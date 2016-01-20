@@ -1,0 +1,1 @@
+{"version":3,"file":"vs/workbench/services/files/node/watcher/unix/watcherApp.js","sourceRoot":"file:///home/robert/Projekte/KodeStudio/src","sources":["vs/workbench/services/files/node/watcher/unix/watcherApp.ts"],"names":[],"mappings":"AAAA;;;gGAGgG;AAChG,YAAY,CAAC;;IAKb,IAAM,MAAM,GAAG,IAAI,mBAAM,EAAE,CAAC;IAC5B,MAAM,CAAC,eAAe,CAAC,gBAAgB,EAAE,IAAI,+CAAsB,EAAE,CAAC,CAAC"}
