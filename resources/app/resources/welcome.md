@@ -3,44 +3,10 @@
 
 <div class="header">
 	<div class="logo"></div>
-	<h1>Hello, welcome to Visual Studio Code!</h1>
-	<p>Here are four topics to get you up and running</p>
+	<h1>Welcome to Kode Studio!</h1>
 </div>
 
-<div class="tips">
-    <div class="tip">
-	    <div class="content">
-		    <h3>Take a quick tour</h3>
-		    <p>Get instantly productive by <a href="http://go.microsoft.com/fwlink/?LinkID=536379#VSCode" target="_blank">learning the basics</a> of Code.  Once completed, move onto <a href="http://go.microsoft.com/fwlink/?LinkID=533484#VSCode" target="_blank">our full set of docs</a> to become a Code master.</p>
-	</div>
-    </div>
-	<div class="tip">
-		<div class="content">
-		    <h3>Start building apps today</h3>
-			<p>Our step-by-step guides will get you going quickly so you can experience the enhanced support we offer for <a href="http://go.microsoft.com/fwlink/?LinkID=533693#VSCode" target="_blank">Node.js</a> and <a href="http://go.microsoft.com/fwlink/?LinkID=533692#VSCode" target="_blank">ASP.NET 5</a>.</p>
-		</div>
-	</div>
-	<div class="tip">
-		<div class="content">
-		    <h3>Install extensions</h3>
-			<p>Find hundreds of useful extensions in the <a href="https://marketplace.visualstudio.com/" target="_blank">marketplace</a> to enhance your coding environment.</p>
-		</div>
-	</div>
-</div>
-<div class="tips">
-	<div class="tip">
-		<div class="content">
-		    <h3>Task running and Git</h3>
-		    <p>Code can participate in your existing development workflow with integrated <a href="http://go.microsoft.com/fwlink/?LinkId=613691#VSCode" target="_blank">task running</a> and <a href="http://go.microsoft.com/fwlink/?LinkID=533695#VSCode" target="_blank">Git support</a>.</p>
-		</div>
-    </div>
-	<div class="tip">
-		<div class="content">
-		    <h3>Debugging, IntelliSense and more</h3>
-		    <p>See the level of support Code includes for various <a href="http://go.microsoft.com/fwlink/?LinkID=533691#VSCode" target="_blank">programming languages</a>, including those with an <a href="http://go.microsoft.com/fwlink/?LinkID=533689#VSCode" target="_blank">evolved editing</a> experience (IntelliSense, Peek Definition, ...) and <a href="http://go.microsoft.com/fwlink/?LinkID=533694#VSCode" target="_blank">debugging</a>.</p>
-		</div>
-    </div>
-</div>
+
 
 <style>
 .welcome-doc * {
