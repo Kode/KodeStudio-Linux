@@ -55,6 +55,11 @@ var WebKitDebugAdapter = (function () {
                 }
                 process.on('exit', function (code) {
                     var electronPath = args.runtimeExecutable;
+                    var electronDir = electronPath;
+                    if (electronPath.lastIndexOf('/') >= 0)
+                        electronDir = electronPath.substring(0, electronPath.lastIndexOf('/'));
+                    else if (electronPath.lastIndexOf('\\') >= 0)
+                        electronDir = electronPath.substring(0, electronPath.lastIndexOf('\\'));
                     // Start with remote debugging enabled
                     var port = args.port || 9222;
                     var electronArgs = ['--remote-debugging-port=' + port];
@@ -69,7 +74,8 @@ var WebKitDebugAdapter = (function () {
                     utilities_1.Logger.log("spawn('" + electronPath + "', " + JSON.stringify(electronArgs) + ")");
                     _this._chromeProc = child_process_1.spawn(electronPath, electronArgs, {
                         detached: true,
-                        stdio: ['ignore']
+                        stdio: ['ignore'],
+                        cwd: electronDir
                     });
                     _this._chromeProc.unref();
                     _this._chromeProc.on('error', function (err) {

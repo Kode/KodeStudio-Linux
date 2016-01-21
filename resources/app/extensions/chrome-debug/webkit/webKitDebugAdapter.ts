@@ -87,6 +87,11 @@ export class WebKitDebugAdapter implements IDebugAdapter {
                 }
                 process.on('exit', (code) => {
                     const electronPath = args.runtimeExecutable;
+                    let electronDir = electronPath;
+                    if (electronPath.lastIndexOf('/') >= 0)
+                        electronDir = electronPath.substring(0, electronPath.lastIndexOf('/'));
+                    else if (electronPath.lastIndexOf('\\') >= 0)
+                        electronDir = electronPath.substring(0, electronPath.lastIndexOf('\\'));
 
                     // Start with remote debugging enabled
                     const port = args.port || 9222;
@@ -104,7 +109,8 @@ export class WebKitDebugAdapter implements IDebugAdapter {
                     Logger.log(`spawn('${electronPath}', ${JSON.stringify(electronArgs) })`);
                     this._chromeProc = spawn(electronPath, electronArgs, {
                         detached: true,
-                        stdio: ['ignore']
+                        stdio: ['ignore'],
+                        cwd: electronDir
                     });
                     (<any>this._chromeProc).unref();
                     this._chromeProc.on('error', (err) => {
