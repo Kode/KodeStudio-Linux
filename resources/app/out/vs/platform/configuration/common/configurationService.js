@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", 'vs/base/common/paths', 'vs/base/common/winjs.base', 'vs/base/common/eventEmitter', 'vs/base/common/objects', 'vs/base/common/errors', './model', 'vs/base/common/lifecycle', 'vs/base/common/collections', './configuration', 'vs/platform/files/common/files', './configurationRegistry', 'vs/platform/platform', 'fs'], function (require, exports, paths, winjs, eventEmitter, objects, errors, model, lifecycle, collections, configuration_1, Files, configurationRegistry_1, platform_1, fs) {
+define(["require", "exports", 'vs/base/common/paths', 'vs/base/common/winjs.base', 'vs/base/common/eventEmitter', 'vs/base/common/objects', 'vs/base/common/errors', './model', 'vs/base/common/lifecycle', 'vs/base/common/collections', './configuration', 'vs/platform/files/common/files', './configurationRegistry', 'vs/platform/platform', 'vs/platform/plugins/common/pluginsRegistry', 'fs', 'path'], function (require, exports, paths, winjs, eventEmitter, objects, errors, model, lifecycle, collections, configuration_1, Files, configurationRegistry_1, platform_1, pluginsRegistry_1, fs, path) {
     var ConfigurationService = (function (_super) {
         __extends(ConfigurationService, _super);
         function ConfigurationService(contextService, eventService, workspaceSettingsRootFolder) {
@@ -65,6 +65,11 @@ define(["require", "exports", 'vs/base/common/paths', 'vs/base/common/winjs.base
                     );
                     try {
                         if (fs.statSync(_this.contextService.toResource('khafile.js').fsPath).isFile()) {
+                            var exec = process.execPath;
+                            if (exec.indexOf('Electron Helper') >= 0) {
+                                var dir = exec.substring(0, exec.lastIndexOf('/'));
+                                exec = paths.join(dir, '..', '..', '..', '..', 'MacOS', 'Electron');
+                            }
                             merged = objects.mixin(merged, {
                                 launch: {
                                     configurations: [
@@ -74,7 +79,8 @@ define(["require", "exports", 'vs/base/common/paths', 'vs/base/common/winjs.base
                                             request: "launch",
                                             file: "build/debug-html5",
                                             sourceMaps: true,
-                                            runtimeExecutable: process.execPath
+                                            runtimeExecutable: exec,
+                                            kha: path.join(pluginsRegistry_1.PluginsRegistry.getPluginDescription('ktx.kha').extensionFolderPath, 'Kha')
                                         }
                                     ]
                                 }

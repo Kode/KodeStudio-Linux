@@ -10,6 +10,7 @@ interface ILaunchRequestArgs extends DebugProtocol.LaunchRequestArguments {
     port?: number;
     diagnosticLogging?: boolean;
     userDataDir?: string;
+    kha?: string;
 }
 
 interface IAttachRequestArgs extends DebugProtocol.AttachRequestArguments {

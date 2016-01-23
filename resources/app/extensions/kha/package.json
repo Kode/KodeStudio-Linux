@@ -1,0 +1,26 @@
+{
+	"name": "kha",
+	"displayName": "Kha",
+	"description": "Kha support",
+	"version": "0.0.1",
+	"publisher": "ktx",
+	"engines": {
+		"vscode": "^0.10.1"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:kha.init"
+	],
+	"main": "./extension",
+	"contributes": {
+		"commands": [{
+			"command": "kha.init",
+			"title": "Init Kha Project"
+		}]
+	},
+	"devDependencies": {
+		"vscode": "0.10.x"
+	}
+}

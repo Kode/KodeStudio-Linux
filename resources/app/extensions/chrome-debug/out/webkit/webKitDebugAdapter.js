@@ -46,46 +46,99 @@ var WebKitDebugAdapter = (function () {
         this.initDiagnosticLogging('launch', args);
         return new Promise(function (resolve, reject) {
             fs.stat(path.resolve(args.cwd, 'Kha'), function (err, stats) {
-                var process;
+                var options = {
+                    from: args.cwd,
+                    to: path.join(args.cwd, 'build'),
+                    projectfile: 'khafile.js',
+                    target: 'debug-html5',
+                    vr: 'none',
+                    pch: false,
+                    intermediate: '',
+                    graphics: 'direct3d9',
+                    visualstudio: 'vs2015',
+                    kha: '',
+                    haxe: '',
+                    ogg: '',
+                    aac: '',
+                    mp3: '',
+                    h264: '',
+                    webm: '',
+                    wmv: '',
+                    theora: '',
+                    kfx: '',
+                    krafix: '',
+                    nokrafix: false,
+                    embedflashassets: false,
+                    compile: false,
+                    run: false,
+                    init: false,
+                    name: 'Project',
+                    server: false,
+                    port: 8080,
+                    debug: false,
+                    silent: false
+                };
                 if (err == null) {
-                    process = child_process_1.fork('Kha/make', ['debug-html5', '--silent'], { cwd: args.cwd });
+                    try {
+                        require(path.join(args.cwd, 'Kha/Tools/khamake/main.js'))
+                            .run(options, {
+                            info: function (message) {
+                                _this.fireEvent(new debugSession_1.OutputEvent(message + '\n', 'stdout'));
+                            }, error: function (message) {
+                                _this.fireEvent(new debugSession_1.OutputEvent(message + '\n', 'stderr'));
+                            }
+                        }, function (name) { });
+                    }
+                    catch (error) {
+                        _this.fireEvent(new debugSession_1.OutputEvent('Error: ' + error.toString() + '\n', 'stderr'));
+                    }
                 }
                 else {
-                    process = child_process_1.spawn('haxelib', ['run', 'kha', 'debug-html5'], { cwd: args.cwd });
+                    try {
+                        require(path.join(args.kha, 'Tools/khamake/main.js'))
+                            .run(options, {
+                            info: function (message) {
+                                _this.fireEvent(new debugSession_1.OutputEvent(message + '\n', 'stdout'));
+                            }, error: function (message) {
+                                _this.fireEvent(new debugSession_1.OutputEvent(message + '\n', 'stderr'));
+                            }
+                        }, function (name) { });
+                    }
+                    catch (error) {
+                        _this.fireEvent(new debugSession_1.OutputEvent('Error: ' + error.toString() + '\n', 'stderr'));
+                    }
                 }
-                process.on('exit', function (code) {
-                    var electronPath = args.runtimeExecutable;
-                    var electronDir = electronPath;
-                    if (electronPath.lastIndexOf('/') >= 0)
-                        electronDir = electronPath.substring(0, electronPath.lastIndexOf('/'));
-                    else if (electronPath.lastIndexOf('\\') >= 0)
-                        electronDir = electronPath.substring(0, electronPath.lastIndexOf('\\'));
-                    // Start with remote debugging enabled
-                    var port = args.port || Math.floor((Math.random() * 10000) + 10000);
-                    ;
-                    var electronArgs = ['--remote-debugging-port=' + port];
-                    electronArgs.push(path.resolve(args.cwd, args.file));
-                    var launchUrl;
-                    if (args.file) {
-                        launchUrl = 'file:///' + path.resolve(args.cwd, path.join(args.file, 'index.html'));
-                    }
-                    else if (args.url) {
-                        launchUrl = args.url;
-                    }
-                    utilities_1.Logger.log("spawn('" + electronPath + "', " + JSON.stringify(electronArgs) + ")");
-                    _this._chromeProc = child_process_1.spawn(electronPath, electronArgs, {
-                        detached: true,
-                        stdio: ['ignore'],
-                        cwd: electronDir
-                    });
-                    _this._chromeProc.unref();
-                    _this._chromeProc.on('error', function (err) {
-                        utilities_1.Logger.log('chrome error: ' + err);
-                        _this.terminateSession();
-                    });
-                    _this._attach(port, launchUrl).then(function () {
-                        resolve();
-                    });
+                var electronPath = args.runtimeExecutable;
+                var electronDir = electronPath;
+                if (electronPath.lastIndexOf('/') >= 0)
+                    electronDir = electronPath.substring(0, electronPath.lastIndexOf('/'));
+                else if (electronPath.lastIndexOf('\\') >= 0)
+                    electronDir = electronPath.substring(0, electronPath.lastIndexOf('\\'));
+                // Start with remote debugging enabled
+                var port = args.port || Math.floor((Math.random() * 10000) + 10000);
+                ;
+                var electronArgs = ['--remote-debugging-port=' + port];
+                electronArgs.push(path.resolve(args.cwd, args.file));
+                var launchUrl;
+                if (args.file) {
+                    launchUrl = 'file:///' + path.resolve(args.cwd, path.join(args.file, 'index.html'));
+                }
+                else if (args.url) {
+                    launchUrl = args.url;
+                }
+                utilities_1.Logger.log("spawn('" + electronPath + "', " + JSON.stringify(electronArgs) + ")");
+                _this._chromeProc = child_process_1.spawn(electronPath, electronArgs, {
+                    detached: true,
+                    stdio: ['ignore'],
+                    cwd: electronDir
+                });
+                _this._chromeProc.unref();
+                _this._chromeProc.on('error', function (err) {
+                    utilities_1.Logger.log('chrome error: ' + err);
+                    _this.terminateSession();
+                });
+                _this._attach(port, launchUrl).then(function () {
+                    resolve();
                 });
             });
         });
