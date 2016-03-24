@@ -50,6 +50,14 @@ define(["require", "exports", 'vs/base/common/paths', 'vs/base/common/winjs.base
                 return result;
             });
         };
+        ConfigurationService.findKha = function (values) {
+            if (values.kha) {
+                var khapath = values.kha.khaPath;
+                if (khapath.length > 0)
+                    return khapath;
+            }
+            return path.join(pluginsRegistry_1.PluginsRegistry.getPluginDescription('ktx.kha').extensionFolderPath, 'Kha');
+        };
         ConfigurationService.prototype.doLoadConfiguration = function () {
             var _this = this;
             // Load globals
@@ -80,7 +88,7 @@ define(["require", "exports", 'vs/base/common/paths', 'vs/base/common/winjs.base
                                             file: "build/debug-html5",
                                             sourceMaps: true,
                                             runtimeExecutable: exec,
-                                            kha: path.join(pluginsRegistry_1.PluginsRegistry.getPluginDescription('ktx.kha').extensionFolderPath, 'Kha')
+                                            kha: ConfigurationService.findKha(merged)
                                         }
                                     ]
                                 }

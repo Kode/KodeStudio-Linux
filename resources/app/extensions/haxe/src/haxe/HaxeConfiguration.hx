@@ -3,6 +3,7 @@ package haxe;
 import js.node.Fs;
 import js.node.Path;
 import platform.Platform;
+import Vscode;
 
 typedef HaxeConfigurationObject = {
     haxePath:String,
@@ -41,8 +42,24 @@ class HaxeConfiguration {
             }
         }
         catch (error: Dynamic) {
-
+            var globalPath = Path.join(findKha(), "Tools", "Haxe");
+            try {
+                if (Fs.statSync(localPath).isDirectory()) {
+                    var exec = "haxe" + platform.executableExtensionK;
+                    var tmp = addTrailingSep(localPath, platform);
+                    return tmp + exec;
+                }
+            }
+            catch (error: Dynamic) {
+            
+            }
         }
         return conf.haxeExec;
     }
+	private static function findKha():String {
+		var config:Dynamic = Vscode.workspace.getConfiguration('kha');
+		var khapath:String = config.khaPath;
+		if (khapath.length > 0) return khapath;
+		return Path.join(Vscode.extensions.getExtension('ktx.kha').extensionPath, 'Kha');
+	}
 }

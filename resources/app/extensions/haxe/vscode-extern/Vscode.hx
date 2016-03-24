@@ -8,6 +8,7 @@ extern class Vscode {
 	static var window(default,null):Window;
 	static var languages(default,null):Languages;
 	static var workspace(default,null):Workspace;
+    static var extensions(default,null):Extensions;
 }
 
 // The following externs are from a scrape/translation of the
