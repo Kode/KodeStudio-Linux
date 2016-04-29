@@ -18,14 +18,14 @@ var Context = function(protocol) {
 Context.__name__ = ["Context"];
 Context.findHaxe = function(projectDir,kha) {
 	var executableExtension = process.platform == "win32"?".exe":process.platform == "linux"?process.arch == "x64"?"-linux64":process.arch == "arm"?"-linuxarm":"-linux32":"-osx";
-	var localPath = js_node_Path.join(projectDir,"Kha","Tools","Haxe");
+	var localPath = js_node_Path.join(projectDir,"Kha","Tools","haxe");
 	try {
 		if(js_node_Fs.statSync(localPath).isDirectory()) {
 			return js_node_Path.join(localPath,"haxe" + executableExtension);
 		}
 	} catch( error ) {
 		haxe_CallStack.lastException = error;
-		var globalPath = js_node_Path.join(kha,"Tools","Haxe");
+		var globalPath = js_node_Path.join(kha,"Tools","haxe");
 		try {
 			if(js_node_Fs.statSync(globalPath).isDirectory()) {
 				return js_node_Path.join(globalPath,"haxe" + executableExtension);
