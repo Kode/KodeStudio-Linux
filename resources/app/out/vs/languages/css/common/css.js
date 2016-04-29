@@ -1,25 +1,39 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-'use strict';
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
+define("vs/languages/css/common/cssTokenTypes", ["require", "exports"], function (require, exports) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.TOKEN_SELECTOR = 'entity.name.selector';
+    exports.TOKEN_SELECTOR_TAG = 'entity.name.tag';
+    exports.TOKEN_PROPERTY = 'support.type.property-name';
+    exports.TOKEN_VALUE = 'support.property-value';
+    exports.TOKEN_AT_KEYWORD = 'keyword.control.at-rule';
+});
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
-    switch (arguments.length) {
-        case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
-        case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
-        case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
-    }
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common/objects', 'vs/editor/common/modes', 'vs/platform/thread/common/threadService', 'vs/languages/css/common/cssTokenTypes', 'vs/editor/common/modes/abstractMode', 'vs/editor/common/modes/abstractState', 'vs/platform/instantiation/common/descriptors', 'vs/editor/common/modes/supports/onEnter', 'vs/platform/instantiation/common/instantiation', 'vs/platform/thread/common/thread'], function (require, exports, supports, objects, Modes, threadService_1, cssTokenTypes, abstractMode_1, abstractState_1, descriptors_1, onEnter_1, instantiation_1, thread_1) {
+define("vs/languages/css/common/css", ["require", "exports", 'vs/base/common/objects', 'vs/platform/thread/common/threadService', 'vs/languages/css/common/cssTokenTypes', 'vs/editor/common/modes/abstractMode', 'vs/editor/common/modes/abstractState', 'vs/platform/instantiation/common/instantiation', 'vs/platform/thread/common/thread', 'vs/editor/common/modes/supports/richEditSupport', 'vs/editor/common/modes/supports/tokenizationSupport', 'vs/editor/common/modes/supports/declarationSupport', 'vs/editor/common/modes/supports/referenceSupport', 'vs/editor/common/modes/supports/suggestSupport'], function (require, exports, objects, threadService_1, cssTokenTypes, abstractMode_1, abstractState_1, instantiation_1, thread_1, richEditSupport_1, tokenizationSupport_1, declarationSupport_1, referenceSupport_1, suggestSupport_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
     exports.cssTokenTypes = cssTokenTypes;
     (function (States) {
         States[States["Selector"] = 0] = "Selector";
@@ -115,13 +129,13 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
             switch (this.kind) {
                 case States.ValuePostUrl:
                     if (ch === '(') {
-                        return this.nextState(States.ValueInUrlFunction, { type: 'punctuation.parenthesis.css', bracket: Modes.Bracket.Open });
+                        return this.nextState(States.ValueInUrlFunction, { type: 'punctuation.parenthesis.css' });
                     }
                     this.kind = States.Value;
                     break;
                 case States.MetaPostUrl:
                     if (ch === '(') {
-                        return this.nextState(States.MetaInUrlFunction, { type: 'punctuation.parenthesis.css', bracket: Modes.Bracket.Open });
+                        return this.nextState(States.MetaInUrlFunction, { type: 'punctuation.parenthesis.css' });
                     }
                     this.kind = States.Meta;
                     break;
@@ -138,10 +152,10 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
             switch (this.kind) {
                 case States.Selector:
                     if (ch === '{') {
-                        return this.nextState(States.Rule, { type: 'punctuation.bracket.css', bracket: Modes.Bracket.Open });
+                        return this.nextState(States.Rule, { type: 'punctuation.bracket.css' });
                     }
                     if (ch === '(' || ch === ')') {
-                        return { type: 'punctuation.parenthesis.css', bracket: ch === '(' ? Modes.Bracket.Open : Modes.Bracket.Close };
+                        return { type: 'punctuation.parenthesis.css' };
                     }
                     if (ch === '@' && !this.inMeta) {
                         stream.advanceIfRegExp2(identRegEx);
@@ -149,7 +163,7 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
                     }
                     if (ch === '}' && this.inMeta) {
                         this.inMeta = false;
-                        return this.nextState(States.Selector, { type: 'punctuation.bracket.css', bracket: Modes.Bracket.Close });
+                        return this.nextState(States.Selector, { type: 'punctuation.bracket.css' });
                     }
                     if (/[\*\(\)\[\]\+>=\~\|;]/.test(ch)) {
                         return { type: 'punctuation.css' };
@@ -170,10 +184,10 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
                         if (this.inMeta) {
                             nextState = States.Selector;
                         }
-                        return this.nextState(nextState, { type: 'punctuation.bracket.css', bracket: Modes.Bracket.Open });
+                        return this.nextState(nextState, { type: 'punctuation.bracket.css' });
                     }
                     if (ch === '(' || ch === ')') {
-                        return { type: 'punctuation.parenthesis.css', bracket: ch === '(' ? Modes.Bracket.Open : Modes.Bracket.Close };
+                        return { type: 'punctuation.parenthesis.css' };
                     }
                     if (ch === ';') {
                         if (this.metaBraceCount === 0) {
@@ -193,19 +207,19 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
                     return { type: cssTokenTypes.TOKEN_VALUE + '.css' };
                 case States.Rule:
                     if (ch === '}') {
-                        return this.nextState(States.Selector, { type: 'punctuation.bracket.css', bracket: Modes.Bracket.Close });
+                        return this.nextState(States.Selector, { type: 'punctuation.bracket.css' });
                     }
                     if (ch === ':') {
                         return this.nextState(States.Value, { type: 'punctuation.css' });
                     }
                     if (ch === '(' || ch === ')') {
-                        return { type: 'punctuation.parenthesis.css', bracket: ch === '(' ? Modes.Bracket.Open : Modes.Bracket.Close };
+                        return { type: 'punctuation.parenthesis.css' };
                     }
                     this.consumeIdent(stream);
                     return { type: cssTokenTypes.TOKEN_PROPERTY + '.css' };
                 case States.Value:
                     if (ch === '}') {
-                        return this.nextState(States.Selector, { type: 'punctuation.bracket.css', bracket: Modes.Bracket.Close });
+                        return this.nextState(States.Selector, { type: 'punctuation.bracket.css' });
                     }
                     if (ch === ';') {
                         return this.nextState(States.Rule, { type: 'punctuation.css' });
@@ -214,7 +228,7 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
                         return this.nextState(States.ValuePostUrl, { type: cssTokenTypes.TOKEN_VALUE + '.css' });
                     }
                     if (ch === '(' || ch === ')') {
-                        return { type: 'punctuation.parenthesis.css', bracket: ch === '(' ? Modes.Bracket.Open : Modes.Bracket.Close };
+                        return { type: 'punctuation.parenthesis.css' };
                     }
                     if (ch === ',') {
                         return { type: 'punctuation.css' };
@@ -250,55 +264,89 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
             return { type: '' };
         };
         return State;
-    })(abstractState_1.AbstractState);
+    }(abstractState_1.AbstractState));
     exports.State = State;
     var CSSMode = (function (_super) {
         __extends(CSSMode, _super);
         function CSSMode(descriptor, instantiationService, threadService) {
             var _this = this;
-            _super.call(this, descriptor, instantiationService, threadService);
-            this.tokenizationSupport = new supports.TokenizationSupport(this, {
+            _super.call(this, descriptor.id);
+            this._modeWorkerManager = new abstractMode_1.ModeWorkerManager(descriptor, 'vs/languages/css/common/cssWorker', 'CSSWorker', null, instantiationService);
+            this._threadService = threadService;
+            this.tokenizationSupport = new tokenizationSupport_1.TokenizationSupport(this, {
                 getInitialState: function () { return new State(_this, States.Selector, false, null, false, 0); }
             }, false, false);
-            this.electricCharacterSupport = new supports.BracketElectricCharacterSupport(this, { brackets: [
-                    { tokenType: 'punctuation.bracket.css', open: '{', close: '}', isElectric: true }
-                ] });
+            this.richEditSupport = new richEditSupport_1.RichEditSupport(this.getId(), null, {
+                // TODO@Martin: This definition does not work with umlauts for example
+                wordPattern: /(#?-?\d*\.\d\w*%?)|((::|[@#.!:])?[\w-?]+%?)|::|[@#.!:]/g,
+                comments: {
+                    blockComment: ['/*', '*/']
+                },
+                brackets: [
+                    ['{', '}'],
+                    ['[', ']'],
+                    ['(', ')']
+                ],
+                __characterPairSupport: {
+                    autoClosingPairs: [
+                        { open: '{', close: '}' },
+                        { open: '[', close: ']' },
+                        { open: '(', close: ')' },
+                        { open: '"', close: '"', notIn: ['string'] },
+                        { open: '\'', close: '\'', notIn: ['string'] }
+                    ]
+                }
+            });
+            this.inplaceReplaceSupport = this;
+            this.configSupport = this;
             this.occurrencesSupport = this;
             this.extraInfoSupport = this;
-            this.referenceSupport = new supports.ReferenceSupport(this, {
+            this.referenceSupport = new referenceSupport_1.ReferenceSupport(this.getId(), {
                 tokens: [cssTokenTypes.TOKEN_PROPERTY + '.css', cssTokenTypes.TOKEN_VALUE + '.css', cssTokenTypes.TOKEN_SELECTOR_TAG + '.css'],
                 findReferences: function (resource, position, /*unused*/ includeDeclaration) { return _this.findReferences(resource, position); } });
             this.logicalSelectionSupport = this;
             this.outlineSupport = this;
-            this.declarationSupport = new supports.DeclarationSupport(this, {
+            this.declarationSupport = new declarationSupport_1.DeclarationSupport(this.getId(), {
                 tokens: [cssTokenTypes.TOKEN_VALUE + '.css'],
                 findDeclaration: function (resource, position) { return _this.findDeclaration(resource, position); } });
-            this.characterPairSupport = new supports.CharacterPairSupport(this, {
-                autoClosingPairs: [{ open: '{', close: '}' },
-                    { open: '[', close: ']' },
-                    { open: '(', close: ')' },
-                    { open: '"', close: '"', notIn: ['string'] },
-                    { open: '\'', close: '\'', notIn: ['string'] }
-                ] });
-            this.suggestSupport = new supports.SuggestSupport(this, {
+            this.suggestSupport = new suggestSupport_1.SuggestSupport(this.getId(), {
                 triggerCharacters: [' ', ':'],
                 excludeTokens: ['comment.css', 'string.css'],
                 suggest: function (resource, position) { return _this.suggest(resource, position); } });
-            this.onEnterSupport = new onEnter_1.OnEnterSupport(this.getId(), {
-                brackets: [
-                    { open: '(', close: ')' },
-                    { open: '{', close: '}' },
-                    { open: '[', close: ']' }
-                ]
-            });
             this.quickFixSupport = this;
         }
-        CSSMode.prototype._getWorkerDescriptor = function () {
-            return descriptors_1.createAsyncDescriptor2('vs/languages/css/common/cssWorker', 'CSSWorker');
+        CSSMode.prototype.creationDone = function () {
+            if (this._threadService.isInMainThread) {
+                // Pick a worker to do validation
+                this._pickAWorkerToValidate();
+            }
+        };
+        CSSMode.prototype._worker = function (runner) {
+            return this._modeWorkerManager.worker(runner);
+        };
+        CSSMode.prototype.configure = function (options) {
+            if (this._threadService.isInMainThread) {
+                return this._configureWorkers(options);
+            }
+            else {
+                return this._worker(function (w) { return w._doConfigure(options); });
+            }
+        };
+        CSSMode.prototype._configureWorkers = function (options) {
+            return this._worker(function (w) { return w._doConfigure(options); });
+        };
+        CSSMode.prototype.navigateValueSet = function (resource, position, up) {
+            return this._worker(function (w) { return w.navigateValueSet(resource, position, up); });
+        };
+        CSSMode.prototype._pickAWorkerToValidate = function () {
+            return this._worker(function (w) { return w.enableValidator(); });
         };
         CSSMode.prototype.findOccurrences = function (resource, position, strict) {
             if (strict === void 0) { strict = false; }
             return this._worker(function (w) { return w.findOccurrences(resource, position, strict); });
+        };
+        CSSMode.prototype.suggest = function (resource, position) {
+            return this._worker(function (w) { return w.suggest(resource, position); });
         };
         CSSMode.prototype.findDeclaration = function (resource, position) {
             return this._worker(function (w) { return w.findDeclaration(resource, position); });
@@ -315,13 +363,6 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
         CSSMode.prototype.getOutline = function (resource) {
             return this._worker(function (w) { return w.getOutline(resource); });
         };
-        CSSMode.prototype.getCommentsConfiguration = function () {
-            return { blockCommentStartToken: '/*', blockCommentEndToken: '*/' };
-        };
-        // TODO@Martin: This definition does not work with umlauts for example
-        CSSMode.prototype.getWordDefinition = function () {
-            return /(#?-?\d*\.\d\w*%?)|((::|[@#.!:])?[\w-?]+%?)|::|[@#.!:]/g;
-        };
         CSSMode.prototype.findColorDeclarations = function (resource) {
             return this._worker(function (w) { return w.findColorDeclarations(resource); });
         };
@@ -331,7 +372,11 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
         CSSMode.prototype.runQuickFixAction = function (resource, range, id) {
             return this._worker(function (w) { return w.runQuickFixAction(resource, range, id); });
         };
+        CSSMode.$_configureWorkers = threadService_1.AllWorkersAttr(CSSMode, CSSMode.prototype._configureWorkers);
+        CSSMode.$navigateValueSet = threadService_1.OneWorkerAttr(CSSMode, CSSMode.prototype.navigateValueSet);
+        CSSMode.$_pickAWorkerToValidate = threadService_1.OneWorkerAttr(CSSMode, CSSMode.prototype._pickAWorkerToValidate, thread_1.ThreadAffinity.Group1);
         CSSMode.$findOccurrences = threadService_1.OneWorkerAttr(CSSMode, CSSMode.prototype.findOccurrences);
+        CSSMode.$suggest = threadService_1.OneWorkerAttr(CSSMode, CSSMode.prototype.suggest);
         CSSMode.$findDeclaration = threadService_1.OneWorkerAttr(CSSMode, CSSMode.prototype.findDeclaration);
         CSSMode.$computeInfo = threadService_1.OneWorkerAttr(CSSMode, CSSMode.prototype.computeInfo);
         CSSMode.$findReferences = threadService_1.OneWorkerAttr(CSSMode, CSSMode.prototype.findReferences);
@@ -345,7 +390,8 @@ define(["require", "exports", 'vs/editor/common/modes/supports', 'vs/base/common
             __param(2, thread_1.IThreadService)
         ], CSSMode);
         return CSSMode;
-    })(abstractMode_1.AbstractMode);
+    }(abstractMode_1.AbstractMode));
     exports.CSSMode = CSSMode;
 });
+
 //# sourceMappingURL=css.js.map

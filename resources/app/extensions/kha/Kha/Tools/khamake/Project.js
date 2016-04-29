@@ -17,13 +17,17 @@ function findFiles(dir, match) {
 	if (match.indexOf('*') >= 0) {
 		let beforeStar = match.substring(0, match.indexOf('*'));
 		subdir = beforeStar.substring(0, beforeStar.lastIndexOf('/'));
-	}
 		
-	let regex = new RegExp('^' + match.replace(/\./g, "\\.").replace(/\*\*/g, ".?").replace(/\*/g, "[^/]*").replace(/\?/g, '*') + '$', 'g');
+		let regex = new RegExp('^' + match.replace(/\./g, "\\.").replace(/\*\*/g, ".?").replace(/\*/g, "[^/]*").replace(/\?/g, '*') + '$', 'g');
 	
-	let collected = [];
-	findFiles2(dir, subdir, regex, collected);
-	return collected;
+		let collected = [];
+		findFiles2(dir, subdir, regex, collected);
+		return collected;
+	}
+	else {
+		let file = path.resolve(dir, match);
+		return [file];
+	}
 }
 
 function findFiles2(basedir, dir, regex, collected) {
@@ -65,10 +69,13 @@ class Project {
 		this.parameters = [];
 		this.scriptdir = Project.scriptdir;
 		this.libraries = [];
-		
+		this.localLibraryPath = 'Libraries';
+
 		this.windowOptions = {}		
 		this.targetOptions = {
-			flash : {}
+			flash: {},
+			android: {},
+			android_native: {}
 		}
 	}
 
@@ -83,7 +90,7 @@ class Project {
 			let file = path.parse(f);
 			let name = file.name;
 			let type = 'blob';
-			if (file.ext === '.png' || file.ext === '.jpg' || file.ext === '.jpeg') {
+			if (file.ext === '.png' || file.ext === '.jpg' || file.ext === '.jpeg' || file.ext === '.hdr') {
 				type = 'image';
 			}
 			else if (file.ext === '.wav') {
@@ -141,42 +148,62 @@ class Project {
 	addLibrary(library) {
 		let self = this;
 		function findLibraryDirectory(name) {
-			let libpath = path.join(self.scriptdir, 'Libraries', name);
+			// Tries to load the default library from inside the kha project.
+			// e.g. 'Libraries/wyngine'
+			let libpath = path.join(self.scriptdir, self.localLibraryPath, name);
 			if (fs.existsSync(libpath) && fs.statSync(libpath).isDirectory()) {
-				return libpath;
+				return { libpath: libpath, libroot: self.localLibraryPath + '/' + name };
 			}
-            try {
-                libpath = path.join(child_process.execSync('haxelib config', { encoding: 'utf8' }).trim(), name.toLowerCase());
-            }
-            catch (error) {
-                libpath = path.join(process.env.HAXEPATH, 'lib', name.toLowerCase());
-            }
-            if (fs.existsSync(libpath) && fs.statSync(libpath).isDirectory()) {
-                if (fs.existsSync(path.join(libpath, '.dev'))) {
-                    return fs.readFileSync(path.join(libpath, '.dev'), 'utf8');
-                }
-                else if (fs.existsSync(path.join(libpath, '.current'))) {
-                    let current = fs.readFileSync(path.join(libpath, '.current'), 'utf8');
-                    return path.join(libpath, current.replaceAll('.', ','));
-                }
+			// If the library couldn't be found in Libraries folder, try
+			// looking in the haxelib folders.
+			// e.g. addLibrary('hxcpp') => '/usr/lib/haxelib/hxcpp/3,2,193'
+			try {
+				libpath = path.join(child_process.execSync('haxelib config', { encoding: 'utf8' }).trim(), name.replaceAll('.', ',').toLowerCase());
 			}
+			catch (error) {
+				libpath = path.join(process.env.HAXEPATH, 'lib', name.toLowerCase());
+			}
+			if (fs.existsSync(libpath) && fs.statSync(libpath).isDirectory()) {
+				if (fs.existsSync(path.join(libpath, '.dev'))) {
+					//return fs.readFileSync(path.join(libpath, '.dev'), 'utf8');
+					return { libpath: fs.readFileSync(path.join(libpath, '.dev'), 'utf8'), libroot: libpath};
+				}
+				else if (fs.existsSync(path.join(libpath, '.current'))) {
+					// Get the latest version of the haxelib path,
+					// e.g. for 'hxcpp', latest version '3,2,193'
+					let current = fs.readFileSync(path.join(libpath, '.current'), 'utf8');
+					//return path.join(libpath, current.replaceAll('.', ','));
+					return { libpath: path.join(libpath, current.replaceAll('.', ',')), libroot: libpath };
+				}
+			}
+			// Show error if library isn't found in Libraries or haxelib folder
 			log.error('Error: Library ' + name + ' not found.');
-			return '';
+			log.error('Install it using \'haxelib install ' + name + '\' or add it to the \'Libraries\' folder.');
+			process.exit(1);
 		}
 		
-		let dir = findLibraryDirectory(library);
+		let libInfo = findLibraryDirectory(library);
+		let dir = libInfo.libpath;
 		
 		if (dir !== '') {
-			this.libraries.push(dir);
-			
+			this.libraries.push({
+				libpath: dir,
+				libroot: libInfo.libroot
+			});
+			// If this is a haxelib library, there must be a haxelib.json
 			if (fs.existsSync(path.join(dir, 'haxelib.json'))) {
 				let options = JSON.parse(fs.readFileSync(path.join(dir, 'haxelib.json'), 'utf8'));
+				// If there is a classPath value, add that directory to be loaded.
+				// Otherwise, just load the current path.
 				if (options.classPath) {
+					// TODO find an example haxelib that has a classPath value
 					this.sources.push(path.join(dir, options.classPath));
 				}
 				else {
+					// e.g. '/usr/lib/haxelib/hxcpp/3,2,193'
 					this.sources.push(dir);
 				}
+				// If this haxelib has other library dependencies, add them too
 				if (options.dependencies) {
 					for (let dependency in options.dependencies) {
 						if (dependency.toLowerCase() !== 'kha') {
@@ -186,6 +213,9 @@ class Project {
 				}
 			}
 			else {
+				// If there is no haxelib.json file, then just load the library
+				// by the Sources folder.
+				// e.g. Libraries/wyngine/Sources
 				this.sources.push(path.join(dir, 'Sources'));
 			}
 			

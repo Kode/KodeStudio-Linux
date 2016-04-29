@@ -1,3 +1,6 @@
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -64,8 +67,9 @@ var AMDLoader;
         Utilities.endsWith = function (haystack, needle) {
             return haystack.length >= needle.length && haystack.substr(haystack.length - needle.length) === needle;
         };
+        // only check for "?" before "#" to ensure that there is a real Query-String
         Utilities.containsQueryString = function (url) {
-            return url.indexOf('?') >= 0;
+            return /^[^\#]*\?/gi.test(url);
         };
         /**
          * Does `url` start with http:// or https:// or / ?
@@ -402,8 +406,7 @@ var AMDLoader;
             return [moduleId];
         };
         Configuration.prototype._addUrlArgsToUrl = function (url) {
-            var hasUrlArgs = url.indexOf('?') >= 0;
-            if (hasUrlArgs) {
+            if (Utilities.containsQueryString(url)) {
                 return url + '&' + this.options.urlArgs;
             }
             else {
@@ -1936,3 +1939,811 @@ var AMDLoader;
         loaderAvailableTimestamp = getHighPerformanceTimestamp();
     }
 })(AMDLoader || (AMDLoader = {}));
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ * Please make sure to make edits in the .ts file at https://github.com/Microsoft/vscode-loader/
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *--------------------------------------------------------------------------------------------*/
+/// <reference path="declares.ts" />
+/// <reference path="loader.ts" />
+'use strict';
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var _cssPluginGlobal = this;
+var CSSLoaderPlugin;
+(function (CSSLoaderPlugin) {
+    var global = _cssPluginGlobal;
+    /**
+     * Known issue:
+     * - In IE there is no way to know if the CSS file loaded successfully or not.
+     */
+    var BrowserCSSLoader = (function () {
+        function BrowserCSSLoader() {
+            this._pendingLoads = 0;
+        }
+        BrowserCSSLoader.prototype.attachListeners = function (name, linkNode, callback, errorback) {
+            var unbind = function () {
+                linkNode.removeEventListener('load', loadEventListener);
+                linkNode.removeEventListener('error', errorEventListener);
+            };
+            var loadEventListener = function (e) {
+                unbind();
+                callback();
+            };
+            var errorEventListener = function (e) {
+                unbind();
+                errorback(e);
+            };
+            linkNode.addEventListener('load', loadEventListener);
+            linkNode.addEventListener('error', errorEventListener);
+        };
+        BrowserCSSLoader.prototype._onLoad = function (name, callback) {
+            this._pendingLoads--;
+            callback();
+        };
+        BrowserCSSLoader.prototype._onLoadError = function (name, errorback, err) {
+            this._pendingLoads--;
+            errorback(err);
+        };
+        BrowserCSSLoader.prototype._insertLinkNode = function (linkNode) {
+            this._pendingLoads++;
+            var head = document.head || document.getElementsByTagName('head')[0];
+            var other = head.getElementsByTagName('link') || document.head.getElementsByTagName('script');
+            if (other.length > 0) {
+                head.insertBefore(linkNode, other[other.length - 1]);
+            }
+            else {
+                head.appendChild(linkNode);
+            }
+        };
+        BrowserCSSLoader.prototype.createLinkTag = function (name, cssUrl, externalCallback, externalErrorback) {
+            var _this = this;
+            var linkNode = document.createElement('link');
+            linkNode.setAttribute('rel', 'stylesheet');
+            linkNode.setAttribute('type', 'text/css');
+            linkNode.setAttribute('data-name', name);
+            var callback = function () { return _this._onLoad(name, externalCallback); };
+            var errorback = function (err) { return _this._onLoadError(name, externalErrorback, err); };
+            this.attachListeners(name, linkNode, callback, errorback);
+            linkNode.setAttribute('href', cssUrl);
+            return linkNode;
+        };
+        BrowserCSSLoader.prototype._linkTagExists = function (name, cssUrl) {
+            var i, len, nameAttr, hrefAttr, links = document.getElementsByTagName('link');
+            for (i = 0, len = links.length; i < len; i++) {
+                nameAttr = links[i].getAttribute('data-name');
+                hrefAttr = links[i].getAttribute('href');
+                if (nameAttr === name || hrefAttr === cssUrl) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        BrowserCSSLoader.prototype.load = function (name, cssUrl, externalCallback, externalErrorback) {
+            if (this._linkTagExists(name, cssUrl)) {
+                externalCallback();
+                return;
+            }
+            var linkNode = this.createLinkTag(name, cssUrl, externalCallback, externalErrorback);
+            this._insertLinkNode(linkNode);
+        };
+        return BrowserCSSLoader;
+    })();
+    /**
+     * Prior to IE10, IE could not go above 31 stylesheets in a page
+     * http://blogs.msdn.com/b/ieinternals/archive/2011/05/14/internet-explorer-stylesheet-rule-selector-import-sheet-limit-maximum.aspx
+     *
+     * The general strategy here is to not write more than 31 link nodes to the page at the same time
+     * When stylesheets get loaded, they will get merged one into another to free up
+     * some positions for new link nodes.
+     */
+    var IE9CSSLoader = (function (_super) {
+        __extends(IE9CSSLoader, _super);
+        function IE9CSSLoader() {
+            _super.call(this);
+            this._blockedLoads = [];
+            this._mergeStyleSheetsTimeout = -1;
+        }
+        IE9CSSLoader.prototype.load = function (name, cssUrl, externalCallback, externalErrorback) {
+            if (this._linkTagExists(name, cssUrl)) {
+                externalCallback();
+                return;
+            }
+            var linkNode = this.createLinkTag(name, cssUrl, externalCallback, externalErrorback);
+            if (this._styleSheetCount() < 31) {
+                this._insertLinkNode(linkNode);
+            }
+            else {
+                this._blockedLoads.push(linkNode);
+                this._handleBlocked();
+            }
+        };
+        IE9CSSLoader.prototype._styleSheetCount = function () {
+            var linkCount = document.getElementsByTagName('link').length;
+            var styleCount = document.getElementsByTagName('style').length;
+            return linkCount + styleCount;
+        };
+        IE9CSSLoader.prototype._onLoad = function (name, callback) {
+            _super.prototype._onLoad.call(this, name, callback);
+            this._handleBlocked();
+        };
+        IE9CSSLoader.prototype._onLoadError = function (name, errorback, err) {
+            _super.prototype._onLoadError.call(this, name, errorback, err);
+            this._handleBlocked();
+        };
+        IE9CSSLoader.prototype._handleBlocked = function () {
+            var _this = this;
+            var blockedLoadsCount = this._blockedLoads.length;
+            if (blockedLoadsCount > 0 && this._mergeStyleSheetsTimeout === -1) {
+                this._mergeStyleSheetsTimeout = window.setTimeout(function () { return _this._mergeStyleSheets(); }, 0);
+            }
+        };
+        IE9CSSLoader.prototype._mergeStyleSheet = function (dstPath, dst, srcPath, src) {
+            for (var i = src.rules.length - 1; i >= 0; i--) {
+                dst.insertRule(Utilities.rewriteUrls(srcPath, dstPath, src.rules[i].cssText), 0);
+            }
+        };
+        IE9CSSLoader.prototype._asIE9HTMLLinkElement = function (linkElement) {
+            return linkElement;
+        };
+        IE9CSSLoader.prototype._mergeStyleSheets = function () {
+            this._mergeStyleSheetsTimeout = -1;
+            var blockedLoadsCount = this._blockedLoads.length;
+            var i, linkDomNodes = document.getElementsByTagName('link');
+            var linkDomNodesCount = linkDomNodes.length;
+            var mergeCandidates = [];
+            for (i = 0; i < linkDomNodesCount; i++) {
+                if (linkDomNodes[i].readyState === 'loaded' || linkDomNodes[i].readyState === 'complete') {
+                    mergeCandidates.push({
+                        linkNode: linkDomNodes[i],
+                        rulesLength: this._asIE9HTMLLinkElement(linkDomNodes[i]).styleSheet.rules.length
+                    });
+                }
+            }
+            var mergeCandidatesCount = mergeCandidates.length;
+            // Just a little legend here :)
+            // - linkDomNodesCount: total number of link nodes in the DOM (this should be kept <= 31)
+            // - mergeCandidatesCount: loaded (finished) link nodes in the DOM (only these can be merged)
+            // - blockedLoadsCount: remaining number of load requests that did not fit in before (because of the <= 31 constraint)
+            // Now comes the heuristic part, we don't want to do too much work with the merging of styles,
+            // but we do need to merge stylesheets to free up loading slots.
+            var mergeCount = Math.min(Math.floor(mergeCandidatesCount / 2), blockedLoadsCount);
+            // Sort the merge candidates descending (least rules last)
+            mergeCandidates.sort(function (a, b) {
+                return b.rulesLength - a.rulesLength;
+            });
+            var srcIndex, dstIndex;
+            for (i = 0; i < mergeCount; i++) {
+                srcIndex = mergeCandidates.length - 1 - i;
+                dstIndex = i % (mergeCandidates.length - mergeCount);
+                // Merge rules of src into dst
+                this._mergeStyleSheet(mergeCandidates[dstIndex].linkNode.href, this._asIE9HTMLLinkElement(mergeCandidates[dstIndex].linkNode).styleSheet, mergeCandidates[srcIndex].linkNode.href, this._asIE9HTMLLinkElement(mergeCandidates[srcIndex].linkNode).styleSheet);
+                // Remove dom node of src
+                mergeCandidates[srcIndex].linkNode.parentNode.removeChild(mergeCandidates[srcIndex].linkNode);
+                linkDomNodesCount--;
+            }
+            var styleSheetCount = this._styleSheetCount();
+            while (styleSheetCount < 31 && this._blockedLoads.length > 0) {
+                this._insertLinkNode(this._blockedLoads.shift());
+                styleSheetCount++;
+            }
+        };
+        return IE9CSSLoader;
+    })(BrowserCSSLoader);
+    var IE8CSSLoader = (function (_super) {
+        __extends(IE8CSSLoader, _super);
+        function IE8CSSLoader() {
+            _super.call(this);
+        }
+        IE8CSSLoader.prototype.attachListeners = function (name, linkNode, callback, errorback) {
+            linkNode.onload = function () {
+                linkNode.onload = null;
+                callback();
+            };
+        };
+        return IE8CSSLoader;
+    })(IE9CSSLoader);
+    var NodeCSSLoader = (function () {
+        function NodeCSSLoader() {
+            this.fs = require.nodeRequire('fs');
+        }
+        NodeCSSLoader.prototype.load = function (name, cssUrl, externalCallback, externalErrorback) {
+            var contents = this.fs.readFileSync(cssUrl, 'utf8');
+            // Remove BOM
+            if (contents.charCodeAt(0) === NodeCSSLoader.BOM_CHAR_CODE) {
+                contents = contents.substring(1);
+            }
+            externalCallback(contents);
+        };
+        NodeCSSLoader.BOM_CHAR_CODE = 65279;
+        return NodeCSSLoader;
+    })();
+    // ------------------------------ Finally, the plugin
+    var CSSPlugin = (function () {
+        function CSSPlugin(cssLoader) {
+            this.cssLoader = cssLoader;
+        }
+        CSSPlugin.prototype.load = function (name, req, load, config) {
+            config = config || {};
+            var cssUrl = req.toUrl(name + '.css');
+            this.cssLoader.load(name, cssUrl, function (contents) {
+                // Contents has the CSS file contents if we are in a build
+                if (config.isBuild) {
+                    CSSPlugin.BUILD_MAP[name] = contents;
+                }
+                load({});
+            }, function (err) {
+                if (typeof load.error === 'function') {
+                    load.error('Could not find ' + cssUrl + ' or it was empty');
+                }
+            });
+        };
+        CSSPlugin.prototype.write = function (pluginName, moduleName, write) {
+            // getEntryPoint is a Monaco extension to r.js
+            var entryPoint = write.getEntryPoint();
+            // r.js destroys the context of this plugin between calling 'write' and 'writeFile'
+            // so the only option at this point is to leak the data to a global
+            global.cssPluginEntryPoints = global.cssPluginEntryPoints || {};
+            global.cssPluginEntryPoints[entryPoint] = global.cssPluginEntryPoints[entryPoint] || [];
+            global.cssPluginEntryPoints[entryPoint].push({
+                moduleName: moduleName,
+                contents: CSSPlugin.BUILD_MAP[moduleName]
+            });
+            write.asModule(pluginName + '!' + moduleName, 'define([\'vs/css!' + entryPoint + '\'], {});');
+        };
+        CSSPlugin.prototype.writeFile = function (pluginName, moduleName, req, write, config) {
+            if (global.cssPluginEntryPoints && global.cssPluginEntryPoints.hasOwnProperty(moduleName)) {
+                var fileName = req.toUrl(moduleName + '.css');
+                var contents = [
+                    '/*---------------------------------------------------------',
+                    ' * Copyright (c) Microsoft Corporation. All rights reserved.',
+                    ' *--------------------------------------------------------*/'
+                ], entries = global.cssPluginEntryPoints[moduleName];
+                for (var i = 0; i < entries.length; i++) {
+                    contents.push(Utilities.rewriteUrls(entries[i].moduleName, moduleName, entries[i].contents));
+                }
+                write(fileName, contents.join('\r\n'));
+            }
+        };
+        CSSPlugin.BUILD_MAP = {};
+        return CSSPlugin;
+    })();
+    CSSLoaderPlugin.CSSPlugin = CSSPlugin;
+    var Utilities = (function () {
+        function Utilities() {
+        }
+        Utilities.startsWith = function (haystack, needle) {
+            return haystack.length >= needle.length && haystack.substr(0, needle.length) === needle;
+        };
+        /**
+         * Find the path of a file.
+         */
+        Utilities.pathOf = function (filename) {
+            var lastSlash = filename.lastIndexOf('/');
+            if (lastSlash !== -1) {
+                return filename.substr(0, lastSlash + 1);
+            }
+            else {
+                return '';
+            }
+        };
+        /**
+         * A conceptual a + b for paths.
+         * Takes into account if `a` contains a protocol.
+         * Also normalizes the result: e.g.: a/b/ + ../c => a/c
+         */
+        Utilities.joinPaths = function (a, b) {
+            function findSlashIndexAfterPrefix(haystack, prefix) {
+                if (Utilities.startsWith(haystack, prefix)) {
+                    return Math.max(prefix.length, haystack.indexOf('/', prefix.length));
+                }
+                return 0;
+            }
+            var aPathStartIndex = 0;
+            aPathStartIndex = aPathStartIndex || findSlashIndexAfterPrefix(a, '//');
+            aPathStartIndex = aPathStartIndex || findSlashIndexAfterPrefix(a, 'http://');
+            aPathStartIndex = aPathStartIndex || findSlashIndexAfterPrefix(a, 'https://');
+            function pushPiece(pieces, piece) {
+                if (piece === './') {
+                    // Ignore
+                    return;
+                }
+                if (piece === '../') {
+                    var prevPiece = (pieces.length > 0 ? pieces[pieces.length - 1] : null);
+                    if (prevPiece && prevPiece === '/') {
+                        // Ignore
+                        return;
+                    }
+                    if (prevPiece && prevPiece !== '../') {
+                        // Pop
+                        pieces.pop();
+                        return;
+                    }
+                }
+                // Push
+                pieces.push(piece);
+            }
+            function push(pieces, path) {
+                while (path.length > 0) {
+                    var slashIndex = path.indexOf('/');
+                    var piece = (slashIndex >= 0 ? path.substring(0, slashIndex + 1) : path);
+                    path = (slashIndex >= 0 ? path.substring(slashIndex + 1) : '');
+                    pushPiece(pieces, piece);
+                }
+            }
+            var pieces = [];
+            push(pieces, a.substr(aPathStartIndex));
+            if (b.length > 0 && b.charAt(0) === '/') {
+                pieces = [];
+            }
+            push(pieces, b);
+            return a.substring(0, aPathStartIndex) + pieces.join('');
+        };
+        Utilities.commonPrefix = function (str1, str2) {
+            var len = Math.min(str1.length, str2.length);
+            for (var i = 0; i < len; i++) {
+                if (str1.charCodeAt(i) !== str2.charCodeAt(i)) {
+                    break;
+                }
+            }
+            return str1.substring(0, i);
+        };
+        Utilities.commonFolderPrefix = function (fromPath, toPath) {
+            var prefix = Utilities.commonPrefix(fromPath, toPath);
+            var slashIndex = prefix.lastIndexOf('/');
+            if (slashIndex === -1) {
+                return '';
+            }
+            return prefix.substring(0, slashIndex + 1);
+        };
+        Utilities.relativePath = function (fromPath, toPath) {
+            if (Utilities.startsWith(toPath, '/') || Utilities.startsWith(toPath, 'http://') || Utilities.startsWith(toPath, 'https://')) {
+                return toPath;
+            }
+            // Ignore common folder prefix
+            var prefix = Utilities.commonFolderPrefix(fromPath, toPath);
+            fromPath = fromPath.substr(prefix.length);
+            toPath = toPath.substr(prefix.length);
+            var upCount = fromPath.split('/').length;
+            var result = '';
+            for (var i = 1; i < upCount; i++) {
+                result += '../';
+            }
+            return result + toPath;
+        };
+        Utilities.rewriteUrls = function (originalFile, newFile, contents) {
+            // Use ")" as the terminator as quotes are oftentimes not used at all
+            return contents.replace(/url\(\s*([^\)]+)\s*\)?/g, function (_) {
+                var matches = [];
+                for (var _i = 1; _i < arguments.length; _i++) {
+                    matches[_i - 1] = arguments[_i];
+                }
+                var url = matches[0];
+                // Eliminate starting quotes (the initial whitespace is not captured)
+                if (url.charAt(0) === '"' || url.charAt(0) === '\'') {
+                    url = url.substring(1);
+                }
+                // The ending whitespace is captured
+                while (url.length > 0 && (url.charAt(url.length - 1) === ' ' || url.charAt(url.length - 1) === '\t')) {
+                    url = url.substring(0, url.length - 1);
+                }
+                // Eliminate ending quotes
+                if (url.charAt(url.length - 1) === '"' || url.charAt(url.length - 1) === '\'') {
+                    url = url.substring(0, url.length - 1);
+                }
+                if (!Utilities.startsWith(url, 'data:') && !Utilities.startsWith(url, 'http://') && !Utilities.startsWith(url, 'https://')) {
+                    var absoluteUrl = Utilities.joinPaths(Utilities.pathOf(originalFile), url);
+                    url = Utilities.relativePath(newFile, absoluteUrl);
+                }
+                return 'url(' + url + ')';
+            });
+        };
+        return Utilities;
+    })();
+    CSSLoaderPlugin.Utilities = Utilities;
+    (function () {
+        var cssLoader = null;
+        var isElectron = (typeof process !== 'undefined' && typeof process.versions !== 'undefined' && typeof process.versions['electron'] !== 'undefined');
+        if (typeof process !== 'undefined' && process.versions && !!process.versions.node && !isElectron) {
+            cssLoader = new NodeCSSLoader();
+        }
+        else if (typeof navigator !== 'undefined' && navigator.userAgent.indexOf('MSIE 9') >= 0) {
+            cssLoader = new IE9CSSLoader();
+        }
+        else if (typeof navigator !== 'undefined' && navigator.userAgent.indexOf('MSIE 8') >= 0) {
+            cssLoader = new IE8CSSLoader();
+        }
+        else {
+            cssLoader = new BrowserCSSLoader();
+        }
+        define('vs/css', new CSSPlugin(cssLoader));
+    })();
+})(CSSLoaderPlugin || (CSSLoaderPlugin = {}));
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ * Please make sure to make edits in the .ts file at https://github.com/Microsoft/vscode-loader/
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *--------------------------------------------------------------------------------------------*/
+'use strict';
+var _nlsPluginGlobal = this;
+var NLSLoaderPlugin;
+(function (NLSLoaderPlugin) {
+    var global = _nlsPluginGlobal;
+    var Resources = global.Plugin && global.Plugin.Resources ? global.Plugin.Resources : undefined;
+    var DEFAULT_TAG = 'i-default';
+    var IS_PSEUDO = (global && global.document && global.document.location && global.document.location.hash.indexOf('pseudo=true') >= 0);
+    var slice = Array.prototype.slice;
+    function _format(message, args) {
+        var result;
+        if (args.length === 0) {
+            result = message;
+        }
+        else {
+            result = message.replace(/\{(\d+)\}/g, function (match, rest) {
+                var index = rest[0];
+                return typeof args[index] !== 'undefined' ? args[index] : match;
+            });
+        }
+        if (IS_PSEUDO) {
+            // FF3B and FF3D is the Unicode zenkaku representation for [ and ]
+            result = '\uFF3B' + result.replace(/[aouei]/g, '$&$&') + '\uFF3D';
+        }
+        return result;
+    }
+    function findLanguageForModule(config, name) {
+        var result = config[name];
+        if (result)
+            return result;
+        result = config['*'];
+        if (result)
+            return result;
+        return null;
+    }
+    function localize(data, message) {
+        var args = [];
+        for (var _i = 0; _i < (arguments.length - 2); _i++) {
+            args[_i] = arguments[_i + 2];
+        }
+        return _format(message, args);
+    }
+    function createScopedLocalize(scope) {
+        return function (idx, defaultValue) {
+            var restArgs = slice.call(arguments, 2);
+            return _format(scope[idx], restArgs);
+        };
+    }
+    var NLSPlugin = (function () {
+        function NLSPlugin() {
+            this.localize = localize;
+        }
+        NLSPlugin.prototype.setPseudoTranslation = function (value) {
+            IS_PSEUDO = value;
+        };
+        NLSPlugin.prototype.create = function (key, data) {
+            return {
+                localize: createScopedLocalize(data[key])
+            };
+        };
+        NLSPlugin.prototype.load = function (name, req, load, config) {
+            config = config || {};
+            if (!name || name.length === 0) {
+                load({
+                    localize: localize
+                });
+            }
+            else {
+                var suffix;
+                if (Resources && Resources.getString) {
+                    suffix = '.nls.keys';
+                    req([name + suffix], function (keyMap) {
+                        load({
+                            localize: function (moduleKey, index) {
+                                if (!keyMap[moduleKey])
+                                    return 'NLS error: unknown key ' + moduleKey;
+                                var mk = keyMap[moduleKey].keys;
+                                if (index >= mk.length)
+                                    return 'NLS error unknow index ' + index;
+                                var subKey = mk[index];
+                                var args = [];
+                                args[0] = moduleKey + '_' + subKey;
+                                for (var _i = 0; _i < (arguments.length - 2); _i++) {
+                                    args[_i + 1] = arguments[_i + 2];
+                                }
+                                return Resources.getString.apply(Resources, args);
+                            }
+                        });
+                    });
+                }
+                else {
+                    if (config.isBuild) {
+                        req([name + '.nls', name + '.nls.keys'], function (messages, keys) {
+                            NLSPlugin.BUILD_MAP[name] = messages;
+                            NLSPlugin.BUILD_MAP_KEYS[name] = keys;
+                            load(messages);
+                        });
+                    }
+                    else {
+                        var pluginConfig = config['vs/nls'] || {};
+                        var language = pluginConfig.availableLanguages ? findLanguageForModule(pluginConfig.availableLanguages, name) : null;
+                        suffix = '.nls';
+                        if (language !== null && language !== DEFAULT_TAG) {
+                            suffix = suffix + '.' + language;
+                        }
+                        req([name + suffix], function (messages) {
+                            if (Array.isArray(messages)) {
+                                messages.localize = createScopedLocalize(messages);
+                            }
+                            else {
+                                messages.localize = createScopedLocalize(messages[name]);
+                            }
+                            load(messages);
+                        });
+                    }
+                }
+            }
+        };
+        NLSPlugin.prototype._getEntryPointsMap = function () {
+            global.nlsPluginEntryPoints = global.nlsPluginEntryPoints || {};
+            return global.nlsPluginEntryPoints;
+        };
+        NLSPlugin.prototype.write = function (pluginName, moduleName, write) {
+            // getEntryPoint is a Monaco extension to r.js
+            var entryPoint = write.getEntryPoint();
+            // r.js destroys the context of this plugin between calling 'write' and 'writeFile'
+            // so the only option at this point is to leak the data to a global
+            var entryPointsMap = this._getEntryPointsMap();
+            entryPointsMap[entryPoint] = entryPointsMap[entryPoint] || [];
+            entryPointsMap[entryPoint].push(moduleName);
+            if (moduleName !== entryPoint) {
+                write.asModule(pluginName + '!' + moduleName, 'define([\'vs/nls\', \'vs/nls!' + entryPoint + '\'], function(nls, data) { return nls.create("' + moduleName + '", data); });');
+            }
+        };
+        NLSPlugin.prototype.writeFile = function (pluginName, moduleName, req, write, config) {
+            var entryPointsMap = this._getEntryPointsMap();
+            if (entryPointsMap.hasOwnProperty(moduleName)) {
+                var fileName = req.toUrl(moduleName + '.nls.js');
+                var contents = [
+                    '/*---------------------------------------------------------',
+                    ' * Copyright (c) Microsoft Corporation. All rights reserved.',
+                    ' *--------------------------------------------------------*/'
+                ], entries = entryPointsMap[moduleName];
+                var data = {};
+                for (var i = 0; i < entries.length; i++) {
+                    data[entries[i]] = NLSPlugin.BUILD_MAP[entries[i]];
+                }
+                contents.push('define("' + moduleName + '.nls", ' + JSON.stringify(data, null, '\t') + ');');
+                write(fileName, contents.join('\r\n'));
+            }
+        };
+        NLSPlugin.prototype.finishBuild = function (write) {
+            write('nls.metadata.json', JSON.stringify({
+                keys: NLSPlugin.BUILD_MAP_KEYS,
+                messages: NLSPlugin.BUILD_MAP,
+                bundles: this._getEntryPointsMap()
+            }, null, '\t'));
+        };
+        ;
+        NLSPlugin.BUILD_MAP = {};
+        NLSPlugin.BUILD_MAP_KEYS = {};
+        return NLSPlugin;
+    })();
+    NLSLoaderPlugin.NLSPlugin = NLSPlugin;
+    (function () {
+        define('vs/nls', new NLSPlugin());
+    })();
+})(NLSLoaderPlugin || (NLSLoaderPlugin = {}));
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ * Please make sure to make edits in the .ts file at https://github.com/Microsoft/vscode-loader/
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------------------
+ *--------------------------------------------------------------------------------------------*/
+/// <reference path="declares.ts" />
+/// <reference path="loader.ts" />
+'use strict';
+var TextLoaderPlugin;
+(function (TextLoaderPlugin) {
+    var BrowserTextLoader = (function () {
+        function BrowserTextLoader() {
+        }
+        BrowserTextLoader.prototype.load = function (name, fileUrl, externalCallback, externalErrorback) {
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function () {
+                if (req.readyState === 4) {
+                    if ((req.status >= 200 && req.status < 300) || req.status === 1223 || (req.status === 0 && req.responseText && req.responseText.length > 0)) {
+                        externalCallback(req.responseText);
+                    }
+                    else {
+                        externalErrorback(req);
+                    }
+                    req.onreadystatechange = null;
+                }
+            };
+            req.open('GET', fileUrl, true);
+            req.responseType = '';
+            req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            req.send(null);
+        };
+        return BrowserTextLoader;
+    })();
+    function readFileAndRemoveBOM(fs, path) {
+        var BOM_CHAR_CODE = 65279;
+        var contents = fs.readFileSync(path, 'utf8');
+        // Remove BOM
+        if (contents.charCodeAt(0) === BOM_CHAR_CODE) {
+            contents = contents.substring(1);
+        }
+        return contents;
+    }
+    var NodeTextLoader = (function () {
+        function NodeTextLoader() {
+            this.fs = require.nodeRequire('fs');
+        }
+        NodeTextLoader.prototype.load = function (name, fileUrl, callback, errorback) {
+            callback(readFileAndRemoveBOM(this.fs, fileUrl));
+        };
+        return NodeTextLoader;
+    })();
+    // ------------------------------ Finally, the plugin
+    var TextPlugin = (function () {
+        function TextPlugin(textLoader) {
+            this.textLoader = textLoader;
+        }
+        TextPlugin.prototype.load = function (name, req, load, config) {
+            config = config || {};
+            var myConfig = config['vs/text'] || {};
+            var myPaths = myConfig.paths || {};
+            var redirectedName = name;
+            for (var path in myPaths) {
+                if (myPaths.hasOwnProperty(path)) {
+                    if (name.indexOf(path) === 0) {
+                        redirectedName = myPaths[path] + name.substr(path.length);
+                    }
+                }
+            }
+            var fileUrl = req.toUrl(redirectedName);
+            this.textLoader.load(name, fileUrl, function (contents) {
+                if (config.isBuild) {
+                    TextPlugin.BUILD_MAP[name] = contents;
+                }
+                load(contents);
+            }, function (err) {
+                if (typeof load.error === 'function') {
+                    load.error('Could not find ' + fileUrl);
+                }
+            });
+        };
+        TextPlugin.prototype.write = function (pluginName, moduleName, write) {
+            if (TextPlugin.BUILD_MAP.hasOwnProperty(moduleName)) {
+                var escapedText = Utilities.escapeText(TextPlugin.BUILD_MAP[moduleName]);
+                write('define("' + pluginName + '!' + moduleName + '", function () { return "' + escapedText + '"; });');
+            }
+        };
+        TextPlugin.BUILD_MAP = {};
+        return TextPlugin;
+    })();
+    TextLoaderPlugin.TextPlugin = TextPlugin;
+    var Utilities = (function () {
+        function Utilities() {
+        }
+        /**
+         * Escape text such that it can be used in a javascript string enclosed by double quotes (")
+         */
+        Utilities.escapeText = function (text) {
+            // http://www.javascriptkit.com/jsref/escapesequence.shtml
+            // \b	Backspace.
+            // \f	Form feed.
+            // \n	Newline.
+            // \O	Nul character.
+            // \r	Carriage return.
+            // \t	Horizontal tab.
+            // \v	Vertical tab.
+            // \'	Single quote or apostrophe.
+            // \"	Double quote.
+            // \\	Backslash.
+            // \ddd	The Latin-1 character specified by the three octal digits between 0 and 377. ie, copyright symbol is \251.
+            // \xdd	The Latin-1 character specified by the two hexadecimal digits dd between 00 and FF.  ie, copyright symbol is \xA9.
+            // \udddd	The Unicode character specified by the four hexadecimal digits dddd. ie, copyright symbol is \u00A9.
+            var _backspace = '\b'.charCodeAt(0);
+            var _formFeed = '\f'.charCodeAt(0);
+            var _newLine = '\n'.charCodeAt(0);
+            var _nullChar = 0;
+            var _carriageReturn = '\r'.charCodeAt(0);
+            var _tab = '\t'.charCodeAt(0);
+            var _verticalTab = '\v'.charCodeAt(0);
+            var _backslash = '\\'.charCodeAt(0);
+            var _doubleQuote = '"'.charCodeAt(0);
+            var startPos = 0, chrCode, replaceWith = null, resultPieces = [];
+            for (var i = 0, len = text.length; i < len; i++) {
+                chrCode = text.charCodeAt(i);
+                switch (chrCode) {
+                    case _backspace:
+                        replaceWith = '\\b';
+                        break;
+                    case _formFeed:
+                        replaceWith = '\\f';
+                        break;
+                    case _newLine:
+                        replaceWith = '\\n';
+                        break;
+                    case _nullChar:
+                        replaceWith = '\\0';
+                        break;
+                    case _carriageReturn:
+                        replaceWith = '\\r';
+                        break;
+                    case _tab:
+                        replaceWith = '\\t';
+                        break;
+                    case _verticalTab:
+                        replaceWith = '\\v';
+                        break;
+                    case _backslash:
+                        replaceWith = '\\\\';
+                        break;
+                    case _doubleQuote:
+                        replaceWith = '\\"';
+                        break;
+                }
+                if (replaceWith !== null) {
+                    resultPieces.push(text.substring(startPos, i));
+                    resultPieces.push(replaceWith);
+                    startPos = i + 1;
+                    replaceWith = null;
+                }
+            }
+            resultPieces.push(text.substring(startPos, len));
+            return resultPieces.join('');
+        };
+        return Utilities;
+    })();
+    TextLoaderPlugin.Utilities = Utilities;
+    (function () {
+        var textLoader = null;
+        var isElectron = (typeof process !== 'undefined' && typeof process.versions !== 'undefined' && typeof process.versions['electron'] !== 'undefined');
+        if (typeof process !== 'undefined' && process.versions && !!process.versions.node && !isElectron) {
+            textLoader = new NodeTextLoader();
+        }
+        else {
+            textLoader = new BrowserTextLoader();
+        }
+        define('vs/text', new TextPlugin(textLoader));
+    })();
+})(TextLoaderPlugin || (TextLoaderPlugin = {}));
+
+//# sourceMappingURL=loader.js.map

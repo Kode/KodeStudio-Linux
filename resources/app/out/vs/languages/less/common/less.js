@@ -1,25 +1,40 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-'use strict';
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
+define("vs/languages/less/common/lessTokenTypes", ["require", "exports"], function (require, exports) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    /* always keep in sync with cssTokenTypes */
+    exports.TOKEN_SELECTOR = 'entity.name.selector';
+    exports.TOKEN_SELECTOR_TAG = 'entity.name.tag';
+    exports.TOKEN_PROPERTY = 'support.type.property-name';
+    exports.TOKEN_VALUE = 'support.property-value';
+    exports.TOKEN_AT_KEYWORD = 'keyword.control.at-rule';
+});
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
-    switch (arguments.length) {
-        case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
-        case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
-        case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
-    }
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(["require", "exports", 'vs/base/common/winjs.base', 'vs/editor/common/modes/monarch/monarch', 'vs/editor/common/modes/monarch/monarchCompile', 'vs/languages/less/common/lessTokenTypes', 'vs/editor/common/modes/supports', 'vs/platform/thread/common/threadService', 'vs/platform/instantiation/common/descriptors', 'vs/editor/common/services/modeService', 'vs/platform/instantiation/common/instantiation', 'vs/platform/thread/common/thread', 'vs/editor/common/services/modelService'], function (require, exports, winjs, Monarch, Compile, lessTokenTypes, supports, threadService_1, descriptors_1, modeService_1, instantiation_1, thread_1, modelService_1) {
+define("vs/languages/less/common/less", ["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/editor/common/modes/monarch/monarchCompile', 'vs/languages/less/common/lessTokenTypes', 'vs/editor/common/modes/abstractMode', 'vs/platform/thread/common/threadService', 'vs/editor/common/services/modeService', 'vs/platform/instantiation/common/instantiation', 'vs/platform/thread/common/thread', 'vs/editor/common/services/modelService', 'vs/editor/common/modes/supports/declarationSupport', 'vs/editor/common/modes/supports/referenceSupport', 'vs/editor/common/modes/supports/suggestSupport', 'vs/editor/common/services/editorWorkerService'], function (require, exports, Monarch, Compile, lessTokenTypes, abstractMode_1, threadService_1, modeService_1, instantiation_1, thread_1, modelService_1, declarationSupport_1, referenceSupport_1, suggestSupport_1, editorWorkerService_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
     exports.language = {
         displayName: 'LESS',
         name: 'less',
@@ -139,38 +154,59 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/editor/common/mod
     };
     var LESSMode = (function (_super) {
         __extends(LESSMode, _super);
-        function LESSMode(descriptor, instantiationService, threadService, modeService, modelService) {
+        function LESSMode(descriptor, instantiationService, threadService, modeService, modelService, editorWorkerService) {
             var _this = this;
-            _super.call(this, descriptor, Compile.compile(exports.language), instantiationService, threadService, modeService, modelService);
+            _super.call(this, descriptor.id, Compile.compile(exports.language), modeService, modelService, editorWorkerService);
+            this._modeWorkerManager = new abstractMode_1.ModeWorkerManager(descriptor, 'vs/languages/less/common/lessWorker', 'LessWorker', 'vs/languages/css/common/cssWorker', instantiationService);
+            this._threadService = threadService;
             this.modeService = modeService;
             this.extraInfoSupport = this;
-            this.referenceSupport = new supports.ReferenceSupport(this, {
+            this.inplaceReplaceSupport = this;
+            this.configSupport = this;
+            this.referenceSupport = new referenceSupport_1.ReferenceSupport(this.getId(), {
                 tokens: [lessTokenTypes.TOKEN_PROPERTY + '.less', lessTokenTypes.TOKEN_VALUE + '.less', 'variable.less', lessTokenTypes.TOKEN_SELECTOR + '.class.less', lessTokenTypes.TOKEN_SELECTOR + '.id.less', 'selector.less'],
                 findReferences: function (resource, position, /*unused*/ includeDeclaration) { return _this.findReferences(resource, position); } });
             this.logicalSelectionSupport = this;
-            this.declarationSupport = new supports.DeclarationSupport(this, {
+            this.declarationSupport = new declarationSupport_1.DeclarationSupport(this.getId(), {
                 tokens: ['variable.less', lessTokenTypes.TOKEN_SELECTOR + '.class.less', lessTokenTypes.TOKEN_SELECTOR + '.id.less', 'selector.less'],
                 findDeclaration: function (resource, position) { return _this.findDeclaration(resource, position); } });
             this.outlineSupport = this;
-            this.suggestSupport = new supports.SuggestSupport(this, {
+            this.suggestSupport = new suggestSupport_1.SuggestSupport(this.getId(), {
                 triggerCharacters: [],
                 excludeTokens: ['comment.less', 'string.less'],
                 suggest: function (resource, position) { return _this.suggest(resource, position); } });
         }
-        LESSMode.prototype._getWorkerDescriptor = function () {
-            return descriptors_1.createAsyncDescriptor2('vs/languages/less/common/lessWorker', 'LessWorker');
+        LESSMode.prototype.creationDone = function () {
+            if (this._threadService.isInMainThread) {
+                // Pick a worker to do validation
+                this._pickAWorkerToValidate();
+            }
         };
         LESSMode.prototype._worker = function (runner) {
-            var _this = this;
-            // TODO@Alex: workaround for missing `bundles` config, before instantiating the lessWorker, we ensure the cssWorker has been loaded
-            return this.modeService.getOrCreateMode('css').then(function (cssMode) {
-                return cssMode._worker(function (worker) { return winjs.TPromise.as(true); });
-            }).then(function () {
-                return _super.prototype._worker.call(_this, runner);
-            });
+            return this._modeWorkerManager.worker(runner);
+        };
+        LESSMode.prototype.configure = function (options) {
+            if (this._threadService.isInMainThread) {
+                return this._configureWorkers(options);
+            }
+            else {
+                return this._worker(function (w) { return w._doConfigure(options); });
+            }
+        };
+        LESSMode.prototype._configureWorkers = function (options) {
+            return this._worker(function (w) { return w._doConfigure(options); });
+        };
+        LESSMode.prototype.navigateValueSet = function (resource, position, up) {
+            return this._worker(function (w) { return w.navigateValueSet(resource, position, up); });
+        };
+        LESSMode.prototype._pickAWorkerToValidate = function () {
+            return this._worker(function (w) { return w.enableValidator(); });
         };
         LESSMode.prototype.findReferences = function (resource, position) {
             return this._worker(function (w) { return w.findReferences(resource, position); });
+        };
+        LESSMode.prototype.suggest = function (resource, position) {
+            return this._worker(function (w) { return w.suggest(resource, position); });
         };
         LESSMode.prototype.getRangesToPosition = function (resource, position) {
             return this._worker(function (w) { return w.getRangesToPosition(resource, position); });
@@ -187,7 +223,11 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/editor/common/mod
         LESSMode.prototype.findColorDeclarations = function (resource) {
             return this._worker(function (w) { return w.findColorDeclarations(resource); });
         };
+        LESSMode.$_configureWorkers = threadService_1.AllWorkersAttr(LESSMode, LESSMode.prototype._configureWorkers);
+        LESSMode.$navigateValueSet = threadService_1.OneWorkerAttr(LESSMode, LESSMode.prototype.navigateValueSet);
+        LESSMode.$_pickAWorkerToValidate = threadService_1.OneWorkerAttr(LESSMode, LESSMode.prototype._pickAWorkerToValidate, thread_1.ThreadAffinity.Group1);
         LESSMode.$findReferences = threadService_1.OneWorkerAttr(LESSMode, LESSMode.prototype.findReferences);
+        LESSMode.$suggest = threadService_1.OneWorkerAttr(LESSMode, LESSMode.prototype.suggest);
         LESSMode.$getRangesToPosition = threadService_1.OneWorkerAttr(LESSMode, LESSMode.prototype.getRangesToPosition);
         LESSMode.$computeInfo = threadService_1.OneWorkerAttr(LESSMode, LESSMode.prototype.computeInfo);
         LESSMode.$getOutline = threadService_1.OneWorkerAttr(LESSMode, LESSMode.prototype.getOutline);
@@ -197,10 +237,12 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/editor/common/mod
             __param(1, instantiation_1.IInstantiationService),
             __param(2, thread_1.IThreadService),
             __param(3, modeService_1.IModeService),
-            __param(4, modelService_1.IModelService)
+            __param(4, modelService_1.IModelService),
+            __param(5, editorWorkerService_1.IEditorWorkerService)
         ], LESSMode);
         return LESSMode;
-    })(Monarch.MonarchMode);
+    }(Monarch.MonarchMode));
     exports.LESSMode = LESSMode;
 });
+
 //# sourceMappingURL=less.js.map

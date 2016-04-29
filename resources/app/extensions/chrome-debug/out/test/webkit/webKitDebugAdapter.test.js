@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var mockery = require('mockery');
 var events_1 = require('events');
 var assert = require('assert');
@@ -184,7 +185,7 @@ suite('WebKitDebugAdapter', function () {
                 // Just assert that the chrome path is some string with 'chrome' in the path, and there are >0 args
                 assert(chromePath.toLowerCase().indexOf('chrome') >= 0);
                 assert(args.indexOf('--remote-debugging-port=9222') >= 0);
-                assert(args.indexOf('file:///c:/a.js') >= 0);
+                assert(args.indexOf('file:///c:/path%20with%20space/index.html') >= 0);
                 assert(args.indexOf('abc') >= 0);
                 assert(args.indexOf('def') >= 0);
                 spawnCalled = true;
@@ -199,7 +200,7 @@ suite('WebKitDebugAdapter', function () {
                 platform: function () { return 'win32'; }
             });
             var wkda = instantiateWKDA();
-            return wkda.launch({ file: 'a.js', runtimeArgs: ['abc', 'def'], cwd: 'c:/' }).then(function () {
+            return wkda.launch({ file: 'c:\\path with space\\index.html', runtimeArgs: ['abc', 'def'] }).then(function () {
                 assert(spawnCalled);
             });
         });
@@ -249,7 +250,7 @@ suite('WebKitDebugAdapter', function () {
     suite('target close/error/detach', function () { });
 });
 function attach(wkda) {
-    return wkda.attach({ port: 9222, cwd: 'c:/' });
+    return wkda.attach({ port: 9222 });
 }
 var DefaultMockWebKitConnection = (function () {
     function DefaultMockWebKitConnection() {
@@ -262,7 +263,7 @@ var DefaultMockWebKitConnection = (function () {
     };
     DefaultMockWebKitConnection.EE = new events_1.EventEmitter();
     return DefaultMockWebKitConnection;
-})();
+}());
 function instantiateWKDA() {
     var WebKitDebugAdapter = require(MODULE_UNDER_TEST).WebKitDebugAdapter;
     return new WebKitDebugAdapter();

@@ -22,21 +22,25 @@ class Html5Exporter extends KhaExporter {
 		return 'html5';
 	}
 
-	exportSolution(name, platform, khaDirectory, haxeDirectory, from, _targetOptions) {
+	exportSolution(name, platform, khaDirectory, haxeDirectory, from, _targetOptions, defines) {
 		this.createDirectory(this.directory.resolve(this.sysdir()));
 
-		let defines = [
-			'sys_' + platform,
-			'sys_g1', 'sys_g2', 'sys_g3', 'sys_g4',
-			'sys_a1', 'sys_a2'
-		];
+		defines.push('sys_g1');
+		defines.push('sys_g2');
+		defines.push('sys_g3');
+		defines.push('sys_g4');
+		defines.push('sys_a1');
+		defines.push('sys_a2');
+		
 		if (this.sysdir() === 'node') {
-			defines = [
-				'sys_node',
-				'sys_server',
-				'nodejs'
-			]
+			defines.push('sys_node');
+			defines.push('sys_server');
+			defines.push('nodejs');
 		}
+		else {
+			defines.push('sys_' + platform);
+		}
+		
 		if (this.sysdir() === 'debug-html5') {
 			defines.push('sys_debug_html5');
 			this.parameters.push('-debug');
@@ -46,6 +50,7 @@ class Html5Exporter extends KhaExporter {
 			from: from.toString(),
 			to: path.join(this.sysdir(), 'kha.js'),
 			sources: this.sources,
+			libraries: this.libraries,
 			defines: defines,
 			parameters: this.parameters,
 			haxeDirectory: haxeDirectory.toString(),
@@ -74,8 +79,8 @@ class Html5Exporter extends KhaExporter {
 			
 			let electron = this.directory.resolve(Paths.get(this.sysdir(), 'electron.js'));
 			let protoelectron = fs.readFileSync(path.join(__dirname, 'Data', 'debug-html5', 'electron.js'), {encoding: 'utf8'});
-			protoelectron = protoelectron.replaceAll('{Width}', this.width + 20);
-			protoelectron = protoelectron.replaceAll('{Height}', this.height + 20);
+			protoelectron = protoelectron.replaceAll('{Width}', this.width);
+			protoelectron = protoelectron.replaceAll('{Height}', this.height);
 			fs.writeFileSync(electron.toString(), protoelectron);
 		}
 		else {		

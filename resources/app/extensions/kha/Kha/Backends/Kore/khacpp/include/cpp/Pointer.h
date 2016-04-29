@@ -29,6 +29,7 @@ enum DynamicHandlerOp
 {
    dhoGetClassName,
    dhoToString,
+   dhoFromDynamic,
 };
 typedef void (*DynamicHandlerFunc)(DynamicHandlerOp op, const void *inData, void *outResult);
 Dynamic CreateDynamicStruct(const void *inValue, int inSize, DynamicHandlerFunc inFunc);
@@ -37,6 +38,12 @@ template<typename T> class Reference;
 
 
 
+struct StructHandlerDynamicParams
+{
+   StructHandlerDynamicParams(hx::Object *data) : outConverted(false), inData(data) { }
+   bool outConverted;
+   hx::Object *inData;
+};
 
 
 class DefaultStructHandler
@@ -45,20 +52,6 @@ class DefaultStructHandler
       static inline const char *getName() { return "unknown"; }
       static inline String toString( const void *inData ) { return HX_CSTRING("Struct"); }
 
-      static inline void handler(DynamicHandlerOp op, const void *inData, void *outResult)
-      {
-         if (op==dhoToString)
-            *(String *)outResult = toString(inData);
-         else if (op==dhoGetClassName)
-            *(const char **)outResult = getName();
-      }
-};
-
-class Int64Handler
-{
-   public:
-      static inline const char *getName() { return "cpp.Int64"; }
-      static inline String toString( const void *inData ) { return String( *(Int64 *)inData ); }
       static inline void handler(DynamicHandlerOp op, const void *inData, void *outResult)
       {
          if (op==dhoToString)
@@ -81,15 +74,23 @@ public:
    inline Struct( const T &inRHS ) : value(inRHS) {  }
    inline Struct( const null &) { value = T(); }
    inline Struct( const Reference<T> &);
+   inline Struct( const Dynamic &inRHS) { fromDynamic(inRHS.mPtr); }
 
    inline Struct<T,HANDLER> &operator=( const T &inRHS ) { value = inRHS; return *this; }
-   inline Struct<T,HANDLER> &operator=( const null & ) { value = T(); }
+   inline Struct<T,HANDLER> &operator=( const null & ) { value = T(); return *this; }
    inline Struct<T,HANDLER> &operator=( const Dynamic &inRHS ) { return *this = Struct<T,HANDLER>(inRHS); }
 
    operator Dynamic() const { return CreateDynamicStruct(&value,sizeof(T),HANDLER::handler); }
-   operator String() const { return HANDLER::toString(value); }
+   operator String() const { return HANDLER::toString(&value); }
+
+   #if (HXCPP_API_LEVEL >= 330)
+   inline Struct( const hx::Val &inRHS) { fromDynamic(inRHS.asObject()); }
+   operator hx::Val() const { return CreateDynamicStruct(&value,sizeof(T),HANDLER::handler); }
+   #endif
 
    bool operator==(const Struct<T,HANDLER> &inRHS) const { return value==inRHS.value; }
+   bool operator==(const null &inRHS) const { return false; }
+   bool operator!=(const null &inRHS) const { return true; }
 
    // Haxe uses -> notation
    inline T *operator->() { return &value; }
@@ -108,9 +109,8 @@ public:
       return ptr->__CStr() == HANDLER::getName();
    }
 
-   inline Struct( const Dynamic &inRHS)
+   inline void fromDynamic( hx::Object *ptr)
    {
-      hx::Object *ptr = inRHS.mPtr;
       if (!ptr)
       {
          value = T();
@@ -118,23 +118,25 @@ public:
       }
       T *data = (T*)ptr->__GetHandle();
       int len = ptr->__length();
-      if (!data || len<sizeof(T))
+      if (!data || len<sizeof(T) || ptr->__CStr()!=HANDLER::getName() )
       {
-         hx::NullReference("DynamicData", true);
-         return;
+         StructHandlerDynamicParams convert(ptr);
+         HANDLER::handler(dhoFromDynamic, &value, &convert );
+         if (!convert.outConverted)
+         {
+            hx::NullReference("DynamicData", true);
+            return;
+         }
       }
-      value = *data;
+      else
+         value = *data;
    }
+
 
 
    inline operator T& () { return value; }
 
 };
-
-typedef Struct<Int64,Int64Handler> Int64Struct;
-
-
-
 
 
 
@@ -145,20 +147,26 @@ template<typename T>
 class Pointer
 {
 public:
+   typedef T elementType;
+
    T *ptr;
 
    inline Pointer( ) : ptr(0) { }
    inline Pointer( const Pointer &inRHS ) : ptr(inRHS.ptr) {  }
    inline Pointer( const Dynamic &inRHS) { ptr = inRHS==null()?0: (T*)inRHS->__GetHandle(); }
    inline Pointer( const null &inRHS ) : ptr(0) { }
-   inline Pointer( const T *inValue ) : ptr( (T*) inValue) { }
+
+   template<typename O>
+   inline Pointer( const O *inValue ) : ptr( (T*) inValue) { }
    //inline Pointer( T *inValue ) : ptr(inValue) { }
    inline Pointer( AutoCast inValue ) : ptr( (T*)inValue.value) { }
 
    template<typename H>
    inline Pointer( const Struct<T,H> &structVal ) : ptr( &structVal.value ) { }
 
-
+   template<typename O>
+   inline void setRaw(const O *inValue ) { ptr =  (T*) inValue; }
+   
    inline Pointer operator=( const Pointer &inRHS ) { return ptr = inRHS.ptr; }
    inline Dynamic operator=( Dynamic &inValue )
    {
@@ -182,6 +190,7 @@ public:
  	inline T &postIncVal() { return *ptr++; }
 
    inline T &at(int inIndex) { return ptr[inIndex]; }
+   inline void setAt(int inIndex, const T &test) { ptr[inIndex] = test; }
 
    inline T &__get(int inIndex) { return ptr[inIndex]; }
    inline T &__set(int inIndex, const T &inValue) { T *p = ptr+inIndex; *p = inValue; return *p; }
@@ -191,8 +200,10 @@ public:
    inline T &set_ref(const T &inValue) { return *ptr = inValue;  }
 
    operator Dynamic () const { return CreateDynamicPointer((void *)ptr); }
+   //operator hx::Val () const { return CreateDynamicPointer((void *)ptr); }
    operator T * () { return ptr; }
    T * get_raw() { return ptr; }
+   const T * get_constRaw() { return ptr; }
 
    inline void destroy() { delete ptr; }
    inline void destroyArray() { delete [] ptr; }
@@ -203,6 +214,80 @@ public:
    inline bool geq(Pointer inOther) { return ptr >= inOther.ptr; }
 
 };
+
+
+
+
+
+template<>
+class Pointer<void>
+{
+public:
+   enum { elementSize = 0 };
+
+   void *ptr;
+
+   inline Pointer( ) : ptr(0) { }
+   inline Pointer( const Pointer &inRHS ) : ptr(inRHS.ptr) {  }
+   inline Pointer( const Dynamic &inRHS) { ptr = inRHS==null()?0: (void*)inRHS->__GetHandle(); }
+   inline Pointer( const null &inRHS ) : ptr(0) { }
+
+   template<typename O>
+   inline Pointer( const O *inValue ) : ptr( (void*) inValue) { }
+   //inline Pointer( T *inValue ) : ptr(inValue) { }
+   inline Pointer( AutoCast inValue ) : ptr( (void*)inValue.value) { }
+
+   inline Pointer operator=( const Pointer &inRHS ) { return ptr = inRHS.ptr; }
+   inline Dynamic operator=( Dynamic &inValue )
+   {
+      ptr = inValue==null() ? 0 : (void*) inValue->__GetHandle();
+      return inValue;
+   }
+   inline Dynamic operator=( null &inValue ) { ptr=0; return inValue; }
+   inline AutoCast reinterpret() { return AutoCast(ptr); }
+   inline RawAutoCast rawCast() { return RawAutoCast(ptr); }
+
+   inline bool operator==( const null &inValue ) const { return ptr==0; }
+   inline bool operator!=( const null &inValue ) const { return ptr!=0; }
+
+   // Allow '->' syntax
+   inline Pointer *operator->() { return this; }
+ 	inline Pointer inc() { return ptr; }
+	inline Pointer dec() { return ptr; }
+	inline Pointer add(int inInt) { return ptr; }
+ 	inline Pointer incBy(int inDiff) { return ptr; }
+ 	inline void postIncRef() {  }
+ 	inline void postIncVal() {  }
+
+   inline void at(int inIndex) {  }
+
+   inline void __get(int inIndex) { }
+
+   template<typename O>
+   inline void __set(int inIndex, O inValue) { }
+
+   inline void get_value() {  }
+   inline void get_ref() {  }
+   template<typename O> inline void set_ref(O val) {  }
+
+   operator Dynamic () const { return CreateDynamicPointer(ptr); }
+   //operator hx::Val () const { return CreateDynamicPointer((void *)ptr); }
+   operator void * () { return ptr; }
+   void * get_raw() { return ptr; }
+   const void * get_constRaw() { return ptr; }
+
+   inline void destroy() {  }
+   inline void destroyArray() {  }
+
+   inline bool lt(Pointer inOther) { return ptr < inOther.ptr; }
+   inline bool gt(Pointer inOther) { return ptr > inOther.ptr; }
+   inline bool leq(Pointer inOther) { return ptr <= inOther.ptr; }
+   inline bool geq(Pointer inOther) { return ptr >= inOther.ptr; }
+
+};
+
+
+
 
 template<typename T>
 inline bool operator == (const null &, Pointer<T> inPtr) { return inPtr.ptr==0; }
@@ -229,13 +314,22 @@ public:
    //inline Reference( T *inValue ) : Pointer(inValue) { }
    inline Reference( AutoCast inValue ) : Pointer<T>( (T*)inValue.value) { }
 
+   template<typename OTHER>
+   inline Reference( const Reference<OTHER> &inOther )
+   {
+      // Allow reinterpret or not?
+      ptr = (T*)inOther.ptr;
+   }
+
    template<typename H>
    inline Reference( const Struct<T,H> &structVal ) : Pointer<T>( &structVal.value ) { }
 
    inline Reference operator=( const Reference &inRHS ) { return ptr = inRHS.ptr; }
 
 
-   inline T *operator->() { return ptr; }
+   inline T *operator->() const { return ptr; }
+   
+   inline operator T &() { return *ptr; }
 
 };
 
@@ -269,6 +363,7 @@ public:
    inline Dynamic operator=( Dynamic &inValue )
    {
       call = inValue==null() ? 0 : (T*) inValue->__GetHandle();
+      return inValue;
    }
    inline Dynamic operator=( null &inValue ) { call=0; return inValue; }
    inline bool operator==( const null &inValue ) const { return call==0; }
@@ -276,6 +371,7 @@ public:
 
 
    operator Dynamic () const { return CreateDynamicPointer((void *)call); }
+   //operator hx::Val () const { return CreateDynamicPointer((void *)call); }
    operator T * () { return call; }
    operator void * () { return (void *)call; }
 
@@ -324,8 +420,21 @@ public:
       if (inVal==null() || !inVal->__IsArray())
          return AutoCast(0);
       hx::ArrayBase *base = (hx::ArrayBase *)inVal.GetPtr();
+      return AutoCast(base->GetBase() + inIndex*base->GetElementSize());
+   }
+
+   template<typename T>
+	inline static AutoCast ofArray(::Array<T> array)  { return AutoCast(&array[0]); }
+	inline static AutoCast ofArray(Dynamic inVal)
+   {
+      if (inVal==null() || !inVal->__IsArray())
+         return AutoCast(0);
+      hx::ArrayBase *base = (hx::ArrayBase *)inVal.GetPtr();
       return AutoCast(base->GetBase());
    }
+
+
+
    template<typename T>
 	inline static Pointer<T> addressOf(T &value)  { return Pointer<T>(&value); }
 

@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -13,7 +14,7 @@ var Message = (function () {
         this.type = type;
     }
     return Message;
-})();
+}());
 exports.Message = Message;
 var Response = (function (_super) {
     __extends(Response, _super);
@@ -30,7 +31,7 @@ var Response = (function (_super) {
         }
     }
     return Response;
-})(Message);
+}(Message));
 exports.Response = Response;
 var Event = (function (_super) {
     __extends(Event, _super);
@@ -42,7 +43,7 @@ var Event = (function (_super) {
         }
     }
     return Event;
-})(Message);
+}(Message));
 exports.Event = Event;
 var V8Protocol = (function (_super) {
     __extends(V8Protocol, _super);
@@ -113,8 +114,8 @@ var V8Protocol = (function (_super) {
         this._send('request', request);
         if (cb) {
             this._pendingRequests[request.seq] = cb;
-            var timer = setTimeout(function () {
-                clearTimeout(timer);
+            var timer_1 = setTimeout(function () {
+                clearTimeout(timer_1);
                 var clb = _this._pendingRequests[request.seq];
                 if (clb) {
                     delete _this._pendingRequests[request.seq];
@@ -180,7 +181,6 @@ var V8Protocol = (function (_super) {
                 break;
             default:
                 throw new Error('Unknown state');
-                break;
         }
     };
     V8Protocol.prototype._dispatch = function (message) {
@@ -205,7 +205,7 @@ var V8Protocol = (function (_super) {
     };
     V8Protocol.TIMEOUT = 3000;
     return V8Protocol;
-})(ee.EventEmitter);
+}(ee.EventEmitter));
 exports.V8Protocol = V8Protocol;
 
 //# sourceMappingURL=v8Protocol.js.map

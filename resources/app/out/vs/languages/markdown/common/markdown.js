@@ -1,25 +1,53 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-'use strict';
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
+define("vs/languages/markdown/common/markdownTokenTypes", ["require", "exports"], function (require, exports) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.TOKEN_HEADER_LEAD = 'entity.name.tag';
+    exports.TOKEN_HEADER = 'entity.name.tag';
+    exports.TOKEN_EXT_HEADER = 'entity.other.attribute-name';
+    exports.TOKEN_SEPARATOR = 'meta.separator';
+    exports.TOKEN_QUOTE = 'comment';
+    exports.TOKEN_LIST = 'keyword';
+    exports.TOKEN_BLOCK = 'string';
+    exports.TOKEN_BLOCK_CODE = 'variable.source';
+});
+/*
+// old settings
+export const TOKEN_HEADER_LEAD = 'white';
+export const TOKEN_HEADER = 'keyword.1';
+export const TOKEN_EXT_HEADER = 'keyword.header';
+export const TOKEN_SEPARATOR = 'keyword.header';
+export const TOKEN_QUOTE = 'comment';
+export const TOKEN_LIST = 'string.list';
+export const TOKEN_BLOCK = 'variable';
+export const TOKEN_BLOCK_CODE = 'variable.code';
+*/ 
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
-    switch (arguments.length) {
-        case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
-        case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
-        case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
-    }
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/editor/common/modes/monarch/monarchCompile', 'vs/platform/thread/common/threadService', 'vs/platform/instantiation/common/descriptors', 'vs/languages/html/common/html', 'vs/languages/markdown/common/markdownTokenTypes', 'vs/editor/common/services/modeService', 'vs/platform/instantiation/common/instantiation', 'vs/platform/thread/common/thread', 'vs/editor/common/services/modelService', 'vs/platform/workspace/common/workspace'], function (require, exports, Monarch, Compile, threadService_1, descriptors_1, html_1, markdownTokenTypes, modeService_1, instantiation_1, thread_1, modelService_1, workspace_1) {
+define("vs/languages/markdown/common/markdown", ["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/editor/common/modes/monarch/monarchCompile', 'vs/platform/thread/common/threadService', 'vs/languages/html/common/html', 'vs/languages/markdown/common/markdownTokenTypes', 'vs/editor/common/services/modeService', 'vs/platform/instantiation/common/instantiation', 'vs/platform/thread/common/thread', 'vs/editor/common/services/modelService', 'vs/platform/workspace/common/workspace', 'vs/editor/common/services/editorWorkerService', 'vs/editor/common/modes/abstractMode'], function (require, exports, Monarch, Compile, threadService_1, html_1, markdownTokenTypes, modeService_1, instantiation_1, thread_1, modelService_1, workspace_1, editorWorkerService_1, abstractMode_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
     exports.language = {
         displayName: 'Markdown',
         name: 'md',
@@ -28,6 +56,8 @@ define(["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/edit
             disableAutoTrigger: true,
         },
         autoClosingPairs: [],
+        blockCommentStart: '<!--',
+        blockCommentEnd: '-->',
         // escape codes
         control: /[\\`*_\[\]{}()#+\-\.!]/,
         noncontrol: /[^\\`*_\[\]{}()#+\-\.!]/,
@@ -54,9 +84,9 @@ define(["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/edit
                 // code block (4 spaces indent)
                 [/^(\t|[ ]{4})[^ ].*$/, markdownTokenTypes.TOKEN_BLOCK],
                 // code block (3 tilde)
-                [/^\s*~{3}\s*((?:\w|[\/\-])+)?\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@codeblock' }],
+                [/^\s*~{3}\s*((?:\w|[\/\-#])+)?\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@codeblock' }],
                 // github style code blocks (with backticks and language)
-                [/^\s*```\s*((?:\w|[\/\-])+)\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@codeblockgh', nextEmbedded: '$1' }],
+                [/^\s*```\s*((?:\w|[\/\-#])+)\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@codeblockgh', nextEmbedded: '$1' }],
                 // github style code blocks (with backticks but no language)
                 [/^\s*`{3}\s*$/, { token: markdownTokenTypes.TOKEN_BLOCK, next: '@codeblock' }],
                 // markup within lines
@@ -88,8 +118,8 @@ define(["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/edit
                 [/`([^\\`]|@escapes)+`/, 'variable'],
                 // links
                 [/\{[^}]+\}/, 'string.target'],
-                [/(!?\[)((?:[^\]\\]|@escapes)+)(\]\([^\)]+\))/, ['string.link', '', 'string.link']],
-                [/(!?\[)((?:[^\]\\]|@escapes)+)(\])/, 'string.link'],
+                [/(!?\[)((?:[^\]\\]|@escapes)*)(\]\([^\)]+\))/, ['string.link', '', 'string.link']],
+                [/(!?\[)((?:[^\]\\]|@escapes)*)(\])/, 'string.link'],
                 // or html
                 { include: 'html' },
             ],
@@ -171,29 +201,43 @@ define(["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/edit
     };
     var MarkdownMode = (function (_super) {
         __extends(MarkdownMode, _super);
-        function MarkdownMode(descriptor, instantiationService, threadService, modeService, modelService, workspaceContextService) {
-            _super.call(this, descriptor, Compile.compile(exports.language), instantiationService, threadService, modeService, modelService);
+        function MarkdownMode(descriptor, instantiationService, threadService, modeService, modelService, workspaceContextService, editorWorkerService) {
+            _super.call(this, descriptor.id, Compile.compile(exports.language), modeService, modelService, editorWorkerService);
+            this._modeWorkerManager = new abstractMode_1.ModeWorkerManager(descriptor, 'vs/languages/markdown/common/markdownWorker', 'MarkdownWorker', null, instantiationService);
+            this._threadService = threadService;
             this.emitOutputSupport = this;
+            this.configSupport = this;
         }
-        MarkdownMode.prototype.getCommentsConfiguration = function () {
-            return { blockCommentStartToken: '<!--', blockCommentEndToken: '-->' };
+        MarkdownMode.prototype._worker = function (runner) {
+            return this._modeWorkerManager.worker(runner);
+        };
+        MarkdownMode.prototype.configure = function (options) {
+            if (this._threadService.isInMainThread) {
+                return this._configureWorkers(options);
+            }
+            else {
+                return this._worker(function (w) { return w._doConfigure(options); });
+            }
+        };
+        MarkdownMode.prototype._configureWorkers = function (options) {
+            return this._worker(function (w) { return w._doConfigure(options); });
         };
         MarkdownMode.prototype.getEmitOutput = function (resource, absoluteWorkerResourcesPath) {
             return this._worker(function (w) { return w.getEmitOutput(resource, absoluteWorkerResourcesPath); });
         };
-        MarkdownMode.prototype._getWorkerDescriptor = function () {
-            return descriptors_1.createAsyncDescriptor2('vs/languages/markdown/common/markdownWorker', 'MarkdownWorker');
-        };
+        MarkdownMode.$_configureWorkers = threadService_1.AllWorkersAttr(MarkdownMode, MarkdownMode.prototype._configureWorkers);
         MarkdownMode.$getEmitOutput = threadService_1.OneWorkerAttr(MarkdownMode, MarkdownMode.prototype.getEmitOutput);
         MarkdownMode = __decorate([
             __param(1, instantiation_1.IInstantiationService),
             __param(2, thread_1.IThreadService),
             __param(3, modeService_1.IModeService),
             __param(4, modelService_1.IModelService),
-            __param(5, workspace_1.IWorkspaceContextService)
+            __param(5, workspace_1.IWorkspaceContextService),
+            __param(6, editorWorkerService_1.IEditorWorkerService)
         ], MarkdownMode);
         return MarkdownMode;
-    })(Monarch.MonarchMode);
+    }(Monarch.MonarchMode));
     exports.MarkdownMode = MarkdownMode;
 });
+
 //# sourceMappingURL=markdown.js.map

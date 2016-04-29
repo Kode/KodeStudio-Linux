@@ -1,6 +1,6 @@
 #include "pch.h"
 #include <Kore/System.h>
-#include <Kore/Application.h>
+#include <Kore/Graphics/Graphics.h>
 #import <UIKit/UIKit.h>
 #import "KoreAppDelegate.h"
 
@@ -28,12 +28,7 @@ vec2i System::mousePos() {
 	return vec2i(mouseX, mouseY);
 }
 
-void* System::createWindow() {
-	//Scheduler::addFrameTask(handleMessages, 1001);
-	return nullptr;
-}
-
-void System::destroyWindow() {
+void System::destroyWindow(int windowId) {
 	
 }
 
@@ -47,6 +42,10 @@ void System::showWindow() {
 
 void System::setTitle(const char* title) {
 	
+}
+
+void System::setKeepScreenOn( bool on ) {
+    
 }
 
 bool System::showsKeyboard() {
@@ -83,11 +82,46 @@ void KoreUpdateKeyboard() {
     }
 }
 
+int Kore::System::initWindow(Kore::WindowOptions options) {
+    Graphics::init(0, options.rendererOptions.depthBufferBits, options.rendererOptions.stencilBufferBits);
+    return 0;
+}
+
+int Kore::System::windowCount() {
+    return 1;
+}
+
+bool Kore::System::isFullscreen() {
+    return true;
+}
+
+void Kore::System::setup() {
+}
+
+void Graphics::makeCurrent(int contextId) {
+}
+
+namespace { namespace windowimpl {
+    int currentDeviceId = -1;
+}}
+
+void Kore::System::makeCurrent(int id) {
+    windowimpl::currentDeviceId = id;
+}
+
+int Kore::System::currentDevice() {
+    return windowimpl::currentDeviceId;
+}
+
+void Kore::System::clearCurrent() {
+}
+
 void endGL();
 
-void System::swapBuffers() {
+void System::swapBuffers(int) {
 	endGL();
 }
+
 
 namespace {
 	char sysid[512];
@@ -108,7 +142,7 @@ namespace {
 	void getSavePath() {
 		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 		NSString* resolvedPath = [paths objectAtIndex:0];
-		NSString* appName = [NSString stringWithUTF8String:Application::the()->name()];
+        NSString* appName = [NSString stringWithUTF8String:Kore::System::name()];
 		resolvedPath = [resolvedPath stringByAppendingPathComponent:appName];
 		
 		NSFileManager* fileMgr = [[NSFileManager alloc] init];

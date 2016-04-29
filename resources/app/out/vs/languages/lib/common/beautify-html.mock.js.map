@@ -1,1 +1,0 @@
-{"version":3,"file":"vs/languages/lib/common/beautify-html.mock.js","sourceRoot":"file:///home/robert/Projekte/KodeStudio/src","sources":["vs/languages/lib/common/beautify-html.mock.ts"],"names":["mock_html_beautify"],"mappings":";IAMA,4BAA4B,KAAY,EAAE,OAAyC;QAClFA,MAAMA,CAACA,KAAKA,CAACA;IACdA,CAACA;IAED,IAAI,IAAI,GAAwB;QAC/B,aAAa,EAAE,kBAAkB;KACjC,CAAC;IACF,OAAS,IAAI,CAAC"}

@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var assert = require('assert');
 var mockery = require('mockery');
 var testUtils = require('../testUtils');

@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 module.exports = {
 	VS2010: 'vs2010',

@@ -1,12 +1,13 @@
 #include "pch.h"
 #include <Kore/System.h>
-#include <Kore/Application.h>
 #include <Kore/Input/Keyboard.h>
 #include <Kore/Input/Mouse.h>
+#include <Kore/Input/Gamepad.h>
 #include <Kore/Direct3D11.h>
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
+#include <Xinput.h>
 
 ref class Win8Application sealed : public Windows::ApplicationModel::Core::IFrameworkView {
 public:
@@ -43,6 +44,8 @@ using namespace Kore;
 
 namespace {
 	int mouseX, mouseY;
+	float axes[12 * 6];
+	float buttons[12 * 16];
 }
 
 using namespace Windows::ApplicationModel;
@@ -55,6 +58,60 @@ using namespace Windows::Graphics::Display;
 
 bool Kore::System::handleMessages() {
 	CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
+
+		DWORD dwResult;
+	for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i) {
+		XINPUT_STATE state;
+		ZeroMemory(&state, sizeof(XINPUT_STATE));
+		dwResult = XInputGetState(i, &state);
+
+		if (dwResult == ERROR_SUCCESS) {
+			Kore::Gamepad::get(i)->vendor = "Microsoft";
+			Kore::Gamepad::get(i)->productName = "Xbox 360 Controller";
+
+			float newaxes[6];
+			newaxes[0] = state.Gamepad.sThumbLX / 32768.0f;
+			newaxes[1] = state.Gamepad.sThumbLY / 32768.0f;
+			newaxes[2] = state.Gamepad.sThumbRX / 32768.0f;
+			newaxes[3] = state.Gamepad.sThumbRY / 32768.0f;
+			newaxes[4] = state.Gamepad.bLeftTrigger / 255.0f;
+			newaxes[5] = state.Gamepad.bRightTrigger / 255.0f;
+			for (int i2 = 0; i2 < 6; ++i2) {
+				if (axes[i * 6 + i2] != newaxes[i2]) {
+					if (Kore::Gamepad::get(i)->Axis != nullptr) Kore::Gamepad::get(i)->Axis(i2, newaxes[i2]);
+					axes[i * 6 + i2] = newaxes[i2];
+				}
+			}
+			float newbuttons[16];
+			newbuttons[0] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) ? 1.0f : 0.0f;
+			newbuttons[1] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) ? 1.0f : 0.0f;
+			newbuttons[2] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_X) ? 1.0f : 0.0f;
+			newbuttons[3] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) ? 1.0f : 0.0f;
+			newbuttons[4] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) ? 1.0f : 0.0f;
+			newbuttons[5] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ? 1.0f : 0.0f;
+			newbuttons[6] = state.Gamepad.bLeftTrigger / 255.0f;
+			newbuttons[7] = state.Gamepad.bRightTrigger / 255.0f;
+			newbuttons[8] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) ? 1.0f : 0.0f;
+			newbuttons[9] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_START) ? 1.0f : 0.0f;
+			newbuttons[10] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) ? 1.0f : 0.0f;
+			newbuttons[11] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) ? 1.0f : 0.0f;
+			newbuttons[12] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) ? 1.0f : 0.0f;
+			newbuttons[13] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) ? 1.0f : 0.0f;
+			newbuttons[14] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) ? 1.0f : 0.0f;
+			newbuttons[15] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) ? 1.0f : 0.0f;
+			for (int i2 = 0; i2 < 16; ++i2) {
+				if (buttons[i * 16 + i2] != newbuttons[i2]) {
+					if (Kore::Gamepad::get(i)->Button != nullptr) Kore::Gamepad::get(i)->Button(i2, newbuttons[i2]);
+					buttons[i * 16 + i2] = newbuttons[i2];
+				}
+			}
+		}
+		else {
+			Kore::Gamepad::get(i)->vendor = nullptr;
+			Kore::Gamepad::get(i)->productName = nullptr;
+		}
+	}
+
 	return true;
 }
 
@@ -62,21 +119,38 @@ Kore::vec2i Kore::System::mousePos() {
 	return vec2i(mouseX, mouseY);
 }
 
-void Kore::System::swapBuffers() {
+void Kore::System::swapBuffers(int windowId) {
 	
 }
 
 #undef CreateWindow
 
-void* Kore::System::createWindow() {
+int Kore::System::initWindow(WindowOptions options) {
+	Graphics::init(0, options.rendererOptions.depthBufferBits, options.rendererOptions.stencilBufferBits);
+	return 0;
+}
+
+void Kore::System::setup() {
+
+}
+
+bool Kore::System::isFullscreen() {
+	return true;
+}
+
+int Kore::System::windowCount() {
+	return 1;
+}
+
+void Kore::System::makeCurrent(int windowId) {
+
+}
+
+void* Kore::System::windowHandle(int windowId) {
 	return nullptr;
 }
 
-void* Kore::System::windowHandle() {
-	return nullptr;
-}
-
-void Kore::System::destroyWindow() {
+void Kore::System::destroyWindow(int windowId) {
 	
 }
 
@@ -86,6 +160,10 @@ void Kore::System::changeResolution(int width, int height, bool fullscreen) {
 
 void Kore::System::setTitle(const char*) {
 
+}
+
+void Kore::System::setKeepScreenOn( bool on ) {
+    
 }
 
 void Kore::System::showWindow() {
@@ -184,19 +262,19 @@ void Win8Application::OnResuming(Platform::Object^ sender, Platform::Object^ arg
 void Win8Application::OnPointerPressed(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args) {
 	mouseX = static_cast<int>(args->CurrentPoint->Position.X);
 	mouseY = static_cast<int>(args->CurrentPoint->Position.Y);
-	Mouse::the()->_press(0, mouseX, mouseY);
+	Mouse::the()->_press(0, 0, mouseX, mouseY);
 }
 
 void Win8Application::OnPointerReleased(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args) {
 	mouseX = static_cast<int>(args->CurrentPoint->Position.X);
 	mouseY = static_cast<int>(args->CurrentPoint->Position.Y);
-	Mouse::the()->_release(0, mouseX, mouseY);
+	Mouse::the()->_release(0, 0, mouseX, mouseY);
 }
 
 void Win8Application::OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args) {
 	mouseX = static_cast<int>(args->CurrentPoint->Position.X);
 	mouseY = static_cast<int>(args->CurrentPoint->Position.Y);
-	Mouse::the()->_move(mouseX, mouseY);
+	Mouse::the()->_move(0, mouseX, mouseY);
 }
 
 void Win8Application::OnKeyDown(Windows::UI::Core::CoreWindow ^sender, Windows::UI::Core::KeyEventArgs ^args) {
@@ -253,11 +331,11 @@ const char** Kore::System::videoFormats() {
 	return ::videoFormats;
 }
 
-int Kore::System::screenWidth() {
+int Kore::System::windowWidth(int windowId) {
 	return renderTargetWidth;
 }
 
-int Kore::System::screenHeight() {
+int Kore::System::windowHeight(int windowId) {
 	return renderTargetHeight;
 }
 

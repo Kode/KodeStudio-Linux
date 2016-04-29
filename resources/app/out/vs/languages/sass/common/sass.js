@@ -1,25 +1,40 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-'use strict';
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
+define("vs/languages/sass/common/sassTokenTypes", ["require", "exports"], function (require, exports) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    /* always keep in sync with cssTokenTypes */
+    exports.TOKEN_SELECTOR = 'entity.name.selector';
+    exports.TOKEN_SELECTOR_TAG = 'entity.name.tag';
+    exports.TOKEN_PROPERTY = 'support.type.property-name';
+    exports.TOKEN_VALUE = 'support.property-value';
+    exports.TOKEN_AT_KEYWORD = 'keyword.control.at-rule';
+});
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
-    switch (arguments.length) {
-        case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
-        case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
-        case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
-    }
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/editor/common/modes/monarch/monarchCompile', 'vs/base/common/winjs.base', 'vs/editor/common/modes/supports', 'vs/languages/sass/common/sassTokenTypes', 'vs/platform/thread/common/threadService', 'vs/platform/instantiation/common/descriptors', 'vs/editor/common/services/modeService', 'vs/platform/instantiation/common/instantiation', 'vs/platform/thread/common/thread', 'vs/editor/common/services/modelService'], function (require, exports, Monarch, Compile, winjs, supports, sassTokenTypes, threadService_1, descriptors_1, modeService_1, instantiation_1, thread_1, modelService_1) {
+define("vs/languages/sass/common/sass", ["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/editor/common/modes/monarch/monarchCompile', 'vs/languages/sass/common/sassTokenTypes', 'vs/editor/common/modes/abstractMode', 'vs/platform/thread/common/threadService', 'vs/editor/common/services/modeService', 'vs/platform/instantiation/common/instantiation', 'vs/platform/thread/common/thread', 'vs/editor/common/services/modelService', 'vs/editor/common/modes/supports/declarationSupport', 'vs/editor/common/modes/supports/referenceSupport', 'vs/editor/common/modes/supports/suggestSupport', 'vs/editor/common/services/editorWorkerService'], function (require, exports, Monarch, Compile, sassTokenTypes, abstractMode_1, threadService_1, modeService_1, instantiation_1, thread_1, modelService_1, declarationSupport_1, referenceSupport_1, suggestSupport_1, editorWorkerService_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
     exports.language = {
         displayName: 'Sass',
         name: 'sass',
@@ -234,38 +249,59 @@ define(["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/edit
     };
     var SASSMode = (function (_super) {
         __extends(SASSMode, _super);
-        function SASSMode(descriptor, instantiationService, threadService, modeService, modelService) {
+        function SASSMode(descriptor, instantiationService, threadService, modeService, modelService, editorWorkerService) {
             var _this = this;
-            _super.call(this, descriptor, Compile.compile(exports.language), instantiationService, threadService, modeService, modelService);
+            _super.call(this, descriptor.id, Compile.compile(exports.language), modeService, modelService, editorWorkerService);
+            this._modeWorkerManager = new abstractMode_1.ModeWorkerManager(descriptor, 'vs/languages/sass/common/sassWorker', 'SassWorker', 'vs/languages/css/common/cssWorker', instantiationService);
+            this._threadService = threadService;
             this.modeService = modeService;
             this.extraInfoSupport = this;
-            this.referenceSupport = new supports.ReferenceSupport(this, {
+            this.inplaceReplaceSupport = this;
+            this.configSupport = this;
+            this.referenceSupport = new referenceSupport_1.ReferenceSupport(this.getId(), {
                 tokens: [sassTokenTypes.TOKEN_PROPERTY + '.sass', sassTokenTypes.TOKEN_VALUE + '.sass', 'variable.decl.sass', 'variable.ref.sass', 'support.function.name.sass', sassTokenTypes.TOKEN_PROPERTY + '.sass', sassTokenTypes.TOKEN_SELECTOR + '.sass'],
                 findReferences: function (resource, position, /*unused*/ includeDeclaration) { return _this.findReferences(resource, position); } });
             this.logicalSelectionSupport = this;
-            this.declarationSupport = new supports.DeclarationSupport(this, {
+            this.declarationSupport = new declarationSupport_1.DeclarationSupport(this.getId(), {
                 tokens: ['variable.decl.sass', 'variable.ref.sass', 'support.function.name.sass', sassTokenTypes.TOKEN_PROPERTY + '.sass', sassTokenTypes.TOKEN_SELECTOR + '.sass'],
                 findDeclaration: function (resource, position) { return _this.findDeclaration(resource, position); } });
             this.outlineSupport = this;
-            this.suggestSupport = new supports.SuggestSupport(this, {
+            this.suggestSupport = new suggestSupport_1.SuggestSupport(this.getId(), {
                 triggerCharacters: [],
                 excludeTokens: ['comment.sass', 'string.sass'],
                 suggest: function (resource, position) { return _this.suggest(resource, position); } });
         }
-        SASSMode.prototype._getWorkerDescriptor = function () {
-            return descriptors_1.createAsyncDescriptor2('vs/languages/sass/common/sassWorker', 'SassWorker');
+        SASSMode.prototype.creationDone = function () {
+            if (this._threadService.isInMainThread) {
+                // Pick a worker to do validation
+                this._pickAWorkerToValidate();
+            }
         };
         SASSMode.prototype._worker = function (runner) {
-            var _this = this;
-            // TODO@Alex: workaround for missing `bundles` config, before instantiating the sassWorker, we ensure the cssWorker has been loaded
-            return this.modeService.getOrCreateMode('css').then(function (cssMode) {
-                return cssMode._worker(function (worker) { return winjs.TPromise.as(true); });
-            }).then(function () {
-                return _super.prototype._worker.call(_this, runner);
-            });
+            return this._modeWorkerManager.worker(runner);
+        };
+        SASSMode.prototype.configure = function (options) {
+            if (this._threadService.isInMainThread) {
+                return this._configureWorkers(options);
+            }
+            else {
+                return this._worker(function (w) { return w._doConfigure(options); });
+            }
+        };
+        SASSMode.prototype._configureWorkers = function (options) {
+            return this._worker(function (w) { return w._doConfigure(options); });
+        };
+        SASSMode.prototype.navigateValueSet = function (resource, position, up) {
+            return this._worker(function (w) { return w.navigateValueSet(resource, position, up); });
+        };
+        SASSMode.prototype._pickAWorkerToValidate = function () {
+            return this._worker(function (w) { return w.enableValidator(); });
         };
         SASSMode.prototype.findReferences = function (resource, position) {
             return this._worker(function (w) { return w.findReferences(resource, position); });
+        };
+        SASSMode.prototype.suggest = function (resource, position) {
+            return this._worker(function (w) { return w.suggest(resource, position); });
         };
         SASSMode.prototype.getRangesToPosition = function (resource, position) {
             return this._worker(function (w) { return w.getRangesToPosition(resource, position); });
@@ -282,7 +318,11 @@ define(["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/edit
         SASSMode.prototype.findColorDeclarations = function (resource) {
             return this._worker(function (w) { return w.findColorDeclarations(resource); });
         };
+        SASSMode.$_configureWorkers = threadService_1.AllWorkersAttr(SASSMode, SASSMode.prototype._configureWorkers);
+        SASSMode.$navigateValueSet = threadService_1.OneWorkerAttr(SASSMode, SASSMode.prototype.navigateValueSet);
+        SASSMode.$_pickAWorkerToValidate = threadService_1.OneWorkerAttr(SASSMode, SASSMode.prototype._pickAWorkerToValidate, thread_1.ThreadAffinity.Group1);
         SASSMode.$findReferences = threadService_1.OneWorkerAttr(SASSMode, SASSMode.prototype.findReferences);
+        SASSMode.$suggest = threadService_1.OneWorkerAttr(SASSMode, SASSMode.prototype.suggest);
         SASSMode.$getRangesToPosition = threadService_1.OneWorkerAttr(SASSMode, SASSMode.prototype.getRangesToPosition);
         SASSMode.$computeInfo = threadService_1.OneWorkerAttr(SASSMode, SASSMode.prototype.computeInfo);
         SASSMode.$getOutline = threadService_1.OneWorkerAttr(SASSMode, SASSMode.prototype.getOutline);
@@ -292,10 +332,12 @@ define(["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/edit
             __param(1, instantiation_1.IInstantiationService),
             __param(2, thread_1.IThreadService),
             __param(3, modeService_1.IModeService),
-            __param(4, modelService_1.IModelService)
+            __param(4, modelService_1.IModelService),
+            __param(5, editorWorkerService_1.IEditorWorkerService)
         ], SASSMode);
         return SASSMode;
-    })(Monarch.MonarchMode);
+    }(Monarch.MonarchMode));
     exports.SASSMode = SASSMode;
 });
+
 //# sourceMappingURL=sass.js.map

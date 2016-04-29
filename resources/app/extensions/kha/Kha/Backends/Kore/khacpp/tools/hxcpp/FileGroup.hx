@@ -13,21 +13,29 @@ class FileGroup
    public var mHLSLs:Array<HLSL>;
    public var mDir:String;
    public var mId:String;
-   public var mDepends:Array<String>;
+   public var mConfig:String;
+   public var mCacheDepends:Array<String>;
    public var mDependHash:String;
+   public var mAsLibrary:Bool;
+   public var mSetImportDir:Bool;
+   public var mUseCache:Bool;
    
-   public function new(inDir:String,inId:String)
+   public function new(inDir:String,inId:String,inSetImportDir = false)
    {
       mNewest = 0;
       mFiles = [];
       mCompilerFlags = [];
       mPrecompiledHeader = "";
-      mDepends = [];
+      mCacheDepends = [];
       mMissingDepends = [];
       mOptions = [];
       mHLSLs = [];
       mDir = inDir;
       mId = inId;
+      mConfig = "";
+      mAsLibrary = false;
+      mSetImportDir = inSetImportDir;
+      mUseCache = false;
    }
 
    public function addCompilerFlag(inFlag:String)
@@ -35,8 +43,10 @@ class FileGroup
       mCompilerFlags.push(inFlag);
    }
 
-   public function addDepend(inFile:String)
+   public function addDepend(inFile:String, inDateOnly:Bool)
    {
+      if (mSetImportDir && !Path.isAbsolute(inFile) )
+         inFile = PathManager.combine(mDir, inFile);
       if (!FileSystem.exists(inFile))
       {
          mMissingDepends.push(inFile);
@@ -44,21 +54,30 @@ class FileGroup
       }
       var stamp =  FileSystem.stat(inFile).mtime.getTime();
       if (stamp>mNewest)
+      {
          mNewest = stamp;
+      }
 
-      mDepends.push(inFile);
+      if (!inDateOnly)
+         mCacheDepends.push(inFile);
    }
 
    public function addDependFiles(inGroup:FileGroup)
    {
-      for(depend in inGroup.mDepends)
-         addDepend(depend);
+      if (inGroup.mNewest>mNewest)
+         mNewest = inGroup.mNewest;
+
+      for(depend in inGroup.mCacheDepends)
+         mCacheDepends.push(depend);
+
+      for(missing in inGroup.mMissingDepends)
+         mMissingDepends.push(missing);
    }
 
 
    public function addHLSL(inFile:String,inProfile:String,inVariable:String,inTarget:String)
    {
-      addDepend(inFile);
+      addDepend(inFile, true );
 
       mHLSLs.push( new HLSL(inFile,inProfile,inVariable,inTarget) );
    }
@@ -72,7 +91,7 @@ class FileGroup
    {
       if (mMissingDepends.length>0)
       {
-         Log.error("Could not find dependencies: [ " + mMissingDepends.join (", ") + " ]");
+         Log.error("Could not find dependencies for " + mId + " : [ " + mMissingDepends.join (", ") + " ]");
          //throw "Could not find dependencies: " + mMissingDepends.join(",");
       }
    }
@@ -91,7 +110,13 @@ class FileGroup
          {
             // Only effects linking, not compiling
          }
-         else if (name.indexOf("hxcpp")>=0 || name=="scriptable" || name.indexOf("dll")>=0 || name=="no_console" )
+         else if (name=="hxcpp_verbose" || name=="hxcpp_silent" || name=="hxcpp_quiet" )
+         {
+            // Does not affect build
+         }
+         else if (name.indexOf("hxcpp")>=0 || name=="scriptable" || name.indexOf("dll")>=0 || name=="no_console" ||
+            name.substr(0,8)=="android-" || name.substr(0,4)=="ndkv" || name=="toolchain" || name=="platform" ||
+              name=="toolchain_version" || name=="android_ndk_root" )
             result.push(def);
       }
 
@@ -116,10 +141,11 @@ class FileGroup
 
             if (FileSystem.exists(dest))
             {
-               var dest_content = sys.io.File.getContent(dest);
+               var dest_content = filterOptions(sys.io.File.getContent(dest));
                if (dest_content==contents)
                   skip = true;
             }
+
             if (!skip)
             {
                PathManager.mkdir(inObjDir);
@@ -128,7 +154,7 @@ class FileGroup
                stream.close();
                changed = true;
             }
-            addDepend(dest);
+            addDepend(dest,true);
          }
       }
       return changed;
@@ -154,10 +180,10 @@ class FileGroup
       for(hlsl in mHLSLs)
          hlsl.build();
 
-      if (BuildTool.useCache)
+      if (CompileCache.hasCache && mUseCache)
       {
          mDependHash = "";
-         for(depend in mDepends)
+         for(depend in mCacheDepends)
             mDependHash += File.getFileHash(depend);
          mDependHash = haxe.crypto.Md5.encode(mDependHash);
       }

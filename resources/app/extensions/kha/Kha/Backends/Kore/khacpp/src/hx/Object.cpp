@@ -11,7 +11,6 @@
 #elif defined(_WIN32)
 
 #include <windows.h>
-#include <time.h>
 // Stoopid windows ...
 #ifdef RegisterClass
 #undef RegisterClass
@@ -22,7 +21,6 @@
 
 #else
 
-#include <sys/time.h>
 #include <wchar.h>
 #ifndef EMSCRIPTEN
 typedef  int64_t  __int64;
@@ -49,7 +47,7 @@ Dynamic Object::__IField(int inFieldID)
 
 double Object::__INumField(int inFieldID)
 {
-	return __IField(inFieldID);
+   return __IField(inFieldID);
 }
 
 Dynamic *Object::__GetFieldMap() { return 0; }
@@ -57,11 +55,12 @@ Dynamic *Object::__GetFieldMap() { return 0; }
 
 int Object::__Compare(const Object *inRHS) const
 {
-   return (int)(inRHS-this);
+   hx::Object *real = const_cast<Object *>(this)->__GetRealObject();
+   return real < inRHS ? -1 : real==inRHS ? 0 : 1;
 }
 
 
-Dynamic Object::__Field(const String &inString, hx::PropertyAccess inCallProp)
+hx::Val Object::__Field(const String &inString, hx::PropertyAccess inCallProp)
 {
    #if 0
    // Will be true for 'Implements dynamic'
@@ -82,9 +81,7 @@ bool Object::__HasField(const String &inString)
 Dynamic Object::__Run(const Array<Dynamic> &inArgs) { return 0; }
 Dynamic Object::__GetItem(int inIndex) const { return null(); }
 Dynamic Object::__SetItem(int inIndex,Dynamic) { return null();  }
-DynamicArray Object::__EnumParams() { return DynamicArray(); }
-String Object::__Tag() const { return HX_CSTRING("<not enum>"); }
-int Object::__Index() const { return -1; }
+
 
 void Object::__SetThis(Dynamic inThis) { }
 
@@ -93,6 +90,20 @@ bool Object::__Is(Dynamic inClass ) const { return __Is(inClass.GetPtr()); }
 hx::Class Object__mClass;
 
 bool AlwaysCast(Object *inPtr) { return inPtr!=0; }
+
+#if (HXCPP_API_LEVEL < 330)
+DynamicArray Object::__EnumParams() { return DynamicArray(); }
+String Object::__Tag() const { return HX_CSTRING("<not enum>"); }
+int Object::__Index() const { return -1; }
+#endif
+
+#if (HXCPP_API_LEVEL >= 330) && !defined(HXCPP_SCRIPTABLE)
+// Other implementation is in Cppia.cpp
+void *hx::Object::_hx_getInterface(int inId)
+{
+   return 0;
+}
+#endif
 
 
 
@@ -104,7 +115,7 @@ class Object__scriptable : public hx::Object {
    typedef hx::Object super;
    typedef hx::Object __superString;
    HX_DEFINE_SCRIPTABLE(HX_ARR_LIST0);
-	HX_DEFINE_SCRIPTABLE_DYNAMIC;
+   HX_DEFINE_SCRIPTABLE_DYNAMIC;
 };
 
 hx::ScriptFunction Object::__script_construct;
@@ -120,7 +131,7 @@ static hx::ScriptNamedFunction __scriptableFunctions[] = {
 
 void Object::__boot()
 {
-   Static(Object__mClass) = hx::RegisterClass(HX_CSTRING("Dynamic"),AlwaysCast,sNone,sNone,0,0, 0, 0 );
+   Static(Object__mClass) = hx::_hx_RegisterClass(HX_CSTRING("Dynamic"),AlwaysCast,sNone,sNone,0,0, 0, 0 );
 
    #ifdef HXCPP_SCRIPTABLE
    hx::ScriptableRegisterClass( HX_CSTRING("hx.Object"), (int)sizeof(hx::Object__scriptable), __scriptableFunctions, Object__scriptable::__script_create, Object::__script_construct );
@@ -139,10 +150,10 @@ String Object::__ToString() const { return HX_CSTRING("Object"); }
 const char * Object::__CStr() const { return __ToString().__CStr(); }
 
 
-Dynamic Object::__SetField(const String &inField,const Dynamic &inValue, hx::PropertyAccess inCallProp)
+hx::Val Object::__SetField(const String &inField,const hx::Val &inValue, hx::PropertyAccess inCallProp)
 {
-	throw Dynamic( HX_CSTRING("Invalid field:") + inField );
-	return null();
+   hx::Throw( HX_CSTRING("Invalid field:") + inField );
+   return null();
 }
 
 Dynamic Object::__run()

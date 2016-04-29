@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2012 Haxe Foundation
+ * Copyright (C)2005-2016 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,18 +29,12 @@ class Bytes {
 
 	public var length(default,null) : Int;
 	var b : BytesData;
-	#if java
-	var buffer: java.nio.ByteBuffer;
-	#end
 
 	function new(length,b) {
 		this.length = length;
 		this.b = b;
 		#if flash
 		b.endian = flash.utils.Endian.LITTLE_ENDIAN;
-		#end
-		#if java
-		buffer = java.nio.ByteBuffer.wrap(b).order(java.nio.ByteOrder.LITTLE_ENDIAN);
 		#end
 	}
 
@@ -215,7 +209,7 @@ class Bytes {
 		Returns the IEEE double precision value at given position (in low endian encoding).
 		Result is unspecified if reading outside of the bounds
 	**/
-	#if (neko_v21 || (cpp && !cppia)) inline #end
+	#if (neko_v21 || (cpp && !cppia) || flash) inline #end
 	public function getDouble( pos : Int ) : Float {
 		#if neko_v21
 		return untyped $sgetd(b, pos, false);
@@ -234,7 +228,7 @@ class Bytes {
 		Returns the IEEE single precision value at given position (in low endian encoding).
 		Result is unspecified if reading outside of the bounds
 	**/
-	#if (neko_v21 || (cpp && !cppia)) inline #end
+	#if (neko_v21 || (cpp && !cppia) || flash) inline #end
 	public function getFloat( pos : Int ) : Float {
 		#if neko_v21
 		return untyped $sgetf(b, pos, false);
@@ -244,8 +238,6 @@ class Bytes {
 		#elseif cpp
 		if( pos < 0 || pos + 4 > length ) throw Error.OutsideBounds;
 		return untyped __global__.__hxcpp_memory_get_float(b,pos);
-		#elseif java
-		return buffer.getFloat(pos);
 		#else
 		var b = new haxe.io.BytesInput(this,pos,4);
 		return b.readFloat();
@@ -256,7 +248,7 @@ class Bytes {
 		Store the IEEE double precision value at given position in low endian encoding.
 		Result is unspecified if writing outside of the bounds.
 	**/
-	#if neko_v21 inline #end
+	#if (neko_v21 || flash) inline #end
 	public function setDouble( pos : Int, v : Float ) : Void {
 		#if neko_v21
 		untyped $ssetd(b, pos, v, false);
@@ -279,7 +271,7 @@ class Bytes {
 		Store the IEEE single precision value at given position in low endian encoding.
 		Result is unspecified if writing outside of the bounds.
 	**/
-	#if neko_v21 inline #end
+	#if (neko_v21 || flash) inline #end
 	public function setFloat( pos : Int, v : Float ) : Void {
 		#if neko_v21
 		untyped $ssetf(b, pos, v, false);
@@ -289,7 +281,7 @@ class Bytes {
 		b.position = pos;
 		b.writeFloat(v);
 		#elseif cpp
-		//if( pos < 0 || pos + 4 > length ) throw Error.OutsideBounds;
+		if( pos < 0 || pos + 4 > length ) throw Error.OutsideBounds;
 		untyped __global__.__hxcpp_memory_set_float(b,pos,v);
 		#else
 		setInt32(pos, FPHelper.floatToI32(v));
@@ -297,7 +289,7 @@ class Bytes {
 	}
 
 	/**
-		Returns the 16 bit unsignged integer at given position (in low endian encoding).
+		Returns the 16 bit unsigned integer at given position (in low endian encoding).
 	**/
 	public inline function getUInt16( pos : Int ) : Int {
 		#if neko_v21
@@ -308,7 +300,7 @@ class Bytes {
 	}
 
 	/**
-		Returns the 16 bit unsignged integer at given position (in low endian encoding).
+		Store the 16 bit unsigned integer at given position (in low endian encoding).
 	**/
 	public inline function setUInt16( pos : Int, v : Int ) : Void {
 		#if neko_v21
@@ -327,7 +319,10 @@ class Bytes {
 		return untyped $sget32(b, pos, false);
 		#elseif (php || python)
 		var v = get(pos) | (get(pos + 1) << 8) | (get(pos + 2) << 16) | (get(pos+3) << 24);
-        return if( v & 0x80000000 != 0 ) v | 0x80000000 else v;
+		return if( v & 0x80000000 != 0 ) v | 0x80000000 else v;
+		#elseif lua
+		var v = get(pos) | (get(pos + 1) << 8) | (get(pos + 2) << 16) | (get(pos+3) << 24);
+		return lua.Boot.clamp(if( v & 0x80000000 != 0 ) v | 0x80000000 else v);
 		#else
 		return get(pos) | (get(pos + 1) << 8) | (get(pos + 2) << 16) | (get(pos+3) << 24);
 		#end
@@ -385,6 +380,10 @@ class Bytes {
 		catch (e:Dynamic) throw e;
 		#elseif python
 		return python.Syntax.pythonCode("self.b[{0}:{0}+{1}].decode('UTF-8','replace')", pos, len);
+		#elseif lua
+		var begin = cast(Math.min(pos,b.length),Int);
+		var end = cast(Math.min(pos+len,b.length),Int);
+		return [for (i in begin...end) String.fromCharCode(b[i])].join("");
 		#else
 		var s = "";
 		var b = b;
@@ -471,7 +470,7 @@ class Bytes {
 		return new Bytes(length, BytesData.alloc(length));
 		#elseif cpp
 		var a = new BytesData();
-		if (length>0) a[length-1] = untyped 0;
+		if (length>0) cpp.NativeArray.setSize(a, length);
 		return new Bytes(length, a);
 		#elseif cs
 		return new Bytes(length, new cs.NativeArray(length));
@@ -487,6 +486,7 @@ class Bytes {
 		#end
 	}
 
+	@:pure
 	public static function ofString( s : String ) : Bytes {
 		#if neko
 		return new Bytes(s.length,untyped __dollar__ssub(s.__s,0,s.length));
@@ -516,6 +516,9 @@ class Bytes {
 			var b:BytesData = new python.Bytearray(s, "UTF-8");
 			return new Bytes(b.length, b);
 
+		#elseif lua
+			var bytes = [for (c in 0...s.length) StringTools.fastCodeAt(s,c)];
+			return new Bytes(bytes.length, bytes);
 		#else
 		var a = new Array();
 		// utf16-decode and utf8-encode

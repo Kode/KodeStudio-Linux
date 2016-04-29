@@ -1,86 +1,94 @@
 {
-	"name": "haxe",
-	"description": "Haxe Language Extension",
-	"version": "0.0.2",
-	"publisher": "Jeff Ward & Dan Korostelev & Patrick Le Clec'h",
-	"engines": {
-		"vscode": "^0.10.1"
+	"name": "vshaxe",
+	"description": "Haxe language server for Visual Studio Code",
+	"version": "0.0.1",
+    "publisher": "nadako",
+	"author": "Dan Korostelev",
+	"license": "MIT",
+    "engines": {
+        "vscode": "^0.10.11"
+    },
+	"dependencies": {
+        "vscode-languageclient": "^2.0.0"
 	},
-	"categories": [
-		"Languages"
-	],
-	"activationEvents": [
-		"onLanguage:haxe"
-	],
-	"main": "./haxe.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "haxe.hello",
-				"title": "Hello from Haxe!"
-			}
-		],	
-		"languages": [
-			{
-				"id": "haxe",
-				"aliases": ["Haxe", "haxe"],
-				"extensions": [".hx",".hxsl",".hscript"],
-				"configuration": "./haxe.configuration.json"
-			},
-			{
-				"id": "hxml",
-				"aliases": ["HXML", "hxml"],
-				"extensions": [".hxml"],
-				"configuration": "./hxml.configuration.json"
-			}
-		],
-		"grammars": [
-			{
-				"language": "haxe",
-				"scopeName": "source.haxe",
-				"path": "./syntaxes/haxe.tmLanguage"
-			},
-			{
-				"language": "hxml",
-				"scopeName": "source.hxml",
-				"path": "./syntaxes/hxml.tmLanguage"
-			}
-		],
+   "scripts": {
+        "vscode:prepublish": "haxe build.hxml"
+    },
+    "main": "bin/client.js",
+    "activationEvents": [
+        "onLanguage:haxe",
+        "onCommand:haxe.restartLanguageServer",
+        "onCommand:haxe.initProject"
+    ],
+    "contributes": {
         "configuration": {
-            "type": "object",
             "title": "Haxe configuration",
             "properties": {
-                "haxe.haxePath": {
-                "type": "string",
-                "default": "",
-                "description": "Where to find haxe executable. If not set must be in your global path"
-                },
-                "haxe.haxelibPath": {
-                "type": "string",
-                "default": "",
-                "description": "Where to find haxelib executable. If not set must be in your global path"
-                },
-                "haxe.haxeDefaultBuildFile": {
-                "type": "string",
-                "default": "project-debug-html5.hxml",
-                "description": "Name of your default build hxml file"
-                },
-                "haxe.haxeServerHost": {
-                "type": "string",
-                "default": "127.0.0.1",
-                "description": "Address of the haxe server"
-                },
-                "haxe.haxeServerPort": {
-                "type": "integer",
-                "default": 6000,
-                "description": "Port number of the haxe server"
-                },
-                "haxe.haxeDiagnosticDelay": {
-                "type": "integer",
-                "default": 500,
-                "description": "Time (in ms) after we can launch a file validation"
+                "haxe.displayArguments": {
+                    "type": "array",
+                    "default": ["project-debug-html5.hxml"],
+                    "description": "Command-line arguments passed to haxe completion server. Can contain hxml files. Relative paths will be resolved against workspace root.",
+                    "items": {"type": "string"}
                 }
             }
-        }
-	}
+        },
+        "commands": [
+            {
+                "title": "Restart language server",
+                "command": "haxe.restartLanguageServer",
+                "category": "Haxe"
+            },
+            {
+                "title": "Initialize VS Code project",
+                "command": "haxe.initProject",
+                "category": "Haxe"
+            }
+        ],
+        "languages": [
+            {
+                "id": "haxe",
+                "aliases": ["Haxe", "haxe"],
+                "extensions": [".hx"],
+                "configuration": "./haxe.configuration.json"
+            },
+            {
+                "id": "hxml",
+                "aliases": ["HXML", "hxml"],
+                "extensions": [".hxml"],
+                "configuration": "./hxml.configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "haxe",
+                "scopeName": "source.hx",
+                "path": "./syntaxes/haxe.json"
+            },
+            {
+                "language": "hxml",
+                "scopeName": "source.hxml",
+                "path": "./syntaxes/hxml.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "haxe",
+                "path": "./snippets/haxe.json"
+            }
+        ],
+        "debuggers": [
+            {
+                "type": "haxe",
+                "enableBreakpointsFor": {
+                    "languageIds": ["haxe"]
+                }
+            }
+        ],
+        "jsonValidation": [
+            {
+                "fileMatch": "haxelib.json",
+                "url": "http://json.schemastore.org/haxelib"
+            }
+        ]
+    }
 }

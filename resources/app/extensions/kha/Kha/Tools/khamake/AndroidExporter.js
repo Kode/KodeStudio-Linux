@@ -31,20 +31,22 @@ class AndroidExporter extends KhaExporter {
 		return "Android";
 	}
 
-	exportSolution(name, platform, khaDirectory, haxeDirectory, from, _targetOptions) {
+	exportSolution(name, platform, khaDirectory, haxeDirectory, from, _targetOptions, defines) {
 		const safename = name.replaceAll(' ', '-');
 
-		const defines = [
-			'no-compilation',
-			'sys_' + platform,
-			'sys_g1', 'sys_g2', 'sys_g3', 'sys_g4',
-			'sys_a1'
-		];
+		defines.push('no-compilation');
+		defines.push('sys_' + platform);
+		defines.push('sys_g1');
+		defines.push('sys_g2');
+		defines.push('sys_g3');
+		defines.push('sys_g4');
+		defines.push('sys_a1');
 
 		const options = {
 			from: from.toString(),
 			to: path.join(this.sysdir(), safename),
 			sources: this.sources,
+			libraries: this.libraries,
 			defines: defines,
 			parameters: this.parameters,
 			haxeDirectory: haxeDirectory.toString(),
@@ -56,14 +58,24 @@ class AndroidExporter extends KhaExporter {
 		};
 		HaxeProject(this.directory.toString(), options);
 
-		this.exportAndroidStudioProject(name);
+		this.exportAndroidStudioProject(name, _targetOptions, from);
 
 		return Haxe.executeHaxe(this.directory, haxeDirectory, ['project-' + this.sysdir() + '.hxml']);
 	}
 
-	exportAndroidStudioProject(name) {
+	exportAndroidStudioProject(name, _targetOptions, from) {
 		let safename = name.replaceAll(' ', '-');
 		this.safename = safename;
+
+		let targetOptions = {
+			package: 'com.ktxsoftware.kha',
+			screenOrientation: 'sensor'
+		};
+		if (_targetOptions != null && _targetOptions.android != null) {
+			let userOptions = _targetOptions.android;
+			if (userOptions.package != null) targetOptions.package = userOptions.package;
+			if (userOptions.screenOrientation != null) targetOptions.screenOrientation = userOptions.screenOrientation;
+		}
 
 		let indir = path.join(__dirname, 'Data', 'android');
 		let outdir = path.join(this.directory.path, this.sysdir(), safename);
@@ -81,7 +93,7 @@ class AndroidExporter extends KhaExporter {
 		fs.copySync(path.join(indir, 'app', 'proguard-rules.pro'), path.join(outdir, 'app', 'proguard-rules.pro'));
 
 		let gradle = fs.readFileSync(path.join(indir, 'app', 'build.gradle'), {encoding: 'utf8'});
-		gradle = gradle.replaceAll('{name}', safename);
+		gradle = gradle.replaceAll('{package}', targetOptions.package);
 		fs.writeFileSync(path.join(outdir, 'app', 'build.gradle'), gradle, {encoding: 'utf8'});
 
 		let appiml = fs.readFileSync(path.join(indir, 'app', 'app.iml'), {encoding: 'utf8'});
@@ -91,7 +103,12 @@ class AndroidExporter extends KhaExporter {
 		fs.ensureDirSync(path.join(outdir, 'app', 'src'));
 		//fs.emptyDirSync(path.join(outdir, 'app', 'src'));
 
-		fs.copySync(path.join(indir, 'main', 'AndroidManifest.xml'), path.join(outdir, 'app', 'src', 'main', 'AndroidManifest.xml'));
+		// fs.copySync(path.join(indir, 'main', 'AndroidManifest.xml'), path.join(outdir, 'app', 'src', 'main', 'AndroidManifest.xml'));
+		let manifest = fs.readFileSync(path.join(indir, 'main', 'AndroidManifest.xml'), {encoding: 'utf8'});
+		manifest = manifest.replaceAll('{package}', targetOptions.package);
+		manifest = manifest.replaceAll('{screenOrientation}', targetOptions.screenOrientation);
+		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main'));
+		fs.writeFileSync(path.join(outdir, 'app', 'src', 'main', 'AndroidManifest.xml'), manifest, {encoding: 'utf8'});
 
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'values'));
 		let strings = fs.readFileSync(path.join(indir, 'main', 'res', 'values', 'strings.xml'), {encoding: 'utf8'});
@@ -99,22 +116,22 @@ class AndroidExporter extends KhaExporter {
 		fs.writeFileSync(path.join(outdir, 'app', 'src', 'main', 'res', 'values', 'strings.xml'), strings, {encoding: 'utf8'});
 
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-hdpi'));
-		exportImage(findIcon(this.directory), this.directory.resolve(Paths.get(this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-hdpi', "ic_launcher")), {
+		exportImage(findIcon(from), this.directory.resolve(Paths.get(this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-hdpi', "ic_launcher")), {
 			width: 72,
 			height: 72
 		});
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-mdpi'));
-		exportImage(findIcon(this.directory), this.directory.resolve(Paths.get(this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-mdpi', "ic_launcher")), {
+		exportImage(findIcon(from), this.directory.resolve(Paths.get(this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-mdpi', "ic_launcher")), {
 			width: 48,
 			height: 48
 		});
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xhdpi'));
-		exportImage(findIcon(this.directory), this.directory.resolve(Paths.get(this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xhdpi', "ic_launcher")), {
+		exportImage(findIcon(from), this.directory.resolve(Paths.get(this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xhdpi', "ic_launcher")), {
 			width: 96,
 			height: 96
 		});
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi'));
-		exportImage(findIcon(this.directory), this.directory.resolve(Paths.get(this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi', "ic_launcher")), {
+		exportImage(findIcon(from), this.directory.resolve(Paths.get(this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi', "ic_launcher")), {
 			width: 144,
 			height: 144
 		});

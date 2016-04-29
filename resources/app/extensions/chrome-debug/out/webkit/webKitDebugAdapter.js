@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var v8Protocol_1 = require('../common/v8Protocol');
 var debugSession_1 = require('../common/debugSession');
 var handles_1 = require('../common/handles');
@@ -43,7 +44,7 @@ var WebKitDebugAdapter = (function () {
     };
     WebKitDebugAdapter.prototype.launch = function (args) {
         var _this = this;
-        this.initDiagnosticLogging('launch', args);
+        this.initializeLogging('launch', args);
         return new Promise(function (resolve, reject) {
             fs.stat(path.resolve(args.cwd, 'Kha'), function (err, stats) {
                 var options = {
@@ -121,7 +122,7 @@ var WebKitDebugAdapter = (function () {
                 electronArgs.push(path.resolve(args.cwd, args.file));
                 var launchUrl;
                 if (args.file) {
-                    launchUrl = 'file:///' + path.resolve(args.cwd, path.join(args.file, 'index.html'));
+                    launchUrl = utils.pathToFileURL(path.join(args.cwd, args.file, 'index.html'));
                 }
                 else if (args.url) {
                     launchUrl = args.url;
@@ -147,14 +148,36 @@ var WebKitDebugAdapter = (function () {
         if (args.port == null) {
             return utils.errP('The "port" field is required in the attach config.');
         }
-        this.initDiagnosticLogging('attach', args);
-        return this._attach(args.port);
+        this.initializeLogging('attach', args);
+        return this._attach(args.port, args.url);
     };
-    WebKitDebugAdapter.prototype.initDiagnosticLogging = function (name, args) {
-        if (args.diagnosticLogging) {
+    WebKitDebugAdapter.prototype.initializeLogging = function (name, args) {
+        if (args.diagnosticLogging && !this._isLoggingInitialized) {
             utilities_1.Logger.enableDiagnosticLogging();
             utils.Logger.log("initialize(" + JSON.stringify(this._initArgs) + ")");
             utils.Logger.log(name + "(" + JSON.stringify(args) + ")");
+            if (!args.webRoot) {
+                utils.Logger.log('WARNING: "webRoot" is not set - if resolving sourcemaps fails, please set the "webRoot" property in the launch config.');
+            }
+            this._isLoggingInitialized = true;
+        }
+    };
+    /**
+     * Chrome is closing, or error'd somehow, stop the debug session
+     */
+    WebKitDebugAdapter.prototype.terminateSession = function () {
+        if (this._clientAttached) {
+            this.fireEvent(new debugSession_1.TerminatedEvent());
+        }
+        this.clearEverything();
+    };
+    WebKitDebugAdapter.prototype.clearEverything = function () {
+        this.clearClientContext();
+        this.clearTargetContext();
+        this._chromeProc = null;
+        if (this._webKitConnection) {
+            this._webKitConnection.close();
+            this._webKitConnection = null;
         }
     };
     WebKitDebugAdapter.prototype._attach = function (port, url) {
@@ -188,24 +211,6 @@ var WebKitDebugAdapter = (function () {
         }
     };
     /**
-     * Chrome is closing, or error'd somehow, stop the debug session
-     */
-    WebKitDebugAdapter.prototype.terminateSession = function () {
-        if (this._clientAttached) {
-            this.fireEvent(new debugSession_1.TerminatedEvent());
-        }
-        this.clearEverything();
-    };
-    WebKitDebugAdapter.prototype.clearEverything = function () {
-        this.clearClientContext();
-        this.clearTargetContext();
-        this._chromeProc = null;
-        if (this._webKitConnection) {
-            this._webKitConnection.close();
-            this._webKitConnection = null;
-        }
-    };
-    /**
      * e.g. the target navigated
      */
     WebKitDebugAdapter.prototype.onGlobalObjectCleared = function () {
@@ -224,7 +229,7 @@ var WebKitDebugAdapter = (function () {
             if (notification.data && this._currentStack.length) {
                 // Insert a scope to wrap the exception object. exceptionText is unused by Code at the moment.
                 var remoteObjValue = utils.remoteObjectToValue(notification.data, false);
-                var scopeObject;
+                var scopeObject = void 0;
                 if (remoteObjValue.variableHandleRef) {
                     // If the remote object is an object (probably an Error), treat the object like a scope.
                     exceptionText = notification.data.description;
@@ -240,7 +245,7 @@ var WebKitDebugAdapter = (function () {
             }
         }
         else {
-            reason = notification.hitBreakpoints.length ? 'breakpoint' : 'step';
+            reason = (notification.hitBreakpoints && notification.hitBreakpoints.length) ? 'breakpoint' : 'step';
         }
         this.fireEvent(new debugSession_1.StoppedEvent(reason, /*threadId=*/ WebKitDebugAdapter.THREAD_ID, exceptionText));
     };
@@ -314,6 +319,9 @@ var WebKitDebugAdapter = (function () {
         else {
             return utils.errP("Can't find script for breakpoint request");
         }
+    };
+    WebKitDebugAdapter.prototype.setFunctionBreakpoints = function () {
+        return Promise.resolve();
     };
     WebKitDebugAdapter.prototype._clearAllBreakpoints = function (url) {
         var _this = this;
@@ -414,29 +422,42 @@ var WebKitDebugAdapter = (function () {
             var script = _this._scriptsById.get(callFrame.location.scriptId);
             var line = callFrame.location.lineNumber;
             var column = callFrame.location.columnNumber;
-            // When the script has a url and isn't a content script, send the name and path fields. PathTransformer will
-            // attempt to resolve it to a script in the workspace. Otherwise, send the name and sourceReference fields.
-            var source = script.url && !_this.isExtensionScript(script) ?
-                {
-                    name: path.basename(script.url),
-                    path: script.url,
-                    sourceReference: scriptIdToSourceReference(script.scriptId) // will be 0'd out by PathTransformer if not needed
-                } :
-                {
-                    // Name should be undefined, work around VS Code bug 20274
-                    name: 'eval: ' + script.scriptId,
-                    sourceReference: scriptIdToSourceReference(script.scriptId)
+            try {
+                // When the script has a url and isn't a content script, send the name and path fields. PathTransformer will
+                // attempt to resolve it to a script in the workspace. Otherwise, send the name and sourceReference fields.
+                var source = script.url && !_this.isExtensionScript(script) ?
+                    {
+                        name: path.basename(script.url),
+                        path: script.url,
+                        sourceReference: scriptIdToSourceReference(script.scriptId) // will be 0'd out by PathTransformer if not needed
+                    } :
+                    {
+                        // Name should be undefined, work around VS Code bug 20274
+                        name: 'eval: ' + script.scriptId,
+                        sourceReference: scriptIdToSourceReference(script.scriptId)
+                    };
+                // If the frame doesn't have a function name, it's either an anonymous function
+                // or eval script. If its source has a name, it's probably an anonymous function.
+                var frameName = callFrame.functionName || (script.url ? '(anonymous function)' : '(eval code)');
+                return {
+                    id: i,
+                    name: frameName,
+                    source: source,
+                    line: line,
+                    column: column
                 };
-            // If the frame doesn't have a function name, it's either an anonymous function
-            // or eval script. If its source has a name, it's probably an anonymous function.
-            var frameName = callFrame.functionName || (script.url ? '(anonymous function)' : '(eval code)');
-            return {
-                id: i,
-                name: frameName,
-                source: source,
-                line: line,
-                column: column
-            };
+            }
+            catch (e) {
+                // Some targets such as the iOS simulator behave badly and return nonsense callFrames.
+                // In these cases, return a dummy stack frame
+                return {
+                    id: i,
+                    name: 'Unknown',
+                    source: { name: 'eval:Unknown' },
+                    line: line,
+                    column: column
+                };
+            }
         });
         return { stackFrames: stackFrames };
     };
@@ -521,7 +542,14 @@ var WebKitDebugAdapter = (function () {
         }
         return evalPromise.then(function (evalResponse) {
             if (evalResponse.result.wasThrown) {
-                var errorMessage = evalResponse.result.exceptionDetails ? evalResponse.result.exceptionDetails.text : 'Error';
+                var evalResult = evalResponse.result;
+                var errorMessage = 'Error';
+                if (evalResult.exceptionDetails) {
+                    errorMessage = evalResult.exceptionDetails.text;
+                }
+                else if (evalResult.result && evalResult.result.description) {
+                    errorMessage = evalResult.result.description;
+                }
                 return utils.errP(errorMessage);
             }
             var _a = _this.remoteObjectToValue(evalResponse.result.result), value = _a.value, variablesReference = _a.variablesReference;
@@ -558,7 +586,7 @@ var WebKitDebugAdapter = (function () {
     WebKitDebugAdapter.PAGE_PAUSE_MESSAGE = 'Paused in Kode Studio';
     WebKitDebugAdapter.EXCEPTION_VALUE_ID = 'EXCEPTION_VALUE_ID';
     return WebKitDebugAdapter;
-})();
+}());
 exports.WebKitDebugAdapter = WebKitDebugAdapter;
 function scriptIdToSourceReference(scriptId) {
     return parseInt(scriptId, 10);

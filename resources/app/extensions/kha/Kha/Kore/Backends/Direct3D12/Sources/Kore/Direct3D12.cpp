@@ -333,6 +333,18 @@ void Graphics::setTextureAddressing(TextureUnit unit, TexDir dir, TextureAddress
 	
 }
 
+// (DK) fancy macro's to generate a clickable warning message in visual studio, can be removed when setColorMask() is implemented
+#define Stringize( L )			#L
+#define MakeString( M, L )		M(L)
+#define $Line					\
+	MakeString( Stringize, __LINE__ )
+#define Warning				\
+	__FILE__ "(" $Line ") : warning: "
+
+void Graphics::setColorMask(bool red, bool green, bool blue, bool alpha) {
+#pragma message(Warning "(DK) Robert, please implement d3d12's version of setColorMask() here")
+}
+
 void Graphics::clear(uint flags, uint color, float depth, int stencil) {
 	
 }
@@ -373,6 +385,18 @@ void Graphics::begin() {
 }
 
 void Graphics::viewport(int x, int y, int width, int height) {
+	//TODO
+}
+
+void Graphics::scissor(int x, int y, int width, int height) {
+	//TODO
+}
+
+void Graphics::disableScissor() {
+	//TODO
+}
+
+void Graphics::setStencilParameters(ZCompareMode compareMode, StencilAction bothPass, StencilAction depthFail, StencilAction stencilFail, int referenceValue, int readMask, int writeMask) {
 	//TODO
 }
 
@@ -625,7 +649,7 @@ void Graphics::restoreRenderTarget() {
 	commandList->RSSetScissorRects(1, &rectScissor);
 }
 
-void Graphics::setRenderTarget(RenderTarget* target, int) {
+void Graphics::setRenderTarget(RenderTarget* target, int num, int additionalTargets) {
 	commandList->OMSetRenderTargets(1, &target->renderTargetDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), true, nullptr);
 	commandList->RSSetViewports(1, (D3D12_VIEWPORT*)&target->viewport);
 	commandList->RSSetScissorRects(1, (D3D12_RECT*)&target->scissor);

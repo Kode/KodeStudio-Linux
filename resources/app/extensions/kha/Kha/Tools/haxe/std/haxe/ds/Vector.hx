@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2013 Haxe Foundation
+ * Copyright (C)2005-2016 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -40,6 +40,8 @@ private typedef VectorData<T> = #if flash10
 /**
 	A Vector is a storage of fixed size. It can be faster than Array on some
 	targets, and is never slower.
+
+	@see http://haxe.org/manual/std-vector.html
 **/
 abstract Vector<T>(VectorData<T>) {
 	/**
@@ -66,7 +68,7 @@ abstract Vector<T>(VectorData<T>) {
 			this = new java.NativeArray(length);
 		#elseif cpp
 			this = new Array<T>();
-			untyped this.__SetSizeExact(length);
+			this.setSize(length);
 		#elseif python
 			this = python.Syntax.pythonCode("[{0}]*{1}", null, length);
 		#else
@@ -211,6 +213,8 @@ abstract Vector<T>(VectorData<T>) {
 		return fromData(java.Lib.nativeArray(array,false));
 		#elseif cs
 		return fromData(cs.Lib.nativeArray(array,false));
+		#elseif cpp
+		return cast array.copy();
 		#else
 		// TODO: Optimize this for flash (and others?)
 		var vec = new Vector<T>(array.length);
@@ -220,7 +224,6 @@ abstract Vector<T>(VectorData<T>) {
 		#end
 	}
 
-	#if !cs
 	/**
 		Returns a shallow copy of `this` Vector.
 
@@ -228,7 +231,7 @@ abstract Vector<T>(VectorData<T>) {
 		`a[i] == a.copy()[i]` is true for any valid `i`. However,
 		`a == a.copy()` is always false.
 	**/
-	public inline function copy<T>():Vector<T> {
+	#if cs @:extern #end public inline function copy<T>():Vector<T> {
 		var r = new Vector<T>(length);
 		Vector.blit(cast this, 0, r, 0, length);
 		return r;
@@ -247,7 +250,7 @@ abstract Vector<T>(VectorData<T>) {
 
 		If `sep` is null, the result is unspecified.
 	**/
-	public inline function join<T>(sep:String):String {
+	#if cs @:extern #end public inline function join<T>(sep:String):String {
 		#if (flash||cpp)
 		return this.join(sep);
 		#else
@@ -271,16 +274,17 @@ abstract Vector<T>(VectorData<T>) {
 
 		If `f` is null, the result is unspecified.
 	**/
-	//public function map<S>(f:T->S):Vector<S> {
-		//var r = new Vector<S>(length);
-		//var i = 0;
-		//var len = length;
-		//for(i in 0...len) {
-			//var v = f(get(i));
-			//r.set(i, v);
-		//}
-		//return r;
-	//}
+	#if cs @:extern #end public inline function map<S>(f:T->S):Vector<S> {
+		var length = length;
+		var r = new Vector<S>(length);
+		var i = 0;
+		var len = length;
+		for(i in 0...len) {
+			var v = f(get(i));
+			r.set(i, v);
+		}
+		return r;
+	}
 
 	/**
 		Sorts `this` Vector according to the comparison function `f`, where
@@ -301,6 +305,4 @@ abstract Vector<T>(VectorData<T>) {
 		this.sort(f);
 		#end
 	}
-
-	#end
 }

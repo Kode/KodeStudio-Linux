@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var utils = require('../webkit/utilities');
 var AdapterProxy = (function () {
     function AdapterProxy(_requestTransformers, _debugAdapter, _eventHandler) {
@@ -64,7 +65,7 @@ var AdapterProxy = (function () {
     };
     AdapterProxy.INTERNAL_EVENTS = ['scriptParsed', 'clearClientContext', 'clearTargetContext'];
     return AdapterProxy;
-})();
+}());
 exports.AdapterProxy = AdapterProxy;
 
 //# sourceMappingURL=adapterProxy.js.map

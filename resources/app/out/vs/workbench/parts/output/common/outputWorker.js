@@ -1,32 +1,29 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-'use strict';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
-    switch (arguments.length) {
-        case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
-        case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
-        case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
-    }
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(["require", "exports", 'vs/platform/markers/common/markers', 'vs/editor/common/services/resourceService', 'vs/editor/common/modes/abstractModeWorker', 'vs/base/common/strings', 'vs/base/common/arrays', 'vs/base/common/paths', 'vs/editor/common/core/range', 'vs/platform/workspace/common/workspace'], function (require, exports, markers_1, resourceService_1, abstractModeWorker_1, strings, arrays, paths, range_1, workspace_1) {
+define("vs/workbench/parts/output/common/outputWorker", ["require", "exports", 'vs/base/common/winjs.base', 'vs/platform/markers/common/markers', 'vs/editor/common/services/resourceService', 'vs/base/common/strings', 'vs/base/common/arrays', 'vs/base/common/paths', 'vs/editor/common/core/range', 'vs/platform/workspace/common/workspace'], function (require, exports, winjs_base_1, markers_1, resourceService_1, strings, arrays, paths, range_1, workspace_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
     /**
      * A base class of text editor worker that helps with detecting links in the text that point to files in the workspace.
      */
-    var OutputWorker = (function (_super) {
-        __extends(OutputWorker, _super);
-        function OutputWorker(mode, participants, resourceService, markerService, contextService) {
-            _super.call(this, mode, participants, resourceService, markerService);
+    var OutputWorker = (function () {
+        function OutputWorker(modeId, participants, resourceService, markerService, contextService) {
+            this._modeId = modeId;
+            this.resourceService = resourceService;
+            this.markerService = markerService;
             this._contextService = contextService;
             var workspace = this._contextService.getWorkspace();
             this.patterns = workspace ? OutputWorker.createPatterns(workspace) : [];
@@ -39,17 +36,15 @@ define(["require", "exports", 'vs/platform/markers/common/markers', 'vs/editor/c
             configurable: true
         });
         OutputWorker.prototype.computeLinks = function (resource) {
-            var _this = this;
-            return _super.prototype.computeLinks.call(this, resource).then(function (links) {
-                if (!_this.patterns.length) {
-                    return links;
-                }
-                var model = _this.resourceService.get(resource);
-                for (var i = 1, lineCount = model.getLineCount(); i <= lineCount; i++) {
-                    links.push.apply(links, OutputWorker.detectLinks(model.getLineContent(i), i, _this.patterns, _this._contextService));
-                }
-                return links;
-            });
+            var links = [];
+            if (!this.patterns.length) {
+                return winjs_base_1.TPromise.as(links);
+            }
+            var model = this.resourceService.get(resource);
+            for (var i = 1, lineCount = model.getLineCount(); i <= lineCount; i++) {
+                links.push.apply(links, OutputWorker.detectLinks(model.getLineContent(i), i, this.patterns, this._contextService));
+            }
+            return winjs_base_1.TPromise.as(links);
         };
         OutputWorker.createPatterns = function (workspace) {
             var patterns = [];
@@ -85,7 +80,7 @@ define(["require", "exports", 'vs/platform/markers/common/markers', 'vs/editor/c
                 var offset = 0;
                 while ((match = pattern.exec(line)) !== null) {
                     // Convert the relative path information to a resource that we can use in links
-                    var workspaceRelativePath = strings.replaceAll(strings.rtrim(match[1], '.'), '\\', '/'); // remove trailing "." that likely indicate end of sentence
+                    var workspaceRelativePath = strings.rtrim(match[1], '.').replace(/\\/g, '/'); // remove trailing "." that likely indicate end of sentence
                     var resource = void 0;
                     try {
                         resource = contextService.toResource(workspaceRelativePath).toString();
@@ -130,7 +125,8 @@ define(["require", "exports", 'vs/platform/markers/common/markers', 'vs/editor/c
             __param(4, workspace_1.IWorkspaceContextService)
         ], OutputWorker);
         return OutputWorker;
-    })(abstractModeWorker_1.AbstractModeWorker);
+    }());
     exports.OutputWorker = OutputWorker;
 });
+
 //# sourceMappingURL=outputWorker.js.map

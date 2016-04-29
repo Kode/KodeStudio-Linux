@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -17,10 +18,13 @@ var pathTransformer_1 = require('../adapter/pathTransformer');
 var sourceMapTransformer_1 = require('../adapter/sourceMaps/sourceMapTransformer');
 var WebKitDebugSession = (function (_super) {
     __extends(WebKitDebugSession, _super);
-    function WebKitDebugSession(targetLinesStartAt1, isServer) {
+    function WebKitDebugSession(targetLinesStartAt1, isServer, adapter, version) {
         var _this = this;
         if (isServer === void 0) { isServer = false; }
+        if (adapter === void 0) { adapter = new webKitDebugAdapter_1.WebKitDebugAdapter(); }
+        if (version === void 0) { version = require('../../package.json').version; }
         _super.call(this, targetLinesStartAt1, isServer);
+        utilities_1.Logger.AdapterVersion = version;
         utilities_1.Logger.init(isServer, function (msg) { return _this.sendEvent(new debugSession_1.OutputEvent("  \u203A" + msg + "\n")); });
         process.addListener('unhandledRejection', function (reason) {
             utilities_1.Logger.log("******** ERROR! Unhandled promise rejection: " + reason);
@@ -29,7 +33,7 @@ var WebKitDebugSession = (function (_super) {
             new lineNumberTransformer_1.LineNumberTransformer(targetLinesStartAt1),
             new sourceMapTransformer_1.SourceMapTransformer(),
             new pathTransformer_1.PathTransformer()
-        ], new webKitDebugAdapter_1.WebKitDebugAdapter(), function (event) { return _this.sendEvent(event); });
+        ], adapter, function (event) { return _this.sendEvent(event); });
     }
     /**
      * Overload sendEvent to log
@@ -60,7 +64,7 @@ var WebKitDebugSession = (function (_super) {
         }, function (e) {
             var eStr = e ? e.message : 'Unknown error';
             if (eStr === 'Error: unknowncommand') {
-                _this.sendErrorResponse(response, 1014, '[webkit-debug-adapter] Unrecognized request: ' + request.command, null, debugSession_2.ErrorDestination.Telemetry);
+                _this.sendErrorResponse(response, 1014, '[debugger-for-chrome] Unrecognized request: ' + request.command, null, debugSession_2.ErrorDestination.Telemetry);
                 return;
             }
             if (request.command === 'evaluate') {
@@ -71,7 +75,7 @@ var WebKitDebugSession = (function (_super) {
             else {
                 // These errors show up in the message bar at the top (or nowhere), sometimes not obvious that they
                 // come from the adapter
-                response.message = '[webkit-debug-adapter] ' + eStr;
+                response.message = '[debugger-for-chrome] ' + eStr;
                 utilities_1.Logger.log('Error: ' + e ? e.stack : eStr);
             }
             response.success = false;
@@ -92,7 +96,7 @@ var WebKitDebugSession = (function (_super) {
         }
     };
     return WebKitDebugSession;
-})(debugSession_2.DebugSession);
+}(debugSession_2.DebugSession));
 exports.WebKitDebugSession = WebKitDebugSession;
 
 //# sourceMappingURL=webKitDebugSession.js.map

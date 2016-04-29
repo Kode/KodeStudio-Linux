@@ -344,7 +344,7 @@ double Kore::System::time() {
 
 #include <Kore/Android.h>
 #include <Kore/System.h>
-#include <Kore/Application.h>
+#include <Kore/Graphics/Graphics.h>
 #include <Kore/Log.h>
 #include <Kore/Input/Gamepad.h>
 #include <Kore/Input/Keyboard.h>
@@ -353,6 +353,7 @@ double Kore::System::time() {
 #include <Kore/Input/Surface.h>
 #include <EGL/egl.h>
 #include <android/sensor.h>
+#include <android/window.h>
 #include <android_native_app_glue.h>
 #include <GLContext.h>
 #include <stdlib.h>
@@ -363,16 +364,16 @@ void pauseAudio();
 void resumeAudio();
 
 namespace {
-	android_app* app;
-	ANativeActivity* activity;
-	ASensorManager* sensorManager;
-	const ASensor* accelerometerSensor;
-	const ASensor* gyroSensor;
-	ASensorEventQueue* sensorEventQueue;
+	android_app* app = nullptr;
+	ANativeActivity* activity = nullptr;
+	ASensorManager* sensorManager = nullptr;
+	const ASensor* accelerometerSensor = nullptr;
+	const ASensor* gyroSensor = nullptr;
+	ASensorEventQueue* sensorEventQueue = nullptr;
 	bool shift = false;
 	//int screenRotation = 0;
 
-	ndk_helper::GLContext* glContext;
+	ndk_helper::GLContext* glContext = nullptr;
 	
 	bool started = false;
 	bool paused = true;
@@ -398,7 +399,7 @@ namespace {
 				case AMOTION_EVENT_ACTION_DOWN:
 				case AMOTION_EVENT_ACTION_POINTER_DOWN:
 					if (id == 0) {
-						Kore::Mouse::the()->_press(0, x, y);
+						Kore::Mouse::the()->_press(0, 0, x, y);
 					}
 					Kore::Surface::the()->_touchStart(id, x, y);
 					// __android_log_print(ANDROID_LOG_INFO, "GAME", "#DOWN %d %d %d %f %f", action, index, id, x, y);
@@ -410,7 +411,7 @@ namespace {
 							x = AMotionEvent_getX(event, i);
 							y = AMotionEvent_getY(event, i);
 							if (id == 0) {
-								Kore::Mouse::the()->_move(x, y);
+								Kore::Mouse::the()->_move(0, x, y);
 							}
 							Kore::Surface::the()->_move(id, x, y);
 							// __android_log_print(ANDROID_LOG_INFO, "GAME", "#MOVE %d %d %d %f %f", action, index, id, x, y);
@@ -421,7 +422,7 @@ namespace {
 				case AMOTION_EVENT_ACTION_CANCEL:
 				case AMOTION_EVENT_ACTION_POINTER_UP:
 					if (id == 0) {
-						Kore::Mouse::the()->_release(0, x, y);
+						Kore::Mouse::the()->_release(0, 0, x, y);
 					}
 					Kore::Surface::the()->_touchEnd(id, x, y);
 					// __android_log_print(ANDROID_LOG_INFO, "GAME", "#UP %d %d %d %f %f", action, index, id, x, y);
@@ -468,7 +469,7 @@ namespace {
 							return 1;
 						}
 						else {
-							Kore::Keyboard::the()->_keyup(Kore::Key_Back, 1);
+							Kore::Keyboard::the()->_keydown(Kore::Key_Back, 1);
 							return 1;
 						}
 					case AKEYCODE_BUTTON_A:
@@ -685,7 +686,7 @@ namespace {
 					if (!started) {
 						started = true;
 					}
-					Kore::System::swapBuffers();
+					Kore::System::swapBuffers(0);
 				}
 				break;
 			case APP_CMD_TERM_WINDOW:
@@ -710,23 +711,23 @@ namespace {
 				}
 				break;
 			case APP_CMD_START:
-				if (Kore::Application::the() != nullptr && Kore::Application::the()->foregroundCallback != nullptr) Kore::Application::the()->foregroundCallback();
+				Kore::System::foregroundCallback();
 				break;
 			case APP_CMD_RESUME:
-				if (Kore::Application::the() != nullptr && Kore::Application::the()->resumeCallback != nullptr) Kore::Application::the()->resumeCallback();
+                Kore::System::resumeCallback();
 				resumeAudio();
 				paused = false;
 				break;
 			case APP_CMD_PAUSE:
-				if (Kore::Application::the() != nullptr && Kore::Application::the()->pauseCallback != nullptr) Kore::Application::the()->pauseCallback();
+                Kore::System::pauseCallback();
 				pauseAudio();
 				paused = true;
 				break;
 			case APP_CMD_STOP:
-				if (Kore::Application::the() != nullptr && Kore::Application::the()->backgroundCallback != nullptr) Kore::Application::the()->backgroundCallback();
+                Kore::System::backgroundCallback();
 				break;
 			case APP_CMD_DESTROY:
-				if (Kore::Application::the() != nullptr && Kore::Application::the()->shutdownCallback != nullptr) Kore::Application::the()->shutdownCallback();
+                Kore::System::shutdownCallback();
 				break;
 			case APP_CMD_CONFIG_CHANGED: {
 
@@ -757,17 +758,13 @@ jclass KoreAndroid::findClass(JNIEnv* env, const char* name) {
 	return clazz;
 }
 
-void* Kore::System::createWindow() {
-	return nullptr;
-}
-
-void Kore::System::swapBuffers() {
+void Kore::System::swapBuffers(int) {
 	if (glContext->Swap() != EGL_SUCCESS) {
 		Kore::log(Kore::Warning, "GL context lost.");
 	}
 }
 
-void Kore::System::destroyWindow() {
+void Kore::System::destroyWindow(int) {
 
 }
 
@@ -796,12 +793,12 @@ void Kore::System::loadURL(const char* url) {
 	activity->vm->DetachCurrentThread();
 }
 
-int Kore::System::screenWidth() {
+int Kore::System::windowWidth(int windowId) {
 	glContext->UpdateSize();
 	return glContext->GetScreenWidth();
 }
 
-int Kore::System::screenHeight() {
+int Kore::System::windowHeight(int windowId) {
 	glContext->UpdateSize();
 	return glContext->GetScreenHeight();
 }
@@ -830,8 +827,20 @@ void Kore::System::setTitle(const char*) {
 
 }
 
-void Kore::System::showWindow() {
+void Kore::System::setKeepScreenOn( bool on ) {
+    if(on)
+    {
+        ANativeActivity_setWindowFlags(activity, AWINDOW_FLAG_KEEP_SCREEN_ON, 0);
+    }else{
+        ANativeActivity_setWindowFlags(activity, 0, AWINDOW_FLAG_KEEP_SCREEN_ON);
+    }
+}
 
+void Kore::System::showWindow() {
+}
+
+int Kore::System::windowCount() {
+    return 1;
 }
 
 #include <sys/time.h>
@@ -856,9 +865,9 @@ double Kore::System::time() {
 bool Kore::System::handleMessages() {
 	int ident;
 	int events;
-	android_poll_source* source;
+	android_poll_source *source;
 
-	while ((ident = ALooper_pollAll(paused ? -1 : 0, NULL, &events, (void**)&source)) >= 0) {
+	while ((ident = ALooper_pollAll(paused ? -1 : 0, NULL, &events, (void **) &source)) >= 0) {
 		if (source != NULL) {
 			source->process(app, source);
 		}
@@ -867,11 +876,13 @@ bool Kore::System::handleMessages() {
 			if (accelerometerSensor != NULL) {
 				ASensorEvent event;
 				while (ASensorEventQueue_getEvents(sensorEventQueue, &event, 1) > 0) {
-					if(event.type == ASENSOR_TYPE_ACCELEROMETER) {
-						Kore::Sensor::_changed(Kore::SensorAccelerometer, event.acceleration.x, event.acceleration.y, event.acceleration.z);
+					if (event.type == ASENSOR_TYPE_ACCELEROMETER) {
+						Kore::Sensor::_changed(Kore::SensorAccelerometer, event.acceleration.x,
+											   event.acceleration.y, event.acceleration.z);
 					}
 					else if (event.type == ASENSOR_TYPE_GYROSCOPE) {
-						Kore::Sensor::_changed(Kore::SensorGyroscope, event.vector.x, event.vector.x, event.vector.z);
+						Kore::Sensor::_changed(Kore::SensorGyroscope, event.vector.x,
+											   event.vector.x, event.vector.z);
 					}
 				}
 			}
@@ -879,9 +890,20 @@ bool Kore::System::handleMessages() {
 
 		if (app->destroyRequested != 0) {
 			termDisplay();
-			Kore::Application::the()->stop();
+			Kore::System::stop();
 			return true;
 		}
+	}
+
+	{
+		JNIEnv* env = nullptr;
+		KoreAndroid::getActivity()->vm->AttachCurrentThread(&env, nullptr);
+		jclass koreMoviePlayerClass = KoreAndroid::findClass(env, "com.ktxsoftware.kore.KoreMoviePlayer");
+
+		jmethodID updateAll = env->GetStaticMethodID(koreMoviePlayerClass, "updateAll", "()V");
+		env->CallStaticVoidMethod(koreMoviePlayerClass, updateAll);
+
+		KoreAndroid::getActivity()->vm->DetachCurrentThread();
 	}
 
 	// Get screen rotation
@@ -897,24 +919,25 @@ bool Kore::System::handleMessages() {
 	return true;
 }
 
-bool Kore::Mouse::canLock() {
+bool Kore::Mouse::canLock(int windowId) {
 	return false;
 }
 
-void Kore::Mouse::setPosition(int, int) {
+void Kore::Mouse::setPosition(int windowId, int, int) {
 
 }
 
-void Kore::Mouse::_lock(bool) {
+void Kore::Mouse::_lock(int windowId, bool) {
 
 }
 
-void Kore::Mouse::getPosition(int& x, int& y) {
+void Kore::Mouse::getPosition(int windowId, int& x, int& y) {
 	x = 0;
 	y = 0;
 }
 
 void initAndroidFileReader();
+void KoreAndroidVideoInit();
 
 extern "C" void android_main(android_app* app) {
 	app_dummy();
@@ -922,6 +945,7 @@ extern "C" void android_main(android_app* app) {
 	::app = app;
 	activity = app->activity;
 	initAndroidFileReader();
+	KoreAndroidVideoInit();
 	app->onAppCmd = cmd;
 	app->onInputEvent = input;
 
@@ -936,4 +960,31 @@ extern "C" void android_main(android_app* app) {
 	}
 	kore(0, nullptr);
 	exit(0);
+}
+
+void Kore::System::setup() {
+}
+
+int Kore::System::initWindow( Kore::WindowOptions options ) {
+    Graphics::init(0, options.rendererOptions.depthBufferBits, options.rendererOptions.stencilBufferBits);
+    return 0;
+}
+
+namespace appstate {
+    int currentDeviceId = -1;
+}
+
+bool Kore::System::isFullscreen() {
+    return true;
+}
+
+int Kore::System::currentDevice() {
+    return appstate::currentDeviceId;
+}
+
+void Kore::System::makeCurrent( int id ) {
+    appstate::currentDeviceId = id;
+}
+
+void Kore::System::clearCurrent() {
 }

@@ -1,6 +1,11 @@
+-cp server/src
 -cp src
--cp vscode-extern
--js haxe.js
--D js-es5
 -lib hxnodejs
+-D hxnodejs-no-version-warning
+-js bin/client.js
+-debug
 Main
+
+--next
+--cwd server
+build.hxml

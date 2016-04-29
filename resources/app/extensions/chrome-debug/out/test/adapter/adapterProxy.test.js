@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var assert = require('assert');
 var testUtils = require('../testUtils');
 var adapterProxy_1 = require('../../adapter/adapterProxy');

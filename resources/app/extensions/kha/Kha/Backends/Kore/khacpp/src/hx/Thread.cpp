@@ -3,15 +3,10 @@
 #include <hx/Thread.h>
 #include <time.h>
 
-#ifdef HX_WINRT
-//using namespace Windows::Foundation;
-//using namespace Windows::System::Threading;
-#endif
-
 DECLARE_TLS_DATA(class hxThreadInfo, tlsCurrentThread);
 
 // g_threadInfoMutex allows atomic access to g_nextThreadNumber
-static MyMutex g_threadInfoMutex;
+static HxMutex g_threadInfoMutex;
 // Thread number 0 is reserved for the main thread
 static int g_nextThreadNumber = 1;
 
@@ -25,8 +20,7 @@ struct Deque : public Array_obj<Dynamic>
 	static Deque *Create()
 	{
 		Deque *result = new Deque();
-		result->mFinalizer = new hx::InternalFinalizer(result);
-		result->mFinalizer->mFinalizer = clean;
+		result->mFinalizer = new hx::InternalFinalizer(result,clean);
 		return result;
 	}
 	static void clean(hx::Object *inObj)
@@ -57,8 +51,8 @@ struct Deque : public Array_obj<Dynamic>
    #endif
 
 
-	#if defined(HX_WINDOWS) || defined(SYS_CONSOLE)
-	MyMutex     mMutex;
+	#ifndef HX_THREAD_SEMAPHORE_LOCKABLE
+	HxMutex     mMutex;
 	void PushBack(Dynamic inValue)
 	{
 		hx::EnterGCFreeZone();
@@ -132,7 +126,7 @@ struct Deque : public Array_obj<Dynamic>
 	#endif
 
 	hx::InternalFinalizer *mFinalizer;
-	MySemaphore mSemaphore;
+	HxSemaphore mSemaphore;
 };
 
 Dynamic __hxcpp_deque_create()
@@ -174,7 +168,7 @@ public:
 	hxThreadInfo(Dynamic inFunction, int inThreadNumber)
         : mFunction(inFunction), mThreadNumber(inThreadNumber), mTLS(0,0)
 	{
-		mSemaphore = new MySemaphore;
+		mSemaphore = new HxSemaphore;
 		mDeque = Deque::Create();
 	}
 	hxThreadInfo()
@@ -225,7 +219,7 @@ public:
 
 
 	Array<Dynamic> mTLS;
-	MySemaphore *mSemaphore;
+	HxSemaphore *mSemaphore;
 	Dynamic mFunction;
     int mThreadNumber;
 	Deque   *mDeque;
@@ -240,7 +234,7 @@ THREAD_FUNC_TYPE hxThreadFunc( void *inInfo )
    info[0] = (hxThreadInfo *)inInfo;
    info[1] = 0;
 
-	hx::RegisterCurrentThread((int *)&info[1]);
+	hx::SetTopOfStack((int *)&info[1], true);
 
 	tlsCurrentThread = info[0];
 
@@ -291,40 +285,11 @@ Dynamic __hxcpp_thread_create(Dynamic inStart)
 	hx::GCPrepareMultiThreaded();
 	hx::EnterGCFreeZone();
 
-   #if defined(HX_WINRT)
-
-   bool ok = true;
-   try
-   {
-     auto workItemHandler = ref new WorkItemHandler([=](IAsyncAction^)
-        {
-            // Run the user callback.
-            hxThreadFunc(info);
-        }, Platform::CallbackContext::Any);
-
-      ThreadPool::RunAsync(workItemHandler, WorkItemPriority::Normal, WorkItemOptions::None);
-   }
-   catch (...)
-   {
-      ok = false;
-   }
-
-   #elif defined(HX_WINDOWS)
-      bool ok = _beginthreadex(0,0,hxThreadFunc,info,0,0) != 0;
-   #else
-      pthread_t result = 0;
-      int created = pthread_create(&result,0,hxThreadFunc,info);
-      bool ok = created==0;
-   #endif
-
-
-     if (ok)
-     {
-        #ifndef HX_WINDOWS
-        pthread_detach(result);
-        #endif
-        info->mSemaphore->Wait();
-     }
+    bool ok = HxCreateDetachedThread(hxThreadFunc, info);
+    if (ok)
+    {
+       info->mSemaphore->Wait();
+    }
 
     hx::ExitGCFreeZone();
     info->CleanSemaphore();
@@ -462,7 +427,7 @@ public:
 	}
 
 
-   MyMutex mMutex;
+   HxMutex mMutex;
 };
 
 
@@ -518,7 +483,7 @@ public:
 
 	hx::InternalFinalizer *mFinalizer;
 
-	#ifdef SYS_CONSOLE
+	#if defined(HX_WINDOWS) || defined(__SNC__) || defined(SYS_CONSOLE)
 	double Now()
 	{
 		return 0;
@@ -528,7 +493,7 @@ public:
 	{
 		return (double)clock()/CLOCKS_PER_SEC;
 	}
-	#else
+	#elif defined(__unix__) || defined(__APPLE__)
 	double Now()
 	{
 		struct timeval tv;
@@ -587,8 +552,8 @@ public:
 	}
 
 
-	MySemaphore mNotEmpty;
-   MyMutex     mAvailableLock;
+	HxSemaphore mNotEmpty;
+   HxMutex     mAvailableLock;
 	int         mAvailable;
 };
 

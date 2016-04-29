@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -50,8 +51,14 @@ var ResReqWebSocket = (function (_super) {
                 resolve(ws);
             });
             ws.on('message', function (msgStr) {
-                utilities_1.Logger.log('From target: ' + msgStr);
-                _this.onMessage(JSON.parse(msgStr));
+                var msgObj = JSON.parse(msgStr);
+                if (msgObj
+                    && !(msgObj.method === 'Debugger.scriptParsed' && msgObj.params && msgObj.params.isContentScript)
+                    && !(msgObj.params && msgObj.params.url && msgObj.params.url.indexOf('extensions::') === 0)) {
+                    // Not really the right place to examine the content of the message, but don't log annoying extension script notifications.
+                    utilities_1.Logger.log('From target: ' + msgStr);
+                }
+                _this.onMessage(msgObj);
             });
             ws.on('close', function () {
                 utilities_1.Logger.log('Websocket closed');
@@ -96,7 +103,7 @@ var ResReqWebSocket = (function (_super) {
         }
     };
     return ResReqWebSocket;
-})(events_1.EventEmitter);
+}(events_1.EventEmitter));
 /**
  * Connects to a target supporting the webkit protocol and sends and receives messages
  */
@@ -127,10 +134,12 @@ var WebKitConnection = (function () {
                 var responseArray = JSON.parse(jsonResponse);
                 if (Array.isArray(responseArray)) {
                     // Filter out extension targets and other things
-                    var pages = responseArray.filter(function (target) { return target && target.type === 'page'; });
+                    // Non-chrome scenarios don't always specify a type, so filter to include ones without a type at all
+                    var pages = responseArray.filter(function (target) { return target && (!target.type || target.type === 'page'); });
                     // If a url was specified (launch mode), try to filter to that url
                     if (url) {
-                        var urlPages = pages.filter(function (page) { return utils.canonicalizeUrl(page.url) === utils.canonicalizeUrl(url); });
+                        url = utils.canonicalizeUrl(url).toLowerCase();
+                        var urlPages = pages.filter(function (page) { return utils.canonicalizeUrl(page.url).toLowerCase() === url; });
                         if (!urlPages.length) {
                             utilities_1.Logger.log("Warning: Can't find a page with url: " + url + ". Available pages: " + JSON.stringify(pages.map(function (page) { return page.url; })), true);
                         }
@@ -215,7 +224,7 @@ var WebKitConnection = (function () {
         });
     };
     return WebKitConnection;
-})();
+}());
 exports.WebKitConnection = WebKitConnection;
 
 //# sourceMappingURL=webKitConnection.js.map

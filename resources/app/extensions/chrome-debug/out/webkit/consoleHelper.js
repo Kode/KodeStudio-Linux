@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var url = require('url');
 var Utilities = require('./utilities');
 function formatConsoleMessage(m) {

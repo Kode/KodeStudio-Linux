@@ -219,7 +219,8 @@ class ExporterXCode extends Exporter {
 		let plistname = '';
 		let files = [];
 		let directories = [];
-		for (let filename of project.getFiles()) {
+		for (let fileobject of project.getFiles()) {
+			let filename = fileobject.file;
 			if (filename.endsWith(".plist")) plistname = filename;
 
 			let dirname = '';
@@ -235,6 +236,20 @@ class ExporterXCode extends Exporter {
 		let frameworks = [];
 		for (let lib of project.getLibs()) {
 			frameworks.push(new Framework(lib));
+		}
+
+		let targetOptions = {
+			bundle: "com.ktxsoftware.$(PRODUCT_NAME:rfc1034identifier)",
+			// version: "1.0", // somehow the plist can't read the values for this
+			// build: "1", // somehow the plist can't read the values for this
+			organizationName: "KTX Software Development",
+		};
+		if (project.targetOptions != null && project.targetOptions.ios != null) {
+			let userOptions = project.targetOptions.ios;
+			if (userOptions.bundle != null) targetOptions.bundle = userOptions.bundle;
+			// if (userOptions.version != null) targetOptions.version = userOptions.version;
+			// if (userOptions.build != null) targetOptions.build = userOptions.build;
+			if (userOptions.organizationName != null) targetOptions.organizationName = userOptions.organizationName;
 		}
 
 		const projectId = newId();
@@ -421,7 +436,7 @@ class ExporterXCode extends Exporter {
 		this.p("isa = PBXProject;", 3);
 		this.p("attributes = {", 3);
 		this.p("LastUpgradeCheck = 0610;", 4);
-		this.p("ORGANIZATIONNAME = \"KTX Software Development\";", 4);
+		this.p('ORGANIZATIONNAME = "' + targetOptions.organizationName + '";', 4);
 		this.p("TargetAttributes = {", 4);
 		this.p(targetId + " = {", 5);
 		this.p("CreatedOnToolsVersion = 6.1.1;", 6);
@@ -504,8 +519,8 @@ class ExporterXCode extends Exporter {
 		this.p("isa = XCBuildConfiguration;", 3);
 		this.p("buildSettings = {", 3);
 		this.p('ALWAYS_SEARCH_USER_PATHS = NO;', 4);
-		this.p('CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";', 4);
-		if (platform === Platform.iOS) {
+		this.p('CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";', 4);
+		if (platform === Platform.iOS || project.cpp11) {
 			this.p('CLANG_CXX_LIBRARY = "libc++";', 4);
 		}
 		else {
@@ -561,7 +576,8 @@ class ExporterXCode extends Exporter {
 				this.p('MACOSX_DEPLOYMENT_TARGET = 10.11;', 4);
 			}
 			else {
-				this.p('MACOSX_DEPLOYMENT_TARGET = 10.4;', 4);
+				if (project.cpp11) this.p('MACOSX_DEPLOYMENT_TARGET = 10.7;', 4);
+				else this.p('MACOSX_DEPLOYMENT_TARGET = 10.4;', 4);
 			}
 		}
 		this.p('MTL_ENABLE_DEBUG_INFO = YES;', 4);
@@ -580,8 +596,8 @@ class ExporterXCode extends Exporter {
 		this.p("isa = XCBuildConfiguration;", 3);
 		this.p("buildSettings = {", 3);
 		this.p('ALWAYS_SEARCH_USER_PATHS = NO;', 4);
-		this.p('CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";', 4);
-		if (platform === Platform.iOS) {
+		this.p('CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";', 4);
+		if (platform === Platform.iOS || project.cpp11) {
 			this.p('CLANG_CXX_LIBRARY = "libc++";', 4);
 		}
 		else {
@@ -637,7 +653,8 @@ class ExporterXCode extends Exporter {
 				this.p('MACOSX_DEPLOYMENT_TARGET = 10.11;', 4);
 			}
 			else {
-				this.p('MACOSX_DEPLOYMENT_TARGET = 10.4;', 4);
+				if (project.cpp11) this.p('MACOSX_DEPLOYMENT_TARGET = 10.7;', 4);
+				else this.p('MACOSX_DEPLOYMENT_TARGET = 10.4;', 4);
 			}
 		}
 		this.p('MTL_ENABLE_DEBUG_INFO = NO;', 4);
@@ -679,6 +696,9 @@ class ExporterXCode extends Exporter {
 		else {
 			this.p('LD_RUNPATH_SEARCH_PATHS = "$(inherited)";', 4);
 		}
+		this.p('PRODUCT_BUNDLE_IDENTIFIER = "' + targetOptions.bundle + '";', 4);
+		// this.p('BUNDLE_VERSION = "' + targetOptions.version + '";', 4);
+		// this.p('BUILD_VERSION = "' + targetOptions.build + '";', 4);
 		this.p('PRODUCT_NAME = "$(TARGET_NAME)";', 4);
 		this.p('};', 3);
 		this.p('name = Debug;', 3);
@@ -709,6 +729,9 @@ class ExporterXCode extends Exporter {
 		else {
 			this.p('LD_RUNPATH_SEARCH_PATHS = "$(inherited)";', 4);
 		}
+		this.p('PRODUCT_BUNDLE_IDENTIFIER = "' + targetOptions.bundle + '";', 4);
+		// this.p('BUNDLE_VERSION = "' + targetOptions.version + '";', 4);
+		// this.p('BUILD_VERSION = "' + targetOptions.build + '";', 4);
 		this.p('PRODUCT_NAME = "$(TARGET_NAME)";', 4);
 		this.p('};', 3);
 		this.p('name = Release;', 3);

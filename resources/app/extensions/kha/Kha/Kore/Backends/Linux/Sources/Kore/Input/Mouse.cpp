@@ -11,14 +11,14 @@
 
 using namespace Kore;
 
-void Mouse::_lock(bool truth){
+void Mouse::_lock(int windowId, bool truth){
     show(!truth);
     if (truth) {
-        int width = System::screenWidth();
-        int height = System::screenHeight();
+        int width = System::windowWidth(windowId);
+        int height = System::windowHeight(windowId);
 
         int x, y;
-        getPosition(x, y);
+        getPosition(windowId, x, y);
 
         // Guess the new position of X and Y
         int newX = x;
@@ -43,11 +43,11 @@ void Mouse::_lock(bool truth){
         }
 
         // Force the mouse to stay inside the window
-        setPosition(newX, newY);
+        setPosition(windowId, newX, newY);
     }
 }
 
-bool Mouse::canLock(){
+bool Mouse::canLock(int windowId){
 	return true;
 }
 
@@ -55,22 +55,25 @@ void Mouse::show(bool truth){
 	//TODO
 }
 
-void Mouse::setPosition(int x, int y){
+void Mouse::setPosition(int windowId, int x, int y){
+#ifdef OPENGL
 	Display* dpy = XOpenDisplay(0);
-    Window win = (XID)System::windowHandle();
+    ::Window win = (XID)System::windowHandle(windowId);
 
     XWarpPointer(dpy, None, win, 0, 0, 0, 0, x, y);
     XFlush(dpy); // Flushes the output buffer, therefore updates the cursor's position.
 
     XCloseDisplay(dpy);
+#endif
 }
 
-void Mouse::getPosition(int& x, int& y){
+void Mouse::getPosition(int windowId, int& x, int& y) {
+#ifdef OPENGL
     Display* dpy = XOpenDisplay(NULL);
-    Window win = (XID)System::windowHandle();
+    ::Window win = (XID)System::windowHandle(windowId);
 
-    Window inwin;
-    Window inchildwin;
+    ::Window inwin;
+    ::Window inchildwin;
     int rootx, rooty;
     unsigned int mask;
 
@@ -78,4 +81,5 @@ void Mouse::getPosition(int& x, int& y){
         &rootx, &rooty, &x, &y, &mask);
 
     XCloseDisplay(dpy);
+#endif
 }

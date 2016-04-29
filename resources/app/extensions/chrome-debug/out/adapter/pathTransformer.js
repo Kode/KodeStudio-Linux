@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var utils = require('../webkit/utilities');
 /**
  * Converts a local path from Code to a path on the target.
@@ -12,10 +13,10 @@ var PathTransformer = (function () {
         this._pendingBreakpointsByPath = new Map();
     }
     PathTransformer.prototype.launch = function (args) {
-        this._webRoot = utils.getWebRoot(args);
+        this._webRoot = args.webRoot;
     };
     PathTransformer.prototype.attach = function (args) {
-        this._webRoot = utils.getWebRoot(args);
+        this._webRoot = args.webRoot;
     };
     PathTransformer.prototype.setBreakpoints = function (args) {
         var _this = this;
@@ -88,7 +89,7 @@ var PathTransformer = (function () {
         });
     };
     return PathTransformer;
-})();
+}());
 exports.PathTransformer = PathTransformer;
 
 //# sourceMappingURL=pathTransformer.js.map

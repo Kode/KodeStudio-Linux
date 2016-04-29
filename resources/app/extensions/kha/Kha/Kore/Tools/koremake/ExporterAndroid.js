@@ -17,6 +17,15 @@ class ExporterAndroid extends Exporter {
 		let project = solution.getProjects()[0];
 		let safename = solution.getName().replaceAll(' ', '-');
 		this.safename = safename;
+		let targetOptions = {
+			package: 'com.ktxsoftware.kha',
+			screenOrientation: 'sensor'
+		};
+		if (project.targetOptions != null && project.targetOptions.android != null) {
+			let userOptions = project.targetOptions.android;
+			if (userOptions.package != null) targetOptions.package = userOptions.package;
+			if (userOptions.screenOrientation != null) targetOptions.screenOrientation = userOptions.screenOrientation;
+		}
 
 		const indir = path.join(__dirname, 'Data', 'android');
 		const outdir = path.join(to.toString(), safename);
@@ -25,6 +34,7 @@ class ExporterAndroid extends Exporter {
 		fs.copySync(path.join(indir, 'gradle.properties'), path.join(outdir, 'gradle.properties'));
 		fs.copySync(path.join(indir, 'gradlew'), path.join(outdir, 'gradlew'));
 		fs.copySync(path.join(indir, 'gradlew.bat'), path.join(outdir, 'gradlew.bat'));
+		fs.copySync(path.join(indir, 'local.properties'), path.join(outdir, 'local.properties'));
 		fs.copySync(path.join(indir, 'settings.gradle'), path.join(outdir, 'settings.gradle'));
 
 		let nameiml = fs.readFileSync(path.join(indir, 'name.iml'), {encoding: 'utf8'});
@@ -34,6 +44,7 @@ class ExporterAndroid extends Exporter {
 		fs.copySync(path.join(indir, 'app', 'proguard-rules.pro'), path.join(outdir, 'app', 'proguard-rules.pro'));
 
 		let flags = '\n';
+        flags += '        cppFlags += "-std=c++11"\n'; // (DK) for scoped enums i.e. (enum class WindowMode { ..}')
 		flags += '        cppFlags += "-fexceptions"\n';
 		flags += '        cppFlags += "-frtti"\n';
 		for (let def of project.getDefines()) {
@@ -48,7 +59,7 @@ class ExporterAndroid extends Exporter {
 		}
 
 		let gradle = fs.readFileSync(path.join(indir, 'app', 'build.gradle'), {encoding: 'utf8'});
-		gradle = gradle.replaceAll('{name}', safename);
+		gradle = gradle.replaceAll('{package}', targetOptions.package);
 		gradle = gradle.replaceAll('{flags}', flags);
 
 		let javasources = '';
@@ -68,7 +79,13 @@ class ExporterAndroid extends Exporter {
 		fs.ensureDirSync(path.join(outdir, 'app', 'src'));
 		//fs.emptyDirSync(path.join(outdir, 'app', 'src'));
 
-		fs.copySync(path.join(indir, 'main', 'AndroidManifest.xml'), path.join(outdir, 'app', 'src', 'main', 'AndroidManifest.xml'));
+		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main'));
+
+		let manifest = fs.readFileSync(path.join(indir, 'main', 'AndroidManifest.xml'), {encoding: 'utf8'});
+		manifest = manifest.replaceAll('{package}', targetOptions.package);
+		manifest = manifest.replaceAll('{screenOrientation}', targetOptions.screenOrientation);
+		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main'));
+		fs.writeFileSync(path.join(outdir, 'app', 'src', 'main', 'AndroidManifest.xml'), manifest, {encoding: 'utf8'});
 
 		let strings = fs.readFileSync(path.join(indir, 'main', 'res', 'values', 'strings.xml'), {encoding: 'utf8'});
 		strings = strings.replaceAll('{name}', solution.getName());
@@ -106,12 +123,16 @@ class ExporterAndroid extends Exporter {
 		if (project.getDebugDir().length > 0) this.copyDirectory(from.resolve(project.getDebugDir()), to.resolve(Paths.get(safename, 'app', 'src', 'main', 'assets')));
 
 		for (let file of project.getFiles()) {
-			let localFile = file;
+			let localFile = file.file;
 			while (localFile.startsWith('../')) localFile = localFile.substr(3);
 			let target = to.resolve(Paths.get(safename, 'app', 'src', 'main', 'jni')).resolve(localFile);
 			this.createDirectory(Paths.get(target.path.substr(0, target.path.lastIndexOf('/'))));
-			Files.copyIfDifferent(from.resolve(file), target, true);
+			Files.copyIfDifferent(from.resolve(file.file), target, true);
 		}
+
+		// Reminder in case you forgot to change project details.
+		console.log("* Project name : " + solution.getName());
+		console.log("* Project package : " + targetOptions.package);
 	}
 
 	exportSolutionEclipse(solution, from, to, platform, vr) {
@@ -181,7 +202,8 @@ class ExporterAndroid extends Exporter {
 
 		this.p("LOCAL_MODULE    := Kore");
 		let files = "";
-		for (let filename of project.getFiles()) {
+		for (let fileobject of project.getFiles()) {
+			let filename = fileobject.file; 
 			if (filename.endsWith(".c") || filename.endsWith(".cpp") || filename.endsWith(".cc") || filename.endsWith(".s")) files += to.resolve('jni').relativize(from.resolve(filename)).toString().replaceAll('\\', '/') + " ";
 		}
 		this.p("LOCAL_SRC_FILES := " + files);

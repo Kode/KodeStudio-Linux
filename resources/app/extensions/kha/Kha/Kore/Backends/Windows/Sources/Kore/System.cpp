@@ -1,10 +1,14 @@
 #include "pch.h"
 #include <Kore/System.h>
-#include <Kore/Application.h>
 #include <Kore/Input/Keyboard.h>
 #include <Kore/Input/Mouse.h>
 #include <Kore/Input/Gamepad.h>
 #include <Kore/Graphics/Graphics.h>
+#include <Kore/Log.h>
+
+#include "Display.h"
+
+#include <dinput.h>
 
 #ifdef VR_RIFT 
 #include "Vr/VrInterface.h"
@@ -16,6 +20,88 @@
 #include <shlobj.h>
 #include <exception>
 #include <XInput.h>
+
+LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+#ifdef KOREC
+extern "C"
+#endif
+int kore(int argc, char** argv);
+
+namespace {
+	struct KoreWindow : public Kore::KoreWindowBase {
+		HWND hwnd;
+
+		KoreWindow( HWND hwnd, int x, int y, int width, int height ) : KoreWindowBase(x, y, width, height) {
+			this->hwnd = hwnd;
+		}
+	};
+
+	KoreWindow* windows[Kore::System::MAXIMUM_WINDOW_COUNT] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	int windowCounter = -1;
+
+	int idFromHWND( HWND hwnd ) {
+		for (int windowIndex = 0; windowIndex < Kore::System::MAXIMUM_WINDOW_COUNT; ++windowIndex) {
+			KoreWindow * window = windows[windowIndex];
+
+			if (window != nullptr && window->hwnd == hwnd) {
+				return windowIndex;
+			}
+		}
+
+		return -1;
+	}
+
+#ifdef VR_RIFT
+	const char* windowClassName = "ORT";
+#else
+	const char* windowClassName = "KoreWindow";
+#endif
+
+	void registerWindowClass(HINSTANCE hInstance, const char * className) {
+		WNDCLASSEXA wc = { sizeof(WNDCLASSEXA), CS_OWNDC/*CS_CLASSDC*/, MsgProc, 0L, 0L, hInstance, LoadIcon(hInstance, MAKEINTRESOURCE(107)), nullptr /*LoadCursor(0, IDC_ARROW)*/, 0, 0, className/*windowClassName*/, 0 };
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		RegisterClassExA(&wc);
+	}
+}
+
+// TODO (DK) split to Graphics / Windowing?
+namespace Kore { namespace System {
+	int currentDeviceId = -1;
+
+	// (DK) only valid during begin() => end() calls
+	int currentDevice() {
+		//if (currentDeviceId == -1) {
+		//	log(Warning, "no current device is active");
+		//}
+
+		return currentDeviceId;
+	}
+
+	//void setCurrentDevice(int id) {
+	//	currentDeviceId = id;
+	//}
+
+	int windowCount() {
+		return windowCounter + 1;
+	}
+
+	int windowWidth(int id) {
+		RECT vRect;
+		GetClientRect(windows[id]->hwnd, &vRect);
+		int i = vRect.right;
+		return i;
+		//return windows[id]->width;
+	}
+
+	int windowHeight(int id) {
+		RECT vRect;
+		GetClientRect(windows[id]->hwnd, &vRect);
+		int i = vRect.bottom;
+		return i;
+		//return windows[id]->height;
+	}
+}}
 
 using namespace Kore;
 
@@ -217,58 +303,78 @@ namespace {
 }
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	int windowWidth;
+	int windowHeight;
+	
 	switch (msg) {
 	case WM_MOVE:
 	case WM_MOVING:
-	case WM_SIZE:
 	case WM_SIZING:
 		//Scheduler::breakTime();
 		break;
+	case WM_SIZE:
+		windowWidth = LOWORD(lParam);
+		windowHeight = HIWORD(lParam);
+		Graphics::changeResolution(windowWidth, windowHeight);
+	break;
 	case WM_DESTROY:
-		Application::the()->stop();
+		Kore::System::stop();
 		return 0;
 	case WM_ERASEBKGND:
 		return 1;
 	case WM_ACTIVATE:
 		if (LOWORD(wParam) == WA_ACTIVE)
-			Mouse::the()->_activated(true);
+			Mouse::the()->_activated(idFromHWND(hWnd), true);
 		else
-			Mouse::the()->_activated(false);
+			Mouse::the()->_activated(idFromHWND(hWnd), false);
 		break;
 	case WM_MOUSEMOVE:
 		mouseX = LOWORD(lParam);
 		mouseY = HIWORD(lParam);
-		Mouse::the()->_move(LOWORD(lParam), HIWORD(lParam));
+		Mouse::the()->_move(idFromHWND(hWnd), LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_LBUTTONDOWN:
 		mouseX = LOWORD(lParam);
 		mouseY = HIWORD(lParam);
-		Mouse::the()->_press(0, LOWORD(lParam), HIWORD(lParam));
+		Mouse::the()->_press(idFromHWND(hWnd), 0, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_LBUTTONUP:
 		mouseX = LOWORD(lParam);
 		mouseY = HIWORD(lParam);
-		Mouse::the()->_release(0, LOWORD(lParam), HIWORD(lParam));
+		Mouse::the()->_release(idFromHWND(hWnd), 0, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_RBUTTONDOWN:
 		mouseX = LOWORD(lParam);
 		mouseY = HIWORD(lParam);
-		Mouse::the()->_press(1, LOWORD(lParam), HIWORD(lParam));
+		Mouse::the()->_press(idFromHWND(hWnd), 1, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_RBUTTONUP:
 		mouseX = LOWORD(lParam);
 		mouseY = HIWORD(lParam);
-		Mouse::the()->_release(1, LOWORD(lParam), HIWORD(lParam));
+		Mouse::the()->_release(idFromHWND(hWnd), 1, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_MBUTTONDOWN:
 		mouseX = LOWORD(lParam);
 		mouseY = HIWORD(lParam);
-		Mouse::the()->_press(2, LOWORD(lParam), HIWORD(lParam));
+		Mouse::the()->_press(idFromHWND(hWnd), 2, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_MBUTTONUP:
 		mouseX = LOWORD(lParam);
 		mouseY = HIWORD(lParam);
-		Mouse::the()->_release(2, LOWORD(lParam), HIWORD(lParam));
+		Mouse::the()->_release(idFromHWND(hWnd), 2, LOWORD(lParam), HIWORD(lParam));
+		break;
+	case WM_XBUTTONDOWN:
+		mouseX = LOWORD(lParam);
+		mouseY = HIWORD(lParam);
+		Mouse::the()->_press(idFromHWND(hWnd), HIWORD(wParam) + 2, mouseX, mouseY);
+		break;	
+	case WM_XBUTTONUP:
+		mouseX = LOWORD(lParam);
+		mouseY = HIWORD(lParam);
+		Mouse::the()->_release(idFromHWND(hWnd), HIWORD(wParam) + 2, mouseX, mouseY);
+		break;
+	case WM_MOUSEWHEEL:
+		Mouse::the()->_scroll(idFromHWND(hWnd), GET_WHEEL_DELTA_WPARAM(wParam) / -120);
 		break;
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
@@ -285,7 +391,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_SYSCOMMAND:
 		//printf("WS_SYSCOMMAND %5d %5d %5d\n", msg, wParam, lParam);
 		switch (wParam) {
-		case SC_KEYMENU: // Ignorieren, wenn Alt für das WS_SYSMENU gedrückt wird.
+		case SC_KEYMENU: // Ignorieren, wenn Alt fï¿½r das WS_SYSMENU gedrï¿½ckt wird.
 			return 0;
 		case SC_SCREENSAVE:
 		case SC_MONITORPOWER:
@@ -310,7 +416,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 }
 
 namespace {
-	float axes[12 * 4];
+	float axes[12 * 6];
 	float buttons[12 * 16];
 
 	typedef DWORD (WINAPI *XInputGetStateType)(DWORD dwUserIndex, XINPUT_STATE* pState);
@@ -327,6 +433,197 @@ namespace {
 		
 		if (lib != nullptr) {
 			InputGetState = (XInputGetStateType)GetProcAddress(lib, "XInputGetState");
+		}
+	}
+
+	IDirectInput8 * di_instance = nullptr;
+	IDirectInputDevice8 * di_pads[XUSER_MAX_COUNT];
+	DIJOYSTATE2 di_padState[XUSER_MAX_COUNT];
+	DIJOYSTATE2 di_lastPadState[XUSER_MAX_COUNT];
+	DIDEVCAPS di_deviceCaps[XUSER_MAX_COUNT];
+	int padCount = 0;
+
+	void cleanupPad( int padIndex ) {
+		if (di_pads[padIndex] != nullptr) {
+			di_pads[padIndex]->Unacquire();
+			di_pads[padIndex]->Release();
+			di_pads[padIndex] = 0;
+		}
+	}
+
+	// TODO (DK) this should probably be called from somewhere?
+	void cleanupDirectInput() {
+		for (int padIndex = 0; padIndex < XUSER_MAX_COUNT; ++padIndex) {
+			cleanupPad(padIndex);
+		}
+
+		if (di_instance != nullptr) {
+			di_instance->Release();
+			di_instance = nullptr;
+		}
+	}
+
+	BOOL CALLBACK enumerateJoystickAxesCallback( LPCDIDEVICEOBJECTINSTANCEW ddoi, LPVOID context ) {
+		HWND hwnd = (HWND)context;
+
+		DIPROPRANGE propertyRange; 
+		propertyRange.diph.dwSize = sizeof(DIPROPRANGE); 
+		propertyRange.diph.dwHeaderSize = sizeof(DIPROPHEADER); 
+		propertyRange.diph.dwHow = DIPH_BYID; 
+		propertyRange.diph.dwObj = ddoi->dwType;
+		propertyRange.lMin = -32768; 
+		propertyRange.lMax = 32768; 
+    
+		HRESULT hr = di_pads[padCount]->SetProperty(DIPROP_RANGE, &propertyRange.diph);
+
+		if (FAILED(hr)) {
+			log(Warning, "DirectInput8 / Pad%i / SetProperty() failed (HRESULT=0x%x)", padCount, hr);
+
+			// TODO (DK) cleanup?
+			//cleanupPad(padCount);
+
+			return DIENUM_STOP;
+		}
+
+		return DIENUM_CONTINUE;
+	}
+
+	BOOL CALLBACK enumerateJoysticksCallback( LPCDIDEVICEINSTANCEW ddi, LPVOID context ) {
+		HRESULT hr = di_instance->CreateDevice(ddi->guidInstance, &di_pads[padCount], nullptr);
+
+		if (SUCCEEDED(hr)) {
+			hr = di_pads[padCount]->SetDataFormat(&c_dfDIJoystick2);
+
+			// TODO (DK) required?
+			//hr = di_pads[padCount]->SetCooperativeLevel(NULL, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+
+			if (SUCCEEDED(hr)) {
+				di_deviceCaps[padCount].dwSize = sizeof(DIDEVCAPS);
+				hr = di_pads[padCount]->GetCapabilities(&di_deviceCaps[padCount]);
+
+				if (SUCCEEDED(hr)) {
+					hr = di_pads[padCount]->EnumObjects(enumerateJoystickAxesCallback, nullptr, DIDFT_AXIS);
+
+					if (SUCCEEDED(hr)) {
+						hr = di_pads[padCount]->Acquire();
+
+						if (SUCCEEDED(hr)) {
+							memset(&di_padState[padCount], 0, sizeof(DIJOYSTATE2));
+							hr = di_pads[padCount]->GetDeviceState(sizeof(DIJOYSTATE2), &di_padState[padCount]);
+
+							switch (hr) {
+								case S_OK: log(Info, "DirectInput8 / Pad%i / initialized", padCount); break;
+								default: {
+									log(Warning, "DirectInput8 / Pad%i / GetDeviceState() failed (HRESULT=0x%x)", padCount, hr);
+									//cleanupPad(padCount); // (DK) don't kill it, we try again in handleDirectInputPad()
+								} break;
+							}
+						} else {
+							log(Warning, "DirectInput8 / Pad%i / Acquire() failed (HRESULT=0x%x)", padCount, hr);
+							cleanupPad(padCount);
+						}
+					} else {
+						log(Warning, "DirectInput8 / Pad%i / EnumObjects(DIDFT_AXIS) failed (HRESULT=0x%x)", padCount, hr);
+						cleanupPad(padCount);
+					}
+				} else {
+					log(Warning, "DirectInput8 / Pad%i / GetCapabilities() failed (HRESULT=0x%x)", padCount, hr);
+					cleanupPad(padCount);
+				}
+			} else {				
+				log(Warning, "DirectInput8 / Pad%i / SetDataFormat() failed (HRESULT=0x%x)", padCount, hr);
+				cleanupPad(padCount);
+			}
+
+			++padCount;
+
+			if (padCount >= XUSER_MAX_COUNT) {
+				return DIENUM_STOP;
+			}
+		}
+
+		return DIENUM_CONTINUE;
+	}
+
+	void initializeDirectInput() {
+		HINSTANCE hinstance = GetModuleHandleA(nullptr);
+		
+		memset(&di_pads, 0, sizeof(IDirectInputDevice8) * XUSER_MAX_COUNT);
+		memset(&di_padState, 0, sizeof(DIJOYSTATE2) * XUSER_MAX_COUNT);
+		memset(&di_lastPadState, 0, sizeof(DIJOYSTATE2) * XUSER_MAX_COUNT);
+		memset(&di_deviceCaps, 0, sizeof(DIDEVCAPS) * XUSER_MAX_COUNT);
+
+		HRESULT hr = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&di_instance, nullptr);
+
+		if (SUCCEEDED(hr)) {
+			hr = di_instance->EnumDevices(DI8DEVCLASS_GAMECTRL, enumerateJoysticksCallback, nullptr, DIEDFL_ATTACHEDONLY);
+
+			if (SUCCEEDED(hr)) {
+			} else {
+				cleanupDirectInput();
+			}
+		} else {
+			log(Warning, "DirectInput8Create failed (HRESULT=0x%x)", hr);
+		}
+	}
+
+	void handleDirectInputPad( int padIndex ) {
+		if (di_pads[padIndex] == nullptr) {
+			return;
+		}
+
+		// TODO (DK) code is copied from xinput stuff, why is it set every frame?
+		Kore::Gamepad::get(padIndex)->vendor = "DirectInput8"; // TODO (DK) figure out how to get vendor name
+		Kore::Gamepad::get(padIndex)->productName = "Generic Gamepad"; // TODO (DK) figure out how to get product name
+				
+		HRESULT hr = di_pads[padIndex]->GetDeviceState(sizeof(DIJOYSTATE2), &di_padState[padIndex]);
+
+		switch (hr) {
+			case S_OK: {
+				if (Kore::Gamepad::get(padIndex)->Axis != nullptr) {
+					// TODO (DK) there is a lot more to handle
+					for (int axisIndex = 0; axisIndex < 2; ++axisIndex) {
+						LONG * now = nullptr;
+						LONG * last = nullptr;
+
+						switch (axisIndex) {
+							case 0: {
+								now = &di_padState[padIndex].lX;
+								last = &di_lastPadState[padIndex].lX;
+							} break;
+							case 1: {
+								now = &di_padState[padIndex].lY;
+								last = &di_lastPadState[padIndex].lY;
+							} break;
+							case 2: {
+								now = &di_padState[padIndex].lZ;
+								last = &di_lastPadState[padIndex].lZ;
+							} break;
+						}
+
+						if (*now != *last) {
+							Kore::Gamepad::get(padIndex)->Axis(axisIndex, *now / 32768.0f);
+						}
+					}
+
+					if (Kore::Gamepad::get(padIndex)->Button != nullptr) {
+						for (int buttonIndex = 0; buttonIndex < 128; ++buttonIndex) {
+							BYTE * now = &di_padState[padIndex].rgbButtons[buttonIndex];
+							BYTE * last = &di_lastPadState[padIndex].rgbButtons[buttonIndex];
+
+							if (*now != *last) {
+								Kore::Gamepad::get(padIndex)->Button(buttonIndex, *now / 255.0f);
+							}
+						}
+					}
+				}
+
+				memcpy(&di_lastPadState[padIndex], &di_padState[padIndex], sizeof(DIJOYSTATE2));
+			} break;
+			case DIERR_INPUTLOST: // fall through
+			case DIERR_NOTACQUIRED: {
+				hr = di_pads[padIndex]->Acquire();
+			} break;
 		}
 	}
 }
@@ -349,15 +646,17 @@ bool Kore::System::handleMessages() {
 				Kore::Gamepad::get(i)->vendor = "Microsoft";
 				Kore::Gamepad::get(i)->productName = "Xbox 360 Controller";
 
-				float newaxes[4];
+				float newaxes[6];
 				newaxes[0] = state.Gamepad.sThumbLX / 32768.0f;
 				newaxes[1] = state.Gamepad.sThumbLY / 32768.0f;
 				newaxes[2] = state.Gamepad.sThumbRX / 32768.0f;
 				newaxes[3] = state.Gamepad.sThumbRY / 32768.0f;
-				for (int i2 = 0; i2 < 4; ++i2) {
-					if (axes[i * 4 + i2] != newaxes[i2]) {
+				newaxes[4] = state.Gamepad.bLeftTrigger / 255.0f;
+				newaxes[5] = state.Gamepad.bRightTrigger / 255.0f;
+				for (int i2 = 0; i2 < 6; ++i2) {
+					if (axes[i * 6 + i2] != newaxes[i2]) {
 						if (Kore::Gamepad::get(i)->Axis != nullptr) Kore::Gamepad::get(i)->Axis(i2, newaxes[i2]);
-						axes[i * 4 + i2] = newaxes[i2];
+						axes[i * 6 + i2] = newaxes[i2];
 					}
 				}
 				float newbuttons[16];
@@ -367,8 +666,8 @@ bool Kore::System::handleMessages() {
 				newbuttons[3] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) ? 1.0f : 0.0f;
 				newbuttons[4] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) ? 1.0f : 0.0f;
 				newbuttons[5] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ? 1.0f : 0.0f;
-				newbuttons[6] = 0.0f;
-				newbuttons[7] = 0.0f;
+				newbuttons[6] = state.Gamepad.bLeftTrigger / 255.0f;
+				newbuttons[7] = state.Gamepad.bRightTrigger / 255.0f;
 				newbuttons[8] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) ? 1.0f : 0.0f;
 				newbuttons[9] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_START) ? 1.0f : 0.0f;
 				newbuttons[10] = (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) ? 1.0f : 0.0f;
@@ -384,10 +683,8 @@ bool Kore::System::handleMessages() {
 					}
 				}
 			}
-			else {
-				Kore::Gamepad::get(i)->vendor = nullptr;
-				Kore::Gamepad::get(i)->productName = nullptr;
-			}
+
+			handleDirectInputPad(i);
 		}
 	}
 
@@ -400,105 +697,184 @@ vec2i Kore::System::mousePos() {
 
 #undef CreateWindow
 
-namespace {
-	HWND hwnd = nullptr;
+int createWindow( const char * title, int x, int y, int width, int height, WindowMode windowMode, int targetDisplay ) {
+	++windowCounter;
 
-#ifdef VR_RIFT
-	const char* windowClassName = "ORT";
-#else
-	const char* windowClassName = "KoreWindow";
-#endif
-
-	void registerWindowClass(HINSTANCE hInstance) {
-		WNDCLASSEXA wc = { sizeof(WNDCLASSEXA), CS_CLASSDC, MsgProc, 0L, 0L, hInstance, LoadIcon(hInstance, MAKEINTRESOURCE(107)), nullptr /*LoadCursor(0, IDC_ARROW)*/, 0, 0, windowClassName, 0 };
-		RegisterClassExA(&wc);
-	}
-}
-
-void* Kore::System::createWindow() {
 	HINSTANCE inst = GetModuleHandleA(nullptr);
-	#ifdef VR_RIFT 
+#ifdef VR_RIFT 
 		::registerWindowClass(inst);
-		::hwnd = (HWND) VrInterface::Init(inst);
-	#else 
-	
-	::registerWindowClass(inst);
+		::windows[0] = new W32KoreWindow((HWND) VrInterface::Init(inst));
+#else /* #ifdef VR_RIFT  */
+
+	if (windowCounter == 0) {
+		::registerWindowClass(inst, windowClassName);
+	}
 	
 	DWORD dwExStyle;
 	DWORD dwStyle;
 
 	RECT WindowRect;
 	WindowRect.left = 0;
-	WindowRect.right = Application::the()->width();
+	WindowRect.right = width;
 	WindowRect.top = 0;
-	WindowRect.bottom = Application::the()->height();
+	WindowRect.bottom = height;
 	
-	if (Application::the()->fullscreen()) {
-		DEVMODEA dmScreenSettings;					// Device Mode
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));		// Makes Sure Memory's Cleared
-		dmScreenSettings.dmSize = sizeof(dmScreenSettings);		// Size Of The Devmode Structure
-		dmScreenSettings.dmPelsWidth	= Application::the()->width();			// Selected Screen Width
-		dmScreenSettings.dmPelsHeight	= Application::the()->height();			// Selected Screen Height
-		dmScreenSettings.dmBitsPerPel	= 32;				// Selected Bits Per Pixel
-		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+	switch (windowMode) {
+		default: // fall through
+		case WindowModeWindow: {
+			dwStyle = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+			dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+		} break;
 
-		// Try To Set Selected Mode And Get Results.  NOTE: CDS_FULLSCREEN Gets Rid Of Start Bar.
-		if (ChangeDisplaySettingsA(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL) {
-			//return FALSE;
-		}
+		case WindowModeBorderless: {
+			dwStyle = WS_POPUP;
+			dwExStyle = WS_EX_APPWINDOW;
+		} break;
+
+		case WindowModeFullscreen: {
+			DEVMODEA dmScreenSettings;									// Device Mode
+			memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));		// Makes Sure Memory's Cleared
+			dmScreenSettings.dmSize = sizeof(dmScreenSettings);			// Size Of The Devmode Structure
+			dmScreenSettings.dmPelsWidth	= width;					// Selected Screen Width
+			dmScreenSettings.dmPelsHeight	= height;					// Selected Screen Height
+			dmScreenSettings.dmBitsPerPel	= 32;						// Selected Bits Per Pixel
+			dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+			// Try To Set Selected Mode And Get Results.  NOTE: CDS_FULLSCREEN Gets Rid Of Start Bar.
+			if (ChangeDisplaySettingsA(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL) {
+				//return FALSE;
+			}
 		
-		dwExStyle = WS_EX_APPWINDOW;					// Window Extended Style
-		dwStyle = WS_POPUP;						// Windows Style
-		ShowCursor(FALSE);
+			dwExStyle = WS_EX_APPWINDOW;
+			dwStyle = WS_POPUP;
+			ShowCursor(FALSE);
+		} break;
 	}
-	else {
-		dwStyle = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-		dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
-	}
+
 	AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);		// Adjust Window To True Requested Size
-	hwnd = CreateWindowExA(dwExStyle, windowClassName, Kore::Application::the()->name(), WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, 100, 100, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top, nullptr, nullptr, inst, nullptr);
+
+	const Kore::Display::DeviceInfo * displayDevice = targetDisplay < 0
+		? Kore::Display::primary()
+		: Kore::Display::byId(targetDisplay)
+		;
+
+	int dstx = displayDevice->x;
+	int dsty = displayDevice->y;
+	uint xres = GetSystemMetrics(SM_CXSCREEN);
+	uint yres = GetSystemMetrics(SM_CYSCREEN);
+	uint w = width;
+	uint h = height;
+
+	switch (windowMode) {
+		default: // fall through
+		case WindowModeWindow: // fall through
+		case WindowModeBorderless: {
+			dstx += x < 0 ? (displayDevice->width - w) >> 1 : x;
+			dsty += y < 0 ? (displayDevice->height - h) >> 1 : y;
+		} break;
+
+		case WindowModeFullscreen: {
+			//dstx = 0;
+			//dsty = 0;
+		} break;
+	}
+
+	HWND hwnd = CreateWindowExA(dwExStyle, windowClassName, title, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, dstx, dsty, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top, nullptr, nullptr, inst, nullptr);
 	
-	if (Application::the()->fullscreen()) SetWindowPos(hwnd, nullptr, 0, 0, Application::the()->width(), Application::the()->height(), 0);
-	GetFocus();
+	if (windowCounter == 0) {
+		if (windowMode == WindowModeFullscreen) {
+			SetWindowPos(hwnd, nullptr, dstx, dsty, width, height, 0);
+		}
+	}
+
+	GetFocus(); // TODO (DK) that seems like a useless call, as the return value isn't saved anywhere?
 	::SetCursor(LoadCursor(0, IDC_ARROW));
 
-	loadXInput();
-
-	if (!Application::the()->fullscreen()) {
-		uint xres = GetSystemMetrics(SM_CXSCREEN);
-		uint yres = GetSystemMetrics(SM_CYSCREEN);
-		uint w = Application::the()->width();
-		uint h = Application::the()->height();
-		RECT r;
-		r.left   = (xres - w) >> 1;
-		r.top    = (yres - h) >> 1;
-		r.right  = r.left + w - 1;
-		r.bottom = r.top  + h - 1;
-		AdjustWindowRect(&r, dwStyle, FALSE);
-		MoveWindow(hwnd, r.left, r.top, r.right - r.left + 1, r.bottom - r.top + 1, TRUE);
+	if (windowCounter == 0) {
+		loadXInput();
+		initializeDirectInput();
 	}
-#endif
-	return hwnd;
+#endif /*#else // #ifdef VR_RIFT  */
+
+	windows[windowCounter] = new KoreWindow(hwnd, dstx, dsty, width, height);
+	return windowCounter;
 }
 
-void* Kore::System::windowHandle() {
-	return hwnd;
+void* Kore::System::windowHandle(int windowId) {
+	return windows[windowId]->hwnd;
 }
 
-void Kore::System::destroyWindow() {
+void Kore::System::destroyWindow( int index ) {
+	HWND hwnd = windows[index]->hwnd;
+
+	// TODO (DK) shouldn't 'hwnd = nullptr' moved out of here?
 	if (hwnd && !DestroyWindow(hwnd)) {
 		//MessageBox(NULL,"Could Not Release hWnd.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
 		hwnd = nullptr;
 	}
+
+	windows[index] = nullptr;
+	
+	// TODO (DK) only unregister after the last window is destroyed?
 	if (!UnregisterClassA(windowClassName, GetModuleHandleA(nullptr))) {
 		//MessageBox(NULL,"Could Not Unregister Class.","SHUTDOWN ERROR",MB_OK | MB_ICONINFORMATION);
 		//hInstance=NULL;
 	}
 }
 
+void Kore::System::makeCurrent(int contextId) {
+	if (currentDeviceId == contextId) {
+		return;
+	}
+
+	currentDeviceId = contextId;
+	Graphics::makeCurrent(contextId);
+}
+
+void Kore::System::clearCurrent() {
+	currentDeviceId = -1;
+	Graphics::clearCurrent();
+}
+
+int Kore::System::initWindow( WindowOptions options ) {
+	char buffer[1024] = {0};
+	strcat(buffer, name());
+	
+	if (options.title != nullptr) {
+		strcat(buffer, options.title);
+	}
+
+	int windowId = createWindow(buffer, options.x, options.y, options.width, options.height, options.mode, options.targetDisplay);
+	
+	HWND hwnd = (HWND)windowHandle(windowId);
+	long style = GetWindowLong(hwnd, GWL_STYLE);
+	
+	if(options.resizable){
+		style |= WS_SIZEBOX;
+	}
+	
+	if(options.maximizable){
+		style |= WS_MAXIMIZEBOX;
+	}
+	
+	if(!options.minimizable){
+		style ^= WS_MINIMIZEBOX;
+	}
+	
+	SetWindowLong(hwnd, GWL_STYLE, style);
+	
+	Graphics::setAntialiasingSamples(options.rendererOptions.antialiasing);
+	Graphics::init(windowId, options.rendererOptions.depthBufferBits, options.rendererOptions.stencilBufferBits);
+	
+	return windowId;
+}
+
 void Kore::System::changeResolution(int width, int height, bool fullscreen) {
-#ifndef OPENGL
-	Application::the()->setWidth(width);
+	
+#pragma message ("TODO (DK) implement changeResolution(w,h,fs) for d3dX")
+    
+#if !defined(OPENGL) && !defined(SYS_VULKAN)
+	/*Application::the()->setWidth(width);
 	Application::the()->setHeight(height);
 	Application::the()->setFullscreen(fullscreen);
 
@@ -518,7 +894,18 @@ void Kore::System::changeResolution(int width, int height, bool fullscreen) {
 
 		Graphics::changeResolution(width, height);
 	}
+	*/
 #endif
+}
+
+void Kore::System::setup() {
+    Display::enumerate();
+	Graphics::setup();
+}
+
+bool Kore::System::isFullscreen() {
+    // TODO (DK)
+    return false;
 }
 
 namespace {
@@ -537,25 +924,21 @@ bool Kore::System::showsKeyboard() {
 	return keyboardshown;
 }
 
-void Kore::System::loadURL(const char* url) {
-    
+void Kore::System::loadURL(const char* url) {    
 }
 
 void Kore::System::setTitle(const char* title) {
-	SetWindowTextA(hwnd, title);
+	SetWindowTextA(windows[currentDevice()]->hwnd, title);
 }
 
+void Kore::System::setKeepScreenOn( bool on ) {
+    
+}
+
+// TODO (DK) windowId
 void Kore::System::showWindow() {
-	ShowWindow(hwnd, SW_SHOWDEFAULT);
-	UpdateWindow(hwnd);
-}
-
-int Kore::System::screenWidth() {
-	return Application::the()->width();
-}
-
-int Kore::System::screenHeight() {
-	return Application::the()->height();
+	ShowWindow(windows[0]->hwnd, SW_SHOWDEFAULT);
+	UpdateWindow(windows[0]->hwnd);
 }
 
 int Kore::System::desktopWidth() {
@@ -590,14 +973,14 @@ namespace {
 		folder->GetPath(0, &path);
 
 		size_t length = wcslen(path);
-		size_t length2 = strlen(Application::the()->name());
+		size_t length2 = strlen(Kore::System::name());
 		savePath = new char[length + length2 + 3];
 		for (size_t i = 0; i < length; ++i) {
 			savePath[i] = static_cast<char>(path[i]);
 		}
 		savePath[length] = '\\';
 		for (size_t i = 0; i < length2; ++i) {
-			savePath[length + 1 + i] = Application::the()->name()[i];
+			savePath[length + 1 + i] = Kore::System::name()[i];
 		}
 		savePath[length + 1 + length2] = '\\';
 		savePath[length + 1 + length2 + 1] = 0;

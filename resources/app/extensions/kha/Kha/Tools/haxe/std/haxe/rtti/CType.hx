@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2012 Haxe Foundation
+ * Copyright (C)2005-2016 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -43,7 +43,7 @@ typedef PathParams = {
 	var params : List<CType>;
 }
 
-typedef TypeParams = Array<String> // no contraints
+typedef TypeParams = Array<String> // no constraints
 
 enum Rights {
 	RNormal;
@@ -276,7 +276,7 @@ class CTypeTools {
 				if (args.length == 0) {
 					"Void -> " +toString(ret);
 				} else {
-					args.map(functionArgumentName).join(" -> ");
+					args.map(functionArgumentName).join(" -> ")+" -> "+toString(ret);
 				}
 			case CDynamic(d):
 				if (d == null) {
@@ -297,7 +297,7 @@ class CTypeTools {
 	}
 
 	static function functionArgumentName(arg:FunctionArgument) {
-		return (arg.opt ? "?" : "") + arg.name + ":" + toString(arg.t) + (arg.value == null ? "" : " = " +arg.value);
+		return (arg.opt ? "?" : "") + (arg.name == "" ? "" : arg.name + ":") + toString(arg.t) + (arg.value == null ? "" : " = " +arg.value);
 	}
 
 	static function classField(cf:ClassField) {

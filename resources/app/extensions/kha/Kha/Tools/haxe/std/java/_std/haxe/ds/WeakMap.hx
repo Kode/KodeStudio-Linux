@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2012 Haxe Foundation
+ * Copyright (C)2005-2016 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -536,7 +536,7 @@ private class Entry<K,V> extends WeakReference<K>
 	public var hash(default, null):Int;
 	public function new(key:K, value:V, hash:Int, queue:ReferenceQueue<K>)
 	{
-		super(key);
+		super(key, queue);
 		this.value = value;
 		this.hash = hash;
 	}

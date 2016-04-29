@@ -35,6 +35,10 @@ class Project {
 		this.systemDependendLibraries = {};
 		this.includes = [];
 		this.excludes = [];
+        this.cpp11 = false;
+		this.targetOptions = {
+			android: {}
+		}
 	}
 
 	flatten() {
@@ -48,7 +52,9 @@ class Project {
 			if (subbasedir.startsWith(basedir)) subbasedir = basedir.relativize(subbasedir);
 
 			for (let d of sub.defines) if (!contains(this.defines, d)) this.defines.push(d);
-			for (let file of sub.files) this.files.push(subbasedir.resolve(file).toString().replace(/\\/g, '/'));
+			for (let file of sub.files) {
+				this.files.push({file: subbasedir.resolve(file.file).toString().replace(/\\/g, '/'), options: file.options});
+			}
 			for (let i of sub.includeDirs) if (!contains(this.includeDirs, subbasedir.resolve(i).toString())) this.includeDirs.push(subbasedir.resolve(i).toString());
 			for (let j of sub.javadirs) if (!contains(this.javadirs, subbasedir.resolve(j).toString())) this.javadirs.push(subbasedir.resolve(j).toString());
 			for (let lib of sub.libs) {
@@ -98,6 +104,16 @@ class Project {
 		return path.toString().replace(/\\/g, '/');
 	}
 
+	addFileForReal(file, options) {
+		for (let index in this.files) {
+			if (this.files[index].file === file) {
+				this.files[index] = {file: file, options: options};
+				return;
+			}
+		}
+		this.files.push({file: file, options: options});
+	}
+
 	searchFiles(current) {
 		if (current === undefined) {
 			for (let sub of this.subProjects) sub.searchFiles();
@@ -122,14 +138,15 @@ class Project {
 			for (let exclude of this.excludes) {
 				if (this.matches(this.stringify(file), exclude)) continue nextfile;
 			}
-			for (let include of this.includes) {
+			for (let includeobject of this.includes) {
+				let include = includeobject.file;
 				if (isAbsolute(include)) {
 					let inc = Paths.get(include);
 					inc = this.basedir.relativize(inc);
 					include = inc.path;
 				}
 				if (this.matches(this.stringify(file), include)) {
-					this.files.push(this.stringify(file));
+					this.addFileForReal(this.stringify(file), includeobject.options);
 				}
 			}
 		}
@@ -146,13 +163,21 @@ class Project {
 		}
 	}
 
-	addFile(file) {
-		this.includes.push(file);
+	addFile(file, options) {
+		this.includes.push({file: file, options: options});
 	}
 
 	addFiles() {
+		let options = undefined;
 		for (let i = 0; i < arguments.length; ++i) {
-			this.addFile(arguments[i]);
+			if (typeof arguments[i] !== 'string') {
+				options = arguments[i];
+			}
+		}
+		for (let i = 0; i < arguments.length; ++i) {
+			if (typeof arguments[i] === 'string') {
+				this.addFile(arguments[i], options);
+			}
 		}
 	}
 

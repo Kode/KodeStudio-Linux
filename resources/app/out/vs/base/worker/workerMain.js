@@ -11,18 +11,26 @@
         baseUrl: monacoBaseUrl,
         catchError: true
     });
+    var loadCode = function (moduleId) {
+        require([moduleId], function (ws) {
+            var messageHandler = ws.create(function (msg) {
+                self.postMessage(msg);
+            }, null);
+            self.onmessage = function (e) { return messageHandler.onmessage(e.data); };
+            while (beforeReadyMessages.length > 0) {
+                self.onmessage(beforeReadyMessages.shift());
+            }
+        });
+    };
+    var isFirstMessage = true;
     var beforeReadyMessages = [];
-    self.onmessage = function (message) { return beforeReadyMessages.push(message); };
-    // Note: not using a import-module statement here, because
-    // it would wrap above statements in the define call.
-    require(['vs/base/common/worker/workerServer'], function (ws) {
-        var messageHandler = ws.create(function (msg) {
-            self.postMessage(msg);
-        }, null);
-        self.onmessage = function (e) { return messageHandler.onmessage(e.data); };
-        while (beforeReadyMessages.length > 0) {
-            self.onmessage(beforeReadyMessages.shift());
+    self.onmessage = function (message) {
+        if (!isFirstMessage) {
+            beforeReadyMessages.push(message);
+            return;
         }
-    });
+        isFirstMessage = false;
+        loadCode(message.data);
+    };
 })();
 //# sourceMappingURL=workerMain.js.map

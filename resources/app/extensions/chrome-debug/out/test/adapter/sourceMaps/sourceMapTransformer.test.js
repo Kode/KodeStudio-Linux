@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var assert = require('assert');
 var mockery = require('mockery');
 var testUtils = require('../../testUtils');
@@ -34,7 +35,6 @@ suite('SourceMapTransformer', function () {
         if (!suppressDefaultMock) {
             mockery.registerMock('./sourceMaps', { SourceMaps: StubSourceMaps });
         }
-        utilsMock.expects('getWebRoot').returns(undefined);
         var SourceMapTransformer = require(MODULE_UNDER_TEST).SourceMapTransformer;
         var transformer = new SourceMapTransformer();
         transformer.launch({
@@ -266,6 +266,6 @@ var StubSourceMaps = (function () {
         return Promise.resolve();
     };
     return StubSourceMaps;
-})();
+}());
 
 //# sourceMappingURL=sourceMapTransformer.test.js.map

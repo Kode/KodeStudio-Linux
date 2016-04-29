@@ -8,10 +8,10 @@ var fs = require('fs');
 var electron = require('./utils/electron');
 var wireProtocol_1 = require('./utils/wireProtocol');
 var vscode_1 = require('vscode');
-var isWin = /^win/.test(process.platform);
-var isDarwin = /^darwin/.test(process.platform);
-var isLinux = /^linux/.test(process.platform);
-var arch = process.arch;
+var VersionStatus = require('./utils/versionStatus');
+var vscode_extension_telemetry_1 = require('vscode-extension-telemetry');
+var nls = require('vscode-nls');
+var localize = nls.loadMessageBundle(__filename);
 var TypeScriptServiceClient = (function () {
     function TypeScriptServiceClient(host) {
         var _this = this;
@@ -38,6 +38,9 @@ var TypeScriptServiceClient = (function () {
                 _this.startService();
             }
         });
+        if (this.packageInfo && this.packageInfo.aiKey) {
+            this.telemetryReporter = new vscode_extension_telemetry_1.default(this.packageInfo.name, this.packageInfo.version, this.packageInfo.aiKey);
+        }
         this.startService();
     }
     TypeScriptServiceClient.prototype.onReady = function () {
@@ -50,6 +53,33 @@ var TypeScriptServiceClient = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(TypeScriptServiceClient.prototype, "packageInfo", {
+        get: function () {
+            if (this._packageInfo !== undefined) {
+                return this._packageInfo;
+            }
+            var packagePath = path.join(__dirname, './../package.json');
+            var extensionPackage = require(packagePath);
+            if (extensionPackage) {
+                this._packageInfo = {
+                    name: extensionPackage.name,
+                    version: extensionPackage.version,
+                    aiKey: extensionPackage.aiKey
+                };
+            }
+            else {
+                this._packageInfo = null;
+            }
+            return this._packageInfo;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TypeScriptServiceClient.prototype.logTelemetry = function (eventName, properties) {
+        if (this.telemetryReporter) {
+            this.telemetryReporter.sendTelemetryEvent(eventName, properties);
+        }
+    };
     TypeScriptServiceClient.prototype.service = function () {
         if (this.servicePromise) {
             return this.servicePromise;
@@ -72,16 +102,14 @@ var TypeScriptServiceClient = (function () {
                 modulePath = path.join(vscode_1.workspace.rootPath, this.tsdk, 'tsserver.js');
             }
         }
-        else if (!!process.env['CODE_TSJS'] || !!process.env['VSCODE_TSJS']) {
-            var candidate = path.join(vscode_1.workspace.rootPath, 'node_modules', 'typescript', 'lib', 'tsserver.js');
-            if (fs.existsSync(candidate)) {
-                modulePath = candidate;
-            }
-        }
         if (!fs.existsSync(modulePath)) {
-            vscode_1.window.showErrorMessage("The path " + path.dirname(modulePath) + " doesn't point to a valid tsserver install. TypeScript language features will be disabled.");
+            vscode_1.window.showErrorMessage(localize(0, null, path.dirname(modulePath)));
             return;
         }
+        var label = this.getTypeScriptVersion(modulePath);
+        var tooltip = modulePath;
+        VersionStatus.enable(!!this.tsdk);
+        VersionStatus.setInfo(label, tooltip);
         this.servicePromise = new Promise(function (resolve, reject) {
             try {
                 var options = {
@@ -97,7 +125,8 @@ var TypeScriptServiceClient = (function () {
                 electron.fork(modulePath, [], options, function (err, childProcess) {
                     if (err) {
                         _this.lastError = err;
-                        vscode_1.window.showErrorMessage("TypeScript language server couldn't be started. Error message is: " + err.message);
+                        vscode_1.window.showErrorMessage(localize(1, null), err.message);
+                        _this.logTelemetry('error', { message: err.message });
                         return;
                     }
                     _this.lastStart = Date.now();
@@ -127,6 +156,31 @@ var TypeScriptServiceClient = (function () {
             this.host.populateService();
         }
     };
+    TypeScriptServiceClient.prototype.getTypeScriptVersion = function (serverPath) {
+        var custom = localize(2, null);
+        var p = serverPath.split(path.sep);
+        if (p.length <= 2) {
+            return custom;
+        }
+        var p2 = p.slice(0, -2);
+        var modulePath = p2.join(path.sep);
+        var fileName = path.join(modulePath, 'package.json');
+        if (!fs.existsSync(fileName)) {
+            return custom;
+        }
+        var contents = fs.readFileSync(fileName).toString();
+        var desc = null;
+        try {
+            desc = JSON.parse(contents);
+        }
+        catch (err) {
+            return custom;
+        }
+        if (!desc.version) {
+            return custom;
+        }
+        return desc.version;
+    };
     TypeScriptServiceClient.prototype.serviceExited = function (restart) {
         var _this = this;
         this.servicePromise = null;
@@ -140,11 +194,12 @@ var TypeScriptServiceClient = (function () {
             var startService = true;
             if (this.numberRestarts > 5) {
                 if (diff < 60 * 1000 /* 1 Minutes */) {
-                    vscode_1.window.showWarningMessage('The Typescript language service died unexpectedly 5 times in the last 5 Minutes. Please consider to open a bug report.');
+                    vscode_1.window.showWarningMessage(localize(3, null));
                 }
                 else if (diff < 2 * 1000 /* 2 seconds */) {
                     startService = false;
-                    vscode_1.window.showErrorMessage('The Typesrript language service died 5 times right after it got started. The service will not be restarted. Please open a bug report.');
+                    vscode_1.window.showErrorMessage(localize(4, null));
+                    this.logTelemetry('serviceExited');
                 }
             }
             if (startService) {
@@ -250,7 +305,7 @@ var TypeScriptServiceClient = (function () {
                 var p = this.callbacks[response.request_seq];
                 if (p) {
                     if (TypeScriptServiceClient.Trace) {
-                        console.log('TypeScript Service: request ' + response.command + '(' + response.request_seq + ') took ' + (Date.now() - p.start) + 'ms. Success: ' + response.success);
+                        console.log('TypeScript Service: request ' + response.command + '(' + response.request_seq + ') took ' + (Date.now() - p.start) + 'ms. Success: ' + response.success + ((!response.success) ? ('. Message: ' + response.message) : ''));
                     }
                     delete this.callbacks[response.request_seq];
                     this.pendingResponses--;
@@ -281,6 +336,7 @@ var TypeScriptServiceClient = (function () {
     };
     TypeScriptServiceClient.Trace = process.env.TSS_TRACE || false;
     return TypeScriptServiceClient;
-})();
+}());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeScriptServiceClient;
+//# sourceMappingURL=typescriptServiceClient.js.map

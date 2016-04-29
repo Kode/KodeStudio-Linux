@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <Kore/System.h>
+#include <Kore/Graphics/Graphics.h>
 
 using namespace Kore;
 
@@ -52,6 +53,10 @@ void System::setTitle(const char* title) {
 	
 }
 
+void System::setKeepScreenOn( bool on ) {
+    
+}
+
 #include <mach/mach_time.h>
 
 double System::frequency() {
@@ -62,4 +67,28 @@ double System::frequency() {
 
 System::ticks System::timestamp() {
 	return mach_absolute_time();
+}
+
+namespace appstate {
+    int currentDeviceId = -1;
+}
+
+void Kore::System::setup() {    
+}
+
+bool Kore::System::isFullscreen() {
+    return false; // TODO (DK)
+}
+
+int Kore::System::currentDevice() {
+    return appstate::currentDeviceId;
+}
+
+void Kore::System::makeCurrent(int contextId) {
+    appstate::currentDeviceId = contextId;
+    Graphics::makeCurrent(contextId);
+}
+
+void Kore::System::clearCurrent() {
+    appstate::currentDeviceId = -1;
 }

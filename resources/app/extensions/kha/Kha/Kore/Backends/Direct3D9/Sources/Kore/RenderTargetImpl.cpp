@@ -1,24 +1,32 @@
 #include "pch.h"
 #include "RenderTargetImpl.h"
 #include <Kore/WinError.h>
+#include <Kore/Log.h>
 #include "Direct3D9.h"
 
 using namespace Kore;
 
-RenderTarget::RenderTarget(int width, int height, bool zBuffer, bool antialiasing, RenderTargetFormat format) : width(width), height(height), texWidth(width), texHeight(height) {
+RenderTarget::RenderTarget(int width, int height, int depthBufferBits, bool antialiasing, RenderTargetFormat format, int stencilBufferBits, int contextId) : width(width), height(height), texWidth(width), texHeight(height) {
 	this->antialiasing = antialiasing;
+	this->contextId = contextId;
 	D3DFORMAT d3dformat;
 	switch (format) {
-	case Target32Bit:
-		d3dformat = D3DFMT_A8R8G8B8;
-		break;
 	case Target64BitFloat:
 		d3dformat = D3DFMT_A16B16G16R16F;
 		break;
 	case Target32BitRedFloat:
 		d3dformat = D3DFMT_R32F;
 		break;
+	case Target32Bit:
+	default:
+		d3dformat = D3DFMT_A8R8G8B8;
 	}
+
+#if defined(_DEBUG)
+	log(Info, "depthBufferBits not implemented yet, using defaults (D3DFMT_D24S8)");
+	log(Info, "stencilBufferBits not implemented yet, using defaults (D3DFMT_D24S8)");
+#endif
+
 	if (antialiasing) {
 		affirm(device->CreateRenderTarget(width, height, d3dformat, D3DMULTISAMPLE_8_SAMPLES, 0, FALSE, &colorSurface, nullptr));
 		affirm(device->CreateDepthStencilSurface(width, height, D3DFMT_D24S8, D3DMULTISAMPLE_8_SAMPLES, 0, TRUE, &depthSurface, nullptr));

@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 /**
  * Converts from 1 based lines on the client side to 0 based lines on the target side
  */
@@ -36,7 +37,7 @@ var LineNumberTransformer = (function () {
         return this._clientLinesStartAt1 ? line + 1 : line;
     };
     return LineNumberTransformer;
-})();
+}());
 exports.LineNumberTransformer = LineNumberTransformer;
 
 //# sourceMappingURL=lineNumberTransformer.js.map

@@ -17,30 +17,51 @@ using StringTools;
 
 class LoaderImpl {
 	public static function getImageFormats(): Array<String> {
-		return ["png", "jpg"];
+		return ["png", "jpg", "hdr"];
 	}
 	
 	public static function loadImageFromDescription(desc: Dynamic, done: kha.Image -> Void) {
-		var img: ImageElement = cast Browser.document.createElement("img");
-		img.src = desc.files[0];
 		var readable = Reflect.hasField(desc, "readable") ? desc.readable : false;
-		img.onload = function(event: Dynamic) {
-			done(Image.fromImage(img, readable));
-		};
+		if (StringTools.endsWith(desc.files[0], ".hdr")) {
+			loadBlobFromDescription(desc, function(blob) {
+				var hdrImage = kha.internal.HdrFormat.parse(blob.toBytes());
+				done(Image.fromFloats(hdrImage.data, hdrImage.width, hdrImage.height, readable));
+			});
+		}
+		else {
+			var img: ImageElement = cast Browser.document.createElement("img");
+			img.src = desc.files[0];
+			img.onload = function(event: Dynamic) {
+				done(Image.fromImage(img, readable));
+			};
+		}
 	}
 	
 	public static function getSoundFormats(): Array<String> {
-		if (SystemImpl._hasWebAudio) return ["ogg"];
-		else return ["mp4", "ogg"];
+		var element = Browser.document.createAudioElement();
+		var formats = new Array<String>();
+		if (element.canPlayType("audio/mp4") != "") formats.push("mp4");
+		if (SystemImpl._hasWebAudio || element.canPlayType("audio/ogg") != "") formats.push("ogg");
+		return formats;
 	}
 	
 	public static function loadSoundFromDescription(desc: Dynamic, done: kha.Sound -> Void) {
 		if (SystemImpl._hasWebAudio) {
+			var element = Browser.document.createAudioElement();
+			if (element.canPlayType("audio/mp4") != "") {
+				for (i in 0...desc.files.length) {
+					var file: String = desc.files[i];
+					if (file.endsWith(".mp4")) {
+						new WebAudioSound(file, done);
+						return;
+					}
+				}
+			}
 			for (i in 0...desc.files.length) {
 				var file: String = desc.files[i];
 				if (file.endsWith(".ogg")) {
 					new WebAudioSound(file, done);
-					break;
+					return;
 				}
 			}
 		}

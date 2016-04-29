@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var mockery = require('mockery');
 var assert = require('assert');
 var testUtils = require('../testUtils');
@@ -244,17 +245,6 @@ suite('Utilities', function () {
             testRemoteObjectToValue({ type: 'object', subtype: 'null' }, 'null');
         });
     });
-    suite('getWebRoot()', function () {
-        test('takes absolute webRoot as is', function () {
-            assert.equal(getUtilities().getWebRoot({ webRoot: 'c:\\project\\webRoot', cwd: 'c:\\project\\cwd' }), 'c:\\project\\webRoot');
-        });
-        test('resolves relative webroot against cwd', function () {
-            assert.equal(getUtilities().getWebRoot({ webRoot: '..\\webRoot', cwd: 'c:\\project\\cwd' }), 'c:\\project\\webRoot');
-        });
-        test('uses cwd when webRoot is missing', function () {
-            assert.equal(getUtilities().getWebRoot({ webRoot: '', cwd: 'c:\\project\\cwd' }), 'c:\\project\\cwd');
-        });
-    });
     suite('getUrl', function () {
         var URL = 'http://testsite.com/testfile';
         var RESPONSE = 'response';
@@ -334,10 +324,13 @@ suite('Utilities', function () {
     });
     suite('pathToFileURL', function () {
         test('converts windows-style paths', function () {
-            assert.equal(getUtilities().pathToFileURL('c:/code/app.js'), 'file:///c:/code/app.js');
+            assert.equal(getUtilities().pathToFileURL('c:\\code\\app.js'), 'file:///c:/code/app.js');
         });
         test('converts unix-style paths', function () {
             assert.equal(getUtilities().pathToFileURL('/code/app.js'), 'file:///code/app.js');
+        });
+        test('encodes as URI and forces forwards slash', function () {
+            assert.equal(getUtilities().pathToFileURL('c:\\path with spaces\\blah.js'), 'file:///c:/path%20with%20spaces/blah.js');
         });
     });
 });

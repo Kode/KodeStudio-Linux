@@ -93,7 +93,19 @@ namespace Kore {
 		Target32Bit,
 		Target64BitFloat,
 		Target32BitRedFloat,
-		Target128BitFloat
+		Target128BitFloat,
+		Target16BitDepth
+	};
+
+	enum StencilAction {
+		Keep,
+		Zero,
+		Replace,
+		Increment,
+		IncrementWrap,
+		Decrement,
+		DecrementWrap,
+		Invert
 	};
 
 	enum TextureOperation {
@@ -109,11 +121,12 @@ namespace Kore {
 
 	class RenderTarget : public RenderTargetImpl {
 	public:
-		RenderTarget(int width, int height, bool depthBuffer, bool antialiasing = false, RenderTargetFormat format = Target32Bit);
+		RenderTarget(int width, int height, int depthBufferBits, bool antialiasing = false, RenderTargetFormat format = Target32Bit, int stencilBufferBits = -1, int contextId = 0);
 		int width;
 		int height;
 		int texWidth;
 		int texHeight;
+		int contextId;
 		void useColorAsTexture(TextureUnit unit);
 		//void useDepthAsTexture(int texunit);
 	};
@@ -149,15 +162,21 @@ namespace Kore {
 		void setAntialiasingSamples(int samples);
 
 		bool renderTargetsInvertedY();
-		void setRenderTarget(RenderTarget* texture, int num = 0);
+		void setRenderTarget(RenderTarget* texture, int num = 0, int additionalTargets = 0);
 		void restoreRenderTarget();
 
-		void swapBuffers();
-		void* getControl();
-		void begin();
-		void end();
+		// TODO (DK) windowId should be renamed contextId?
+		void setup();
+		void swapBuffers(int windowId = 0);
+		void begin(int windowId = 0);
+		void end(int windowId = 0);
+		void makeCurrent(int windowId);
+		void clearCurrent();
 
 		void viewport(int x, int y, int width, int height);
+		void scissor(int x, int y, int width, int height);
+		void disableScissor();
+		void setStencilParameters(ZCompareMode compareMode, StencilAction bothPass, StencilAction depthFail, StencilAction stencilFail, int referenceValue, int readMask = 0, int writeMask = 0);
 
 		void setRenderState(RenderState state, bool on);
 		void setRenderState(RenderState state, int v);
@@ -168,6 +187,7 @@ namespace Kore {
 		void setTextureMipmapFilter(TextureUnit texunit, MipmapFilter filter);
 		void setBlendingMode(BlendingOperation source, BlendingOperation destination);
 		void setTextureOperation(TextureOperation operation, TextureArgument arg1, TextureArgument arg2);
+		void setColorMask(bool red, bool green, bool blue, bool alpha);
 
 		bool vsynced();
 		unsigned refreshRate();
@@ -179,8 +199,8 @@ namespace Kore {
 
 		void clear(uint flags, uint color = 0, float depth = 1.0f, int stencil = 0);
 
-		void init();
-		void destroy();
+		void init(int windowId, int depthBufferBits, int stencilBufferBits);
+		void destroy(int windowId);
 
 		extern bool fullscreen;
 

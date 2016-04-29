@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 /* tslint:disable */
 var Path = require('path');
 var URL = require('url');
@@ -83,10 +84,10 @@ var SourceMaps = (function () {
         if (pathToGenerated in this._generatedToSourceMaps) {
             return Promise.resolve(this._generatedToSourceMaps[pathToGenerated]);
         }
-        if (mapPath.indexOf("data:application/json;base64,") >= 0) {
+        if (mapPath.indexOf("data:application/json") >= 0) {
             utilities_1.Logger.log("SourceMaps.findGeneratedToSourceMapping: Using inlined sourcemap in " + pathToGenerated);
             // sourcemap is inlined
-            var pos = mapPath.indexOf(',');
+            var pos = mapPath.lastIndexOf(',');
             var data = mapPath.substr(pos + 1);
             try {
                 var buffer = new Buffer(data, 'base64');
@@ -172,7 +173,7 @@ var SourceMaps = (function () {
     SourceMaps.TRACE = false;
     SourceMaps.SOURCE_MAPPING_MATCHER = new RegExp("//[#@] ?sourceMappingURL=(.+)$");
     return SourceMaps;
-})();
+}());
 exports.SourceMaps = SourceMaps;
 var Bias;
 (function (Bias) {
@@ -186,37 +187,34 @@ var SourceMap = (function () {
      * webRoot - an absolute path
      */
     function SourceMap(generatedPath, json, webRoot) {
-        var _this = this;
         utilities_1.Logger.log("SourceMap: creating SM for " + generatedPath);
         this._generatedPath = generatedPath;
-        this._webRoot = webRoot;
         var sm = JSON.parse(json);
-        this._absSourceRoot = PathUtils.getAbsSourceRoot(sm.sourceRoot, this._webRoot, this._generatedPath);
+        var absSourceRoot = PathUtils.getAbsSourceRoot(sm.sourceRoot, webRoot, this._generatedPath);
         // Overwrite the sourcemap's sourceRoot with the version that's resolved to an absolute path,
         // so the work above only has to be done once
-        sm.sourceRoot = utils.pathToFileURL(this._absSourceRoot);
-        sm.sources = sm.sources.map(function (sourcePath) {
-            // special-case webpack:/// prefixed sources which is kind of meaningless
+        sm.sourceRoot = null; // probably get rid of this._sourceRoot?
+        // sm.sources are relative paths or file:/// urls - (or other URLs?) read the spec...
+        // resolve them to file:/// urls, using absSourceRoot.
+        // note - the source-map library doesn't like backslashes, but some tools output them.
+        // Which is wrong? Consider filing issues on source-map or tools that output backslashes?
+        // In either case, support whatever works
+        this._sources = sm.sources.map(function (sourcePath) {
+            // Special-case webpack:/// prefixed sources which is kind of meaningless
             sourcePath = utils.lstrip(sourcePath, 'webpack:///');
-            // Force correct format for sanity
-            return utils.fixDriveLetterAndSlashes(sourcePath);
+            sourcePath = utils.canonicalizeUrl(sourcePath);
+            // If not already an absolute path, make it an absolute path with this._absSourceRoot. Also resolves '..' parts.
+            if (!Path.isAbsolute(sourcePath)) {
+                sourcePath = Path.resolve(absSourceRoot, sourcePath);
+            }
+            return sourcePath;
+        });
+        // Rewrite sm.sources to same as this._sources but forward slashes and file url
+        sm.sources = this._sources.map(function (sourceAbsPath) {
+            // Convert to file: url. After this, it's a file URL for an absolute path to a file on disk with forward slashes.
+            return utils.pathToFileURL(sourceAbsPath);
         });
         this._smc = new source_map_1.SourceMapConsumer(sm);
-        // rewrite sources as absolute paths
-        this._sources = sm.sources.map(function (sourcePath) {
-            if (sourcePath.startsWith('file:///')) {
-                // If one source is a URL, assume all are
-                _this._sourcesAreURLs = true;
-            }
-            sourcePath = utils.lstrip(sourcePath, 'webpack:///');
-            sourcePath = PathUtils.canonicalizeUrl(sourcePath);
-            if (Path.isAbsolute(sourcePath)) {
-                return utils.fixDriveLetterAndSlashes(sourcePath);
-            }
-            else {
-                return Path.join(_this._absSourceRoot, sourcePath);
-            }
-        });
     }
     Object.defineProperty(SourceMap.prototype, "sources", {
         /*
@@ -261,17 +259,7 @@ var SourceMap = (function () {
      */
     SourceMap.prototype.generatedPositionFor = function (src, line, column, bias) {
         if (bias === void 0) { bias = Bias.GREATEST_LOWER_BOUND; }
-        if (this._sourcesAreURLs) {
-            src = utils.pathToFileURL(src);
-        }
-        else if (this._absSourceRoot) {
-            // make input path relative to sourceRoot
-            src = Path.relative(this._absSourceRoot, src);
-            // source-maps use forward slashes unless the source is specified with file:///
-            if (process.platform === 'win32') {
-                src = src.replace(/\\/g, '/');
-            }
-        }
+        src = utils.pathToFileURL(src);
         var needle = {
             source: src,
             line: line,
@@ -281,6 +269,6 @@ var SourceMap = (function () {
         return this._smc.generatedPositionFor(needle);
     };
     return SourceMap;
-})();
+}());
 
 //# sourceMappingURL=sourceMaps.js.map

@@ -1,9 +1,12 @@
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 // file generated from css-schema.xml using css-exclude_generate_browserjs.js
-define(["require", "exports"], function(require, exports) {	
+define("vs/languages/css/common/services/browsers", ["require", "exports"], function(require, exports) {
 
 exports.data ={
 	"css": {
@@ -8422,6 +8425,10 @@ exports.data ={
 						"name": "overline"
 					},
 					{
+						"name": "none",
+						"desc": "Produces no text decoration."
+					},
+					{
 						"name": "solid"
 					},
 					{
@@ -8443,7 +8450,7 @@ exports.data ={
 					},
 					{
 						"name": "none",
-						"desc": "Neither produces nor inhibits text decoration."
+						"desc": "Produces no text decoration."
 					},
 					{
 						"name": "overline"
@@ -8469,8 +8476,7 @@ exports.data ={
 						"name": "double"
 					},
 					{
-						"name": "none",
-						"desc": "Produces no line."
+						"name": "none"
 					},
 					{
 						"name": "solid"
@@ -11300,3 +11306,4 @@ exports.descriptions = {
 	"vertical-rl": "Right-to-left block flow direction. The writing mode is vertical."
 };
 });
+//# sourceMappingURL=browsers.js.map

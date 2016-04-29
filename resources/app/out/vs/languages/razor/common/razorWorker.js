@@ -1,3 +1,6 @@
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7,7 +10,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", 'vs/languages/html/common/htmlWorker'], function (require, exports, htmlWorker) {
+define("vs/languages/razor/common/razorWorker", ["require", "exports", 'vs/languages/html/common/htmlWorker'], function (require, exports, htmlWorker) {
+    "use strict";
     function getRazorTagProvider() {
         var customTags = {
             a: ['asp-action', 'asp-controller', 'asp-fragment', 'asp-host', 'asp-protocol', 'asp-route'],
@@ -46,7 +50,8 @@ define(["require", "exports", 'vs/languages/html/common/htmlWorker'], function (
             providers.push(getRazorTagProvider());
         };
         return RAZORWorker;
-    })(htmlWorker.HTMLWorker);
+    }(htmlWorker.HTMLWorker));
     exports.RAZORWorker = RAZORWorker;
 });
+
 //# sourceMappingURL=razorWorker.js.map

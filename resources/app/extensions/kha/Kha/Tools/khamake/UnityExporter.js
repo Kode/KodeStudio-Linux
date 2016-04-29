@@ -22,21 +22,23 @@ class UnityExporter extends KhaExporter {
 		return 'unity';
 	}
 
-	exportSolution(name, platform, khaDirectory, haxeDirectory, from, _targetOptions) {
+	exportSolution(name, platform, khaDirectory, haxeDirectory, from, _targetOptions, defines) {
 		this.addSourceDirectory("Kha/Backends/Unity");
 
-		const defines = [
-			'no-root',
-			'no-compilation',
-			'sys_' + platform,
-			'sys_g1', 'sys_g2', 'sys_g3', 'sys_g4',
-			'sys_a1'
-		];
+		defines.push('no-root');
+		defines.push('no-compilation');
+		defines.push('sys_' + platform);
+		defines.push('sys_g1');
+		defines.push('sys_g2');
+		defines.push('sys_g3');
+		defines.push('sys_g4');
+		defines.push('sys_a1');
 
 		const options = {
 			from: from.toString(),
 			to: path.join(this.sysdir(), 'Assets', 'Sources'),
 			sources: this.sources,
+			libraries: this.libraries,
 			defines: defines,
 			parameters: this.parameters,
 			haxeDirectory: haxeDirectory.toString(),
@@ -70,7 +72,8 @@ class UnityExporter extends KhaExporter {
 	}*/
 
 	copySound(platform, from, to, encoders) {
-		return [to];
+		let ogg = Converter.convert(from, this.directory.resolve(this.sysdir()).resolve(Paths.get('Assets', 'Resources', 'Sounds', to + '.ogg')), encoders.oggEncoder);
+		return [to + '.ogg'];
 	}
 
 	copyImage(platform, from, to, asset) {

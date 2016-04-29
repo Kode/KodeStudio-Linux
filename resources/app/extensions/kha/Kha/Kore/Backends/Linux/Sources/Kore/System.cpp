@@ -1,28 +1,45 @@
 #include "pch.h"
-#include <Kore/System.h>
-#include <cstring>
-#include <Kore/Application.h>
 #include <Kore/Input/Keyboard.h>
 #include <Kore/Input/Mouse.h>
+#include <Kore/Log.h>
+#include <Kore/System.h>
+#include <Kore/Graphics/Graphics.h>
+
+#include "Display.h"
+
+#include <cstring>
 
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef OPENGL
 #include <GL/glx.h>
 #include <GL/gl.h>
 
 #include <X11/keysym.h>
+//#include <X11/Xlib.h>
+#endif
 
 //apt-get install mesa-common-dev
 //apt-get install libgl-dev
 
 namespace {
-    static int snglBuf[] = {GLX_RGBA, GLX_DEPTH_SIZE, 16, None};
-    static int dblBuf[]  = {GLX_RGBA, GLX_DEPTH_SIZE, 16, GLX_DOUBLEBUFFER, None};
+    //static int snglBuf[] = {GLX_RGBA, GLX_DEPTH_SIZE, 16, GLX_STENCIL_SIZE, 8, None};
+    //static int dblBuf[]  = {GLX_RGBA, GLX_DEPTH_SIZE, 16, GLX_STENCIL_SIZE, 8, GLX_DOUBLEBUFFER, None};
+#ifdef OPENGL
+    struct MwmHints {
+        // These correspond to XmRInt resources. (VendorSE.c)
+        int	         flags;
+        int		 functions;
+        int		 decorations;
+        int		 input_mode;
+        int		 status;
+    };
 
+    #define MWM_HINTS_DECORATIONS	(1L << 1)
     Display* dpy;
-    Window win;
     GLboolean doubleBuffer = GL_TRUE;
+#endif
 
     void fatalError(const char* message) {
         printf("main: %s\n", message);
@@ -30,9 +47,60 @@ namespace {
     }
 }
 
-using namespace Kore;
+#ifdef OPENGL
+namespace windowimpl {
+    struct KoreWindow : public Kore::KoreWindowBase {
+        Window handle;
+        GLXContext context;
 
-void* System::createWindow() {
+        KoreWindow( Window handle, GLXContext context, int x, int y, int width, int height ) : KoreWindowBase(x, y, width, height) {
+            this->handle = handle;
+            this->context = context;
+        }
+    };
+
+    KoreWindow * windows[10] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+    int windowCounter = -1;
+
+    int idFromWindow( Window window ) {
+        for (int windowIndex = 0; windowIndex < sizeof(windows) / sizeof(windows[0]); ++windowIndex) {
+            if (windows[windowIndex]->handle == window) {
+                return windowIndex;
+            }
+        }
+
+        return -1;
+    }
+}
+#endif
+
+void Kore::System::setup() {
+    Display::enumerate();
+}
+
+bool Kore::System::isFullscreen() {
+    // TODO (DK)
+    return false;
+}
+
+#ifndef OPENGL
+xcb_connection_t* connection;
+xcb_screen_t* screen;
+xcb_window_t window;
+xcb_intern_atom_reply_t* atom_wm_delete_window;
+
+namespace {
+	int windowWidth;
+	int windowHeight;
+}
+#endif
+
+// TODO (DK) the whole glx stuff should go into Graphics/OpenGL?
+//  -then there would be a better separation between window + context setup
+int createWindow(const char* title, int x, int y, int width, int height, Kore::WindowMode windowMode, int targetDisplay, int depthBufferBits, int stencilBufferBits) {
+#ifdef OPENGL
+    int wcounter = windowimpl::windowCounter + 1;
+
 	XVisualInfo*         vi;
 	Colormap             cmap;
 	XSetWindowAttributes swa;
@@ -44,30 +112,48 @@ void* System::createWindow() {
 
 	// (1) open a connection to the X server
 
-	dpy = XOpenDisplay(NULL);
-	if (dpy == NULL) fatalError("could not open display");
+    if (dpy == nullptr) {
+        dpy = XOpenDisplay(NULL);
+    }
+
+	if (dpy == NULL) {
+        fatalError("could not open display");
+    }
 
 	// (2) make sure OpenGL's GLX extension supported
-
-	if (!glXQueryExtension(dpy, &dummy, &dummy)) fatalError("X server has no OpenGL GLX extension");
+	if (!glXQueryExtension(dpy, &dummy, &dummy)) {
+        fatalError("X server has no OpenGL GLX extension");
+    }
 
 	// (3) find an appropriate visual
-
 	// find an OpenGL-capable RGB visual with depth buffer
+    int snglBuf[] = {GLX_RGBA, GLX_DEPTH_SIZE, depthBufferBits, GLX_STENCIL_SIZE, stencilBufferBits, None};
+    int dblBuf[]  = {GLX_RGBA, GLX_DEPTH_SIZE, depthBufferBits, GLX_STENCIL_SIZE, stencilBufferBits, GLX_DOUBLEBUFFER, None};
+
 	vi = glXChooseVisual(dpy, DefaultScreen(dpy), dblBuf);
+
 	if (vi == NULL) {
 		vi = glXChooseVisual(dpy, DefaultScreen(dpy), snglBuf);
-		if (vi == NULL) fatalError("no RGB visual with depth buffer");
+
+		if (vi == NULL) {
+            fatalError("no RGB visual with valid depth/stencil buffer");
+		}
+
 		doubleBuffer = GL_FALSE;
 	}
 	//if(vi->class != TrueColor)
 	//  fatalError("TrueColor visual required for this program");
 
 	// (4) create an OpenGL rendering context
+	// TODO (DK)
+	//  -context sharing doesn't seem to work in virtual box?
+	//      -main screen flickers
+	//      -sprite in subscreens is black
+	cx = glXCreateContext(dpy, vi, wcounter == 0 ? None : windowimpl::windows[0]->context, /* direct rendering if possible */ GL_TRUE);
 
-	// create an OpenGL rendering context
-	cx = glXCreateContext(dpy, vi, /* no shared dlists */ None, /* direct rendering if possible */ GL_TRUE);
-	if (cx == NULL) fatalError("could not create rendering context");
+	if (cx == NULL) {
+        fatalError("could not create rendering context");
+	}
 
 	// (5) create an X window with the selected visual
 
@@ -76,26 +162,168 @@ void* System::createWindow() {
 	swa.colormap = cmap;
 	swa.border_pixel = 0;
 	swa.event_mask = KeyPressMask | KeyReleaseMask | ExposureMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask | StructureNotifyMask;
-	win = XCreateWindow(dpy, RootWindow(dpy, vi->screen), 0, 0, Application::the()->width(), Application::the()->height(), 0, vi->depth, InputOutput, vi->visual, CWBorderPixel | CWColormap | CWEventMask, &swa);
-	XSetStandardProperties(dpy, win, "main", "main", None, NULL, 0, NULL);
+
+	Window win = XCreateWindow(dpy, RootWindow(dpy, vi->screen), 0, 0, width, height, 0, vi->depth, InputOutput, vi->visual, CWBorderPixel | CWColormap | CWEventMask, &swa);
+	XSetStandardProperties(dpy, win, title, "main", None, NULL, 0, NULL);
+
+	switch (windowMode) {
+        case Kore::WindowModeFullscreen: // fall through
+        case Kore::WindowModeBorderless: {
+            Atom awmHints = XInternAtom(dpy, "_MOTIF_WM_HINTS", 0);
+            MwmHints hints;
+            hints.flags = MWM_HINTS_DECORATIONS;
+            hints.decorations = 0;
+
+            XChangeProperty(dpy, win, awmHints, awmHints, 32, PropModeReplace, (unsigned char *)&hints, 5);
+        }
+    }
 
 	// (6) bind the rendering context to the window
-
 	glXMakeCurrent(dpy, win, cx);
 
-	// (7) request the X window to be displayed on the screen
+	const Kore::Display::DeviceInfo * deviceInfo = targetDisplay < 0
+		? Kore::Display::primaryScreen()
+		: Kore::Display::screenById(targetDisplay)
+		;
 
+	int dstx = deviceInfo->x;
+	int dsty = deviceInfo->y;
+
+	switch (windowMode) {
+	    default: // fall through
+		case Kore::WindowModeWindow: // fall through
+		case Kore::WindowModeBorderless: // fall through
+        case Kore::WindowModeFullscreen: {
+		    int dw = deviceInfo->width;
+		    int dh = deviceInfo->height;
+			dstx += x < 0 ? (dw - width) / 2 : x;
+			dsty += y < 0 ? (dh - height) / 2 : y;
+		} break;
+	}
+
+	// (7) request the X window to be displayed on the screen
 	XMapWindow(dpy, win);
-    XMoveWindow(dpy, win, DisplayWidth(dpy, vi->screen) / 2 - Application::the()->width() / 2, DisplayHeight(dpy, vi->screen) / 2 - Application::the()->height() / 2);
+    XMoveWindow(dpy, win, dstx, dsty);
 	//Scheduler::addFrameTask(HandleMessages, 1001);
 
-	return nullptr;
+    windowimpl::windows[wcounter] = new windowimpl::KoreWindow(win, cx, dstx, dsty, width, height);
+
+    Kore::System::makeCurrent(wcounter);
+
+	return windowimpl::windowCounter = wcounter;
+#else
+	::windowWidth = width;
+	::windowHeight = height;
+
+	const xcb_setup_t* setup;
+    xcb_screen_iterator_t iter;
+    int scr;
+
+    connection = xcb_connect(NULL, &scr);
+    if (connection == nullptr) {
+        printf("Cannot find a compatible Vulkan installable client driver (ICD).\nExiting ...\n");
+        fflush(stdout);
+        exit(1);
+    }
+
+    setup = xcb_get_setup(connection);
+    iter = xcb_setup_roots_iterator(setup);
+	while (scr-- > 0) xcb_screen_next(&iter);
+
+    screen = iter.data;
+
+	window = xcb_generate_id(connection);
+
+	uint32_t value_mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
+	uint32_t value_list[32];
+	value_list[0] = screen->black_pixel;
+	value_list[1] = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE | XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+
+    xcb_create_window(connection, XCB_COPY_FROM_PARENT, window, screen->root, 0, 0, width, height, 0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT, screen->root_visual, value_mask, value_list);
+
+    // Magic code that will send notification when window is destroyed
+    xcb_intern_atom_cookie_t cookie = xcb_intern_atom(connection, 1, 12, "WM_PROTOCOLS");
+    xcb_intern_atom_reply_t* reply = xcb_intern_atom_reply(connection, cookie, 0);
+
+    xcb_intern_atom_cookie_t cookie2 = xcb_intern_atom(connection, 0, 16, "WM_DELETE_WINDOW");
+    atom_wm_delete_window = xcb_intern_atom_reply(connection, cookie2, 0);
+
+    xcb_change_property(connection, XCB_PROP_MODE_REPLACE, window, (*reply).atom, 4, 32, 1, &(*atom_wm_delete_window).atom);
+    free(reply);
+
+    xcb_map_window(connection, window);
+	xcb_flush(connection);
+    return 1;
+#endif
 }
 
-bool System::handleMessages() {
+namespace Kore { namespace System {
+#ifdef OPENGL
+    int windowCount() {
+        return windowimpl::windowCounter + 1;
+    }
+
+    int windowWidth(int id) {
+        return windowimpl::windows[id]->width;
+    }
+
+    int windowHeight(int id) {
+        return windowimpl::windows[id]->height;
+    }
+
+    void* windowHandle(int id) {
+        return (void*)windowimpl::windows[id]->handle;
+    }
+#else
+	int windowCount() {
+        return 1;
+    }
+
+    int windowWidth(int id) {
+        return ::windowWidth;
+    }
+
+    int windowHeight(int id) {
+        return ::windowHeight;
+    }
+
+    void* windowHandle(int id) {
+        return nullptr;
+    }
+#endif
+
+    int initWindow( WindowOptions options ) {
+        char buffer[1024] = {0};
+        strcat(buffer, name());
+        if (options.title != nullptr) {
+            strcat(buffer, options.title);
+        }
+
+        int id = createWindow(buffer, options.x, options.y, options.width, options.height, options.mode, options.targetDisplay, options.rendererOptions.depthBufferBits, options.rendererOptions.stencilBufferBits);
+        Graphics::init(id, options.rendererOptions.depthBufferBits, options.rendererOptions.stencilBufferBits);
+        return id;
+    }
+}}
+
+namespace Kore { namespace System {
+    int currentDeviceId = -1;
+
+    int currentDevice() {
+        return currentDeviceId;
+    }
+
+    void setCurrentDevice( int id ) {
+        currentDeviceId = id;
+    }
+}}
+
+bool Kore::System::handleMessages() {
+#ifdef OPENGL
 	while (XPending(dpy) > 0) {
 		XEvent event;
 		XNextEvent(dpy, &event);
+
 		switch (event.type) {
 		case KeyPress: {
 			XKeyEvent* key = (XKeyEvent*)&event;
@@ -109,6 +337,16 @@ bool System::handleMessages() {
 			KEY(XK_Up, Key_Up, ' ')
 			KEY(XK_Down, Key_Down, ' ')
 			KEY(XK_space, Key_Space, ' ')
+			KEY(XK_BackSpace, Key_Backspace, ' ')
+			KEY(XK_Tab, Key_Tab, ' ')
+			KEY(XK_Return, Key_Enter, ' ')
+			KEY(XK_Shift_L, Key_Shift, ' ')
+			KEY(XK_Shift_R, Key_Shift, ' ')
+			KEY(XK_Control_L, Key_Control, ' ')
+			KEY(XK_Control_R, Key_Control, ' ')
+			KEY(XK_Alt_L, Key_Alt, ' ')
+			KEY(XK_Alt_R, Key_Alt, ' ')
+			KEY(XK_Delete, Key_Delete, ' ')
 			KEY(XK_a, Key_A, 'a')
 			KEY(XK_b, Key_B, 'b')
 			KEY(XK_c, Key_C, 'c')
@@ -136,7 +374,7 @@ bool System::handleMessages() {
 			KEY(XK_y, Key_Y, 'y')
 			KEY(XK_z, Key_Z, 'z')
 			case XK_Escape:
-				Application::the()->stop();
+                System::stop();
 				break;
 			}
 			break;
@@ -154,6 +392,16 @@ bool System::handleMessages() {
 			KEY(XK_Up, Key_Up, ' ')
 			KEY(XK_Down, Key_Down, ' ')
 			KEY(XK_space, Key_Space, ' ')
+			KEY(XK_BackSpace, Key_Backspace, ' ')
+			KEY(XK_Tab, Key_Tab, ' ')
+			KEY(XK_Return, Key_Enter, ' ')
+			KEY(XK_Shift_L, Key_Shift, ' ')
+			KEY(XK_Shift_R, Key_Shift, ' ')
+			KEY(XK_Control_L, Key_Control, ' ')
+			KEY(XK_Control_R, Key_Control, ' ')
+			KEY(XK_Alt_L, Key_Alt, ' ')
+			KEY(XK_Alt_R, Key_Alt, ' ')
+			KEY(XK_Delete, Key_Delete, ' ')
 			KEY(XK_a, Key_A, 'a')
 			KEY(XK_b, Key_B, 'b')
 			KEY(XK_c, Key_C, 'c')
@@ -186,31 +434,36 @@ bool System::handleMessages() {
 		}
 		case ButtonPress: {
 			XButtonEvent* button = (XButtonEvent*)&event;
+			int windowId = windowimpl::idFromWindow(button->window);
+
 			switch (button->button) {
 			case Button1:
-                Kore::Mouse::the()->_press(0, button->x, button->y);
+                Kore::Mouse::the()->_press(windowId, 0, button->x, button->y);
                 break;
             case Button3:
-                Kore::Mouse::the()->_press(1, button->x, button->y);
+                Kore::Mouse::the()->_press(windowId, 1, button->x, button->y);
                 break;
 			}
 			break;
 		}
 		case ButtonRelease: {
 			XButtonEvent* button = (XButtonEvent*)&event;
+			int windowId = windowimpl::idFromWindow(button->window);
+
 			switch (button->button) {
 			case Button1:
-                Kore::Mouse::the()->_release(0, button->x, button->y);
+                Kore::Mouse::the()->_release(windowId, 0, button->x, button->y);
                 break;
             case Button3:
-                Kore::Mouse::the()->_release(1, button->x, button->y);
+                Kore::Mouse::the()->_release(windowId, 1, button->x, button->y);
                 break;
 			}
 			break;
 		}
 		case MotionNotify: {
 			XMotionEvent* motion = (XMotionEvent*)&event;
-			Kore::Mouse::the()->_move(motion->x, motion->y);
+			int windowId = windowimpl::idFromWindow(motion->window);
+			Kore::Mouse::the()->_move(windowId, motion->x, motion->y);
 			break;
 		}
 		case ConfigureNotify:
@@ -221,6 +474,57 @@ bool System::handleMessages() {
 			break;
 		}
 	}
+#else
+	xcb_generic_event_t* event = xcb_poll_for_event(connection);
+	while (event != nullptr) {
+		switch (event->response_type & 0x7f) {
+		case XCB_EXPOSE:
+			break;
+		case XCB_CLIENT_MESSAGE:
+			if ((*(xcb_client_message_event_t*)event).data.data32[0] == (*atom_wm_delete_window).atom) {
+				exit(0);
+			}
+			break;
+		case XCB_KEY_PRESS: {
+			const xcb_key_press_event_t* key = (const xcb_key_press_event_t*)event;
+			switch (key->detail) {
+			case 111: Kore::Keyboard::the()->_keydown(Kore::Key_Up, ' '); break;
+			case 116: Kore::Keyboard::the()->_keydown(Kore::Key_Down, ' '); break;
+			case 113: Kore::Keyboard::the()->_keydown(Kore::Key_Left, ' '); break;
+			case 114: Kore::Keyboard::the()->_keydown(Kore::Key_Right, ' '); break;
+			}
+			break;
+		}
+		case XCB_KEY_RELEASE: {
+			const xcb_key_release_event_t* key = (const xcb_key_release_event_t*)event;
+			if (key->detail == 0x9) exit(0);
+			switch (key->detail) {
+			case 111: Kore::Keyboard::the()->_keyup(Kore::Key_Up, ' '); break;
+			case 116: Kore::Keyboard::the()->_keyup(Kore::Key_Down, ' '); break;
+			case 113: Kore::Keyboard::the()->_keyup(Kore::Key_Left, ' '); break;
+			case 114: Kore::Keyboard::the()->_keyup(Kore::Key_Right, ' '); break;
+			}
+			break;
+		}
+		case XCB_DESTROY_NOTIFY:
+			exit(0);
+			break;
+		case XCB_CONFIGURE_NOTIFY: {
+			const xcb_configure_notify_event_t* cfg = (const xcb_configure_notify_event_t*)event;
+			//if ((demo->width != cfg->width) || (demo->height != cfg->height)) {
+			//	demo->width = cfg->width;
+			//	demo->height = cfg->height;
+			//	demo_resize(demo);
+			//}
+			break;
+		}
+		default:
+			break;
+		}
+		free(event);
+		event = xcb_poll_for_event(connection);
+	}
+#endif
 	return true;
 }
 
@@ -228,16 +532,41 @@ const char* Kore::System::systemId() {
     return "Linux";
 }
 
-void* Kore::System::windowHandle() {
-    return (void*)win;
+void Kore::System::makeCurrent( int contextId ) {
+	if (currentDeviceId == contextId) {
+		return;
+	}
+
+#if !defined(NDEBUG)
+	log(Info, "Kore/System | context switch from %i to %i", currentDeviceId, contextId);
+#endif
+
+    currentDeviceId = contextId;
+#ifdef OPENGL
+	glXMakeCurrent(dpy, windowimpl::windows[contextId]->handle, windowimpl::windows[contextId]->context);
+#endif
 }
 
-void Kore::System::swapBuffers() {
-    glXSwapBuffers(dpy, win);
+void Kore::Graphics::clearCurrent() {
 }
 
-void Kore::System::destroyWindow() {
+void Kore::System::clearCurrent() {
+#if !defined(NDEBUG)
+	log(Info, "Kore/System | context clear");
+#endif
 
+    currentDeviceId = -1;
+    Graphics::clearCurrent();
+}
+
+void Kore::System::swapBuffers( int contextId ) {
+#ifdef OPENGL
+    glXSwapBuffers(dpy, windowimpl::windows[contextId]->handle);
+#endif
+}
+
+void Kore::System::destroyWindow( int id ) {
+    // TODO (DK) implement me
 }
 
 void Kore::System::changeResolution(int width, int height, bool fullscreen) {
@@ -246,6 +575,10 @@ void Kore::System::changeResolution(int width, int height, bool fullscreen) {
 
 void Kore::System::setTitle(const char* title) {
 
+}
+
+void Kore::System::setKeepScreenOn( bool on ) {
+    
 }
 
 void Kore::System::showWindow() {
@@ -264,20 +597,20 @@ void Kore::System::loadURL(const char* url) {
 
 }
 
-int Kore::System::screenWidth() {
-    return Application::the()->width();
-}
-
-int Kore::System::screenHeight() {
-    return Application::the()->height();
-}
-
 int Kore::System::desktopWidth() {
+#ifdef OPENGL
     return XWidthOfScreen(XDefaultScreenOfDisplay(XOpenDisplay(NULL)));
+#else
+    return 1920;
+#endif
 }
 
 int Kore::System::desktopHeight() {
+#ifdef OPENGL
     return XHeightOfScreen(XDefaultScreenOfDisplay(XOpenDisplay(NULL)));
+#else
+	return 1080;
+#endif
 }
 
 namespace {
@@ -288,7 +621,7 @@ namespace {
 const char* Kore::System::savePath() {
     if (!saveInitialized) {
         strcpy(save, "Ķ~/.");
-        strcat(save, Application::the()->name());
+        strcat(save, name());
         strcat(save, "/");
         saveInitialized = true;
     }

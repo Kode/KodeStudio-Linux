@@ -1,0 +1,855 @@
+{
+  "name": "Haxe",
+  "scopeName": "source.hx",
+  "fileTypes": ["hx"],
+  "uuid": "67c72f9f-862c-4e48-8951-dcc22c0bb4ea",
+  "patterns": [
+    {"include": "#all"}
+  ],
+  "repository": {
+    "all": {
+      "patterns": [
+        {"include": "#package"},
+        {"include": "#import"},
+        {"include": "#import-using"},
+        {"include": "#type-abstract"},
+        {"include": "#type-class"},
+        {"include": "#type-enum"},
+        {"include": "#type-interface"},
+        {"include": "#type-typedef"},
+        {"include": "#meta-static"},
+        {"include": "#method"},
+        {"include": "#variable"},
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "array": {
+      "begin": "\\[",
+      "beginCaptures": {
+        "0": {"name": "punctuation.definition.array.begin.hx"}
+      },
+      "end": "\\]",
+      "endCaptures": {
+        "0": {"name": "punctuation.definition.array.end.hx"}
+      },
+      "name": "meta.array.literal.hx",
+      "patterns": [
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "block": {
+      "begin": "\\{",
+      "beginCaptures": {
+        "0": {"name": "punctuation.definition.block.begin.hx"}
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": {"name": "punctuation.definition.block.end.hx"}
+      },
+      "patterns": [
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "block-contents": {
+      "patterns": [
+        {"include": "#regex"},
+        {"include": "#array"},
+        {"include": "#parameters"},
+        {"include": "#constants"},
+        {"include": "#comments"},
+        {"include": "#strings"},
+        {"include": "#macro"},
+        {"include": "#modifiers"},
+        {"include": "#keywords"},
+        {"include": "#keywords-reification"},
+        {"include": "#conditional-compilation"},
+        {"include": "#operator-assignment"},
+        {"include": "#operators"},
+        {"include": "#punctuation-separator"},
+        {"include": "#punctuation-terminator"},
+        {"include": "#punctuation-brackets"},
+        {"include": "#support-class-name"}
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "begin": "\/\\*\\*(?!/)",
+          "beginCaptures": {
+            "0": {"name": "punctuation.definition.comment.hx"}
+          },
+          "end": "\\*\/",
+          "endCaptures": {
+            "0": {"name": "punctuation.definition.comment.hx"}
+          },
+          "name": "comment.block.documentation.hx"
+        },
+        {
+          "begin": "\/\\*",
+          "beginCaptures": {
+            "0": {"name": "punctuation.definition.comment.hx"}
+          },
+          "end": "\\*\/",
+          "endCaptures": {
+            "0": {"name": "punctuation.definition.comment.hx"}
+          },
+          "name": "comment.block.hx"
+        },
+        {
+          "match": "(\/\/).*$\\n?",
+          "captures": {
+            "1": {"name": "punctuation.definition.comment.hx"}
+          },
+          "name": "comment.line.double-slash.hx"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "match": "\\b(true|false|null)\\b",
+          "name": "constant.language.hx"
+        },
+        {
+          "match": "\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)\\b",
+          "name": "constant.numeric.hx"
+        }
+      ]
+    },
+    "entity-name-class": {
+      "match": "\\b([_A-Za-z]\\w*)\\b",
+      "name": "entity.name.type.class.hx"
+    },
+    "entity-name-function": {
+      "match": "([_A-Za-z]\\w*)\\b(?=\\s*[\\(])",
+      "name": "entity.name.function.hx"
+    },
+    "import": {
+      "begin": "\\b(import)\\b",
+      "beginCaptures": {
+        "1": {"name": "storage.type.import.hx"}
+      },
+      "end": ";",
+      "endCaptures": {
+        "0": {"name": "punctuation.terminator.hx"}
+      },
+      "name": "meta.import.hx",
+      "patterns": [
+        {
+          "captures": {
+            "1": {"name": "support.package.hx"},
+            "3": {"name": "support.class.hx"}
+          },
+          "match": "((\\b[a-z]\\w*\\.)*)((\\b[A-Z]\\w*\\.?|\\*)+)(\\b[_a-z]\\w*|\\*)?"
+        }
+      ]
+    },
+    "import-using": {
+      "begin": "\\b(using)\\b",
+      "beginCaptures": {
+        "1": {"name": "storage.type.using.hx"}
+      },
+      "end": ";",
+      "endCaptures": {
+        "0": {"name": "punctuation.terminator.hx"}
+      },
+      "name": "meta.using.hx",
+      "patterns": [
+        {
+          "captures": {
+            "1": {"name": "support.package.hx"},
+            "3": {"name": "support.class.hx"}
+          },
+          "match": "(([a-z]\\w*\\.)*)(([A-Z]\\w*\\.?)+)"
+        }
+      ]
+    },
+    "conditional-compilation": {
+      "patterns": [
+        {
+          "match": "(#(end|else))",
+          "name": "keyword.control.directive.conditional.hx"
+        },
+        {
+          "match": "((#(if|elseif))\\s+([a-zA-Z0-9_]*)\\s)",
+          "captures": {
+            "0": {"name": "meta.control.directive.conditional.hx"},
+            "2": {"name": "keyword.control.directive.conditional.hx"}
+          }
+        },
+        {
+          "begin": "((#(if|elseif))\\s*?\\()",
+          "beginCaptures": {
+            "0": {"name": "meta.control.directive.conditional.hx"},
+            "2": {"name": "keyword.control.directive.conditional.hx"}
+          },
+          "end": "(\\))",
+          "name": "meta.control.directive.conditional.hx"
+        },
+        {
+          "match": "(#([a-zA-Z0-9_]*))\\s",
+          "name": "meta.control.directive.conditional.hx"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "match": "\\b(try|catch|throw)\\b",
+          "name": "keyword.control.catch-exception.hx"
+        },
+        {
+          "match": "\\b(if|return|while|for|return|break|case|default|continue|do|while|for|switch|if|else)\\b",
+          "name": "keyword.control.flow-control.hx"
+        },
+        {
+          "match": "\\.\\.\\.",
+          "name": "keyword.control.directive.hx"
+        },
+        {
+          "match": "\\b(cast|untyped)\\b",
+          "name": "keyword.other.untyped.hx"
+        },
+        {
+          "match": "\\btrace\\b",
+          "name": "keyword.other.trace.hx"
+        },
+        {
+          "match": "\\b(this|super)\\b",
+          "name": "variable.language.hx"
+        },
+        {
+          "match": "\\bnew\\b",
+          "name": "keyword.control.new.hx"
+        },
+        {
+          "match": "\\bvar\\b",
+          "name": "storage.type.variable.hx"
+        },
+        {
+          "match": "\\bfunction\\b",
+          "name": "storage.type.function.hx"
+        },
+        {
+          "match": "\\b(abstract|class|enum|interface|typedef)\\b",
+          "name": "storage.type.hx"
+        }
+      ]
+    },
+    "keywords-abstract": {
+      "patterns": [
+        {
+          "match": "\\b(from|to)\\b",
+          "name": "keyword.other.hx"
+        }
+      ]
+    },
+    "keywords-accessor": {
+      "patterns": [
+        {
+          "match": "\\b(default|get|set|dynamic|never|null)\\b",
+          "name": "keyword.other.hx"
+        }
+      ]
+    },
+    "keywords-reification": {
+      "patterns": [
+        {
+          "captures": {
+            "1": {"name": "punctuation.definition.variable.hx"},
+            "2": {"name": "support.reification.hx"}
+          },
+          "match": "(\\$)([iea])\\("
+        },
+        {
+          "captures": {
+            "2": {"name": "punctuation.definition.variable.hx"},
+            "3": {"name": "support.reification.hx"}
+          },
+          "match": "((\\$)([a-zA-Z.]*))"
+        }
+      ]
+    },
+    "macro": {
+      "patterns": [
+        {
+          "captures": {
+            "2": {"name": "punctuation.definition.variable.hx"},
+            "3": {"name": "storage.modifier.macro.hx"}
+          },
+          "match": "((@:)(require|final|hack|native|coreApi|fakeEnum|macro|build|keep|keepSub|overload|extern|optional|feature|noCompletion|noUsing|allow|access|generic|publicFields|expose|defineFeature|runtime|initPackage|bind|bitmap|file|font|sound|ns|protected|getter|setter|meta|debug|noDebug|headerCode|headerClassCode|cppFileCode|functionCode|functionTailCode|buildXml|cppNamespaceCode|headerNamespaceCode|noStack|depend|include|internal|volatile|transient|functionBody|classContents|remove|jsRequire|pythonImport)\\b)"
+        },
+        {
+          "captures": {
+            "2": {"name": "punctuation.definition.variable.hx"},
+            "3": {"name": "support.macro.hx"}
+          },
+          "match": "((@:?)([a-zA-Z_]*))"
+        }
+      ]
+    },
+    "meta-static": {
+      "begin": "static",
+      "beginCaptures": {
+        "0": {"name": "storage.modifier.hx"}
+      },
+      "end": "(?<=[\\};])",
+      "name": "meta.static.hx",
+      "patterns": [
+        {"include": "#modifiers"},
+        {"include": "#method"},
+        {"include": "#variable"},
+        {"include": "#punctuation-terminator"}
+      ]
+    },
+    "method": {
+      "begin": "(?=function)",
+      "end": "(?<=[\\};])",
+      "name": "meta.method.hx",
+      "patterns": [
+        {"include": "#method-name"},
+        {"include": "#method-name-post"},
+        {"include": "#method-block"}
+      ]
+    },
+    "method-block": {
+      "begin": "(?<=\\{)",
+      "beginCaptures": {
+        "1": {"name": "punctuation.definition.block.begin.hx"}
+      },
+      "end": "(\\})",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.end.hx"}
+      },
+      "name": "meta.method.block.hx",
+      "patterns": [
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "method-name": {
+      "begin": "\\b(function)\\b",
+      "beginCaptures": {
+        "1": {"name": "storage.type.function.hx"}
+      },
+      "end": "[_A-Za-z]\\w*",
+      "endCaptures": {
+        "0": {"name": "entity.name.function.hx"}
+      },
+      "name": "meta.method.name.hx"
+    },
+    "method-name-post": {
+      "begin": "(?<=\\w)",
+      "end": "(\\{)|(;)",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.begin.hx"},
+        "2": {"name": "punctuation.terminator.hx"}
+      },
+      "patterns": [
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "modifiers": {
+      "match": "\\b(public|private|static|dynamic|inline|macro|extern|override)\\b",
+      "name": "storage.modifier.hx"
+    },
+    "modifiers-inheritance": {
+      "match": "\\b(implements|extends)\\b",
+      "name": "storage.modifier.hx"
+    },
+    "operator-assignment": {
+      "match": "(=)",
+      "name": "keyword.operator.assignment.hx"
+    },
+    "operator-optional": {
+      "match": "(\\?)(?!\\s)",
+      "name": "punctuation.definition.variable.hx"
+    },
+    "operators": {
+      "patterns": [
+        {
+          "match": "(!|&&|\\|\\|)",
+          "name": "keyword.operator.logical.hx"
+        },
+        {
+          "match": "(~|&|\\||\\^|<<|>>|>>>)",
+          "name": "keyword.operator.bitwise.hx"
+        },
+        {
+          "match": "(==|!=|<=|>=|<>|<|>)",
+          "name": "keyword.operator.comparison.hx"
+        },
+        {
+          "match": "(\\-\\-|\\+\\+)",
+          "name": "keyword.operator.increment-decrement.hx"
+        },
+        {
+          "match": "(\\-|\\+|\\*|\\\/|%)",
+          "name": "keyword.operator.arithmetic.hx"
+        }
+      ]
+    },
+    "package": {
+      "captures": {
+        "1": {"name": "storage.type.package.hx"},
+        "2": {"name": "support.package.hx"},
+        "4": {"name": "punctuation.terminator.hx"}
+      },
+      "match": "\\b(package)(\\s+([\\w.*]*))?\\s*(;)",
+      "name": "meta.package.hx"
+    },
+    "parameters": {
+      "begin": "\\(",
+      "beginCaptures": {
+        "0": {"name": "punctuation.definition.parameters.begin.hx"}
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {"name": "punctuation.definition.parameters.end.hx"}
+      },
+      "name": "meta.parameters.hx",
+      "patterns": [
+        {"include": "#operator-optional"},
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "punctuation-brackets": {
+      "patterns": [
+        {
+          "match": "[\\(\\<\\)\\>]",
+          "name": "punctuation.definition.other.hx"
+        }
+      ]
+    },
+    "punctuation-separator": {
+      "match": "[,:.?]",
+      "name": "punctuation.separator.hx"
+    },
+    "punctuation-terminator": {
+      "match": ";",
+      "name": "punctuation.terminator.hx"
+    },
+    "regex": {
+      "begin": "~\/",
+      "beginCaptures": {
+        "1": {"name": "string.regexp.begin.hx"}
+      },
+      "end": "(\/[gimsu]*)|(\\n$)",
+      "endCaptures": {
+        "1": {"name": "string.regexp.end.hx"},
+        "2": {"name": "invalid.illegal.hx"}
+      },
+      "name": "string.regexp.hx",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.hx"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "beginCaptures": [
+            {"name": "punctuation.definition.string.begin.hx"}
+          ],
+          "end": "\"",
+          "endCaptures": [
+            {"name": "punctuation.definition.string.end.hx"}
+          ],
+          "name": "string.quoted.double.hx",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.hx"
+            }
+          ]
+        },
+        {
+          "begin": "'",
+          "beginCaptures": [
+            {"name": "punctuation.definition.string.begin.hx"}
+          ],
+          "end": "'",
+          "endCaptures": [
+            {"name": "punctuation.definition.string.end.hx"}
+          ],
+          "name": "string.quoted.single.hx",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.hx"
+            },
+            {
+              "match": "\\$\\$",
+              "name": "constant.character.escape.hx"
+            },
+            {
+              "captures": {
+                "1": {"name": "variable.other.hx"},
+                "2": {"name": "variable.other.hx"},
+                "3": {"name": "variable.other.hx"},
+                "4": {"name": "variable.other.hx"}
+              },
+              "comment": "String interpolation : \"${test.ole}\"",
+              "match": "(\\$)(\\{)([^}]*)(\\})"
+            },
+            {
+              "captures": {
+                "1": {"name": "variable.other.hx"},
+                "2": {"name": "variable.other.hx"}
+              },
+              "comment": "String interpolation : \"$test\"",
+              "match": "(\\$)(\\w*)"
+            }
+          ]
+        }
+      ]
+    },
+    "support-class-name": {
+      "captures": {
+        "1": { "name": "support.package.hx" },
+        "3": { "name": "support.class.hx" }
+      },
+      "match": "\\b(([a-z][a-zA-Z0-9]*\\.)*)(([A-Z]\\w*\\.?)+)\\b"
+    },
+    "type-abstract": {
+      "begin": "(?=abstract)",
+      "end": "(?<=\\})|(;)",
+      "endCaptures": {
+        "1": {"name": "punctuation.terminator.hx"}
+      },
+      "name": "meta.type.abstract.hx",
+      "patterns": [
+        {"include": "#type-abstract-name"},
+        {"include": "#type-abstract-name-post"},
+        {"include": "#type-abstract-block"}
+      ]
+    },
+    "type-abstract-block": {
+      "begin": "(?<=\\{)",
+      "end": "(\\})",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.end.hx"}
+      },
+      "name": "meta.type.block.hx",
+      "patterns": [
+        {"include": "#meta-static"},
+        {"include": "#method"},
+        {"include": "#modifiers"},
+        {"include": "#variable"},
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "type-abstract-name": {
+      "begin": "\\b(abstract)\\b",
+      "beginCaptures": {
+        "1": {"name": "storage.type.class.hx"}
+      },
+      "end": "([_A-Za-z]\\w*)",
+      "endCaptures": {
+        "1": {"name": "entity.name.type.class.hx"}
+      },
+      "name": "meta.type.name.hx"
+    },
+    "type-abstract-name-post": {
+      "begin": "(?<=\\w)",
+      "end": "([\\{;])",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.begin.hx"}
+      },
+      "patterns": [
+        {"include": "#parameters"},
+        {"include": "#keywords-abstract"},
+        {"include": "#punctuation-brackets"},
+        {"include": "#punctuation-separator"},
+        {"include": "#support-class-name"}
+      ]
+    },
+    "type-class": {
+      "begin": "(?=class)",
+      "end": "(?<=\\})|(;)",
+      "endCaptures": {
+        "1": { "name": "punctuation.terminator.hx" }
+      },
+      "name": "meta.type.class.hx",
+      "patterns": [
+        {"include": "#type-class-name"},
+        {"include": "#type-class-name-post"},
+        {"include": "#type-class-block"}
+      ]
+    },
+    "type-class-block": {
+      "begin": "(?<=\\{)",
+      "end": "(\\})",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.end.hx"}
+      },
+      "name": "meta.type.block.hx",
+      "patterns": [
+        {"include": "#meta-static"},
+        {"include": "#method"},
+        {"include": "#modifiers"},
+        {"include": "#variable"},
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "type-class-name": {
+      "begin": "\\b(class)\\b",
+      "beginCaptures": {
+        "1": {"name": "storage.type.class.hx"}
+      },
+      "end": "([_A-Za-z]\\w*)",
+      "endCaptures": {
+        "1": {"name": "entity.name.type.class.hx"}
+      },
+      "name": "meta.type.name.hx"
+    },
+    "type-class-name-post": {
+      "begin": "(?<=\\w)",
+      "end": "([\\{;])",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.begin.hx"}
+      },
+      "patterns": [
+        {"include": "#type-parameters"},
+        {"include": "#modifiers-inheritance"},
+        {"include": "#punctuation-brackets"},
+        {"include": "#punctuation-separator"},
+        {"include": "#support-class-name"}
+      ]
+    },
+    "type-enum": {
+      "begin": "(?=enum)",
+      "end": "(?<=\\})|(;)",
+      "endCaptures": {
+        "1": {"name": "punctuation.terminator.hx"}
+      },
+      "name": "meta.type.enum.hx",
+      "patterns": [
+        {"include": "#type-enum-name"},
+        {"include": "#type-enum-name-post"},
+        {"include": "#type-enum-block"}
+      ]
+    },
+    "type-enum-block": {
+      "begin": "(?<=\\{)",
+      "end": "(\\})",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.end.hx"}
+      },
+      "name": "meta.type.block.hx",
+      "patterns": [
+        {"include": "#type-parameters"},
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "type-enum-name": {
+      "begin": "\\b(enum)\\b",
+      "beginCaptures": {
+        "1": {"name": "storage.type.class.hx"}
+      },
+      "end": "([_A-Za-z]\\w*)",
+      "endCaptures": {
+        "1": {"name": "entity.name.type.class.hx"}
+      },
+      "name": "meta.type.name.hx"
+    },
+    "type-enum-name-post": {
+      "begin": "(?<=\\w)",
+      "end": "([\\{;])",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.begin.hx"}
+      },
+      "patterns": [
+        {"include": "#type-parameters"},
+        {"include": "#punctuation-brackets"},
+        {"include": "#punctuation-separator"},
+        {"include": "#support-class-name"}
+      ]
+    },
+    "type-interface": {
+      "begin": "(?=interface)",
+      "end": "(?<=\\})|(;)",
+      "endCaptures": {
+        "1": {"name": "punctuation.terminator.hx"}
+      },
+      "name": "meta.type.interface.hx",
+      "patterns": [
+        {"include": "#type-interface-name"},
+        {"include": "#type-interface-name-post"},
+        {"include": "#type-interface-block"}
+      ]
+    },
+    "type-interface-block": {
+      "begin": "(?<=\\{)",
+      "end": "(\\})",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.end.hx"}
+      },
+      "name": "meta.type.block.hx",
+      "patterns": [
+        {"include": "#method"},
+        {"include": "#variable"},
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "type-interface-name": {
+      "begin": "\\b(interface)\\b",
+      "beginCaptures": {
+        "1": {"name": "storage.type.class.hx"}
+      },
+      "end": "([_A-Za-z]\\w*)",
+      "endCaptures": {
+        "1": {"name": "entity.name.type.class.hx"}
+      },
+      "name": "meta.type.name.hx"
+    },
+    "type-interface-name-post": {
+      "begin": "(?<=\\w)",
+      "end": "([\\{;])",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.begin.hx"}
+      },
+      "patterns": [
+        {"include": "#modifiers-inheritance"},
+        {"include": "#punctuation-brackets"},
+        {"include": "#punctuation-separator"},
+        {"include": "#support-class-name"}
+      ]
+    },
+    "type-parameters": {
+      "begin": "(\\<)",
+      "beginCaptures": {
+        "1": {"name": "punctuation.definition.parameters.begin.hx"}
+      },
+      "end": "(\\>)",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.parameters.end.hx"}
+      },
+      "name": "meta.type.parameters.hx",
+      "patterns": [
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "type-typedef": {
+      "begin": "(?=typedef)",
+      "end": "(?<=\\})|(;)",
+      "endCaptures": {
+        "1": {"name": "punctuation.terminator.hx"}
+      },
+      "name": "meta.type.typedef.hx",
+      "patterns": [
+        {"include": "#type-typedef-name"},
+        {"include": "#type-typedef-name-post"},
+        {"include": "#type-typedef-block"}
+      ]
+    },
+    "type-typedef-block": {
+      "begin": "(?<=\\{)",
+      "end": "(\\})",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.end.hx"}
+      },
+      "name": "meta.type.block.hx",
+      "patterns": [
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "type-typedef-name": {
+      "begin": "\\b(typedef)\\b",
+      "beginCaptures": {
+        "1": {"name": "storage.type.class.hx"}
+      },
+      "end": "([_A-Za-z]\\w*)",
+      "endCaptures": {
+        "1": {"name": "entity.name.type.class.hx"}
+      },
+      "name": "meta.type.name.hx"
+    },
+    "type-typedef-name-post": {
+      "begin": "(?<=\\w)",
+      "end": "(\\{)|(?=;)",
+      "endCaptures": {
+        "1": {"name": "punctuation.definition.block.begin.hx"}
+      },
+      "patterns": [
+        {"include": "#punctuation-brackets"},
+        {"include": "#punctuation-separator"},
+        {"include": "#operator-assignment"},
+        {"include": "#support-class-name"}
+      ]
+    },
+    "variable": {
+      "begin": "(?=var)",
+      "end": "(;)",
+      "endCaptures": {
+        "1": {"name": "punctuation.terminator.hx"}
+      },
+      "name": "meta.variable.hx",
+      "patterns": [
+        {"include": "#variable-name"},
+        {"include": "#variable-assign"},
+        {"include": "#variable-name-post"}
+      ]
+    },
+    "variable-accessors": {
+      "begin": "\\(",
+      "beginCaptures": {
+        "0": {"name": "punctuation.definition.parameters.begin.hx"}
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {"name": "punctuation.definition.parameters.end.hx"}
+      },
+      "name": "meta.parameters.hx",
+      "patterns": [
+        {"include": "#operator-optional"},
+        {"include": "#keywords-accessor"},
+        {"include": "#punctuation-separator"}
+      ]
+    },
+    "variable-assign": {
+      "begin": "=",
+      "beginCaptures": {
+        "0": {"name": "keyword.operator.assignment.hx"}
+      },
+      "end": "(?=;)",
+      "patterns": [
+        {"include": "#block"},
+        {"include": "#block-contents"}
+      ]
+    },
+    "variable-name": {
+      "begin": "\\b(var)\\b",
+      "beginCaptures": {
+        "1": {"name": "storage.type.variable.hx"}
+      },
+      "end": "([_a-zA-Z]\\w*)",
+      "endCaptures": {
+        "1": {"name": "entity.name.variable.hx"}
+      },
+      "name": "meta.variable.name.hx"
+    },
+    "variable-name-post": {
+      "begin": "(?<=\\w)",
+      "end": "(?=;)|(?==)",
+      "patterns": [
+        {"include": "#variable-accessors"},
+        {"include": "#block-contents"}
+      ]
+    }
+  }
+}

@@ -1,4 +1,8 @@
-﻿"use strict";
+// Called from entry point, e.g. Kha/make.js
+// This is where options are processed:
+// e.g. '-t html5 --server'
+
+"use strict";
 
 var version = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
 
@@ -73,12 +77,6 @@ var options = [
 		default: VrApi.None
 	},
 	{
-		full: 'pch',
-		description: 'Use precompiled headers for C++ targets',
-		value: false,
-		hidden: true
-	},
-	{
 		full: 'intermediate',
 		description: 'Intermediate location for object files.',
 		value: true,
@@ -114,50 +112,8 @@ var options = [
 		default: ''
 	},
 	{
-		full: 'ogg',
-		description: 'Argument line for ogg encoder',
-		value: true,
-		default: ''
-	},
-	{
-		full: 'aac',
-		description: 'Argument line for aac encoder',
-		value: true,
-		default: ''
-	},
-	{
-		full: 'mp3',
-		description: 'Argument line for mp3 encoder',
-		value: true,
-		default: ''
-	},
-	{
-		full: 'h264',
-		description: 'Argument line for h264 encoder',
-		value: true,
-		default: ''
-	},
-	{
-		full: 'webm',
-		description: 'Argument line for webm encoder',
-		value: true,
-		default: ''
-	},
-	{
-		full: 'wmv',
-		description: 'Argument line for wmv encoder',
-		value: true,
-		default: ''
-	},
-	{
-		full: 'theora',
-		description: 'Argument line for theora encoder',
-		value: true,
-		default: ''
-	},
-	{
-		full: 'kfx',
-		description: 'Location of kfx shader compiler',
+		full: 'ffmpeg',
+		description: 'Location of ffmpeg executable',
 		value: true,
 		default: ''
 	},
@@ -166,11 +122,6 @@ var options = [
 		description: 'Location of krafix shader compiler',
 		value: true,
 		default: ''
-	},
-	{
-		full: 'nokrafix',
-		description: 'Switch off the new shader compiler',
-		value: false
 	},
 	{
 		full: 'embedflashassets',
@@ -310,7 +261,7 @@ if (parsedOptions.run) {
 if (parsedOptions.init) {
 	console.log('Initializing Kha project.\n');
 	require('./init.js').run(parsedOptions.name, parsedOptions.from, parsedOptions.projectfile);
-	console.log('If you want to use the git version of Kha, execute "git init" and "git add submodule https://github.com/ktxsoftware/Kha.git".');
+	console.log('If you want to use the git version of Kha, execute "git init" and "git submodule add https://github.com/ktxsoftware/Kha.git".');
 }
 else if (parsedOptions.server) {
 	console.log('Running server on ' + parsedOptions.port);

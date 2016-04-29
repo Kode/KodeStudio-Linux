@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -16,7 +17,7 @@ var Source = (function () {
         this.sourceReference = id;
     }
     return Source;
-})();
+}());
 exports.Source = Source;
 var Scope = (function () {
     function Scope(name, reference, expensive) {
@@ -26,7 +27,7 @@ var Scope = (function () {
         this.expensive = expensive;
     }
     return Scope;
-})();
+}());
 exports.Scope = Scope;
 var StackFrame = (function () {
     function StackFrame(i, nm, src, ln, col) {
@@ -37,7 +38,7 @@ var StackFrame = (function () {
         this.name = nm;
     }
     return StackFrame;
-})();
+}());
 exports.StackFrame = StackFrame;
 var Thread = (function () {
     function Thread(id, name) {
@@ -50,7 +51,7 @@ var Thread = (function () {
         }
     }
     return Thread;
-})();
+}());
 exports.Thread = Thread;
 var Variable = (function () {
     function Variable(name, value, ref) {
@@ -60,7 +61,7 @@ var Variable = (function () {
         this.variablesReference = ref;
     }
     return Variable;
-})();
+}());
 exports.Variable = Variable;
 var Breakpoint = (function () {
     function Breakpoint(verified, line) {
@@ -68,7 +69,7 @@ var Breakpoint = (function () {
         this.line = line;
     }
     return Breakpoint;
-})();
+}());
 exports.Breakpoint = Breakpoint;
 var StoppedEvent = (function (_super) {
     __extends(StoppedEvent, _super);
@@ -84,7 +85,7 @@ var StoppedEvent = (function (_super) {
         }
     }
     return StoppedEvent;
-})(v8Protocol_1.Event);
+}(v8Protocol_1.Event));
 exports.StoppedEvent = StoppedEvent;
 var InitializedEvent = (function (_super) {
     __extends(InitializedEvent, _super);
@@ -92,7 +93,7 @@ var InitializedEvent = (function (_super) {
         _super.call(this, 'initialized');
     }
     return InitializedEvent;
-})(v8Protocol_1.Event);
+}(v8Protocol_1.Event));
 exports.InitializedEvent = InitializedEvent;
 var TerminatedEvent = (function (_super) {
     __extends(TerminatedEvent, _super);
@@ -100,7 +101,7 @@ var TerminatedEvent = (function (_super) {
         _super.call(this, 'terminated');
     }
     return TerminatedEvent;
-})(v8Protocol_1.Event);
+}(v8Protocol_1.Event));
 exports.TerminatedEvent = TerminatedEvent;
 var OutputEvent = (function (_super) {
     __extends(OutputEvent, _super);
@@ -113,7 +114,7 @@ var OutputEvent = (function (_super) {
         };
     }
     return OutputEvent;
-})(v8Protocol_1.Event);
+}(v8Protocol_1.Event));
 exports.OutputEvent = OutputEvent;
 (function (ErrorDestination) {
     ErrorDestination[ErrorDestination["User"] = 1] = "User";
@@ -163,11 +164,11 @@ var DebugSession = (function (_super) {
         else {
             // start a session
             console.error("waiting for v8 protocol on stdin/stdout");
-            var session = new debugSession(false);
+            var session_1 = new debugSession(false);
             process.on('SIGTERM', function () {
-                session.shutdown();
+                session_1.shutdown();
             });
-            session.start(process.stdin, process.stdout);
+            session_1.start(process.stdin, process.stdout);
         }
     };
     DebugSession.prototype.shutdown = function () {
@@ -349,7 +350,7 @@ var DebugSession = (function (_super) {
         return path;
     };
     return DebugSession;
-})(v8Protocol_1.V8Protocol);
+}(v8Protocol_1.V8Protocol));
 exports.DebugSession = DebugSession;
 var _formatPIIRegexp = /{([^}]+)}/g;
 /*

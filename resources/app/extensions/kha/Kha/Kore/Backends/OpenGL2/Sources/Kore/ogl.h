@@ -39,9 +39,23 @@
 #include <GL/glext.h>
 #endif
 
+#ifdef SYS_PI
+//#define GL_GLEXT_PROTOTYPES
+#include "GLES2/gl2.h"
+#include "EGL/egl.h"
+#include "EGL/eglext.h"
+#define OPENGLES
+#endif
+
 #ifdef SYS_TIZEN
 #include <gl2.h>
 #define OPENGLES
 #endif
 
-void glCheckErrors();
+#include <Kore/Log.h>
+
+#if defined(NDEBUG) || defined(SYS_OSX) || defined(SYS_IOS) || defined(SYS_ANDROID)
+#define glCheckErrors() { }
+#else
+#define glCheckErrors() { GLenum code = glGetError(); while (code != GL_NO_ERROR) { Kore::log(Kore::Error, "GL Error %d %s %d\n", code, __FILE__, __LINE__); } }
+#endif

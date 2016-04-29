@@ -33,13 +33,16 @@ class FlashExporter extends KhaExporter {
 		return 'flash';
 	}
 
-	exportSolution(name, platform, khaDirectory, haxeDirectory, from, targetOptions) {
-		let defines = [
-			'swf-script-timeout=60',
-			'sys_' + platform,
-			'sys_g1', 'sys_g2', 'sys_g3', 'sys_g4',
-			'sys_a1', 'sys_a2'
-		];
+	exportSolution(name, platform, khaDirectory, haxeDirectory, from, targetOptions, defines) {
+		defines.push('swf-script-timeout=60');
+		defines.push('sys_' + platform);
+		defines.push('sys_g1');
+		defines.push('sys_g2');
+		defines.push('sys_g3');
+		defines.push('sys_g4');
+		defines.push('sys_a1');
+		defines.push('sys_a2');
+
 		if (this.embed) defines.push('KHA_EMBEDDED_ASSETS');
 
 		let defaultFlashOptions = {
@@ -54,6 +57,7 @@ class FlashExporter extends KhaExporter {
 			from: from.toString(),
 			to: path.join(this.sysdir(), 'kha.swf'),
 			sources: this.sources,
+			libraries: this.libraries,
 			defines: defines,
 			parameters: this.parameters,
 			haxeDirectory: haxeDirectory.toString(),
@@ -112,7 +116,7 @@ class FlashExporter extends KhaExporter {
 		}
 	}
 
-	/*copyMusic(platform, from, to, encoders) {
+	copySound(platform, from, to, encoders) {
 		Files.createDirectories(this.directory.resolve(this.sysdir()).resolve(to).parent());
 		var ogg = Converter.convert(from, this.directory.resolve(this.sysdir()).resolve(to + '.ogg'), encoders.oggEncoder);
 		var mp3 = Converter.convert(from, this.directory.resolve(this.sysdir()).resolve(to + '.mp3'), encoders.mp3Encoder);
@@ -126,13 +130,6 @@ class FlashExporter extends KhaExporter {
 			if (this.embed) this.sounds.push(to + '.mp3');
 		}
 		return files;
-	}*/
-
-	copySound(platform, from, to, encoders) {
-		Files.createDirectories(this.directory.resolve(this.sysdir()).resolve(to).parent());
-		Converter.convert(from, this.directory.resolve(this.sysdir()).resolve(to + '.ogg'), encoders.oggEncoder);
-		if (this.embed) this.sounds.push(to + '.ogg');
-		return [to + '.ogg'];
 	}
 
 	copyImage(platform, from, to, asset) {

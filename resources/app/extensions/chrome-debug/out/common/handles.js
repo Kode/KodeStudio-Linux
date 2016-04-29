@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var Handles = (function () {
     function Handles() {
         this.START_HANDLE = 1000;
@@ -20,7 +21,7 @@ var Handles = (function () {
         return this._handleMap[handle] || dflt;
     };
     return Handles;
-})();
+}());
 exports.Handles = Handles;
 
 //# sourceMappingURL=handles.js.map

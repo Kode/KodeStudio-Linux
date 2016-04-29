@@ -1,6 +1,6 @@
 #include "pch.h"
+#include <Kore/Graphics/Graphics.h>
 #include <Kore/System.h>
-#include <Kore/Application.h>
 #include <Kore/Input/Keyboard.h>
 #include <Kore/Log.h>
 #import <Cocoa/Cocoa.h>
@@ -33,9 +33,22 @@ const char* macgetresourcepath() {
 
 namespace {
 	NSApplication* myapp;
-	NSWindow* window;
-	BasicOpenGLView* view;
+//	NSWindow* window;
+//	BasicOpenGLView* view;
 	MyAppDelegate* delegate;
+    
+    struct KoreWindow : public KoreWindowBase {
+        NSWindow * handle;
+        BasicOpenGLView* view;
+        
+        KoreWindow( NSWindow * handle, BasicOpenGLView * view, int x, int y, int width, int height ) : KoreWindowBase(x, y, width, height) {
+            this->handle = handle;
+            this->view = view;
+        }
+    };
+    
+    KoreWindow* windows[10] = {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
+    int windowCounter = -1;
 }
 
 bool System::handleMessages() {
@@ -47,34 +60,51 @@ bool System::handleMessages() {
 	return true;
 }
 
-void System::swapBuffers() {
-	[view switchBuffers];
+void System::swapBuffers(int windowId) {
+	[windows[windowId]->view switchBuffers];
 }
 
-void* System::createWindow() {
-	view = [[BasicOpenGLView alloc] initWithFrame:NSMakeRect(0, 0, Kore::Application::the()->width(), Kore::Application::the()->height()) ];
-	window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, Kore::Application::the()->width(), Kore::Application::the()->height()) styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask backing:NSBackingStoreBuffered defer:TRUE];
+int Kore::System::windowCount() {
+    return windowCounter + 1;
+}
+
+int createWindow(const char * title, int x, int y, int width, int height, WindowMode windowMode, int targetDisplay) {
+	BasicOpenGLView* view = [[BasicOpenGLView alloc] initWithFrame:NSMakeRect(0, 0, width, height) ];
+	NSWindow* window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, width, height) styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask backing:NSBackingStoreBuffered defer:TRUE];
 	delegate = [MyAppDelegate alloc];
 	[window setDelegate: delegate];
-	[window setTitle:[NSString stringWithCString: Kore::Application::the()->name() encoding: 1]];
+    [window setTitle:[NSString stringWithCString: title encoding: 1]];
 	[window setAcceptsMouseMovedEvents:YES];
 	[[window contentView] addSubview:view];
 	[window center];
 	[window makeKeyAndOrderFront: nil];
 		
-	return nullptr;
+    ++windowCounter;
+    windows[windowCounter] = new KoreWindow(window, view, x, y, width, height);
+    Kore::System::makeCurrent(windowCounter);
+	return windowCounter;
 }
 
-void System::destroyWindow() {
+void System::destroyWindow(int windowId) {
 	
 }
 
-int System::screenWidth() {
-	return Application::the()->width();
+int Kore::System::initWindow(Kore::WindowOptions options) {
+    int id = createWindow(options.title, options.x, options.y, options.width, options.height, options.mode, options.targetDisplay);
+    Graphics::init(id, options.rendererOptions.depthBufferBits, options.rendererOptions.stencilBufferBits);
+    return id;
 }
 
-int System::screenHeight() {
-	return Application::the()->height();
+void Graphics::makeCurrent(int contextId) {
+    [[windows[contextId]->view openGLContext] makeCurrentContext];
+}
+
+int Kore::System::windowWidth(int id) {
+    return windows[id]->width;
+}
+
+int Kore::System::windowHeight(int id) {
+    return windows[id]->height;
 }
 
 int System::desktopWidth() {
@@ -99,7 +129,7 @@ namespace {
 	void getSavePath() {
 		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 		NSString* resolvedPath = [paths objectAtIndex:0];
-		NSString* appName = [NSString stringWithUTF8String:Application::the()->name()];
+        NSString* appName = [NSString stringWithUTF8String:Kore::System::name()];
 		resolvedPath = [resolvedPath stringByAppendingPathComponent:appName];
 		
 		NSFileManager* fileMgr = [[NSFileManager alloc] init];
@@ -125,6 +155,11 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
+#ifdef KOREC
+extern "C"
+#endif
+void kore(int, char **);
+
 @implementation MyApplication
 
 - (void)run {
@@ -140,7 +175,7 @@ int main(int argc, char** argv) {
 }
 
 - (void)terminate:(id)sender {
-	Application::the()->stop();
+    Kore::System::stop();
 }
 
 @end
@@ -148,7 +183,7 @@ int main(int argc, char** argv) {
 @implementation MyAppDelegate
 
 - (void)windowWillClose:(NSNotification *)notification {
-	Application::the()->stop();
+    Kore::System::stop();
 }
 
 @end

@@ -1,11 +1,12 @@
 #include "pch.h"
 #include <Kore/Math/Core.h>
 #include "Direct3D9.h"
-#include <Kore/Application.h>
 #include <Kore/Graphics/Shader.h>
 #undef CreateWindow
 #include <Kore/System.h>
 #include <Kore/WinError.h>
+
+#include <Kore/Log.h>
 
 using namespace Kore;
 
@@ -18,11 +19,25 @@ LPDIRECT3DDEVICE9 device;
 
 namespace {
 	HWND hWnd;
+	
+	int _width;
+	int _height;
+	
 	unsigned hz;
 	bool vsync;
+		
+	bool resizable;
+	
+	D3DVIEWPORT9 vp;
 
 	void swapBuffers() {
-		device->Present(0, 0, 0, 0);
+		if( resizable ){
+			RECT vRect;
+			GetClientRect(hWnd, &vRect);
+			device->Present(&vRect, &vRect, 0, 0);
+		} else {
+			device->Present(0, 0, 0, 0);
+		}
 	}
 
 	Shader* pixelShader = nullptr;
@@ -71,11 +86,18 @@ namespace {
 	}
 }
 
-void Graphics::destroy() {
+void Graphics::destroy(int windowId) {
 
 }
 
 void Graphics::changeResolution(int width, int height) {
+	if(!resizable){
+		return;
+	}
+	
+	_width = width;
+	_height = height;
+	viewport(0, 0, width, height);
 	/*D3DPRESENT_PARAMETERS d3dpp; 
 	ZeroMemory(&d3dpp, sizeof(d3dpp));
 	d3dpp.Windowed = (!fullscreen) ? TRUE : FALSE;
@@ -102,22 +124,52 @@ void Graphics::changeResolution(int width, int height) {
 	initDeviceStates();*/
 }
 
-void Graphics::init() {
-	if (!hasWindow()) return;
-
-	hWnd = (HWND)System::createWindow();
-
+void Graphics::setup() {
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
 	//if (!d3d) throw Exception("Could not initialize Direct3D9");
+}
+
+void Graphics::init(int windowId, int depthBufferBits, int stencilBufferBits) {
+	if (!hasWindow()) return;
+
+	hWnd = (HWND)System::windowHandle(windowId);
+	long style = GetWindowLong(hWnd, GWL_STYLE);
+	
+	resizable = false;
+	
+	if((style & WS_SIZEBOX) != 0){
+		resizable = true;
+	}
+	
+	if((style & WS_MAXIMIZEBOX) != 0){
+		resizable = true;
+	}
+
+	// TODO (DK) just setup the primary window for now and ignore secondaries
+	//	-this should probably be implemented via swap chain for real at a later time
+	//  -http://www.mvps.org/directx/articles/rendering_to_multiple_windows.htm
+	if (windowId > 0) {
+		return;
+	}
 
 #ifdef SYS_WINDOWS
+	// TODO (DK) convert depthBufferBits + stencilBufferBits to: d3dpp.AutoDepthStencilFormat = D3DFMT_D24X8;
 	D3DPRESENT_PARAMETERS d3dpp; 
 	ZeroMemory(&d3dpp, sizeof(d3dpp));
 	d3dpp.Windowed = (!fullscreen) ? TRUE : FALSE;
-	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dpp.BackBufferCount = 2;
-	d3dpp.BackBufferWidth = Application::the()->width();
-	d3dpp.BackBufferHeight = Application::the()->height();
+	
+	if(resizable) {
+		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
+		d3dpp.BackBufferCount = 1;
+		d3dpp.BackBufferWidth = Kore::System::desktopWidth();
+		d3dpp.BackBufferHeight = Kore::System::desktopHeight();
+	}else{
+		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+		d3dpp.BackBufferCount = 2;
+		d3dpp.BackBufferWidth = System::windowWidth(windowId);
+		d3dpp.BackBufferHeight = System::windowHeight(windowId);
+	}
+	
 	d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
 	d3dpp.EnableAutoDepthStencil = TRUE;
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D24X8;
@@ -159,7 +211,7 @@ void Graphics::init() {
 #endif
 
 #ifdef SYS_WINDOWS
-	if (Application::the()->showWindow()) {
+	if (System::hasShowWindowFlag(/*windowId*/)) {
 		ShowWindow(hWnd, SW_SHOWDEFAULT);
 		UpdateWindow(hWnd);
 	}
@@ -186,7 +238,7 @@ void Graphics::init() {
 	//vsync = d3dpp.PresentationInterval != D3DPRESENT_INTERVAL_IMMEDIATE;
 
 	System::ticks test1 = Kore::System::timestamp();
-	for (int i = 0; i < 3; ++i) swapBuffers();
+	for (int i = 0; i < 3; ++i) swapBuffers(windowId);
 	System::ticks test2 = Kore::System::timestamp();
 	if (test2 - test1 < (1.0 / hz) * System::frequency()) {
 		vsync = false;
@@ -202,6 +254,11 @@ void Graphics::init() {
 
 	setFragmentBool(L"lighting", false);
 #endif
+	
+	_width = System::windowWidth(windowId);
+	_height =  System::windowHeight(windowId);
+	
+	System::makeCurrent(windowId);
 }
 
 void Graphics::flush() {
@@ -262,6 +319,16 @@ namespace {
 	}
 }
 
+void Graphics::setColorMask(bool red, bool green, bool blue, bool alpha) {
+	DWORD flags = 0;
+	if (red) flags |= D3DCOLORWRITEENABLE_RED;
+	if (green) flags |= D3DCOLORWRITEENABLE_GREEN;
+	if (blue) flags |= D3DCOLORWRITEENABLE_BLUE;
+	if (alpha) flags |= D3DCOLORWRITEENABLE_ALPHA;
+
+	device->SetRenderState(D3DRS_COLORWRITEENABLE, flags);
+}
+
 void Graphics::setTextureOperation(TextureOperation operation, TextureArgument arg1, TextureArgument arg2) {
 	device->SetTextureStageState(0, D3DTSS_COLOROP, convert(operation));
 	device->SetTextureStageState(0, D3DTSS_COLORARG1, convert(arg1));
@@ -280,12 +347,19 @@ void Graphics::setTextureMipmapFilter(TextureUnit texunit, MipmapFilter filter) 
 	device->SetSamplerState(texunit.unit, D3DSAMP_MIPFILTER, convertMipFilter(filter));
 }
 
-void* Graphics::getControl() {
-	return hWnd;
+void Graphics::makeCurrent( int contextId ) {
+	// TODO (DK) implement me
 }
 
-void Graphics::setRenderTarget(RenderTarget* target, int num) {
+void Graphics::clearCurrent() {
+	// TODO (DK) implement me
+}
+
+void Graphics::setRenderTarget(RenderTarget* target, int num, int additionalTargets) {
 	//if (backBuffer != nullptr) backBuffer->Release();
+	
+	System::makeCurrent(target->contextId);
+
 	if (num == 0) {
 		if (backBuffer == nullptr) {
 			device->GetRenderTarget(0, &backBuffer);
@@ -311,6 +385,7 @@ void Graphics::restoreRenderTarget() {
 		device->SetDepthStencilSurface(depthBuffer);
 		depthBuffer->Release();
 		depthBuffer = nullptr;
+		viewport(0, 0, _width, _height);
 	}
 }
 
@@ -379,13 +454,17 @@ void Graphics::clear(uint flags, uint color, float z, int stencil) {
 	device->Clear(0, nullptr, flags, color, z, stencil);
 }
 
-void Graphics::begin() {
+void Graphics::begin(int windowId) {
+	// TODO (DK) ignore secondary windows for now
+	if (windowId > 0) {
+		return;
+	}
+	
+	viewport(0, 0, _width, _height);
 	device->BeginScene();
 }
 
-
 void Graphics::viewport(int x, int y, int width, int height) {
-	D3DVIEWPORT9 vp;
 	vp.X = x;
 	vp.Y = y;
 	vp.Width = width;
@@ -393,8 +472,24 @@ void Graphics::viewport(int x, int y, int width, int height) {
 	device->SetViewport(&vp);
 }
 
+void Graphics::scissor(int x, int y, int width, int height) {
+	// TODO
+}
 
-void Graphics::end() {
+void Graphics::disableScissor() {
+	// TODO
+}
+
+void Graphics::setStencilParameters(ZCompareMode compareMode, StencilAction bothPass, StencilAction depthFail, StencilAction stencilFail, int referenceValue, int readMask, int writeMask) {
+	// TODO
+}
+
+void Graphics::end(int windowId) {
+	// TODO (DK) ignore secondary windows for now
+	if (windowId > 0) {
+		return;
+	}
+
 	/*if (backBuffer != nullptr) {
 		backBuffer->Release();
 		backBuffer = nullptr;
@@ -410,7 +505,12 @@ unsigned Graphics::refreshRate() {
 	return hz;
 }
 
-void Graphics::swapBuffers() {
+void Graphics::swapBuffers(int windowId) {
+	// TODO (DK) ignore secondary windows for now
+	if (windowId > 0) {
+		return;
+	}
+
 	::swapBuffers();
 }
 
@@ -471,7 +571,7 @@ void Graphics::setRenderState(RenderState state, int v) {
 	switch (state) {
 	case DepthTestCompare:
 		switch (v) {
-		// TODO: Cmp-Konstanten systemabhängig abgleichen
+		// TODO: Cmp-Konstanten systemabhï¿½ngig abgleichen
 		default:
 		case ZCompareAlways      : v = D3DCMP_ALWAYS; break;
 		case ZCompareNever       : v = D3DCMP_NEVER; break;

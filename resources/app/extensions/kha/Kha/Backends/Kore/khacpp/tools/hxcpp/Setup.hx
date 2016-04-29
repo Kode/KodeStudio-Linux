@@ -5,7 +5,7 @@ import BuildTool;
 
 class Setup
 {
-   static function findAndroidNdkRoot(inDir:String)
+   static function findAndroidNdkRoot(inDir:String, inBaseVersion:Int)
    {
       var files:Array<String> = null;
       try
@@ -18,20 +18,23 @@ class Setup
          //throw 'ANDROID_NDK_DIR "$inDir" does not point to a valid directory.';
       }
 
-      var extract_version = ~/^android-ndk-r(\d+)([a-z]?)$/;
+      var extract_version = ~/^(android-ndk-)?r(\d+)([a-z]?)$/;
       var bestMajor = 0;
       var bestMinor = "";
       var result = "";
       for(file in files)
          if (extract_version.match(file))
          {
-            var major = Std.parseInt( extract_version.matched(1) );
-            var minor = extract_version.matched(2);
-            if ( major>bestMajor || (major==bestMajor && minor>bestMinor))
+            var major = Std.parseInt( extract_version.matched(2) );
+            if (inBaseVersion==0 || major==inBaseVersion)
             {
-               bestMajor = major;
-               bestMinor = minor;
-               result = inDir + "/" + file;
+               var minor = extract_version.matched(3);
+               if ( major>bestMajor || (major==bestMajor && minor>bestMinor))
+               {
+                  bestMajor = major;
+                  bestMinor = minor;
+                  result = inDir + "/" + file;
+               }
             }
          }
       
@@ -39,7 +42,10 @@ class Setup
 
       if (result=="")
       {
-         Log.error('ANDROID_NDK_DIR "$inDir" does not contain matching NDK downloads'); 
+         if (inBaseVersion!=0)
+            Log.error('ANDROID_NDK_DIR "$inDir" does not contain requested NDK $inBaseVersion'); 
+         else
+            Log.error('ANDROID_NDK_DIR "$inDir" does not contain a matching NDK'); 
          //throw 'ANDROID_NDK_DIR "$inDir" does not contain matching ndk downloads.'; 
       }
 
@@ -48,12 +54,17 @@ class Setup
 
    static public function getNdkVersion(inDirName:String):Int
    {
-      var extract_version = ~/android-ndk-r(\d+)*/;
-      if (extract_version.match(inDirName))
+      var dir = inDirName.split("\\").join("/");
+
+      var extract_version = ~/.*\/(android-ndk-)?r(\d+)/;
+      if (extract_version.match(dir))
       {
-         return Std.parseInt( extract_version.matched(1) );
+         var result = Std.parseInt( extract_version.matched(2) );
+         if (result!=null)
+            return result;
       }
-      //throw 'Could not deduce NDK version from "$inDirName"';
+
+      Log.v('Could not deduce NDK version from "$inDirName" - assuming 8');
       return 8;
    }
    
@@ -125,7 +136,16 @@ class Setup
             }
          }
 
-         Log.error('Could not guess MINGW_ROOT (tried $guesses) - please set explicitly');
+         if (ioDefines.exists("mingw"))
+         {
+            //when mingw is explicitly indicated but not properly configured, this log will be shown
+            Log.error('Could not guess MINGW_ROOT (tried $guesses) - please set explicitly');          
+         }
+         else
+         {
+            //when both mingw and MSVC is not properly configured, this log will be shown
+            Log.error('Could not setup any C++ compiler, please install or reinstall a valid C++ compiler');
+         }
       }
    }
 
@@ -171,6 +191,22 @@ class Setup
       return str.split(" ")[1]=="raspberrypi";
    }
 
+   static public function startPdbServer()
+   {
+      var oldPath = Sys.getCwd();
+      try
+      {
+         // Run it in hxcpp directory so it does not lock the build directory after build finishes
+         Sys.setCwd(BuildTool.HXCPP);
+         var proc = new Process("mspdbsrv.exe",["-start"]);
+      }
+      catch(e:Dynamic)
+      {
+         Log.v("Could not start mspdbsrv:" + e);
+      }
+      Sys.setCwd(oldPath);
+   }
+
 
 
 
@@ -189,7 +225,11 @@ class Setup
       }
       else if (inWhat=="msvc")
       {
-         setupMSVC(ioDefines, ioDefines.exists("HXCPP_M64"));
+         setupMSVC(ioDefines, ioDefines.exists("HXCPP_M64"), ioDefines.exists("winrt"));
+      }
+      else if (inWhat=="pdbserver")
+      {
+         startPdbServer();
       }
       else if (inWhat=="mingw")
       {
@@ -212,11 +252,23 @@ class Setup
       
       if (Log.verbose) Log.println("");
 
+      var found = false;
+      var ndkVersion = 0;
+      for(i in 6...20)
+         if (defines.exists("NDKV" + i))
+         {
+            found = true;
+            ndkVersion = i;
+            Log.info("", "\x1b[33;1mRequested Android NDK r" + i + "\x1b[0m");
+            break;
+         }
+
+
       if (!defines.exists("ANDROID_NDK_ROOT"))
       {
          if (defines.exists("ANDROID_NDK_DIR"))
          {
-            root = Setup.findAndroidNdkRoot( defines.get("ANDROID_NDK_DIR") );
+            root = Setup.findAndroidNdkRoot( defines.get("ANDROID_NDK_DIR"), ndkVersion );
             Log.info("", "\x1b[33;1mDetected Android NDK root: " + root + "\x1b[0m");
 
             Sys.putEnv("ANDROID_NDK_ROOT", root);
@@ -234,20 +286,19 @@ class Setup
          Log.info("", "\x1b[33;1mUsing Android NDK root: " + root + "\x1b[0m");
       }
       
-      var found = false;
-      for(i in 6...20)
-         if (defines.exists("NDKV" + i))
-         {
-            found = true;
-            Log.info("", "\x1b[33;1mUsing Android NDK r" + i + "\x1b[0m");
-            break;
-         }
       if (!found)
       {
          var version = Setup.getNdkVersion( defines.get("ANDROID_NDK_ROOT") );
          Log.info("", "\x1b[33;1mDetected Android NDK r" + version + "\x1b[0m");
          defines.set("NDKV" + version, "1" );
+         ndkVersion = version;
       }
+      for(i in 5...ndkVersion+1)
+         defines.set("NDKV" + i + "+", "1");
+
+      var arm_type = 'arm-linux-androideabi';
+      var arm_64 = defines.exists('HXCPP_ARM64');
+      if(arm_64) arm_type = 'aarch64-linux-android';
 
       // Find toolchain
       if (!defines.exists("TOOLCHAIN_VERSION"))
@@ -258,6 +309,8 @@ class Setup
 
             // Prefer clang?
             var extract_version = ~/^arm-linux-androideabi-(\d.*)/;
+            if(arm_64) extract_version = ~/^aarch64-linux-android-(\d.*)/;
+
             var bestVer="";
             for(file in files)
             {
@@ -273,7 +326,7 @@ class Setup
             if (bestVer!="")
             {
                defines.set("TOOLCHAIN_VERSION",bestVer);
-               Log.info("", "\x1b[33;1mDetected Android toolchain: arm-linux-androideabi-" + bestVer + "\x1b[0m");
+               Log.info("", "\x1b[33;1mDetected Android toolchain: "+arm_type+"-" + bestVer + "\x1b[0m");
             }
          }
          catch(e:Dynamic) { }
@@ -282,7 +335,7 @@ class Setup
       // See what ANDROID_HOST to use ...
       try
       {
-         var prebuilt =  root+"/toolchains/arm-linux-androideabi-" + defines.get("TOOLCHAIN_VERSION") + "/prebuilt";
+         var prebuilt =  root+"/toolchains/"+arm_type+"-" + defines.get("TOOLCHAIN_VERSION") + "/prebuilt";
          var files = FileSystem.readDirectory(prebuilt);
          for (file in files)
          {  
@@ -304,6 +357,19 @@ class Setup
       catch(e:Dynamic) { }
 
       var androidPlatform = 5;
+      if (!defines.exists("PLATFORM"))
+      {
+         for(i in 5...100)
+         {
+            var test = "android-" + i;
+            if (defines.exists(test))
+            {
+               defines.set("PLATFORM",test);
+               break;
+            }
+         }
+      }
+
       if (defines.exists("PLATFORM"))
       {
          var platform = defines.get("PLATFORM");
@@ -420,7 +486,7 @@ class Setup
       }
    }
 
-   public static function setupMSVC(ioDefines:Hash<String>, in64:Bool)
+   public static function setupMSVC(ioDefines:Hash<String>, in64:Bool, isWinRT:Bool)
    {
       var detectMsvc = !ioDefines.exists("NO_AUTO_MSVC") &&
                        !ioDefines.exists("HXCPP_MSVC_CUSTOM");
@@ -465,7 +531,11 @@ class Setup
 
       if (detectMsvc)
       {
-         var extra = in64 ? "64" : "";
+        var extra:String = "";
+        if( isWinRT )
+            extra += "-winrt";
+        if( in64 )
+            extra += "64";
          var xpCompat = false;
          if (ioDefines.exists("HXCPP_WINXP_COMPAT"))
          {
@@ -498,7 +568,8 @@ class Setup
                   {
                      case "path", "vcinstalldir", "windowssdkdir","framework35version",
                         "frameworkdir", "frameworkdir32", "frameworkversion",
-                        "frameworkversion32", "devenvdir", "include", "lib", "libpath", "hxcpp_xp_define"
+                        "frameworkversion32", "devenvdir", "include", "lib", "libpath", "hxcpp_xp_define",
+                        "hxcpp_hack_pdbsrv"
                       :
                         var value = str.substr(pos+1);
                         ioDefines.set(name,value);
@@ -540,16 +611,18 @@ class Setup
          proc.close();
          if (str>"")
          {
-            var reg = ~/Version\s+(\d+)/i;
+            var reg = ~/(\d{2})\.\d+/i;
             if (reg.match(str))
             {
                var cl_version = Std.parseInt(reg.matched(1));
-               Log.info("", "Using msvc cl version " + cl_version);
+               Log.info("", "Using MSVC version: " + cl_version);
                ioDefines.set("MSVC_VER", cl_version+"");
                if (cl_version>=17)
                   ioDefines.set("MSVC17+","1");
                if (cl_version>=18)
                   ioDefines.set("MSVC18+","1");
+               if (cl_version==19)
+                  ioDefines.set("MSVC19","1");
                BuildTool.sAllowNumProcs = cl_version >= 14;
                var threads = BuildTool.getThreadCount();
                if (threads>1 && cl_version>=18)

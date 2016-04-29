@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2012 Haxe Foundation
+ * Copyright (C)2005-2016 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,8 +28,7 @@ package haxe.io;
 #elseif php
 	typedef BytesData = php.BytesData;
 #elseif cpp
-	extern class Unsigned_char__ { }
-	typedef BytesData = Array<Unsigned_char__>;
+	typedef BytesData = Array< cpp.UInt8 >;
 #elseif java
 	typedef BytesData = java.NativeArray<java.StdTypes.Int8>;
 #elseif cs
@@ -38,6 +37,16 @@ package haxe.io;
 	typedef BytesData = python.Bytearray;
 #elseif js
 	typedef BytesData = js.html.ArrayBuffer;
+#elseif hl
+	class BytesDataImpl {
+		public var b : hl.types.Bytes;
+		public var length : Int;
+		public function new(b,length) {
+			this.b = b;
+			this.length = length;
+		}
+	}
+	typedef BytesData = BytesDataImpl;
 #else
 	typedef BytesData = Array<Int>;
 #end

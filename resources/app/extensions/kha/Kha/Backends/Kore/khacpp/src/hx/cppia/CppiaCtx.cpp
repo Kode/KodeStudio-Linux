@@ -10,7 +10,7 @@
 namespace hx
 {
 
-static MyMutex *sCppiaCtxLock = 0;
+static HxMutex *sCppiaCtxLock = 0;
 
 DECLARE_TLS_DATA(CppiaCtx,tlsCppiaCtx)
 
@@ -20,7 +20,7 @@ static std::vector<CppiaCtx *> sAllContexts;
 
 CppiaCtx::CppiaCtx()
 {
-   stack = new unsigned char[64*1024];
+   stack = new unsigned char[128*1024];
    pointer = &stack[0];
    push((hx::Object *)0);
    frame = pointer;
@@ -44,7 +44,7 @@ CppiaCtx *CppiaCtx::getCurrent()
       tlsCppiaCtx = result = new CppiaCtx();
 
       if (!sCppiaCtxLock)
-         sCppiaCtxLock = new MyMutex();
+         sCppiaCtxLock = new HxMutex();
       sCppiaCtxLock->Lock();
       sAllContexts.push_back(result);
       sCppiaCtxLock->Unlock();
@@ -59,7 +59,7 @@ void CppiaCtx::mark(hx::MarkContext *__inCtx)
 
 void scriptMarkStack(hx::MarkContext *__inCtx)
 {
-   MyMutex *m = sCppiaCtxLock;
+   HxMutex *m = sCppiaCtxLock;
    if (m)
        m->Lock();
 

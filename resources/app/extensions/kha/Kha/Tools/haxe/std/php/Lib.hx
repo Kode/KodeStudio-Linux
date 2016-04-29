@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2012 Haxe Foundation
+ * Copyright (C)2005-2016 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,6 +21,11 @@
  */
 package php;
 
+/**
+	Platform-specific PHP Library. Provides some platform-specific functions 
+	for the PHP target, such as conversion from Haxe types to native types 
+	and vice-versa.
+**/
 class Lib {
 	/**
 		Print the specified value on the default output.
@@ -111,7 +116,7 @@ class Lib {
 
 	/**
 	 * See the documentation for the equivalent PHP function for details on usage:
-	 * http://php.net/manual/en/function.mail.php
+	 * <http://php.net/manual/en/function.mail.php>
 	 * @param	to
 	 * @param	subject
 	 * @param	message

@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var http = require('http');
 var os = require('os');
 var fs = require('fs');
@@ -81,7 +82,7 @@ var DebounceHelper = (function () {
         fn();
     };
     return DebounceHelper;
-})();
+}());
 exports.DebounceHelper = DebounceHelper;
 /**
  * Returns a reversed version of arr. Doesn't modify the input.
@@ -162,7 +163,7 @@ var Logger = (function () {
     Logger.logVersionInfo = function () {
         Logger.log("OS: " + os.platform() + " " + os.arch());
         Logger.log('Node version: ' + process.version);
-        Logger.log('Adapter version: ' + require('../../package.json').version);
+        Logger.log('Adapter version: ' + Logger.AdapterVersion);
     };
     Logger.prototype._log = function (msg, forceDiagnosticLogging) {
         if (this._isServer || this._diagnosticLoggingEnabled || forceDiagnosticLogging) {
@@ -178,7 +179,7 @@ var Logger = (function () {
         }
     };
     return Logger;
-})();
+}());
 exports.Logger = Logger;
 /**
  * Maps a url from webkit to an absolute local path.
@@ -224,22 +225,32 @@ exports.webkitUrlToClientPath = webkitUrlToClientPath;
  * The client can handle urls in this format too.
  * file:///D:\\scripts\\code.js => d:/scripts/code.js
  * file:///Users/me/project/code.js => /Users/me/project/code.js
- * c:\\scripts\\code.js => c:/scripts/code.js
+ * c:/scripts/code.js => c:\\scripts\\code.js
  * http://site.com/scripts/code.js => (no change)
  * http://site.com/ => http://site.com
  */
 function canonicalizeUrl(aUrl) {
-    aUrl = aUrl.replace('file:///', '');
+    if (aUrl.startsWith('file:///')) {
+        aUrl = aUrl.replace('file:///', '');
+        if (aUrl[0] !== '/' && aUrl.indexOf(':') < 0 && getPlatform() === 1 /* OSX */) {
+            // Ensure osx path starts with /, it can be removed when file:/// was stripped.
+            // Don't add if the url still has a protocol
+            aUrl = '/' + aUrl;
+        }
+    }
     aUrl = stripTrailingSlash(aUrl);
     aUrl = fixDriveLetterAndSlashes(aUrl);
-    if (aUrl[0] !== '/' && aUrl.indexOf(':') < 0 && getPlatform() === 1 /* OSX */) {
-        // Ensure osx path starts with /, it can be removed when file:/// was stripped.
-        // Don't add if the url still has a protocol
-        aUrl = '/' + aUrl;
-    }
     return aUrl;
 }
 exports.canonicalizeUrl = canonicalizeUrl;
+/**
+ * Replace any backslashes with forward slashes
+ * blah\something => blah/something
+ */
+function forceForwardSlashes(aUrl) {
+    return aUrl.replace(/\\/g, '/');
+}
+exports.forceForwardSlashes = forceForwardSlashes;
 /**
  * Ensure lower case drive letter and \ on Windows
  */
@@ -334,25 +345,6 @@ function errP(msg) {
 }
 exports.errP = errP;
 /**
- * Calculates the webRoot from a launch/attach request. The webRoot is the directory that the
- * files are served from by a web server, (or the directory that they would be served from, and which
- * sourceRoot may be relative to).
- */
-function getWebRoot(args) {
-    var webRoot;
-    if (args.webRoot) {
-        webRoot = args.webRoot;
-        if (!path.isAbsolute(webRoot)) {
-            webRoot = path.resolve(args.cwd, webRoot);
-        }
-    }
-    else {
-        webRoot = args.cwd;
-    }
-    return webRoot;
-}
-exports.getWebRoot = getWebRoot;
-/**
  * Helper function to GET the contents of a url
  */
 function getURL(aUrl) {
@@ -366,6 +358,7 @@ function getURL(aUrl) {
                     resolve(responseData);
                 }
                 else {
+                    Logger.log('Http Get failed with: ' + response.statusCode.toString() + ' ' + response.statusMessage.toString());
                     reject(responseData);
                 }
             });
@@ -396,9 +389,11 @@ exports.lstrip = lstrip;
  * C:/code/app.js => file:///C:/code/app.js
  * /code/app.js => file:///code/app.js
  */
-function pathToFileURL(path) {
-    return (path.startsWith('/') ? 'file://' : 'file:///') +
-        path;
+function pathToFileURL(absPath) {
+    absPath = forceForwardSlashes(absPath);
+    absPath = (absPath.startsWith('/') ? 'file://' : 'file:///') +
+        absPath;
+    return encodeURI(absPath);
 }
 exports.pathToFileURL = pathToFileURL;
 

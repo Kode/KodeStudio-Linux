@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var path = require('path');
 var sinon = require('sinon');
 var mockery = require('mockery');
@@ -34,7 +35,7 @@ var MockEvent = (function () {
         this.type = 'event';
     }
     return MockEvent;
-})();
+}());
 exports.MockEvent = MockEvent;
 /**
  * Calls sinon.mock and patches its 'expects' method to not expect that the mock base object

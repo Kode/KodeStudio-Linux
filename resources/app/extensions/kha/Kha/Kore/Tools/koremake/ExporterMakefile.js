@@ -3,7 +3,10 @@
 const Exporter = require('./Exporter.js');
 const Files = require('./Files.js');
 const Paths = require('./Paths.js');
-const fs = require('fs');
+const GraphicsApi = require('./GraphicsApi.js');
+const Options = require('./Options.js');
+const Platform = require('./Platform.js');
+const fs = require('fs-extra');
 
 class ExporterMakefile extends Exporter {
 	constructor() {
@@ -15,7 +18,8 @@ class ExporterMakefile extends Exporter {
 
 		let objects = {};
 		let ofiles = {};
-		for (let file of project.getFiles()) {
+		for (let fileobject of project.getFiles()) {
+			let file = fileobject.file;
 			if (file.endsWith(".cpp") || file.endsWith(".c") || file.endsWith("cc")) {
 				let name = file.toLowerCase();
 				if (name.indexOf('/') >= 0) name = name.substr(name.lastIndexOf('/') + 1);
@@ -33,12 +37,33 @@ class ExporterMakefile extends Exporter {
 				}
 			}
 		}
-
-		var ofilelist = '';
+		
+		let gchfilelist = '';
+		let precompiledHeaders = [];
+		for (let file of project.getFiles()) {
+			if (file.options && file.options.pch && precompiledHeaders.indexOf(file.options.pch) < 0) {
+				precompiledHeaders.push(file.options.pch);
+			}
+		}
+		for (let file of project.getFiles()) {
+			let precompiledHeader = null;
+			for (let header of precompiledHeaders) {
+				if (file.file.endsWith(header)) {
+					precompiledHeader = header;
+					break;
+				}
+			}
+			if (precompiledHeader !== null) {
+				let realfile = to.relativize(from.resolve(file.file));
+				gchfilelist += realfile + '.gch ';
+			}
+		}
+		
+		let ofilelist = '';
 		for (let o in objects) {
 			ofilelist += o + '.o ';
 		}
-
+		
 		this.writeFile(to.resolve('makefile'));
 
 		let incline = '';
@@ -48,7 +73,10 @@ class ExporterMakefile extends Exporter {
 		}
 		this.p('INC=' + incline);
 
-		let libsline = '-static-libgcc -static-libstdc++ -pthread -lGL -lX11 -lasound -ldl';
+		let libsline = '-static-libgcc -static-libstdc++ -pthread';
+		for (let lib of project.getLibs()) {
+			libsline += ' -l' + lib;
+		}
 		this.p('LIB=' + libsline);
 
 		let defline = '';
@@ -61,16 +89,41 @@ class ExporterMakefile extends Exporter {
 		let optimization = '';
 		if (!options.debug) optimization = '-O3';
 
-		this.p(project.getName() + ': ' + ofilelist);
-		this.p('\tg++ -std=c++0x ' + optimization + ' ' + ofilelist + ' -o "' + project.getName() + '" $(LIB)');
+		this.p(project.getName() + ': ' + gchfilelist + ofilelist);
+		
+		let cpp = '';
+		if (project.cpp11) {
+			cpp = '-std=c++11'
+		}
 
+		this.p('\tg++ ' + cpp + ' ' + optimization + ' ' + ofilelist + ' -o "' + project.getName() + '" $(LIB)');
+		
 		for (let file of project.getFiles()) {
+			let precompiledHeader = null;
+			for (let header of precompiledHeaders) {
+				if (file.file.endsWith(header)) {
+					precompiledHeader = header;
+					break;
+				}
+			}
+			if (precompiledHeader !== null) {
+				let realfile = to.relativize(from.resolve(file.file));
+				this.p(realfile + '.gch: ' + realfile);
+				let compiler = 'g++';
+				this.p('\t' + compiler + ' ' + cpp + ' ' + optimization + ' $(INC) $(DEF) -c ' + realfile + ' -o ' + realfile + '.gch $(LIB)');
+			}
+		}
+
+		for (let fileobject of project.getFiles()) {
+			let file = fileobject.file;
 			if (file.endsWith('.c') || file.endsWith('.cpp') || file.endsWith('cc')) {
 				this.p();
 				let name = ofiles[file];
 				let realfile = to.relativize(from.resolve(file));
 				this.p(name + '.o: ' + realfile);
-				this.p('\tg++ -std=c++0x ' + optimization + ' $(INC) $(DEF) -c ' + realfile + ' -o ' + name + '.o $(LIB)');
+				let compiler = 'g++';
+				if (file.endsWith('.c')) compiler = 'gcc';
+				this.p('\t' + compiler + ' ' + cpp + ' ' + optimization + ' $(INC) $(DEF) -c ' + realfile + ' -o ' + name + '.o $(LIB)');
 			}
 		}
 

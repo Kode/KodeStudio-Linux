@@ -3,12 +3,14 @@
 #include "RenderTargetImpl.h"
 #include <Kore/Graphics/Graphics.h>
 #include <Kore/WinError.h>
+#include <Kore/Log.h>
 
 using namespace Kore;
 
-RenderTarget::RenderTarget(int width, int height, bool zBuffer, bool antialiasing, RenderTargetFormat format) {
+RenderTarget::RenderTarget(int width, int height, int depthBufferBits, bool antialiasing, RenderTargetFormat format, int stencilBufferBits, int contextId) {
 	this->texWidth = this->width = width;
 	this->texHeight = this->height = height;
+	this->contextId = contextId;
 
 	D3D11_TEXTURE2D_DESC desc;
 	desc.Width = width;
@@ -21,6 +23,11 @@ RenderTarget::RenderTarget(int width, int height, bool zBuffer, bool antialiasin
 	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = 0;//D3D11_CPU_ACCESS_WRITE;
 	desc.MiscFlags = 0;
+
+#if defined(_DEBUG)
+	log(Info, "depthBufferBits not implemented yet, using target defaults");
+	log(Info, "stencilBufferBits not implemented yet, using target defaults");
+#endif
 
 	texture = nullptr;
 	affirm(device->CreateTexture2D(&desc, nullptr, &texture));

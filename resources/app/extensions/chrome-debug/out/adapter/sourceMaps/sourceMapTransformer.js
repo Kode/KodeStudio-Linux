@@ -1,9 +1,11 @@
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+"use strict";
 var path = require('path');
 var sourceMaps_1 = require('./sourceMaps');
 var utils = require('../../webkit/utilities');
+var utilities_1 = require('../../webkit/utilities');
 /**
  * If sourcemaps are enabled, converts from source files on the client side to runtime files on the target side
  */
@@ -19,7 +21,7 @@ var SourceMapTransformer = (function () {
     };
     SourceMapTransformer.prototype.init = function (args) {
         if (args.sourceMaps) {
-            this._webRoot = utils.getWebRoot(args);
+            this._webRoot = args.webRoot;
             this._sourceMaps = new sourceMaps_1.SourceMaps(this._webRoot);
             this._requestSeqToSetBreakpointsArgs = new Map();
             this._allRuntimeScriptPaths = new Set();
@@ -37,34 +39,34 @@ var SourceMapTransformer = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             if (_this._sourceMaps && args.source.path) {
-                var argsPath = args.source.path;
-                var mappedPath = _this._sourceMaps.MapPathFromSource(argsPath);
-                if (mappedPath) {
-                    utils.Logger.log("SourceMaps.setBP: Mapped " + argsPath + " to " + mappedPath);
-                    args.authoredPath = argsPath;
-                    args.source.path = mappedPath;
+                var argsPath_1 = args.source.path;
+                var mappedPath_1 = _this._sourceMaps.MapPathFromSource(argsPath_1);
+                if (mappedPath_1) {
+                    utilities_1.Logger.log("SourceMaps.setBP: Mapped " + argsPath_1 + " to " + mappedPath_1);
+                    args.authoredPath = argsPath_1;
+                    args.source.path = mappedPath_1;
                     // DebugProtocol doesn't send cols, but they need to be added from sourcemaps
-                    var mappedCols = [];
+                    var mappedCols_1 = [];
                     var mappedLines = args.lines.map(function (line, i) {
-                        var mapped = _this._sourceMaps.MapFromSource(argsPath, line, /*column=*/ 0);
+                        var mapped = _this._sourceMaps.MapFromSource(argsPath_1, line, /*column=*/ 0);
                         if (mapped) {
-                            utils.Logger.log("SourceMaps.setBP: Mapped " + argsPath + ":" + line + ":0 to " + mappedPath + ":" + mapped.line + ":" + mapped.column);
-                            mappedCols[i] = mapped.column;
+                            utilities_1.Logger.log("SourceMaps.setBP: Mapped " + argsPath_1 + ":" + line + ":0 to " + mappedPath_1 + ":" + mapped.line + ":" + mapped.column);
+                            mappedCols_1[i] = mapped.column;
                             return mapped.line;
                         }
                         else {
-                            utils.Logger.log("SourceMaps.setBP: Mapped " + argsPath + " but not line " + line + ", column 0");
-                            mappedCols[i] = 0;
+                            utilities_1.Logger.log("SourceMaps.setBP: Mapped " + argsPath_1 + " but not line " + line + ", column 0");
+                            mappedCols_1[i] = 0;
                             return line;
                         }
                     });
-                    _this._authoredPathsToMappedBPLines.set(argsPath, mappedLines);
-                    _this._authoredPathsToMappedBPCols.set(argsPath, mappedCols);
+                    _this._authoredPathsToMappedBPLines.set(argsPath_1, mappedLines);
+                    _this._authoredPathsToMappedBPCols.set(argsPath_1, mappedCols_1);
                     // Include BPs from other files that map to the same file. Ensure the current file's breakpoints go first
                     args.lines = mappedLines;
-                    args.cols = mappedCols;
-                    _this._sourceMaps.AllMappedSources(mappedPath).forEach(function (sourcePath) {
-                        if (sourcePath === argsPath) {
+                    args.cols = mappedCols_1;
+                    _this._sourceMaps.AllMappedSources(mappedPath_1).forEach(function (sourcePath) {
+                        if (sourcePath === argsPath_1) {
                             return;
                         }
                         var sourceBPLines = _this._authoredPathsToMappedBPLines.get(sourcePath);
@@ -76,14 +78,14 @@ var SourceMapTransformer = (function () {
                         }
                     });
                 }
-                else if (_this._allRuntimeScriptPaths.has(argsPath)) {
+                else if (_this._allRuntimeScriptPaths.has(argsPath_1)) {
                     // It's a generated file which is loaded
-                    utils.Logger.log("SourceMaps.setBP: SourceMaps are enabled but " + argsPath + " is a runtime script");
+                    utilities_1.Logger.log("SourceMaps.setBP: SourceMaps are enabled but " + argsPath_1 + " is a runtime script");
                 }
                 else {
                     // Source (or generated) file which is not loaded, need to wait
-                    utils.Logger.log("SourceMaps.setBP: " + argsPath + " can't be resolved to a loaded script.");
-                    _this._pendingBreakpointsByPath.set(argsPath, { resolve: resolve, reject: reject, args: args, requestSeq: requestSeq });
+                    utilities_1.Logger.log("SourceMaps.setBP: " + argsPath_1 + " can't be resolved to a loaded script.");
+                    _this._pendingBreakpointsByPath.set(argsPath_1, { resolve: resolve, reject: reject, args: args, requestSeq: requestSeq });
                     return;
                 }
                 _this._requestSeqToSetBreakpointsArgs.set(requestSeq, JSON.parse(JSON.stringify(args)));
@@ -100,21 +102,21 @@ var SourceMapTransformer = (function () {
     SourceMapTransformer.prototype.setBreakpointsResponse = function (response, requestSeq) {
         var _this = this;
         if (this._sourceMaps && this._requestSeqToSetBreakpointsArgs.has(requestSeq)) {
-            var args = this._requestSeqToSetBreakpointsArgs.get(requestSeq);
-            if (args.authoredPath) {
-                var sourceBPLines = this._authoredPathsToMappedBPLines.get(args.authoredPath);
-                if (sourceBPLines) {
+            var args_1 = this._requestSeqToSetBreakpointsArgs.get(requestSeq);
+            if (args_1.authoredPath) {
+                var sourceBPLines_1 = this._authoredPathsToMappedBPLines.get(args_1.authoredPath);
+                if (sourceBPLines_1) {
                     // authoredPath is set, so the file was mapped to source.
                     // Remove breakpoints from files that map to the same file, and map back to source.
-                    response.breakpoints = response.breakpoints.filter(function (_, i) { return i < sourceBPLines.length; });
+                    response.breakpoints = response.breakpoints.filter(function (_, i) { return i < sourceBPLines_1.length; });
                     response.breakpoints.forEach(function (bp) {
-                        var mapped = _this._sourceMaps.MapToSource(args.source.path, bp.line, bp.column);
+                        var mapped = _this._sourceMaps.MapToSource(args_1.source.path, bp.line, bp.column);
                         if (mapped) {
-                            utils.Logger.log("SourceMaps.setBP: Mapped " + args.source.path + ":" + bp.line + ":" + bp.column + " to " + mapped.path + ":" + mapped.line);
+                            utilities_1.Logger.log("SourceMaps.setBP: Mapped " + args_1.source.path + ":" + bp.line + ":" + bp.column + " to " + mapped.path + ":" + mapped.line);
                             bp.line = mapped.line;
                         }
                         else {
-                            utils.Logger.log("SourceMaps.setBP: Can't map " + args.source.path + ":" + bp.line + ":" + bp.column + ", keeping the line number as-is.");
+                            utilities_1.Logger.log("SourceMaps.setBP: Can't map " + args_1.source.path + ":" + bp.line + ":" + bp.column + ", keeping the line number as-is.");
                         }
                         _this._requestSeqToSetBreakpointsArgs.delete(requestSeq);
                     });
@@ -165,30 +167,39 @@ var SourceMapTransformer = (function () {
     SourceMapTransformer.prototype.scriptParsed = function (event) {
         var _this = this;
         if (this._sourceMaps) {
+            this._allRuntimeScriptPaths.add(event.body.scriptUrl);
             if (!event.body.sourceMapURL) {
+                // If a file does not have a source map, check if we've seen any breakpoints
+                // for it anyway and make sure to enable them
+                this.resolvePendingBreakpointsForScript(event.body.scriptUrl);
                 return;
             }
             this._sourceMaps.ProcessNewSourceMap(event.body.scriptUrl, event.body.sourceMapURL).then(function () {
-                _this._allRuntimeScriptPaths.add(event.body.scriptUrl);
                 var sources = _this._sourceMaps.AllMappedSources(event.body.scriptUrl);
                 if (sources) {
-                    utils.Logger.log("SourceMaps.scriptParsed: " + event.body.scriptUrl + " was just loaded and has mapped sources: " + JSON.stringify(sources));
+                    utilities_1.Logger.log("SourceMaps.scriptParsed: " + event.body.scriptUrl + " was just loaded and has mapped sources: " + JSON.stringify(sources));
                     sources.forEach(function (sourcePath) {
-                        // If there's a setBreakpoints request waiting on this script, go through setBreakpoints again
-                        if (_this._pendingBreakpointsByPath.has(sourcePath)) {
-                            utils.Logger.log("SourceMaps.scriptParsed: Resolving pending breakpoints for " + sourcePath);
-                            var pendingBreakpoint = _this._pendingBreakpointsByPath.get(sourcePath);
-                            _this._pendingBreakpointsByPath.delete(sourcePath);
-                            _this.setBreakpoints(pendingBreakpoint.args, pendingBreakpoint.requestSeq)
-                                .then(pendingBreakpoint.resolve, pendingBreakpoint.reject);
-                        }
+                        _this.resolvePendingBreakpointsForScript(sourcePath);
                     });
                 }
             });
         }
     };
+    /**
+     * Resolve any pending breakpoints for this script
+     */
+    SourceMapTransformer.prototype.resolvePendingBreakpointsForScript = function (scriptUrl) {
+        if (this._pendingBreakpointsByPath.has(scriptUrl)) {
+            utilities_1.Logger.log("SourceMaps.scriptParsed: Resolving pending breakpoints for " + scriptUrl);
+            var pendingBreakpoints = this._pendingBreakpointsByPath.get(scriptUrl);
+            this._pendingBreakpointsByPath.delete(scriptUrl);
+            // If there's a setBreakpoints request waiting on this script, go through setBreakpoints again
+            this.setBreakpoints(pendingBreakpoints.args, pendingBreakpoints.requestSeq)
+                .then(pendingBreakpoints.resolve, pendingBreakpoints.reject);
+        }
+    };
     return SourceMapTransformer;
-})();
+}());
 exports.SourceMapTransformer = SourceMapTransformer;
 
 //# sourceMappingURL=sourceMapTransformer.js.map

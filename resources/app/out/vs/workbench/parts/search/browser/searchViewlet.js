@@ -1,30 +1,373 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-'use strict';
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
+define("vs/css!vs/workbench/parts/search/browser/media/searchviewlet",['vs/css!vs/workbench/parts/search/browser/searchViewlet'], {});
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
-    switch (arguments.length) {
-        case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
-        case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
-        case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
-    }
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/common/editorCommon', 'vs/base/common/lifecycle', 'vs/base/common/errors', 'vs/base/common/assert', 'vs/base/common/glob', 'vs/base/common/types', 'vs/base/common/strings', 'vs/base/browser/dom', 'vs/base/common/actions', 'vs/base/browser/keyboardEvent', 'vs/base/common/timer', 'vs/base/browser/builder', 'vs/base/browser/ui/filelabel/fileLabel', 'vs/base/browser/ui/findinput/findInput', 'vs/base/browser/ui/leftRightWidget/leftRightWidget', 'vs/base/browser/ui/countBadge/countBadge', 'vs/base/parts/tree/browser/treeImpl', 'vs/base/parts/tree/browser/treeDefaults', 'vs/base/parts/tree/browser/actionsRenderer', 'vs/workbench/browser/actionBarRegistry', 'vs/workbench/common/memento', 'vs/workbench/browser/actions/openSettings', 'vs/workbench/common/events', 'vs/workbench/parts/files/common/files', 'vs/platform/files/common/files', 'vs/workbench/browser/viewlet', 'vs/workbench/parts/search/common/searchModel', 'vs/workbench/parts/search/common/searchQuery', 'vs/base/browser/ui/checkbox/checkbox', 'vs/workbench/parts/search/browser/search.contribution', 'vs/base/browser/ui/inputbox/inputBox', 'vs/workbench/services/editor/common/editorService', 'vs/workbench/services/viewlet/common/viewletService', 'vs/editor/common/core/range', 'vs/platform/storage/common/storage', 'vs/platform/configuration/common/configuration', 'vs/platform/contextview/browser/contextView', 'vs/platform/event/common/event', 'vs/platform/instantiation/common/instantiation', 'vs/platform/message/common/message', 'vs/platform/search/common/search', 'vs/platform/progress/common/progress', 'vs/platform/workspace/common/workspace', 'vs/platform/selection/common/selection', 'vs/platform/keybinding/common/keybindingService', 'vs/platform/telemetry/common/telemetry', 'vs/base/common/keyCodes', 'vs/css!./media/searchviewlet'], function (require, exports, winjs_base_1, nls, editorCommon_1, lifecycle, errors, assert, glob_1, types_1, strings, dom, actions_1, keyboardEvent_1, timer, builder_1, fileLabel_1, findInput_1, leftRightWidget_1, countBadge_1, treeImpl_1, treeDefaults_1, actionsRenderer_1, actionBarRegistry_1, memento_1, openSettings_1, events_1, files_1, files_2, viewlet_1, searchModel_1, searchQuery_1, checkbox_1, search_contribution_1, inputBox_1, editorService_1, viewletService_1, range_1, storage_1, configuration_1, contextView_1, event_1, instantiation_1, message_1, search_1, progress_1, workspace_1, selection_1, keybindingService_1, telemetry_1, keyCodes_1) {
+define("vs/workbench/parts/search/common/searchModel", ["require", "exports", 'vs/base/common/async', 'vs/base/common/strings', 'vs/base/common/paths', 'vs/base/common/lifecycle', 'vs/base/common/collections', 'vs/base/common/eventEmitter', 'vs/editor/common/editorCommon', 'vs/editor/common/core/range', 'vs/editor/common/services/modelService'], function (require, exports, async_1, strings, paths, lifecycle, collections, eventEmitter_1, editorCommon_1, range_1, modelService_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var Match = (function () {
+        function Match(parent, text, lineNumber, offset, length) {
+            this._parent = parent;
+            this._lineText = text;
+            this._id = parent.id() + '>' + lineNumber + '>' + offset;
+            this._range = new range_1.Range(1 + lineNumber, 1 + offset, 1 + lineNumber, 1 + offset + length);
+        }
+        Match.prototype.id = function () {
+            return this._id;
+        };
+        Match.prototype.parent = function () {
+            return this._parent;
+        };
+        Match.prototype.text = function () {
+            return this._lineText;
+        };
+        Match.prototype.range = function () {
+            return this._range;
+        };
+        Match.prototype.preview = function () {
+            var before = this._lineText.substring(0, this._range.startColumn - 1), inside = this._lineText.substring(this._range.startColumn - 1, this._range.endColumn - 1), after = this._lineText.substring(this._range.endColumn - 1, Math.min(this._range.endColumn + 150, this._lineText.length));
+            before = strings.lcut(before, 26);
+            return {
+                before: before,
+                inside: inside,
+                after: after,
+            };
+        };
+        return Match;
+    }());
+    exports.Match = Match;
+    var EmptyMatch = (function (_super) {
+        __extends(EmptyMatch, _super);
+        function EmptyMatch(parent) {
+            _super.call(this, parent, null, Date.now(), Date.now(), Date.now());
+        }
+        return EmptyMatch;
+    }(Match));
+    exports.EmptyMatch = EmptyMatch;
+    var FileMatch = (function () {
+        function FileMatch(parent, resource) {
+            this._resource = resource;
+            this._parent = parent;
+            this._matches = Object.create(null);
+        }
+        FileMatch.prototype.dispose = function () {
+            // nothing
+        };
+        FileMatch.prototype.id = function () {
+            return this.resource().toString();
+        };
+        FileMatch.prototype.parent = function () {
+            return this._parent;
+        };
+        FileMatch.prototype.add = function (match) {
+            this._matches[match.id()] = match;
+        };
+        FileMatch.prototype.remove = function (match) {
+            delete this._matches[match.id()];
+        };
+        FileMatch.prototype.matches = function () {
+            return collections.values(this._matches);
+        };
+        FileMatch.prototype.count = function () {
+            var result = 0;
+            for (var key in this._matches) {
+                if (!(this._matches[key] instanceof EmptyMatch)) {
+                    result += 1;
+                }
+            }
+            return result;
+        };
+        FileMatch.prototype.resource = function () {
+            return this._resource;
+        };
+        FileMatch.prototype.name = function () {
+            return paths.basename(this.resource().fsPath);
+        };
+        return FileMatch;
+    }());
+    exports.FileMatch = FileMatch;
+    var LiveFileMatch = (function (_super) {
+        __extends(LiveFileMatch, _super);
+        function LiveFileMatch(parent, resource, query, model, fileMatch) {
+            var _this = this;
+            _super.call(this, parent, resource);
+            this._modelDecorations = [];
+            this._unbind = [];
+            this._query = query;
+            this._model = model;
+            this._diskFileMatch = fileMatch;
+            this._updateScheduler = new async_1.RunOnceScheduler(this._updateMatches.bind(this), 250);
+            this._unbind.push(this._model.addListener(editorCommon_1.EventType.ModelContentChanged, function (_) { return _this._updateScheduler.schedule(); }));
+            this._updateMatches();
+        }
+        LiveFileMatch.prototype.dispose = function () {
+            this._unbind = lifecycle.cAll(this._unbind);
+            if (!this._isTextModelDisposed()) {
+                this._model.deltaDecorations(this._modelDecorations, []);
+            }
+        };
+        LiveFileMatch.prototype._updateMatches = function () {
+            var _this = this;
+            // this is called from a timeout and might fire
+            // after the model has been disposed
+            if (this._isTextModelDisposed()) {
+                return;
+            }
+            this._matches = Object.create(null);
+            var matches = this._model
+                .findMatches(this._query.pattern, this._model.getFullModelRange(), this._query.isRegExp, this._query.isCaseSensitive, this._query.isWordMatch);
+            if (matches.length === 0) {
+                this.add(new EmptyMatch(this));
+            }
+            else {
+                matches.forEach(function (range) { return _this.add(new Match(_this, _this._model.getLineContent(range.startLineNumber), range.startLineNumber - 1, range.startColumn - 1, range.endColumn - range.startColumn)); });
+            }
+            this.parent().emit('changed', this);
+            this.updateHighlights();
+        };
+        LiveFileMatch.prototype.updateHighlights = function () {
+            if (this._model.isDisposed()) {
+                return;
+            }
+            if (this.parent()._showHighlights) {
+                this._modelDecorations = this._model.deltaDecorations(this._modelDecorations, this.matches().filter(function (match) { return !(match instanceof EmptyMatch); }).map(function (match) { return {
+                    range: match.range(),
+                    options: LiveFileMatch.DecorationOption
+                }; }));
+            }
+            else {
+                this._modelDecorations = this._model.deltaDecorations(this._modelDecorations, []);
+            }
+        };
+        LiveFileMatch.prototype._isTextModelDisposed = function () {
+            return !this._model || this._model.isDisposed();
+        };
+        LiveFileMatch.DecorationOption = {
+            stickiness: editorCommon_1.TrackedRangeStickiness.NeverGrowsWhenTypingAtEdges,
+            className: 'findMatch',
+            overviewRuler: {
+                color: 'rgba(246, 185, 77, 0.7)',
+                darkColor: 'rgba(246, 185, 77, 0.7)',
+                position: editorCommon_1.OverviewRulerLane.Center
+            }
+        };
+        return LiveFileMatch;
+    }(FileMatch));
+    exports.LiveFileMatch = LiveFileMatch;
+    var SearchResult = (function (_super) {
+        __extends(SearchResult, _super);
+        function SearchResult(query, modelService) {
+            _super.call(this);
+            this._disposables = [];
+            this._matches = Object.create(null);
+            this._modelService = modelService;
+            this._query = query;
+            if (this._query) {
+                this._modelService.onModelAdded(this._onModelAdded, this, this._disposables);
+                this._modelService.onModelRemoved(this._onModelRemoved, this, this._disposables);
+            }
+        }
+        SearchResult.prototype._onModelAdded = function (model) {
+            var resource = model.getAssociatedResource(), fileMatch = this._matches[resource.toString()];
+            if (fileMatch) {
+                var liveMatch = new LiveFileMatch(this, resource, this._query, model, fileMatch);
+                liveMatch.updateHighlights();
+                this._matches[resource.toString()] = liveMatch;
+                this.emit('changed', this);
+            }
+        };
+        SearchResult.prototype._onModelRemoved = function (model) {
+            var _this = this;
+            var resource = model.getAssociatedResource(), fileMatch = this._matches[resource.toString()];
+            if (fileMatch instanceof LiveFileMatch) {
+                this.deferredEmit(function () {
+                    _this.remove(fileMatch);
+                    _this._matches[resource.toString()] = fileMatch._diskFileMatch;
+                    //				this.emit('changed', this);
+                });
+            }
+        };
+        SearchResult.prototype.append = function (raw) {
+            var _this = this;
+            raw.forEach(function (rawFileMatch) {
+                var fileMatch = _this._getOrAdd(rawFileMatch);
+                if (fileMatch instanceof LiveFileMatch) {
+                    fileMatch = fileMatch._diskFileMatch;
+                }
+                rawFileMatch.lineMatches.forEach(function (rawLineMatch) {
+                    rawLineMatch.offsetAndLengths.forEach(function (offsetAndLength) {
+                        var match = new Match(fileMatch, rawLineMatch.preview, rawLineMatch.lineNumber, offsetAndLength[0], offsetAndLength[1]);
+                        fileMatch.add(match);
+                    });
+                });
+            });
+        };
+        SearchResult.prototype._getOrAdd = function (raw) {
+            var _this = this;
+            return collections.lookupOrInsert(this._matches, raw.resource.toString(), function () {
+                var model = _this._modelService.getModel(raw.resource), fileMatch = new FileMatch(_this, raw.resource);
+                if (model && _this._query) {
+                    fileMatch = new LiveFileMatch(_this, raw.resource, _this._query, model, fileMatch);
+                }
+                return fileMatch;
+            });
+        };
+        SearchResult.prototype.remove = function (match) {
+            delete this._matches[match.resource().toString()];
+            match.dispose();
+            this.emit('changed', this);
+        };
+        SearchResult.prototype.matches = function () {
+            return collections.values(this._matches);
+        };
+        SearchResult.prototype.isEmpty = function () {
+            return this.fileCount() === 0;
+        };
+        SearchResult.prototype.fileCount = function () {
+            return Object.keys(this._matches).length;
+        };
+        SearchResult.prototype.count = function () {
+            return this.matches().reduce(function (prev, match) { return prev + match.count(); }, 0);
+        };
+        SearchResult.prototype.toggleHighlights = function (value) {
+            if (this._showHighlights === value) {
+                return;
+            }
+            this._showHighlights = value;
+            for (var resource in this._matches) {
+                var match = this._matches[resource];
+                if (match instanceof LiveFileMatch) {
+                    match.updateHighlights();
+                }
+            }
+        };
+        SearchResult.prototype.dispose = function () {
+            this._disposables = lifecycle.disposeAll(this._disposables);
+            lifecycle.disposeAll(this.matches());
+            _super.prototype.dispose.call(this);
+        };
+        SearchResult = __decorate([
+            __param(1, modelService_1.IModelService)
+        ], SearchResult);
+        return SearchResult;
+    }(eventEmitter_1.EventEmitter));
+    exports.SearchResult = SearchResult;
+});
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+define("vs/workbench/parts/search/common/searchQuery", ["require", "exports", 'vs/base/common/objects', 'vs/platform/search/common/search', 'vs/platform/configuration/common/configuration'], function (require, exports, objects, search, configuration_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    function getExcludes(configuration) {
+        var fileExcludes = configuration && configuration.files && configuration.files.exclude;
+        var searchExcludes = configuration && configuration.search && configuration.search.exclude;
+        if (!fileExcludes && !searchExcludes) {
+            return null;
+        }
+        if (!fileExcludes || !searchExcludes) {
+            return fileExcludes || searchExcludes;
+        }
+        var allExcludes = Object.create(null);
+        allExcludes = objects.mixin(allExcludes, fileExcludes);
+        allExcludes = objects.mixin(allExcludes, searchExcludes, true);
+        return allExcludes;
+    }
+    exports.getExcludes = getExcludes;
+    var QueryBuilder = (function () {
+        function QueryBuilder(configurationService) {
+            this.configurationService = configurationService;
+        }
+        QueryBuilder.prototype.text = function (contentPattern, options) {
+            return this.query(search.QueryType.Text, contentPattern, options);
+        };
+        QueryBuilder.prototype.file = function (options) {
+            return this.query(search.QueryType.File, null, options);
+        };
+        QueryBuilder.prototype.query = function (type, contentPattern, options) {
+            if (options === void 0) { options = {}; }
+            return this.configurationService.loadConfiguration().then(function (configuration) {
+                var excludePattern = getExcludes(configuration);
+                if (!options.excludePattern) {
+                    options.excludePattern = excludePattern;
+                }
+                else {
+                    objects.mixin(options.excludePattern, excludePattern, false /* no overwrite */);
+                }
+                return {
+                    type: type,
+                    folderResources: options.folderResources,
+                    extraFileResources: options.extraFileResources,
+                    filePattern: options.filePattern,
+                    excludePattern: options.excludePattern,
+                    includePattern: options.includePattern,
+                    maxResults: options.maxResults,
+                    fileEncoding: options.fileEncoding,
+                    contentPattern: contentPattern
+                };
+            });
+        };
+        QueryBuilder = __decorate([
+            __param(0, configuration_1.IConfigurationService)
+        ], QueryBuilder);
+        return QueryBuilder;
+    }());
+    exports.QueryBuilder = QueryBuilder;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+define("vs/workbench/parts/search/browser/searchViewlet", ["require", "exports", 'vs/base/common/winjs.base', 'vs/nls!vs/workbench/parts/search/browser/searchViewlet', 'vs/editor/common/editorCommon', 'vs/base/common/lifecycle', 'vs/base/common/errors', 'vs/base/common/assert', 'vs/base/browser/ui/aria/aria', 'vs/base/common/glob', 'vs/base/common/types', 'vs/base/common/strings', 'vs/base/common/paths', 'vs/base/browser/dom', 'vs/base/common/actions', 'vs/base/browser/keyboardEvent', 'vs/base/common/timer', 'vs/base/browser/builder', 'vs/base/browser/ui/filelabel/fileLabel', 'vs/base/browser/ui/findinput/findInput', 'vs/base/browser/ui/leftRightWidget/leftRightWidget', 'vs/base/browser/ui/countBadge/countBadge', 'vs/base/parts/tree/browser/treeImpl', 'vs/base/parts/tree/browser/treeDefaults', 'vs/base/parts/tree/browser/actionsRenderer', 'vs/workbench/browser/actionBarRegistry', 'vs/workbench/common/memento', 'vs/workbench/browser/actions/openSettings', 'vs/workbench/common/events', 'vs/workbench/parts/files/common/files', 'vs/platform/files/common/files', 'vs/workbench/browser/viewlet', 'vs/workbench/parts/search/common/searchModel', 'vs/workbench/parts/search/common/searchQuery', 'vs/base/browser/ui/checkbox/checkbox', 'vs/workbench/parts/search/browser/search.contribution', 'vs/base/browser/ui/inputbox/inputBox', 'vs/workbench/services/editor/common/editorService', 'vs/workbench/services/viewlet/common/viewletService', 'vs/editor/common/core/range', 'vs/platform/storage/common/storage', 'vs/platform/configuration/common/configuration', 'vs/platform/contextview/browser/contextView', 'vs/platform/event/common/event', 'vs/platform/instantiation/common/instantiation', 'vs/platform/message/common/message', 'vs/platform/search/common/search', 'vs/platform/progress/common/progress', 'vs/platform/workspace/common/workspace', 'vs/platform/selection/common/selection', 'vs/platform/keybinding/common/keybindingService', 'vs/platform/telemetry/common/telemetry', 'vs/base/common/keyCodes', 'vs/css!./media/searchviewlet'], function (require, exports, winjs_base_1, nls, editorCommon_1, lifecycle, errors, assert, aria, glob_1, types_1, strings, paths, dom, actions_1, keyboardEvent_1, timer, builder_1, fileLabel_1, findInput_1, leftRightWidget_1, countBadge_1, treeImpl_1, treeDefaults_1, actionsRenderer_1, actionBarRegistry_1, memento_1, openSettings_1, events_1, files_1, files_2, viewlet_1, searchModel_1, searchQuery_1, checkbox_1, search_contribution_1, inputBox_1, editorService_1, viewletService_1, range_1, storage_1, configuration_1, contextView_1, event_1, instantiation_1, message_1, search_1, progress_1, workspace_1, selection_1, keybindingService_1, telemetry_1, keyCodes_1) {
+    'use strict';
     var ID = search_contribution_1.VIEWLET_ID;
     var FindInFolderAction = (function (_super) {
         __extends(FindInFolderAction, _super);
         function FindInFolderAction(resource, viewletService) {
-            _super.call(this, 'workbench.search.action.findInFolder', nls.localize('findInFolder', "Find in Folder"));
+            _super.call(this, 'workbench.search.action.findInFolder', nls.localize(0, null));
             this.viewletService = viewletService;
             this.resource = resource;
         }
@@ -38,7 +381,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             __param(1, viewletService_1.IViewletService)
         ], FindInFolderAction);
         return FindInFolderAction;
-    })(actions_1.Action);
+    }(actions_1.Action));
     exports.FindInFolderAction = FindInFolderAction;
     var SearchDataSource = (function () {
         function SearchDataSource() {
@@ -63,7 +406,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             else if (element instanceof searchModel_1.SearchResult) {
                 value = element.matches();
             }
-            return winjs_base_1.Promise.as(value);
+            return winjs_base_1.TPromise.as(value);
         };
         SearchDataSource.prototype.hasChildren = function (tree, element) {
             return element instanceof searchModel_1.FileMatch || element instanceof searchModel_1.SearchResult;
@@ -76,10 +419,10 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             else if (element instanceof searchModel_1.FileMatch) {
                 value = element.parent();
             }
-            return winjs_base_1.Promise.as(value);
+            return winjs_base_1.TPromise.as(value);
         };
         return SearchDataSource;
-    })();
+    }());
     exports.SearchDataSource = SearchDataSource;
     var SearchSorter = (function () {
         function SearchSorter() {
@@ -88,13 +431,32 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             if (elementA instanceof searchModel_1.FileMatch && elementB instanceof searchModel_1.FileMatch) {
                 return strings.localeCompare(elementA.resource().fsPath, elementB.resource().fsPath) || strings.localeCompare(elementA.name(), elementB.name());
             }
-            else if (elementA instanceof searchModel_1.Match && elementB instanceof searchModel_1.Match) {
+            if (elementA instanceof searchModel_1.Match && elementB instanceof searchModel_1.Match) {
                 return range_1.Range.compareRangesUsingStarts(elementA.range(), elementB.range());
             }
         };
         return SearchSorter;
-    })();
+    }());
     exports.SearchSorter = SearchSorter;
+    var SearchAccessibilityProvider = (function () {
+        function SearchAccessibilityProvider(contextService) {
+            this.contextService = contextService;
+        }
+        SearchAccessibilityProvider.prototype.getAriaLabel = function (tree, element) {
+            if (element instanceof searchModel_1.FileMatch) {
+                var path = this.contextService.toWorkspaceRelativePath(element.resource()) || element.resource().fsPath;
+                return nls.localize(1, null, element.count(), element.name(), paths.dirname(path));
+            }
+            if (element instanceof searchModel_1.Match) {
+                return nls.localize(2, null, element.text());
+            }
+        };
+        SearchAccessibilityProvider = __decorate([
+            __param(0, workspace_1.IWorkspaceContextService)
+        ], SearchAccessibilityProvider);
+        return SearchAccessibilityProvider;
+    }());
+    exports.SearchAccessibilityProvider = SearchAccessibilityProvider;
     var SearchController = (function (_super) {
         __extends(SearchController, _super);
         function SearchController() {
@@ -115,8 +477,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             return result;
         };
         return SearchController;
-    })(treeDefaults_1.DefaultController);
-    ;
+    }(treeDefaults_1.DefaultController));
     var SearchFilter = (function () {
         function SearchFilter() {
         }
@@ -124,7 +485,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             return !(element instanceof searchModel_1.FileMatch) || element.matches().length > 0;
         };
         return SearchFilter;
-    })();
+    }());
     var SearchActionProvider = (function (_super) {
         __extends(SearchActionProvider, _super);
         function SearchActionProvider() {
@@ -142,11 +503,11 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             });
         };
         return SearchActionProvider;
-    })(actionBarRegistry_1.ContributableActionProvider);
+    }(actionBarRegistry_1.ContributableActionProvider));
     var RemoveAction = (function (_super) {
         __extends(RemoveAction, _super);
         function RemoveAction(viewer, element) {
-            _super.call(this, 'remove', nls.localize('RemoveAction.label', "Remove"), 'action-remove');
+            _super.call(this, 'remove', nls.localize(3, null), 'action-remove');
             this._viewer = viewer;
             this._fileMatch = element;
         }
@@ -156,7 +517,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             return this._viewer.refresh(parent);
         };
         return RemoveAction;
-    })(actions_1.Action);
+    }(actions_1.Action));
     var SearchRenderer = (function (_super) {
         __extends(SearchRenderer, _super);
         function SearchRenderer(actionRunner, contextService) {
@@ -172,15 +533,15 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
         SearchRenderer.prototype.renderContents = function (tree, element, domElement, previousCleanupFn) {
             var _this = this;
             if (element instanceof searchModel_1.FileMatch) {
-                var fileMatch = element;
-                var container = builder_1.$('.filematch'), leftRenderer, rightRenderer, widget;
+                var fileMatch_1 = element;
+                var container = builder_1.$('.filematch'), leftRenderer = void 0, rightRenderer = void 0, widget = void 0;
                 leftRenderer = function (left) {
-                    new fileLabel_1.FileLabel(left, fileMatch.resource(), _this._contextService);
+                    new fileLabel_1.FileLabel(left, fileMatch_1.resource(), _this._contextService);
                     return null;
                 };
                 rightRenderer = function (right) {
-                    var len = fileMatch.count();
-                    return new countBadge_1.CountBadge(right, len, len > 1 ? nls.localize('searchMatches', "{0} matches found", len) : nls.localize('searchMatch', "{0} match found", len));
+                    var len = fileMatch_1.count();
+                    return new countBadge_1.CountBadge(right, len, len > 1 ? nls.localize(4, null, len) : nls.localize(5, null, len));
                 };
                 widget = new leftRightWidget_1.LeftRightWidget(container, leftRenderer, rightRenderer);
                 container.appendTo(domElement);
@@ -188,7 +549,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             }
             else if (element instanceof searchModel_1.EmptyMatch) {
                 dom.addClass(domElement, 'linematch');
-                builder_1.$('a.plain.label').innerHtml(nls.localize('noMatches', "no matches")).appendTo(domElement);
+                builder_1.$('a.plain.label').innerHtml(nls.localize(6, null)).appendTo(domElement);
             }
             else if (element instanceof searchModel_1.Match) {
                 dom.addClass(domElement, 'linematch');
@@ -208,28 +569,28 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             __param(1, workspace_1.IWorkspaceContextService)
         ], SearchRenderer);
         return SearchRenderer;
-    })(actionsRenderer_1.ActionsRenderer);
+    }(actionsRenderer_1.ActionsRenderer));
     var RefreshAction = (function (_super) {
         __extends(RefreshAction, _super);
         function RefreshAction(viewlet) {
             _super.call(this, 'refresh');
-            this.label = nls.localize('RefreshAction.label', "Refresh");
+            this.label = nls.localize(7, null);
             this.enabled = false;
             this.class = 'search-action refresh';
             this.viewlet = viewlet;
         }
         RefreshAction.prototype.run = function () {
             this.viewlet.onQueryChanged(true);
-            return winjs_base_1.Promise.as(null);
+            return winjs_base_1.TPromise.as(null);
         };
         return RefreshAction;
-    })(actions_1.Action);
+    }(actions_1.Action));
     exports.RefreshAction = RefreshAction;
     var SelectOrRemoveAction = (function (_super) {
         __extends(SelectOrRemoveAction, _super);
         function SelectOrRemoveAction(viewlet) {
             _super.call(this, 'selectOrRemove');
-            this.label = nls.localize('SelectOrRemoveAction.selectLabel', "Select");
+            this.label = nls.localize(8, null);
             this.enabled = false;
             this.selectMode = true;
             this.viewlet = viewlet;
@@ -243,12 +604,12 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                 result = this.runAsRemove();
             }
             this.selectMode = !this.selectMode;
-            this.label = this.selectMode ? nls.localize('SelectOrRemoveAction.selectLabel', "Select") : nls.localize('SelectOrRemoveAction.removeLabel', "Remove");
+            this.label = this.selectMode ? nls.localize(9, null) : nls.localize(10, null);
             return result;
         };
         SelectOrRemoveAction.prototype.runAsSelect = function () {
             this.viewlet.getResults().addClass('select');
-            return winjs_base_1.Promise.as(null);
+            return winjs_base_1.TPromise.as(null);
         };
         SelectOrRemoveAction.prototype.runAsRemove = function () {
             var elements = [], tree = this.viewlet.getControl();
@@ -266,50 +627,55 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                     return tree.refresh();
                 });
             }
-            return winjs_base_1.Promise.as(null);
+            return winjs_base_1.TPromise.as(null);
         };
         return SelectOrRemoveAction;
-    })(actions_1.Action);
+    }(actions_1.Action));
     exports.SelectOrRemoveAction = SelectOrRemoveAction;
     var CollapseAllAction = (function (_super) {
         __extends(CollapseAllAction, _super);
         function CollapseAllAction(viewlet) {
             _super.call(this, 'collapseAll');
-            this.label = nls.localize('CollapseAllAction.label', "Collapse");
+            this.label = nls.localize(11, null);
             this.enabled = false;
             this.class = 'search-action collapse';
             this.viewlet = viewlet;
         }
         CollapseAllAction.prototype.run = function () {
-            if (this.viewlet.getControl()) {
-                return this.viewlet.getControl().collapseAll();
+            var tree = this.viewlet.getControl();
+            if (tree) {
+                tree.collapseAll();
+                tree.clearSelection();
+                tree.clearFocus();
+                tree.DOMFocus();
+                tree.focusFirst();
             }
-            return winjs_base_1.Promise.as(null);
+            return winjs_base_1.TPromise.as(null);
         };
         return CollapseAllAction;
-    })(actions_1.Action);
+    }(actions_1.Action));
     exports.CollapseAllAction = CollapseAllAction;
     var ClearSearchResultsAction = (function (_super) {
         __extends(ClearSearchResultsAction, _super);
         function ClearSearchResultsAction(viewlet) {
             _super.call(this, 'clearSearchResults');
-            this.label = nls.localize('ClearSearchResultsAction.label', "Clear Search Results");
+            this.label = nls.localize(12, null);
             this.enabled = false;
             this.class = 'search-action clear-search-results';
             this.viewlet = viewlet;
         }
         ClearSearchResultsAction.prototype.run = function () {
             this.viewlet.clearSearchResults();
-            return winjs_base_1.Promise.as(null);
+            return winjs_base_1.TPromise.as(null);
         };
         return ClearSearchResultsAction;
-    })(actions_1.Action);
+    }(actions_1.Action));
     exports.ClearSearchResultsAction = ClearSearchResultsAction;
     var ConfigureGlobalExclusionsAction = (function (_super) {
         __extends(ConfigureGlobalExclusionsAction, _super);
         function ConfigureGlobalExclusionsAction(instantiationService) {
             _super.call(this, 'configureGlobalExclusionsAction');
-            this.label = nls.localize('ConfigureGlobalExclusionsAction.label', "Open Settings");
+            this.label = nls.localize(13, null);
             this.enabled = true;
             this.class = 'search-configure-exclusions';
             this.instantiationService = instantiationService;
@@ -317,13 +683,13 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
         ConfigureGlobalExclusionsAction.prototype.run = function () {
             var action = this.instantiationService.createInstance(openSettings_1.OpenGlobalSettingsAction, openSettings_1.OpenGlobalSettingsAction.ID, openSettings_1.OpenGlobalSettingsAction.LABEL);
             action.run().done(function () { return action.dispose(); }, errors.onUnexpectedError);
-            return winjs_base_1.Promise.as(null);
+            return winjs_base_1.TPromise.as(null);
         };
         ConfigureGlobalExclusionsAction = __decorate([
             __param(0, instantiation_1.IInstantiationService)
         ], ConfigureGlobalExclusionsAction);
         return ConfigureGlobalExclusionsAction;
-    })(actions_1.Action);
+    }(actions_1.Action));
     var PatternInput = (function () {
         function PatternInput(parent, contextViewProvider, options) {
             if (options === void 0) { options = Object.create(null); }
@@ -331,7 +697,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             this.onOptionChange = null;
             this.width = options.width || 100;
             this.placeholder = options.placeholder || '';
-            this.label = options.label || nls.localize('defaultLabel', "input");
+            this.ariaLabel = options.ariaLabel || nls.localize(14, null);
             this.listenersToRemove = [];
             this.pattern = null;
             this.domNode = null;
@@ -420,7 +786,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             builder_1.$(this.domNode).addClass('monaco-findInput');
             this.inputBox = new inputBox_1.InputBox(this.domNode, this.contextViewProvider, {
                 placeholder: this.placeholder || '',
-                ariaLabel: this.label || '',
+                ariaLabel: this.ariaLabel || '',
                 validationOptions: {
                     validation: null,
                     showMessage: true
@@ -428,11 +794,13 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             });
             this.pattern = new checkbox_1.Checkbox({
                 actionClassName: 'pattern',
-                title: nls.localize('patternDescription', "Use Glob Patterns"),
+                title: nls.localize(15, null),
                 isChecked: false,
-                onChange: function () {
+                onChange: function (viaKeyboard) {
                     _this.onOptionChange(null);
-                    _this.inputBox.focus();
+                    if (!viaKeyboard) {
+                        _this.inputBox.focus();
+                    }
                     _this.setInputWidth();
                     if (_this.isGlobPattern()) {
                         _this.showGlobHelp();
@@ -460,12 +828,12 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             this.inputBox.showMessage({
                 type: inputBox_1.MessageType.INFO,
                 formatContent: true,
-                content: nls.localize('patternHelpInclude', "The pattern to match. e.g. **\\*\\*/*.js** to match all JavaScript files or **myFolder/\\*\\*** to match that folder with all children.\n\n**Reference**:\n**\\*** matches 0 or more characters\n**?** matches 1 character\n**\\*\\*** matches zero or more directories\n**[a-z]** matches a range of characters\n**{a,b}** matches any of the patterns)")
+                content: nls.localize(16, null)
             }, true);
         };
         PatternInput.OPTION_CHANGE = 'optionChange';
         return PatternInput;
-    })();
+    }());
     var SearchViewlet = (function (_super) {
         __extends(SearchViewlet, _super);
         function SearchViewlet(telemetryService, eventService, editorService, progressService, messageService, storageService, contextViewService, instantiationService, configurationService, contextService, searchService, textFileService, keybindingService) {
@@ -532,7 +900,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             };
             this.queryBox = builder.div({ 'class': 'query-box' }, function (div) {
                 var options = {
-                    label: nls.localize('label.Search', 'Search Term'),
+                    label: nls.localize(17, null),
                     validation: function (value) {
                         if (value.length === 0) {
                             return null;
@@ -548,9 +916,10 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                             return { content: e.message };
                         }
                         if (strings.regExpLeadsToEndlessLoop(regExp)) {
-                            return { content: nls.localize('regexp.validationFailure', "Expression matches everything") };
+                            return { content: nls.localize(18, null) };
                         }
-                    }
+                    },
+                    placeholder: nls.localize(19, null)
                 };
                 _this.findInput = new findInput_1.FindInput(div.getHTMLElement(), _this.contextViewService, options);
                 _this.findInput.onKeyUp(onStandardKeyUp);
@@ -558,15 +927,15 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                     if (keyboardEvent.keyCode === keyCodes_1.KeyCode.DownArrow) {
                         dom.EventHelper.stop(keyboardEvent);
                         if (_this.showsFileTypes()) {
-                            _this.toggleFileTypes(true);
+                            _this.toggleFileTypes(true, true);
                         }
                         else {
                             _this.selectTreeIfNotSelected(keyboardEvent);
                         }
                     }
                 });
-                _this.findInput.onDidOptionChange(function () {
-                    _this.onQueryChanged(true);
+                _this.findInput.onDidOptionChange(function (viaKeyboard) {
+                    _this.onQueryChanged(true, viaKeyboard);
                 });
                 _this.findInput.setValue(contentPattern);
                 _this.findInput.setRegex(isRegex);
@@ -574,16 +943,23 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                 _this.findInput.setWholeWords(isWholeWords);
             }).style({ position: 'relative' }).getHTMLElement();
             this.queryDetails = builder.div({ 'class': ['query-details', 'separator'] }, function (builder) {
-                builder.div({ 'class': 'more', text: '\u2026' /*, href: '#'*/ }).on(dom.EventType.CLICK, function (e) {
+                builder.div({ 'class': 'more', 'tabindex': 0, 'role': 'button', 'title': nls.localize(20, null) })
+                    .on(dom.EventType.CLICK, function (e) {
                     dom.EventHelper.stop(e);
-                    _this.toggleFileTypes();
+                    _this.toggleFileTypes(true);
+                }).on(dom.EventType.KEY_UP, function (e) {
+                    var event = new keyboardEvent_1.StandardKeyboardEvent(e);
+                    if (event.equals(keyCodes_1.CommonKeybindings.ENTER) || event.equals(keyCodes_1.CommonKeybindings.SPACE)) {
+                        dom.EventHelper.stop(e);
+                        _this.toggleFileTypes();
+                    }
                 });
                 //folder includes list
                 builder.div({ 'class': 'file-types' }, function (builder) {
-                    var title = nls.localize('searchScope.includes', "files to include");
+                    var title = nls.localize(21, null);
                     builder.element('h4', { text: title });
                     _this.inputPatternIncludes = new PatternInput(builder.getContainer(), _this.contextViewService, {
-                        label: nls.localize('label.includes', 'Includes')
+                        ariaLabel: nls.localize(22, null)
                     });
                     _this.inputPatternIncludes.setIsGlobPattern(includesUsePattern);
                     _this.inputPatternIncludes.setValue(patternIncludes);
@@ -607,10 +983,10 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                 });
                 //pattern exclusion list
                 builder.div({ 'class': 'file-types' }, function (builder) {
-                    var title = nls.localize('searchScope.excludes', "files to exclude");
+                    var title = nls.localize(23, null);
                     builder.element('h4', { text: title });
                     _this.inputPatternExclusions = new PatternInput(builder.getContainer(), _this.contextViewService, {
-                        label: nls.localize('label.excludes', 'Excludes')
+                        ariaLabel: nls.localize(24, null)
                     });
                     _this.inputPatternExclusions.setIsGlobPattern(exclusionsUsePattern);
                     _this.inputPatternExclusions.setValue(patternExclusions);
@@ -633,12 +1009,14 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                 });
                 // add hint if we have global exclusion
                 _this.inputPatternGlobalExclusionsContainer = builder.div({ 'class': 'file-types global-exclude disabled' }, function (builder) {
-                    var title = nls.localize('global.searchScope.folders', "files excluded through settings");
+                    var title = nls.localize(25, null);
                     builder.element('h4', { text: title });
                     _this.inputPatternGlobalExclusions = new inputBox_1.InputBox(builder.getContainer(), _this.contextViewService, {
-                        actions: [_this.instantiationService.createInstance(ConfigureGlobalExclusionsAction)]
+                        actions: [_this.instantiationService.createInstance(ConfigureGlobalExclusionsAction)],
+                        ariaLabel: nls.localize(26, null)
                     });
                     _this.inputPatternGlobalExclusions.inputElement.readOnly = true;
+                    builder_1.$(_this.inputPatternGlobalExclusions.inputElement).attr('aria-readonly', 'true');
                     builder_1.$(_this.inputPatternGlobalExclusions.inputElement).addClass('disabled');
                 }).hide();
             }).getHTMLElement();
@@ -652,7 +1030,10 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                     renderer: renderer,
                     sorter: new SearchSorter(),
                     filter: new SearchFilter(),
-                    controller: new SearchController()
+                    controller: new SearchController(),
+                    accessibilityProvider: _this.instantiationService.createInstance(SearchAccessibilityProvider)
+                }, {
+                    ariaLabel: nls.localize(27, null)
                 });
                 _this.toUnbind.push(function () { return renderer.dispose(); });
                 _this.toUnbind.push(_this.tree.addListener('selection', function (event) {
@@ -678,22 +1059,22 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                 _this.actionRegistry[action.id] = action;
             });
             if (filePatterns !== '' || patternExclusions !== '' || patternIncludes !== '') {
-                this.toggleFileTypes(true, true);
+                this.toggleFileTypes(true, true, true);
             }
             this.configurationService.loadConfiguration().then(function (configuration) {
                 _this.updateGlobalPatternExclusions(configuration);
             }).done(null, errors.onUnexpectedError);
-            return winjs_base_1.Promise.as(null);
+            return winjs_base_1.TPromise.as(null);
         };
         SearchViewlet.prototype.updateGlobalPatternExclusions = function (configuration) {
             if (this.inputPatternGlobalExclusionsContainer) {
-                var excludes = searchQuery_1.getExcludes(configuration);
-                if (excludes) {
-                    var exclusions = Object.getOwnPropertyNames(excludes).filter(function (exclude) { return excludes[exclude] === true || typeof excludes[exclude].when === 'string'; }).map(function (exclude) {
-                        if (excludes[exclude] === true) {
+                var excludes_1 = searchQuery_1.getExcludes(configuration);
+                if (excludes_1) {
+                    var exclusions = Object.getOwnPropertyNames(excludes_1).filter(function (exclude) { return excludes_1[exclude] === true || typeof excludes_1[exclude].when === 'string'; }).map(function (exclude) {
+                        if (excludes_1[exclude] === true) {
                             return exclude;
                         }
-                        return nls.localize('globLabel', "{0} when {1}", exclude, excludes[exclude].when);
+                        return nls.localize(28, null, exclude, excludes_1[exclude].when);
                     });
                     if (exclusions.length) {
                         var values = exclusions.join(', ');
@@ -755,9 +1136,8 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             this.tree.layout(searchResultContainerSize);
         };
         SearchViewlet.prototype.layout = function (dimension) {
-            var _this = this;
             this.size = dimension;
-            winjs_base_1.Promise.timeout(10).done(function () { _this.reLayout(); }, errors.onUnexpectedError);
+            this.reLayout();
         };
         SearchViewlet.prototype.getControl = function () {
             return this.tree;
@@ -800,17 +1180,23 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
         SearchViewlet.prototype.showsFileTypes = function () {
             return dom.hasClass(this.queryDetails, 'more');
         };
-        SearchViewlet.prototype.toggleFileTypes = function (show, skipLayout) {
+        SearchViewlet.prototype.toggleFileTypes = function (moveFocus, show, skipLayout) {
             var cls = 'more';
             show = typeof show === 'undefined' ? !dom.hasClass(this.queryDetails, cls) : Boolean(show);
             skipLayout = Boolean(skipLayout);
             if (show) {
                 dom.addClass(this.queryDetails, cls);
-                this.inputPatternIncludes.focus();
-                this.inputPatternIncludes.select();
+                if (moveFocus) {
+                    this.inputPatternIncludes.focus();
+                    this.inputPatternIncludes.select();
+                }
             }
             else {
                 dom.removeClass(this.queryDetails, cls);
+                if (moveFocus) {
+                    this.findInput.focus();
+                    this.findInput.select();
+                }
             }
             if (!skipLayout && this.size) {
                 this.layout(this.size);
@@ -818,7 +1204,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
         };
         SearchViewlet.prototype.searchInFolder = function (resource) {
             if (!this.showsFileTypes()) {
-                this.toggleFileTypes(true, false);
+                this.toggleFileTypes(true, true);
             }
             var workspaceRelativePath = this.contextService.toWorkspaceRelativePath(resource);
             if (workspaceRelativePath) {
@@ -827,7 +1213,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                 this.findInput.focus();
             }
         };
-        SearchViewlet.prototype.onQueryChanged = function (rerunQuery) {
+        SearchViewlet.prototype.onQueryChanged = function (rerunQuery, preserveFocus) {
             var _this = this;
             var isRegex = this.findInput.getRegex(), isWholeWords = this.findInput.getWholeWords(), isCaseSensitive = this.findInput.getCaseSensitive(), contentPattern = this.findInput.getValue(), patternExcludes = this.inputPatternExclusions.getValue().trim(), exclusionsUsePattern = this.inputPatternExclusions.isGlobPattern(), patternIncludes = this.inputPatternIncludes.getValue().trim(), includesUsePattern = this.inputPatternIncludes.isGlobPattern();
             // store memento
@@ -850,7 +1236,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                 return;
             }
             if (isRegex) {
-                var regExp;
+                var regExp = void 0;
                 try {
                     regExp = new RegExp(contentPattern);
                 }
@@ -878,7 +1264,9 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             };
             this.queryBuilder.text(content, options)
                 .then(function (query) { return _this.onQueryTriggered(query, patternExcludes, patternIncludes); }, errors.onUnexpectedError);
-            this.findInput.focus(); // focus back to input field
+            if (!preserveFocus) {
+                this.findInput.focus(); // focus back to input field
+            }
         };
         SearchViewlet.prototype.onQueryTriggered = function (query, excludePattern, includePattern) {
             var _this = this;
@@ -950,36 +1338,38 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                 _this.actionRegistry['clearSearchResults'].enabled = hasResults;
                 if (completed && completed.limitHit) {
                     _this.findInput.showMessage({
-                        content: nls.localize('searchMaxResultsWarning', "The result set only contains a subset of all matches. Please be more specific in your search to narrow down the results."),
+                        content: nls.localize(29, null),
                         type: inputBox_1.MessageType.WARNING
                     });
                 }
                 if (!hasResults) {
                     var hasExcludes = !!excludePattern;
                     var hasIncludes = !!includePattern;
-                    var message;
+                    var message = void 0;
                     if (!completed) {
-                        message = nls.localize('searchCanceled', "Search was canceled before any results could be found - ");
+                        message = nls.localize(30, null);
                     }
                     else if (hasIncludes && hasExcludes) {
-                        message = nls.localize('noResultsIncludesExcludes', "No results found in '{0}' excluding '{1}' - ", includePattern, excludePattern);
+                        message = nls.localize(31, null, includePattern, excludePattern);
                     }
                     else if (hasIncludes) {
-                        message = nls.localize('noResultsIncludes', "No results found in '{0}' - ", includePattern);
+                        message = nls.localize(32, null, includePattern);
                     }
                     else if (hasExcludes) {
-                        message = nls.localize('noResultsExcludes', "No results found excluding '{0}' - ", excludePattern);
+                        message = nls.localize(33, null, excludePattern);
                     }
                     else {
-                        message = nls.localize('noResultsFound', "No results found. Review your settings for configured exclusions - ");
+                        message = nls.localize(34, null);
                     }
+                    // Indicate as status to ARIA
+                    aria.status(message);
                     _this.tree.onHidden();
                     _this.results.hide();
                     var div = _this.messages.empty().show().asContainer().div({ 'class': 'message', text: message });
                     if (!completed) {
                         builder_1.$(div).a({
                             'class': ['pointer', 'prominent'],
-                            text: nls.localize('rerunSearch.message', "Search again")
+                            text: nls.localize(35, null)
                         }).on(dom.EventType.CLICK, function (e) {
                             dom.EventHelper.stop(e, false);
                             _this.onQueryChanged(true);
@@ -988,7 +1378,8 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                     else if (hasIncludes || hasExcludes) {
                         builder_1.$(div).a({
                             'class': ['pointer', 'prominent'],
-                            text: nls.localize('rerunSearchInAll.message', "Search again in all files")
+                            'tabindex': '0',
+                            text: nls.localize(36, null)
                         }).on(dom.EventType.CLICK, function (e) {
                             dom.EventHelper.stop(e, false);
                             _this.inputPatternExclusions.setValue('');
@@ -999,7 +1390,8 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                     else {
                         builder_1.$(div).a({
                             'class': ['pointer', 'prominent'],
-                            text: nls.localize('openSettings.message', "Open Settings")
+                            'tabindex': '0',
+                            text: nls.localize(37, null)
                         }).on(dom.EventType.CLICK, function (e) {
                             dom.EventHelper.stop(e, false);
                             var action = _this.instantiationService.createInstance(openSettings_1.OpenGlobalSettingsAction, openSettings_1.OpenGlobalSettingsAction.ID, openSettings_1.OpenGlobalSettingsAction.LABEL);
@@ -1008,8 +1400,9 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
                     }
                 }
                 else {
-                    // show highlights
-                    _this.viewModel.toggleHighlights(true);
+                    _this.viewModel.toggleHighlights(true); // show highlights
+                    // Indicate as status to ARIA
+                    aria.status(nls.localize(38, null, _this.viewModel.count(), _this.viewModel.fileCount()));
                 }
                 doneTimer.stop();
             };
@@ -1103,7 +1496,7 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
         };
         SearchViewlet.prototype.onFocus = function (lineMatch, preserveFocus, sideBySide) {
             if (!(lineMatch instanceof searchModel_1.Match)) {
-                return winjs_base_1.Promise.as(true);
+                return winjs_base_1.TPromise.as(true);
             }
             this.telemetryService.publicLog('searchResultChosen');
             return this.editorService.openEditor({
@@ -1178,7 +1571,8 @@ define(["require", "exports", 'vs/base/common/winjs.base', 'vs/nls', 'vs/editor/
             __param(12, keybindingService_1.IKeybindingService)
         ], SearchViewlet);
         return SearchViewlet;
-    })(viewlet_1.Viewlet);
+    }(viewlet_1.Viewlet));
     exports.SearchViewlet = SearchViewlet;
 });
+
 //# sourceMappingURL=searchViewlet.js.map
