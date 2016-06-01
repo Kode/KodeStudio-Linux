@@ -57,13 +57,13 @@ typedef ResponseMessage = {
     /**
         The error object in case a request fails.
     **/
-    @:optional var error:ResponseError<Dynamic>;
+    @:optional var error:ResponseErrorData;
 }
 
 /**
     Error object sent in the `ResponseMessage.error` field.
 **/
-typedef ResponseError<D> = {
+typedef ResponseErrorData = {
     /**
         A number indicating the error type that occured.
     **/
@@ -77,7 +77,7 @@ typedef ResponseError<D> = {
     /**
         A Primitive or Structured value that contains additional information about the error.
     **/
-    @:optional var data:D;
+    @:optional var data:Dynamic;
 }
 
 /**
@@ -98,9 +98,10 @@ typedef NotificationMessage = {
     @:optional var params:Dynamic;
 }
 
-typedef CancelParams = {
-    /**
-        The request id to cancel.
-    **/
-    var id:RequestId;
+abstract RequestMethod<TParams,TResponse,TError>(String) to String {
+    public inline function new(method:String) this = method;
+}
+
+abstract NotificationMethod<TParams>(String) to String {
+    public inline function new(method:String) this = method;
 }

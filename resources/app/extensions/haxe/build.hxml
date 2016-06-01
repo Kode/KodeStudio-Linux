@@ -1,10 +1,12 @@
 -cp server/src
+-cp vscode-extern
 -cp src
 -lib hxnodejs
 -D hxnodejs-no-version-warning
 -js bin/client.js
 -debug
-Main
+-dce full
+vshaxe.Main
 
 --next
 --cwd server

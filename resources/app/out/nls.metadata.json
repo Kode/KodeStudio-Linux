@@ -8,6 +8,9 @@
 		"vs/workbench/electron-main/main": [
 			"newWindow"
 		],
+		"vs/workbench/parts/search/browser/openAnythingHandler": [
+			"fileAndTypeResults"
+		],
 		"vs/workbench/parts/search/browser/searchViewlet": [
 			"findInFolder",
 			"fileMatchAriaLabel",
@@ -49,12 +52,12 @@
 			"openSettings.message",
 			"ariaSearchResultsStatus"
 		],
-		"vs/workbench/parts/search/browser/openAnythingHandler": [
-			"fileAndTypeResults"
-		],
 		"vs/workbench/parts/output/browser/outputPanel": [
 			"outputPanelWithInputAriaLabel",
 			"outputPanelAriaLabel"
+		],
+		"vs/workbench/parts/debug/browser/repl": [
+			"replAriaLabel"
 		],
 		"vs/workbench/parts/debug/browser/debugViewlet": [
 			"variablesSection",
@@ -72,9 +75,6 @@
 			"breakpointsAriaTreeLabel",
 			"noWorkspace",
 			"pleaseRestartToDebug"
-		],
-		"vs/workbench/parts/debug/browser/repl": [
-			"replAriaLabel"
 		],
 		"vs/base/common/errors": [
 			{
@@ -117,12 +117,6 @@
 			"togglePosition",
 			"view"
 		],
-		"vs/workbench/browser/actions/triggerQuickOpen": [
-			"quickOpen",
-			"navigateEditorHistoryByInput",
-			"quickNavigateNext",
-			"quickNavigatePrevious"
-		],
 		"vs/workbench/browser/actions/triggerEditorActions": [
 			"splitEditor",
 			"cycleEditor",
@@ -140,6 +134,12 @@
 			"evenEditorWidths",
 			"maximizeEditor",
 			"view"
+		],
+		"vs/workbench/browser/actions/triggerQuickOpen": [
+			"quickOpen",
+			"navigateEditorHistoryByInput",
+			"quickNavigateNext",
+			"quickNavigatePrevious"
 		],
 		"vs/workbench/browser/actions/triggerNavigation": [
 			"navigateNext",
@@ -170,6 +170,12 @@
 			"restart",
 			"fail.createSettings"
 		],
+		"vs/workbench/parts/files/browser/workingFilesPicker": [
+			"entryAriaLabel",
+			"workingFilesGroupLabel",
+			"noResultsFound",
+			"noWorkingFiles"
+		],
 		"vs/workbench/parts/quickopen/browser/quickopen.contribution": [
 			"desc.mac",
 			"desc.win",
@@ -180,12 +186,6 @@
 			"gotoSymbolDescriptionNormalWin",
 			"gotoSymbolDescriptionScoped",
 			"helpDescription"
-		],
-		"vs/workbench/parts/files/browser/workingFilesPicker": [
-			"entryAriaLabel",
-			"workingFilesGroupLabel",
-			"noResultsFound",
-			"noWorkingFiles"
 		],
 		"vs/workbench/parts/files/browser/fileActions.contribution": [
 			"filesCategory"
@@ -214,9 +214,6 @@
 			"openWorkingFile",
 			"filesCategory"
 		],
-		"vs/workbench/parts/files/electron-browser/files.electron.contribution": [
-			"filesCategory"
-		],
 		"vs/workbench/parts/search/browser/search.contribution": [
 			"showSearchViewlet",
 			"findInFolder",
@@ -229,6 +226,9 @@
 			"exclude",
 			"exclude.boolean",
 			"exclude.when"
+		],
+		"vs/workbench/parts/files/electron-browser/files.electron.contribution": [
+			"filesCategory"
 		],
 		"vs/workbench/parts/git/browser/gitQuickOpen": [
 			"refAriaLabel",
@@ -380,14 +380,14 @@
 			"JsonSchema.mac",
 			"JsonSchema.linux"
 		],
-		"vs/workbench/parts/emmet/node/emmet.contribution": [
-			"expandAbbreviationAction"
-		],
 		"vs/workbench/parts/execution/electron-browser/terminal.contribution": [
 			"globalConsoleActionWin",
 			"globalConsoleActionMacLinux",
 			"scopedConsoleActionWin",
 			"scopedConsoleActionMacLinux"
+		],
+		"vs/workbench/parts/emmet/node/emmet.contribution": [
+			"expandAbbreviationAction"
 		],
 		"vs/workbench/parts/snippets/electron-browser/snippets.contribution": [
 			"openSnippet.label",
@@ -412,6 +412,17 @@
 			"releaseNotes",
 			"licenseChanged"
 		],
+		"vs/workbench/electron-browser/main.contribution": [
+			"view",
+			"developer",
+			"file",
+			"windowConfigurationTitle",
+			"openFilesInNewWindow",
+			"reopenFolders",
+			"zoomLevel",
+			"updateConfigurationTitle",
+			"updateChannel"
+		],
 		"vs/workbench/electron-browser/darwin/cli.contribution": [
 			"install",
 			"exists",
@@ -432,17 +443,6 @@
 			"later",
 			"laterInfo",
 			"shellCommand"
-		],
-		"vs/workbench/electron-browser/main.contribution": [
-			"view",
-			"developer",
-			"file",
-			"windowConfigurationTitle",
-			"openFilesInNewWindow",
-			"reopenFolders",
-			"zoomLevel",
-			"updateConfigurationTitle",
-			"updateChannel"
 		],
 		"vs/base/common/severity": [
 			"sev.error",
@@ -1287,61 +1287,10 @@
 		"vs/workbench/parts/git/electron-main/askpassService": [
 			"git"
 		],
-		"vs/base/browser/ui/aria/aria": [
-			"repeated"
-		],
-		"vs/base/browser/ui/findinput/findInput": [
-			"regexDescription",
-			"wordsDescription",
-			"caseDescription",
-			"defaultLabel"
-		],
 		"vs/workbench/browser/viewlet": [
 			"collapse",
 			"viewToolbarAriaLabel",
 			"viewToolbarAriaLabel"
-		],
-		"vs/base/browser/ui/inputbox/inputBox": [
-			"alertErrorMessage",
-			"alertWarningMessage",
-			"alertInfoMessage"
-		],
-		"vs/platform/message/common/message": [
-			"close",
-			"cancel"
-		],
-		"vs/base/common/keyCodes": [
-			"windowsKey",
-			"ctrlKey.long",
-			"shiftKey.long",
-			"altKey.long",
-			"cmdKey.long",
-			"windowsKey.long",
-			"ctrlKey",
-			"shiftKey",
-			"altKey",
-			"cmdKey",
-			"windowsKey"
-		],
-		"vs/base/parts/quickopen/browser/quickOpenModel": [
-			"quickOpenAriaLabelEntry",
-			"quickOpenAriaLabel"
-		],
-		"vs/workbench/browser/quickopen": [
-			"noResultsMatching",
-			"noResultsFound2",
-			"entryAriaLabel",
-			"noCommands"
-		],
-		"vs/workbench/parts/search/browser/openFileHandler": [
-			"entryAriaLabel",
-			"searchResults"
-		],
-		"vs/workbench/parts/search/browser/openSymbolHandler": [
-			"entryAriaLabel",
-			"symbols",
-			"noSymbolsMatching",
-			"noSymbolsWithoutInput"
 		],
 		"vs/workbench/parts/git/browser/gitWorkbenchContributions": [
 			"gitProgressBadge",
@@ -1386,15 +1335,59 @@
 		"vs/workbench/parts/git/browser/views/disabled/disabledView": [
 			"disabled"
 		],
+		"vs/workbench/browser/quickopen": [
+			"noResultsMatching",
+			"noResultsFound2",
+			"entryAriaLabel",
+			"noCommands"
+		],
+		"vs/workbench/parts/search/browser/openFileHandler": [
+			"entryAriaLabel",
+			"searchResults"
+		],
+		"vs/base/parts/quickopen/browser/quickOpenModel": [
+			"quickOpenAriaLabelEntry",
+			"quickOpenAriaLabel"
+		],
+		"vs/workbench/parts/search/browser/openSymbolHandler": [
+			"entryAriaLabel",
+			"symbols",
+			"noSymbolsMatching",
+			"noSymbolsWithoutInput"
+		],
+		"vs/platform/message/common/message": [
+			"close",
+			"cancel"
+		],
+		"vs/base/browser/ui/aria/aria": [
+			"repeated"
+		],
+		"vs/base/browser/ui/findinput/findInput": [
+			"regexDescription",
+			"wordsDescription",
+			"caseDescription",
+			"defaultLabel"
+		],
+		"vs/base/browser/ui/inputbox/inputBox": [
+			"alertErrorMessage",
+			"alertWarningMessage",
+			"alertInfoMessage"
+		],
+		"vs/base/common/keyCodes": [
+			"windowsKey",
+			"ctrlKey.long",
+			"shiftKey.long",
+			"altKey.long",
+			"cmdKey.long",
+			"windowsKey.long",
+			"ctrlKey",
+			"shiftKey",
+			"altKey",
+			"cmdKey",
+			"windowsKey"
+		],
 		"vs/workbench/parts/git/node/git.lib": [
 			"fileBinaryError"
-		],
-		"vs/workbench/browser/parts/editor/stringEditor": [
-			"textEditor",
-			"readonlyEditorWithInputAriaLabel",
-			"readonlyEditorAriaLabel",
-			"untitledFileEditorWithInputAriaLabel",
-			"untitledFileEditorAriaLabel"
 		],
 		"vs/workbench/parts/output/common/outputEditorInput": [
 			"output",
@@ -1405,25 +1398,21 @@
 			"clearOutput",
 			"switchToOutput.label"
 		],
-		"vs/workbench/parts/debug/common/debugModel": [
-			"startDebugFirst",
-			"unknownStack",
-			"snapshotObj"
+		"vs/workbench/browser/parts/editor/stringEditor": [
+			"textEditor",
+			"readonlyEditorWithInputAriaLabel",
+			"readonlyEditorAriaLabel",
+			"untitledFileEditorWithInputAriaLabel",
+			"untitledFileEditorAriaLabel"
 		],
-		"vs/workbench/parts/debug/browser/debugViewer": [
-			"threadAriaLabel",
-			"stackFrameAriaLabel",
-			"variableScopeAriaLabel",
-			"variableAriaLabel",
-			"watchExpressionPlaceholder",
-			"watchExpressionInputAriaLabel",
-			"watchExpressionAriaLabel",
-			"watchVariableAriaLabel",
-			"functionBreakpointPlaceholder",
-			"functionBreakPointInputAriaLabel",
-			"breakpointAriaLabel",
-			"functionBreakpointAriaLabel",
-			"exceptionBreakpointAriaLabel"
+		"vs/workbench/parts/debug/browser/replViewer": [
+			"stateCapture",
+			"fileLinkMac",
+			"fileLink",
+			"replVariableAriaLabel",
+			"replExpressionAriaLabel",
+			"replValueOutputAriaLabel",
+			"replKeyValueOutputAriaLabel"
 		],
 		"vs/workbench/parts/debug/electron-browser/debugActions": [
 			"debugActionLabelAndKeybinding",
@@ -1461,14 +1450,25 @@
 			"toggleRepl",
 			"run"
 		],
-		"vs/workbench/parts/debug/browser/replViewer": [
-			"stateCapture",
-			"fileLinkMac",
-			"fileLink",
-			"replVariableAriaLabel",
-			"replExpressionAriaLabel",
-			"replValueOutputAriaLabel",
-			"replKeyValueOutputAriaLabel"
+		"vs/workbench/parts/debug/common/debugModel": [
+			"startDebugFirst",
+			"unknownStack",
+			"snapshotObj"
+		],
+		"vs/workbench/parts/debug/browser/debugViewer": [
+			"threadAriaLabel",
+			"stackFrameAriaLabel",
+			"variableScopeAriaLabel",
+			"variableAriaLabel",
+			"watchExpressionPlaceholder",
+			"watchExpressionInputAriaLabel",
+			"watchExpressionAriaLabel",
+			"watchVariableAriaLabel",
+			"functionBreakpointPlaceholder",
+			"functionBreakPointInputAriaLabel",
+			"breakpointAriaLabel",
+			"functionBreakpointAriaLabel",
+			"exceptionBreakpointAriaLabel"
 		],
 		"vs/workbench/node/extensionHostMain": [
 			"overwritingExtension",
@@ -1495,6 +1495,11 @@
 			"noCompatible",
 			"notExists"
 		],
+		"vs/editor/contrib/clipboard/browser/clipboard": [
+			"actions.clipboard.cutLabel",
+			"actions.clipboard.copyLabel",
+			"actions.clipboard.pasteLabel"
+		],
 		"vs/editor/contrib/accessibility/browser/accessibility": [
 			"ShowAccessibilityHelpAction",
 			"introMsg",
@@ -1510,19 +1515,14 @@
 			"experimentalScreenReaderSessionOffNoKb",
 			"outroMsg"
 		],
-		"vs/editor/contrib/clipboard/browser/clipboard": [
-			"actions.clipboard.cutLabel",
-			"actions.clipboard.copyLabel",
-			"actions.clipboard.pasteLabel"
+		"vs/editor/contrib/contextmenu/browser/contextmenu": [
+			"action.showContextMenu.label"
 		],
 		"vs/editor/contrib/comment/common/comment": [
 			"comment.line",
 			"comment.line.add",
 			"comment.line.remove",
 			"comment.block"
-		],
-		"vs/editor/contrib/contextmenu/browser/contextmenu": [
-			"action.showContextMenu.label"
 		],
 		"vs/editor/contrib/format/common/formatActions": [
 			"formatAction.label"
@@ -1562,16 +1562,16 @@
 			"lines.insertBefore",
 			"lines.insertAfter"
 		],
+		"vs/editor/contrib/multicursor/common/multicursor": [
+			"mutlicursor.insertAbove",
+			"mutlicursor.insertBelow",
+			"mutlicursor.insertAtEndOfEachLineSelected"
+		],
 		"vs/editor/contrib/links/browser/links": [
 			"links.navigate.mac",
 			"links.navigate",
 			"invalid.url",
 			"label"
-		],
-		"vs/editor/contrib/multicursor/common/multicursor": [
-			"mutlicursor.insertAbove",
-			"mutlicursor.insertBelow",
-			"mutlicursor.insertAtEndOfEachLineSelected"
 		],
 		"vs/editor/contrib/parameterHints/browser/parameterHints": [
 			"parameterHints.trigger.label"
@@ -1722,6 +1722,22 @@
 			"noErrorsAndWarnings",
 			"label"
 		],
+		"vs/workbench/parts/files/browser/views/emptyView": [
+			"explorerSection",
+			"noWorkspace",
+			"noWorkspaceHelp",
+			"openFolder"
+		],
+		"vs/workbench/parts/files/browser/views/workingFilesView": [
+			"workingFilesSection",
+			"workingFiles",
+			"dirtyCounter",
+			"treeAriaLabel"
+		],
+		"vs/workbench/parts/files/browser/views/explorerView": [
+			"explorerSection",
+			"treeAriaLabel"
+		],
 		"vs/workbench/parts/files/browser/views/explorerViewer": [
 			"fileInputAriaLabel",
 			"filesExplorerViewerAriaLabel",
@@ -1734,22 +1750,6 @@
 					"&& denotes a mnemonic"
 				]
 			}
-		],
-		"vs/workbench/parts/files/browser/views/explorerView": [
-			"explorerSection",
-			"treeAriaLabel"
-		],
-		"vs/workbench/parts/files/browser/views/emptyView": [
-			"explorerSection",
-			"noWorkspace",
-			"noWorkspaceHelp",
-			"openFolder"
-		],
-		"vs/workbench/parts/files/browser/views/workingFilesView": [
-			"workingFilesSection",
-			"workingFiles",
-			"dirtyCounter",
-			"treeAriaLabel"
 		],
 		"vs/base/browser/ui/actionbar/actionbar": [
 			"titleLabel"
@@ -2103,6 +2103,9 @@
 		"vs/workbench/browser/parts/statusbar/statusbarPart": [
 			"canNotRun"
 		],
+		"vs/workbench/common/editor/diffEditorInput": [
+			"compareLabels"
+		],
 		"vs/workbench/browser/parts/quickopen/quickOpenController": [
 			"inputModeEntryDescription",
 			"inputModeEntry",
@@ -2112,9 +2115,6 @@
 			"historyMatches",
 			"noResultsFound1",
 			"canNotRunPlaceholder"
-		],
-		"vs/workbench/common/editor/diffEditorInput": [
-			"compareLabels"
 		],
 		"vs/platform/keybinding/browser/keybindingServiceImpl": [
 			"unboundCommands",
@@ -2394,6 +2394,18 @@
 			"ignoreTrimWhitespace",
 			"selectionClipboard"
 		],
+		"vs/editor/contrib/find/common/findController": [
+			"selectAllOccurencesOfFindMatch",
+			"changeAll.label",
+			"startFindAction",
+			"findNextMatchAction",
+			"findPreviousMatchAction",
+			"nextSelectionMatchFindAction",
+			"previousSelectionMatchFindAction",
+			"startReplace",
+			"moveSelectionToNextFindMatch",
+			"addSelectionToNextFindMatch"
+		],
 		"vs/editor/contrib/find/browser/findWidget": [
 			"label.find",
 			"placeholder.find",
@@ -2409,18 +2421,6 @@
 			"title.matchesCountLimit",
 			"label.matchesLocation",
 			"label.noResults"
-		],
-		"vs/editor/contrib/find/common/findController": [
-			"selectAllOccurencesOfFindMatch",
-			"changeAll.label",
-			"startFindAction",
-			"findNextMatchAction",
-			"findPreviousMatchAction",
-			"nextSelectionMatchFindAction",
-			"previousSelectionMatchFindAction",
-			"startReplace",
-			"moveSelectionToNextFindMatch",
-			"addSelectionToNextFindMatch"
 		],
 		"vs/editor/common/services/bulkEdit": [
 			"conflict"
@@ -2573,13 +2573,6 @@
 		"vs/workbench/browser/parts/activitybar/activityAction": [
 			"titleKeybinding"
 		],
-		"vs/workbench/browser/parts/editor/sideBySideEditorControl": [
-			"close",
-			"splitEditor",
-			"inputDecoration",
-			"araLabelEditorActions",
-			"loadingLabel"
-		],
 		"vs/workbench/browser/parts/editor/editor.contribution": [
 			"textEditor",
 			"textDiffEditor",
@@ -2587,6 +2580,13 @@
 			"iframeEditor",
 			"viewSource",
 			"reload"
+		],
+		"vs/workbench/browser/parts/editor/sideBySideEditorControl": [
+			"close",
+			"splitEditor",
+			"inputDecoration",
+			"araLabelEditorActions",
+			"loadingLabel"
 		],
 		"vs/workbench/browser/parts/compositePart": [
 			"compositeTitleTooltip",
@@ -2653,10 +2653,6 @@
 			"info",
 			"close"
 		],
-		"vs/platform/telemetry/electron-browser/electronTelemetryService": [
-			"telemetryConfigurationTitle",
-			"telemetry.enableTelemetry"
-		],
 		"vs/workbench/electron-browser/integration": [
 			"undo",
 			"redo",
@@ -2664,6 +2660,10 @@
 			"copy",
 			"paste",
 			"selectAll"
+		],
+		"vs/platform/telemetry/electron-browser/electronTelemetryService": [
+			"telemetryConfigurationTitle",
+			"telemetry.enableTelemetry"
 		],
 		"vs/workbench/services/message/electron-browser/messageService": [
 			{
@@ -2846,6 +2846,9 @@
 		"vs/workbench/electron-main/main": [
 			"New Window"
 		],
+		"vs/workbench/parts/search/browser/openAnythingHandler": [
+			"file and symbol results"
+		],
 		"vs/workbench/parts/search/browser/searchViewlet": [
 			"Find in Folder",
 			"{0} matches in file {1} of folder {2}, Search result",
@@ -2887,12 +2890,12 @@
 			"Open Settings",
 			"Search returned {0} results in {1} files"
 		],
-		"vs/workbench/parts/search/browser/openAnythingHandler": [
-			"file and symbol results"
-		],
 		"vs/workbench/parts/output/browser/outputPanel": [
 			"{0}, Output panel",
 			"Output panel"
+		],
+		"vs/workbench/parts/debug/browser/repl": [
+			"Read Eval Print Loop Panel"
 		],
 		"vs/workbench/parts/debug/browser/debugViewlet": [
 			"Variables Section",
@@ -2910,9 +2913,6 @@
 			"Debug Breakpoints",
 			"There is no currently opened folder.",
 			"Open a folder in order to start debugging."
-		],
-		"vs/workbench/parts/debug/browser/repl": [
-			"Read Eval Print Loop Panel"
 		],
 		"vs/base/common/errors": [
 			"{0}. Error code: {1}",
@@ -2944,12 +2944,6 @@
 			"Toggle Side Bar Position",
 			"View"
 		],
-		"vs/workbench/browser/actions/triggerQuickOpen": [
-			"Go to File...",
-			"Navigate History",
-			"Navigate Next in Quick Open",
-			"Navigate Previous in Quick Open"
-		],
 		"vs/workbench/browser/actions/triggerEditorActions": [
 			"Split Editor",
 			"Cycle Between Opened Editors",
@@ -2967,6 +2961,12 @@
 			"Even Editor Widths",
 			"Maximize Active Editor and Hide Sidebar",
 			"View"
+		],
+		"vs/workbench/browser/actions/triggerQuickOpen": [
+			"Go to File...",
+			"Navigate History",
+			"Navigate Next in Quick Open",
+			"Navigate Previous in Quick Open"
 		],
 		"vs/workbench/browser/actions/triggerNavigation": [
 			"Go Forward",
@@ -2997,6 +2997,12 @@
 			"Changing the value requires to restart VSCode.",
 			"Unable to create '{0}' ({1})."
 		],
+		"vs/workbench/parts/files/browser/workingFilesPicker": [
+			"{0}, working file picker",
+			"working files",
+			"No matching working files found",
+			"List of working files is currently empty"
+		],
 		"vs/workbench/parts/quickopen/browser/quickopen.contribution": [
 			"Show Errors or Warnings",
 			"Show Errors and Warnings",
@@ -3007,12 +3013,6 @@
 			"Go to Symbol",
 			"Go to Symbol by Category",
 			"Show Help"
-		],
-		"vs/workbench/parts/files/browser/workingFilesPicker": [
-			"{0}, working file picker",
-			"working files",
-			"No matching working files found",
-			"List of working files is currently empty"
 		],
 		"vs/workbench/parts/files/browser/fileActions.contribution": [
 			"Files"
@@ -3041,9 +3041,6 @@
 			"Open Working File By Name",
 			"Files"
 		],
-		"vs/workbench/parts/files/electron-browser/files.electron.contribution": [
-			"Files"
-		],
 		"vs/workbench/parts/search/browser/search.contribution": [
 			"Show Search",
 			"Find in Folder",
@@ -3056,6 +3053,9 @@
 			"Configure glob patterns for excluding files and folders in searches. Inherits all glob patterns from the file.exclude setting.",
 			"The glob pattern to match file paths against. Set to true or false to enable or disable the pattern.",
 			"Additional check on the siblings of a matching file. Use $(basename) as variable for the matching file name."
+		],
+		"vs/workbench/parts/files/electron-browser/files.electron.contribution": [
+			"Files"
 		],
 		"vs/workbench/parts/git/browser/gitQuickOpen": [
 			"{0}, git",
@@ -3202,14 +3202,14 @@
 			"Mac specific build configuration",
 			"Linux specific build configuration"
 		],
-		"vs/workbench/parts/emmet/node/emmet.contribution": [
-			"Emmet: Expand Abbreviation"
-		],
 		"vs/workbench/parts/execution/electron-browser/terminal.contribution": [
 			"Open New Command Prompt",
 			"Open New Terminal",
 			"Open in Command Prompt",
 			"Open in Terminal"
+		],
+		"vs/workbench/parts/emmet/node/emmet.contribution": [
+			"Emmet: Expand Abbreviation"
 		],
 		"vs/workbench/parts/snippets/electron-browser/snippets.contribution": [
 			"Snippets",
@@ -3234,6 +3234,17 @@
 			"Welcome to {0} v{1}! Would you like to read the Release Notes?",
 			"Our license terms have changed, please go through them."
 		],
+		"vs/workbench/electron-browser/main.contribution": [
+			"View",
+			"Developer",
+			"File",
+			"Window configuration",
+			"When enabled, will open files in a new window instead of reusing an existing instance.",
+			"Controls how folders are being reopened after a restart. Select 'none' to never reopen a folder, 'one' to reopen the last folder you worked on or 'all' to reopen all folders of your last session.",
+			"Adjust the zoom level of the window. The original size is 0 and each increment above (e.g. 1) or below (e.g. -1) represents zooming 20% larger or smaller. You can also enter decimals to adjust the zoom level with a finer granularity.",
+			"Update configuration",
+			"Configure the update channel to receive updates from. Requires a restart after change."
+		],
 		"vs/workbench/electron-browser/darwin/cli.contribution": [
 			"Install 'code' command in PATH",
 			"Please remove the alias referencing '{0}' in '{1}' (line {2}) and retry this action.",
@@ -3254,17 +3265,6 @@
 			"Later",
 			"Remember you can always run the '{0}' action from the Command Palette.",
 			"Shell Command"
-		],
-		"vs/workbench/electron-browser/main.contribution": [
-			"View",
-			"Developer",
-			"File",
-			"Window configuration",
-			"When enabled, will open files in a new window instead of reusing an existing instance.",
-			"Controls how folders are being reopened after a restart. Select 'none' to never reopen a folder, 'one' to reopen the last folder you worked on or 'all' to reopen all folders of your last session.",
-			"Adjust the zoom level of the window. The original size is 0 and each increment above (e.g. 1) or below (e.g. -1) represents zooming 20% larger or smaller. You can also enter decimals to adjust the zoom level with a finer granularity.",
-			"Update configuration",
-			"Configure the update channel to receive updates from. Requires a restart after change."
 		],
 		"vs/base/common/severity": [
 			"Error",
@@ -3724,61 +3724,10 @@
 		"vs/workbench/parts/git/electron-main/askpassService": [
 			"Git"
 		],
-		"vs/base/browser/ui/aria/aria": [
-			"{0} (occurred again)"
-		],
-		"vs/base/browser/ui/findinput/findInput": [
-			"Use Regular Expression",
-			"Match Whole Word",
-			"Match Case",
-			"input"
-		],
 		"vs/workbench/browser/viewlet": [
 			"Collapse",
 			"{0} actions",
 			"{0} actions"
-		],
-		"vs/base/browser/ui/inputbox/inputBox": [
-			"Error: {0}",
-			"Warning: {0}",
-			"Info: {0}"
-		],
-		"vs/platform/message/common/message": [
-			"Close",
-			"Cancel"
-		],
-		"vs/base/common/keyCodes": [
-			"Windows",
-			"Control",
-			"Shift",
-			"Alt",
-			"Command",
-			"Windows",
-			"Ctrl",
-			"Shift",
-			"Alt",
-			"Command",
-			"Windows"
-		],
-		"vs/base/parts/quickopen/browser/quickOpenModel": [
-			"{0}, picker",
-			"picker"
-		],
-		"vs/workbench/browser/quickopen": [
-			"No results matching",
-			"No results found",
-			"{0}, command",
-			"No commands matching"
-		],
-		"vs/workbench/parts/search/browser/openFileHandler": [
-			"{0}, file picker",
-			"search results"
-		],
-		"vs/workbench/parts/search/browser/openSymbolHandler": [
-			"{0}, symbols picker",
-			"symbol results",
-			"No symbols matching",
-			"Type to search for symbols"
 		],
 		"vs/workbench/parts/git/browser/gitWorkbenchContributions": [
 			"Running git status",
@@ -3823,15 +3772,59 @@
 		"vs/workbench/parts/git/browser/views/disabled/disabledView": [
 			"Git is disabled in the settings."
 		],
+		"vs/workbench/browser/quickopen": [
+			"No results matching",
+			"No results found",
+			"{0}, command",
+			"No commands matching"
+		],
+		"vs/workbench/parts/search/browser/openFileHandler": [
+			"{0}, file picker",
+			"search results"
+		],
+		"vs/base/parts/quickopen/browser/quickOpenModel": [
+			"{0}, picker",
+			"picker"
+		],
+		"vs/workbench/parts/search/browser/openSymbolHandler": [
+			"{0}, symbols picker",
+			"symbol results",
+			"No symbols matching",
+			"Type to search for symbols"
+		],
+		"vs/platform/message/common/message": [
+			"Close",
+			"Cancel"
+		],
+		"vs/base/browser/ui/aria/aria": [
+			"{0} (occurred again)"
+		],
+		"vs/base/browser/ui/findinput/findInput": [
+			"Use Regular Expression",
+			"Match Whole Word",
+			"Match Case",
+			"input"
+		],
+		"vs/base/browser/ui/inputbox/inputBox": [
+			"Error: {0}",
+			"Warning: {0}",
+			"Info: {0}"
+		],
+		"vs/base/common/keyCodes": [
+			"Windows",
+			"Control",
+			"Shift",
+			"Alt",
+			"Command",
+			"Windows",
+			"Ctrl",
+			"Shift",
+			"Alt",
+			"Command",
+			"Windows"
+		],
 		"vs/workbench/parts/git/node/git.lib": [
 			"File seems to be binary and cannot be opened as text"
-		],
-		"vs/workbench/browser/parts/editor/stringEditor": [
-			"Text Editor",
-			"{0}. Readonly text editor.",
-			"Readonly text editor.",
-			"{0}. Untitled file text editor.",
-			"Untitled file text editor."
 		],
 		"vs/workbench/parts/output/common/outputEditorInput": [
 			"Output",
@@ -3842,25 +3835,21 @@
 			"Clear Output",
 			"Switch to Output"
 		],
-		"vs/workbench/parts/debug/common/debugModel": [
-			"Please start a debug session to evaluate",
-			"Unknown stack location",
-			"Only primitive values are shown for this object."
+		"vs/workbench/browser/parts/editor/stringEditor": [
+			"Text Editor",
+			"{0}. Readonly text editor.",
+			"Readonly text editor.",
+			"{0}. Untitled file text editor.",
+			"Untitled file text editor."
 		],
-		"vs/workbench/parts/debug/browser/debugViewer": [
-			"Thread {0}, callstack, debug",
-			"Stack Frame {0} line {1} {2}, callstack, debug",
-			"Scope {0}, variables, debug",
-			"{0} value {1}, variables, debug",
-			"Expression to watch",
-			"Type watch expression",
-			"{0} value {1}, watch, debug",
-			"{0} value {1}, watch, debug",
-			"Function to break on",
-			"Type function breakpoint",
-			"Breakpoint line {0} {1}, breakpoints, debug",
-			"Function breakpoint {0}, breakpoints, debug",
-			"Exception breakpoint {0}, breakpoints, debug"
+		"vs/workbench/parts/debug/browser/replViewer": [
+			"Object state is captured from first evaluation",
+			"Click to follow (Cmd + click opens to the side)",
+			"Click to follow (Ctrl + click opens to the side)",
+			"Variable {0} has value {1}, read eval print loop, debug",
+			"Expression {0} has value {1}, read eval print loop, debug",
+			"{0}, read eval print loop, debug",
+			"Output variable {0} has value {1}, read eval print loop, debug"
 		],
 		"vs/workbench/parts/debug/electron-browser/debugActions": [
 			"{0} ({1})",
@@ -3898,14 +3887,25 @@
 			"Debug Console",
 			"Run"
 		],
-		"vs/workbench/parts/debug/browser/replViewer": [
-			"Object state is captured from first evaluation",
-			"Click to follow (Cmd + click opens to the side)",
-			"Click to follow (Ctrl + click opens to the side)",
-			"Variable {0} has value {1}, read eval print loop, debug",
-			"Expression {0} has value {1}, read eval print loop, debug",
-			"{0}, read eval print loop, debug",
-			"Output variable {0} has value {1}, read eval print loop, debug"
+		"vs/workbench/parts/debug/common/debugModel": [
+			"Please start a debug session to evaluate",
+			"Unknown stack location",
+			"Only primitive values are shown for this object."
+		],
+		"vs/workbench/parts/debug/browser/debugViewer": [
+			"Thread {0}, callstack, debug",
+			"Stack Frame {0} line {1} {2}, callstack, debug",
+			"Scope {0}, variables, debug",
+			"{0} value {1}, variables, debug",
+			"Expression to watch",
+			"Type watch expression",
+			"{0} value {1}, watch, debug",
+			"{0} value {1}, watch, debug",
+			"Function to break on",
+			"Type function breakpoint",
+			"Breakpoint line {0} {1}, breakpoints, debug",
+			"Function breakpoint {0}, breakpoints, debug",
+			"Exception breakpoint {0}, breakpoints, debug"
 		],
 		"vs/workbench/node/extensionHostMain": [
 			"Overwriting extesion {0} with {1}.",
@@ -3932,6 +3932,11 @@
 			"Couldn't find a compatible version of {0} with this version of Code.",
 			"Could not find extension"
 		],
+		"vs/editor/contrib/clipboard/browser/clipboard": [
+			"Cut",
+			"Copy",
+			"Paste"
+		],
 		"vs/editor/contrib/accessibility/browser/accessibility": [
 			"Show Accessibility Help",
 			"Thank you for trying out VS Code's experimental accessibility options.",
@@ -3947,19 +3952,14 @@
 			"Experimental screen reader support is turned off. The command {0} is currently not triggerable by a keybinding. Turn it on for all sessions by configuring the editor.experimentalScreenReader setting to true.",
 			"You can dismiss this tooltip and return to the editor by pressing Escape."
 		],
-		"vs/editor/contrib/clipboard/browser/clipboard": [
-			"Cut",
-			"Copy",
-			"Paste"
+		"vs/editor/contrib/contextmenu/browser/contextmenu": [
+			"Show Editor Context Menu"
 		],
 		"vs/editor/contrib/comment/common/comment": [
 			"Toggle Line Comment",
 			"Add Line Comment",
 			"Remove Line Comment",
 			"Toggle Block Comment"
-		],
-		"vs/editor/contrib/contextmenu/browser/contextmenu": [
-			"Show Editor Context Menu"
 		],
 		"vs/editor/contrib/format/common/formatActions": [
 			"Format Code"
@@ -3999,16 +3999,16 @@
 			"Insert Line Above",
 			"Insert Line Below"
 		],
+		"vs/editor/contrib/multicursor/common/multicursor": [
+			"Add Cursor Above",
+			"Add Cursor Below",
+			"Create multiple cursors from selected lines"
+		],
 		"vs/editor/contrib/links/browser/links": [
 			"Cmd + click to follow link",
 			"Ctrl + click to follow link",
 			"Invalid URI: cannot open {0}",
 			"Open Link"
-		],
-		"vs/editor/contrib/multicursor/common/multicursor": [
-			"Add Cursor Above",
-			"Add Cursor Below",
-			"Create multiple cursors from selected lines"
 		],
 		"vs/editor/contrib/parameterHints/browser/parameterHints": [
 			"Trigger Parameter Hints"
@@ -4159,18 +4159,6 @@
 			"No errors or warnings",
 			"Show Errors and Warnings"
 		],
-		"vs/workbench/parts/files/browser/views/explorerViewer": [
-			"Type file name. Press Enter to confirm or Escape to cancel.",
-			"{0}, Files Explorer",
-			"File '{0}' is currently being saved, please try again later.",
-			"'{0}' already exists in the destination folder. Do you want to replace it?",
-			"This action is irreversible!",
-			"&&Replace"
-		],
-		"vs/workbench/parts/files/browser/views/explorerView": [
-			"Files Explorer Section",
-			"Files Explorer"
-		],
 		"vs/workbench/parts/files/browser/views/emptyView": [
 			"Files Explorer Section",
 			"No Folder Opened",
@@ -4182,6 +4170,18 @@
 			"Working Files",
 			"{0} unsaved",
 			"Working Files"
+		],
+		"vs/workbench/parts/files/browser/views/explorerView": [
+			"Files Explorer Section",
+			"Files Explorer"
+		],
+		"vs/workbench/parts/files/browser/views/explorerViewer": [
+			"Type file name. Press Enter to confirm or Escape to cancel.",
+			"{0}, Files Explorer",
+			"File '{0}' is currently being saved, please try again later.",
+			"'{0}' already exists in the destination folder. Do you want to replace it?",
+			"This action is irreversible!",
+			"&&Replace"
 		],
 		"vs/base/browser/ui/actionbar/actionbar": [
 			"{0} ({1})"
@@ -4490,6 +4490,9 @@
 		"vs/workbench/browser/parts/statusbar/statusbarPart": [
 			"Command '{0}' can not be run from here."
 		],
+		"vs/workbench/common/editor/diffEditorInput": [
+			"{0} ↔ {1}"
+		],
 		"vs/workbench/browser/parts/quickopen/quickOpenController": [
 			"{0} (Press 'Enter' to confirm or 'Escape' to cancel)",
 			"Press 'Enter' to confirm your input or 'Escape' to cancel",
@@ -4499,9 +4502,6 @@
 			"recently opened",
 			"No results found",
 			"This quick open handler can not be used in the current context"
-		],
-		"vs/workbench/common/editor/diffEditorInput": [
-			"{0} ↔ {1}"
 		],
 		"vs/platform/keybinding/browser/keybindingServiceImpl": [
 			"Here are other available commands: ",
@@ -4781,6 +4781,18 @@
 			"Controls if the diff editor shows changes in leading or trailing whitespace as diffs",
 			"Controls if the Linux primary clipboard should be supported."
 		],
+		"vs/editor/contrib/find/common/findController": [
+			"Select All Occurences of Find Match",
+			"Change All Occurrences",
+			"Find",
+			"Find Next",
+			"Find Previous",
+			"Find Next Selection",
+			"Find Previous Selection",
+			"Replace",
+			"Move Last Selection To Next Find Match",
+			"Add Selection To Next Find Match"
+		],
 		"vs/editor/contrib/find/browser/findWidget": [
 			"Find",
 			"Find",
@@ -4796,18 +4808,6 @@
 			"Only the first 999 results are highlighted, but all find operations work on the entire text.",
 			"{0} of {1}",
 			"No results"
-		],
-		"vs/editor/contrib/find/common/findController": [
-			"Select All Occurences of Find Match",
-			"Change All Occurrences",
-			"Find",
-			"Find Next",
-			"Find Previous",
-			"Find Next Selection",
-			"Find Previous Selection",
-			"Replace",
-			"Move Last Selection To Next Find Match",
-			"Add Selection To Next Find Match"
 		],
 		"vs/editor/common/services/bulkEdit": [
 			"These files have changed in the meantime: {0}"
@@ -4960,13 +4960,6 @@
 		"vs/workbench/browser/parts/activitybar/activityAction": [
 			"{0} ({1})"
 		],
-		"vs/workbench/browser/parts/editor/sideBySideEditorControl": [
-			"Close",
-			"Split Editor",
-			"{0} {1}",
-			"Editor actions",
-			"Loading..."
-		],
 		"vs/workbench/browser/parts/editor/editor.contribution": [
 			"Text Editor",
 			"Text Diff Editor",
@@ -4974,6 +4967,13 @@
 			"IFrame Editor",
 			"View Source",
 			"Reload"
+		],
+		"vs/workbench/browser/parts/editor/sideBySideEditorControl": [
+			"Close",
+			"Split Editor",
+			"{0} {1}",
+			"Editor actions",
+			"Loading..."
 		],
 		"vs/workbench/browser/parts/compositePart": [
 			"{0} ({1})",
@@ -5040,10 +5040,6 @@
 			"Info",
 			"Close"
 		],
-		"vs/platform/telemetry/electron-browser/electronTelemetryService": [
-			"Telemetry configuration",
-			"Enable usage data and errors to be sent to Microsoft."
-		],
 		"vs/workbench/electron-browser/integration": [
 			"Undo",
 			"Redo",
@@ -5051,6 +5047,10 @@
 			"Copy",
 			"Paste",
 			"Select All"
+		],
+		"vs/platform/telemetry/electron-browser/electronTelemetryService": [
+			"Telemetry configuration",
+			"Enable usage data and errors to be sent to Microsoft."
 		],
 		"vs/workbench/services/message/electron-browser/messageService": [
 			"&&Yes",
