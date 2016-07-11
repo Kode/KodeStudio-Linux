@@ -1,11 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/git/browser/gitViewlet.nls.ja", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"コミット メッセージを入力してください。**{0}** を押すといつでも変更をコミットできます。ステージング済みの変更がある場合は、それらの変更だけがコミットされます。それ以外の場合は、すべての変更がコミットされます。",
 		"コミットする変更があった時点で、コミット メッセージを入力するか、**{0}** を押して変更をコミットしてください。ステージング済みの変更がある場合は、それらの変更だけがコミットされます。それ以外の場合は、すべての変更がコミットされます。",
+		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
 		"メッセージ ({0} を押してコミット)",
 		"Git: コミット メッセージを入力し、{0} を押してコミットしてください",
 		"Git 変更の表示",
@@ -67,6 +67,11 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.ja", {
 		"{0} からダウンロードできます。",
 		"システムに Git がインストールされていない可能性があります。",
 		"Git をインストールし終えたら、{0} を再起動してください。",
+	],
+	"vs/workbench/parts/git/browser/views/huge/hugeView": [
+		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
+		"You can permanently disable this warning with the following setting:",
+		"Allow large repositories",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"このディレクトリは Git リポジトリに含まれているようです。",

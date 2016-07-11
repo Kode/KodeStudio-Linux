@@ -6,7 +6,8 @@
 	"win32MutexName": "kodestudio",
 	"licenseUrl": "https://github.com/KTXSoftware/KodeStudio/blob/master/LICENSE.txt",
 	"darwinBundleIdentifier": "org.kodestudio",
-	"welcomePage": "resources/welcome.md",
-	"commit": "89d99a9988bad91f5faecf2dd280c3fcf781fcfc",
-	"date": "2016-06-01T22:53:45.405Z"
+	"reportIssueUrl": "https://github.com/Microsoft/vscode/issues/new",
+	"kodeStudioVersion": "16.7.1",
+	"commit": "8f4464773e78ef33a257c4869c12d68c2802d4b1",
+	"date": "2016-07-11T16:13:26.130Z"
 }

@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/languages/html/common/htmlWorker.nls.es", {
 	"vs/languages/html/common/htmlTags": [
 		"El elemento html representa la raíz de un documento HTML.",
@@ -131,7 +130,7 @@ define("vs/languages/html/common/htmlWorker.nls.es", {
 		"Elemento secundario de ionItem. Crea un botón de opción dentro de un elemento de lista que queda visible cuando el usuario pasa el elemento a la izquierda.",
 		"Contenedor simple que se ajusta al contenido, sin efectos secundarios. Agrega la clase \"pane\" al elemento.",
 		"Popover es una vista que flota sobre el contenido de una aplicación. Las vistas Popover son una forma fácil de presentar información del usuario o de recopilarla.",
-		"La directiva radio de ion no difiere de la entrada de radio HTML, salvo en el estilo. ionRadio se comporta como una entrada de radio AngularJS.",
+		"La directiva ionRadio no difiere de la entrada de radio HTML, salvo en el estilo. ionRadio se comporta como una entrada de radio AngularJS.",
 		"Elemento secundario de ionContent o ionScroll. Permite agregar la opción de incorporar cambios para actualizar a una vista scrollView. Colóquelo como primer elemento secundario del elemento ionContent o ionScroll.",
 		"Elemento secundario de ionItem.",
 		"Crea un contenedor desplazable para todo el contenido incluido.",

@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/debug/browser/repl.nls.zh-cn", {
 	"vs/workbench/parts/debug/browser/repl": [
 		"读取 Eval 打印循环面板",

@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/services/search/node/searchApp.nls.zh-tw", {
 	"vs/base/common/errors": [
 		"{0}。錯誤碼: {1}",

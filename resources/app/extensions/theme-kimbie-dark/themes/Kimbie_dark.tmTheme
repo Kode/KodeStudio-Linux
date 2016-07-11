@@ -300,7 +300,7 @@
 			<key>name</key>
 			<string>Headings</string>
 			<key>scope</key>
-			<string>markup.heading punctuation.definition.heading, entity.name.section</string>
+			<string>markup.heading, markup.heading.setext, punctuation.definition.heading, entity.name.section</string>
 			<key>settings</key>
 			<dict>
 				<key>fontStyle</key>
@@ -498,10 +498,8 @@
 			<string>invalid.illegal</string>
 			<key>settings</key>
 			<dict>
-				<key>background</key>
-				<string>#dc3958</string>
 				<key>foreground</key>
-				<string>#221a0f</string>
+				<string>#dc3958</string>
 			</dict>
 		</dict>
 	</array>

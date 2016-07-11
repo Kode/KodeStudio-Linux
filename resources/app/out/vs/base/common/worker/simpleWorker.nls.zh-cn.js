@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/base/common/worker/simpleWorker.nls.zh-cn", {
 	"vs/base/common/errors": [
 		"{0}。错误代码: {1}",
@@ -24,5 +23,23 @@ define("vs/base/common/worker/simpleWorker.nls.zh-cn", {
 		"非法状态",
 		"无法加载需要的文件。您的 Internet 连接已断开，或者您连接的服务器已脱机。请刷新浏览器并重试。",
 		"未能加载所需文件。请重启应用程序重试。详细信息: {0}",
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"控件",
+		"Shift",
+		"Alt",
+		"命令",
+		"Windows",
+		"Ctrl",
+		"Shift",
+		"Alt",
+		"命令",
+		"Windows",
+	],
+	"vs/base/common/severity": [
+		"错误",
+		"警告",
+		"信息",
 	]
 });

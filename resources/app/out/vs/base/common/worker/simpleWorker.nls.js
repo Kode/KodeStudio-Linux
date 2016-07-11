@@ -26,5 +26,23 @@ define("vs/base/common/worker/simpleWorker.nls", {
 		"Illegal state",
 		"Failed to load a required file. Either you are no longer connected to the internet or the server you are connected to is offline. Please refresh the browser to try again.",
 		"Failed to load a required file. Please restart the application to try again. Details: {0}"
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"Control",
+		"Shift",
+		"Alt",
+		"Command",
+		"Windows",
+		"Ctrl",
+		"Shift",
+		"Alt",
+		"Command",
+		"Windows"
+	],
+	"vs/base/common/severity": [
+		"Error",
+		"Warning",
+		"Info"
 	]
 });

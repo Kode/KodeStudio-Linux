@@ -1,29 +1,22 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/search/browser/searchViewlet.nls.it", {
-	"vs/workbench/parts/search/browser/searchViewlet": [
-		"Trova nella cartella",
-		"{0} corrispondenze nel file {1} della cartella {2}, risultato della ricerca",
-		"{0}, risultato della ricerca",
-		"Rimuovi",
-		"{0} corrispondenze trovate",
-		"{0} corrispondenza trovata",
-		"nessuna corrispondenza",
-		"Aggiorna",
-		"Seleziona",
-		"Seleziona",
-		"Rimuovi",
-		"Comprimi",
-		"Cancella risultati della ricerca",
-		"Apri impostazioni",
+	"vs/workbench/parts/search/browser/patternInputWidget": [
 		"input",
-		"Usa criteri GLOB",
-		"Criterio da usare per la ricerca, ad esempio ****/*.js** per cercare tutti i file JavaScript oppure **cartellaPersonale/**** per cercare la cartella specificata con tutti gli elementi figlio.\n\n**Informazioni di riferimento**:\n***** consente di cercare 0 o più caratteri\n**?** consente di cercare 1 carattere\n****** consente di cercare zero o più directory\n**[a-z]** consente di cercare un intervallo di caratteri\n**{a,b}** consente di cercare uno qualsiasi dei criteri",
-		"Cerca: digitare il termine di ricerca e premere INVIO per cercare oppure ESC per annullare",
-		"Espressione corrispondente a qualsiasi valore",
-		"Premere INVIO per cercare o ESC per annullare",
+		"Use Glob Patterns",
+		"The pattern to match. e.g. **\\*\\*/*.js** to match all JavaScript files or **myFolder/\\*\\*** to match that folder with all children.\n\n**Reference**:\n**\\*** matches 0 or more characters\n**?** matches 1 character\n**\\*\\*** matches zero or more directories\n**[a-z]** matches a range of characters\n**{a,b}** matches any of the patterns)",
+	],
+	"vs/workbench/parts/search/browser/searchResultsView": [
+		"{0} matches found",
+		"{0} match found",
+		"no matches",
+		"{0} matches in file {1} of folder {2}, Search result",
+		"No matches",
+		"Replace preview result, {0}",
+		"{0}, Search result",
+	],
+	"vs/workbench/parts/search/browser/searchViewlet": [
 		"Attiva/Disattiva dettagli ricerca",
 		"file da includere",
 		"Criteri di inclusione per la ricerca",
@@ -31,6 +24,12 @@ define("vs/workbench/parts/search/browser/searchViewlet.nls.it", {
 		"Criteri di esclusione per la ricerca",
 		"file esclusi tramite impostazioni",
 		"Criteri di esclusione per la ricerca configurati",
+		"Replaced {0} occurrences across {1} files with {2}.",
+		"Removed {0} occurrences across {1} files.",
+		"Replace All",
+		"Replace {0} occurrences across {1} files with \'{2}\'?",
+		"Remove {0} occurrences across {1} files?",
+		"Replace",
 		"Risultati ricerca",
 		"{0} quando {1}",
 		"Il set di risultati contiene solo un subset di tutte le corrispondenze. Eseguire una ricerca più specifica per ridurre il numero di risultati.",

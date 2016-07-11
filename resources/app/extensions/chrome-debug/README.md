@@ -1,9 +1,14 @@
 # VS Code - Debugger for Chrome
+
+[![Join the chat at https://gitter.im/Microsoft/vscode-chrome-debug](https://badges.gitter.im/Microsoft/vscode-chrome-debug.svg)](https://gitter.im/Microsoft/vscode-chrome-debug?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![build status](https://travis-ci.org/Microsoft/vscode-chrome-debug.svg?branch=master)](https://travis-ci.org/Microsoft/vscode-chrome-debug)
 
 A VS Code extension to debug your JavaScript code in the Chrome browser, or other targets that support the [Chrome Debugging Protocol](https://chromedevtools.github.io/debugger-protocol-viewer/).
 
 ![Demo](https://cdn.rawgit.com/Microsoft/vscode-chrome-debug/master/images/demo.gif)
+
+## Examples
+See our wiki page for some configured example apps: [Examples](https://github.com/Microsoft/vscode-chrome-debug/wiki/Examples)
 
 ## Starting
 The extension operates in two modes - it can launch an instance of Chrome navigated to your app, or it can attach to a running instance of Chrome. Just like when using the Node debugger, you configure these modes with a `.vscode/launch.json` file in the root directory of your project. You can create this file manually, or Code will create one for you if you try to run your project, and it doesn't exist yet.
@@ -12,7 +17,7 @@ To use this extension, you must first open the folder containing the project you
 
 ### Launch
 Two example `launch.json` configs. You must specify either `file` or `url` to launch Chrome against a local file or a url. If you use a url, set `webRoot` to the directory that files are served from. This can be either an absolute path or a path relative to the workspace (the folder open in Code). It's used to resolve urls (like "http://localhost/app.js") to a file on disk (like "/users/me/project/app.js"), so be careful that it's set correctly.
-```
+```json
 {
     "version": "0.1.0",
     "configurations": [
@@ -53,7 +58,7 @@ __Linux__
 Launch Chrome and navigate to your page.
 
 An example `launch.json` config.
-```
+```json
 {
     "version": "0.1.0",
     "configurations": [
@@ -79,7 +84,7 @@ An example `launch.json` config.
 You can also theoretically attach to other targets that support the same Chrome Debugging protocol, such as Electron or Cordova. These aren't officially supported, but should work with basically the same steps. You can use a launch config by setting `"runtimeExecutable"` to a program or script to launch, or an attach config to attach to a process that's already running. If Code can't find the target, you can always verify that it is actually available by navigating to `http://localhost:<port>/json` in a browser. If you get a response with a bunch of JSON, and can find your target page in that JSON, then the target should be available to this extension.
 
 ### Other optional launch config fields
-* diagnosticLogging: When true, the adapter logs its own diagnostic info to the console
+* diagnosticLogging: When true, the adapter logs its own diagnostic info to the console, _and_ to this file: `~/.vscode/extensions/msjsdiag.debugger-for-chrome/vscode-chrome-debug.txt`. This is often useful info to include when filing an issue on GitHub.
 * runtimeExecutable: Workspace relative or absolute path to the runtime executable to be used. If not specified, Chrome will be used from the default install location
 * runtimeArgs: Optional arguments passed to the runtime executable
 * userDataDir: Can be set to a temp directory, then Chrome will use that directory as the user profile directory. If Chrome is already running when you start debugging with a launch config, then the new instance won't start in remote debugging mode. If you don't want to close the original instance, you can set this property and the new instance will correctly be in remote debugging mode.
@@ -108,5 +113,8 @@ General things to try if you're having issues:
 * Ensure nothing else is using port 9222, or specify a different port in your launch config
 * Check the console for warnings that this extension prints in some cases when it can't attach
 * Ensure the code in Chrome matches the code in Code. Chrome may cache an old version.
-* If you were previously using the `cwd` property in your launch config with the `file` property, you need to specify an absolute path for `file` instead, e.g. `"${workspaceRoot}/index.html"`.
-* File a bug in this extension's [GitHub repo](https://github.com/Microsoft/vscode-webkit-debug). Set the "diagnosticLogging" field in your launch config and attach the logs when filing a bug.
+* If you set a breakpoint in code that runs immediately when the page loads, you won't hit that breakpoint until you refresh the page.
+* File a bug in this extension's [GitHub repo](https://github.com/Microsoft/vscode-chrome-debug). Set the "diagnosticLogging" field in your launch config and attach the logs when filing a bug. You can drag this file into the GitHub comment box: `~/.vscode/extensions/msjsdiag.debugger-for-chrome/vscode-chrome-debug.txt`.
+
+===
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.

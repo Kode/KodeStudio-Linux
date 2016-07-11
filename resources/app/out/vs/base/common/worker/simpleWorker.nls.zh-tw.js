@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/base/common/worker/simpleWorker.nls.zh-tw", {
 	"vs/base/common/errors": [
 		"{0}。錯誤碼: {1}",
@@ -24,5 +23,23 @@ define("vs/base/common/worker/simpleWorker.nls.zh-tw", {
 		"不合法的狀態",
 		"無法載入需要的檔案。可能是您已經沒有連線到網際網路，或是您連接的伺服器已離線。請重新整理瀏覽器，再試一次。",
 		"無法載入必要的檔案。請重新啟動該應用程式，然後再試一次。詳細資料: {0}",
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"Control",
+		"Shift",
+		"Alt",
+		"Command",
+		"Windows",
+		"Ctrl",
+		"Shift",
+		"Alt",
+		"Command",
+		"Windows",
+	],
+	"vs/base/common/severity": [
+		"錯誤",
+		"警告",
+		"資訊",
 	]
 });

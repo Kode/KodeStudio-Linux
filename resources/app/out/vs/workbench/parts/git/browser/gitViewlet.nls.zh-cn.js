@@ -1,11 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/git/browser/gitViewlet.nls.zh-cn", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"请提供提交消息。您可以始终按下“{0}”以提交更改。如果存在任何暂存的更改，将仅提交这些更改；否则，提交所有更改。",
 		"在有一些更改要提交时，键入提交信息，并按下“{0}”以提交更改。如果存在任何暂存的更改，将仅提交这些更改；否则，提交所有更改。",
+		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
 		"消息(按 {0} 提交)",
 		"GIT: 键入提交信息并按 {0} 以提交",
 		"GIT 更改视图",
@@ -67,6 +67,11 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.zh-cn", {
 		"可从 {0} 中下载它。",
 		"你的系统上似乎未安装 GIT。",
 		"安装 GIT 后，请重启 {0}。",
+	],
+	"vs/workbench/parts/git/browser/views/huge/hugeView": [
+		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
+		"You can permanently disable this warning with the following setting:",
+		"Allow large repositories",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"此目录似乎包含在 GIT 存储库中。",

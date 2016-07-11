@@ -1,11 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/git/browser/gitViewlet.nls.it", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"Fornire un messaggio di commit. È sempre possibile premere **{0}** per eseguire il commit delle modifiche. Se sono presenti modifiche preparate per il commit, verrà eseguito il commit solo di tali modifiche. In caso contrario, verrà eseguito il commit di tutte le modifiche.",
 		"Non appena sono presenti modifiche di cui eseguire il commit, immettere il messaggio di commit e premere **{0}** per eseguire il commit. Se sono presenti modifiche preparate per il commit, verrà eseguito il commit solo di tali modifiche. In caso contrario, verrà eseguito il commit di tutte le modifiche.",
+		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
 		"Messaggio (premere {0} per eseguire il commit)",
 		"GIT: digitare il messaggio e premere {0} per eseguire il commit",
 		"Visualizzazione modifiche GIT",
@@ -67,6 +67,11 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.it", {
 		"È possibile scaricarlo da {0}.",
 		"Sembra che GIT non sia installato nel sistema.",
 		"Dopo aver installato GIT, riavviare {0}.",
+	],
+	"vs/workbench/parts/git/browser/views/huge/hugeView": [
+		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
+		"You can permanently disable this warning with the following setting:",
+		"Allow large repositories",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"Questa directory sembra essere inclusa in un repository GIT.",

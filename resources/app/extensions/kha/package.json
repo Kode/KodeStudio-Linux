@@ -11,8 +11,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:kha.init",
-		"onCommand:kha.compile"
+		"*"
 	],
 	"main": "./extension",
 	"contributes": {
@@ -37,7 +36,12 @@
 					"type": "string",
 					"default": "",
 					"description": "Points to a Kha directory."
-                }
+                },
+				"kha.ffmpeg": {
+					"type": "string",
+					"default": "",
+					"description": "Path to ffmpeg for extended audio and video format support."
+				}
             }
         }
 	},

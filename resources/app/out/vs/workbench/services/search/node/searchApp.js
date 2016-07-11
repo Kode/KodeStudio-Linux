@@ -1,7 +1,16 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
-define("vs/base/common/arrays", ["require", "exports"], function (require, exports) {
+(function() {
+var __m = ["require","exports","vs/base/common/strings","vs/base/common/types","vs/base/common/winjs.base","vs/base/common/platform","fs","vs/base/common/paths","vs/base/common/errors","vs/base/node/stream","vs/base/common/lifecycle","vs/base/common/mime","vs/base/common/objects","vs/base/common/event","vs/base/node/flow","vs/base/common/arrays","vs/base/common/glob","path","vs/base/common/map","vs/base/node/encoding","vs/base/common/async","vs/base/node/extfs","vs/nls!vs/base/common/errors","vs/base/common/uuid","vs/base/common/callbackList","vs/base/common/scorer","vs/base/common/cancellation","vs/base/common/events","vs/base/node/mime","vs/base/parts/ipc/common/ipc","vs/base/parts/ipc/node/ipc.cp","vs/platform/instantiation/common/instantiation","vs/platform/files/common/files","vs/workbench/services/search/node/fileSearch","vs/workbench/services/search/node/searchIpc","vs/workbench/services/search/node/textSearch","vs/workbench/services/search/node/rawSearchService","vs/workbench/services/search/node/searchApp","vs/base/common/winjs.base.raw","assert","vs/nls","vs/nls!vs/workbench/services/search/node/searchApp","child_process","graceful-fs","iconv-lite"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
+define(__m[15], __M([0,1]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -32,6 +41,7 @@ define("vs/base/common/arrays", ["require", "exports"], function (require, expor
     }
     exports.forEach = forEach;
     function equals(one, other, itemEquals) {
+        if (itemEquals === void 0) { itemEquals = function (a, b) { return a === b; }; }
         if (one.length !== other.length) {
             return false;
         }
@@ -157,7 +167,7 @@ define("vs/base/common/arrays", ["require", "exports"], function (require, expor
                 return array.indexOf(element) === position;
             });
         }
-        var seen = {};
+        var seen = Object.create(null);
         return array.filter(function (elem) {
             var key = keyFn(elem);
             if (seen[key]) {
@@ -168,15 +178,32 @@ define("vs/base/common/arrays", ["require", "exports"], function (require, expor
         });
     }
     exports.distinct = distinct;
-    function first(array, fn, notFoundValue) {
-        if (notFoundValue === void 0) { notFoundValue = null; }
+    function uniqueFilter(keyFn) {
+        var seen = Object.create(null);
+        return function (element) {
+            var key = keyFn(element);
+            if (seen[key]) {
+                return false;
+            }
+            seen[key] = true;
+            return true;
+        };
+    }
+    exports.uniqueFilter = uniqueFilter;
+    function firstIndex(array, fn) {
         for (var i = 0; i < array.length; i++) {
             var element = array[i];
             if (fn(element)) {
-                return element;
+                return i;
             }
         }
-        return notFoundValue;
+        return -1;
+    }
+    exports.firstIndex = firstIndex;
+    function first(array, fn, notFoundValue) {
+        if (notFoundValue === void 0) { notFoundValue = null; }
+        var index = firstIndex(array, fn);
+        return index < 0 ? notFoundValue : array[index];
     }
     exports.first = first;
     function commonPrefixLength(one, other, equals) {
@@ -192,6 +219,29 @@ define("vs/base/common/arrays", ["require", "exports"], function (require, expor
         return arr.reduce(function (r, v) { return r.concat(v); }, []);
     }
     exports.flatten = flatten;
+    function range(to, from) {
+        if (from === void 0) { from = 0; }
+        var result = [];
+        for (var i = from; i < to; i++) {
+            result.push(i);
+        }
+        return result;
+    }
+    exports.range = range;
+    function fill(num, valueFn, arr) {
+        if (arr === void 0) { arr = []; }
+        for (var i = 0; i < num; i++) {
+            arr[i] = valueFn();
+        }
+        return arr;
+    }
+    exports.fill = fill;
+    function index(array, indexer) {
+        var result = Object.create(null);
+        array.forEach(function (t) { return result[indexer(t)] = t; });
+        return result;
+    }
+    exports.index = index;
 });
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -199,7 +249,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define("vs/base/common/events", ["require", "exports"], function (require, exports) {
+define(__m[27], __M([0,1]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -254,102 +304,230 @@ define("vs/base/common/events", ["require", "exports"], function (require, expor
     };
 });
 
-define("vs/base/common/lifecycle", ["require", "exports"], function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+define(__m[18], __M([0,1]), function (require, exports) {
     'use strict';
-    exports.empty = Object.freeze({
-        dispose: function () { }
-    });
-    function dispose(disposable) {
-        if (disposable) {
-            disposable.dispose();
+    /**
+     * A simple map to store value by a key object. Key can be any object that has toString() function to get
+     * string value of the key.
+     */
+    var SimpleMap = (function () {
+        function SimpleMap() {
+            this.map = Object.create(null);
+            this._size = 0;
         }
-        return null;
-    }
-    exports.dispose = dispose;
-    function disposeAll(arr) {
-        if (arr) {
-            for (var i = 0, len = arr.length; i < len; i++) {
-                if (arr[i]) {
-                    arr[i].dispose();
+        Object.defineProperty(SimpleMap.prototype, "size", {
+            get: function () {
+                return this._size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SimpleMap.prototype.get = function (k) {
+            var value = this.peek(k);
+            return value ? value : null;
+        };
+        SimpleMap.prototype.keys = function () {
+            var keys = [];
+            for (var key in this.map) {
+                keys.push(this.map[key].key);
+            }
+            return keys;
+        };
+        SimpleMap.prototype.entries = function () {
+            var entries = [];
+            for (var key in this.map) {
+                entries.push(this.map[key]);
+            }
+            return entries;
+        };
+        SimpleMap.prototype.set = function (k, t) {
+            if (this.get(k)) {
+                return false; // already present!
+            }
+            this.push(k, t);
+            return true;
+        };
+        SimpleMap.prototype.delete = function (k) {
+            var value = this.get(k);
+            if (value) {
+                this.pop(k);
+                return value;
+            }
+            return null;
+        };
+        SimpleMap.prototype.has = function (k) {
+            return !!this.get(k);
+        };
+        SimpleMap.prototype.clear = function () {
+            this.map = Object.create(null);
+            this._size = 0;
+        };
+        SimpleMap.prototype.push = function (key, value) {
+            var entry = { key: key, value: value };
+            this.map[key.toString()] = entry;
+            this._size++;
+        };
+        SimpleMap.prototype.pop = function (k) {
+            delete this.map[k.toString()];
+            this._size--;
+        };
+        SimpleMap.prototype.peek = function (k) {
+            var entry = this.map[k.toString()];
+            return entry ? entry.value : null;
+        };
+        return SimpleMap;
+    }());
+    exports.SimpleMap = SimpleMap;
+    /**
+     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
+     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
+     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
+     */
+    var LinkedMap = (function () {
+        function LinkedMap(limit, ratio) {
+            if (limit === void 0) { limit = Number.MAX_VALUE; }
+            if (ratio === void 0) { ratio = 1; }
+            this.limit = limit;
+            this.map = Object.create(null);
+            this._size = 0;
+            this.ratio = limit * ratio;
+        }
+        Object.defineProperty(LinkedMap.prototype, "size", {
+            get: function () {
+                return this._size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        LinkedMap.prototype.set = function (key, value) {
+            if (this.map[key]) {
+                return false; // already present!
+            }
+            var entry = { key: key, value: value };
+            this.push(entry);
+            if (this._size > this.limit) {
+                this.trim();
+            }
+            return true;
+        };
+        LinkedMap.prototype.get = function (key) {
+            var entry = this.map[key];
+            return entry ? entry.value : null;
+        };
+        LinkedMap.prototype.delete = function (key) {
+            var entry = this.map[key];
+            if (entry) {
+                this.map[key] = void 0;
+                this._size--;
+                if (entry.next) {
+                    entry.next.prev = entry.prev; // [A]<-[x]<-[C] = [A]<-[C]
+                }
+                else {
+                    this.head = entry.prev; // [A]-[x] = [A]
+                }
+                if (entry.prev) {
+                    entry.prev.next = entry.next; // [A]->[x]->[C] = [A]->[C]
+                }
+                else {
+                    this.tail = entry.next; // [x]-[A] = [A]
+                }
+                return entry.value;
+            }
+            return null;
+        };
+        LinkedMap.prototype.has = function (key) {
+            return !!this.map[key];
+        };
+        LinkedMap.prototype.clear = function () {
+            this.map = Object.create(null);
+            this._size = 0;
+            this.head = null;
+            this.tail = null;
+        };
+        LinkedMap.prototype.push = function (entry) {
+            if (this.head) {
+                // [A]-[B] = [A]-[B]->[X]
+                entry.prev = this.head;
+                this.head.next = entry;
+            }
+            if (!this.tail) {
+                this.tail = entry;
+            }
+            this.head = entry;
+            this.map[entry.key] = entry;
+            this._size++;
+        };
+        LinkedMap.prototype.trim = function () {
+            if (this.tail) {
+                // Remove all elements until ratio is reached
+                if (this.ratio < this.limit) {
+                    var index = 0;
+                    var current = this.tail;
+                    while (current.next) {
+                        // Remove the entry
+                        this.map[current.key] = void 0;
+                        this._size--;
+                        // if we reached the element that overflows our ratio condition
+                        // make its next element the new tail of the Map and adjust the size
+                        if (index === this.ratio) {
+                            this.tail = current.next;
+                            this.tail.prev = null;
+                            break;
+                        }
+                        // Move on
+                        current = current.next;
+                        index++;
+                    }
+                }
+                else {
+                    this.map[this.tail.key] = void 0;
+                    this._size--;
+                    // [x]-[B] = [B]
+                    this.tail = this.tail.next;
+                    this.tail.prev = null;
                 }
             }
-        }
-        return [];
-    }
-    exports.disposeAll = disposeAll;
-    function combinedDispose() {
-        var disposables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
-        }
-        return {
-            dispose: function () { return disposeAll(disposables); }
         };
-    }
-    exports.combinedDispose = combinedDispose;
-    function combinedDispose2(disposables) {
-        return {
-            dispose: function () { return disposeAll(disposables); }
-        };
-    }
-    exports.combinedDispose2 = combinedDispose2;
-    function fnToDisposable(fn) {
-        return {
-            dispose: function () { return fn(); }
-        };
-    }
-    exports.fnToDisposable = fnToDisposable;
-    function toDisposable() {
-        var fns = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            fns[_i - 0] = arguments[_i];
-        }
-        return combinedDispose2(fns.map(fnToDisposable));
-    }
-    exports.toDisposable = toDisposable;
-    function callAll(arg) {
-        if (!arg) {
-            return null;
-        }
-        else if (typeof arg === 'function') {
-            arg();
-            return null;
-        }
-        else if (Array.isArray(arg)) {
-            while (arg.length > 0) {
-                arg.pop()();
-            }
-            return arg;
-        }
-        else {
-            return null;
-        }
-    }
-    /**
-     * Calls all functions that are being passed to it.
-     */
-    exports.cAll = callAll;
-    var Disposable = (function () {
-        function Disposable() {
-            this._toDispose = [];
-        }
-        Disposable.prototype.dispose = function () {
-            this._toDispose = disposeAll(this._toDispose);
-        };
-        Disposable.prototype._register = function (t) {
-            this._toDispose.push(t);
-            return t;
-        };
-        return Disposable;
+        return LinkedMap;
     }());
-    exports.Disposable = Disposable;
+    exports.LinkedMap = LinkedMap;
+    /**
+     * A subclass of Map<T> that makes an entry the MRU entry as soon
+     * as it is being accessed. In combination with the limit for the
+     * maximum number of elements in the cache, it helps to remove those
+     * entries from the cache that are LRU.
+     */
+    var LRUCache = (function (_super) {
+        __extends(LRUCache, _super);
+        function LRUCache(limit) {
+            _super.call(this, limit);
+        }
+        LRUCache.prototype.get = function (key) {
+            // Upon access of an entry, make it the head of
+            // the linked map so that it is the MRU element
+            var entry = this.map[key];
+            if (entry) {
+                this.delete(key);
+                this.push(entry);
+                return entry.value;
+            }
+            return null;
+        };
+        return LRUCache;
+    }(LinkedMap));
+    exports.LRUCache = LRUCache;
 });
 
-define("vs/base/common/platform", ["require", "exports"], function (require, exports) {
+define(__m[5], __M([0,1]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -359,16 +537,19 @@ define("vs/base/common/platform", ["require", "exports"], function (require, exp
     var _isWindows = false;
     var _isMacintosh = false;
     var _isLinux = false;
+    var _isRootUser = false;
     var _isNative = false;
     var _isWeb = false;
     var _isQunit = false;
     var _locale = undefined;
     var _language = undefined;
+    exports.LANGUAGE_DEFAULT = 'en';
     // OS detection
     if (typeof process === 'object') {
         _isWindows = (process.platform === 'win32');
         _isMacintosh = (process.platform === 'darwin');
         _isLinux = (process.platform === 'linux');
+        _isRootUser = !_isWindows && (process.getuid() === 0);
         var vscode_nls_config = process.env['VSCODE_NLS_CONFIG'];
         if (vscode_nls_config) {
             try {
@@ -376,7 +557,7 @@ define("vs/base/common/platform", ["require", "exports"], function (require, exp
                 var resolved = nlsConfig.availableLanguages['*'];
                 _locale = nlsConfig.locale;
                 // VSCode's default language is 'en'
-                _language = resolved ? resolved : 'en';
+                _language = resolved ? resolved : exports.LANGUAGE_DEFAULT;
             }
             catch (e) {
             }
@@ -415,6 +596,7 @@ define("vs/base/common/platform", ["require", "exports"], function (require, exp
     exports.isWindows = _isWindows;
     exports.isMacintosh = _isMacintosh;
     exports.isLinux = _isLinux;
+    exports.isRootUser = _isRootUser;
     exports.isNative = _isNative;
     exports.isWeb = _isWeb;
     exports.isQunit = _isQunit;
@@ -428,7 +610,7 @@ define("vs/base/common/platform", ["require", "exports"], function (require, exp
     /**
      * The OS locale or the locale specified by --locale. The format of
      * the string is all lower case (e.g. zh-tw for Traditional
-     * Chinese)
+     * Chinese). The UI is not necessarily shown in the provided locale.
      */
     exports.locale = _locale;
     var _globals = (typeof self === 'object' ? self : global);
@@ -443,13 +625,366 @@ define("vs/base/common/platform", ["require", "exports"], function (require, exp
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
+define(__m[7], __M([0,1,5]), function (require, exports, platform_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    /**
+     * The forward slash path separator.
+     */
+    exports.sep = '/';
+    /**
+     * The native path separator depending on the OS.
+     */
+    exports.nativeSep = platform_1.isWindows ? '\\' : '/';
+    function relative(from, to) {
+        from = normalize(from);
+        to = normalize(to);
+        var fromParts = from.split(exports.sep), toParts = to.split(exports.sep);
+        while (fromParts.length > 0 && toParts.length > 0) {
+            if (fromParts[0] === toParts[0]) {
+                fromParts.shift();
+                toParts.shift();
+            }
+            else {
+                break;
+            }
+        }
+        for (var i = 0, len = fromParts.length; i < len; i++) {
+            toParts.unshift('..');
+        }
+        return toParts.join(exports.sep);
+    }
+    exports.relative = relative;
+    /**
+     * @returns the directory name of a path.
+     */
+    function dirname(path) {
+        var idx = ~path.lastIndexOf('/') || ~path.lastIndexOf('\\');
+        if (idx === 0) {
+            return '.';
+        }
+        else if (~idx === 0) {
+            return path[0];
+        }
+        else {
+            return path.substring(0, ~idx);
+        }
+    }
+    exports.dirname = dirname;
+    /**
+     * @returns the base name of a path.
+     */
+    function basename(path) {
+        var idx = ~path.lastIndexOf('/') || ~path.lastIndexOf('\\');
+        if (idx === 0) {
+            return path;
+        }
+        else if (~idx === path.length - 1) {
+            return basename(path.substring(0, path.length - 1));
+        }
+        else {
+            return path.substr(~idx + 1);
+        }
+    }
+    exports.basename = basename;
+    /**
+     * @returns {{.far}} from boo.far or the empty string.
+     */
+    function extname(path) {
+        path = basename(path);
+        var idx = ~path.lastIndexOf('.');
+        return idx ? path.substring(~idx) : '';
+    }
+    exports.extname = extname;
+    var _posixBadPath = /(\/\.\.?\/)|(\/\.\.?)$|^(\.\.?\/)|(\/\/+)|(\\)/;
+    var _winBadPath = /(\\\.\.?\\)|(\\\.\.?)$|^(\.\.?\\)|(\\\\+)|(\/)/;
+    function _isNormal(path, win) {
+        return win
+            ? !_winBadPath.test(path)
+            : !_posixBadPath.test(path);
+    }
+    function normalize(path, toOSPath) {
+        if (path === null || path === void 0) {
+            return path;
+        }
+        var len = path.length;
+        if (len === 0) {
+            return '.';
+        }
+        var wantsBackslash = platform_1.isWindows && toOSPath;
+        if (_isNormal(path, wantsBackslash)) {
+            return path;
+        }
+        var sep = wantsBackslash ? '\\' : '/';
+        var root = getRoot(path, sep);
+        // skip the root-portion of the path
+        var start = root.length;
+        var skip = false;
+        var res = '';
+        for (var end = root.length; end <= len; end++) {
+            // either at the end or at a path-separator character
+            if (end === len || path.charCodeAt(end) === _slash || path.charCodeAt(end) === _backslash) {
+                if (streql(path, start, end, '..')) {
+                    // skip current and remove parent (if there is already something)
+                    var prev_start = res.lastIndexOf(sep);
+                    var prev_part = res.slice(prev_start + 1);
+                    if ((root || prev_part.length > 0) && prev_part !== '..') {
+                        res = prev_start === -1 ? '' : res.slice(0, prev_start);
+                        skip = true;
+                    }
+                }
+                else if (streql(path, start, end, '.') && (root || res || end < len - 1)) {
+                    // skip current (if there is already something or if there is more to come)
+                    skip = true;
+                }
+                if (!skip) {
+                    var part = path.slice(start, end);
+                    if (res !== '' && res[res.length - 1] !== sep) {
+                        res += sep;
+                    }
+                    res += part;
+                }
+                start = end + 1;
+                skip = false;
+            }
+        }
+        return root + res;
+    }
+    exports.normalize = normalize;
+    function streql(value, start, end, other) {
+        return start + other.length === end && value.indexOf(other, start) === start;
+    }
+    /**
+     * Computes the _root_ this path, like `getRoot('c:\files') === c:\`,
+     * `getRoot('files:///files/path') === files:///`,
+     * or `getRoot('\\server\shares\path') === \\server\shares\`
+     */
+    function getRoot(path, sep) {
+        if (sep === void 0) { sep = '/'; }
+        if (!path) {
+            return '';
+        }
+        var len = path.length;
+        var code = path.charCodeAt(0);
+        if (code === _slash || code === _backslash) {
+            code = path.charCodeAt(1);
+            if (code === _slash || code === _backslash) {
+                // UNC candidate \\localhost\shares\ddd
+                //               ^^^^^^^^^^^^^^^^^^^
+                code = path.charCodeAt(2);
+                if (code !== _slash && code !== _backslash) {
+                    var pos_1 = 3;
+                    var start = pos_1;
+                    for (; pos_1 < len; pos_1++) {
+                        code = path.charCodeAt(pos_1);
+                        if (code === _slash || code === _backslash) {
+                            break;
+                        }
+                    }
+                    code = path.charCodeAt(pos_1 + 1);
+                    if (start !== pos_1 && code !== _slash && code !== _backslash) {
+                        pos_1 += 1;
+                        for (; pos_1 < len; pos_1++) {
+                            code = path.charCodeAt(pos_1);
+                            if (code === _slash || code === _backslash) {
+                                return path.slice(0, pos_1 + 1) // consume this separator
+                                    .replace(/[\\/]/g, sep);
+                            }
+                        }
+                    }
+                }
+            }
+            // /user/far
+            // ^
+            return sep;
+        }
+        else if ((code >= _A && code <= _Z) || (code >= _a && code <= _z)) {
+            // check for windows drive letter c:\ or c:
+            if (path.charCodeAt(1) === _colon) {
+                code = path.charCodeAt(2);
+                if (code === _slash || code === _backslash) {
+                    // C:\fff
+                    // ^^^
+                    return path.slice(0, 2) + sep;
+                }
+                else {
+                    // C:
+                    // ^^
+                    return path.slice(0, 2);
+                }
+            }
+        }
+        // check for URI
+        // scheme://authority/path
+        // ^^^^^^^^^^^^^^^^^^^
+        var pos = path.indexOf('://');
+        if (pos !== -1) {
+            pos += 3; // 3 -> "://".length
+            for (; pos < len; pos++) {
+                code = path.charCodeAt(pos);
+                if (code === _slash || code === _backslash) {
+                    return path.slice(0, pos + 1); // consume this separator
+                }
+            }
+        }
+        return '';
+    }
+    exports.getRoot = getRoot;
+    exports.join = function () {
+        var value = '';
+        for (var i = 0; i < arguments.length; i++) {
+            var part = arguments[i];
+            if (i > 0) {
+                // add the separater between two parts unless
+                // there already is one
+                var last = value.charCodeAt(value.length - 1);
+                if (last !== _slash && last !== _backslash) {
+                    var next = part.charCodeAt(0);
+                    if (next !== _slash && next !== _backslash) {
+                        value += exports.sep;
+                    }
+                }
+            }
+            value += part;
+        }
+        return normalize(value);
+    };
+    /**
+     * Check if the path follows this pattern: `\\hostname\sharename`.
+     *
+     * @see https://msdn.microsoft.com/en-us/library/gg465305.aspx
+     * @return A boolean indication if the path is a UNC path, on none-windows
+     * always false.
+     */
+    function isUNC(path) {
+        if (!platform_1.isWindows) {
+            // UNC is a windows concept
+            return false;
+        }
+        if (!path || path.length < 5) {
+            // at least \\a\b
+            return false;
+        }
+        var code = path.charCodeAt(0);
+        if (code !== _backslash) {
+            return false;
+        }
+        code = path.charCodeAt(1);
+        if (code !== _backslash) {
+            return false;
+        }
+        var pos = 2;
+        var start = pos;
+        for (; pos < path.length; pos++) {
+            code = path.charCodeAt(pos);
+            if (code === _backslash) {
+                break;
+            }
+        }
+        if (start === pos) {
+            return false;
+        }
+        code = path.charCodeAt(pos + 1);
+        if (isNaN(code) || code === _backslash) {
+            return false;
+        }
+        return true;
+    }
+    exports.isUNC = isUNC;
+    function isPosixAbsolute(path) {
+        return path && path[0] === '/';
+    }
+    function makePosixAbsolute(path) {
+        return isPosixAbsolute(normalize(path)) ? path : exports.sep + path;
+    }
+    exports.makePosixAbsolute = makePosixAbsolute;
+    var _slash = '/'.charCodeAt(0);
+    var _backslash = '\\'.charCodeAt(0);
+    var _colon = ':'.charCodeAt(0);
+    var _a = 'a'.charCodeAt(0);
+    var _A = 'A'.charCodeAt(0);
+    var _z = 'z'.charCodeAt(0);
+    var _Z = 'Z'.charCodeAt(0);
+    function isEqualOrParent(path, candidate) {
+        if (path === candidate) {
+            return true;
+        }
+        path = normalize(path);
+        candidate = normalize(candidate);
+        var candidateLen = candidate.length;
+        var lastCandidateChar = candidate.charCodeAt(candidateLen - 1);
+        if (lastCandidateChar === _slash) {
+            candidate = candidate.substring(0, candidateLen - 1);
+            candidateLen -= 1;
+        }
+        if (path === candidate) {
+            return true;
+        }
+        if (!platform_1.isLinux) {
+            // case insensitive
+            path = path.toLowerCase();
+            candidate = candidate.toLowerCase();
+        }
+        if (path === candidate) {
+            return true;
+        }
+        if (path.indexOf(candidate) !== 0) {
+            return false;
+        }
+        var char = path.charCodeAt(candidateLen);
+        return char === _slash;
+    }
+    exports.isEqualOrParent = isEqualOrParent;
+    // Reference: https://en.wikipedia.org/wiki/Filename
+    var INVALID_FILE_CHARS = platform_1.isWindows ? /[\\/:\*\?"<>\|]/g : /[\\/]/g;
+    var WINDOWS_FORBIDDEN_NAMES = /^(con|prn|aux|clock\$|nul|lpt[0-9]|com[0-9])$/i;
+    function isValidBasename(name) {
+        if (!name || name.length === 0 || /^\s+$/.test(name)) {
+            return false; // require a name that is not just whitespace
+        }
+        INVALID_FILE_CHARS.lastIndex = 0; // the holy grail of software development
+        if (INVALID_FILE_CHARS.test(name)) {
+            return false; // check for certain invalid file characters
+        }
+        if (platform_1.isWindows && WINDOWS_FORBIDDEN_NAMES.test(name)) {
+            return false; // check for certain invalid file names
+        }
+        if (name === '.' || name === '..') {
+            return false; // check for reserved values
+        }
+        if (platform_1.isWindows && name[name.length - 1] === '.') {
+            return false; // Windows: file cannot end with a "."
+        }
+        if (platform_1.isWindows && name.length !== name.trim().length) {
+            return false; // Windows: file cannot end with a whitespace
+        }
+        return true;
+    }
+    exports.isValidBasename = isValidBasename;
+    exports.isAbsoluteRegex = /^((\/|[a-zA-Z]:\\)[^\(\)<>\\'\"\[\]]+)/;
+    /**
+     * If you have access to node, it is recommended to use node's path.isAbsolute().
+     * This is a simple regex based approach.
+     */
+    function isAbsolute(path) {
+        return exports.isAbsoluteRegex.test(path);
+    }
+    exports.isAbsolute = isAbsolute;
+});
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/base/common/scorer", ["require", "exports"], function (require, exports) {
+define(__m[25], __M([0,1]), function (require, exports) {
     'use strict';
     // Based on material from:
+    /*!
+    BEGIN THIRD PARTY
+    */
     /*!
     * string_score.js: String Scoring Algorithm 0.1.22
     *
@@ -470,6 +1005,7 @@ define("vs/base/common/scorer", ["require", "exports"], function (require, expor
      * Character score: 1
      * Same case bonus: 1
      * Upper case bonus: 1
+     * Consecutive match bonus: 5
      * Start of word/path bonus: 7
      * Start of string bonus: 8
      */
@@ -487,22 +1023,25 @@ define("vs/base/common/scorer", ["require", "exports"], function (require, expor
         var targetLower = target.toLowerCase();
         var queryLower = query.toLowerCase();
         var index = 0;
-        var lastIndexOf = -1;
+        var startAt = 0;
         var score = 0;
-        while (index < queryLen) {
-            var indexOf = targetLower.indexOf(queryLower[index], lastIndexOf + 1);
+        var _loop_1 = function() {
+            var indexOf = targetLower.indexOf(queryLower[index], startAt);
             if (indexOf < 0) {
                 score = 0; // This makes sure that the query is contained in the target
-                break;
+                return "break";
             }
-            lastIndexOf = indexOf;
-            // Character Match Bonus
+            // Character match bonus
             score += 1;
-            // Same Case Bonous
+            // Consecutive match bonus
+            if (startAt === indexOf) {
+                score += 5;
+            }
+            // Same case bonus
             if (target[indexOf] === query[indexOf]) {
                 score += 1;
             }
-            // Prefix Bonus
+            // Start of word bonus
             if (indexOf === 0) {
                 score += 8;
             }
@@ -512,7 +1051,12 @@ define("vs/base/common/scorer", ["require", "exports"], function (require, expor
             else if (isUpper(target.charCodeAt(indexOf))) {
                 score += 1;
             }
+            startAt = indexOf + 1;
             index++;
+        };
+        while (index < queryLen) {
+            var state_1 = _loop_1();
+            if (state_1 === "break") break;
         }
         if (cache) {
             cache[hash] = score;
@@ -546,8 +1090,11 @@ define("vs/base/common/scorer", ["require", "exports"], function (require, expor
     }
     exports.matches = matches;
 });
+/*!
+END THIRD PARTY
+*/ 
 
-define("vs/base/common/strings", ["require", "exports"], function (require, exports) {
+define(__m[2], __M([0,1,18]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -702,7 +1249,7 @@ define("vs/base/common/strings", ["require", "exports"], function (require, expo
     function endsWith(haystack, needle) {
         var diff = haystack.length - needle.length;
         if (diff > 0) {
-            return haystack.lastIndexOf(needle) === haystack.length - needle.length;
+            return haystack.lastIndexOf(needle) === diff;
         }
         else if (diff === 0) {
             return haystack === needle;
@@ -737,33 +1284,6 @@ define("vs/base/common/strings", ["require", "exports"], function (require, expo
         return new RegExp(searchString, modifiers);
     }
     exports.createRegExp = createRegExp;
-    /**
-     * Create a regular expression only if it is valid and it doesn't lead to endless loop.
-     */
-    function createSafeRegExp(searchString, isRegex, matchCase, wholeWord) {
-        if (searchString === '') {
-            return null;
-        }
-        // Try to create a RegExp out of the params
-        var regex = null;
-        try {
-            regex = createRegExp(searchString, isRegex, matchCase, wholeWord, true);
-        }
-        catch (err) {
-            return null;
-        }
-        // Guard against endless loop RegExps & wrap around try-catch as very long regexes produce an exception when executed the first time
-        try {
-            if (regExpLeadsToEndlessLoop(regex)) {
-                return null;
-            }
-        }
-        catch (err) {
-            return null;
-        }
-        return regex;
-    }
-    exports.createSafeRegExp = createSafeRegExp;
     function regExpLeadsToEndlessLoop(regexp) {
         // Exit early if it's one of these special cases which are meant to match
         // against an empty string
@@ -784,13 +1304,12 @@ define("vs/base/common/strings", ["require", "exports"], function (require, expo
      */
     exports.canNormalize = typeof (''.normalize) === 'function';
     var nonAsciiCharactersPattern = /[^\u0000-\u0080]/;
-    var normalizedCache = Object.create(null);
-    var cacheCounter = 0;
+    var normalizedCache = new map_1.LinkedMap(10000); // bounded to 10000 elements
     function normalizeNFC(str) {
         if (!exports.canNormalize || !str) {
             return str;
         }
-        var cached = normalizedCache[str];
+        var cached = normalizedCache.get(str);
         if (cached) {
             return cached;
         }
@@ -801,11 +1320,8 @@ define("vs/base/common/strings", ["require", "exports"], function (require, expo
         else {
             res = str;
         }
-        // Use the cache for fast lookup but do not let it grow unbounded
-        if (cacheCounter < 10000) {
-            normalizedCache[str] = res;
-            cacheCounter++;
-        }
+        // Use the cache for fast lookup
+        normalizedCache.set(str, res);
         return res;
     }
     exports.normalizeNFC = normalizeNFC;
@@ -839,8 +1355,9 @@ define("vs/base/common/strings", ["require", "exports"], function (require, expo
      * Returns last index of the string that is not whitespace.
      * If string is empty or contains only whitespaces, returns -1
      */
-    function lastNonWhitespaceIndex(str) {
-        for (var i = str.length - 1; i >= 0; i--) {
+    function lastNonWhitespaceIndex(str, startIndex) {
+        if (startIndex === void 0) { startIndex = str.length - 1; }
+        for (var i = startIndex; i >= 0; i--) {
             if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
                 return i;
             }
@@ -971,6 +1488,7 @@ define("vs/base/common/strings", ["require", "exports"], function (require, expo
         //               of which FF01 - FF5E fullwidth ASCII of 21 to 7E
         // [IGNORE]    and FF65 - FFDC halfwidth of Katakana and Hangul
         // [IGNORE] FFF0 — FFFF   Specials
+        charCode = +charCode; // @perf
         return ((charCode >= 0x2E80 && charCode <= 0xD7AF)
             || (charCode >= 0xF900 && charCode <= 0xFAFF)
             || (charCode >= 0xFF01 && charCode <= 0xFF5E));
@@ -1070,293 +1588,44 @@ define("vs/base/common/strings", ["require", "exports"], function (require, expo
         return (str && str.length > 0 && str.charCodeAt(0) === __utf8_bom);
     }
     exports.startsWithUTF8BOM = startsWithUTF8BOM;
+    /**
+     * Appends two strings. If the appended result is longer than maxLength,
+     * trims the start of the result and replaces it with '...'.
+     */
+    function appendWithLimit(first, second, maxLength) {
+        var newLength = first.length + second.length;
+        if (newLength > maxLength) {
+            first = '...' + first.substr(newLength - maxLength);
+        }
+        if (second.length > maxLength) {
+            first += second.substr(second.length - maxLength);
+        }
+        else {
+            first += second;
+        }
+        return first;
+    }
+    exports.appendWithLimit = appendWithLimit;
+    function safeBtoa(str) {
+        return btoa(encodeURIComponent(str)); // we use encodeURIComponent because btoa fails for non Latin 1 values
+    }
+    exports.safeBtoa = safeBtoa;
+    function repeat(s, count) {
+        var result = '';
+        for (var i = 0; i < count; i++) {
+            result += s;
+        }
+        return result;
+    }
+    exports.repeat = repeat;
 });
 
-define("vs/base/common/paths", ["require", "exports", 'vs/base/common/platform', 'vs/base/common/strings'], function (require, exports, platform_1, strings_1) {
+define(__m[16], __M([0,1,2,7,18]), function (require, exports, strings, paths, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    /**
-     * The forward slash path separator.
-     */
-    exports.sep = '/';
-    /**
-     * The native path separator depending on the OS.
-     */
-    exports.nativeSep = platform_1.isWindows ? '\\' : '/';
-    function relative(from, to) {
-        from = normalize(from);
-        to = normalize(to);
-        var fromParts = from.split(exports.sep), toParts = to.split(exports.sep);
-        while (fromParts.length > 0 && toParts.length > 0) {
-            if (fromParts[0] === toParts[0]) {
-                fromParts.shift();
-                toParts.shift();
-            }
-            else {
-                break;
-            }
-        }
-        for (var i = 0, len = fromParts.length; i < len; i++) {
-            toParts.unshift('..');
-        }
-        return toParts.join(exports.sep);
-    }
-    exports.relative = relative;
-    var _dotSegment = /[\\\/]\.\.?[\\\/]?|[\\\/]?\.\.?[\\\/]/;
-    function normalize(path, toOSPath) {
-        if (!path) {
-            return path;
-        }
-        // a path is already normal if it contains no .. or . parts
-        // and already uses the proper path separator
-        if (!_dotSegment.test(path)) {
-            // badSep is the path separator we don't want. Usually
-            // the backslash, unless isWindows && toOSPath
-            var badSep = toOSPath && platform_1.isWindows ? '/' : '\\';
-            if (path.indexOf(badSep) === -1) {
-                return path;
-            }
-        }
-        var parts = path.split(/[\\\/]/);
-        for (var i = 0, len = parts.length; i < len; i++) {
-            if (parts[i] === '.' && !!parts[i + 1]) {
-                parts.splice(i, 1);
-                i -= 1;
-            }
-            else if (parts[i] === '..' && !!parts[i - 1]) {
-                parts.splice(i - 1, 2);
-                i -= 2;
-            }
-        }
-        return parts.join(toOSPath ? exports.nativeSep : exports.sep);
-    }
-    exports.normalize = normalize;
-    function dirnames(path) {
-        var value = path, done = false;
-        function next() {
-            if (value === '.' || value === '/' || value === '\\') {
-                value = undefined;
-                done = true;
-            }
-            else {
-                value = dirname(value);
-            }
-            return {
-                value: value,
-                done: done
-            };
-        }
-        return {
-            next: next
-        };
-    }
-    exports.dirnames = dirnames;
-    /**
-     * @returns the directory name of a path.
-     */
-    function dirname(path) {
-        var idx = ~path.lastIndexOf('/') || ~path.lastIndexOf('\\');
-        if (idx === 0) {
-            return '.';
-        }
-        else if (~idx === 0) {
-            return path[0];
-        }
-        else {
-            return path.substring(0, ~idx);
-        }
-    }
-    exports.dirname = dirname;
-    /**
-     * @returns the base name of a path.
-     */
-    function basename(path) {
-        var idx = ~path.lastIndexOf('/') || ~path.lastIndexOf('\\');
-        if (idx === 0) {
-            return path;
-        }
-        else if (~idx === path.length - 1) {
-            return basename(path.substring(0, path.length - 1));
-        }
-        else {
-            return path.substr(~idx + 1);
-        }
-    }
-    exports.basename = basename;
-    /**
-     * @returns {{.far}} from boo.far or the empty string.
-     */
-    function extname(path) {
-        path = basename(path);
-        var idx = ~path.lastIndexOf('.');
-        return idx ? path.substring(~idx) : '';
-    }
-    exports.extname = extname;
-    function getRootLength(path) {
-        if (!path) {
-            return 0;
-        }
-        path = path.replace(/\/|\\/g, '/');
-        if (path[0] === '/') {
-            if (path[1] !== '/') {
-                // /far/boo
-                return 1;
-            }
-            else {
-                // //server/far/boo
-                return 2;
-            }
-        }
-        if (path[1] === ':') {
-            if (path[2] === '/') {
-                // c:/boo/far.txt
-                return 3;
-            }
-            else {
-                // c:
-                return 2;
-            }
-        }
-        if (path.indexOf('file:///') === 0) {
-            return 8; // 8 -> 'file:///'.length
-        }
-        var idx = path.indexOf('://');
-        if (idx !== -1) {
-            return idx + 3; // 3 -> "://".length
-        }
-        return 0;
-    }
-    function join() {
-        var parts = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            parts[_i - 0] = arguments[_i];
-        }
-        var rootLen = getRootLength(parts[0]), root;
-        // simply preserve things like c:/, //localhost/, file:///, http://, etc
-        root = parts[0].substr(0, rootLen);
-        parts[0] = parts[0].substr(rootLen);
-        var allParts = [], endsWithSep = /[\\\/]$/.test(parts[parts.length - 1]);
-        for (var i = 0; i < parts.length; i++) {
-            allParts.push.apply(allParts, parts[i].split(/\/|\\/));
-        }
-        for (var i = 0; i < allParts.length; i++) {
-            var part = allParts[i];
-            if (part === '.' || part.length === 0) {
-                allParts.splice(i, 1);
-                i -= 1;
-            }
-            else if (part === '..' && !!allParts[i - 1] && allParts[i - 1] !== '..') {
-                allParts.splice(i - 1, 2);
-                i -= 2;
-            }
-        }
-        if (endsWithSep) {
-            allParts.push('');
-        }
-        var ret = allParts.join('/');
-        if (root) {
-            ret = root.replace(/\/|\\/g, '/') + ret;
-        }
-        return ret;
-    }
-    exports.join = join;
-    function isUNC(path) {
-        if (!platform_1.isWindows || !path) {
-            return false; // UNC is a windows concept
-        }
-        path = this.normalize(path, true);
-        return path[0] === exports.nativeSep && path[1] === exports.nativeSep;
-    }
-    exports.isUNC = isUNC;
-    function isPosixAbsolute(path) {
-        return path && path[0] === '/';
-    }
-    function makeAbsolute(path, isPathNormalized) {
-        return isPosixAbsolute(!isPathNormalized ? normalize(path) : path) ? path : exports.sep + path;
-    }
-    exports.makeAbsolute = makeAbsolute;
-    function isRelative(path) {
-        return path && path.length > 1 && path[0] === '.';
-    }
-    exports.isRelative = isRelative;
-    var _slash = '/'.charCodeAt(0);
-    function isEqualOrParent(path, candidate) {
-        if (path === candidate) {
-            return true;
-        }
-        path = normalize(path);
-        candidate = normalize(candidate);
-        var candidateLen = candidate.length;
-        var lastCandidateChar = candidate.charCodeAt(candidateLen - 1);
-        if (lastCandidateChar === _slash) {
-            candidate = candidate.substring(0, candidateLen - 1);
-            candidateLen -= 1;
-        }
-        if (path === candidate) {
-            return true;
-        }
-        if (!platform_1.isLinux) {
-            // case insensitive
-            path = path.toLowerCase();
-            candidate = candidate.toLowerCase();
-        }
-        if (path === candidate) {
-            return true;
-        }
-        if (path.indexOf(candidate) !== 0) {
-            return false;
-        }
-        var char = path.charCodeAt(candidateLen);
-        return char === _slash;
-    }
-    exports.isEqualOrParent = isEqualOrParent;
-    // Reference: https://en.wikipedia.org/wiki/Filename
-    var INVALID_FILE_CHARS = platform_1.isWindows ? /[\\/:\*\?"<>\|]/g : /[\\/]/g;
-    var WINDOWS_FORBIDDEN_NAMES = /^(con|prn|aux|clock\$|nul|lpt[0-9]|com[0-9])$/i;
-    function isValidBasename(name) {
-        if (!name || name.length === 0 || /^\s+$/.test(name)) {
-            return false; // require a name that is not just whitespace
-        }
-        INVALID_FILE_CHARS.lastIndex = 0; // the holy grail of software development
-        if (INVALID_FILE_CHARS.test(name)) {
-            return false; // check for certain invalid file characters
-        }
-        if (platform_1.isWindows && WINDOWS_FORBIDDEN_NAMES.test(name)) {
-            return false; // check for certain invalid file names
-        }
-        if (name === '.' || name === '..') {
-            return false; // check for reserved values
-        }
-        if (platform_1.isWindows && strings_1.endsWith(name, '.')) {
-            return false; // Windows: file cannot end with a "."
-        }
-        if (platform_1.isWindows && name.length !== name.trim().length) {
-            return false; // Windows: file cannot end with a whitespace
-        }
-        return true;
-    }
-    exports.isValidBasename = isValidBasename;
-    exports.isAbsoluteRegex = /^((\/|[a-zA-Z]:\\)[^\(\)<>\\'\"\[\]]+)/;
-    /**
-     * If you have access to node, it is recommended to use node's path.isAbsolute().
-     * This is a simple regex based approach.
-     */
-    function isAbsolute(path) {
-        return exports.isAbsoluteRegex.test(path);
-    }
-    exports.isAbsolute = isAbsolute;
-});
-
-define("vs/base/common/glob", ["require", "exports", 'vs/base/common/strings', 'vs/base/common/paths'], function (require, exports, strings, paths) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var CACHE = Object.create(null);
     var PATH_REGEX = '[/\\\\]'; // any slash or backslash
     var NO_PATH_REGEX = '[^/\\\\]'; // any non-slash and non-backslash
     function starsToRegExp(starCount) {
@@ -1364,12 +1633,12 @@ define("vs/base/common/glob", ["require", "exports", 'vs/base/common/strings', '
             case 0:
                 return '';
             case 1:
-                return NO_PATH_REGEX + '*?'; // 1 star matches any number of characters except path separator (/ and \) - non greedy (?)
+                return NO_PATH_REGEX + "*?"; // 1 star matches any number of characters except path separator (/ and \) - non greedy (?)
             default:
-                // Matches:  (Path Sep    OR     Path Val followed by Path Sep     OR    Path Sep followed by Path Val) 0-many times
+                // Matches:  (Path Sep OR Path Val followed by Path Sep OR Path Sep followed by Path Val) 0-many times
                 // Group is non capturing because we don't need to capture at all (?:...)
                 // Overall we use non-greedy matching because it could be that we match too much
-                return '(?:' + PATH_REGEX + '|' + NO_PATH_REGEX + '+' + PATH_REGEX + '|' + PATH_REGEX + NO_PATH_REGEX + '+)*?';
+                return "(?:" + PATH_REGEX + "|" + NO_PATH_REGEX + "+" + PATH_REGEX + "|" + PATH_REGEX + NO_PATH_REGEX + "+)*?";
         }
     }
     function splitGlobAware(pattern, splitChar) {
@@ -1475,9 +1744,7 @@ define("vs/base/common/glob", ["require", "exports", 'vs/base/common/strings', '
                         case '}':
                             var choices = splitGlobAware(braceVal, ',');
                             // Converts {foo,bar} => [foo|bar]
-                            var braceRegExp = '(?:' + choices.reduce(function (prevValue, curValue, i, array) {
-                                return prevValue + '|' + parseRegExp(curValue);
-                            }, parseRegExp(choices[0]) /* parse the first segment as regex and give as initial value */) + ')';
+                            var braceRegExp = "(?:" + choices.map(function (c) { return parseRegExp(c); }).join('|') + ")";
                             regEx += braceRegExp;
                             inBraces = false;
                             braceVal = '';
@@ -1507,26 +1774,48 @@ define("vs/base/common/glob", ["require", "exports", 'vs/base/common/strings', '
         }
         return regEx;
     }
-    function globToRegExp(pattern) {
+    // regexes to check for trival glob patterns that just check for String#endsWith
+    var T1 = /^\*\*\/\*\.[\w\.-]+$/; // **/*.something
+    var T2 = /^\*\*\/[\w\.-]+$/; // **/something
+    var T3 = /^{\*\*\/\*\.[\w\.-]+(,\*\*\/\*\.[\w\.-]+)*}$/; // {**/*.something,**/*.else}
+    var Trivia;
+    (function (Trivia) {
+        Trivia[Trivia["T1"] = 0] = "T1";
+        Trivia[Trivia["T2"] = 1] = "T2";
+        Trivia[Trivia["T3"] = 2] = "T3"; // {**/*.something,**/*.else}
+    })(Trivia || (Trivia = {}));
+    var CACHE = new map_1.LinkedMap(10000); // bounded to 10000 elements
+    function parsePattern(pattern) {
         if (!pattern) {
             return null;
         }
         // Whitespace trimming
         pattern = pattern.trim();
         // Check cache
-        if (CACHE[pattern]) {
-            var cached = CACHE[pattern];
-            cached.lastIndex = 0; // reset RegExp to its initial state to reuse it!
-            return cached;
+        var parsedPattern = CACHE.get(pattern);
+        if (parsedPattern) {
+            if (parsedPattern.regexp) {
+                parsedPattern.regexp.lastIndex = 0; // reset RegExp to its initial state to reuse it!
+            }
+            return parsedPattern;
         }
-        var regEx = parseRegExp(pattern);
-        // Wrap it
-        regEx = '^' + regEx + '$';
-        // Convert to regexp and be ready for errors
-        var result = toRegExp(regEx);
-        // Make sure to cache
-        CACHE[pattern] = result;
-        return result;
+        parsedPattern = Object.create(null);
+        // Check for Trivias
+        if (T1.test(pattern)) {
+            parsedPattern.trivia = Trivia.T1;
+        }
+        else if (T2.test(pattern)) {
+            parsedPattern.trivia = Trivia.T2;
+        }
+        else if (T3.test(pattern)) {
+            parsedPattern.trivia = Trivia.T3;
+        }
+        else {
+            parsedPattern.regexp = toRegExp("^" + parseRegExp(pattern) + "$");
+        }
+        // Cache
+        CACHE.set(pattern, parsedPattern);
+        return parsedPattern;
     }
     function toRegExp(regEx) {
         try {
@@ -1542,8 +1831,24 @@ define("vs/base/common/glob", ["require", "exports", 'vs/base/common/strings', '
         }
         // Glob with String
         if (typeof arg1 === 'string') {
-            var regExp = globToRegExp(arg1);
-            return regExp && regExp.test(path);
+            var parsedPattern = parsePattern(arg1);
+            if (!parsedPattern) {
+                return false;
+            }
+            // common pattern: **/*.txt just need endsWith check
+            if (parsedPattern.trivia === Trivia.T1) {
+                return strings.endsWith(path, arg1.substr(4)); // '**/*'.length === 4
+            }
+            // common pattern: **/some.txt just need basename check
+            if (parsedPattern.trivia === Trivia.T2) {
+                var base = arg1.substr(3); // '**/'.length === 3
+                return path === base || strings.endsWith(path, "/" + base) || strings.endsWith(path, "\\" + base);
+            }
+            // repetition of common patterns (see above) {**/*.txt,**/*.png}
+            if (parsedPattern.trivia === Trivia.T3) {
+                return arg1.slice(1, -1).split(',').some(function (pattern) { return match(pattern, path); });
+            }
+            return parsedPattern.regexp.test(path);
         }
         // Glob with Expression
         return matchExpression(arg1, path, siblings);
@@ -1594,12 +1899,19 @@ define("vs/base/common/glob", ["require", "exports", 'vs/base/common/strings', '
     }
 });
 
-define("vs/base/common/types", ["require", "exports"], function (require, exports) {
+define(__m[3], __M([0,1]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    var _typeof = {
+        number: 'number',
+        string: 'string',
+        undefined: 'undefined',
+        object: 'object',
+        function: 'function'
+    };
     /**
      * @returns whether the provided parameter is a JavaScript Array or not.
      */
@@ -1607,7 +1919,7 @@ define("vs/base/common/types", ["require", "exports"], function (require, export
         if (Array.isArray) {
             return Array.isArray(array);
         }
-        if (array && typeof (array.length) === 'number' && array.constructor === Array) {
+        if (array && typeof (array.length) === _typeof.number && array.constructor === Array) {
             return true;
         }
         return false;
@@ -1617,7 +1929,7 @@ define("vs/base/common/types", ["require", "exports"], function (require, export
      * @returns whether the provided parameter is a JavaScript String or not.
      */
     function isString(str) {
-        if (typeof (str) === 'string' || str instanceof String) {
+        if (typeof (str) === _typeof.string || str instanceof String) {
             return true;
         }
         return false;
@@ -1631,21 +1943,24 @@ define("vs/base/common/types", ["require", "exports"], function (require, export
     }
     exports.isStringArray = isStringArray;
     /**
-     * @returns whether the provided parameter is a JavaScript Object or not.
+     *
+     * @returns whether the provided parameter is of type `object` but **not**
+     *	`null`, an `array`, a `regexp`, nor a `date`.
      */
     function isObject(obj) {
-        // Needed for IE8
-        if (typeof obj === 'undefined' || obj === null) {
-            return false;
-        }
-        return Object.prototype.toString.call(obj) === '[object Object]';
+        return typeof obj === _typeof.object
+            && obj !== null
+            && !Array.isArray(obj)
+            && !(obj instanceof RegExp)
+            && !(obj instanceof Date);
     }
     exports.isObject = isObject;
     /**
+     * In **contrast** to just checking `typeof` this will return `false` for `NaN`.
      * @returns whether the provided parameter is a JavaScript Number or not.
      */
     function isNumber(obj) {
-        if ((typeof (obj) === 'number' || obj instanceof Number) && !isNaN(obj)) {
+        if ((typeof (obj) === _typeof.number || obj instanceof Number) && !isNaN(obj)) {
             return true;
         }
         return false;
@@ -1662,7 +1977,7 @@ define("vs/base/common/types", ["require", "exports"], function (require, export
      * @returns whether the provided parameter is undefined.
      */
     function isUndefined(obj) {
-        return typeof (obj) === 'undefined';
+        return typeof (obj) === _typeof.undefined;
     }
     exports.isUndefined = isUndefined;
     /**
@@ -1692,7 +2007,7 @@ define("vs/base/common/types", ["require", "exports"], function (require, export
      * @returns whether the provided parameter is a JavaScript Function or not.
      */
     function isFunction(obj) {
-        return Object.prototype.toString.call(obj) === '[object Function]';
+        return typeof obj === _typeof.function;
     }
     exports.isFunction = isFunction;
     /**
@@ -1703,7 +2018,7 @@ define("vs/base/common/types", ["require", "exports"], function (require, export
         for (var _i = 0; _i < arguments.length; _i++) {
             objects[_i - 0] = arguments[_i];
         }
-        return objects && objects.length > 0 && objects.every(function (object) { return isFunction(object); });
+        return objects && objects.length > 0 && objects.every(isFunction);
     }
     exports.areFunctions = areFunctions;
     function validateConstraints(args, constraints) {
@@ -1714,12 +2029,12 @@ define("vs/base/common/types", ["require", "exports"], function (require, export
     }
     exports.validateConstraints = validateConstraints;
     function validateConstraint(arg, constraint) {
-        if (typeof constraint === 'string') {
+        if (isString(constraint)) {
             if (typeof arg !== constraint) {
                 throw new Error("argument does not match constraint: typeof " + constraint);
             }
         }
-        else if (typeof constraint === 'function') {
+        else if (isFunction(constraint)) {
             if (arg instanceof constraint) {
                 return;
             }
@@ -1749,7 +2064,81 @@ define("vs/base/common/types", ["require", "exports"], function (require, export
     exports.create = create;
 });
 
-define("vs/base/common/mime", ["require", "exports", 'vs/base/common/paths', 'vs/base/common/types', 'vs/base/common/strings', 'vs/base/common/glob'], function (require, exports, paths, types, strings, glob_1) {
+
+
+
+
+
+define(__m[10], __M([0,1,3]), function (require, exports, types_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.empty = Object.freeze({
+        dispose: function () { }
+    });
+    function dispose() {
+        var disposables = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            disposables[_i - 0] = arguments[_i];
+        }
+        var first = disposables[0];
+        if (types_1.isArray(first)) {
+            disposables = first;
+        }
+        disposables.forEach(function (d) { return d && d.dispose(); });
+        return [];
+    }
+    exports.dispose = dispose;
+    function combinedDisposable(disposables) {
+        return { dispose: function () { return dispose(disposables); } };
+    }
+    exports.combinedDisposable = combinedDisposable;
+    function toDisposable() {
+        var fns = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            fns[_i - 0] = arguments[_i];
+        }
+        return combinedDisposable(fns.map(function (fn) { return ({ dispose: fn }); }));
+    }
+    exports.toDisposable = toDisposable;
+    var Disposable = (function () {
+        function Disposable() {
+            this._toDispose = [];
+        }
+        Disposable.prototype.dispose = function () {
+            this._toDispose = dispose(this._toDispose);
+        };
+        Disposable.prototype._register = function (t) {
+            this._toDispose.push(t);
+            return t;
+        };
+        return Disposable;
+    }());
+    exports.Disposable = Disposable;
+    var Disposables = (function (_super) {
+        __extends(Disposables, _super);
+        function Disposables() {
+            _super.apply(this, arguments);
+        }
+        Disposables.prototype.add = function (arg) {
+            if (!Array.isArray(arg)) {
+                return this._register(arg);
+            }
+            else {
+                for (var _i = 0, arg_1 = arg; _i < arg_1.length; _i++) {
+                    var element = arg_1[_i];
+                    return this._register(element);
+                }
+            }
+        };
+        return Disposables;
+    }(Disposable));
+    exports.Disposables = Disposables;
+});
+
+define(__m[11], __M([0,1,7,3,2,16]), function (require, exports, paths, types, strings, glob_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1929,7 +2318,7 @@ define("vs/base/common/mime", ["require", "exports", 'vs/base/common/paths', 'vs
     exports.suggestFilename = suggestFilename;
 });
 
-define("vs/base/common/objects", ["require", "exports", 'vs/base/common/types'], function (require, exports, Types) {
+define(__m[12], __M([0,1,3]), function (require, exports, Types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2081,14 +2470,6 @@ define("vs/base/common/objects", ["require", "exports", 'vs/base/common/types'],
         return arr.reduce(function (o, d) { return assign(o, (_a = {}, _a[keyMap(d)] = valueMap(d), _a)); var _a; }, Object.create(null));
     }
     exports.toObject = toObject;
-    /**
-     * Returns a new object that has all values of {{obj}}
-     * plus those from {{defaults}}.
-     */
-    function withDefaults(obj, defaults) {
-        return mixin(clone(defaults), obj || {});
-    }
-    exports.withDefaults = withDefaults;
     function equals(one, other) {
         if (one === other) {
             return true;
@@ -2220,14 +2601,20 @@ define("vs/base/common/objects", ["require", "exports", 'vs/base/common/types'],
         });
     }
     exports.safeStringify = safeStringify;
+    function getOrDefault(obj, fn, defaultValue) {
+        if (defaultValue === void 0) { defaultValue = null; }
+        var result = fn(obj);
+        return typeof result === 'undefined' ? defaultValue : result;
+    }
+    exports.getOrDefault = getOrDefault;
 });
 
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define("vs/base/common/uuid", ["require", "exports"], function (require, exports) {
+
+
+
+
+
+define(__m[23], __M([0,1]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2325,54 +2712,91 @@ define("vs/base/common/uuid", ["require", "exports"], function (require, exports
     exports.generateUuid = generateUuid;
 });
 
-/// <loc filename="Metadata\base_loc_oam.xml" format="messagebundle" />
-/*! @minifier_do_not_preserve
-  © Microsoft. All rights reserved.
+/**
+ * Extracted from https://github.com/winjs/winjs
+ * Version: 4.4.0(ec3258a9f3a36805a187848984e3bb938044178d)
+ * Copyright (c) Microsoft Corporation.
+ * All Rights Reserved.
+ * Licensed under the MIT License.
+ */
+(function() {
 
-  This library is supported for use in Windows Store apps only.
+var _modules = {};
+_modules["WinJS/Core/_WinJS"] = {};
 
-  Build: 1.0.9200.20602.win8_ldr.130108-1504
+var _winjs = function(moduleId, deps, factory) {
+    var exports = {};
+    var exportsPassedIn = false;
 
-  Version: Microsoft.WinJS.1.0
-*/
-
-/*
-	Note: Copied out of base.js.
-	Changes:
-		- we have only kept the first 2554 lines.
-		- we have patched WinJS.xhr to add the hedader X-Requested-With:XMLHttpRequest
-		- we have wrapped the entire code in an if statement to make WinJS re-entrant (if already defined)
-		- we have to define setImmediate if not running in IE 10 since its a IE 10 only function
-		- we have removed some getter syntax
-*/
-
-// MONACO CHANGE: Make WinJS re-entrant (if already defined)
-if (typeof WinJS === 'undefined') {
-
-// MONACO CHANGE: define setImmediate
-(function (global) {
-    if (!global.setImmediate) {
-        if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
-            // running in node
-            global.setImmediate = function(callback) {
-                return process.nextTick(callback);
-            };
-        } else {
-            // running in browser
-            global.setImmediate = function(callback) {
-                return setTimeout(callback, 0);
-            };
+    var depsValues = deps.map(function(dep) {
+        if (dep === 'exports') {
+            exportsPassedIn = true;
+            return exports;
         }
-	}
+        return _modules[dep];
+    });
 
-})(this);
+    var result = factory.apply({}, depsValues);
 
-/// <reference path="ms-appx://Microsoft.WinJS.1.0/js/base.js" />
-(function baseInit(global, undefined) {
+    _modules[moduleId] = exportsPassedIn ? exports : result;
+};
+
+
+_winjs("WinJS/Core/_Global", [], function () {
     "use strict";
 
-    function initializeProperties(target, members) {
+    // Appease jshint
+    /* global window, self, global */
+
+    var globalObject =
+        typeof window !== 'undefined' ? window :
+        typeof self !== 'undefined' ? self :
+        typeof global !== 'undefined' ? global :
+        {};
+    return globalObject;
+});
+
+_winjs("WinJS/Core/_BaseCoreUtils", ["WinJS/Core/_Global"], function baseCoreUtilsInit(_Global) {
+    "use strict";
+
+    var hasWinRT = !!_Global.Windows;
+
+    function markSupportedForProcessing(func) {
+        /// <signature helpKeyword="WinJS.Utilities.markSupportedForProcessing">
+        /// <summary locid="WinJS.Utilities.markSupportedForProcessing">
+        /// Marks a function as being compatible with declarative processing, such as WinJS.UI.processAll
+        /// or WinJS.Binding.processAll.
+        /// </summary>
+        /// <param name="func" type="Function" locid="WinJS.Utilities.markSupportedForProcessing_p:func">
+        /// The function to be marked as compatible with declarative processing.
+        /// </param>
+        /// <returns type="Function" locid="WinJS.Utilities.markSupportedForProcessing_returnValue">
+        /// The input function.
+        /// </returns>
+        /// </signature>
+        func.supportedForProcessing = true;
+        return func;
+    }
+
+    return {
+        hasWinRT: hasWinRT,
+        markSupportedForProcessing: markSupportedForProcessing,
+        _setImmediate: _Global.setImmediate ? _Global.setImmediate.bind(_Global) : function (handler) {
+            _Global.setTimeout(handler, 0);
+        }
+    };
+});
+_winjs("WinJS/Core/_WriteProfilerMark", ["WinJS/Core/_Global"], function profilerInit(_Global) {
+    "use strict";
+
+    return _Global.msWriteProfilerMark || function () { };
+});
+_winjs("WinJS/Core/_Base", ["WinJS/Core/_WinJS","WinJS/Core/_Global","WinJS/Core/_BaseCoreUtils","WinJS/Core/_WriteProfilerMark"], function baseInit(_WinJS, _Global, _BaseCoreUtils, _WriteProfilerMark) {
+    "use strict";
+
+    function initializeProperties(target, members, prefix) {
         var keys = Object.keys(members);
+        var isArray = Array.isArray(target);
         var properties;
         var i, len;
         for (i = 0, len = keys.length; i < len; i++) {
@@ -2384,6 +2808,9 @@ if (typeof WinJS === 'undefined') {
                     if (member.enumerable === undefined) {
                         member.enumerable = enumerable;
                     }
+                    if (prefix && member.setName && typeof member.setName === 'function') {
+                        member.setName(prefix + "." + key);
+                    }
                     properties = properties || {};
                     properties[key] = member;
                     continue;
@@ -2391,27 +2818,54 @@ if (typeof WinJS === 'undefined') {
             }
             if (!enumerable) {
                 properties = properties || {};
-                properties[key] = { value: member, enumerable: enumerable, configurable: true, writable: true }
+                properties[key] = { value: member, enumerable: enumerable, configurable: true, writable: true };
                 continue;
             }
-            target[key] = member;
+            if (isArray) {
+                target.forEach(function (target) {
+                    target[key] = member;
+                });
+            } else {
+                target[key] = member;
+            }
         }
         if (properties) {
-            Object.defineProperties(target, properties);
+            if (isArray) {
+                target.forEach(function (target) {
+                    Object.defineProperties(target, properties);
+                });
+            } else {
+                Object.defineProperties(target, properties);
+            }
         }
     }
 
-    (function (rootNamespace) {
+    (function () {
 
-        // Create the rootNamespace in the global namespace
-        if (!global[rootNamespace]) {
-            global[rootNamespace] = Object.create(Object.prototype);
-        }
-
-        // Cache the rootNamespace we just created in a local variable
-        var _rootNamespace = global[rootNamespace];
+        var _rootNamespace = _WinJS;
         if (!_rootNamespace.Namespace) {
             _rootNamespace.Namespace = Object.create(Object.prototype);
+        }
+
+        function createNamespace(parentNamespace, name) {
+            var currentNamespace = parentNamespace || {};
+            if (name) {
+                var namespaceFragments = name.split(".");
+                if (currentNamespace === _Global && namespaceFragments[0] === "WinJS") {
+                    currentNamespace = _WinJS;
+                    namespaceFragments.splice(0, 1);
+                }
+                for (var i = 0, len = namespaceFragments.length; i < len; i++) {
+                    var namespaceName = namespaceFragments[i];
+                    if (!currentNamespace[namespaceName]) {
+                        Object.defineProperty(currentNamespace, namespaceName,
+                            { value: {}, writable: false, enumerable: true, configurable: true }
+                        );
+                    }
+                    currentNamespace = currentNamespace[namespaceName];
+                }
+            }
+            return currentNamespace;
         }
 
         function defineWithParent(parentNamespace, name, members) {
@@ -2432,21 +2886,10 @@ if (typeof WinJS === 'undefined') {
             /// The newly-defined namespace.
             /// </returns>
             /// </signature>
-            var currentNamespace = parentNamespace,
-                namespaceFragments = name.split(".");
-
-            for (var i = 0, len = namespaceFragments.length; i < len; i++) {
-                var namespaceName = namespaceFragments[i];
-                if (!currentNamespace[namespaceName]) {
-                    Object.defineProperty(currentNamespace, namespaceName,
-                        { value: {}, writable: false, enumerable: true, configurable: true }
-                    );
-                }
-                currentNamespace = currentNamespace[namespaceName];
-            }
+            var currentNamespace = createNamespace(parentNamespace, name);
 
             if (members) {
-                initializeProperties(currentNamespace, members);
+                initializeProperties(currentNamespace, members, name || "<ANONYMOUS>");
             }
 
             return currentNamespace;
@@ -2467,7 +2910,74 @@ if (typeof WinJS === 'undefined') {
             /// The newly-defined namespace.
             /// </returns>
             /// </signature>
-            return defineWithParent(global, name, members);
+            return defineWithParent(_Global, name, members);
+        }
+
+        var LazyStates = {
+            uninitialized: 1,
+            working: 2,
+            initialized: 3,
+        };
+
+        function lazy(f) {
+            var name;
+            var state = LazyStates.uninitialized;
+            var result;
+            return {
+                setName: function (value) {
+                    name = value;
+                },
+                get: function () {
+                    switch (state) {
+                        case LazyStates.initialized:
+                            return result;
+
+                        case LazyStates.uninitialized:
+                            state = LazyStates.working;
+                            try {
+                                _WriteProfilerMark("WinJS.Namespace._lazy:" + name + ",StartTM");
+                                result = f();
+                            } finally {
+                                _WriteProfilerMark("WinJS.Namespace._lazy:" + name + ",StopTM");
+                                state = LazyStates.uninitialized;
+                            }
+                            f = null;
+                            state = LazyStates.initialized;
+                            return result;
+
+                        case LazyStates.working:
+                            throw "Illegal: reentrancy on initialization";
+
+                        default:
+                            throw "Illegal";
+                    }
+                },
+                set: function (value) {
+                    switch (state) {
+                        case LazyStates.working:
+                            throw "Illegal: reentrancy on initialization";
+
+                        default:
+                            state = LazyStates.initialized;
+                            result = value;
+                            break;
+                    }
+                },
+                enumerable: true,
+                configurable: true,
+            };
+        }
+
+        // helper for defining AMD module members
+        function moduleDefine(exports, name, members) {
+            var target = [exports];
+            var publicNS = null;
+            if (name) {
+                publicNS = createNamespace(_Global, name);
+                target.push(publicNS);
+            }
+            initializeProperties(target, members, name || "<ANONYMOUS>");
+            return publicNS;
         }
 
         // Establish members of the "WinJS.Namespace" namespace
@@ -2475,13 +2985,17 @@ if (typeof WinJS === 'undefined') {
 
             defineWithParent: { value: defineWithParent, writable: true, enumerable: true, configurable: true },
 
-            define: { value: define, writable: true, enumerable: true, configurable: true }
+            define: { value: define, writable: true, enumerable: true, configurable: true },
+
+            _lazy: { value: lazy, writable: true, enumerable: true, configurable: true },
+
+            _moduleDefine: { value: moduleDefine, writable: true, enumerable: true, configurable: true }
 
         });
 
-    })("WinJS");
+    })();
 
-    (function (WinJS) {
+    (function () {
 
         function define(constructor, instanceMembers, staticMembers) {
             /// <signature helpKeyword="WinJS.Class.define">
@@ -2502,7 +3016,7 @@ if (typeof WinJS === 'undefined') {
             /// </returns>
             /// </signature>
             constructor = constructor || function () { };
-            WinJS.Utilities.markSupportedForProcessing(constructor);
+            _BaseCoreUtils.markSupportedForProcessing(constructor);
             if (instanceMembers) {
                 initializeProperties(constructor.prototype, instanceMembers);
             }
@@ -2537,7 +3051,7 @@ if (typeof WinJS === 'undefined') {
                 constructor = constructor || function () { };
                 var basePrototype = baseClass.prototype;
                 constructor.prototype = Object.create(basePrototype);
-                WinJS.Utilities.markSupportedForProcessing(constructor);
+                _BaseCoreUtils.markSupportedForProcessing(constructor);
                 Object.defineProperty(constructor.prototype, "constructor", { value: constructor, writable: true, configurable: true, enumerable: true });
                 if (instanceMembers) {
                     initializeProperties(constructor.prototype, instanceMembers);
@@ -2573,325 +3087,52 @@ if (typeof WinJS === 'undefined') {
         }
 
         // Establish members of "WinJS.Class" namespace
-        WinJS.Namespace.define("WinJS.Class", {
+        _WinJS.Namespace.define("WinJS.Class", {
             define: define,
             derive: derive,
             mix: mix
         });
 
-    })(global.WinJS);
+    })();
 
-})(this);
-
-
-(function baseUtilsInit(global, WinJS) {
-    "use strict";
-
-    var hasWinRT = !!global.Windows;
-
-    var strings = {
-		// MONACOCHANGE
-        //get notSupportedForProcessing() { return WinJS.Resources._getWinJSString("base/notSupportedForProcessing").value; }
-		notSupportedForProcessing: "Value is not supported within a declarative processing context, if you want it to be supported mark it using WinJS.Utilities.markSupportedForProcessing. The value was: '{0}'"
+    return {
+        Namespace: _WinJS.Namespace,
+        Class: _WinJS.Class
     };
 
-    function nop(v) {
-        return v;
-    }
-
-    function getMemberFiltered(name, root, filter) {
-        return name.split(".").reduce(function (currentNamespace, name) {
-            if (currentNamespace) {
-                return filter(currentNamespace[name]);
-            }
-            return null;
-        }, root);
-    }
-
-    // Establish members of "WinJS.Utilities" namespace
-    WinJS.Namespace.define("WinJS.Utilities", {
-        // Used for mocking in tests
-        _setHasWinRT: {
-            value: function (value) {
-                hasWinRT = value;
-            },
-            configurable: false,
-            writable: false,
-            enumerable: false
-        },
-
-        /// <field type="Boolean" locid="WinJS.Utilities.hasWinRT" helpKeyword="WinJS.Utilities.hasWinRT">Determine if WinRT is accessible in this script context.</field>
-        hasWinRT: {
-            get: function () { return hasWinRT; },
-            configurable: false,
-            enumerable: true
-        },
-
-        _getMemberFiltered: getMemberFiltered,
-
-        getMember: function (name, root) {
-            /// <signature helpKeyword="WinJS.Utilities.getMember">
-            /// <summary locid="WinJS.Utilities.getMember">
-            /// Gets the leaf-level type or namespace specified by the name parameter.
-            /// </summary>
-            /// <param name="name" locid="WinJS.Utilities.getMember_p:name">
-            /// The name of the member.
-            /// </param>
-            /// <param name="root" locid="WinJS.Utilities.getMember_p:root">
-            /// The root to start in. Defaults to the global object.
-            /// </param>
-            /// <returns type="Object" locid="WinJS.Utilities.getMember_returnValue">
-            /// The leaf-level type or namespace in the specified parent namespace.
-            /// </returns>
-            /// </signature>
-            if (!name) {
-                return null;
-            }
-            return getMemberFiltered(name, root || global, nop);
-        },
-
-        ready: function (callback, async) {
-            /// <signature helpKeyword="WinJS.Utilities.ready">
-            /// <summary locid="WinJS.Utilities.ready">
-            /// Ensures that the specified function executes only after the DOMContentLoaded event has fired
-            /// for the current page.
-            /// </summary>
-            /// <returns type="WinJS.Promise" locid="WinJS.Utilities.ready_returnValue">A promise that completes after DOMContentLoaded has occurred.</returns>
-            /// <param name="callback" optional="true" locid="WinJS.Utilities.ready_p:callback">
-            /// A function that executes after DOMContentLoaded has occurred.
-            /// </param>
-            /// <param name="async" optional="true" locid="WinJS.Utilities.ready_p:async">
-            /// If true, the callback should be executed asynchronously.
-            /// </param>
-            /// </signature>
-            return new WinJS.Promise(function (c, e) {
-                function complete() {
-                    if (callback) {
-                        try {
-                            callback();
-                            c();
-                        }
-                        catch (err) {
-                            e(err);
-                        }
-                    }
-                    else {
-                        c();
-                    }
-                }
-
-                var readyState = WinJS.Utilities.testReadyState;
-                if (!readyState) {
-                    if (global.document) {
-                        readyState = document.readyState;
-                    }
-                    else {
-                        readyState = "complete";
-                    }
-                }
-                if (readyState === "complete" || (global.document && document.body !== null)) {
-                    if (async) {
-                        global.setImmediate(complete);
-                    }
-                    else {
-                        complete();
-                    }
-                }
-                else {
-                    global.addEventListener("DOMContentLoaded", complete, false);
-                }
-            });
-        },
-
-        /// <field type="Boolean" locid="WinJS.Utilities.strictProcessing" helpKeyword="WinJS.Utilities.strictProcessing">Determines if strict declarative processing is enabled in this script context.</field>
-        strictProcessing: {
-            get: function () { return true; },
-            configurable: false,
-            enumerable: true,
-        },
-
-        markSupportedForProcessing: {
-            value: function (func) {
-                /// <signature helpKeyword="WinJS.Utilities.markSupportedForProcessing">
-                /// <summary locid="WinJS.Utilities.markSupportedForProcessing">
-                /// Marks a function as being compatible with declarative processing, such as WinJS.UI.processAll
-                /// or WinJS.Binding.processAll.
-                /// </summary>
-                /// <param name="func" type="Function" locid="WinJS.Utilities.markSupportedForProcessing_p:func">
-                /// The function to be marked as compatible with declarative processing.
-                /// </param>
-                /// <returns type="Function" locid="WinJS.Utilities.markSupportedForProcessing_returnValue">
-                /// The input function.
-                /// </returns>
-                /// </signature>
-                func.supportedForProcessing = true;
-                return func;
-            },
-            configurable: false,
-            writable: false,
-            enumerable: true
-        },
-
-        requireSupportedForProcessing: {
-            value: function (value) {
-                /// <signature helpKeyword="WinJS.Utilities.requireSupportedForProcessing">
-                /// <summary locid="WinJS.Utilities.requireSupportedForProcessing">
-                /// Asserts that the value is compatible with declarative processing, such as WinJS.UI.processAll
-                /// or WinJS.Binding.processAll. If it is not compatible an exception will be thrown.
-                /// </summary>
-                /// <param name="value" type="Object" locid="WinJS.Utilities.requireSupportedForProcessing_p:value">
-                /// The value to be tested for compatibility with declarative processing. If the
-                /// value is a function it must be marked with a property 'supportedForProcessing'
-                /// with a value of true.
-                /// </param>
-                /// <returns type="Object" locid="WinJS.Utilities.requireSupportedForProcessing_returnValue">
-                /// The input value.
-                /// </returns>
-                /// </signature>
-                var supportedForProcessing = true;
-
-                supportedForProcessing = supportedForProcessing && !(value === global);
-                supportedForProcessing = supportedForProcessing && !(value === global.location);
-                supportedForProcessing = supportedForProcessing && !(value instanceof HTMLIFrameElement);
-                supportedForProcessing = supportedForProcessing && !(typeof value === "function" && !value.supportedForProcessing);
-
-                switch (global.frames.length) {
-                    case 0:
-                        break;
-
-                    case 1:
-                        supportedForProcessing = supportedForProcessing && !(value === global.frames[0]);
-                        break;
-
-                    default:
-                        for (var i = 0, len = global.frames.length; supportedForProcessing && i < len; i++) {
-                            supportedForProcessing = supportedForProcessing && !(value === global.frames[i]);
-                        }
-                        break;
-                }
-
-                if (supportedForProcessing) {
-                    return value;
-                }
-
-                throw new WinJS.ErrorFromName("WinJS.Utilities.requireSupportedForProcessing", WinJS.Resources._formatString(strings.notSupportedForProcessing, value));
-            },
-            configurable: false,
-            writable: false,
-            enumerable: true
-        },
-
-    });
-
-    WinJS.Namespace.define("WinJS", {
-        validation: false,
-
-        strictProcessing: {
-            value: function () {
-                /// <signature helpKeyword="WinJS.strictProcessing">
-                /// <summary locid="WinJS.strictProcessing">
-                /// Strict processing is always enforced, this method has no effect.
-                /// </summary>
-                /// </signature>
-            },
-            configurable: false,
-            writable: false,
-            enumerable: false
-        },
-    });
-})(this, this.WinJS);
-
-
-(function logInit(WinJS) {
+});
+_winjs("WinJS/Core/_ErrorFromName", ["WinJS/Core/_Base"], function errorsInit(_Base) {
     "use strict";
 
-    var spaceR = /\s+/g;
-    var typeR = /^(error|warn|info|log)$/;
-
-    function format(message, tag, type) {
-        /// <signature helpKeyword="WinJS.Utilities.formatLog">
-        /// <summary locid="WinJS.Utilities.formatLog">
-        /// Adds tags and type to a logging message.
+    var ErrorFromName = _Base.Class.derive(Error, function (name, message) {
+        /// <signature helpKeyword="WinJS.ErrorFromName">
+        /// <summary locid="WinJS.ErrorFromName">
+        /// Creates an Error object with the specified name and message properties.
         /// </summary>
-        /// <param name="message" type="String" locid="WinJS.Utilities.startLog_p:message">The message to be formatted.</param>
-        /// <param name="tag" type="String" locid="WinJS.Utilities.startLog_p:tag">The tag(s) to be applied to the message. Multiple tags should be separated by spaces.</param>
-        /// <param name="type" type="String" locid="WinJS.Utilities.startLog_p:type">The type of the message.</param>
-        /// <returns type="String" locid="WinJS.Utilities.startLog_returnValue">The formatted message.</returns>
+        /// <param name="name" type="String" locid="WinJS.ErrorFromName_p:name">The name of this error. The name is meant to be consumed programmatically and should not be localized.</param>
+        /// <param name="message" type="String" optional="true" locid="WinJS.ErrorFromName_p:message">The message for this error. The message is meant to be consumed by humans and should be localized.</param>
+        /// <returns type="Error" locid="WinJS.ErrorFromName_returnValue">Error instance with .name and .message properties populated</returns>
         /// </signature>
-        var m = message;
-        if (typeof (m) === "function") { m = m(); }
-
-        return ((type && typeR.test(type)) ? ("") : (type ? (type + ": ") : "")) +
-            (tag ? tag.replace(spaceR, ":") + ": " : "") +
-            m;
-    }
-    function defAction(message, tag, type) {
-        var m = WinJS.Utilities.formatLog(message, tag, type);
-        console[(type && typeR.test(type)) ? type : "log"](m);
-    }
-    function escape(s) {
-        // \s (whitespace) is used as separator, so don't escape it
-        return s.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&");
-    }
-    WinJS.Namespace.define("WinJS.Utilities", {
-        startLog: function (options) {
-            /// <signature helpKeyword="WinJS.Utilities.startLog">
-            /// <summary locid="WinJS.Utilities.startLog">
-            /// Configures a logger that writes messages containing the specified tags from WinJS.log to console.log.
-            /// </summary>
-            /// <param name="options" type="String" locid="WinJS.Utilities.startLog_p:options">The tags for messages to log. Multiple tags should be separated by spaces.</param>
-            /// </signature>
-            /// <signature>
-            /// <summary locid="WinJS.Utilities.startLog2">
-            /// Configure a logger to write WinJS.log output.
-            /// </summary>
-            /// <param name="options" type="Object" locid="WinJS.Utilities.startLog_p:options2">
-            /// May contain .type, .tags, .excludeTags and .action properties.
-            /// - .type is a required tag.
-            /// - .excludeTags is a space-separated list of tags, any of which will result in a message not being logged.
-            /// - .tags is a space-separated list of tags, any of which will result in a message being logged.
-            /// - .action is a function that, if present, will be called with the log message, tags and type. The default is to log to the console.
-            /// </param>
-            /// </signature>
-            options = options || {};
-            if (typeof options === "string") {
-                options = { tags: options };
-            }
-            var el = options.type && new RegExp("^(" + escape(options.type).replace(spaceR, " ").split(" ").join("|") + ")$");
-            var not = options.excludeTags && new RegExp("(^|\\s)(" + escape(options.excludeTags).replace(spaceR, " ").split(" ").join("|") + ")(\\s|$)", "i");
-            var has = options.tags && new RegExp("(^|\\s)(" + escape(options.tags).replace(spaceR, " ").split(" ").join("|") + ")(\\s|$)", "i");
-            var action = options.action || defAction;
-
-            if (!el && !not && !has && !WinJS.log) {
-                WinJS.log = action;
-                return;
-            }
-
-            var result = function (message, tag, type) {
-                if (!((el && !el.test(type))          // if the expected log level is not satisfied
-                    || (not && not.test(tag))         // if any of the excluded categories exist
-                    || (has && !has.test(tag)))) {    // if at least one of the included categories doesn't exist
-                        action(message, tag, type);
-                    }
-
-                result.next && result.next(message, tag, type);
-            };
-            result.next = WinJS.log;
-            WinJS.log = result;
-        },
-        stopLog: function () {
-            /// <signature helpKeyword="WinJS.Utilities.stopLog">
-            /// <summary locid="WinJS.Utilities.stopLog">
-            /// Removes the previously set up logger.
-            /// </summary>
-            /// </signature>
-            delete WinJS.log;
-        },
-        formatLog: format
+        this.name = name;
+        this.message = message || name;
+    }, {
+        /* empty */
+    }, {
+        supportedForProcessing: false,
     });
-})(this.WinJS);
 
-(function eventsInit(WinJS, undefined) {
+    _Base.Namespace.define("WinJS", {
+        // ErrorFromName establishes a simple pattern for returning error codes.
+        //
+        ErrorFromName: ErrorFromName
+    });
+
+    return ErrorFromName;
+
+});
+
+
+_winjs("WinJS/Core/_Events", ["exports","WinJS/Core/_Base"], function eventsInit(exports, _Base) {
     "use strict";
 
 
@@ -2918,10 +3159,10 @@ if (typeof WinJS === 'undefined') {
                 }
             },
             enumerable: true
-        }
+        };
     }
 
-    function createEventProperties(events) {
+    function createEventProperties() {
         /// <signature helpKeyword="WinJS.Utilities.createEventProperties">
         /// <summary locid="WinJS.Utilities.createEventProperties">
         /// Creates an object that has one property for each name passed to the function.
@@ -2941,7 +3182,7 @@ if (typeof WinJS === 'undefined') {
         return props;
     }
 
-    var EventMixinEvent = WinJS.Class.define(
+    var EventMixinEvent = _Base.Class.define(
         function EventMixinEvent_ctor(type, detail, target) {
             this.detail = detail;
             this.target = target;
@@ -2988,7 +3229,7 @@ if (typeof WinJS === 'undefined') {
             /// The type (name) of the event.
             /// </param>
             /// <param name="listener" locid="WinJS.Utilities.eventMixin.addEventListener_p:listener">
-            /// The listener to invoke when the event gets raised.
+            /// The listener to invoke when the event is raised.
             /// </param>
             /// <param name="useCapture" locid="WinJS.Utilities.eventMixin.addEventListener_p:useCapture">
             /// if true initiates capture, otherwise false.
@@ -3065,173 +3306,35 @@ if (typeof WinJS === 'undefined') {
         }
     };
 
-    WinJS.Namespace.define("WinJS.Utilities", {
+    _Base.Namespace._moduleDefine(exports, "WinJS.Utilities", {
         _createEventProperty: createEventProperty,
         createEventProperties: createEventProperties,
         eventMixin: eventMixin
     });
 
-})(this.WinJS);
+});
 
 
-(function resourcesInit(global, WinJS, undefined) {
+_winjs("WinJS/Core/_Trace", ["WinJS/Core/_Global"], function traceInit(_Global) {
     "use strict";
 
-    var resourceMap;
-    var mrtEventHook = false;
-    var contextChangedET = "contextchanged";
+    function nop(v) {
+        return v;
+    }
 
-    var ListenerType = WinJS.Class.mix(WinJS.Class.define(null, { /* empty */ }, { supportedForProcessing: false }), WinJS.Utilities.eventMixin);
-    var listeners = new ListenerType();
-
-    var strings = {
-		// MONACO CHANGE
-        //get malformedFormatStringInput() { return WinJS.Resources._getWinJSString("base/malformedFormatStringInput").value; },
-		malformedFormatStringInput: "Malformed, did you mean to escape your '{0}'?"
+    return {
+        _traceAsyncOperationStarting: (_Global.Debug && _Global.Debug.msTraceAsyncOperationStarting && _Global.Debug.msTraceAsyncOperationStarting.bind(_Global.Debug)) || nop,
+        _traceAsyncOperationCompleted: (_Global.Debug && _Global.Debug.msTraceAsyncOperationCompleted && _Global.Debug.msTraceAsyncOperationCompleted.bind(_Global.Debug)) || nop,
+        _traceAsyncCallbackStarting: (_Global.Debug && _Global.Debug.msTraceAsyncCallbackStarting && _Global.Debug.msTraceAsyncCallbackStarting.bind(_Global.Debug)) || nop,
+        _traceAsyncCallbackCompleted: (_Global.Debug && _Global.Debug.msTraceAsyncCallbackCompleted && _Global.Debug.msTraceAsyncCallbackCompleted.bind(_Global.Debug)) || nop
     };
-
-    WinJS.Namespace.define("WinJS.Resources", {
-        addEventListener: function (type, listener, useCapture) {
-            /// <signature helpKeyword="WinJS.Resources.addEventListener">
-            /// <summary locid="WinJS.Resources.addEventListener">
-            /// Registers an event handler for the specified event.
-            /// </summary>
-            /// <param name="type" type="String" locid="WinJS.Resources.addEventListener_p:type">
-            /// The name of the event to handle.
-            /// </param>
-            /// <param name="listener" type="Function" locid="WinJS.Resources.addEventListener_p:listener">
-            /// The listener to invoke when the event gets raised.
-            /// </param>
-            /// <param name="useCapture" type="Boolean" locid="WinJS.Resources.addEventListener_p:useCapture">
-            /// Set to true to register the event handler for the capturing phase; set to false to register for the bubbling phase.
-            /// </param>
-            /// </signature>
-            if (WinJS.Utilities.hasWinRT && !mrtEventHook) {
-                if (type === contextChangedET) {
-                    try {
-                        Windows.ApplicationModel.Resources.Core.ResourceManager.current.defaultContext.qualifierValues.addEventListener("mapchanged", function (e) {
-                            WinJS.Resources.dispatchEvent(contextChangedET, { qualifier: e.key, changed: e.target[e.key] });
-                        }, false);
-
-                        mrtEventHook = true;
-                    } catch (e) {
-                    }
-                }
-            }
-            listeners.addEventListener(type, listener, useCapture);
-        },
-        removeEventListener: listeners.removeEventListener.bind(listeners),
-        dispatchEvent: listeners.dispatchEvent.bind(listeners),
-
-        _formatString: function (string) {
-            var args = arguments;
-            if (args.length > 1) {
-                string = string.replace(/({{)|(}})|{(\d+)}|({)|(})/g, function (unused, left, right, index, illegalLeft, illegalRight) {
-                    if (illegalLeft || illegalRight) { throw WinJS.Resources._formatString(strings.malformedFormatStringInput, illegalLeft || illegalRight); }
-                    return (left && "{") || (right && "}") || args[(index|0) + 1];
-                });
-            }
-            return string;
-        },
-
-        _getStringWinRT: function (resourceId) {
-            if (!resourceMap) {
-                var mainResourceMap = Windows.ApplicationModel.Resources.Core.ResourceManager.current.mainResourceMap;
-                try {
-                    resourceMap = mainResourceMap.getSubtree('Resources');
-                }
-                catch (e) {
-                }
-                if (!resourceMap) {
-                    resourceMap = mainResourceMap;
-                }
-            }
-
-            var stringValue;
-            var langValue;
-            var resCandidate;
-            try {
-                resCandidate = resourceMap.getValue(resourceId);
-                if (resCandidate) {
-                    stringValue = resCandidate.valueAsString;
-                    if (stringValue === undefined) {
-                        stringValue = resCandidate.toString();
-                    }
-                }
-            }
-            catch (e) {}
-
-            if (!stringValue) {
-                return { value: resourceId, empty: true };
-            }
-
-            try {
-                langValue = resCandidate.getQualifierValue("Language");
-            }
-            catch (e) {
-                return { value: stringValue };
-            }
-
-            return { value: stringValue, lang: langValue };
-        },
-
-        _getStringJS: function (resourceId) {
-            var str = global.strings && global.strings[resourceId];
-            if (typeof str === "string") {
-                str = { value: str };
-            }
-            return str || { value: resourceId, empty: true };
-        }
-    });
-
-    Object.defineProperties(WinJS.Resources, WinJS.Utilities.createEventProperties(contextChangedET));
-
-    var getStringImpl;
-
-    WinJS.Resources.getString = function (resourceId) {
-        /// <signature helpKeyword="WinJS.Resources.getString">
-        /// <summary locid="WinJS.Resources.getString">
-        /// Retrieves the resource string that has the specified resource id.
-        /// </summary>
-        /// <param name="resourceId" type="Number" locid="WinJS.Resources.getString._p:resourceId">
-        /// The resource id of the string to retrieve.
-        /// </param>
-        /// <returns type="Object" locid="WinJS.Resources.getString_returnValue">
-        /// An object that can contain these properties:
-        ///
-        /// value:
-        /// The value of the requested string. This property is always present.
-        ///
-        /// empty:
-        /// A value that specifies whether the requested string wasn't found.
-        /// If its true, the string wasn't found. If its false or undefined,
-        /// the requested string was found.
-        ///
-        /// lang:
-        /// The language of the string, if specified. This property is only present
-        /// for multi-language resources.
-        ///
-        /// </returns>
-        /// </signature>
-        getStringImpl =
-            getStringImpl ||
-                (WinJS.Utilities.hasWinRT
-                    ? WinJS.Resources._getStringWinRT
-                    : WinJS.Resources._getStringJS);
-
-        return getStringImpl(resourceId);
-    };
-
-
-})(this, this.WinJS);
-
-
-(function promiseInit(global, WinJS, undefined) {
+});
+_winjs("WinJS/Promise/_StateMachine", ["WinJS/Core/_Global","WinJS/Core/_BaseCoreUtils","WinJS/Core/_Base","WinJS/Core/_ErrorFromName","WinJS/Core/_Events","WinJS/Core/_Trace"], function promiseStateMachineInit(_Global, _BaseCoreUtils, _Base, _ErrorFromName, _Events, _Trace) {
     "use strict";
 
-    global.Debug && (global.Debug.setNonUserCodeExceptions = true);
+    _Global.Debug && (_Global.Debug.setNonUserCodeExceptions = true);
 
-    var ListenerType = WinJS.Class.mix(WinJS.Class.define(null, { /*empty*/ }, { supportedForProcessing: false }), WinJS.Utilities.eventMixin);
+    var ListenerType = _Base.Class.mix(_Base.Class.define(null, { /*empty*/ }, { supportedForProcessing: false }), _Events.eventMixin);
     var promiseEventListeners = new ListenerType();
     // make sure there is a listeners collection so that we can do a more trivial check below
     promiseEventListeners._listeners = {};
@@ -3239,11 +3342,11 @@ if (typeof WinJS === 'undefined') {
     var canceledName = "Canceled";
     var tagWithStack = false;
     var tag = {
-        promise:            0x01,
-        thenPromise:        0x02,
-        errorPromise:       0x04,
-        exceptionPromise:   0x08,
-        completePromise:    0x10,
+        promise: 0x01,
+        thenPromise: 0x02,
+        errorPromise: 0x04,
+        exceptionPromise: 0x08,
+        completePromise: 0x10,
     };
     tag.all = tag.promise | tag.thenPromise | tag.errorPromise | tag.exceptionPromise | tag.completePromise;
 
@@ -3334,24 +3437,33 @@ if (typeof WinJS === 'undefined') {
         name: "waiting",
         enter: function (promise) {
             var waitedUpon = promise._value;
-            var error = function (value) {
-                if (waitedUpon._errorId) {
-                    promise._chainedError(value, waitedUpon);
-                } else {
-                    // Because this is an interop boundary we want to indicate that this
-                    //  error has been handled by the promise infrastructure before we
-                    //  begin a new handling chain.
-                    //
-                    callonerror(promise, value, detailsForHandledError, waitedUpon, error);
-                    promise._error(value);
-                }
-            };
-            error.handlesOnError = true;
-            waitedUpon.then(
-                promise._completed.bind(promise),
-                error,
-                promise._progress.bind(promise)
-            );
+            // We can special case our own intermediate promises which are not in a
+            //  terminal state by just pushing this promise as a listener without
+            //  having to create new indirection functions
+            if (waitedUpon instanceof ThenPromise &&
+                waitedUpon._state !== state_error &&
+                waitedUpon._state !== state_success) {
+                pushListener(waitedUpon, { promise: promise });
+            } else {
+                var error = function (value) {
+                    if (waitedUpon._errorId) {
+                        promise._chainedError(value, waitedUpon);
+                    } else {
+                        // Because this is an interop boundary we want to indicate that this
+                        //  error has been handled by the promise infrastructure before we
+                        //  begin a new handling chain.
+                        //
+                        callonerror(promise, value, detailsForHandledError, waitedUpon, error);
+                        promise._error(value);
+                    }
+                };
+                error.handlesOnError = true;
+                waitedUpon.then(
+                    promise._completed.bind(promise),
+                    error,
+                    promise._progress.bind(promise)
+                );
+            }
         },
         cancel: function (promise) {
             promise._setState(state_waiting_canceled);
@@ -3450,7 +3562,7 @@ if (typeof WinJS === 'undefined') {
                 var queue = [promise];
                 var p;
                 while (queue.length) {
-                    p = queue.pop();
+                    p = queue.shift();
                     p._state._notify(p, queue);
                 }
             }
@@ -3499,7 +3611,7 @@ if (typeof WinJS === 'undefined') {
                 var queue = [promise];
                 var p;
                 while (queue.length) {
-                    p = queue.pop();
+                    p = queue.shift();
                     p._state._notify(p, queue);
                 }
             }
@@ -3548,7 +3660,7 @@ if (typeof WinJS === 'undefined') {
     // would have to remember to do things like pumping the state machine to catch state transitions.
     //
 
-    var PromiseStateMachine = WinJS.Class.define(null, {
+    var PromiseStateMachine = _Base.Class.define(null, {
         _listeners: null,
         _nextState: null,
         _state: null,
@@ -3575,7 +3687,7 @@ if (typeof WinJS === 'undefined') {
             /// After the handlers have finished executing, this function throws any error that would have been returned
             /// from then() as a promise in the error state.
             /// </summary>
-            /// <param name="onComplete" type="Function" locid="WinJS.PromiseStateMachine.done_p:onComplete">
+            /// <param name='onComplete' type='Function' locid="WinJS.PromiseStateMachine.done_p:onComplete">
             /// The function to be called if the promise is fulfilled successfully with a value.
             /// The fulfilled value is passed as the single argument. If the value is null,
             /// the fulfilled value is returned. The value returned
@@ -3583,12 +3695,12 @@ if (typeof WinJS === 'undefined') {
             /// then(). If an exception is thrown while executing the function, the promise returned
             /// by then() moves into the error state.
             /// </param>
-            /// <param name="onError" type="Function" optional="true" locid="WinJS.PromiseStateMachine.done_p:onError">
+            /// <param name='onError' type='Function' optional='true' locid="WinJS.PromiseStateMachine.done_p:onError">
             /// The function to be called if the promise is fulfilled with an error. The error
             /// is passed as the single argument. If it is null, the error is forwarded.
             /// The value returned from the function is the fulfilled value of the promise returned by then().
             /// </param>
-            /// <param name="onProgress" type="Function" optional="true" locid="WinJS.PromiseStateMachine.done_p:onProgress">
+            /// <param name='onProgress' type='Function' optional='true' locid="WinJS.PromiseStateMachine.done_p:onProgress">
             /// the function to be called if the promise reports progress. Data about the progress
             /// is passed as the single argument. Promises are not required to support
             /// progress.
@@ -3603,19 +3715,19 @@ if (typeof WinJS === 'undefined') {
             /// the error handling to be performed if the promise fails to fulfill
             /// a value, and the handling of progress notifications along the way.
             /// </summary>
-            /// <param name="onComplete" type="Function" locid="WinJS.PromiseStateMachine.then_p:onComplete">
+            /// <param name='onComplete' type='Function' locid="WinJS.PromiseStateMachine.then_p:onComplete">
             /// The function to be called if the promise is fulfilled successfully with a value.
             /// The value is passed as the single argument. If the value is null, the value is returned.
             /// The value returned from the function becomes the fulfilled value of the promise returned by
             /// then(). If an exception is thrown while this function is being executed, the promise returned
             /// by then() moves into the error state.
             /// </param>
-            /// <param name="onError" type="Function" optional="true" locid="WinJS.PromiseStateMachine.then_p:onError">
+            /// <param name='onError' type='Function' optional='true' locid="WinJS.PromiseStateMachine.then_p:onError">
             /// The function to be called if the promise is fulfilled with an error. The error
             /// is passed as the single argument. If it is null, the error is forwarded.
             /// The value returned from the function becomes the fulfilled value of the promise returned by then().
             /// </param>
-            /// <param name="onProgress" type="Function" optional="true" locid="WinJS.PromiseStateMachine.then_p:onProgress">
+            /// <param name='onProgress' type='Function' optional='true' locid="WinJS.PromiseStateMachine.then_p:onProgress">
             /// The function to be called if the promise reports progress. Data about the progress
             /// is passed as the single argument. Promises are not required to support
             /// progress.
@@ -3743,7 +3855,8 @@ if (typeof WinJS === 'undefined') {
         );
     }
     function done(promise, onComplete, onError, onProgress) {
-        pushListener(promise, { c: onComplete, e: onError, p: onProgress });
+        var asyncOpID = _Trace._traceAsyncOperationStarting("WinJS.Promise.done");
+        pushListener(promise, { c: onComplete, e: onError, p: onProgress, asyncOpID: asyncOpID });
     }
     function error(promise, value, onerrorDetails, context) {
         promise._value = value;
@@ -3762,11 +3875,17 @@ if (typeof WinJS === 'undefined') {
             var listener = len === 1 ? listeners : listeners[i];
             var onComplete = listener.c;
             var target = listener.promise;
+
+            _Trace._traceAsyncOperationCompleted(listener.asyncOpID, _Global.Debug && _Global.Debug.MS_ASYNC_OP_STATUS_SUCCESS);
+
             if (target) {
+                _Trace._traceAsyncCallbackStarting(listener.asyncOpID);
                 try {
                     target._setCompleteValue(onComplete ? onComplete(value) : value);
                 } catch (ex) {
                     target._setExceptionValue(ex);
+                } finally {
+                    _Trace._traceAsyncCallbackCompleted();
                 }
                 if (target._state !== state_waiting && target._listeners) {
                     queue.push(target);
@@ -3788,18 +3907,29 @@ if (typeof WinJS === 'undefined') {
             var listener = len === 1 ? listeners : listeners[i];
             var onError = listener.e;
             var target = listener.promise;
+
+            var errorID = _Global.Debug && (value && value.name === canceledName ? _Global.Debug.MS_ASYNC_OP_STATUS_CANCELED : _Global.Debug.MS_ASYNC_OP_STATUS_ERROR);
+            _Trace._traceAsyncOperationCompleted(listener.asyncOpID, errorID);
+
             if (target) {
+                var asyncCallbackStarted = false;
                 try {
                     if (onError) {
+                        _Trace._traceAsyncCallbackStarting(listener.asyncOpID);
+                        asyncCallbackStarted = true;
                         if (!onError.handlesOnError) {
                             callonerror(target, value, detailsForHandledError, promise, onError);
                         }
-                        target._setCompleteValue(onError(value))
+                        target._setCompleteValue(onError(value));
                     } else {
                         target._setChainedErrorValue(value, promise);
                     }
                 } catch (ex) {
                     target._setExceptionValue(ex);
+                } finally {
+                    if (asyncCallbackStarted) {
+                        _Trace._traceAsyncCallbackCompleted();
+                    }
                 }
                 if (target._state !== state_waiting && target._listeners) {
                     queue.push(target);
@@ -3870,7 +4000,8 @@ if (typeof WinJS === 'undefined') {
     }
     function then(promise, onComplete, onError, onProgress) {
         var result = new ThenPromise(promise);
-        pushListener(promise, { promise: result, c: onComplete, e: onError, p: onProgress });
+        var asyncOpID = _Trace._traceAsyncOperationStarting("WinJS.Promise.then");
+        pushListener(promise, { promise: result, c: onComplete, e: onError, p: onProgress, asyncOpID: asyncOpID });
         return result;
     }
 
@@ -3878,11 +4009,11 @@ if (typeof WinJS === 'undefined') {
     // Internal implementation detail promise, ThenPromise is created when a promise needs
     // to be returned from a then() method.
     //
-    var ThenPromise = WinJS.Class.derive(PromiseStateMachine,
+    var ThenPromise = _Base.Class.derive(PromiseStateMachine,
         function (creator) {
 
             if (tagWithStack && (tagWithStack === true || (tagWithStack & tag.thenPromise))) {
-                this._stack = WinJS.Promise._getStack();
+                this._stack = Promise._getStack();
             }
 
             this._creator = creator;
@@ -3904,11 +4035,11 @@ if (typeof WinJS === 'undefined') {
     // and WinJS.Promise.wrapError.
     //
 
-    var ErrorPromise = WinJS.Class.define(
+    var ErrorPromise = _Base.Class.define(
         function ErrorPromise_ctor(value) {
 
             if (tagWithStack && (tagWithStack === true || (tagWithStack & tag.errorPromise))) {
-                this._stack = WinJS.Promise._getStack();
+                this._stack = Promise._getStack();
             }
 
             this._value = value;
@@ -3974,9 +4105,7 @@ if (typeof WinJS === 'undefined') {
                 }
                 // force the exception to be thrown asyncronously to avoid any try/catch blocks
                 //
-                setImmediate(function () {
-                    throw value;
-                });
+                Promise._doneHandler(value);
             },
             then: function ErrorPromise_then(unused, onError) {
                 /// <signature helpKeyword="WinJS.PromiseStateMachine.then">
@@ -4036,11 +4165,11 @@ if (typeof WinJS === 'undefined') {
         }
     );
 
-    var ExceptionPromise = WinJS.Class.derive(ErrorPromise,
+    var ExceptionPromise = _Base.Class.derive(ErrorPromise,
         function ExceptionPromise_ctor(value) {
 
             if (tagWithStack && (tagWithStack === true || (tagWithStack & tag.exceptionPromise))) {
-                this._stack = WinJS.Promise._getStack();
+                this._stack = Promise._getStack();
             }
 
             this._value = value;
@@ -4052,11 +4181,11 @@ if (typeof WinJS === 'undefined') {
         }
     );
 
-    var CompletePromise = WinJS.Class.define(
+    var CompletePromise = _Base.Class.define(
         function CompletePromise_ctor(value) {
 
             if (tagWithStack && (tagWithStack === true || (tagWithStack & tag.completePromise))) {
-                this._stack = WinJS.Promise._getStack();
+                this._stack = Promise._getStack();
             }
 
             if (value && typeof value === "object" && typeof value.then === "function") {
@@ -4112,9 +4241,7 @@ if (typeof WinJS === 'undefined') {
                     }
                 } catch (ex) {
                     // force the exception to be thrown asynchronously to avoid any try/catch blocks
-                    setImmediate(function () {
-                        throw ex;
-                    });
+                    Promise._doneHandler(ex);
                 }
             },
             then: function CompletePromise_then(onComplete) {
@@ -4167,25 +4294,25 @@ if (typeof WinJS === 'undefined') {
 
     function timeout(timeoutMS) {
         var id;
-        return new WinJS.Promise(
+        return new Promise(
             function (c) {
                 if (timeoutMS) {
-                    id = setTimeout(c, timeoutMS);
+                    id = _Global.setTimeout(c, timeoutMS);
                 } else {
-                    setImmediate(c);
+                    _BaseCoreUtils._setImmediate(c);
                 }
             },
             function () {
                 if (id) {
-                    clearTimeout(id);
+                    _Global.clearTimeout(id);
                 }
             }
         );
     }
 
     function timeoutWithPromise(timeout, promise) {
-        var cancelPromise = function () { promise.cancel(); }
-        var cancelTimeout = function () { timeout.cancel(); }
+        var cancelPromise = function () { promise.cancel(); };
+        var cancelTimeout = function () { timeout.cancel(); };
         timeout.then(cancelPromise);
         promise.then(cancelTimeout, cancelTimeout);
         return promise;
@@ -4193,7 +4320,7 @@ if (typeof WinJS === 'undefined') {
 
     var staticCanceledPromise;
 
-    var Promise = WinJS.Class.derive(PromiseStateMachine,
+    var Promise = _Base.Class.derive(PromiseStateMachine,
         function Promise_ctor(init, oncancel) {
             /// <signature helpKeyword="WinJS.Promise">
             /// <summary locid="WinJS.Promise">
@@ -4214,7 +4341,7 @@ if (typeof WinJS === 'undefined') {
             /// </signature>
 
             if (tagWithStack && (tagWithStack === true || (tagWithStack & tag.promise))) {
-                this._stack = WinJS.Promise._getStack();
+                this._stack = Promise._getStack();
             }
 
             this._oncancel = oncancel;
@@ -4233,18 +4360,20 @@ if (typeof WinJS === 'undefined') {
             _oncancel: null,
 
             _cancelAction: function () {
-				try {
-            		if (this._oncancel) {
-						this._oncancel();
-					} else {
-						throw new Error('Promise did not implement oncancel');
-					}
-				} catch (ex) {
-					// Access fields to get them created
-					var msg = ex.message;
-					var stack = ex.stack;
-					promiseEventListeners.dispatchEvent('error', ex);
-				}
+                // BEGIN monaco change
+                try {
+                    if (this._oncancel) {
+                        this._oncancel();
+                    } else {
+                        throw new Error('Promise did not implement oncancel');
+                    }
+                } catch (ex) {
+                    // Access fields to get them created
+                    var msg = ex.message;
+                    var stack = ex.stack;
+                    promiseEventListeners.dispatchEvent('error', ex);
+                }
+                // END monaco change
             },
             _cleanupAction: function () { this._oncancel = null; }
         }, {
@@ -4281,9 +4410,8 @@ if (typeof WinJS === 'undefined') {
                 /// </returns>
                 /// </signature>
                 return new Promise(
-                    function (complete, error, progress) {
+                    function (complete, error) {
                         var keys = Object.keys(values);
-                        var errors = Array.isArray(values) ? [] : {};
                         if (keys.length === 0) {
                             complete();
                         }
@@ -4294,7 +4422,7 @@ if (typeof WinJS === 'undefined') {
                                 function (e) {
                                     if (e instanceof Error && e.name === canceledName) {
                                         if ((++canceled) === keys.length) {
-                                            complete(WinJS.Promise.cancel);
+                                            complete(Promise.cancel);
                                         }
                                         return;
                                     }
@@ -4338,7 +4466,7 @@ if (typeof WinJS === 'undefined') {
             /// </field>
             cancel: {
                 get: function () {
-                    return (staticCanceledPromise = staticCanceledPromise || new ErrorPromise(new WinJS.ErrorFromName(canceledName)));
+                    return (staticCanceledPromise = staticCanceledPromise || new ErrorPromise(new _ErrorFromName(canceledName)));
                 }
             },
             dispatchEvent: function Promise_dispatchEvent(eventType, details) {
@@ -4406,7 +4534,7 @@ if (typeof WinJS === 'undefined') {
                                         }
                                     });
                                     if (canceledCount === errorCount) {
-                                        complete(WinJS.Promise.cancel);
+                                        complete(Promise.cancel);
                                     } else {
                                         error(errors);
                                     }
@@ -4579,372 +4707,87 @@ if (typeof WinJS === 'undefined') {
             },
             _veryExpensiveTagWithStack_tag: tag,
             _getStack: function () {
-                if (Debug.debuggerEnabled) {
+                if (_Global.Debug && _Global.Debug.debuggerEnabled) {
                     try { throw new Error(); } catch (e) { return e.stack; }
                 }
             },
 
-        }
-    );
-    Object.defineProperties(Promise, WinJS.Utilities.createEventProperties(errorET));
-
-    var SignalPromise = WinJS.Class.derive(PromiseStateMachine,
-        function (cancel) {
-            this._oncancel = cancel;
-            this._setState(state_created);
-            this._run();
-        }, {
-            _cancelAction: function () { this._oncancel && this._oncancel(); },
-            _cleanupAction: function () { this._oncancel = null; }
-        }, {
-            supportedForProcessing: false
-        }
-    );
-
-    var Signal = WinJS.Class.define(
-        function Signal_ctor(oncancel) {
-            this._promise = new SignalPromise(oncancel);
-        }, {
-            promise: {
-                get: function () { return this._promise; }
-            },
-
-            cancel: function Signal_cancel() {
-                this._promise.cancel();
-            },
-            complete: function Signal_complete(value) {
-                this._promise._completed(value);
-            },
-            error: function Signal_error(value) {
-                this._promise._error(value);
-            },
-            progress: function Signal_progress(value) {
-                this._promise._progress(value);
-            }
-        }, {
-            supportedForProcessing: false,
-        }
-    );
-
-    // Publish WinJS.Promise
-    //
-    WinJS.Namespace.define("WinJS", {
-        Promise: Promise,
-        _Signal: Signal
-    });
-
-}(this, this.WinJS));
-
-(function errorsInit(global, WinJS) {
-    "use strict";
-
-
-    WinJS.Namespace.define("WinJS", {
-        // ErrorFromName establishes a simple pattern for returning error codes.
-        //
-        ErrorFromName: WinJS.Class.derive(Error, function (name, message) {
-            /// <signature helpKeyword="WinJS.ErrorFromName">
-            /// <summary locid="WinJS.ErrorFromName">
-            /// Creates an Error object with the specified name and message properties.
-            /// </summary>
-            /// <param name="name" type="String" locid="WinJS.ErrorFromName_p:name">The name of this error. The name is meant to be consumed programmatically and should not be localized.</param>
-            /// <param name="message" type="String" optional="true" locid="WinJS.ErrorFromName_p:message">The message for this error. The message is meant to be consumed by humans and should be localized.</param>
-            /// <returns type="Error" locid="WinJS.ErrorFromName_returnValue">Error instance with .name and .message properties populated</returns>
-            /// </signature>
-            this.name = name;
-            this.message = message || name;
-        }, {
-            /* empty */
-        }, {
-            supportedForProcessing: false,
-        })
-    });
-
-})(this, this.WinJS);
-
-
-(function xhrInit(WinJS) {
-    "use strict";
-
-
-    WinJS.Namespace.define("WinJS", {
-        xhr: function (options) {
-            /// <signature helpKeyword="WinJS.xhr">
-            /// <summary locid="WinJS.xhr">
-            /// Wraps calls to XMLHttpRequest in a promise.
-            /// </summary>
-            /// <param name="options" type="Object" locid="WinJS.xhr_p:options">
-            /// The options that are applied to the XMLHttpRequest object. They are: type,
-            /// url, user, password, headers, responseType, data, and customRequestInitializer.
-            /// </param>
-            /// <returns type="WinJS.Promise" locid="WinJS.xhr_returnValue">
-            /// A promise that returns the XMLHttpRequest object when it completes.
-            /// </returns>
-            /// </signature>
-            var req;
-            return new WinJS.Promise(
-                function (c, e, p) {
-                    /// <returns value="c(new XMLHttpRequest())" locid="WinJS.xhr.constructor._returnValue" />
-                    req = new XMLHttpRequest();
-                    req.onreadystatechange = function () {
-                        if (req._canceled) { return; }
-
-                        if (req.readyState === 4) {
-							// MONACO CHANGE: Handle 1223: http://bugs.jquery.com/ticket/1450
-                            if ((req.status >= 200 && req.status < 300) || req.status === 1223) {
-                                c(req);
-                            } else {
-                                e(req);
-                            }
-                            req.onreadystatechange = function () { };
-                        } else {
-                            p(req);
-                        }
-                    };
-
-                    req.open(
-                        options.type || "GET",
-                        options.url,
-                        // Promise based XHR does not support sync.
-                        //
-                        true,
-                        options.user,
-                        options.password
-                    );
-                    req.responseType = options.responseType || "";
-
-                    Object.keys(options.headers || {}).forEach(function (k) {
-                        req.setRequestHeader(k, options.headers[k]);
-                    });
-
-                    if (options.customRequestInitializer) {
-                        options.customRequestInitializer(req);
-                    }
-
-                    req.send(options.data);
-                },
-                function () {
-                    req._canceled = true;
-                    req.abort();
+            _cancelBlocker: function Promise__cancelBlocker(input, oncancel) {
+                //
+                // Returns a promise which on cancelation will still result in downstream cancelation while
+                //  protecting the promise 'input' from being  canceled which has the effect of allowing
+                //  'input' to be shared amoung various consumers.
+                //
+                if (!Promise.is(input)) {
+                    return Promise.wrap(input);
                 }
-            );
+                var complete;
+                var error;
+                var output = new Promise(
+                    function (c, e) {
+                        complete = c;
+                        error = e;
+                    },
+                    function () {
+                        complete = null;
+                        error = null;
+                        oncancel && oncancel();
+                    }
+                );
+                input.then(
+                    function (v) { complete && complete(v); },
+                    function (e) { error && error(e); }
+                );
+                return output;
+            },
+
         }
-    });
+    );
+    Object.defineProperties(Promise, _Events.createEventProperties(errorET));
 
-})(this.WinJS);
+    Promise._doneHandler = function (value) {
+        _BaseCoreUtils._setImmediate(function Promise_done_rethrow() {
+            throw value;
+        });
+    };
 
+    return {
+        PromiseStateMachine: PromiseStateMachine,
+        Promise: Promise,
+        state_created: state_created
+    };
+});
 
-(function safeHTMLInit(global, WinJS, undefined) {
+_winjs("WinJS/Promise", ["WinJS/Core/_Base","WinJS/Promise/_StateMachine"], function promiseInit( _Base, _StateMachine) {
     "use strict";
 
-
-    var setInnerHTML,
-        setInnerHTMLUnsafe,
-        setOuterHTML,
-        setOuterHTMLUnsafe,
-        insertAdjacentHTML,
-        insertAdjacentHTMLUnsafe;
-
-    var strings = {
-		// MONACO CHANGE
-        //get nonStaticHTML() { return WinJS.Resources._getWinJSString("base/nonStaticHTML").value; },
-		nonStaticHTML: "Unable to add dynamic content. A script attempted to inject dynamic content, or elements previously modified dynamically, that might be unsafe. For example, using the innerHTML property or the document.write method to add a script element will generate this exception. If the content is safe and from a trusted source, use a method to explicitly manipulate elements and attributes, such as createElement, or use setInnerHTMLUnsafe (or other unsafe method)."
-    };
-
-    setInnerHTML = setInnerHTMLUnsafe = function (element, text) {
-        /// <signature helpKeyword="WinJS.Utilities.setInnerHTML">
-        /// <summary locid="WinJS.Utilities.setInnerHTML">
-        /// Sets the innerHTML property of the specified element to the specified text.
-        /// </summary>
-        /// <param name="element" type="HTMLElement" locid="WinJS.Utilities.setInnerHTML_p:element">
-        /// The element on which the innerHTML property is to be set.
-        /// </param>
-        /// <param name="text" type="String" locid="WinJS.Utilities.setInnerHTML_p:text">
-        /// The value to be set to the innerHTML property.
-        /// </param>
-        /// </signature>
-        element.innerHTML = text;
-    };
-    setOuterHTML = setOuterHTMLUnsafe = function (element, text) {
-        /// <signature helpKeyword="WinJS.Utilities.setOuterHTML">
-        /// <summary locid="WinJS.Utilities.setOuterHTML">
-        /// Sets the outerHTML property of the specified element to the specified text.
-        /// </summary>
-        /// <param name="element" type="HTMLElement" locid="WinJS.Utilities.setOuterHTML_p:element">
-        /// The element on which the outerHTML property is to be set.
-        /// </param>
-        /// <param name="text" type="String" locid="WinJS.Utilities.setOuterHTML_p:text">
-        /// The value to be set to the outerHTML property.
-        /// </param>
-        /// </signature>
-        element.outerHTML = text;
-    };
-    insertAdjacentHTML = insertAdjacentHTMLUnsafe = function (element, position, text) {
-        /// <signature helpKeyword="WinJS.Utilities.insertAdjacentHTML">
-        /// <summary locid="WinJS.Utilities.insertAdjacentHTML">
-        /// Calls insertAdjacentHTML on the specified element.
-        /// </summary>
-        /// <param name="element" type="HTMLElement" locid="WinJS.Utilities.insertAdjacentHTML_p:element">
-        /// The element on which insertAdjacentHTML is to be called.
-        /// </param>
-        /// <param name="position" type="String" locid="WinJS.Utilities.insertAdjacentHTML_p:position">
-        /// The position relative to the element at which to insert the HTML.
-        /// </param>
-        /// <param name="text" type="String" locid="WinJS.Utilities.insertAdjacentHTML_p:text">
-        /// The value to be provided to insertAdjacentHTML.
-        /// </param>
-        /// </signature>
-        element.insertAdjacentHTML(position, text);
-    };
-
-    var msApp = global.MSApp;
-    if (msApp) {
-        setInnerHTMLUnsafe = function (element, text) {
-            /// <signature helpKeyword="WinJS.Utilities.setInnerHTMLUnsafe">
-            /// <summary locid="WinJS.Utilities.setInnerHTMLUnsafe">
-            /// Sets the innerHTML property of the specified element to the specified text.
-            /// </summary>
-            /// <param name='element' type='HTMLElement' locid="WinJS.Utilities.setInnerHTMLUnsafe_p:element">
-            /// The element on which the innerHTML property is to be set.
-            /// </param>
-            /// <param name='text' type="String" locid="WinJS.Utilities.setInnerHTMLUnsafe_p:text">
-            /// The value to be set to the innerHTML property.
-            /// </param>
-            /// </signature>
-            msApp.execUnsafeLocalFunction(function () {
-                element.innerHTML = text;
-            });
-        };
-        setOuterHTMLUnsafe = function (element, text) {
-            /// <signature helpKeyword="WinJS.Utilities.setOuterHTMLUnsafe">
-            /// <summary locid="WinJS.Utilities.setOuterHTMLUnsafe">
-            /// Sets the outerHTML property of the specified element to the specified text
-            /// in the context of msWWA.execUnsafeLocalFunction.
-            /// </summary>
-            /// <param name="element" type="HTMLElement" locid="WinJS.Utilities.setOuterHTMLUnsafe_p:element">
-            /// The element on which the outerHTML property is to be set.
-            /// </param>
-            /// <param name="text" type="String" locid="WinJS.Utilities.setOuterHTMLUnsafe_p:text">
-            /// The value to be set to the outerHTML property.
-            /// </param>
-            /// </signature>
-            msApp.execUnsafeLocalFunction(function () {
-                element.outerHTML = text;
-            });
-        };
-        insertAdjacentHTMLUnsafe = function (element, position, text) {
-            /// <signature helpKeyword="WinJS.Utilities.insertAdjacentHTMLUnsafe">
-            /// <summary locid="WinJS.Utilities.insertAdjacentHTMLUnsafe">
-            /// Calls insertAdjacentHTML on the specified element in the context
-            /// of msWWA.execUnsafeLocalFunction.
-            /// </summary>
-            /// <param name="element" type="HTMLElement" locid="WinJS.Utilities.insertAdjacentHTMLUnsafe_p:element">
-            /// The element on which insertAdjacentHTML is to be called.
-            /// </param>
-            /// <param name="position" type="String" locid="WinJS.Utilities.insertAdjacentHTMLUnsafe_p:position">
-            /// The position relative to the element at which to insert the HTML.
-            /// </param>
-            /// <param name="text" type="String" locid="WinJS.Utilities.insertAdjacentHTMLUnsafe_p:text">
-            /// Value to be provided to insertAdjacentHTML.
-            /// </param>
-            /// </signature>
-            msApp.execUnsafeLocalFunction(function () {
-                element.insertAdjacentHTML(position, text);
-            });
-        };
-    }
-    else if (global.msIsStaticHTML) {
-        var check = function (str) {
-            if (!global.msIsStaticHTML(str)) {
-                throw new WinJS.ErrorFromName("WinJS.Utitilies.NonStaticHTML", strings.nonStaticHTML);
-            }
-        }
-        // If we ever get isStaticHTML we can attempt to recreate the behavior we have in the local
-        // compartment, in the mean-time all we can do is sanitize the input.
-        //
-        setInnerHTML = function (element, text) {
-            /// <signature helpKeyword="WinJS.Utilities.setInnerHTML">
-            /// <summary locid="WinJS.Utilities.msIsStaticHTML.setInnerHTML">
-            /// Sets the innerHTML property of a element to the specified text
-            /// if it passes a msIsStaticHTML check.
-            /// </summary>
-            /// <param name="element" type="HTMLElement" locid="WinJS.Utilities.msIsStaticHTML.setInnerHTML_p:element">
-            /// The element on which the innerHTML property is to be set.
-            /// </param>
-            /// <param name="text" type="String" locid="WinJS.Utilities.msIsStaticHTML.setInnerHTML_p:text">
-            /// The value to be set to the innerHTML property.
-            /// </param>
-            /// </signature>
-            check(text);
-            element.innerHTML = text;
-        };
-        setOuterHTML = function (element, text) {
-            /// <signature helpKeyword="WinJS.Utilities.setOuterHTML">
-            /// <summary locid="WinJS.Utilities.msIsStaticHTML.setOuterHTML">
-            /// Sets the outerHTML property of a element to the specified text
-            /// if it passes a msIsStaticHTML check.
-            /// </summary>
-            /// <param name="element" type="HTMLElement" locid="WinJS.Utilities.msIsStaticHTML.setOuterHTML_p:element">
-            /// The element on which the outerHTML property is to be set.
-            /// </param>
-            /// <param name="text" type="String" locid="WinJS.Utilities.msIsStaticHTML.setOuterHTML_p:text">
-            /// The value to be set to the outerHTML property.
-            /// </param>
-            /// </signature>
-            check(text);
-            element.outerHTML = text;
-        };
-        insertAdjacentHTML = function (element, position, text) {
-            /// <signature helpKeyword="WinJS.Utilities.insertAdjacentHTML">
-            /// <summary locid="WinJS.Utilities.msIsStaticHTML.insertAdjacentHTML">
-            /// Calls insertAdjacentHTML on the element if it passes
-            /// a msIsStaticHTML check.
-            /// </summary>
-            /// <param name="element" type="HTMLElement" locid="WinJS.Utilities.msIsStaticHTML.insertAdjacentHTML_p:element">
-            /// The element on which insertAdjacentHTML is to be called.
-            /// </param>
-            /// <param name="position" type="String" locid="WinJS.Utilities.msIsStaticHTML.insertAdjacentHTML_p:position">
-            /// The position relative to the element at which to insert the HTML.
-            /// </param>
-            /// <param name="text" type="String" locid="WinJS.Utilities.msIsStaticHTML.insertAdjacentHTML_p:text">
-            /// The value to be provided to insertAdjacentHTML.
-            /// </param>
-            /// </signature>
-            check(text);
-            element.insertAdjacentHTML(position, text);
-        };
-    }
-
-    WinJS.Namespace.define("WinJS.Utilities", {
-        setInnerHTML: setInnerHTML,
-        setInnerHTMLUnsafe: setInnerHTMLUnsafe,
-        setOuterHTML: setOuterHTML,
-        setOuterHTMLUnsafe: setOuterHTMLUnsafe,
-        insertAdjacentHTML: insertAdjacentHTML,
-        insertAdjacentHTMLUnsafe: insertAdjacentHTMLUnsafe
+    _Base.Namespace.define("WinJS", {
+        Promise: _StateMachine.Promise
     });
 
-}(this, this.WinJS));
+    return _StateMachine.Promise;
+});
 
+var exported = _modules["WinJS/Core/_WinJS"];
 
+if (typeof exports === 'undefined' && typeof define === 'function' && define.amd) {
+    define("vs/base/common/winjs.base.raw", exported);
+} else {
+    module.exports = exported;
+}
 
-// MONACO CHANGE
-} // if (typeof WinJS === 'undefined')
+if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
+    _modules["WinJS/Core/_BaseCoreUtils"]._setImmediate = function(handler) {
+        return process.nextTick(handler);
+    };
+}
 
-(function(global) {
-
-    if (typeof exports === 'undefined' && typeof define === 'function' && define.amd) {
-        define("vs/base/common/winjs.base.raw", global.WinJS);
-    } else {
-        module.exports = global.WinJS;
-    }
-
-})(this);
+})();
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/base/node/flow", ["require", "exports", 'assert'], function (require, exports, assert) {
+define(__m[14], __M([0,1,39]), function (require, exports, assert) {
     'use strict';
     /**
      * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
@@ -5087,7 +4930,7 @@ define("vs/base/node/flow", ["require", "exports", 'assert'], function (require,
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/base/node/extfs", ["require", "exports", 'vs/base/common/uuid', 'vs/base/common/strings', 'vs/base/common/platform', 'vs/base/node/flow', 'fs', 'path'], function (require, exports, uuid, strings, platform, flow, fs, paths) {
+define(__m[21], __M([0,1,23,2,5,14,6,17]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
     'use strict';
     var loop = flow.loop;
     function readdir(path, callback) {
@@ -5373,7 +5216,7 @@ define("vs/base/node/extfs", ["require", "exports", 'vs/base/common/uuid', 'vs/b
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/base/node/stream", ["require", "exports", 'fs'], function (require, exports, fs) {
+define(__m[9], __M([0,1,6]), function (require, exports, fs) {
     'use strict';
     /**
      * Reads up to total bytes from the provided stream.
@@ -5456,7 +5299,7 @@ define("vs/base/node/stream", ["require", "exports", 'fs'], function (require, e
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/base/node/encoding", ["require", "exports", 'vs/base/node/stream', 'iconv-lite'], function (require, exports, stream, iconv) {
+define(__m[19], __M([0,1,9,44]), function (require, exports, stream, iconv) {
     'use strict';
     exports.UTF8 = 'utf8';
     exports.UTF8_with_bom = 'utf8bom';
@@ -5532,7 +5375,7 @@ define("vs/base/node/encoding", ["require", "exports", 'vs/base/node/stream', 'i
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/base/node/mime", ["require", "exports", 'vs/base/common/mime', 'vs/base/node/stream', 'vs/base/node/encoding'], function (require, exports, mime, stream, encoding) {
+define(__m[28], __M([0,1,17,11,9,19]), function (require, exports, paths, mime, stream, encoding) {
     'use strict';
     /**
      * Lots of binary file types exists where the type can be determined by matching the first few bytes against some "magic patterns".
@@ -5572,12 +5415,16 @@ define("vs/base/node/mime", ["require", "exports", 'vs/base/common/mime', 'vs/ba
      * 	mimes.push('application/octet-stream')    // last element: least specific
      */
     var BUFFER_READ_MAX_LEN = 512; // max buffer len to use when detecting encoding/mime
+    var ASAR_EXT = '.asar';
     function doDetectMimesFromStream(instream, callback) {
         stream.readExactlyByStream(instream, BUFFER_READ_MAX_LEN, function (err, buffer, bytesRead) {
             handleReadResult(err, buffer, bytesRead, callback);
         });
     }
     function doDetectMimesFromFile(absolutePath, callback) {
+        if (paths.extname(absolutePath) === ASAR_EXT) {
+            return callback(null, { encoding: encoding.UTF8, mimes: [mime.MIME_BINARY] }); // https://github.com/Microsoft/vscode/issues/646
+        }
         stream.readExactlyByFile(absolutePath, BUFFER_READ_MAX_LEN, function (err, buffer, bytesRead) {
             handleReadResult(err, buffer, bytesRead, callback);
         });
@@ -5665,8 +5512,8 @@ define("vs/base/node/mime", ["require", "exports", 'vs/base/common/mime', 'vs/ba
     }
 });
 
-define("vs/nls!vs/base/common/errors",['vs/nls', 'vs/nls!vs/workbench/services/search/node/searchApp'], function(nls, data) { return nls.create("vs/base/common/errors", data); });
-define("vs/base/common/errors", ["require", "exports", 'vs/nls!vs/base/common/errors', 'vs/base/common/objects', 'vs/base/common/platform', 'vs/base/common/types', 'vs/base/common/arrays', 'vs/base/common/strings'], function (require, exports, nls, objects, platform, types, arrays, strings) {
+define(__m[22], __M([40,41]), function(nls, data) { return nls.create("vs/base/common/errors", data); });
+define(__m[8], __M([0,1,22,12,5,3,15,2]), function (require, exports, nls, objects, platform, types, arrays, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5967,8 +5814,10 @@ define("vs/base/common/errors", ["require", "exports", 'vs/nls!vs/base/common/er
         }
     }
     exports.illegalState = illegalState;
-    function readonly() {
-        return new Error('readonly property cannot be changed');
+    function readonly(name) {
+        return name
+            ? new Error("readonly property '" + name + " cannot be changed'")
+            : new Error('readonly property cannot be changed');
     }
     exports.readonly = readonly;
     function loaderError(err) {
@@ -5992,7 +5841,7 @@ define("vs/base/common/errors", ["require", "exports", 'vs/nls!vs/base/common/er
     exports.create = create;
 });
 
-define("vs/base/common/callbackList", ["require", "exports", 'vs/base/common/errors'], function (require, exports, errors_1) {
+define(__m[24], __M([0,1,8]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6069,7 +5918,7 @@ define("vs/base/common/callbackList", ["require", "exports", 'vs/base/common/err
     exports.default = CallbackList;
 });
 
-define("vs/base/common/event", ["require", "exports", 'vs/base/common/callbackList'], function (require, exports, callbackList_1) {
+define(__m[13], __M([0,1,24]), function (require, exports, callbackList_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6202,10 +6051,41 @@ define("vs/base/common/event", ["require", "exports", 'vs/base/common/callbackLi
     exports.fromEventEmitter = fromEventEmitter;
     function mapEvent(event, map) {
         return function (listener, thisArgs, disposables) {
-            return event(function (i) { return listener(map(i)); }, thisArgs, disposables);
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
         };
     }
     exports.mapEvent = mapEvent;
+    function filterEvent(event, filter) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
+        };
+    }
+    exports.filterEvent = filterEvent;
+    function debounceEvent(event, merger, delay) {
+        if (delay === void 0) { delay = 100; }
+        var subscription;
+        var output;
+        var handle;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                subscription = event(function (cur) {
+                    output = merger(output, cur);
+                    clearTimeout(handle);
+                    handle = setTimeout(function () {
+                        emitter.fire(output);
+                        output = undefined;
+                    }, delay);
+                });
+            },
+            onLastListenerRemove: function () {
+                subscription.dispose();
+            }
+        });
+        return emitter.event;
+    }
+    exports.debounceEvent = debounceEvent;
     var EventDelayerState;
     (function (EventDelayerState) {
         EventDelayerState[EventDelayerState["Idle"] = 0] = "Idle";
@@ -6265,7 +6145,7 @@ define("vs/base/common/event", ["require", "exports", 'vs/base/common/callbackLi
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/base/common/cancellation", ["require", "exports", 'vs/base/common/event'], function (require, exports, event_1) {
+define(__m[26], __M([0,1,13]), function (require, exports, event_1) {
     'use strict';
     var CancellationToken;
     (function (CancellationToken) {
@@ -6356,10 +6236,8 @@ define("vs/base/common/cancellation", ["require", "exports", 'vs/base/common/eve
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define("vs/base/common/winjs.base", ['./winjs.base.raw', 'vs/base/common/errors'], function (raw, __Errors__) {
+define(__m[4], __M([38,8]), function (winjs, __Errors__) {
 	'use strict';
-
-	var winjs = raw;
 
 	var outstandingPromiseErrors = {};
 	function promiseErrorHandler(e) {
@@ -6409,59 +6287,35 @@ define("vs/base/common/winjs.base", ['./winjs.base.raw', 'vs/base/common/errors'
 
 	winjs.Promise.addEventListener("error", promiseErrorHandler);
 
-
-	function decoratePromise(promise, completeCallback, errorCallback) {
-		var pc, pe, pp;
-
-		var resultPromise = new winjs.Promise(
-			function (c, e, p) {
-				pc = c;
-				pe = e;
-				pp = p;
-			}, function () {
-				promise.cancel();
-			}
-		);
-
-		promise.then(function (r) {
-			if (completeCallback) {
-				completeCallback(r);
-			}
-			pc(r);
-		}, function (e) {
-			if (errorCallback) {
-				errorCallback(e);
-			}
-			pe(e);
-		}, pp);
-
-		return resultPromise;
-	}
-
 	return {
-		decoratePromise: decoratePromise,
-		Class: winjs.Class,
-		xhr: winjs.xhr,
 		Promise: winjs.Promise,
 		TPromise: winjs.Promise,
-		PPromise: winjs.Promise,
-		Utilities: winjs.Utilities
+		PPromise: winjs.Promise
 	};
 });
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define("vs/base/common/async", ["require", "exports", 'vs/base/common/errors', 'vs/base/common/winjs.base', 'vs/base/common/platform', 'vs/base/common/cancellation', 'vs/base/common/lifecycle'], function (require, exports, errors, winjs_base_1, platform, cancellation_1, lifecycle_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+define(__m[20], __M([0,1,8,5,4,26,10]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
     }
+    function toThenable(arg) {
+        if (isThenable(arg)) {
+            return arg;
+        }
+        else {
+            return winjs_base_1.TPromise.as(arg);
+        }
+    }
+    exports.toThenable = toThenable;
     function asWinJsPromise(callback) {
         var source = new cancellation_1.CancellationTokenSource();
         return new winjs_base_1.TPromise(function (resolve, reject) {
@@ -6478,6 +6332,14 @@ define("vs/base/common/async", ["require", "exports", 'vs/base/common/errors', '
     }
     exports.asWinJsPromise = asWinJsPromise;
     /**
+     * Hook a cancellation token to a WinJS Promise
+     */
+    function wireCancellationToken(token, promise) {
+        token.onCancellationRequested(function () { return promise.cancel(); });
+        return promise;
+    }
+    exports.wireCancellationToken = wireCancellationToken;
+    /**
      * A helper to prevent accumulation of sequential async tasks.
      *
      * Imagine a mail man with the sole task of delivering letters. As soon as
@@ -6492,9 +6354,15 @@ define("vs/base/common/async", ["require", "exports", 'vs/base/common/errors', '
      * 		var throttler = new Throttler();
      * 		var letters = [];
      *
-     * 		function letterReceived(l) {
+     * 		function deliver() {
+     * 			const lettersToDeliver = letters;
+     * 			letters = [];
+     * 			return makeTheTrip(lettersToDeliver);
+     * 		}
+     *
+     * 		function onLetterReceived(l) {
      * 			letters.push(l);
-     * 			throttler.queue(() => { return makeTheTrip(); });
+     * 			throttler.queue(deliver);
      * 		}
      */
     var Throttler = (function () {
@@ -6542,6 +6410,17 @@ define("vs/base/common/async", ["require", "exports", 'vs/base/common/errors', '
         return Throttler;
     }());
     exports.Throttler = Throttler;
+    // TODO@Joao: can the previous throttler be replaced with this?
+    var SimpleThrottler = (function () {
+        function SimpleThrottler() {
+            this.current = winjs_base_1.TPromise.as(null);
+        }
+        SimpleThrottler.prototype.queue = function (promiseTask) {
+            return this.current = this.current.then(function () { return promiseTask(); });
+        };
+        return SimpleThrottler;
+    }());
+    exports.SimpleThrottler = SimpleThrottler;
     /**
      * A helper to delay execution of a task that is being requested often.
      *
@@ -6910,17 +6789,12 @@ define("vs/base/common/async", ["require", "exports", 'vs/base/common/errors', '
             this.runner = runner;
         };
         /**
-         * Set timeout. This change will only impact new schedule calls.
-         */
-        RunOnceScheduler.prototype.setTimeout = function (timeout) {
-            this.timeout = timeout;
-        };
-        /**
          * Cancel previous runner (if any) & schedule a new runner.
          */
-        RunOnceScheduler.prototype.schedule = function () {
+        RunOnceScheduler.prototype.schedule = function (delay) {
+            if (delay === void 0) { delay = this.timeout; }
             this.cancel();
-            this.timeoutToken = platform.setTimeout(this.timeoutHandler, this.timeout);
+            this.timeoutToken = platform.setTimeout(this.timeoutHandler, delay);
         };
         /**
          * Returns true if scheduled.
@@ -6959,7 +6833,7 @@ define("vs/base/common/async", ["require", "exports", 'vs/base/common/errors', '
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/base/common/service", ["require", "exports", 'vs/base/common/winjs.base', 'vs/base/common/objects', 'vs/base/common/lifecycle', 'vs/base/common/event'], function (require, exports, winjs_base_1, objects_1, lifecycle_1, event_1) {
+define(__m[29], __M([0,1,4,10,13]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
     'use strict';
     var RequestType;
     (function (RequestType) {
@@ -6974,35 +6848,22 @@ define("vs/base/common/service", ["require", "exports", 'vs/base/common/winjs.ba
         ResponseType[ResponseType["Error"] = 3] = "Error";
         ResponseType[ResponseType["ErrorObj"] = 4] = "ErrorObj";
     })(ResponseType || (ResponseType = {}));
-    var ServiceState;
-    (function (ServiceState) {
-        ServiceState[ServiceState["Uninitialized"] = 0] = "Uninitialized";
-        ServiceState[ServiceState["Idle"] = 1] = "Idle";
-    })(ServiceState || (ServiceState = {}));
-    var ServiceEventProperty = '$__SERVICE_EVENT';
-    /**
-     * Use this as a property decorator.
-     */
-    function ServiceEvent(target, key) {
-        target[key] = (_a = {}, _a[ServiceEventProperty] = true, _a);
-        var _a;
-    }
-    exports.ServiceEvent = ServiceEvent;
-    function isServiceEvent(target) {
-        return target[ServiceEventProperty];
-    }
-    exports.isServiceEvent = isServiceEvent;
+    var State;
+    (function (State) {
+        State[State["Uninitialized"] = 0] = "Uninitialized";
+        State[State["Idle"] = 1] = "Idle";
+    })(State || (State = {}));
     var Server = (function () {
         function Server(protocol) {
             var _this = this;
             this.protocol = protocol;
-            this.services = Object.create(null);
+            this.channels = Object.create(null);
             this.activeRequests = Object.create(null);
             this.protocol.onMessage(function (r) { return _this.onMessage(r); });
             this.protocol.send({ type: ResponseType.Initialize });
         }
-        Server.prototype.registerService = function (serviceName, service) {
-            this.services[serviceName] = service;
+        Server.prototype.registerChannel = function (channelName, channel) {
+            this.channels[channelName] = channel;
         };
         Server.prototype.onMessage = function (request) {
             switch (request.type) {
@@ -7015,38 +6876,15 @@ define("vs/base/common/service", ["require", "exports", 'vs/base/common/winjs.ba
             }
         };
         Server.prototype.onCommonRequest = function (request) {
-            var service = this.services[request.serviceName];
-            var servicePrototype = service.constructor.prototype;
-            var prototypeMethod = servicePrototype && servicePrototype[request.name];
-            var isEvent = prototypeMethod && prototypeMethod[ServiceEventProperty];
-            var method = service[request.name];
-            var promise;
-            if (isEvent) {
-                var disposable_1;
-                promise = new winjs_base_1.Promise(function (c, e, p) { return disposable_1 = method.call(service, p); }, function () { return disposable_1.dispose(); });
-            }
-            else {
-                if (!method) {
-                    promise = winjs_base_1.Promise.wrapError(new Error(request.name + " is not a valid method on " + request.serviceName));
-                }
-                else {
-                    try {
-                        promise = method.call.apply(method, [service].concat(request.args));
-                    }
-                    catch (err) {
-                        promise = winjs_base_1.Promise.wrapError(err);
-                    }
-                }
-                if (!winjs_base_1.Promise.is(promise)) {
-                    var message = "'" + request.name + "' did not return a promise";
-                    console.warn(message);
-                    promise = winjs_base_1.Promise.wrapError(new Error(message));
-                }
-            }
-            this.onPromiseRequest(promise, request);
-        };
-        Server.prototype.onPromiseRequest = function (promise, request) {
             var _this = this;
+            var channel = this.channels[request.channelName];
+            var promise;
+            try {
+                promise = channel.call(request.name, request.arg);
+            }
+            catch (err) {
+                promise = winjs_base_1.Promise.wrapError(err);
+            }
             var id = request.id;
             var requestPromise = promise.then(function (data) {
                 _this.protocol.send({ id: id, data: data, type: ResponseType.Success });
@@ -7066,7 +6904,7 @@ define("vs/base/common/service", ["require", "exports", 'vs/base/common/winjs.ba
             }, function (data) {
                 _this.protocol.send({ id: id, data: data, type: ResponseType.Progress });
             });
-            this.activeRequests[request.id] = lifecycle_1.fnToDisposable(function () { return requestPromise.cancel(); });
+            this.activeRequests[request.id] = lifecycle_1.toDisposable(function () { return requestPromise.cancel(); });
         };
         Server.prototype.onCancelRequest = function (request) {
             var disposable = this.activeRequests[request.id];
@@ -7089,56 +6927,28 @@ define("vs/base/common/service", ["require", "exports", 'vs/base/common/winjs.ba
         function Client(protocol) {
             var _this = this;
             this.protocol = protocol;
-            this.state = ServiceState.Uninitialized;
+            this.state = State.Uninitialized;
             this.bufferedRequests = [];
             this.handlers = Object.create(null);
             this.lastRequestId = 0;
             this.protocol.onMessage(function (r) { return _this.onMessage(r); });
         }
-        Client.prototype.getService = function (serviceName, serviceCtor) {
+        Client.prototype.getChannel = function (channelName) {
             var _this = this;
-            var props = Object.keys(serviceCtor.prototype)
-                .filter(function (key) { return key !== 'constructor'; });
-            return props.reduce(function (service, key) {
-                if (serviceCtor.prototype[key][ServiceEventProperty]) {
-                    var promise_1;
-                    var emitter_1 = new event_1.Emitter({
-                        onFirstListenerAdd: function () {
-                            promise_1 = _this.request(serviceName, key)
-                                .then(null, null, function (event) { return emitter_1.fire(event); });
-                        },
-                        onLastListenerRemove: function () {
-                            promise_1.cancel();
-                            promise_1 = null;
-                        }
-                    });
-                    return objects_1.assign(service, (_a = {}, _a[key] = emitter_1.event, _a));
-                }
-                return objects_1.assign(service, (_b = {}, _b[key] = function () {
-                    var args = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i - 0] = arguments[_i];
-                    }
-                    return _this.request.apply(_this, [serviceName, key].concat(args));
-                }, _b));
-                var _a, _b;
-            }, {});
+            var call = function (command, arg) { return _this.request(channelName, command, arg); };
+            return { call: call };
         };
-        Client.prototype.request = function (serviceName, name) {
-            var args = [];
-            for (var _i = 2; _i < arguments.length; _i++) {
-                args[_i - 2] = arguments[_i];
-            }
+        Client.prototype.request = function (channelName, name, arg) {
             var request = {
                 raw: {
                     id: this.lastRequestId++,
                     type: RequestType.Common,
-                    serviceName: serviceName,
+                    channelName: channelName,
                     name: name,
-                    args: args
+                    arg: arg
                 }
             };
-            if (this.state === ServiceState.Uninitialized) {
+            if (this.state === State.Uninitialized) {
                 return this.bufferRequest(request);
             }
             return this.doRequest(request);
@@ -7183,7 +6993,7 @@ define("vs/base/common/service", ["require", "exports", 'vs/base/common/winjs.ba
                 };
             }, function () {
                 request.flush = null;
-                if (_this.state !== ServiceState.Uninitialized) {
+                if (_this.state !== State.Uninitialized) {
                     if (flushedRequest) {
                         flushedRequest.cancel();
                         flushedRequest = null;
@@ -7198,8 +7008,8 @@ define("vs/base/common/service", ["require", "exports", 'vs/base/common/winjs.ba
             });
         };
         Client.prototype.onMessage = function (response) {
-            if (this.state === ServiceState.Uninitialized && response.type === ResponseType.Initialize) {
-                this.state = ServiceState.Idle;
+            if (this.state === State.Uninitialized && response.type === ResponseType.Initialize) {
+                this.state = State.Idle;
                 this.bufferedRequests.forEach(function (r) { return r.flush && r.flush(); });
                 this.bufferedRequests = null;
                 return;
@@ -7219,67 +7029,55 @@ define("vs/base/common/service", ["require", "exports", 'vs/base/common/winjs.ba
         return Client;
     }());
     exports.Client = Client;
-    /**
-     * Useful when the service itself is needed right away but the client
-     * is wrapped within a promise.
-     */
-    function getService(clientPromise, serviceName, serviceCtor) {
-        var _servicePromise;
-        var servicePromise = function () {
-            if (!_servicePromise) {
-                _servicePromise = clientPromise.then(function (client) { return client.getService(serviceName, serviceCtor); });
-            }
-            return _servicePromise;
-        };
-        return Object.keys(serviceCtor.prototype)
-            .filter(function (key) { return key !== 'constructor'; })
-            .reduce(function (result, key) {
-            if (isServiceEvent(serviceCtor.prototype[key])) {
-                var promise_2;
-                var disposable_2;
-                var emitter_2 = new event_1.Emitter({
-                    onFirstListenerAdd: function () {
-                        promise_2 = servicePromise().then(function (service) {
-                            disposable_2 = service[key](function (e) { return emitter_2.fire(e); });
-                        });
-                    },
-                    onLastListenerRemove: function () {
-                        if (disposable_2) {
-                            disposable_2.dispose();
-                            disposable_2 = null;
-                        }
-                        promise_2.cancel();
-                        promise_2 = null;
-                    }
-                });
-                return objects_1.assign(result, (_a = {}, _a[key] = emitter_2.event, _a));
-            }
-            return objects_1.assign(result, (_b = {},
-                _b[key] = function () {
-                    var args = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i - 0] = arguments[_i];
-                    }
-                    return servicePromise().then(function (service) { return service[key].apply(service, args); });
-                },
-                _b
-            ));
-            var _a, _b;
-        }, {});
+    function getDelayedChannel(promise) {
+        var call = function (command, arg) { return promise.then(function (c) { return c.call(command, arg); }); };
+        return { call: call };
     }
-    exports.getService = getService;
+    exports.getDelayedChannel = getDelayedChannel;
+    function getNextTickChannel(channel) {
+        var didTick = false;
+        var call = function (command, arg) {
+            if (didTick) {
+                return channel.call(command, arg);
+            }
+            return winjs_base_1.TPromise.timeout(0)
+                .then(function () { return didTick = true; })
+                .then(function () { return channel.call(command, arg); });
+        };
+        return { call: call };
+    }
+    exports.getNextTickChannel = getNextTickChannel;
+    function eventToCall(event) {
+        var disposable;
+        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(p); }, function () { return disposable.dispose(); });
+    }
+    exports.eventToCall = eventToCall;
+    function eventFromCall(channel, name) {
+        var promise;
+        var emitter = new event_1.Emitter({
+            onFirstListenerAdd: function () {
+                promise = channel.call(name, null).then(null, function (err) { return null; }, function (e) { return emitter.fire(e); });
+            },
+            onLastListenerRemove: function () {
+                promise.cancel();
+                promise = null;
+            }
+        });
+        return emitter.event;
+    }
+    exports.eventFromCall = eventFromCall;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define("vs/base/node/service.cp", ["require", "exports", 'child_process', 'vs/base/common/winjs.base', 'vs/base/common/async', 'vs/base/common/objects', 'vs/base/common/service'], function (require, exports, cp, winjs_base_1, async_1, objects_1, service_1) {
+
+
+
+
+
+define(__m[30], __M([0,1,42,4,20,12,29]), function (require, exports, child_process_1, winjs_base_1, async_1, objects_1, ipc_1) {
     "use strict";
     var Server = (function (_super) {
         __extends(Server, _super);
@@ -7295,48 +7093,39 @@ define("vs/base/node/service.cp", ["require", "exports", 'child_process', 'vs/ba
             process.once('disconnect', function () { return _this.dispose(); });
         }
         return Server;
-    }(service_1.Server));
+    }(ipc_1.Server));
     exports.Server = Server;
     var Client = (function () {
         function Client(modulePath, options) {
             this.modulePath = modulePath;
             this.options = options;
-            var timeout = options && options.timeout ? options.timeout : Number.MAX_VALUE;
+            var timeout = options && options.timeout ? options.timeout : 60000;
             this.disposeDelayer = new async_1.Delayer(timeout);
             this.activeRequests = [];
             this.child = null;
             this._client = null;
-            this.services = Object.create(null);
+            this.channels = Object.create(null);
         }
-        Client.prototype.getService = function (serviceName, serviceCtor) {
+        Client.prototype.getChannel = function (channelName) {
             var _this = this;
-            return Object.keys(serviceCtor.prototype)
-                .filter(function (key) { return key !== 'constructor'; })
-                .reduce(function (service, key) { return objects_1.assign(service, (_a = {}, _a[key] = function () {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i - 0] = arguments[_i];
-                }
-                return _this.request.apply(_this, [serviceName, serviceCtor, key].concat(args));
-            }, _a)); var _a; }, {});
+            var call = function (command, arg) { return _this.request(channelName, command, arg); };
+            return { call: call };
         };
-        Client.prototype.request = function (serviceName, serviceCtor, name) {
+        Client.prototype.request = function (channelName, name, arg) {
             var _this = this;
-            var args = [];
-            for (var _i = 3; _i < arguments.length; _i++) {
-                args[_i - 3] = arguments[_i];
-            }
             this.disposeDelayer.cancel();
-            var service = this.services[serviceName];
-            if (!service) {
-                service = this.services[serviceName] = this.client.getService(serviceName, serviceCtor);
-            }
-            var request = service[name].apply(service, args);
+            var channel = this.channels[channelName] || (this.channels[channelName] = this.client.getChannel(channelName));
+            var request = channel.call(name, arg);
             // Progress doesn't propagate across 'then', we need to create a promise wrapper
             var result = new winjs_base_1.Promise(function (c, e, p) {
                 request.then(c, e, p).done(function () {
+                    if (!_this.activeRequests) {
+                        return;
+                    }
                     _this.activeRequests.splice(_this.activeRequests.indexOf(result), 1);
-                    _this.disposeDelayer.trigger(function () { return _this.disposeClient(); });
+                    if (_this.activeRequests.length === 0) {
+                        _this.disposeDelayer.trigger(function () { return _this.disposeClient(); });
+                    }
                 });
             }, function () { return request.cancel(); });
             this.activeRequests.push(result);
@@ -7347,27 +7136,25 @@ define("vs/base/node/service.cp", ["require", "exports", 'child_process', 'vs/ba
                 var _this = this;
                 if (!this._client) {
                     var args = this.options && this.options.args ? this.options.args : [];
-                    var forkOpts = undefined;
-                    if (this.options) {
-                        forkOpts = Object.create(null);
-                        if (this.options.env) {
-                            forkOpts.env = objects_1.assign(objects_1.clone(process.env), this.options.env);
-                        }
-                        if (typeof this.options.debug === 'number') {
-                            forkOpts.execArgv = ['--nolazy', '--debug=' + this.options.debug];
-                        }
-                        if (typeof this.options.debugBrk === 'number') {
-                            forkOpts.execArgv = ['--nolazy', '--debug-brk=' + this.options.debugBrk];
-                        }
+                    var forkOpts = Object.create(null);
+                    forkOpts.env = objects_1.assign(objects_1.clone(process.env), { 'VSCODE_PARENT_PID': String(process.pid) });
+                    if (this.options && this.options.env) {
+                        forkOpts.env = objects_1.assign(forkOpts.env, this.options.env);
                     }
-                    this.child = cp.fork(this.modulePath, args, forkOpts);
-                    this._client = new service_1.Client({
+                    if (this.options && typeof this.options.debug === 'number') {
+                        forkOpts.execArgv = ['--nolazy', '--debug=' + this.options.debug];
+                    }
+                    if (this.options && typeof this.options.debugBrk === 'number') {
+                        forkOpts.execArgv = ['--nolazy', '--debug-brk=' + this.options.debugBrk];
+                    }
+                    this.child = child_process_1.fork(this.modulePath, args, forkOpts);
+                    this._client = new ipc_1.Client({
                         send: function (r) { return _this.child && _this.child.connected && _this.child.send(r); },
                         onMessage: function (cb) {
                             _this.child.on('message', function (msg) {
                                 // Handle console logs specially
                                 if (msg && msg.type === '__$console') {
-                                    var args_1 = ['%c[Service Library: ' + _this.options.serverName + ']', 'color: darkgreen'];
+                                    var args_1 = ['%c[IPC Library: ' + _this.options.serverName + ']', 'color: darkgreen'];
                                     try {
                                         var parsed_1 = JSON.parse(msg.arguments);
                                         args_1 = args_1.concat(Object.getOwnPropertyNames(parsed_1).map(function (o) { return parsed_1[o]; }));
@@ -7385,7 +7172,7 @@ define("vs/base/node/service.cp", ["require", "exports", 'child_process', 'vs/ba
                     });
                     var onExit_1 = function () { return _this.disposeClient(); };
                     process.once('exit', onExit_1);
-                    this.child.on('error', function (err) { return console.warn('Service "' + _this.options.serverName + '" errored with ' + err); });
+                    this.child.on('error', function (err) { return console.warn('IPC "' + _this.options.serverName + '" errored with ' + err); });
                     this.child.on('exit', function (code, signal) {
                         process.removeListener('exit', onExit_1);
                         if (_this.activeRequests) {
@@ -7393,7 +7180,7 @@ define("vs/base/node/service.cp", ["require", "exports", 'child_process', 'vs/ba
                             _this.activeRequests = [];
                         }
                         if (code && signal !== 'SIGTERM') {
-                            console.warn('Service "' + _this.options.serverName + '" crashed with exit code ' + code);
+                            console.warn('IPC "' + _this.options.serverName + '" crashed with exit code ' + code);
                             _this.disposeDelayer.cancel();
                             _this.disposeClient();
                         }
@@ -7409,7 +7196,7 @@ define("vs/base/node/service.cp", ["require", "exports", 'child_process', 'vs/ba
                 this.child.kill();
                 this.child = null;
                 this._client = null;
-                this.services = Object.create(null);
+                this.channels = Object.create(null);
             }
         };
         Client.prototype.dispose = function () {
@@ -7423,57 +7210,66 @@ define("vs/base/node/service.cp", ["require", "exports", 'child_process', 'vs/ba
     exports.Client = Client;
 });
 
-define("vs/platform/instantiation/common/instantiation", ["require", "exports"], function (require, exports) {
+define(__m[31], __M([0,1]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    // ----------------------- internal util -----------------------
+    // ------ internal util
     var _util;
     (function (_util) {
         _util.DI_TARGET = '$di$target';
         _util.DI_DEPENDENCIES = '$di$dependencies';
-        _util.DI_PROVIDES = '$di$provides_service';
-        function getServiceId(id) {
-            return id[_util.DI_PROVIDES];
-        }
-        _util.getServiceId = getServiceId;
         function getServiceDependencies(ctor) {
-            return ctor[_util.DI_DEPENDENCIES];
+            return ctor[_util.DI_DEPENDENCIES] || [];
         }
         _util.getServiceDependencies = getServiceDependencies;
     })(_util = exports._util || (exports._util = {}));
     exports.IInstantiationService = createDecorator('instantiationService');
+    function storeServiceDependency(id, target, index, optional) {
+        if (target[_util.DI_TARGET] === target) {
+            target[_util.DI_DEPENDENCIES].push({ id: id, index: index, optional: optional });
+        }
+        else {
+            target[_util.DI_DEPENDENCIES] = [{ id: id, index: index, optional: optional }];
+            target[_util.DI_TARGET] = target;
+        }
+    }
     /**
      * A *only* valid way to create a {{ServiceIdentifier}}.
      */
     function createDecorator(serviceId) {
-        var ret = function (target, key, index) {
+        var id = function (target, key, index) {
             if (arguments.length !== 3) {
                 throw new Error('@IServiceName-decorator can only be used to decorate a parameter');
             }
-            if (target[_util.DI_TARGET] === target) {
-                target[_util.DI_DEPENDENCIES].push({ serviceId: serviceId, index: index });
-            }
-            else {
-                target[_util.DI_DEPENDENCIES] = [{ serviceId: serviceId, index: index }];
-                target[_util.DI_TARGET] = target;
-            }
+            storeServiceDependency(id, target, index, false);
         };
-        ret[_util.DI_PROVIDES] = serviceId;
-        // ret['type'] = undefined;
-        return ret;
+        id.toString = function () { return serviceId; };
+        return id;
     }
     exports.createDecorator = createDecorator;
+    /**
+     * Mark a service dependency as optional.
+     */
+    function optional(serviceIdentifier) {
+        return function (target, key, index) {
+            if (arguments.length !== 3) {
+                throw new Error('@optional-decorator can only be used to decorate a parameter');
+            }
+            storeServiceDependency(serviceIdentifier, target, index, true);
+        };
+    }
+    exports.optional = optional;
 });
 
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define("vs/platform/files/common/files", ["require", "exports", 'vs/base/common/paths', 'vs/base/common/events', 'vs/platform/instantiation/common/instantiation'], function (require, exports, paths, events, instantiation_1) {
+
+
+
+
+
+define(__m[32], __M([0,1,7,27,31]), function (require, exports, paths, events, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7847,7 +7643,7 @@ define("vs/platform/files/common/files", ["require", "exports", 'vs/base/common/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/workbench/services/search/node/fileSearch", ["require", "exports", 'fs', 'path', 'vs/base/common/scorer', 'vs/base/common/arrays', 'vs/base/common/strings', 'vs/base/common/types', 'vs/base/common/glob', 'vs/base/node/extfs', 'vs/base/node/flow'], function (require, exports, fs, paths, scorer, arrays, strings, types, glob, extfs, flow) {
+define(__m[33], __M([0,1,6,17,25,15,2,3,16,21,14]), function (require, exports, fs, paths, scorer, arrays, strings, types, glob, extfs, flow) {
     'use strict';
     var FileWalker = (function () {
         function FileWalker(config) {
@@ -7871,13 +7667,13 @@ define("vs/workbench/services/search/node/fileSearch", ["require", "exports", 'f
         FileWalker.prototype.walk = function (rootFolders, extraFiles, onResult, done) {
             var _this = this;
             // Support that the file pattern is a full path to a file that exists
-            this.checkFilePatternAbsoluteMatch(function (exists) {
+            this.checkFilePatternAbsoluteMatch(function (exists, size) {
                 if (_this.isCanceled) {
                     return done(null, _this.isLimitHit);
                 }
                 // Report result from file pattern if matching
                 if (exists) {
-                    onResult({ path: _this.filePattern });
+                    onResult({ path: _this.filePattern }, size);
                     // Optimization: a match on an absolute path is a good result and we do not
                     // continue walking the entire root paths array for other matches because
                     // it is very unlikely that another file would match on the full absolute path
@@ -7900,13 +7696,13 @@ define("vs/workbench/services/search/node/fileSearch", ["require", "exports", 'f
                             return perEntryCallback(null, null);
                         }
                         // Support relative paths to files from a root resource
-                        return _this.checkFilePatternRelativeMatch(absolutePath, function (match) {
+                        return _this.checkFilePatternRelativeMatch(absolutePath, function (match, size) {
                             if (_this.isCanceled || _this.isLimitHit) {
                                 return perEntryCallback(null, null);
                             }
                             // Report result from file pattern if matching
                             if (match) {
-                                onResult({ path: match });
+                                onResult({ path: match }, size);
                             }
                             return _this.doWalk(paths.normalize(absolutePath), '', files, onResult, perEntryCallback);
                         });
@@ -7921,7 +7717,7 @@ define("vs/workbench/services/search/node/fileSearch", ["require", "exports", 'f
                 return clb(false);
             }
             return fs.stat(this.filePattern, function (error, stat) {
-                return clb(!error && !stat.isDirectory()); // only existing files
+                return clb(!error && !stat.isDirectory(), stat && stat.size); // only existing files
             });
         };
         FileWalker.prototype.checkFilePatternRelativeMatch = function (basePath, clb) {
@@ -7930,7 +7726,7 @@ define("vs/workbench/services/search/node/fileSearch", ["require", "exports", 'f
             }
             var absolutePath = paths.join(basePath, this.filePattern);
             return fs.stat(absolutePath, function (error, stat) {
-                return clb(!error && !stat.isDirectory() ? absolutePath : null); // only existing files
+                return clb(!error && !stat.isDirectory() ? absolutePath : null, stat && stat.size); // only existing files
             });
         };
         FileWalker.prototype.doWalk = function (absolutePath, relativeParentPathWithSlashes, files, onResult, done) {
@@ -7993,7 +7789,7 @@ define("vs/workbench/services/search/node/fileSearch", ["require", "exports", 'f
                             if (_this.maxFilesize && types.isNumber(stat.size) && stat.size > _this.maxFilesize) {
                                 return clb(null); // ignore file if max file size is hit
                             }
-                            _this.matchFile(onResult, currentAbsolutePath, currentRelativePathWithSlashes);
+                            _this.matchFile(onResult, currentAbsolutePath, currentRelativePathWithSlashes, stat.size);
                         }
                         // Unwind
                         return clb(null);
@@ -8006,7 +7802,7 @@ define("vs/workbench/services/search/node/fileSearch", ["require", "exports", 'f
                 return done(error && error.length > 0 ? error[0] : null, null);
             });
         };
-        FileWalker.prototype.matchFile = function (onResult, absolutePath, relativePathWithSlashes) {
+        FileWalker.prototype.matchFile = function (onResult, absolutePath, relativePathWithSlashes, size) {
             if (this.isFilePatternMatch(relativePathWithSlashes) && (!this.includePattern || glob.match(this.includePattern, relativePathWithSlashes))) {
                 this.resultCount++;
                 if (this.maxResults && this.resultCount > this.maxResults) {
@@ -8015,7 +7811,7 @@ define("vs/workbench/services/search/node/fileSearch", ["require", "exports", 'f
                 if (!this.isLimitHit) {
                     onResult({
                         path: absolutePath
-                    });
+                    }, size);
                 }
             }
         };
@@ -8071,7 +7867,41 @@ define("vs/workbench/services/search/node/fileSearch", ["require", "exports", 'f
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/workbench/services/search/node/textSearch", ["require", "exports", 'vs/base/common/strings', 'fs', 'vs/base/common/mime', 'vs/base/node/mime', 'vs/base/node/encoding'], function (require, exports, strings, fs, baseMime, mime_1, encoding_1) {
+define(__m[34], __M([0,1]), function (require, exports) {
+    'use strict';
+    var SearchChannel = (function () {
+        function SearchChannel(service) {
+            this.service = service;
+        }
+        SearchChannel.prototype.call = function (command, arg) {
+            switch (command) {
+                case 'fileSearch': return this.service.fileSearch(arg);
+                case 'textSearch': return this.service.textSearch(arg);
+            }
+        };
+        return SearchChannel;
+    }());
+    exports.SearchChannel = SearchChannel;
+    var SearchChannelClient = (function () {
+        function SearchChannelClient(channel) {
+            this.channel = channel;
+        }
+        SearchChannelClient.prototype.fileSearch = function (search) {
+            return this.channel.call('fileSearch', search);
+        };
+        SearchChannelClient.prototype.textSearch = function (search) {
+            return this.channel.call('textSearch', search);
+        };
+        return SearchChannelClient;
+    }());
+    exports.SearchChannelClient = SearchChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[35], __M([0,1,2,6,11,28,19]), function (require, exports, strings, fs, baseMime, mime_1, encoding_1) {
     'use strict';
     var Engine = (function () {
         function Engine(config, walker) {
@@ -8083,6 +7913,7 @@ define("vs/workbench/services/search/node/textSearch", ["require", "exports", 'v
             this.limitReached = false;
             this.maxResults = config.maxResults;
             this.worked = 0;
+            this.progressed = 0;
             this.total = 0;
             this.fileEncoding = encoding_1.encodingExists(config.fileEncoding) ? config.fileEncoding : encoding_1.UTF8;
         }
@@ -8093,11 +7924,17 @@ define("vs/workbench/services/search/node/textSearch", ["require", "exports", 'v
         Engine.prototype.search = function (onResult, onProgress, done) {
             var _this = this;
             var resultCounter = 0;
+            var progress = function () {
+                _this.progressed++;
+                if (_this.progressed % Engine.PROGRESS_FLUSH_CHUNK_SIZE === 0) {
+                    onProgress({ total: _this.total, worked: _this.worked }); // buffer progress in chunks to reduce pressure
+                }
+            };
             var unwind = function (processed) {
                 _this.worked += processed;
                 // Emit progress() unless we got canceled or hit the limit
                 if (processed && !_this.isDone && !_this.isCanceled && !_this.limitReached) {
-                    onProgress({ total: _this.total, worked: _this.worked });
+                    progress();
                 }
                 // Emit done()
                 if (_this.worked === _this.total && _this.walkerIsDone && !_this.isDone) {
@@ -8106,20 +7943,21 @@ define("vs/workbench/services/search/node/textSearch", ["require", "exports", 'v
                 }
             };
             // Walk over the file system
-            this.walker.walk(this.rootFolders, this.extraFiles, function (result) {
-                _this.total++;
+            this.walker.walk(this.rootFolders, this.extraFiles, function (result, size) {
+                size = size || 1;
+                _this.total += size;
                 // If the result is empty or we have reached the limit or we are canceled, ignore it
                 if (_this.limitReached || _this.isCanceled) {
-                    return unwind(1);
+                    return unwind(size);
                 }
                 // Indicate progress to the outside
-                onProgress({ total: _this.total, worked: _this.worked });
+                progress();
                 var fileMatch = null;
                 var doneCallback = function (error) {
                     if (!error && !_this.isCanceled && fileMatch && !fileMatch.isEmpty()) {
                         onResult(fileMatch.serialize());
                     }
-                    return unwind(1);
+                    return unwind(size);
                 };
                 var perLineCallback = function (line, lineNumber) {
                     if (_this.limitReached || _this.isCanceled) {
@@ -8254,6 +8092,7 @@ define("vs/workbench/services/search/node/textSearch", ["require", "exports", 'v
                 });
             });
         };
+        Engine.PROGRESS_FLUSH_CHUNK_SIZE = 50; // optimization: number of files to process before emitting progress event
         return Engine;
     }());
     exports.Engine = Engine;
@@ -8311,7 +8150,7 @@ define("vs/workbench/services/search/node/textSearch", ["require", "exports", 'v
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/workbench/services/search/node/rawSearchService", ["require", "exports", 'fs', 'graceful-fs', 'vs/base/common/winjs.base', 'vs/platform/files/common/files', 'vs/workbench/services/search/node/fileSearch', 'vs/workbench/services/search/node/textSearch'], function (require, exports, fs, gracefulFs, winjs_base_1, files_1, fileSearch_1, textSearch_1) {
+define(__m[36], __M([0,1,6,43,4,32,33,35]), function (require, exports, fs, gracefulFs, winjs_base_1, files_1, fileSearch_1, textSearch_1) {
     'use strict';
     gracefulFs.gracefulify(fs);
     var SearchService = (function () {
@@ -8361,10 +8200,13 @@ define("vs/workbench/services/search/node/rawSearchService", ["require", "export
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/workbench/services/search/node/searchApp", ["require", "exports", 'vs/base/node/service.cp', 'vs/workbench/services/search/node/rawSearchService'], function (require, exports, service_cp_1, rawSearchService_1) {
+define(__m[37], __M([0,1,30,34,36]), function (require, exports, ipc_cp_1, searchIpc_1, rawSearchService_1) {
     'use strict';
-    var server = new service_cp_1.Server();
-    server.registerService('SearchService', new rawSearchService_1.SearchService());
+    var server = new ipc_cp_1.Server();
+    var service = new rawSearchService_1.SearchService();
+    var channel = new searchIpc_1.SearchChannel(service);
+    server.registerChannel('search', channel);
 });
 
+}).call(this);
 //# sourceMappingURL=searchApp.js.map

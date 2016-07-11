@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/base/common/worker/simpleWorker.nls.ja", {
 	"vs/base/common/errors": [
 		"{0}。エラー コード: {1}",
@@ -24,5 +23,23 @@ define("vs/base/common/worker/simpleWorker.nls.ja", {
 		"無効な状態",
 		"必要なファイルを読み込みに失敗しました。インターネット接続が切れたか、接続先のサーバーがオフラインです。ブラウザーを更新して、もう一度やり直してください。",
 		"必要なファイルの読み込みに失敗しました。アプリケーションを再起動してもう一度試してください。詳細: {0}",
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"コントロール",
+		"Shift",
+		"Alt",
+		"コマンド",
+		"Windows",
+		"Ctrl",
+		"Shift",
+		"Alt",
+		"コマンド",
+		"Windows",
+	],
+	"vs/base/common/severity": [
+		"エラー",
+		"警告",
+		"情報",
 	]
 });

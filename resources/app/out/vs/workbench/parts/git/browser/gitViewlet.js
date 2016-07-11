@@ -1,20 +1,31 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
-define("vs/css!vs/workbench/parts/git/browser/media/gitViewlet",['vs/css!vs/workbench/parts/git/browser/gitViewlet'], {});
-define("vs/css!vs/workbench/parts/git/browser/views/changes/changesView",['vs/css!vs/workbench/parts/git/browser/gitViewlet'], {});
-define("vs/css!vs/workbench/parts/git/browser/views/disabled/disabledView",['vs/css!vs/workbench/parts/git/browser/gitViewlet'], {});
-define("vs/css!vs/workbench/parts/git/browser/views/empty/emptyView",['vs/css!vs/workbench/parts/git/browser/gitViewlet'], {});
-define("vs/css!vs/workbench/parts/git/browser/views/gitless/gitlessView",['vs/css!vs/workbench/parts/git/browser/gitViewlet'], {});
-define("vs/css!vs/workbench/parts/git/browser/views/notroot/notrootView",['vs/css!vs/workbench/parts/git/browser/gitViewlet'], {});
-define("vs/css!vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView",['vs/css!vs/workbench/parts/git/browser/gitViewlet'], {});
-define("vs/nls!vs/workbench/parts/git/browser/views/changes/changesView",['vs/nls', 'vs/nls!vs/workbench/parts/git/browser/gitViewlet'], function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/changes/changesView", data); });
-define("vs/nls!vs/workbench/parts/git/browser/views/changes/changesViewer",['vs/nls', 'vs/nls!vs/workbench/parts/git/browser/gitViewlet'], function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/changes/changesViewer", data); });
-define("vs/nls!vs/workbench/parts/git/browser/views/disabled/disabledView",['vs/nls', 'vs/nls!vs/workbench/parts/git/browser/gitViewlet'], function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/disabled/disabledView", data); });
-define("vs/nls!vs/workbench/parts/git/browser/views/empty/emptyView",['vs/nls', 'vs/nls!vs/workbench/parts/git/browser/gitViewlet'], function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/empty/emptyView", data); });
-define("vs/nls!vs/workbench/parts/git/browser/views/gitless/gitlessView",['vs/nls', 'vs/nls!vs/workbench/parts/git/browser/gitViewlet'], function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/gitless/gitlessView", data); });
-define("vs/nls!vs/workbench/parts/git/browser/views/notroot/notrootView",['vs/nls', 'vs/nls!vs/workbench/parts/git/browser/gitViewlet'], function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/notroot/notrootView", data); });
-define("vs/nls!vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView",['vs/nls', 'vs/nls!vs/workbench/parts/git/browser/gitViewlet'], function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView", data); });
+(function() {
+var __m = ["require","exports","vs/base/common/winjs.base","vs/nls!vs/workbench/parts/git/browser/gitViewlet","vs/nls","vs/css!vs/workbench/parts/git/browser/gitViewlet","vs/base/common/eventEmitter","vs/base/browser/builder","vs/workbench/parts/git/common/git","vs/platform/instantiation/common/instantiation","vs/base/browser/dom","vs/base/common/platform","vs/platform/workspace/common/workspace","vs/base/common/lifecycle","vs/platform/message/common/message","vs/workbench/parts/git/browser/gitActions","vs/base/common/paths","vs/nls!vs/workbench/parts/git/browser/views/notroot/notrootView","vs/nls!vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView","vs/workbench/parts/git/browser/views/disabled/disabledView","vs/css!vs/workbench/parts/git/browser/views/disabled/disabledView","vs/css!vs/workbench/parts/git/browser/views/empty/emptyView","vs/css!vs/workbench/parts/git/browser/views/gitless/gitlessView","vs/css!vs/workbench/parts/git/browser/views/huge/hugeView","vs/css!vs/workbench/parts/git/browser/views/notroot/notrootView","vs/workbench/parts/git/browser/views/gitless/gitlessView","vs/css!vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView","vs/nls!vs/workbench/parts/git/browser/views/changes/changesView","vs/workbench/parts/git/browser/views/notroot/notrootView","vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView","vs/workbench/parts/git/browser/views/huge/hugeView","vs/css!vs/workbench/parts/git/browser/media/gitViewlet","vs/css!vs/workbench/parts/git/browser/views/changes/changesView","vs/base/common/errors","vs/base/browser/ui/button/button","vs/workbench/parts/git/browser/views/changes/changesViewer","vs/nls!vs/workbench/parts/git/browser/views/changes/changesViewer","vs/base/common/severity","vs/workbench/parts/git/browser/views/empty/emptyView","vs/base/browser/ui/actionbar/actionbar","vs/nls!vs/workbench/parts/git/browser/views/disabled/disabledView","vs/workbench/parts/git/browser/views/changes/changesView","vs/base/common/keyCodes","vs/nls!vs/workbench/parts/git/browser/views/empty/emptyView","vs/workbench/parts/git/common/gitModel","vs/nls!vs/workbench/parts/git/browser/views/gitless/gitlessView","vs/platform/contextview/browser/contextView","vs/nls!vs/workbench/parts/git/browser/views/huge/hugeView","vs/workbench/common/editor","vs/base/parts/tree/browser/treeDefaults","vs/base/common/uri","vs/base/parts/tree/browser/tree","vs/base/browser/ui/countBadge/countBadge","vs/base/common/strings","vs/base/browser/keyboardEvent","vs/base/common/actions","vs/base/parts/tree/browser/treeImpl","vs/workbench/parts/git/browser/gitEditorInputs","vs/workbench/parts/files/common/files","vs/workbench/parts/output/common/output","vs/base/parts/tree/browser/treeDnd","vs/base/browser/ui/inputbox/inputBox","vs/workbench/services/editor/common/editorService","vs/platform/event/common/event","vs/workbench/services/group/common/groupService","vs/platform/configuration/common/configuration","vs/base/common/comparers","vs/platform/files/common/files","vs/workbench/parts/git/browser/gitViewlet","vs/workbench/browser/viewlet","vs/workbench/parts/git/browser/gitWorkbenchContributions","vs/platform/progress/common/progress","vs/platform/telemetry/common/telemetry"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
+define(__m[31], __M([5]), {});
+define(__m[32], __M([5]), {});
+define(__m[20], __M([5]), {});
+define(__m[21], __M([5]), {});
+define(__m[22], __M([5]), {});
+define(__m[23], __M([5]), {});
+define(__m[24], __M([5]), {});
+define(__m[26], __M([5]), {});
+define(__m[27], __M([4,3]), function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/changes/changesView", data); });
+define(__m[36], __M([4,3]), function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/changes/changesViewer", data); });
+define(__m[40], __M([4,3]), function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/disabled/disabledView", data); });
+define(__m[43], __M([4,3]), function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/empty/emptyView", data); });
+define(__m[45], __M([4,3]), function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/gitless/gitlessView", data); });
+define(__m[47], __M([4,3]), function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/huge/hugeView", data); });
+define(__m[17], __M([4,3]), function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/notroot/notrootView", data); });
+define(__m[18], __M([4,3]), function(nls, data) { return nls.create("vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView", data); });
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -24,7 +35,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define("vs/workbench/parts/git/browser/views/disabled/disabledView", ["require", "exports", 'vs/nls!vs/workbench/parts/git/browser/views/disabled/disabledView', 'vs/base/common/winjs.base', 'vs/base/common/eventEmitter', 'vs/base/browser/builder', 'vs/platform/selection/common/selection', 'vs/css!./disabledView'], function (require, exports, nls, winjs, ee, builder, selection_1) {
+define(__m[19], __M([0,1,40,2,6,7,20]), function (require, exports, nls, winjs, ee, builder) {
     'use strict';
     var $ = builder.$;
     var DisabledView = (function (_super) {
@@ -59,9 +70,6 @@ define("vs/workbench/parts/git/browser/views/disabled/disabledView", ["require",
         DisabledView.prototype.setVisible = function (visible) {
             return winjs.TPromise.as(null);
         };
-        DisabledView.prototype.getSelection = function () {
-            return selection_1.Selection.EMPTY;
-        };
         DisabledView.prototype.getControl = function () {
             return null;
         };
@@ -80,11 +88,11 @@ define("vs/workbench/parts/git/browser/views/disabled/disabledView", ["require",
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+
+
+
+
+
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -94,7 +102,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define("vs/workbench/parts/git/browser/views/gitless/gitlessView", ["require", "exports", 'vs/nls!vs/workbench/parts/git/browser/views/gitless/gitlessView', 'vs/base/common/platform', 'vs/base/common/winjs.base', 'vs/base/common/eventEmitter', 'vs/base/browser/builder', 'vs/platform/workspace/common/workspace', 'vs/platform/selection/common/selection', 'vs/css!./gitlessView'], function (require, exports, nls, platform, winjs, ee, builder, workspace_1, selection_1) {
+define(__m[25], __M([0,1,45,11,2,6,7,12,22]), function (require, exports, nls, platform, winjs, ee, builder, workspace_1) {
     'use strict';
     var $ = builder.$;
     var GitlessView = (function (_super) {
@@ -145,9 +153,6 @@ define("vs/workbench/parts/git/browser/views/gitless/gitlessView", ["require", "
         GitlessView.prototype.setVisible = function (visible) {
             return winjs.TPromise.as(null);
         };
-        GitlessView.prototype.getSelection = function () {
-            return selection_1.Selection.EMPTY;
-        };
         GitlessView.prototype.getControl = function () {
             return null;
         };
@@ -169,12 +174,12 @@ define("vs/workbench/parts/git/browser/views/gitless/gitlessView", ["require", "
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define("vs/workbench/parts/git/browser/views/notroot/notrootView", ["require", "exports", 'vs/nls!vs/workbench/parts/git/browser/views/notroot/notrootView', 'vs/base/common/winjs.base', 'vs/base/common/eventEmitter', 'vs/base/browser/builder', 'vs/platform/selection/common/selection', 'vs/css!./notrootView'], function (require, exports, nls, winjs, ee, builder, selection_1) {
+
+
+
+
+
+define(__m[28], __M([0,1,17,2,6,7,24]), function (require, exports, nls, winjs, ee, builder) {
     'use strict';
     var $ = builder.$;
     var NotRootView = (function (_super) {
@@ -210,9 +215,6 @@ define("vs/workbench/parts/git/browser/views/notroot/notrootView", ["require", "
         NotRootView.prototype.setVisible = function (visible) {
             return winjs.TPromise.as(null);
         };
-        NotRootView.prototype.getSelection = function () {
-            return selection_1.Selection.EMPTY;
-        };
         NotRootView.prototype.getControl = function () {
             return null;
         };
@@ -231,12 +233,12 @@ define("vs/workbench/parts/git/browser/views/notroot/notrootView", ["require", "
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define("vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView", ["require", "exports", 'vs/nls!vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView', 'vs/base/common/winjs.base', 'vs/base/common/eventEmitter', 'vs/base/browser/builder', 'vs/platform/selection/common/selection', 'vs/css!./noworkspaceView'], function (require, exports, nls, winjs, ee, builder, selection_1) {
+
+
+
+
+
+define(__m[29], __M([0,1,18,2,6,7,26]), function (require, exports, nls, winjs, ee, builder) {
     'use strict';
     var $ = builder.$;
     var NoWorkspaceView = (function (_super) {
@@ -272,9 +274,6 @@ define("vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView", ["req
         NoWorkspaceView.prototype.setVisible = function (visible) {
             return winjs.TPromise.as(null);
         };
-        NoWorkspaceView.prototype.getSelection = function () {
-            return selection_1.Selection.EMPTY;
-        };
         NoWorkspaceView.prototype.getControl = function () {
             return null;
         };
@@ -289,21 +288,103 @@ define("vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView", ["req
     exports.NoWorkspaceView = NoWorkspaceView;
 });
 
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-define("vs/workbench/parts/git/browser/views/changes/changesViewer", ["require", "exports", 'vs/base/common/winjs.base', 'vs/nls!vs/workbench/parts/git/browser/views/changes/changesViewer', 'vs/base/common/platform', 'vs/base/common/paths', 'vs/base/common/severity', 'vs/base/browser/dom', 'vs/base/common/comparers', 'vs/base/browser/ui/actionbar/actionbar', 'vs/base/browser/ui/countBadge/countBadge', 'vs/base/parts/tree/browser/tree', 'vs/base/parts/tree/browser/treeDnd', 'vs/base/parts/tree/browser/treeDefaults', 'vs/workbench/parts/git/common/git', 'vs/workbench/parts/git/common/gitModel', 'vs/workbench/parts/git/browser/gitActions', 'vs/platform/contextview/browser/contextView', 'vs/platform/instantiation/common/instantiation', 'vs/platform/message/common/message', 'vs/base/common/keyCodes', 'vs/platform/workspace/common/workspace', 'vs/base/common/uri'], function (require, exports, winjs, nls, platform, paths, severity_1, dom, comparers, actionbar, countbadge, tree, treednd, treedefaults, git, gitmodel, gitactions, contextView_1, instantiation_1, message_1, keyCodes_1, workspace_1, uri_1) {
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[30], __M([0,1,47,2,6,10,8,33,34,23]), function (require, exports, nls, winjs, ee, dom, git_1, errors_1, button_1) {
+    'use strict';
+    var $ = dom.emmet;
+    var HugeView = (function (_super) {
+        __extends(HugeView, _super);
+        function HugeView(gitService) {
+            _super.call(this);
+            this.gitService = gitService;
+            this.ID = 'huge';
+        }
+        Object.defineProperty(HugeView.prototype, "element", {
+            get: function () {
+                if (!this._element) {
+                    this.render();
+                }
+                return this._element;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        HugeView.prototype.render = function () {
+            var _this = this;
+            this._element = $('.huge-view');
+            dom.append(this._element, $('p')).textContent = nls.localize(0, null);
+            var settingP = dom.append(this._element, $('p'));
+            dom.append(settingP, document.createTextNode(nls.localize(1, null)));
+            dom.append(settingP, document.createTextNode(' '));
+            var pre = dom.append(settingP, $('pre'));
+            pre.style.display = 'inline';
+            pre.textContent = 'git.allowLargeRepositories';
+            var button = new button_1.Button(this._element);
+            button.label = nls.localize(2, null);
+            button.addListener2('click', function (e) {
+                dom.EventHelper.stop(e);
+                _this.gitService.allowHugeRepositories = true;
+                _this.gitService.status().done(null, errors_1.onUnexpectedError);
+            });
+        };
+        HugeView.prototype.focus = function () {
+            return;
+        };
+        HugeView.prototype.layout = function (dimension) {
+            return;
+        };
+        HugeView.prototype.setVisible = function (visible) {
+            return winjs.TPromise.as(null);
+        };
+        HugeView.prototype.getControl = function () {
+            return null;
+        };
+        HugeView.prototype.getActions = function () {
+            return [];
+        };
+        HugeView.prototype.getSecondaryActions = function () {
+            return [];
+        };
+        HugeView = __decorate([
+            __param(0, git_1.IGitService)
+        ], HugeView);
+        return HugeView;
+    }(ee.EventEmitter));
+    exports.HugeView = HugeView;
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[35], __M([0,1,2,36,11,16,37,10,66,39,52,51,60,49,8,44,15,46,9,14,42,12,50]), function (require, exports, winjs, nls, platform, paths, severity_1, dom, comparers, actionbar, countbadge, tree, treednd, treedefaults, git, gitmodel, gitactions, contextView_1, instantiation_1, message_1, keyCodes_1, workspace_1, uri_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -590,6 +671,7 @@ define("vs/workbench/parts/git/browser/views/changes/changesViewer", ["require",
                 data.root.className += ' out-of-workspace';
             }
             data.name.textContent = rename || name;
+            data.name.title = renamePath || path;
             data.folder.textContent = toReadablePath(renameFolder || folder);
         };
         Renderer.prototype.disposeTemplate = function (tree, templateId, templateData) {
@@ -1082,29 +1164,30 @@ define("vs/workbench/parts/git/browser/views/changes/changesViewer", ["require",
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "exports", 'vs/nls!vs/workbench/parts/git/browser/views/changes/changesView', 'vs/base/common/platform', 'vs/base/common/lifecycle', 'vs/base/common/eventEmitter', 'vs/base/common/strings', 'vs/base/common/errors', 'vs/base/common/paths', 'vs/base/common/winjs.base', 'vs/base/browser/builder', 'vs/base/browser/keyboardEvent', 'vs/base/common/actions', 'vs/base/browser/ui/actionbar/actionbar', 'vs/base/parts/tree/browser/treeImpl', 'vs/workbench/common/events', 'vs/workbench/parts/git/common/git', 'vs/workbench/parts/git/browser/gitActions', 'vs/workbench/parts/git/common/gitModel', 'vs/workbench/parts/git/browser/views/changes/changesViewer', 'vs/workbench/parts/git/browser/gitEditorInputs', 'vs/workbench/parts/files/common/files', 'vs/workbench/parts/output/common/output', 'vs/workbench/common/editor', 'vs/base/browser/ui/inputbox/inputBox', 'vs/base/common/severity', 'vs/workbench/services/editor/common/editorService', 'vs/platform/contextview/browser/contextView', 'vs/platform/instantiation/common/instantiation', 'vs/platform/message/common/message', 'vs/platform/workspace/common/workspace', 'vs/platform/selection/common/selection', 'vs/platform/event/common/event', 'vs/base/common/keyCodes', 'vs/css!./changesView'], function (require, exports, nls, Platform, Lifecycle, EventEmitter, Strings, Errors, paths, WinJS, Builder, keyboardEvent_1, Actions, ActionBar, TreeImpl, WorkbenchEvents, git, GitActions, GitModel, Viewer, GitEditorInputs, Files, output_1, WorkbenchEditorCommon, InputBox, severity_1, editorService_1, contextView_1, instantiation_1, message_1, workspace_1, selection_1, event_1, keyCodes_1) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[41], __M([0,1,27,11,13,6,53,33,16,2,7,54,55,39,56,8,15,44,35,57,58,59,48,61,37,62,46,9,14,12,63,42,64,65,32]), function (require, exports, nls, Platform, Lifecycle, EventEmitter, Strings, Errors, paths, WinJS, Builder, keyboardEvent_1, Actions, ActionBar, TreeImpl, git, GitActions, GitModel, Viewer, GitEditorInputs, Files, output_1, WorkbenchEditorCommon, InputBox, severity_1, editorService_1, contextView_1, instantiation_1, message_1, workspace_1, event_1, keyCodes_1, groupService_1, configuration_1) {
     'use strict';
     var IGitService = git.IGitService;
     var $ = Builder.$;
     var ChangesView = (function (_super) {
         __extends(ChangesView, _super);
-        function ChangesView(actionRunner, instantiationService, editorService, messageService, contextViewService, contextService, gitService, outputService, eventService) {
+        function ChangesView(actionRunner, instantiationService, editorService, editorGroupService, messageService, contextViewService, contextService, gitService, outputService, eventService, configurationService) {
             var _this = this;
             _super.call(this);
+            this.configurationService = configurationService;
             this.ID = 'changes';
             this.instantiationService = instantiationService;
             this.editorService = editorService;
@@ -1118,7 +1201,7 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
             this.actionRunner = actionRunner;
             this.toDispose = [
                 this.smartCommitAction = this.instantiationService.createInstance(GitActions.SmartCommitAction, this),
-                eventService.addListener2(WorkbenchEvents.EventType.EDITOR_INPUT_CHANGED, function (e) { return _this.onEditorInputChanged(e.editorInput).done(null, Errors.onUnexpectedError); }),
+                editorGroupService.onEditorsChanged(function () { return _this.onEditorsChanged(_this.editorService.getActiveEditorInput()).done(null, Errors.onUnexpectedError); }),
                 this.gitService.addListener2(git.ServiceEvents.OPERATION_START, function (e) { return _this.onGitOperationStart(e); }),
                 this.gitService.addListener2(git.ServiceEvents.OPERATION_END, function (e) { return _this.onGitOperationEnd(e); }),
                 this.gitService.getModel().addListener2(git.ModelEvents.MODEL_UPDATED, this.onGitModelUpdate.bind(this))
@@ -1142,12 +1225,24 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
             this.$commitView = $('.commit-view').appendTo(this.$el);
             // Commit view
             this.commitInputBox = new InputBox.InputBox(this.$commitView.getHTMLElement(), this.contextViewService, {
-                placeholder: nls.localize(2, null, ChangesView.COMMIT_KEYBINDING),
+                placeholder: nls.localize(3, null, ChangesView.COMMIT_KEYBINDING),
                 validationOptions: {
                     showMessage: true,
-                    validation: function () { return null; }
+                    validation: function (value) {
+                        var config = _this.configurationService.getConfiguration('git');
+                        if (!config.enableLongCommitWarning) {
+                            return null;
+                        }
+                        if (/^[^\n]{51}/.test(value)) {
+                            return {
+                                content: ChangesView.LONG_COMMIT,
+                                type: InputBox.MessageType.WARNING
+                            };
+                        }
+                        return null;
+                    }
                 },
-                ariaLabel: nls.localize(3, null, ChangesView.COMMIT_KEYBINDING),
+                ariaLabel: nls.localize(4, null, ChangesView.COMMIT_KEYBINDING),
                 flexibleHeight: true
             });
             this.commitInputBox.onDidChange(function (value) { return _this.emit('change', value); });
@@ -1182,7 +1277,7 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
             }, {
                 indentPixels: 0,
                 twistiePixels: 20,
-                ariaLabel: nls.localize(4, null)
+                ariaLabel: nls.localize(5, null)
             });
             this.tree.setInput(this.gitService.getModel().getStatus());
             this.tree.expandAll(this.gitService.getModel().getStatus().getGroups());
@@ -1217,15 +1312,12 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
             this.visible = visible;
             if (visible) {
                 this.tree.onVisible();
-                return this.onEditorInputChanged(this.editorService.getActiveEditorInput());
+                return this.onEditorsChanged(this.editorService.getActiveEditorInput());
             }
             else {
                 this.tree.onHidden();
                 return WinJS.TPromise.as(null);
             }
-        };
-        ChangesView.prototype.getSelection = function () {
-            return new selection_1.StructuredSelection(this.tree.getSelection());
         };
         ChangesView.prototype.getControl = function () {
             return this.tree;
@@ -1254,12 +1346,12 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
                     new ActionBar.Separator(),
                     this.instantiationService.createInstance(GitActions.CommitAction, this),
                     this.instantiationService.createInstance(GitActions.StageAndCommitAction, this),
-                    this.instantiationService.createInstance(GitActions.UndoLastCommitAction),
+                    this.instantiationService.createInstance(GitActions.UndoLastCommitAction, GitActions.UndoLastCommitAction.ID, GitActions.UndoLastCommitAction.LABEL),
                     new ActionBar.Separator(),
                     this.instantiationService.createInstance(GitActions.GlobalUnstageAction),
                     this.instantiationService.createInstance(GitActions.GlobalUndoAction),
                     new ActionBar.Separator(),
-                    new Actions.Action('show.gitOutput', nls.localize(5, null), null, true, function () { return _this.outputService.showOutput('Git'); })
+                    new Actions.Action('show.gitOutput', nls.localize(6, null), null, true, function () { return _this.outputService.getChannel('Git').show(); })
                 ];
                 this.secondaryActions.forEach(function (a) { return _this.toDispose.push(a); });
             }
@@ -1282,7 +1374,7 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
                 });
             }
         };
-        ChangesView.prototype.onEditorInputChanged = function (input) {
+        ChangesView.prototype.onEditorsChanged = function (input) {
             var _this = this;
             if (!this.tree) {
                 return WinJS.TPromise.as(null);
@@ -1317,6 +1409,7 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
             if (isMouseOrigin && (e.payload.originalEvent.metaKey || e.payload.originalEvent.shiftKey)) {
                 return;
             }
+            var isDoubleClick = isMouseOrigin && e.payload.originalEvent && e.payload.originalEvent.detail === 2;
             var status = element;
             this.gitService.getInput(status).done(function (input) {
                 var options = new WorkbenchEditorCommon.TextDiffEditorOptions();
@@ -1329,6 +1422,7 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
                     }
                 }
                 options.forceOpen = true;
+                options.pinned = isDoubleClick;
                 var sideBySide = (e && e.payload && e.payload.originalEvent && e.payload.originalEvent.altKey);
                 return _this.editorService.openEditor(input, options, sideBySide);
             }, function (e) {
@@ -1395,21 +1489,24 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
                 this.$el.dispose();
                 this.$el = null;
             }
-            this.toDispose = Lifecycle.disposeAll(this.toDispose);
+            this.toDispose = Lifecycle.dispose(this.toDispose);
             _super.prototype.dispose.call(this);
         };
         ChangesView.COMMIT_KEYBINDING = Platform.isMacintosh ? 'Cmd+Enter' : 'Ctrl+Enter';
         ChangesView.NEED_MESSAGE = nls.localize(0, null, ChangesView.COMMIT_KEYBINDING);
         ChangesView.NOTHING_TO_COMMIT = nls.localize(1, null, ChangesView.COMMIT_KEYBINDING);
+        ChangesView.LONG_COMMIT = nls.localize(2, null);
         ChangesView = __decorate([
             __param(1, instantiation_1.IInstantiationService),
             __param(2, editorService_1.IWorkbenchEditorService),
-            __param(3, message_1.IMessageService),
-            __param(4, contextView_1.IContextViewService),
-            __param(5, workspace_1.IWorkspaceContextService),
-            __param(6, IGitService),
-            __param(7, output_1.IOutputService),
-            __param(8, event_1.IEventService)
+            __param(3, groupService_1.IEditorGroupService),
+            __param(4, message_1.IMessageService),
+            __param(5, contextView_1.IContextViewService),
+            __param(6, workspace_1.IWorkspaceContextService),
+            __param(7, IGitService),
+            __param(8, output_1.IOutputService),
+            __param(9, event_1.IEventService),
+            __param(10, configuration_1.IConfigurationService)
         ], ChangesView);
         return ChangesView;
     }(EventEmitter.EventEmitter));
@@ -1420,21 +1517,21 @@ define("vs/workbench/parts/git/browser/views/changes/changesView", ["require", "
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-define("vs/workbench/parts/git/browser/views/empty/emptyView", ["require", "exports", 'vs/nls!vs/workbench/parts/git/browser/views/empty/emptyView', 'vs/base/common/lifecycle', 'vs/base/common/eventEmitter', 'vs/base/browser/dom', 'vs/base/browser/ui/button/button', 'vs/base/common/winjs.base', 'vs/base/browser/builder', 'vs/workbench/parts/git/common/git', 'vs/workbench/parts/git/browser/gitActions', 'vs/platform/files/common/files', 'vs/platform/instantiation/common/instantiation', 'vs/platform/message/common/message', 'vs/platform/selection/common/selection', 'vs/css!./emptyView'], function (require, exports, nls, Lifecycle, EventEmitter, DOM, button_1, WinJS, Builder, git, GitActions, files_1, instantiation_1, message_1, selection_1) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[38], __M([0,1,43,13,6,10,34,2,7,8,15,67,9,14,21]), function (require, exports, nls, Lifecycle, EventEmitter, DOM, button_1, WinJS, Builder, git, GitActions, files_1, instantiation_1, message_1) {
     'use strict';
     var IGitService = git.IGitService;
     var $ = Builder.$;
@@ -1482,7 +1579,7 @@ define("vs/workbench/parts/git/browser/views/empty/emptyView", ["require", "expo
             var initSection = $('.section').appendTo(this.$el);
             this.initButton = new button_1.Button(initSection);
             this.initButton.label = nls.localize(1, null);
-            this.initButton.on('click', function (e) {
+            this.initButton.addListener2('click', function (e) {
                 DOM.EventHelper.stop(e);
                 _this.disableUI();
                 _this.actionRunner.run(_this.initAction).done(function () {
@@ -1520,9 +1617,6 @@ define("vs/workbench/parts/git/browser/views/empty/emptyView", ["require", "expo
             this.isVisible = visible;
             return WinJS.TPromise.as(null);
         };
-        EmptyView.prototype.getSelection = function () {
-            return selection_1.Selection.EMPTY;
-        };
         EmptyView.prototype.getControl = function () {
             return null;
         };
@@ -1546,7 +1640,7 @@ define("vs/workbench/parts/git/browser/views/empty/emptyView", ["require", "expo
                 this.$el.dispose();
                 this.$el = null;
             }
-            this.toDispose = Lifecycle.disposeAll(this.toDispose);
+            this.toDispose = Lifecycle.dispose(this.toDispose);
             _super.prototype.dispose.call(this);
         };
         EmptyView.EMPTY_MESSAGE = nls.localize(0, null);
@@ -1565,21 +1659,21 @@ define("vs/workbench/parts/git/browser/views/empty/emptyView", ["require", "expo
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-define("vs/workbench/parts/git/browser/gitViewlet", ["require", "exports", 'vs/base/common/winjs.base', 'vs/base/common/lifecycle', 'vs/workbench/browser/viewlet', 'vs/workbench/parts/git/common/git', 'vs/workbench/parts/git/browser/gitWorkbenchContributions', 'vs/workbench/parts/git/browser/views/changes/changesView', 'vs/workbench/parts/git/browser/views/empty/emptyView', 'vs/workbench/parts/git/browser/views/gitless/gitlessView', 'vs/workbench/parts/git/browser/views/notroot/notrootView', 'vs/workbench/parts/git/browser/views/noworkspace/noworkspaceView', './views/disabled/disabledView', 'vs/platform/instantiation/common/instantiation', 'vs/platform/progress/common/progress', 'vs/platform/selection/common/selection', 'vs/platform/telemetry/common/telemetry', 'vs/css!./media/gitViewlet'], function (require, exports, winjs, lifecycle, viewlet, git, contrib, changes, empty, gitless, notroot, noworkspace, disabledView_1, instantiation_1, progress_1, selection_1, telemetry_1) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[68], __M([0,1,2,13,69,8,70,41,38,25,28,29,19,30,9,71,72,31]), function (require, exports, winjs, lifecycle, viewlet, git, contrib, changes, empty, gitless, notroot, noworkspace, disabledView_1, hugeView_1, instantiation_1, progress_1, telemetry_1) {
     'use strict';
     var IGitService = git.IGitService;
     var GitViewlet = (function (_super) {
@@ -1599,13 +1693,14 @@ define("vs/workbench/parts/git/browser/gitViewlet", ["require", "exports", 'vs/b
                 this.instantiationService.createInstance(gitless.GitlessView),
                 new notroot.NotRootView(),
                 new noworkspace.NoWorkspaceView(),
-                new disabledView_1.DisabledView()
+                new disabledView_1.DisabledView(),
+                this.instantiationService.createInstance(hugeView_1.HugeView)
             ];
             views.forEach(function (v) {
                 _this.views[v.ID] = v;
                 _this.toDispose.push(v);
             });
-            this.toUnbind.push(this.gitService.addBulkListener(function () { return _this.onGitServiceChanges(); }));
+            this.toUnbind.push(this.gitService.addBulkListener2(function () { return _this.onGitServiceChanges(); }));
         }
         // GitView.IController
         GitViewlet.prototype.setView = function (id) {
@@ -1676,12 +1771,6 @@ define("vs/workbench/parts/git/browser/gitViewlet", ["require", "exports", 'vs/b
         GitViewlet.prototype.getSecondaryActions = function () {
             return this.currentView ? this.currentView.getSecondaryActions() : [];
         };
-        GitViewlet.prototype.getSelection = function () {
-            if (!this.currentView) {
-                return selection_1.Selection.EMPTY;
-            }
-            return this.currentView.getSelection();
-        };
         GitViewlet.prototype.getControl = function () {
             if (!this.currentView) {
                 return null;
@@ -1713,6 +1802,10 @@ define("vs/workbench/parts/git/browser/gitViewlet", ["require", "exports", 'vs/b
                 this.setView('notroot');
                 this.progressRunner = null;
             }
+            else if (this.gitService.getState() === git.ServiceState.Huge) {
+                this.setView('huge');
+                this.progressRunner = null;
+            }
             else if (this.gitService.isIdle()) {
                 this.setView('changes');
                 this.progressRunner = null;
@@ -1722,7 +1815,7 @@ define("vs/workbench/parts/git/browser/gitViewlet", ["require", "exports", 'vs/b
             }
         };
         GitViewlet.prototype.dispose = function () {
-            this.toDispose = lifecycle.disposeAll(this.toDispose);
+            this.toDispose = lifecycle.dispose(this.toDispose);
             this.views = null;
             _super.prototype.dispose.call(this);
         };
@@ -1737,4 +1830,5 @@ define("vs/workbench/parts/git/browser/gitViewlet", ["require", "exports", 'vs/b
     exports.GitViewlet = GitViewlet;
 });
 
+}).call(this);
 //# sourceMappingURL=gitViewlet.js.map

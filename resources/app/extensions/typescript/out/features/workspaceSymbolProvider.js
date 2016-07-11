@@ -43,14 +43,20 @@ var TypeScriptWorkspaceSymbolProvider = (function () {
         return this.client.execute('navto', args, token).then(function (response) {
             var data = response.body;
             if (data) {
-                return data.map(function (item) {
+                var result = [];
+                for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
+                    var item = data_1[_i];
+                    if (!item.containerName && item.kind === 'alias') {
+                        continue;
+                    }
                     var range = new vscode_1.Range(item.start.line - 1, item.start.offset - 1, item.end.line - 1, item.end.offset - 1);
                     var label = item.name;
                     if (item.kind === 'method' || item.kind === 'function') {
                         label += '()';
                     }
-                    return new vscode_1.SymbolInformation(label, _kindMapping[item.kind], range, _this.client.asUrl(item.file), item.containerName);
-                });
+                    result.push(new vscode_1.SymbolInformation(label, _kindMapping[item.kind], range, _this.client.asUrl(item.file), item.containerName));
+                }
+                return result;
             }
             else {
                 return [];

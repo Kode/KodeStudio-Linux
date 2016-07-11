@@ -1,11 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/git/browser/gitViewlet.nls.ru", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"Предоставьте сообщение фиксации. В любом случае можно нажать кнопку **{0}**, чтобы зафиксировать изменения. При наличии промежуточно сохраненных изменений зафиксированы будут только они. В противном случае фиксируются все изменения.",
 		"Как только появятся изменения для фиксации, введите сообщение фиксации и нажмите кнопку **{0}**, чтобы зафиксировать изменения. При наличии промежуточно сохраненных изменений зафиксированы будут только они. В противном случае фиксируются все изменения.",
+		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
 		"Сообщение (чтобы зафиксировать, нажмите {0})",
 		"GIT: введите сообщение фиксации и нажмите {0}, чтобы выполнить фиксацию",
 		"Представление изменений GIT",
@@ -67,6 +67,11 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.ru", {
 		"Его можно скачать по адресу {0}.",
 		"Похоже, GIT не установлен в вашей системе.",
 		"После установки GIT перезапустите {0}.",
+	],
+	"vs/workbench/parts/git/browser/views/huge/hugeView": [
+		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
+		"You can permanently disable this warning with the following setting:",
+		"Allow large repositories",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"Кажется, каталог находится в репозитории GIT.",

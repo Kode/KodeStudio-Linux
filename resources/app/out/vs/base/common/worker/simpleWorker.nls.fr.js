@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/base/common/worker/simpleWorker.nls.fr", {
 	"vs/base/common/errors": [
 		"{0}. Code d\'erreur : {1}",
@@ -24,5 +23,23 @@ define("vs/base/common/worker/simpleWorker.nls.fr", {
 		"État incorrect",
 		"Échec du chargement d\'un fichier requis. Soit vous n\'êtes plus connecté à Internet, soit le serveur auquel vous êtes connecté est hors connexion. Actualisez le navigateur pour réessayer.",
 		"Échec du chargement d\'un fichier obligatoire. Redémarrez l\'application pour réessayer. Détails : {0}",
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"Contrôle",
+		"Maj",
+		"Alt",
+		"Commande",
+		"Windows",
+		"Ctrl",
+		"Maj",
+		"Alt",
+		"Commande",
+		"Windows",
+	],
+	"vs/base/common/severity": [
+		"Erreur",
+		"Avertissement",
+		"Informations",
 	]
 });

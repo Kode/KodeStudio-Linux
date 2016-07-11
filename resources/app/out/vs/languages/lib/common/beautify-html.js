@@ -1,7 +1,16 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
-define("vs/languages/lib/common/beautify", ["require", "exports"], function (require, exports) {
+(function() {
+var __m = ["vs/languages/lib/common/beautify","require","exports","vs/languages/lib/common/beautify-html","vs/languages/lib/common/beautify-css"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
+define(__m[0], __M([1,2]), function (require, exports) {
     "use strict";
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -1501,7 +1510,7 @@ define("vs/languages/lib/common/beautify", ["require", "exports"], function (req
 
     if (typeof define === "function" && define.amd) {
         // Add support for AMD ( https://github.com/amdjs/amdjs-api/wiki/AMD#defineamd-property- )
-        define("vs/languages/lib/common/beautify-html", ["require", "./beautify", "./beautify-css"], function(requireamd) {
+        define(__m[3], __M([1,0,4]), function(requireamd) {
             var js_beautify =  requireamd("./beautify");
             var css_beautify =  requireamd("./beautify-css");
 
@@ -1533,4 +1542,5 @@ define("vs/languages/lib/common/beautify", ["require", "exports"], function (req
     }
 
 }());
+}).call(this);
 //# sourceMappingURL=beautify-html.js.map

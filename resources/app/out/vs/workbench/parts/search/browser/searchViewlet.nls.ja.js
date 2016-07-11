@@ -1,29 +1,22 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/search/browser/searchViewlet.nls.ja", {
+	"vs/workbench/parts/search/browser/patternInputWidget": [
+		"input",
+		"Use Glob Patterns",
+		"The pattern to match. e.g. **\\*\\*/*.js** to match all JavaScript files or **myFolder/\\*\\*** to match that folder with all children.\n\n**Reference**:\n**\\*** matches 0 or more characters\n**?** matches 1 character\n**\\*\\*** matches zero or more directories\n**[a-z]** matches a range of characters\n**{a,b}** matches any of the patterns)",
+	],
+	"vs/workbench/parts/search/browser/searchResultsView": [
+		"{0} matches found",
+		"{0} match found",
+		"no matches",
+		"{0} matches in file {1} of folder {2}, Search result",
+		"No matches",
+		"Replace preview result, {0}",
+		"{0}, Search result",
+	],
 	"vs/workbench/parts/search/browser/searchViewlet": [
-		"フォルダー内を検索",
-		"フォルダー {2} のファイル {1} 内で {0} 件の一致、検索結果",
-		"{0}、検索結果",
-		"削除",
-		"一致する項目が {0} 件見つかりました",
-		"一致する項目が {0} 件見つかりました",
-		"一致なし",
-		"最新の情報に更新",
-		"選択",
-		"選択",
-		"削除",
-		"折りたたむ",
-		"検索結果のクリア",
-		"設定を開く",
-		"入力",
-		"glob パターンを使用する",
-		"一致するパターン。たとえば、****/*.js** はすべての JavaScript ファイルと一致し、**myFolder/**** は当該フォルダーとすべての子と一致します。\n\n**参照情報**:\n***** は 0 個以上の文字と一致します\n**?** は 1 文字と一致します\n****** は 0 個以上のディレクトリと一致します\n**[a-z]** は文字の範囲と一致します\n**{a,b}** は任意のパターンと一致します)",
-		"検索: 検索語句を入力し Enter を押して検索するか、Esc を押して取り消します",
-		"この式はすべてに一致します",
-		"Enter を押して検索するか、Esc を押して取り消します",
 		"詳細検索の切り替え",
 		"含めるファイル",
 		"検索包含パターン",
@@ -31,6 +24,12 @@ define("vs/workbench/parts/search/browser/searchViewlet.nls.ja", {
 		"検索除外パターン",
 		"設定で除外されたファイル",
 		"検索除外パターンを構成しました",
+		"Replaced {0} occurrences across {1} files with {2}.",
+		"Removed {0} occurrences across {1} files.",
+		"Replace All",
+		"Replace {0} occurrences across {1} files with \'{2}\'?",
+		"Remove {0} occurrences across {1} files?",
+		"Replace",
 		"検索結果",
 		"{1} のとき {0}",
 		"結果セットにはすべての一致項目のサブセットのみが含まれています。より限定的な検索条件を入力して、検索結果を絞り込んでください。",

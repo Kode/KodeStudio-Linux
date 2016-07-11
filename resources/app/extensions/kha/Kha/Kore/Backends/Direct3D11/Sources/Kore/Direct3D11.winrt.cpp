@@ -259,6 +259,12 @@ void Graphics::changeResolution(int width, int height) {
 }
 
 void Graphics::drawIndexedVertices() {
+	if (currentProgram->tessControlShader != nullptr) {
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	}
+	else {
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
 	Program::setConstants();
 	context->DrawIndexed(IndexBuffer::_current->count(), 0, 0);
 }
@@ -379,12 +385,16 @@ unsigned Graphics::refreshRate() {
 
 void Graphics::swapBuffers(int windowId) {
 	HRESULT hr = swapChain->Present(1, 0);
+	// TODO: if (hr == DXGI_STATUS_OCCLUDED)...
+	// http://www.pouet.net/topic.php?which=10454
+	// "Proper handling of DXGI_STATUS_OCCLUDED would be to pause the application,
+	// and periodically call Present with the TEST flag, and when it returns S_OK, resume rendering."
 
 	//if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET) {
 	//	Initialize(m_window);
 	//}
 	//else {
-		affirm(hr);
+		affirm(SUCCEEDED(hr));
 	//}
 }
 
@@ -663,4 +673,8 @@ void Graphics::setIndexBuffer(IndexBuffer& buffer) {
 
 void Graphics::setTexture(TextureUnit unit, Texture* texture) {
 	texture->_set(unit);
+}
+
+void Graphics::setup() {
+
 }

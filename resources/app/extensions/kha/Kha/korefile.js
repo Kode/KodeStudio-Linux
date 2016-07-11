@@ -10,18 +10,31 @@ project.addFiles('Backends/Kore/khacpp/project/libs/regexp/**.h', 'Backends/Kore
 //'Backends/Kore/khacpp/project/libs/zlib/**.cpp'
 project.addFiles('Backends/Kore/khacpp/project/thirdparty/pcre-7.8/**.h', 'Backends/Kore/khacpp/project/thirdparty/pcre-7.8/**.c');
 //'Backends/Kore/khacpp/project/thirdparty/pcre-7.8/**.cc'
+project.addFiles('Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/**.h',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/adler32.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/compress.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/crc32.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/gzio.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/uncompr.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/deflate.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/trees.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/zutil.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/inflate.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/infback.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/inftrees.c',
+'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3/inffast.c'
+);
+project.addFiles('Backends/Kore/khacpp/project/thirdparty/mbedtls-2.2.1/**');
+
 project.addFiles('Backends/Kore/*.cpp', 'Backends/Kore/*.h');
 
 project.addExcludes('Backends/Kore/khacpp/project/thirdparty/pcre-7.8/dftables.c', 'Backends/Kore/khacpp/project/thirdparty/pcre-7.8/pcredemo.c', 'Backends/Kore/khacpp/project/thirdparty/pcre-7.8/pcregrep.c', 'Backends/Kore/khacpp/project/thirdparty/pcre-7.8/pcretest.c');
-project.addExcludes('Backends/Kore/khacpp/src/ExampleMain.cpp', 'Backends/Kore/khacpp/src/hx/Scriptable.cpp', 'Backends/Kore/khacpp/src/hx/cppia/**');
+project.addExcludes('Backends/Kore/khacpp/src/ExampleMain.cpp', 'Backends/Kore/khacpp/src/hx/Scriptable.cpp', 'Backends/Kore/khacpp/src/hx/NoFiles.cpp', 'Backends/Kore/khacpp/src/hx/cppia/**');
 project.addExcludes('Backends/Kore/khacpp/src/hx/NekoAPI.cpp');
-project.addExcludes('Backends/Kore/khacpp/src/hx/libs/ssl/**');
 project.addExcludes('Backends/Kore/khacpp/src/hx/libs/sqlite/**');
-project.addExcludes('Backends/Kore/khacpp/src/hx/libs/zlib/**');
 project.addExcludes('Backends/Kore/khacpp/src/hx/libs/mysql/**');
 
-project.addIncludeDirs('Backends/Kore/khacpp/include', 'Backends/Kore/khacpp/project/thirdparty/pcre-7.8', 'Backends/Kore/khacpp/project/libs/nekoapi');
-//project.addIncludeDirs('Backends/Kore/khacpp/project/thirdparty/mbedtls-2.2.1/include');
+project.addIncludeDirs('Backends/Kore/khacpp/include', 'Backends/Kore/khacpp/project/thirdparty/pcre-7.8', 'Backends/Kore/khacpp/project/thirdparty/zlib-1.2.3', 'Backends/Kore/khacpp/project/libs/nekoapi', 'Backends/Kore/khacpp/project/thirdparty/mbedtls-2.2.1/include');
 
 //if (options.vrApi == "rift") {
 //	out += "project.addIncludeDirs('C:/khaviar/LibOVRKernel/Src/');\n";
@@ -45,12 +58,18 @@ if (platform == Platform.iOS) {
 	project.addDefine('IPHONE');
 	project.addDefine('HX_IPHONE');
 }
+if (platform === Platform.tvOS) {
+	project.addDefine('APPLETV');
+}
 if (platform == Platform.Android) {
 	project.addDefine('ANDROID');
 	project.addDefine('_ANDROID');
 	project.addDefine('HX_ANDROID');
 }
-if (platform == Platform.OSX) project.addDefine('KORE_DEBUGDIR="osx"');
+if (platform == Platform.OSX) {
+	project.addDefine('KORE_DEBUGDIR="osx"');
+	project.addLib('Security');
+}
 if (platform == Platform.iOS) project.addDefine('KORE_DEBUGDIR="ios"');
 
 // project:addDefine('HXCPP_SCRIPTABLE');

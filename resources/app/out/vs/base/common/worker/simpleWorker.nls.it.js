@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/base/common/worker/simpleWorker.nls.it", {
 	"vs/base/common/errors": [
 		"{0}. Codice errore: {1}",
@@ -24,5 +23,23 @@ define("vs/base/common/worker/simpleWorker.nls.it", {
 		"Stato non valido",
 		"Non è stato possibile caricare un file obbligatorio. Non si è più connessi a Internet oppure il server a cui si è connessi è offline. Per riprovare, aggiornare il browser.",
 		"Non è stato possibile caricare un file obbligatorio. Riavviare l\'applicazione e riprovare. Dettagli: {0}",
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"CTRL",
+		"Maiusc",
+		"Alt",
+		"Comando",
+		"Windows",
+		"Ctrl",
+		"Maiusc",
+		"Alt",
+		"Comando",
+		"Windows",
+	],
+	"vs/base/common/severity": [
+		"Errore",
+		"Avviso",
+		"Informazioni",
 	]
 });

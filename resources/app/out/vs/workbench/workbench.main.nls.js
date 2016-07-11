@@ -67,16 +67,10 @@ define("vs/workbench/workbench.main.nls", {
 		"Property name expected",
 		"Value expected",
 		"Colon expected",
-		"Value expected",
 		"Comma expected",
-		"Value expected",
 		"Closing brace expected",
-		"Value expected",
-		"Comma expected",
-		"Value expected",
 		"Closing bracket expected",
-		"Value expected",
-		"End of content expected"
+		"End of file expected"
 	],
 	"vs/base/common/keyCodes": [
 		"Windows",
@@ -105,9 +99,6 @@ define("vs/workbench/workbench.main.nls", {
 	"vs/base/node/processes": [
 		"Can't execute a shell command on an UNC drive."
 	],
-	"vs/base/node/zip": [
-		"{0} not found inside zip."
-	],
 	"vs/base/parts/quickopen/browser/quickOpenModel": [
 		"{0}, picker",
 		"picker"
@@ -116,11 +107,11 @@ define("vs/workbench/workbench.main.nls", {
 		"Quick picker. Type to narrow down results.",
 		"Quick Picker"
 	],
-	"vs/editor/common/commonCodeEditor": [
-		"Press {0} if you are using a screen reader."
+	"vs/base/parts/tree/browser/treeDefaults": [
+		"Collapse"
 	],
 	"vs/editor/common/config/commonEditorConfig": [
-		"Editor configuration",
+		"Editor",
 		"Controls the font family.",
 		"Controls the font size.",
 		"Controls the line height.",
@@ -135,11 +126,12 @@ define("vs/workbench/workbench.main.nls", {
 		"When opening a file, `editor.tabSize` and `editor.insertSpaces` will be detected based on the file contents.",
 		"Controls if selections have rounded corners",
 		"Controls if the editor will scroll beyond the last line",
-		"Controls after how many characters the editor will wrap to the next line. Setting this to 0 turns on viewport width wrapping",
+		"Controls after how many characters the editor will wrap to the next line. Setting this to 0 turns on viewport width wrapping (word wrapping). Setting this to -1 forces the editor to never wrap.",
 		"Controls the indentation of wrapped lines. Can be one of 'none', 'same' or 'indent'.",
 		"A multiplier to be used on the `deltaX` and `deltaY` of mouse wheel scroll events",
 		"Controls if quick suggestions should show up or not while typing",
 		"Controls the delay in ms after which quick suggestions will show up",
+		"Enables parameter hints",
 		"Controls if the editor should automatically close brackets after opening them",
 		"Controls if the editor should automatically format the line after typing",
 		"Controls if suggestions should automatically show up when typing trigger characters",
@@ -147,12 +139,18 @@ define("vs/workbench/workbench.main.nls", {
 		"Controls whether the editor should highlight similar matches to the selection",
 		"Controls the number of decorations that can show up at the same position in the overview ruler",
 		"Controls the cursor blinking animation, accepted values are 'blink', 'visible', and 'hidden'",
+		"Zoom the font of the editor when using mouse wheel and holding Ctrl",
 		"Controls the cursor style, accepted values are 'block' and 'line'",
 		"Enables font ligatures",
 		"Controls if the cursor should be hidden in the overview ruler.",
 		"Controls whether the editor should render whitespace characters",
+		"Controls whether the editor should render control characters",
+		"Controls whether the editor should render indent guides",
 		"Controls if the editor shows reference information for the modes that support it",
 		"Controls whether the editor has code folding enabled",
+		"Inserting and deleting whitespace follows tab stops",
+		"Remove trailing auto inserted whitespace",
+		"Keep peek editors open even when double clicking their content or when hitting Escape.",
 		"Controls if the diff editor shows the diff side by side or inline",
 		"Controls if the diff editor shows changes in leading or trailing whitespace as diffs",
 		"Controls if the Linux primary clipboard should be supported."
@@ -168,6 +166,9 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/editor/common/modes/modesRegistry": [
 		"Plain Text"
+	],
+	"vs/editor/common/modes/supports/suggestSupport": [
+		"Enable word based suggestions."
 	],
 	"vs/editor/common/services/bulkEdit": [
 		"These files have changed in the meantime: {0}"
@@ -203,12 +204,11 @@ define("vs/workbench/workbench.main.nls", {
 		"Pressing Tab in this editor will move focus to the next focusable element. The command {0} is currently not triggerable by a keybinding.",
 		"Pressing Tab in this editor will insert the tab character. Toggle this behaviour by pressing {0}.",
 		"Pressing Tab in this editor will move focus to the next focusable element. The command {0} is currently not triggerable by a keybinding.",
-		"Experimental screen reader support is turned on due to editor.experimentalScreenReader settings key.",
-		"Experimental screen reader support is turned on for this session. Toggle this behaviour by pressing {0}.",
-		"Experimental screen reader support is turned on for this session. The command {0} is currently not triggerable by a keybinding.",
-		"Experimental screen reader support is turned off. Turn it on for this session by pressing {0} or turn it on for all sessions by configuring the editor.experimentalScreenReader setting to true.",
-		"Experimental screen reader support is turned off. The command {0} is currently not triggerable by a keybinding. Turn it on for all sessions by configuring the editor.experimentalScreenReader setting to true.",
 		"You can dismiss this tooltip and return to the editor by pressing Escape."
+	],
+	"vs/editor/contrib/carretOperations/common/carretOperations": [
+		"Move Carret Left",
+		"Move Carret Right"
 	],
 	"vs/editor/contrib/clipboard/browser/clipboard": [
 		"Cut",
@@ -261,7 +261,9 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/editor/contrib/folding/browser/folding": [
 		"Unfold",
+		"Unfold Recursively",
 		"Fold",
+		"Fold Recursively",
 		"Fold All",
 		"Unfold All",
 		"Fold Level 1",
@@ -278,12 +280,13 @@ define("vs/workbench/workbench.main.nls", {
 		"Click to show the {0} definitions found.",
 		"Peek Definition",
 		"Go to Definition",
-		"Open Definition to the Side",
-		"Go to Type Definition"
+		"Open Definition to the Side"
 	],
 	"vs/editor/contrib/gotoError/browser/gotoError": [
 		"Suggested fixes: ",
 		"Suggested fix: ",
+		"({0}/{1}) [{2}]",
+		"({0}/{1})",
 		"Go to Next Error or Warning",
 		"Go to Previous Error or Warning"
 	],
@@ -305,7 +308,8 @@ define("vs/workbench/workbench.main.nls", {
 		"Indent Using Spaces",
 		"Indent Using Tabs",
 		"Detect Indentation from Content",
-		"Toggle Render Whitespace"
+		"Toggle Render Whitespace",
+		"Toggle Control Characters"
 	],
 	"vs/editor/contrib/linesOperations/common/linesOperations": [
 		"Delete Line",
@@ -330,7 +334,7 @@ define("vs/workbench/workbench.main.nls", {
 	"vs/editor/contrib/multicursor/common/multicursor": [
 		"Add Cursor Above",
 		"Add Cursor Below",
-		"Create multiple cursors from selected lines"
+		"Create Multiple Cursors from Selected Lines"
 	],
 	"vs/editor/contrib/parameterHints/browser/parameterHints": [
 		"Trigger Parameter Hints"
@@ -349,20 +353,23 @@ define("vs/workbench/workbench.main.nls", {
 		"{0}, accepted"
 	],
 	"vs/editor/contrib/referenceSearch/browser/referenceSearch": [
-		"Loading...",
-		"No results",
-		"Find All References",
 		" – {0} references",
-		"Show References"
+		"Find All References",
+		"Find All References"
 	],
-	"vs/editor/contrib/referenceSearch/browser/referenceSearchWidget": [
+	"vs/editor/contrib/referenceSearch/browser/referencesController": [
+		"Loading..."
+	],
+	"vs/editor/contrib/referenceSearch/browser/referencesWidget": [
+		"Failed to resolve file.",
 		"{0} references",
 		"{0} reference",
 		"no preview available",
 		"References",
+		"No results",
 		"References"
 	],
-	"vs/editor/contrib/rename/browser/rename2": [
+	"vs/editor/contrib/rename/browser/rename": [
 		"Rename Symbol"
 	],
 	"vs/editor/contrib/rename/browser/renameInputField": [
@@ -406,7 +413,7 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/editor/node/textMate/TMSnippets": [
 		"Contributes TextMate snippets.",
-		"Language id for which this snippet is contributed to.",
+		"Language identifier for which this snippet is contributed to.",
 		"Path of the snippets file. The path is relative to the extension folder and typically starts with './snippets/'.",
 		"Unknown language in `contributes.{0}.language`. Provided value: {1}",
 		"Expected string in `contributes.{0}.path`. Provided value: {1}",
@@ -414,43 +421,20 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/editor/node/textMate/TMSyntax": [
 		"Contributes textmate tokenizers.",
-		"Language id for which this syntax is contributed to.",
+		"Language identifier for which this syntax is contributed to.",
 		"Textmate scope name used by the tmLanguage file.",
 		"Path of the tmLanguage file. The path is relative to the extension folder and typically starts with './syntaxes/'.",
+		"List of language scope names to which this grammar is injected to.",
 		"Unknown language in `contributes.{0}.language`. Provided value: {1}",
 		"Expected string in `contributes.{0}.scopeName`. Provided value: {1}",
 		"Expected string in `contributes.{0}.path`. Provided value: {1}",
+		"Invalid value in `contributes.{0}.injectTo`. Must be an array of language scope names. Provided value: {1}",
 		"Expected `contributes.{0}.path` ({1}) to be included inside extension's folder ({2}). This might make the extension non-portable."
 	],
-	"vs/languages/css/common/css.contribution": [
-		"CSS configuration",
-		"Controls CSS validation and problem severities."
-	],
-	"vs/languages/css/common/services/lintRules": [
-		"When using a vendor-specific prefix make sure to also include all other vendor-specific properties",
-		"When using a vendor-specific prefix also include the standard property",
-		"Do not use duplicate style definitions",
-		"Do not use empty rulesets",
-		"Import statements do not load in parallel",
-		"Do not use width or height when using padding or border",
-		"The universal selector (*) is known to be slow",
-		"No unit for zero needed",
-		"@font-face rule must define 'src' and 'font-family' properties",
-		"Hex colors must consist of three or six hex numbers",
-		"Invalid number of parameters",
-		"Unknown property.",
-		"IE hacks are only necessary when supporting IE7 and older",
-		"Unknown vendor specific property.",
-		"Property is ignored due to the display. E.g. with 'display: inline', the width, height, margin-top, margin-bottom, and float properties have no effect",
-		"Avoid using !important. It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.",
-		"Avoid using 'float'. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.",
-		"Selectors should not contain IDs because these rules are too tightly coupled with the HTML.",
-		"Enables or disables all validations"
-	],
 	"vs/languages/html/common/html.contribution": [
-		"HTML configuration",
+		"HTML",
 		"Maximum amount of characters per line (0 = disable).",
-		"List of tags, comma separated, that shouldn't be reformatted. 'null' defaults to all inline tags.",
+		"List of tags, comma separated, that shouldn't be reformatted. 'null' defaults to all tags listed at https://www.w3.org/TR/html5/dom.html#phrasing-content.",
 		"Indent <head> and <body> sections.",
 		"Whether existing line breaks before elements should be preserved. Only works before elements, not inside tags or for text.",
 		"Maximum number of line breaks to be preserved in one chunk. Use 'null' for unlimited.",
@@ -458,29 +442,41 @@ define("vs/workbench/workbench.main.nls", {
 		"End with a newline.",
 		"List of tags, comma separated, that should have an extra newline before them. 'null' defaults to \"head, body, /html\"."
 	],
-	"vs/languages/less/common/less.contribution": [
-		"LESS configuration",
-		"Controls LESS validation and problem severities."
+	"vs/platform/actions/browser/menuItemActionItem": [
+		"{0} ({1})"
 	],
-	"vs/languages/markdown/common/markdown.contribution": [
-		"Markdown preview configuration",
-		"A list of URLs or local paths to CSS style sheets to use from the markdown preview."
-	],
-	"vs/languages/sass/common/sass.contribution": [
-		"Sass configuration",
-		"Controls Sass validation and problem severities."
-	],
-	"vs/platform/actions/common/actionsService": [
+	"vs/platform/actions/browser/menusExtensionPoint": [
+		"menu items must be an arry",
+		"property `{0}` is mandatory and must be of type `string`",
+		"property `{0}` can be omitted or must be of type `string`",
+		"property `{0}` can be omitted or must be of type `string`",
+		"property `{0}` can be omitted or must be of type `string`",
+		"Identifier of the command to execute. The command must be declared in the 'commands'-section",
+		"Identifier of an alternative command to execute. The command must be declared in the 'commands'-section",
+		"Condition which must be true to show this item",
+		"Group into which this command belongs",
+		"Contributes menu items to the editor",
+		"The editor title menu",
+		"The editor context menu",
+		"The file explorer context menu",
 		"expected non-empty value.",
 		"property `{0}` is mandatory and must be of type `string`",
 		"property `{0}` is mandatory and must be of type `string`",
 		"property `{0}` can be omitted or must be of type `string`",
+		"property `icon` can be omitted or must be either a string or a literal like `{dark, light}`",
 		"Identifier of the command to execute",
-		"Title by which the command is represented in the UI.",
-		"(Optional) category string by the command is grouped in the UI",
+		"Title by which the command is represented in the UI",
+		"(Optional) Category string by the command is grouped in the UI",
+		"(Optional) Icon which is used to represent the command in the UI. Either a file path or a themable configuration",
+		"Icon path when a light theme is used",
+		"Icon path when a dark theme is used",
 		"Contributes commands to the command palette.",
-		"{0}: {1}",
-		"Invalid `contributes.{0}`: {1}"
+		"Command `{0}` appears multiple times in the `commands` section.",
+		"`{0}` is not a valid menu identifier",
+		"Menu item references a command `{0}` which is not defined in the 'commands' section.",
+		"Menu item references an alt-command `{0}` which is not defined in the 'commands' section.",
+		"Menu item references the same command as default and alt-command",
+		"Sorry, but currently only the 'navigation' group of the 'editor/title' menu supports alt-commands"
 	],
 	"vs/platform/configuration/common/configurationRegistry": [
 		"Contributes configuration settings.",
@@ -489,6 +485,9 @@ define("vs/workbench/workbench.main.nls", {
 		"if set, 'configuration.type' must be set to 'object",
 		"'configuration.title' must be a string",
 		"'configuration.properties' must be an object"
+	],
+	"vs/platform/extensionManagement/common/extensionManagement": [
+		"Extensions"
 	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"Extension `{1}` failed to activate. Reason: unknown dependency `{0}`.",
@@ -516,16 +515,9 @@ define("vs/workbench/workbench.main.nls", {
 		"The color theme for the font used in the banner.",
 		"The publisher of the VS Code extension.",
 		"Activation events for the VS Code extension.",
-		"Dependencies to other extensions. The id of an extension is always ${publisher}.${name}. For example: vscode.csharp.",
+		"Dependencies to other extensions. The identifier of an extension is always ${publisher}.${name}. For example: vscode.csharp.",
 		"Script executed before the package is published as a VS Code extension.",
 		"All contributions of the VS Code extension represented by this package."
-	],
-	"vs/platform/extensions/node/extensionValidator": [
-		"Could not parse `engines.vscode` value {0}. Please use, for example: ^0.10.0, ^1.2.3, ^0.11.0, ^0.10.x, etc.",
-		"Version specified in `engines.vscode` ({0}) is not specific enough. For vscode versions before 1.0.0, please define at a minimum the major and minor desired version. E.g. ^0.10.0, 0.10.x, 0.11.0, etc.",
-		"Version specified in `engines.vscode` ({0}) is not specific enough. For vscode versions after 1.0.0, please define at a minimum the major desired version. E.g. ^1.10.0, 1.10.x, 1.x.x, 2.x.x, etc.",
-		"Extension is not compatible with Code {0}. Extension requires: {1}.",
-		"Extension version is not semver compatible."
 	],
 	"vs/platform/jsonschemas/common/jsonContributionRegistry": [
 		"Describes a JSON file using a schema. See json-schema.org for more info.",
@@ -592,16 +584,11 @@ define("vs/workbench/workbench.main.nls", {
 		"Close",
 		"Cancel"
 	],
-	"vs/platform/telemetry/electron-browser/electronTelemetryService": [
-		"Telemetry configuration",
+	"vs/platform/telemetry/common/telemetryService": [
+		"Telemetry",
 		"Enable usage data and errors to be sent to Microsoft."
 	],
-	"vs/platform/theme/common/themes": [
-		"Light (Visual Studio)",
-		"Dark (Visual Studio)",
-		"High Contrast"
-	],
-	"vs/workbench/api/node/extHostMessageService": [
+	"vs/workbench/api/node/mainThreadMessageService": [
 		"Close"
 	],
 	"vs/workbench/browser/actions/configureLocale": [
@@ -609,7 +596,8 @@ define("vs/workbench/workbench.main.nls", {
 		"Defines VSCode's display language.",
 		"See {0} for a list of supported languages.",
 		"Changing the value requires to restart VSCode.",
-		"Unable to create '{0}' ({1})."
+		"Unable to create '{0}' ({1}).",
+		"The UI Language to use."
 	],
 	"vs/workbench/browser/actions/openSettings": [
 		"Unable to create '{0}' ({1}).",
@@ -624,6 +612,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Open a folder first to create workspace settings",
 		"Place your settings in this file to overwrite default and user settings.",
 		"Overwrite settings by placing them into your settings file.",
+		"See http://go.microsoft.com/fwlink/?LinkId=808995 for the most commonly used settings.",
 		"Default Settings",
 		"Overwrite key bindings by placing them into your key bindings file.",
 		"Default Keyboard Shortcuts",
@@ -637,33 +626,9 @@ define("vs/workbench/workbench.main.nls", {
 		"Toggle Side Bar Visibility",
 		"View"
 	],
-	"vs/workbench/browser/actions/triggerEditorActions": [
-		"Split Editor",
-		"Cycle Between Opened Editors",
-		"Focus into Left Hand Editor",
-		"Focus into Side Editor",
-		"Focus into Right Hand Editor",
-		"Focus into Next Editor on the Left",
-		"Focus into Next Editor on the Right",
-		"Open to the Side",
-		"Close All Editors",
-		"Close Other Editors",
-		"Move Active Editor Left",
-		"Move Active Editor Right",
-		"Minimize Other Editors",
-		"Even Editor Widths",
-		"Maximize Active Editor and Hide Sidebar",
+	"vs/workbench/browser/actions/toggleStatusbarVisibility": [
+		"Toggle Status Bar Visibility",
 		"View"
-	],
-	"vs/workbench/browser/actions/triggerNavigation": [
-		"Go Forward",
-		"Go Back"
-	],
-	"vs/workbench/browser/actions/triggerQuickOpen": [
-		"Go to File...",
-		"Navigate History",
-		"Navigate Next in Quick Open",
-		"Navigate Previous in Quick Open"
 	],
 	"vs/workbench/browser/parts/activitybar/activityAction": [
 		"{0} ({1})"
@@ -686,12 +651,74 @@ define("vs/workbench/workbench.main.nls", {
 		"Text Editor",
 		"Text Diff Editor",
 		"Binary Diff Editor",
-		"IFrame Editor",
-		"View Source",
-		"Reload"
+		"Show Editors in Left Group",
+		"Show Editors in Center Group",
+		"Show Editors in Right Group",
+		"Show All Opened Editors",
+		"View",
+		"Workbench",
+		"Controls if opened editors should show in tabs or not.",
+		"Controls if opened editors show as preview. Preview editors are reused until they are kept (e.g. via double click or editing).",
+		"Controls if opened editors from quick open show as preview. Preview editors are reused until they are kept (e.g. via double click or editing).",
+		"Controls where editors open. Select 'left' or 'right' to open editors to the left or right of the current active one. Select 'first' or 'last' to open editors independently from the currently active one.",
+		"Command **{0}** is now deprecated. You can use **{1}** instead",
+		"Configure Keyboard Shortcuts"
+	],
+	"vs/workbench/browser/parts/editor/editorActions": [
+		"Split Editor",
+		"Navigate Between Editor Groups",
+		"Focus Left Editor Group",
+		"Focus Center Editor Group",
+		"Focus Right Editor Group",
+		"Focus Previous Group",
+		"Focus Next Group",
+		"Open to the Side",
+		"Close Editor",
+		"Close Editors to the Left",
+		"Close Editors to the Right",
+		"Close All Editors",
+		"Close Editors in Other Groups",
+		"Close Other Editors",
+		"Close All Editors in Group",
+		"Move Editor Group Left",
+		"Move Editor Group Right",
+		"Minimize Other Editor Groups",
+		"Even Editor Group Widths",
+		"Maximize Editor Group and Hide Sidebar",
+		"Keep Editor",
+		"Open Next Editor",
+		"Open Previous Editor",
+		"Go Forward",
+		"Go Back",
+		"Reopen Closed Editor",
+		"Show Editors in Left Group",
+		"Show Editors in Center Group",
+		"Show Editors in Right Group",
+		"Show Editors in Group",
+		"Show All Editors",
+		"Open Previous Recently Used Editor in Group",
+		"Open Next Recently Used Editor in Group",
+		"Go to File...",
+		"Open Previous Editor from History",
+		"Clear Editor History",
+		"Remove From Editor History",
+		"Navigate Next in Quick Open",
+		"Navigate Previous in Quick Open",
+		"Open Last Editor in Group"
 	],
 	"vs/workbench/browser/parts/editor/editorPart": [
+		"Left",
+		"Center",
+		"Right",
 		"Unable to open '{0}': {1}."
+	],
+	"vs/workbench/browser/parts/editor/editorPicker": [
+		"{0}, editor group picker",
+		"Group: {0}",
+		"No matching opened editor found in group",
+		"List of opened editors is currently empty",
+		"No matching opened editor found",
+		"List of opened editors is currently empty"
 	],
 	"vs/workbench/browser/parts/editor/editorStatus": [
 		"Ln {0}, Col {1} ({2} selected)",
@@ -733,19 +760,11 @@ define("vs/workbench/workbench.main.nls", {
 		"No file active at this time",
 		"Save with Encoding",
 		"Reopen with Encoding",
+		"Save with Encoding",
+		"Reopen with Encoding",
 		"Select Action",
 		"Select File Encoding to Reopen File",
 		"Select File Encoding to Save with"
-	],
-	"vs/workbench/browser/parts/editor/iframeEditor": [
-		"IFrame Viewer"
-	],
-	"vs/workbench/browser/parts/editor/sideBySideEditorControl": [
-		"Close",
-		"Split Editor",
-		"{0} {1}",
-		"Editor actions",
-		"Loading..."
 	],
 	"vs/workbench/browser/parts/editor/stringEditor": [
 		"Text Editor",
@@ -753,6 +772,9 @@ define("vs/workbench/workbench.main.nls", {
 		"Readonly text editor.",
 		"{0}. Untitled file text editor.",
 		"Untitled file text editor."
+	],
+	"vs/workbench/browser/parts/editor/tabsTitleControl": [
+		"Tab actions"
 	],
 	"vs/workbench/browser/parts/editor/textDiffEditor": [
 		"Text Diff Editor",
@@ -765,13 +787,20 @@ define("vs/workbench/workbench.main.nls", {
 		"Next Change",
 		"Previous Change"
 	],
+	"vs/workbench/browser/parts/editor/titleControl": [
+		"Close",
+		"Close Others",
+		"Close to the Right",
+		"Close All",
+		"Keep Open",
+		"Move Left",
+		"Move Right",
+		"Editor actions"
+	],
 	"vs/workbench/browser/parts/panel/panelPart": [
 		"Close",
 		"Toggle Panel Visibility",
 		"View"
-	],
-	"vs/workbench/browser/parts/quickopen/editorHistoryModel": [
-		"{0}, recently opened"
 	],
 	"vs/workbench/browser/parts/quickopen/quickOpenController": [
 		"{0} (Press 'Enter' to confirm or 'Escape' to cancel)",
@@ -781,7 +810,8 @@ define("vs/workbench/workbench.main.nls", {
 		"recently opened",
 		"recently opened",
 		"No results found",
-		"This quick open handler can not be used in the current context"
+		"This quick open handler can not be used in the current context",
+		"{0}, recently opened"
 	],
 	"vs/workbench/browser/parts/sidebar/sidebarPart": [
 		"Focus into Side Bar",
@@ -797,7 +827,7 @@ define("vs/workbench/workbench.main.nls", {
 		"No commands matching"
 	],
 	"vs/workbench/browser/viewlet": [
-		"Collapse",
+		"Collapse All",
 		"{0} actions",
 		"{0} actions"
 	],
@@ -813,21 +843,24 @@ define("vs/workbench/workbench.main.nls", {
 		"Toggle Full Screen",
 		"Toggle Menu Bar",
 		"Toggle Developer Tools",
-		"Zoom in",
-		"Zoom out",
+		"Zoom In",
+		"Zoom Out",
 		"Reset Zoom",
 		"Startup Performance",
 		"Reload Window",
 		"Open Recent",
-		"Select a path to open",
-		"Close Notification Messages"
+		"folders",
+		"files",
+		"Select a path (hold Cmd-key to open in new window)",
+		"Select a path to open (hold Ctrl-key to open in new window)",
+		"Close Notification Messages",
+		"{0} ⟷ {1}"
 	],
 	"vs/workbench/electron-browser/crashReporter": [
-		"Telemetry configuration",
 		"Enable crash reports to be sent to Microsoft.\n\t// This option requires restart to take effect."
 	],
 	"vs/workbench/electron-browser/darwin/cli.contribution": [
-		"Install 'code' command in PATH",
+		"Install '{0}' command in PATH",
 		"Please remove the alias referencing '{0}' in '{1}' (line {2}) and retry this action.",
 		"Edit '{0}'",
 		"Please remove the '{0}' alias from '{1}' before continuing.",
@@ -839,7 +872,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Aborted",
 		"OK",
 		"Unable to create '/usr/local/bin'.",
-		"Uninstall 'code' command from PATH",
+		"Uninstall '{0}' command from PATH",
 		"Shell command '{0}' successfully uninstalled from PATH.",
 		"Code needs to change the '{0}' shell command. Would you like to do this now?",
 		"Change Now",
@@ -859,25 +892,26 @@ define("vs/workbench/workbench.main.nls", {
 		"View",
 		"Developer",
 		"File",
-		"Window configuration",
+		"Window",
 		"When enabled, will open files in a new window instead of reusing an existing instance.",
 		"Controls how folders are being reopened after a restart. Select 'none' to never reopen a folder, 'one' to reopen the last folder you worked on or 'all' to reopen all folders of your last session.",
+		"Controls if a window should restore to full screen mode if it was exited in full screen mode.",
 		"Adjust the zoom level of the window. The original size is 0 and each increment above (e.g. 1) or below (e.g. -1) represents zooming 20% larger or smaller. You can also enter decimals to adjust the zoom level with a finer granularity.",
-		"Update configuration",
-		"Configure the update channel to receive updates from. Requires a restart after change."
+		"Update",
+		"Configure whether you receive automatic updates from an update channel. Requires a restart after change."
 	],
 	"vs/workbench/electron-browser/shell": [
+		"It is recommended not to run Code as 'root'.",
 		"The shared process terminated unexpectedly. Please reload the window to recover."
 	],
 	"vs/workbench/electron-browser/update": [
 		"Update Now",
 		"Later",
 		"Release Notes",
+		"Download Now",
 		"{0} will be updated after it restarts.",
-		"There are no updates currently available.",
-		"This version of {0} is outdated and can't be updated automatically. Please download and install the latest version manually.",
-		"Download Latest",
-		"Release Notes"
+		"There is an available update.",
+		"There are no updates currently available."
 	],
 	"vs/workbench/parts/debug/browser/breakpointWidget": [
 		"Breakpoint on line {0} will only stop if this condition is true. 'Enter' to accept, 'esc' to cancel.",
@@ -897,8 +931,13 @@ define("vs/workbench/workbench.main.nls", {
 		"Debug Hover"
 	],
 	"vs/workbench/parts/debug/browser/debugViewer": [
+		"Thread",
+		"paused",
+		"running",
+		"Load More Stack Frames",
 		"Thread {0}, callstack, debug",
 		"Stack Frame {0} line {1} {2}, callstack, debug",
+		"Type new variable value",
 		"Scope {0}, variables, debug",
 		"{0} value {1}, variables, debug",
 		"Expression to watch",
@@ -911,7 +950,23 @@ define("vs/workbench/workbench.main.nls", {
 		"Function breakpoint {0}, breakpoints, debug",
 		"Exception breakpoint {0}, breakpoints, debug"
 	],
+	"vs/workbench/parts/debug/browser/debugViews": [
+		"Variables Section",
+		"Variables",
+		"Debug Variables",
+		"Expressions Section",
+		"Watch",
+		"Debug Watch Expressions",
+		"Call Stack Section",
+		"Call Stack",
+		"Debug Call Stack",
+		"Paused on {0}",
+		"Breakpoints Section",
+		"Breakpoints",
+		"Debug Breakpoints"
+	],
 	"vs/workbench/parts/debug/common/debugModel": [
+		"Unknown Source",
 		"Please start a debug session to evaluate",
 		"Unknown stack location",
 		"Only primitive values are shown for this object."
@@ -927,18 +982,21 @@ define("vs/workbench/workbench.main.nls", {
 		"Debug",
 		"Debug Console",
 		"View",
-		"Debug"
+		"Debug",
+		"Launch configuration '{0}' does not exist."
 	],
 	"vs/workbench/parts/debug/electron-browser/debugActions": [
 		"{0} ({1})",
 		"Open {0}",
+		"Configure or Fix 'launch.json'",
 		"Select Configuration",
-		"Start",
+		"Start Debugging",
 		"Restart",
 		"Reconnect",
 		"Step Over",
 		"Step Into",
 		"Step Out",
+		"Step Back",
 		"Stop",
 		"Disconnect",
 		"Continue",
@@ -955,6 +1013,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Rename Function Breakpoint",
 		"Add Conditional Breakpoint",
 		"Edit Breakpoint",
+		"Set Value",
 		"Copy Value",
 		"Add Expression",
 		"Add to Watch",
@@ -962,32 +1021,39 @@ define("vs/workbench/workbench.main.nls", {
 		"Remove Expression",
 		"Remove All Expressions",
 		"Clear Console",
+		"Copy",
 		"Debug Console",
-		"Run"
+		"New Output in Debug Console",
+		"Start Without Debugging"
 	],
 	"vs/workbench/parts/debug/electron-browser/debugService": [
 		"Debugging started.",
 		"Debugging paused, reason {0}, {1} {2}",
-		"Debugging continued.",
 		"Debugging stopped.",
-		"Did not get a thread from debug adapter with id {0}.",
+		"Added breakpoint, line {0}, file {1}",
+		"Removed breakpoint, line {0}, file {1}",
 		"Please set up the launch configuration file for your application.",
 		"Configured debug type '{0}' is not supported.",
-		"Missing property 'type' for the selected configuration in launch.json.",
-		"Errors detected while running the preLaunchTask '{0}'.",
-		"Error detected while running the preLaunchTask '{0}'.",
+		"Missing property 'type' for the chosen launch configuration.",
+		"Build errors have been detected during preLaunchTask '{0}'.",
+		"Build error has been detected during preLaunchTask '{0}'.",
 		"The preLaunchTask '{0}' terminated with exit code {1}.",
-		"Continue",
+		"Debug Anyway",
 		"Debug adapter process has terminated unexpectedly",
 		"Could not find the preLaunchTask '{0}'.",
 		"There is a task {0} running. Can not run pre launch task {1}.",
-		"Source {0} is not available."
+		"Source {0} is not available.",
+		"Debugging continued."
 	],
 	"vs/workbench/parts/debug/node/debugAdapter": [
 		"Type of configuration.",
 		"Name of configuration; appears in the launch configuration drop down menu.",
 		"Request type of configuration. Can be \"launch\" or \"attach\".",
 		"Task to run before debug session starts.",
+		"Controls behavior of the internal debug console.",
+		"Windows specific launch configuration attributes.",
+		"OS X specific launch configuration attributes.",
+		"Linux specific launch configuration attributes.",
 		"Relative paths will no longer be automatically converted to absolute ones. Consider using ${workspaceRoot} as a prefix."
 	],
 	"vs/workbench/parts/debug/node/debugConfigurationManager": [
@@ -1000,6 +1066,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Optional arguments to pass to the adapter.",
 		"Optional runtime in case the program attribute is not an executable but requires a runtime.",
 		"Optional runtime arguments.",
+		"Mapping from interactive variables (e.g ${action.pickProcess}) in `launch.json` to a command.",
 		"Configurations for generating the initial 'launch.json'.",
 		"JSON schema configurations for validating 'launch.json'.",
 		"Windows specific settings.",
@@ -1008,101 +1075,144 @@ define("vs/workbench/workbench.main.nls", {
 		"Runtime used for OSX.",
 		"Linux specific settings.",
 		"Runtime used for Linux.",
-		"Launch configuration",
+		"Launch",
 		"Version of this file format.",
 		"List of configurations. Add new configurations or edit existing ones.",
 		"Debug adapter 'type' can not be omitted and must be of type 'string'.",
 		"Debug type '{0}' is already registered and has attribute '{1}', ignoring attribute '{1}'.",
+		"Adapter {0} does not contribute variable {1} that is specified in launch configuration.",
 		"Unable to create 'launch.json' file inside the '.vscode' folder ({0}).",
 		"Select Environment"
 	],
 	"vs/workbench/parts/debug/node/rawDebugSession": [
 		"More Info",
 		"No extension installed for '{0}' debugging.",
-		"Unable to launch debug adapter from {0}.",
-		"DebugAdapter bin folder not found on path {0}.",
+		"Unable to launch debug adapter from '{0}'.",
+		"Debug adapter executable '{0}' not found.",
 		"{0}. Stopping the debug adapter.",
 		"Debug adapter process has terminated unexpectedly"
 	],
-	"vs/workbench/parts/emmet/node/emmet.contribution": [
+	"vs/workbench/parts/emmet/node/actions/balance": [
+		"Emmet: Balance (inward)",
+		"Emmet: Balance (outward)"
+	],
+	"vs/workbench/parts/emmet/node/actions/editPoints": [
+		"Emmet: Previous Edit Point",
+		"Emmet: Next Edit Point"
+	],
+	"vs/workbench/parts/emmet/node/actions/evaluateMath": [
+		"Emmet: Evaluate Math Expression"
+	],
+	"vs/workbench/parts/emmet/node/actions/expandAbbreviation": [
 		"Emmet: Expand Abbreviation"
 	],
-	"vs/workbench/parts/errorList/browser/errorList.contribution": [
-		"Toggle Error List",
-		"Error List"
+	"vs/workbench/parts/emmet/node/actions/incrementDecrement": [
+		"Emmet: Increment by 0.1",
+		"Emmet: Decrement by 0.1",
+		"Emmet: Increment by 1",
+		"Emmet: Decrement by 1",
+		"Emmet: Increment by 10",
+		"Emmet: Decrement by 10"
 	],
-	"vs/workbench/parts/execution/electron-browser/executionService": [
-		"Press any key to continue..."
+	"vs/workbench/parts/emmet/node/actions/matchingPair": [
+		"Emmet: Go to Matching Pair"
+	],
+	"vs/workbench/parts/emmet/node/actions/mergeLines": [
+		"Emmet: Merge Lines"
+	],
+	"vs/workbench/parts/emmet/node/actions/reflectCssValue": [
+		"Emmet: Reflect CSS Value"
+	],
+	"vs/workbench/parts/emmet/node/actions/removeTag": [
+		"Emmet: Remove Tag"
+	],
+	"vs/workbench/parts/emmet/node/actions/selectItem": [
+		"Emmet: Select Previous Item",
+		"Emmet: Select Next Item"
+	],
+	"vs/workbench/parts/emmet/node/actions/splitJoinTag": [
+		"Emmet: Split/Join Tag"
+	],
+	"vs/workbench/parts/emmet/node/actions/toggleComment": [
+		"Emmet: Toggle Comment"
+	],
+	"vs/workbench/parts/emmet/node/actions/updateImageSize": [
+		"Emmet: Update Image Size"
+	],
+	"vs/workbench/parts/emmet/node/actions/updateTag": [
+		"Enter Tag",
+		"Tag",
+		"Emmet: Update Tag"
+	],
+	"vs/workbench/parts/emmet/node/actions/wrapWithAbbreviation": [
+		"Enter Abbreviation",
+		"Abbreviation",
+		"Emmet: Wrap with Abbreviation"
+	],
+	"vs/workbench/parts/emmet/node/emmet.contribution": [
+		"Emmet",
+		"When enabled, emmet abbreviations are expanded when pressing TAB.",
+		"Preferences used to modify behavior of some actions and resolvers of Emmet.",
+		"Define profile for specified syntax or use your own profile with specific rules."
 	],
 	"vs/workbench/parts/execution/electron-browser/terminal.contribution": [
+		"External Terminal",
+		"Customizes which terminal to run on Windows.",
+		"Customizes which terminal application to run on OS X.",
+		"Customizes which terminal to run on Linux.",
 		"Open New Command Prompt",
 		"Open New Terminal",
 		"Open in Command Prompt",
 		"Open in Terminal"
 	],
-	"vs/workbench/parts/extensions/common/extensions": [
-		"Extensions"
+	"vs/workbench/parts/extensions/electron-browser/extensionEditor": [
+		"License"
+	],
+	"vs/workbench/parts/extensions/electron-browser/extensionTipsService": [
+		"It is recommended to install the '{0}' extension.",
+		"Don't show again",
+		"Show Recommendations"
+	],
+	"vs/workbench/parts/extensions/electron-browser/extensions.contribution": [
+		"Manage Extensions",
+		"Install Gallery Extensions",
+		"Extension",
+		"Extensions",
+		"View"
 	],
 	"vs/workbench/parts/extensions/electron-browser/extensionsActions": [
-		"Close",
-		"Show Installed Extensions",
-		"Install Extension",
-		"Show Outdated Extensions",
-		"Show Extension Recommendations",
-		"'{0}' was successfully installed. Restart to enable it.",
-		"Restart Now",
-		"Uninstall Extension",
+		"Install",
+		"Installing",
+		"Uninstall",
 		"Are you sure you want to uninstall '{0}'?",
-		"'{0}' was successfully uninstalled. Restart to deactivate it.",
-		"Restart Now"
+		"{0} was successfully uninstalled. Restart to deactivate it.",
+		"Restart Now",
+		"Update",
+		"Enable",
+		"In order to enable this extension, this window of VS Code needs to be restarted.\n\nDo you want to continue?",
+		"Restart Now",
+		"Show Extensions",
+		"Install Extensions",
+		"Clear Extensions Input",
+		"Show Outdated Extensions",
+		"Show Popular Extensions",
+		"Show Extension Recommendations",
+		"Show Installed Extensions"
+	],
+	"vs/workbench/parts/extensions/electron-browser/extensionsInput": [
+		"Extension: {0}"
 	],
 	"vs/workbench/parts/extensions/electron-browser/extensionsQuickOpen": [
-		"Install Extension",
-		"Update Extension",
-		"License",
-		"Readme",
-		"Would you like to install '{0}'?",
-		"Cancel",
-		"Install Now",
-		"'{0}' is being installed...",
-		"{0}, {1}, extensions picker",
-		"{0} wasn't downloaded yet.",
-		"{0} was downloaded once.",
-		"{0} was downloaded {1} times.",
-		"Type to narrow down the list of installed extensions",
-		"No extensions found",
-		"Type to narrow down the list of extensions from the gallery",
-		"No extensions found",
-		"Type to narrow down the list of outdated extensions",
-		"No outdated extensions found",
-		"No recommended extensions"
-	],
-	"vs/workbench/parts/extensions/electron-browser/extensionsWidgets": [
-		"Extensions (1 issue)",
-		"Extensions ({0} issues)",
-		"Extensions ({0} installing...)",
-		"Extensions (1 update available)",
-		"Extensions ({0} updates available)",
-		"Extensions"
+		"Press Enter to manage your extensions.",
+		"Press Enter to search for '{0}' in the Marketplace.",
+		"Type an extension name"
 	],
 	"vs/workbench/parts/extensions/electron-browser/extensionsWorkbenchExtension": [
-		"Show Local Extensions",
-		"Install Gallery Extensions",
-		"Update Outdated Extensions",
-		"Show Extension Recommendations",
 		"Extensions were successfully installed. Restart to enable them.",
 		"{0} was successfully installed. Restart to enable it.",
-		"Restart Now"
-	],
-	"vs/workbench/parts/extensions/node/extensionsService": [
-		"Extension invalid: package.json is not a JSON file.",
-		"Extension invalid: manifest name mismatch.",
-		"Extension invalid: manifest publisher mismatch.",
-		"Extension invalid: manifest version mismatch.",
-		"Please restart Code before reinstalling {0}.",
-		"Gallery information is missing",
-		"Couldn't find a compatible version of {0} with this version of Code.",
-		"Could not find extension"
+		"Restart Now",
+		"Extensions",
+		"{0} Outdated Extensions"
 	],
 	"vs/workbench/parts/feedback/browser/feedback": [
 		"Tweet Feedback",
@@ -1125,23 +1235,9 @@ define("vs/workbench/workbench.main.nls", {
 	"vs/workbench/parts/files/browser/editors/binaryFileEditor": [
 		"Binary File Viewer"
 	],
-	"vs/workbench/parts/files/browser/editors/fileEditorInput": [
-		"Saved",
-		"All changes saved",
-		"Dirty",
-		"Changes have been made to the file...",
-		"Saving...",
-		"Changes are currently being saved...",
-		"Save error",
-		"Sorry, we are having trouble saving your changes",
-		"Conflict",
-		"Changes cannot be saved because they conflict with the version on disk"
-	],
 	"vs/workbench/parts/files/browser/editors/textFileEditor": [
 		"Text File Editor",
 		"Create File",
-		"We are sorry, but the file is too large to open it inside an editor.",
-		"The folder '{0}' is outside the currently opened root folder and can not be opened in this instance.",
 		"{0}. Text file editor.",
 		"Text file editor."
 	],
@@ -1152,6 +1248,8 @@ define("vs/workbench/workbench.main.nls", {
 		"File '{0}' is currently being saved, please try again later.",
 		"New File",
 		"New Folder",
+		"Open a folder first to create files or folders within.",
+		"New Untitled File",
 		"New File",
 		"New Folder",
 		"New File",
@@ -1166,7 +1264,6 @@ define("vs/workbench/workbench.main.nls", {
 		"Are you sure you want to permanently delete '{0}'?",
 		"This action is irreversible!",
 		"&&Delete",
-		"File '{0}' is currently being saved, please try again later.",
 		"Delete Permanently",
 		"Delete",
 		"Delete",
@@ -1186,24 +1283,17 @@ define("vs/workbench/workbench.main.nls", {
 		"Compare Files",
 		"Refresh",
 		"Save",
+		"Save As...",
 		"Save All",
+		"Save All in Group",
 		"Save Dirty Files",
 		"Revert File",
-		"Close All Files",
-		"Close File",
-		"Close Other Files",
-		"Close File",
-		"There is currently no file opened to close.",
-		"Close Other Files",
-		"Close All Files",
-		"Open Next Working File",
-		"Currently there are no working files.",
-		"Open Previous Working File",
-		"Currently there are no working files.",
-		"Add Active File to Working Files",
-		"Open a file first to add it to working files",
-		"Focus on Working Files",
+		"Focus on Open Editors View",
 		"Focus on Files Explorer",
+		"Show Active File in Explorer",
+		"Open a file first to show it in the explorer",
+		"Collapse Folders in Explorer",
+		"Refresh Explorer",
 		"A file or folder name must be provided.",
 		"A file or folder **{0}** already exists at this location. Please choose a different name.",
 		"The name **{0}** is not valid as a file or folder name. Please choose a different name.",
@@ -1221,7 +1311,7 @@ define("vs/workbench/workbench.main.nls", {
 		"View",
 		"Text File Editor",
 		"Binary File Editor",
-		"Files configuration",
+		"Files",
 		"Configure glob patterns for excluding files and folders.",
 		"The glob pattern to match file paths against. Set to true or false to enable or disable the pattern.",
 		"Additional check on the siblings of a matching file. Use $(basename) as variable for the matching file name.",
@@ -1232,12 +1322,10 @@ define("vs/workbench/workbench.main.nls", {
 		"Controls auto save of dirty files. Accepted values:  \"{0}\", \"{1}\", \"{2}\". If set to \"{3}\" you can configure the delay in \"files.autoSaveDelay\".",
 		"Controls the delay in ms after which a dirty file is saved automatically. Only applies when \"files.autoSave\" is set to \"{0}\"",
 		"Configure glob patterns of file paths to exclude from file watching. Changing this setting requires a restart. When you experience Code consuming lots of cpu time on startup, you can exclude large folders to reduce the initial load.",
-		"File Explorer configuration",
-		"Maximum number of working files to show before scrollbars appear.",
-		"Controls if the height of the working files section should adapt dynamically to the number of elements or not.",
-		"Open Working File by Name",
-		"Open Working File By Name",
-		"Files"
+		"File Explorer",
+		"Number of editors shown in the Open Editors pane. Set it to 0 to hide the pane.",
+		"Controls if the height of the open editors section should adapt dynamically to the number of elements or not.",
+		"Controls if the explorer should automatically reveal files when opening them."
 	],
 	"vs/workbench/parts/files/browser/saveErrorHandler": [
 		"Overwrite",
@@ -1249,10 +1337,10 @@ define("vs/workbench/workbench.main.nls", {
 		"Compare",
 		"{0} - on disk ↔ in {1}",
 		"{0} - Resolve save conflict",
-		"Use the actions in the editor tool bar to either **undo** your changes or **overwrite** the content on disk with your changes",
-		"Use local changes and overwrite disk contents",
+		"Please either select **Revert** to discard your changes or **Overwrite** to replace the content on disk with your changes",
+		"Overwrite",
 		"The content of the file on disk has changed and the left hand side of the compare editor was refreshed. Please review and resolve again.",
-		"Discard local changes and revert to content on disk"
+		"Revert"
 	],
 	"vs/workbench/parts/files/browser/views/emptyView": [
 		"Files Explorer Section",
@@ -1272,20 +1360,20 @@ define("vs/workbench/workbench.main.nls", {
 		"This action is irreversible!",
 		"&&Replace"
 	],
-	"vs/workbench/parts/files/browser/views/workingFilesView": [
-		"Working Files Section",
-		"Working Files",
-		"{0} unsaved",
-		"Working Files"
+	"vs/workbench/parts/files/browser/views/openEditorsView": [
+		"Open Editors Section",
+		"Open Editors",
+		"Open Editors",
+		"{0} unsaved"
 	],
-	"vs/workbench/parts/files/browser/views/workingFilesViewer": [
-		"{0}, Working Files"
-	],
-	"vs/workbench/parts/files/browser/workingFilesPicker": [
-		"{0}, working file picker",
-		"working files",
-		"No matching working files found",
-		"List of working files is currently empty"
+	"vs/workbench/parts/files/browser/views/openEditorsViewer": [
+		"{0}, Editor Group",
+		"{0}, Open Editor",
+		"Save All",
+		"Close All",
+		"Close",
+		"Close Others",
+		"Close All"
 	],
 	"vs/workbench/parts/files/common/editors/textFileEditorModel": [
 		"Failed to save '{0}': {1}",
@@ -1314,7 +1402,9 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/workbench/parts/files/electron-browser/textFileServices": [
 		"Do you want to save the changes you made to {0}?",
-		"Do you want to save the changes to the following files?",
+		"Do you want to save the changes to the following {0} files?",
+		"...1 additional file not shown",
+		"...{0} additional files not shown",
 		"&&Save All",
 		"&&Save",
 		"Do&&n't Save",
@@ -1341,16 +1431,14 @@ define("vs/workbench/workbench.main.nls", {
 		"Unstage",
 		"Unstage All",
 		"Can't checkout. Please commit or stage your work first.",
-		"Branch",
 		"Commit Staged",
+		"Commit",
+		"Commit Message",
 		"Commit All",
 		"Commit All",
 		"Commit Staged",
-		"Pull",
 		"Can't pull. Please commit or stage your work first.",
 		"Authentication failed on the git remote.",
-		"Pull (Rebase)",
-		"Push",
 		"Authentication failed on the git remote.",
 		"Publish",
 		"Are you sure you want to publish '{0}' to '{1}'?",
@@ -1358,8 +1446,6 @@ define("vs/workbench/workbench.main.nls", {
 		"Pick a remote to publish the branch '{0}' to:",
 		"Authentication failed on the git remote.",
 		"Authentication failed on the git remote.",
-		"Sync",
-		"Sync",
 		"Synchronizing...",
 		"Can't sync in detached mode.",
 		"Current branch '{0} doesn't have an upstream branch configured.",
@@ -1369,14 +1455,15 @@ define("vs/workbench/workbench.main.nls", {
 		"Current branch '{0}' is {1} commit behind and {2} commits ahead of '{3}'.",
 		"Current branch '{0}' is {1} commits behind and {2} commit ahead of '{3}'.",
 		"Current branch '{0}' is {1} commits behind and {2} commits ahead of '{3}'.",
-		"Undo Last Commit",
-		"Checkout",
-		"Branch"
+		"Undo Last Commit"
 	],
 	"vs/workbench/parts/git/browser/gitActions.contribution": [
 		"Switch to Changes View",
 		"Switch to Editor View",
+		"Stage",
+		"Unstage",
 		"Stage Selected Lines",
+		"Unstage Selected Lines",
 		"Open Change",
 		"Open File",
 		"Git"
@@ -1384,6 +1471,7 @@ define("vs/workbench/workbench.main.nls", {
 	"vs/workbench/parts/git/browser/gitQuickOpen": [
 		"{0}, git",
 		"Branch at {0}",
+		"Remote branch at {0}",
 		"Tag at {0}",
 		"Branch {0} is already the current branch",
 		"{0}, git branch",
@@ -1393,11 +1481,16 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/workbench/parts/git/browser/gitServices": [
 		"Can't open this git resource.",
+		"{0} (index) ↔ {1}",
 		"{0} - Changes on index",
+		"{0} ← {1}",
 		"{0} - Renamed - Changes on index",
+		"{0} (HEAD) ↔ {1}",
 		"{0} - Changes on working tree",
+		"{0} (merge) ↔ {1}",
 		"{0} - Merge changes",
 		"You seem to have git {0} installed. Code works best with git >=2.0.0.",
+		"Don't show again",
 		"Download",
 		"Please configure your git user name and e-mail.",
 		"Git {0}",
@@ -1405,7 +1498,9 @@ define("vs/workbench/workbench.main.nls", {
 		"Show Output",
 		"Cancel",
 		"There was an issue running a git operation. Please review the output or use a console to check the state of your repository.",
+		"{0} (index)",
 		"{0} - Changes on index",
+		"{0} ({1})",
 		"{0} - Changes on {1}",
 		"Can't open this git resource."
 	],
@@ -1419,12 +1514,15 @@ define("vs/workbench/workbench.main.nls", {
 		"{0} pending changes",
 		"Show Git",
 		"Git",
+		"Git",
 		"View",
 		"Git Commands",
-		"Git configuration",
+		"Git",
 		"Is git enabled",
 		"Path to the git executable",
-		"Whether auto fetching is enabled."
+		"Whether auto fetching is enabled.",
+		"Whether long commit messages should be warned about.",
+		"Always allow large repositories to be managed by Code."
 	],
 	"vs/workbench/parts/git/node/git.lib": [
 		"File seems to be binary and cannot be opened as text"
@@ -1433,25 +1531,41 @@ define("vs/workbench/workbench.main.nls", {
 		"Html Preview"
 	],
 	"vs/workbench/parts/html/browser/htmlPreviewPart": [
-		"Preview Html",
 		"Invalid editor input."
 	],
-	"vs/workbench/parts/markdown/browser/markdownActions": [
-		"Toggle Preview",
-		"Open a Markdown file first to show a preview.",
-		"Open Preview to the Side",
-		"Open a Markdown file first to show a preview.",
-		"Open Preview",
-		"Open Preview"
-	],
-	"vs/workbench/parts/markdown/browser/markdownActions.contribution": [
-		"Markdown"
-	],
-	"vs/workbench/parts/markdown/common/markdownEditorInput": [
-		"Preview '{0}'"
-	],
-	"vs/workbench/parts/markdown/common/markdownEditorModel": [
-		"Unable to open '{0}' for Markdown rendering. Please make sure the file exists and that it is a valid Markdown file."
+	"vs/workbench/parts/markers/common/messages": [
+		"View",
+		"Show Problems",
+		"Problems View",
+		"Controls if Problems view should automatically reveal files when opening them",
+		"No problems",
+		"Problems grouped by files",
+		"No problems have been detected in the workspace so far.",
+		"No results found with provided filter criteria",
+		"Filter Problems",
+		"Filter by type or text",
+		"errors",
+		"warnings",
+		"infos",
+		"1 Error",
+		"{0} Errors",
+		"1 Warning",
+		"{0} Warnings",
+		"1 Info",
+		"{0} Infos",
+		"1 Unknown",
+		"{0} Unknowns",
+		"({0}, {1})",
+		"{0} with {1} problems",
+		"Error generated by {0}: {1} at line {2} and column {3}",
+		"Error: {0} at line {1} and column {2}",
+		"Warning generated by {0}: {1} at line {2} and column {3}",
+		"Warning: {0} at line {1} and column {2}",
+		"Info generated by {0}: {1} at line {2} and column {3}",
+		"Info: {0} at line {1} and column {2}",
+		"Problem generated by {0}: {1} at line {2} and column {3}",
+		"Problem: {0} at line {1} and column {2}",
+		"Errors and Warnings"
 	],
 	"vs/workbench/parts/output/browser/output.contribution": [
 		"Output",
@@ -1473,6 +1587,7 @@ define("vs/workbench/workbench.main.nls", {
 		"{0}, commands",
 		"Command '{0}' can not be run from here.",
 		"Command '{0}' is not enabled in the current context.",
+		"{0}: {1}",
 		"{0}: {1}",
 		"No commands matching",
 		"Show Editor Commands"
@@ -1520,38 +1635,49 @@ define("vs/workbench/workbench.main.nls", {
 		"global commands",
 		"editor commands"
 	],
-	"vs/workbench/parts/quickopen/browser/markersHandler": [
-		"[{0}] {1}",
-		"{0}({1},{2})",
-		"{0}, errors and warnings",
-		"Type to narrow down errors and warnings",
-		"No errors or warnings matching",
-		"No errors or warnings",
-		"Show Errors and Warnings"
-	],
 	"vs/workbench/parts/quickopen/browser/quickopen.contribution": [
-		"Show Errors or Warnings",
-		"Show Errors and Warnings",
 		"Show and Run Commands",
 		"Go to Line",
 		"Go to Line",
-		"Go to Symbol",
-		"Go to Symbol",
-		"Go to Symbol by Category",
+		"Go to Symbol in File",
+		"Go to Symbol in File by Category",
 		"Show Help"
 	],
+	"vs/workbench/parts/search/browser/replaceService": [
+		"{0} ↔ {1} (Replace Preview)"
+	],
 	"vs/workbench/parts/search/browser/search.contribution": [
-		"Show Search",
 		"Find in Folder",
 		"Show All Symbols",
 		"Search",
 		"View",
-		"Open Files and Symbols by Name",
-		"Open Symbol By Name",
-		"Search configuration",
-		"Configure glob patterns for excluding files and folders in searches. Inherits all glob patterns from the file.exclude setting.",
+		"Open Files and Global Symbols by Name",
+		"Open Any Symbol By Name",
+		"Search",
+		"Configure glob patterns for excluding files and folders in searches. Inherits all glob patterns from the files.exclude setting.",
 		"The glob pattern to match file paths against. Set to true or false to enable or disable the pattern.",
 		"Additional check on the siblings of a matching file. Use $(basename) as variable for the matching file name."
+	],
+	"vs/workbench/parts/search/browser/searchActions": [
+		"Show Search",
+		"Replace in Files",
+		"Find in Folder",
+		"Refresh",
+		"Clear Search Results",
+		"Remove",
+		"Replace All",
+		"Replace",
+		"Open Settings"
+	],
+	"vs/workbench/parts/search/browser/searchWidget": [
+		"Replace All (Submit Search to Enable)",
+		"Replace All",
+		"Toggle Replace",
+		"Search: Type Search Term and press Enter to search or Escape to cancel",
+		"Search",
+		"Replace: Type replace term and press Enter to preview or Escape to cancel",
+		"Replace",
+		"Expression matches everything"
 	],
 	"vs/workbench/parts/snippets/electron-browser/snippets.contribution": [
 		"Snippets",
@@ -1578,6 +1704,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Example to run an arbitrary external command"
 	],
 	"vs/workbench/parts/tasks/electron-browser/task.contribution": [
+		"Tasks are only available on a workspace folder.",
 		"Run Build Task",
 		"Run Test Task",
 		"Run Rebuild Task",
@@ -1594,6 +1721,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Show Task Log",
 		"Run Task",
 		"99+",
+		"Tasks",
 		"Error: The content of the tasks.json file has syntax errors. Please correct them before executing a task.\n",
 		"No task runner configured.",
 		"No valid task runner configured. Supported task runners are 'service' and 'program'.",
@@ -1685,6 +1813,31 @@ define("vs/workbench/workbench.main.nls", {
 		"Failed to launch external program {0} {1}.",
 		"\nThe task '{0}' was terminated per user request."
 	],
+	"vs/workbench/parts/terminal/electron-browser/terminal.contribution": [
+		"Integrated Terminal",
+		"The path of the shell that the terminal uses on Linux.",
+		"The command line arguments to use when on the Linux terminal.",
+		"The path of the shell that the terminal uses on OS X.",
+		"The command line arguments to use when on the OS X terminal.",
+		"The path of the shell that the terminal uses on Windows.",
+		"Controls the font family of the terminal, this defaults to editor.fontFamily's value.",
+		"Controls the font size of the terminal, this defaults to editor.fontSize's value.",
+		"Controls the line height of the terminal, this defaults to normal.",
+		"Terminal",
+		"View"
+	],
+	"vs/workbench/parts/terminal/electron-browser/terminalActions": [
+		"Toggle Integrated Terminal",
+		"Terminal: Kill the Active Terminal Instance",
+		"Kill Terminal",
+		"Terminal: Create New Integrated Terminal",
+		"New Terminal",
+		"Terminal: Focus Terminal",
+		"Terminal: Focus Next Terminal",
+		"Terminal: Focus Previous Terminal",
+		"Terminal: Run Selected Text In Active Terminal",
+		"Terminal: Switch Terminal Instance"
+	],
 	"vs/workbench/parts/themes/electron-browser/themes.contribution": [
 		"Color Theme",
 		"Problem loading theme: {0}",
@@ -1693,11 +1846,16 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/workbench/parts/update/electron-browser/update.contribution": [
 		"Close",
-		"Read License",
 		"Welcome to {0} v{1}! Would you like to read the Release Notes?",
-		"Our license terms have changed, please go through them."
+		"Our license terms have changed, please go through them.",
+		"Read License",
+		"Insider builds are becoming daily builds!",
+		"Never Show Again",
+		"Read More"
 	],
 	"vs/workbench/services/files/electron-browser/fileService": [
+		"The Microsoft .NET Framework 4.5 is required. Please follow the link to install it.",
+		"Download .NET Framework 4.5",
 		"Failed to move '{0}' to the trash"
 	],
 	"vs/workbench/services/files/node/fileService": [
@@ -1710,7 +1868,7 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/workbench/services/history/browser/history": [
 		"[Extension Development Host] - {0}",
-		"{0} {1}",
+		"● {0}",
 		"{0} - {1}",
 		"{0} - {1} - {2}",
 		"{0} - {1}",
@@ -1743,11 +1901,11 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/workbench/services/request/node/requestService": [
 		"File not found.",
-		"HTTP configuration",
+		"HTTP",
 		"The proxy setting to use. If not set will be taken from the http_proxy and https_proxy environment variables",
 		"Whether the proxy server certificate should be verified against the list of supplied CAs."
 	],
-	"vs/workbench/services/themes/node/themeService": [
+	"vs/workbench/services/themes/electron-browser/themeService": [
 		"Contributes textmate color themes.",
 		"Label of the color theme as shown in the UI.",
 		"Base theme defining the colors around the editor: 'vs' is the light color theme, 'vs-dark' is the dark color theme.",

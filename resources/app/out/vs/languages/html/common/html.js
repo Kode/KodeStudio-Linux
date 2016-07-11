@@ -1,11 +1,20 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+(function() {
+var __m = ["exports","require","vs/languages/html/common/htmlEmptyTagsShared","vs/languages/html/common/htmlTokenTypes","vs/platform/workspace/common/workspace","vs/base/common/strings","vs/languages/html/common/html","vs/editor/common/modes","vs/base/common/arrays","vs/editor/common/modes/abstractState","vs/editor/common/services/modeService","vs/platform/instantiation/common/instantiation","vs/editor/common/modes/languageConfigurationRegistry","vs/editor/common/modes/supports/tokenizationSupport","vs/base/common/async","vs/editor/common/services/compatWorkerService","vs/editor/common/modes/abstractMode"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/languages/html/common/htmlEmptyTagsShared", ["require", "exports", 'vs/base/common/arrays'], function (require, exports, arrays) {
+define(__m[2], __M([1,0,8]), function (require, exports, arrays) {
     "use strict";
     exports.EMPTY_ELEMENTS = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'];
     function isEmptyElement(e) {
@@ -14,7 +23,7 @@ define("vs/languages/html/common/htmlEmptyTagsShared", ["require", "exports", 'v
     exports.isEmptyElement = isEmptyElement;
 });
 
-define("vs/languages/html/common/htmlTokenTypes", ["require", "exports", 'vs/base/common/strings'], function (require, exports, strings) {
+define(__m[3], __M([1,0,5]), function (require, exports, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -54,7 +63,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/winjs.base', 'vs/editor/common/modes', 'vs/editor/common/modes/abstractMode', 'vs/editor/common/modes/abstractState', 'vs/platform/thread/common/threadService', 'vs/editor/common/services/modeService', 'vs/platform/instantiation/common/instantiation', 'vs/languages/html/common/htmlTokenTypes', 'vs/languages/html/common/htmlEmptyTagsShared', 'vs/editor/common/modes/supports/richEditSupport', 'vs/editor/common/modes/supports/tokenizationSupport', 'vs/editor/common/modes/supports/referenceSupport', 'vs/editor/common/modes/supports/parameterHintsSupport', 'vs/editor/common/modes/supports/suggestSupport', 'vs/platform/thread/common/thread'], function (require, exports, winjs, Modes, abstractMode_1, abstractState_1, threadService_1, modeService_1, instantiation_1, htmlTokenTypes, htmlEmptyTagsShared_1, richEditSupport_1, tokenizationSupport_1, referenceSupport_1, parameterHintsSupport_1, suggestSupport_1, thread_1) {
+define(__m[6], __M([1,0,7,16,9,10,11,3,2,12,13,14,15,4]), function (require, exports, modes, abstractMode_1, abstractState_1, modeService_1, instantiation_1, htmlTokenTypes, htmlEmptyTagsShared_1, languageConfigurationRegistry_1, tokenizationSupport_1, async_1, compatWorkerService_1, workspace_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -62,8 +71,8 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
     'use strict';
     exports.htmlTokenTypes = htmlTokenTypes;
     exports.EMPTY_ELEMENTS = htmlEmptyTagsShared_1.EMPTY_ELEMENTS;
-     // export to be used by Razor. We are the main module, so Razor should get ot from use.
-     // export to be used by Razor. We are the main module, so Razor should get ot from use.
+     // export to be used by Razor. We are the main module, so Razor should get it from us.
+     // export to be used by Razor. We are the main module, so Razor should get it from us.
     (function (States) {
         States[States["Content"] = 0] = "Content";
         States[States["OpeningStartTag"] = 1] = "OpeningStartTag";
@@ -107,8 +116,11 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
             }
             return false;
         };
-        State.prototype.nextName = function (stream) {
+        State.prototype.nextElementName = function (stream) {
             return stream.advanceIfRegExp(/^[_:\w][_:\w-.\d]*/).toLowerCase();
+        };
+        State.prototype.nextAttributeName = function (stream) {
+            return stream.advanceIfRegExp(/^[^\s"'>/=\x00-\x0F\x7F\x80-\x9F]*/).toLowerCase();
         };
         State.prototype.tokenize = function (stream) {
             switch (this.kind) {
@@ -151,7 +163,7 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
                     }
                     break;
                 case States.OpeningEndTag:
-                    var tagName = this.nextName(stream);
+                    var tagName = this.nextElementName(stream);
                     if (tagName.length > 0) {
                         return {
                             type: State.escapeTagName(tagName),
@@ -166,7 +178,7 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
                         return { type: '' };
                     }
                 case States.OpeningStartTag:
-                    this.lastTagName = this.nextName(stream);
+                    this.lastTagName = this.nextElementName(stream);
                     if (this.lastTagName.length > 0) {
                         this.lastAttributeName = null;
                         if ('script' === this.lastTagName || 'style' === this.lastTagName) {
@@ -181,16 +193,19 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
                     break;
                 case States.WithinTag:
                     if (stream.skipWhitespace2() || stream.eos()) {
+                        this.lastAttributeName = ''; // remember that we have seen a whitespace
                         return { type: '' };
                     }
                     else {
-                        var name = this.nextName(stream);
-                        if (name.length > 0) {
-                            this.lastAttributeName = name;
-                            this.kind = States.AttributeName;
-                            return { type: htmlTokenTypes.ATTRIB_NAME };
+                        if (this.lastAttributeName === '') {
+                            var name = this.nextAttributeName(stream);
+                            if (name.length > 0) {
+                                this.lastAttributeName = name;
+                                this.kind = States.AttributeName;
+                                return { type: htmlTokenTypes.ATTRIB_NAME };
+                            }
                         }
-                        else if (stream.advanceIfString2('/>')) {
+                        if (stream.advanceIfString2('/>')) {
                             this.kind = States.Content;
                             return { type: htmlTokenTypes.DELIM_START, dontMergeWithPrev: true };
                         }
@@ -219,6 +234,7 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
                     }
                     else {
                         this.kind = States.WithinTag;
+                        this.lastAttributeName = '';
                         return this.tokenize(stream); // no advance yet - jump to WithinTag
                     }
                 case States.AttributeValue:
@@ -249,6 +265,7 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
                                 this.kind = States.WithinTag;
                                 this.attributeValue = '';
                                 this.attributeValueQuote = '';
+                                this.lastAttributeName = null;
                             }
                             else {
                                 var part = stream.next();
@@ -258,6 +275,12 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
                         }
                     }
                     else {
+                        var attributeValue = stream.advanceIfRegExp(/^[^\s"'`=<>]+/);
+                        if (attributeValue.length > 0) {
+                            this.kind = States.WithinTag;
+                            this.lastAttributeName = null;
+                            return { type: htmlTokenTypes.ATTRIB_VALUE };
+                        }
                         var ch = stream.peek();
                         if (ch === '\'' || ch === '"') {
                             this.attributeValueQuote = ch;
@@ -267,6 +290,7 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
                         }
                         else {
                             this.kind = States.WithinTag;
+                            this.lastAttributeName = null;
                             return this.tokenize(stream); // no advance yet - jump to WithinTag
                         }
                     }
@@ -291,87 +315,49 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
     exports.State = State;
     var HTMLMode = (function (_super) {
         __extends(HTMLMode, _super);
-        function HTMLMode(descriptor, instantiationService, modeService, threadService) {
-            var _this = this;
-            _super.call(this, descriptor.id);
+        function HTMLMode(descriptor, instantiationService, modeService, compatWorkerService, workspaceContextService) {
+            _super.call(this, descriptor.id, compatWorkerService);
+            this.workspaceContextService = workspaceContextService;
             this._modeWorkerManager = this._createModeWorkerManager(descriptor, instantiationService);
             this.modeService = modeService;
-            this.threadService = threadService;
-            this.tokenizationSupport = new tokenizationSupport_1.TokenizationSupport(this, this, true, true);
-            this.linkSupport = this;
+            this.tokenizationSupport = new tokenizationSupport_1.TokenizationSupport(this, this, true);
             this.configSupport = this;
-            this.formattingSupport = this;
-            this.extraInfoSupport = this;
-            this.occurrencesSupport = this;
-            this.referenceSupport = new referenceSupport_1.ReferenceSupport(this.getId(), {
-                tokens: ['invalid'],
-                findReferences: function (resource, position, includeDeclaration) { return _this.findReferences(resource, position, includeDeclaration); } });
-            this.logicalSelectionSupport = this;
-            this.parameterHintsSupport = new parameterHintsSupport_1.ParameterHintsSupport(this.getId(), {
-                triggerCharacters: ['(', ','],
-                excludeTokens: ['*'],
-                getParameterHints: function (resource, position) { return _this.getParameterHints(resource, position); } });
-            // TODO@Alex TODO@Joh: there is something off about declaration support of embedded JS in HTML
-            // this.declarationSupport = new DeclarationSupport(this, {
-            // 		tokens: ['invalid'],
-            // 		findDeclaration: (resource, position) => this.findDeclaration(resource, position)});
-            this.suggestSupport = new suggestSupport_1.SuggestSupport(this.getId(), {
-                triggerCharacters: ['.', ':', '<', '"', '=', '/'],
-                excludeTokens: ['comment'],
-                suggest: function (resource, position) { return _this.suggest(resource, position); } });
-            this.richEditSupport = this._createRichEditSupport();
+            this._registerSupports();
         }
-        HTMLMode.prototype.asyncCtor = function () {
-            return winjs.Promise.join([
-                this.modeService.getOrCreateMode('text/css'),
-                this.modeService.getOrCreateMode('text/javascript'),
-            ]);
+        HTMLMode.prototype._registerSupports = function () {
+            var _this = this;
+            if (this.getId() !== 'html') {
+                throw new Error('This method must be overwritten!');
+            }
+            modes.SuggestRegistry.register(this.getId(), {
+                triggerCharacters: ['.', ':', '<', '"', '=', '/'],
+                shouldAutotriggerSuggest: true,
+                provideCompletionItems: function (model, position, token) {
+                    return async_1.wireCancellationToken(token, _this._provideCompletionItems(model.uri, position));
+                }
+            }, true);
+            modes.DocumentHighlightProviderRegistry.register(this.getId(), {
+                provideDocumentHighlights: function (model, position, token) {
+                    return async_1.wireCancellationToken(token, _this._provideDocumentHighlights(model.uri, position));
+                }
+            }, true);
+            modes.DocumentRangeFormattingEditProviderRegistry.register(this.getId(), {
+                provideDocumentRangeFormattingEdits: function (model, range, options, token) {
+                    return async_1.wireCancellationToken(token, _this._provideDocumentRangeFormattingEdits(model.uri, range, options));
+                }
+            }, true);
+            modes.LinkProviderRegistry.register(this.getId(), {
+                provideLinks: function (model, token) {
+                    return async_1.wireCancellationToken(token, _this.provideLinks(model.uri));
+                }
+            }, true);
+            languageConfigurationRegistry_1.LanguageConfigurationRegistry.register(this.getId(), HTMLMode.LANG_CONFIG);
         };
         HTMLMode.prototype._createModeWorkerManager = function (descriptor, instantiationService) {
             return new abstractMode_1.ModeWorkerManager(descriptor, 'vs/languages/html/common/htmlWorker', 'HTMLWorker', null, instantiationService);
         };
         HTMLMode.prototype._worker = function (runner) {
             return this._modeWorkerManager.worker(runner);
-        };
-        HTMLMode.prototype._createRichEditSupport = function () {
-            return new richEditSupport_1.RichEditSupport(this.getId(), null, {
-                wordPattern: abstractMode_1.createWordRegExp('#-?%'),
-                comments: {
-                    blockComment: ['<!--', '-->']
-                },
-                brackets: [
-                    ['<!--', '-->'],
-                    ['<', '>'],
-                ],
-                __electricCharacterSupport: {
-                    caseInsensitive: true,
-                    embeddedElectricCharacters: ['*', '}', ']', ')']
-                },
-                __characterPairSupport: {
-                    autoClosingPairs: [
-                        { open: '{', close: '}' },
-                        { open: '[', close: ']' },
-                        { open: '(', close: ')' },
-                        { open: '"', close: '"' },
-                        { open: '\'', close: '\'' }
-                    ],
-                    surroundingPairs: [
-                        { open: '"', close: '"' },
-                        { open: '\'', close: '\'' }
-                    ]
-                },
-                onEnterRules: [
-                    {
-                        beforeText: new RegExp("<(?!(?:" + htmlEmptyTagsShared_1.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
-                        afterText: /^<\/(\w[\w\d]*)\s*>$/i,
-                        action: { indentAction: Modes.IndentAction.IndentOutdent }
-                    },
-                    {
-                        beforeText: new RegExp("<(?!(?:" + htmlEmptyTagsShared_1.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
-                        action: { indentAction: Modes.IndentAction.Indent }
-                    }
-                ],
-            });
         };
         // TokenizationSupport
         HTMLMode.prototype.getInitialState = function () {
@@ -427,66 +413,87 @@ define("vs/languages/html/common/html", ["require", "exports", 'vs/base/common/w
             return null;
         };
         HTMLMode.prototype.configure = function (options) {
-            if (this.threadService.isInMainThread) {
-                return this._configureWorkers(options);
+            if (!this.compatWorkerService) {
+                return;
+            }
+            if (this.compatWorkerService.isInMainThread) {
+                return this._configureWorker(options);
             }
             else {
                 return this._worker(function (w) { return w._doConfigure(options); });
             }
         };
-        HTMLMode.prototype._configureWorkers = function (options) {
+        HTMLMode.prototype._configureWorker = function (options) {
             return this._worker(function (w) { return w._doConfigure(options); });
         };
-        HTMLMode.prototype.computeLinks = function (resource) {
-            return this._worker(function (w) { return w.computeLinks(resource); });
+        HTMLMode.prototype.provideLinks = function (resource) {
+            var workspace = this.workspaceContextService.getWorkspace();
+            var workspaceResource = workspace ? workspace.resource : null;
+            return this._provideLinks(resource, workspaceResource);
         };
-        HTMLMode.prototype.formatRange = function (resource, range, options) {
-            return this._worker(function (w) { return w.format(resource, range, options); });
+        HTMLMode.prototype._provideLinks = function (resource, workspaceResource) {
+            return this._worker(function (w) { return w.provideLinks(resource, workspaceResource); });
         };
-        HTMLMode.prototype.computeInfo = function (resource, position) {
-            return this._worker(function (w) { return w.computeInfo(resource, position); });
+        HTMLMode.prototype._provideDocumentRangeFormattingEdits = function (resource, range, options) {
+            return this._worker(function (w) { return w.provideDocumentRangeFormattingEdits(resource, range, options); });
         };
-        HTMLMode.prototype.findReferences = function (resource, position, includeDeclaration) {
-            return this._worker(function (w) { return w.findReferences(resource, position, includeDeclaration); });
-        };
-        HTMLMode.prototype.getRangesToPosition = function (resource, position) {
-            return this._worker(function (w) { return w.getRangesToPosition(resource, position); });
-        };
-        HTMLMode.prototype.findDeclaration = function (resource, position) {
-            return this._worker(function (w) { return w.findDeclaration(resource, position); });
-        };
-        HTMLMode.prototype.findOccurrences = function (resource, position, strict) {
+        HTMLMode.prototype._provideDocumentHighlights = function (resource, position, strict) {
             if (strict === void 0) { strict = false; }
-            return this._worker(function (w) { return w.findOccurrences(resource, position, strict); });
+            return this._worker(function (w) { return w.provideDocumentHighlights(resource, position, strict); });
         };
-        HTMLMode.prototype.suggest = function (resource, position) {
-            return this._worker(function (w) { return w.suggest(resource, position); });
+        HTMLMode.prototype._provideCompletionItems = function (resource, position) {
+            return this._worker(function (w) { return w.provideCompletionItems(resource, position); });
         };
-        HTMLMode.prototype.findColorDeclarations = function (resource) {
-            return this._worker(function (w) { return w.findColorDeclarations(resource); });
+        HTMLMode.LANG_CONFIG = {
+            wordPattern: abstractMode_1.createWordRegExp('#-?%'),
+            comments: {
+                blockComment: ['<!--', '-->']
+            },
+            brackets: [
+                ['<!--', '-->'],
+                ['<', '>'],
+            ],
+            __electricCharacterSupport: {
+                embeddedElectricCharacters: ['*', '}', ']', ')']
+            },
+            autoClosingPairs: [
+                { open: '{', close: '}' },
+                { open: '[', close: ']' },
+                { open: '(', close: ')' },
+                { open: '"', close: '"' },
+                { open: '\'', close: '\'' }
+            ],
+            surroundingPairs: [
+                { open: '"', close: '"' },
+                { open: '\'', close: '\'' }
+            ],
+            onEnterRules: [
+                {
+                    beforeText: new RegExp("<(?!(?:" + htmlEmptyTagsShared_1.EMPTY_ELEMENTS.join('|') + "))([_:\\w][_:\\w-.\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
+                    afterText: /^<\/([_:\w][_:\w-.\d]*)\s*>$/i,
+                    action: { indentAction: modes.IndentAction.IndentOutdent }
+                },
+                {
+                    beforeText: new RegExp("<(?!(?:" + htmlEmptyTagsShared_1.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
+                    action: { indentAction: modes.IndentAction.Indent }
+                }
+            ],
         };
-        HTMLMode.prototype.getParameterHints = function (resource, position) {
-            return this._worker(function (w) { return w.getParameterHints(resource, position); });
-        };
-        HTMLMode.$_configureWorkers = threadService_1.AllWorkersAttr(HTMLMode, HTMLMode.prototype._configureWorkers);
-        HTMLMode.$computeLinks = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.computeLinks);
-        HTMLMode.$formatRange = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.formatRange);
-        HTMLMode.$computeInfo = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.computeInfo);
-        HTMLMode.$findReferences = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.findReferences);
-        HTMLMode.$getRangesToPosition = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.getRangesToPosition);
-        HTMLMode.$findDeclaration = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.findDeclaration);
-        HTMLMode.$findOccurrences = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.findOccurrences);
-        HTMLMode.$suggest = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.suggest);
-        HTMLMode.$findColorDeclarations = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.findColorDeclarations);
-        HTMLMode.$getParameterHints = threadService_1.OneWorkerAttr(HTMLMode, HTMLMode.prototype.getParameterHints);
+        HTMLMode.$_configureWorker = compatWorkerService_1.CompatWorkerAttr(HTMLMode, HTMLMode.prototype._configureWorker);
+        HTMLMode.$_provideLinks = compatWorkerService_1.CompatWorkerAttr(HTMLMode, HTMLMode.prototype._provideLinks);
+        HTMLMode.$_provideDocumentRangeFormattingEdits = compatWorkerService_1.CompatWorkerAttr(HTMLMode, HTMLMode.prototype._provideDocumentRangeFormattingEdits);
+        HTMLMode.$_provideDocumentHighlights = compatWorkerService_1.CompatWorkerAttr(HTMLMode, HTMLMode.prototype._provideDocumentHighlights);
+        HTMLMode.$_provideCompletionItems = compatWorkerService_1.CompatWorkerAttr(HTMLMode, HTMLMode.prototype._provideCompletionItems);
         HTMLMode = __decorate([
             __param(1, instantiation_1.IInstantiationService),
             __param(2, modeService_1.IModeService),
-            __param(3, thread_1.IThreadService)
+            __param(3, compatWorkerService_1.ICompatWorkerService),
+            __param(4, workspace_1.IWorkspaceContextService)
         ], HTMLMode);
         return HTMLMode;
-    }(abstractMode_1.AbstractMode));
+    }(abstractMode_1.CompatMode));
     exports.HTMLMode = HTMLMode;
 });
 
+}).call(this);
 //# sourceMappingURL=html.js.map

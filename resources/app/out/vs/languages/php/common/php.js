@@ -1,6 +1,15 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+(function() {
+var __m = ["vs/editor/common/services/modeService","vs/languages/php/common/php","exports","vs/base/common/objects","vs/editor/common/modes","vs/editor/common/modes/abstractMode","vs/editor/common/modes/abstractState","require","vs/editor/common/modes/languageConfigurationRegistry","vs/editor/common/modes/supports/tokenizationSupport","vs/editor/common/modes/supports/suggestSupport","vs/editor/common/services/editorWorkerService","vs/platform/configuration/common/configuration","vs/editor/common/services/compatWorkerService"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -15,7 +24,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define("vs/languages/php/common/php", ["require", "exports", 'vs/base/common/objects', 'vs/editor/common/modes/abstractMode', 'vs/editor/common/modes/abstractState', 'vs/editor/common/services/modeService', 'vs/editor/common/modes/supports/richEditSupport', 'vs/editor/common/modes/supports/tokenizationSupport', 'vs/editor/common/modes/supports/suggestSupport', 'vs/editor/common/services/editorWorkerService'], function (require, exports, objects, abstractMode_1, abstractState_1, modeService_1, richEditSupport_1, tokenizationSupport_1, suggestSupport_1, editorWorkerService_1) {
+define(__m[1], __M([7,2,3,4,5,6,0,8,9,10,11,12,13]), function (require, exports, objects, Modes, abstractMode_1, abstractState_1, modeService_1, languageConfigurationRegistry_1, tokenizationSupport_1, suggestSupport_1, editorWorkerService_1, configuration_1, compatWorkerService_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -424,38 +433,15 @@ define("vs/languages/php/common/php", ["require", "exports", 'vs/base/common/obj
     exports.PHPEnterHTMLState = PHPEnterHTMLState;
     var PHPMode = (function (_super) {
         __extends(PHPMode, _super);
-        function PHPMode(descriptor, modeService, editorWorkerService) {
-            _super.call(this, descriptor.id);
+        function PHPMode(descriptor, modeService, configurationService, editorWorkerService, compatWorkerService) {
+            _super.call(this, descriptor.id, compatWorkerService);
             this.modeService = modeService;
-            this.tokenizationSupport = new tokenizationSupport_1.TokenizationSupport(this, this, true, false);
-            this.richEditSupport = new richEditSupport_1.RichEditSupport(this.getId(), null, {
-                wordPattern: abstractMode_1.createWordRegExp('$_'),
-                comments: {
-                    lineComment: '//',
-                    blockComment: ['/*', '*/']
-                },
-                brackets: [
-                    ['{', '}'],
-                    ['[', ']'],
-                    ['(', ')']
-                ],
-                __characterPairSupport: {
-                    autoClosingPairs: [
-                        { open: '{', close: '}', notIn: ['string.php'] },
-                        { open: '[', close: ']', notIn: ['string.php'] },
-                        { open: '(', close: ')', notIn: ['string.php'] },
-                        { open: '"', close: '"', notIn: ['string.php'] },
-                        { open: '\'', close: '\'', notIn: ['string.php'] }
-                    ]
-                }
-            });
+            this.tokenizationSupport = new tokenizationSupport_1.TokenizationSupport(this, this, true);
+            languageConfigurationRegistry_1.LanguageConfigurationRegistry.register(this.getId(), PHPMode.LANG_CONFIG);
             if (editorWorkerService) {
-                this.suggestSupport = new suggestSupport_1.TextualSuggestSupport(this.getId(), editorWorkerService);
+                Modes.SuggestRegistry.register(this.getId(), new suggestSupport_1.TextualSuggestSupport(editorWorkerService, configurationService), true);
             }
         }
-        PHPMode.prototype.asyncCtor = function () {
-            return this.modeService.getOrCreateMode('text/html');
-        };
         PHPMode.prototype.getInitialState = function () {
             // Because AbstractMode doesn't allow the initial state to immediately enter a nested
             // mode, we will enter a nested mode ourselves
@@ -496,13 +482,35 @@ define("vs/languages/php/common/php", ["require", "exports", 'vs/base/common/obj
             // such that when we enter HTML again, we can recover the HTML state from .parent
             myStateAfterNestedMode.parent = lastNestedModeState;
         };
+        PHPMode.LANG_CONFIG = {
+            wordPattern: abstractMode_1.createWordRegExp('$_'),
+            comments: {
+                lineComment: '//',
+                blockComment: ['/*', '*/']
+            },
+            brackets: [
+                ['{', '}'],
+                ['[', ']'],
+                ['(', ')']
+            ],
+            autoClosingPairs: [
+                { open: '{', close: '}', notIn: ['string.php'] },
+                { open: '[', close: ']', notIn: ['string.php'] },
+                { open: '(', close: ')', notIn: ['string.php'] },
+                { open: '"', close: '"', notIn: ['string.php'] },
+                { open: '\'', close: '\'', notIn: ['string.php'] }
+            ]
+        };
         PHPMode = __decorate([
             __param(1, modeService_1.IModeService),
-            __param(2, editorWorkerService_1.IEditorWorkerService)
+            __param(2, configuration_1.IConfigurationService),
+            __param(3, editorWorkerService_1.IEditorWorkerService),
+            __param(4, compatWorkerService_1.ICompatWorkerService)
         ], PHPMode);
         return PHPMode;
-    }(abstractMode_1.AbstractMode));
+    }(abstractMode_1.CompatMode));
     exports.PHPMode = PHPMode;
 });
 
+}).call(this);
 //# sourceMappingURL=php.js.map

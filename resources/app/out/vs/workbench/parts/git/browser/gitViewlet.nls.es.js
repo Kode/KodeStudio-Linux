@@ -1,11 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/git/browser/gitViewlet.nls.es", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"Especifique un mensaje de confirmación. Siempre puede presionar **{0}** para confirmar los cambios. Si hay cambios almacenados provisionalmente, solo se confirmarán dichos cambios; de lo contrario, se confirmarán todos los cambios.",
 		"Cuando haya cambios para confirmar, escriba el mensaje de confirmación y presione **{0}** para confirmarlos. Si hay cambios almacenados provisionalmente, solo se confirmarán estos cambios; de lo contrario, se confirmarán todos los cambios.",
+		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
 		"Mensaje (presione {0} para confirmar)",
 		"GIT: Escriba un mensaje de confirmación y presione {0} para confirmar",
 		"Vista de cambios de GIT",
@@ -67,6 +67,11 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.es", {
 		"Se puede descargar de {0}.",
 		"Parece que GIT no está instalado en el sistema.",
 		"Una vez instalado GIT, reinicie {0}.",
+	],
+	"vs/workbench/parts/git/browser/views/huge/hugeView": [
+		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
+		"You can permanently disable this warning with the following setting:",
+		"Allow large repositories",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"Este directorio parece estar incluido en un repositorio GIT.",

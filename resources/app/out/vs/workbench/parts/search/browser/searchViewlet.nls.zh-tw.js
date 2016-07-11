@@ -1,29 +1,22 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/search/browser/searchViewlet.nls.zh-tw", {
+	"vs/workbench/parts/search/browser/patternInputWidget": [
+		"input",
+		"Use Glob Patterns",
+		"The pattern to match. e.g. **\\*\\*/*.js** to match all JavaScript files or **myFolder/\\*\\*** to match that folder with all children.\n\n**Reference**:\n**\\*** matches 0 or more characters\n**?** matches 1 character\n**\\*\\*** matches zero or more directories\n**[a-z]** matches a range of characters\n**{a,b}** matches any of the patterns)",
+	],
+	"vs/workbench/parts/search/browser/searchResultsView": [
+		"{0} matches found",
+		"{0} match found",
+		"no matches",
+		"{0} matches in file {1} of folder {2}, Search result",
+		"No matches",
+		"Replace preview result, {0}",
+		"{0}, Search result",
+	],
 	"vs/workbench/parts/search/browser/searchViewlet": [
-		"在資料夾中尋找",
-		"資料夾 {2} 檔案 {1} 中的 {0} 個相符的記錄，搜尋結果",
-		"{0}，搜尋結果",
-		"移除",
-		"找到 {0} 個符合項",
-		"找到 {0} 個符合項",
-		"沒有相符項目",
-		"重新整理",
-		"選取",
-		"選取",
-		"移除",
-		"摺疊",
-		"清除搜尋結果",
-		"開啟設定",
-		"輸入",
-		"使用 Glob 模式",
-		"要比對的模式。例如 ****/*.js** 可比對所有 JavaScript 檔案，或 **myFolder/**** 可比對資料夾和所有子系。\n\n**參考**:\n***** 比對 0 或多個字元\n**?** 比對 1 個字元\n****** 比對 0 或多個目錄\n**[a-z]** 比對某個範圍的字元\n**{a,b}** 比對任何模式)",
-		"搜尋: 輸入搜尋字詞，然後按 Enter 鍵搜尋或按 Esc 鍵取消",
-		"運算式符合所有項目",
-		"按 Enter 鍵搜尋或按 Esc 鍵取消",
 		"切換搜尋詳細資料",
 		"要包含的檔案",
 		"搜尋包含模式",
@@ -31,6 +24,12 @@ define("vs/workbench/parts/search/browser/searchViewlet.nls.zh-tw", {
 		"搜尋排除模式",
 		"透過設定所排除的檔案",
 		"設定的搜尋排除模式",
+		"Replaced {0} occurrences across {1} files with {2}.",
+		"Removed {0} occurrences across {1} files.",
+		"Replace All",
+		"Replace {0} occurrences across {1} files with \'{2}\'?",
+		"Remove {0} occurrences across {1} files?",
+		"Replace",
 		"搜尋結果",
 		"當 {1} 時為 {0}",
 		"結果集只包含所有符合項的子集。請提供更具體的搜尋條件以縮小結果範圍。",

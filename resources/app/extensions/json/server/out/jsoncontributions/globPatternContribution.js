@@ -26,17 +26,17 @@ var GlobPatternContribution = (function () {
     GlobPatternContribution.prototype.isSettingsFile = function (resource) {
         return Strings.endsWith(resource, '/settings.json');
     };
-    GlobPatternContribution.prototype.collectDefaultSuggestions = function (resource, result) {
+    GlobPatternContribution.prototype.collectDefaultCompletions = function (resource, result) {
         return null;
     };
-    GlobPatternContribution.prototype.collectPropertySuggestions = function (resource, location, currentWord, addValue, isLast, result) {
-        if (this.isSettingsFile(resource) && (location.matches(['files.exclude']) || location.matches(['search.exclude']))) {
+    GlobPatternContribution.prototype.collectPropertyCompletions = function (resource, location, currentWord, addValue, isLast, result) {
+        if (this.isSettingsFile(resource) && location.length === 1 && ((location[0] === 'files.exclude') || (location[0] === 'search.exclude'))) {
             globProperties.forEach(function (e) { return result.add(e); });
         }
         return null;
     };
-    GlobPatternContribution.prototype.collectValueSuggestions = function (resource, location, currentKey, result) {
-        if (this.isSettingsFile(resource) && (location.matches(['files.exclude']) || location.matches(['search.exclude']))) {
+    GlobPatternContribution.prototype.collectValueCompletions = function (resource, location, currentKey, result) {
+        if (this.isSettingsFile(resource) && location.length === 1 && ((location[0] === 'files.exclude') || (location[0] === 'search.exclude'))) {
             globValues.forEach(function (e) { return result.add(e); });
         }
         return null;

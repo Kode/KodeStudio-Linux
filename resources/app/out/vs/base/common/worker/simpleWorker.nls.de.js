@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/base/common/worker/simpleWorker.nls.de", {
 	"vs/base/common/errors": [
 		"{0}. Fehlercode: {1}",
@@ -24,5 +23,23 @@ define("vs/base/common/worker/simpleWorker.nls.de", {
 		"ungültiger Status",
 		"Eine erforderliche Datei konnte nicht geladen werden. Entweder sind Sie nicht mehr mit dem Internet verbunden oder der verbundene Server ist offline. Aktualisieren Sie den Browser, und wiederholen Sie den Vorgang.",
 		"Fehler beim Laden einer erforderlichen Datei. Bitte starten Sie die Anwendung neu, und versuchen Sie es dann erneut. Details: {0}",
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"Steuerelement",
+		"Umschalttaste",
+		"Alt",
+		"Befehl",
+		"Windows",
+		"Strg",
+		"Umschalttaste",
+		"Alt",
+		"Befehl",
+		"Windows",
+	],
+	"vs/base/common/severity": [
+		"Fehler",
+		"Warnung",
+		"Info",
 	]
 });

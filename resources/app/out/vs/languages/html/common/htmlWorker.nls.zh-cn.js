@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/languages/html/common/htmlWorker.nls.zh-cn", {
 	"vs/languages/html/common/htmlTags": [
 		"html 元素表示 HTML 文档的根。",
@@ -123,7 +122,7 @@ define("vs/languages/html/common/htmlWorker.nls.zh-cn", {
 		"ionList 的子级。",
 		"该列表几乎在任何移动应用中都是被广泛使用的界面元素，并且内容范围可以涵盖从基本的文本到按钮、切换组件、图标以及缩略图。",
 		"Modal 是一个内容窗格，可以临时查看用户的主视图。通常用于做出选择或编辑项。",
-		"ionNavBar 的子级。 在 ionNavBar 内创建一个返回按钮。该按钮在用户在当前导航堆栈能够返回时出现。",
+		"ionNavBar 的子级。在 ionNavBar 内创建一个返回按钮。在用户在当前导航堆栈能够返回时,将出现该按钮。",
 		"如果你有 ionNavView 指令，你也可以创建 <ion-nav-bar>，它将创建随着应用程序状态改变而更新的 topbar。",
 		"ionNavView 的子级。使用 ionNavButtons 设置来自 ionView 内部的 ionNavBar 上的按钮。",
 		"ionNavView 的子级。ionNavTitle 指令用于将 ionNavBar 标题文本替换为 ionView 模板中的自定义 HTML。",

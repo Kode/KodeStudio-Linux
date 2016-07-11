@@ -1,3 +1,6 @@
+const globalCode = 'page loaded';
+console.log(globalCode);
+
 function locals() {
     var arr1 = [1, 2];
 
@@ -15,6 +18,11 @@ newlines`;
     buffView[0] = 234;
     var s = Symbol('hi');
     var e = new Error('hi');
+
+    var m = new Map();
+    m.set('a', 1);
+
+    var b = document.body;
 
     eval('var evalVar3 = [1,2,3]');
     eval('var evalVar1 = 16');

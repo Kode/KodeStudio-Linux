@@ -47,11 +47,11 @@ function compileShader2(compiler, type, from, to, temp, system) {
 	if (compiler !== '') {
 		let result = child_process.spawnSync(compiler, [type, from.toString(), to.toString(), temp.toString(), system]);
 
-		if (result.stdout.toString() !== '') {
+		if (result.stdout && result.stdout.toString() !== '') {
 			log.info(result.stdout.toString());
 		}
 
-		if (result.stderr.toString() !== '') {
+		if (result.stderr && result.stderr.toString() !== '') {
 			log.info(result.stderr.toString());
 		}
 
@@ -102,17 +102,22 @@ function compileShader(exporter, platform, project, shader, to, temp, compiler) 
 		case Platform.HTML5Worker:
 		case Platform.Tizen:
 		case Platform.Pi:
+		case Platform.tvOS:
 		case Platform.iOS: {
 			if (Options.graphicsApi === GraphicsApi.Metal) {
-				if (!Files.isDirectory(to.resolve(Paths.get('..', 'ios-build', 'Sources')))) {
-					Files.createDirectories(to.resolve(Paths.get('..', 'ios-build', 'Sources')));
+				let builddir = 'ios-build';
+				if (platform === Platform.tvOS) {
+					builddir = 'tvos-build';
+				}
+				if (!Files.isDirectory(to.resolve(Paths.get('..', builddir, 'Sources')))) {
+					Files.createDirectories(to.resolve(Paths.get('..', builddir, 'Sources')));
 				}
 				let funcname = name;
 				funcname = funcname.replaceAll('-', '_');
 				funcname = funcname.replaceAll('.', '_');
 				funcname += '_main';
 				fs.writeFileSync(to.resolve(name + ".metal").toString(), funcname, { encoding: 'utf8' });
-				compileShader2(compiler, "metal", shader.files[0], to.resolve(Paths.get('..', 'ios-build', 'Sources', name + ".metal")), temp, platform);
+				compileShader2(compiler, "metal", shader.files[0], to.resolve(Paths.get('..', builddir, 'Sources', name + ".metal")), temp, platform);
 				addShader(project, name, ".metal");
 			}
 			else {
@@ -243,7 +248,10 @@ function exportAssets(assets, exporter, from, khafolders, platform, encoders) {
 }
 
 function exportProjectFiles(name, from, to, options, exporter, platform, khaDirectory, haxeDirectory, kore, korehl, libraries, targetOptions, defines, callback) {
-	if (haxeDirectory.path !== '') exporter.exportSolution(name, platform, khaDirectory, haxeDirectory, from, targetOptions, defines);
+	let success = false;
+	if (haxeDirectory.path !== '') {
+		success = exporter.exportSolution(name, platform, khaDirectory, haxeDirectory, from, targetOptions, defines);
+	}
 	if (haxeDirectory.path !== '' && kore) {
 		// If target is a Kore project, generate additional project folders here.
 		// generate the korefile.js
@@ -398,6 +406,7 @@ function exportProjectFiles(name, from, to, options, exporter, platform, khaDire
 		log.info('Done.');
 		callback(name);
 	}
+	return success;
 }
 
 function koreplatform(platform) {
@@ -597,7 +606,7 @@ function exportKhaProject(from, to, platform, khaDirectory, haxeDirectory, oggEn
 		log.info('Assets done.');
 	}
 
-	exportProjectFiles(name, from, to, options, exporter, platform, khaDirectory, haxeDirectory, kore, korehl, project.libraries, project.targetOptions, project.defines, secondPass);
+	return exportProjectFiles(name, from, to, options, exporter, platform, khaDirectory, haxeDirectory, kore, korehl, project.libraries, project.targetOptions, project.defines, secondPass);
 }
 
 function isKhaProject(directory, projectfile) {
@@ -606,11 +615,12 @@ function isKhaProject(directory, projectfile) {
 
 function exportProject(from, to, platform, khaDirectory, haxeDirectory, oggEncoder, aacEncoder, mp3Encoder, h264Encoder, webmEncoder, wmvEncoder, theoraEncoder, krafix, khafolders, embedflashassets, options, callback) {
 	if (isKhaProject(from, options.projectfile)) {
-		exportKhaProject(from, to, platform, khaDirectory, haxeDirectory, oggEncoder, aacEncoder, mp3Encoder, h264Encoder, webmEncoder, wmvEncoder, theoraEncoder, krafix, khafolders, embedflashassets, options, callback);
+		return exportKhaProject(from, to, platform, khaDirectory, haxeDirectory, oggEncoder, aacEncoder, mp3Encoder, h264Encoder, webmEncoder, wmvEncoder, theoraEncoder, krafix, khafolders, embedflashassets, options, callback);
 	}
 	else {
 		log.error('Neither Kha directory nor project file (' + options.projectfile + ') found.');
 		callback('Unknown');
+		return false;
 	}
 }
 
@@ -718,5 +728,5 @@ exports.run = function (options, loglog, callback) {
 		Options.visualStudioVersion = options.visualStudioVersion;
 	}
 	
-	exportProject(Paths.get(options.from), Paths.get(options.to), options.target, Paths.get(options.kha), Paths.get(options.haxe), options.ogg, options.aac, options.mp3, options.h264, options.webm, options.wmv, options.theora, options.krafix, false, options.embedflashassets, options, done);
+	return exportProject(Paths.get(options.from), Paths.get(options.to), options.target, Paths.get(options.kha), Paths.get(options.haxe), options.ogg, options.aac, options.mp3, options.h264, options.webm, options.wmv, options.theora, options.krafix, false, options.embedflashassets, options, done);
 };

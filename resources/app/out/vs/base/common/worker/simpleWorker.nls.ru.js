@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/base/common/worker/simpleWorker.nls.ru", {
 	"vs/base/common/errors": [
 		"{0}. Код ошибки: {1}",
@@ -24,5 +23,23 @@ define("vs/base/common/worker/simpleWorker.nls.ru", {
 		"Недопустимое состояние",
 		"Сбой загрузки требуемого файла. Утеряно подключение к Интернету, либо сервер, к которому вы подключены, перешел в автономный режим. Обновите содержимое браузера, чтобы повторить попытку.",
 		"Не удалось загрузить требуемый файл. Перезапустите приложение, чтобы повторить попытку. Дополнительные сведения: {0}.",
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"Управление",
+		"Shift",
+		"Alt",
+		"COMMAND",
+		"Windows",
+		"Ctrl",
+		"Shift",
+		"Alt",
+		"COMMAND",
+		"Windows",
+	],
+	"vs/base/common/severity": [
+		"Ошибка",
+		"Предупреждение",
+		"Сведения",
 	]
 });

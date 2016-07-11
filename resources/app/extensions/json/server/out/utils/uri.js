@@ -3,9 +3,15 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
+function _encode(ch) {
+    return '%' + ch.charCodeAt(0).toString(16).toUpperCase();
+}
 // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
-function fixedEncodeURIComponent(str) {
-    return encodeURIComponent(str).replace(/[!'()*]/g, function (c) { return '%' + c.charCodeAt(0).toString(16).toUpperCase(); });
+function encodeURIComponent2(str) {
+    return encodeURIComponent(str).replace(/[!'()*]/g, _encode);
+}
+function encodeNoop(str) {
+    return str;
 }
 /**
  * Uniform Resource Identifier (URI) http://tools.ietf.org/html/rfc3986.
@@ -30,6 +36,8 @@ var URI = (function () {
         this._path = URI._empty;
         this._query = URI._empty;
         this._fragment = URI._empty;
+        this._formatted = null;
+        this._fsPath = null;
     }
     Object.defineProperty(URI.prototype, "scheme", {
         /**
@@ -84,6 +92,7 @@ var URI = (function () {
         configurable: true
     });
     Object.defineProperty(URI.prototype, "fsPath", {
+        // ---- filesystem path -----------------------
         /**
          * Returns a string representing the corresponding file system path of this URI.
          * Will handle UNC paths and normalize windows drive letters to lower-case. Also
@@ -143,36 +152,60 @@ var URI = (function () {
     };
     // ---- parse & validate ------------------------
     URI.parse = function (value) {
-        var ret = URI._parse(value);
-        ret = ret.with(undefined, decodeURIComponent(ret.authority), decodeURIComponent(ret.path), decodeURIComponent(ret.query), decodeURIComponent(ret.fragment));
+        var ret = new URI();
+        var data = URI._parseComponents(value);
+        ret._scheme = data.scheme;
+        ret._authority = decodeURIComponent(data.authority);
+        ret._path = decodeURIComponent(data.path);
+        ret._query = decodeURIComponent(data.query);
+        ret._fragment = decodeURIComponent(data.fragment);
+        URI._validate(ret);
         return ret;
     };
     URI.file = function (path) {
-        path = path.replace(/\\/g, '/');
-        path = path.replace(/%/g, '%25');
-        path = path.replace(/#/g, '%23');
-        path = path.replace(/\?/g, '%3F');
-        path = URI._driveLetter.test(path)
-            ? '/' + path
-            : path;
-        var ret = URI._parse(path);
-        if (ret.scheme || ret.fragment || ret.query) {
-            throw new Error('Path contains a scheme, fragment or a query. Can not convert it to a file uri.');
-        }
-        ret = ret.with('file', undefined, decodeURIComponent(ret.path), undefined, undefined);
-        return ret;
-    };
-    URI._parse = function (value) {
         var ret = new URI();
-        var match = URI._regexp.exec(value);
-        if (match) {
-            ret._scheme = match[2] || ret._scheme;
-            ret._authority = match[4] || ret._authority;
-            ret._path = match[5] || ret._path;
-            ret._query = match[7] || ret._query;
-            ret._fragment = match[9] || ret._fragment;
+        ret._scheme = 'file';
+        // normalize to fwd-slashes
+        path = path.replace(/\\/g, URI._slash);
+        // check for authority as used in UNC shares
+        // or use the path as given
+        if (path[0] === URI._slash && path[0] === path[1]) {
+            var idx = path.indexOf(URI._slash, 2);
+            if (idx === -1) {
+                ret._authority = path.substring(2);
+            }
+            else {
+                ret._authority = path.substring(2, idx);
+                ret._path = path.substring(idx);
+            }
+        }
+        else {
+            ret._path = path;
+        }
+        // Ensure that path starts with a slash
+        // or that it is at least a slash
+        if (ret._path[0] !== URI._slash) {
+            ret._path = URI._slash + ret._path;
         }
         URI._validate(ret);
+        return ret;
+    };
+    URI._parseComponents = function (value) {
+        var ret = {
+            scheme: URI._empty,
+            authority: URI._empty,
+            path: URI._empty,
+            query: URI._empty,
+            fragment: URI._empty,
+        };
+        var match = URI._regexp.exec(value);
+        if (match) {
+            ret.scheme = match[2] || ret.scheme;
+            ret.authority = match[4] || ret.authority;
+            ret.path = match[5] || ret.path;
+            ret.query = match[7] || ret.query;
+            ret.fragment = match[9] || ret.fragment;
+        }
         return ret;
     };
     URI.create = function (scheme, authority, path, query, fragment) {
@@ -192,116 +225,93 @@ var URI = (function () {
             throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
         }
     };
-    URI.prototype.toString = function () {
-        if (!this._formatted) {
-            var parts = [];
-            if (this._scheme) {
-                parts.push(this._scheme);
-                parts.push(':');
+    // ---- printing/externalize ---------------------------
+    /**
+     *
+     * @param skipEncoding Do not encode the result, default is `false`
+     */
+    URI.prototype.toString = function (skipEncoding) {
+        if (skipEncoding === void 0) { skipEncoding = false; }
+        if (!skipEncoding) {
+            if (!this._formatted) {
+                this._formatted = URI._asFormatted(this, false);
             }
-            if (this._authority || this._scheme === 'file') {
-                parts.push('//');
-            }
-            if (this._authority) {
-                var authority = this._authority, idx;
-                authority = authority.toLowerCase();
-                idx = authority.indexOf(':');
-                if (idx === -1) {
-                    parts.push(fixedEncodeURIComponent(authority));
-                }
-                else {
-                    parts.push(fixedEncodeURIComponent(authority.substr(0, idx)));
-                    parts.push(authority.substr(idx));
-                }
-            }
-            if (this._path) {
-                // encode every segment of the path
-                var path = this._path, segments;
-                // lower-case win drive letters in /C:/fff
-                if (URI._driveLetterPath.test(path)) {
-                    path = '/' + path[1].toLowerCase() + path.substr(2);
-                }
-                else if (URI._driveLetter.test(path)) {
-                    path = path[0].toLowerCase() + path.substr(1);
-                }
-                segments = path.split('/');
-                for (var i = 0, len = segments.length; i < len; i++) {
-                    segments[i] = fixedEncodeURIComponent(segments[i]);
-                }
-                parts.push(segments.join('/'));
-            }
-            if (this._query) {
-                // in http(s) querys often use 'key=value'-pairs and
-                // ampersand characters for multiple pairs
-                var encoder = /https?/i.test(this.scheme)
-                    ? encodeURI
-                    : fixedEncodeURIComponent;
-                parts.push('?');
-                parts.push(encoder(this._query));
-            }
-            if (this._fragment) {
-                parts.push('#');
-                parts.push(fixedEncodeURIComponent(this._fragment));
-            }
-            this._formatted = parts.join('');
+            return this._formatted;
         }
-        return this._formatted;
+        else {
+            // we don't cache that
+            return URI._asFormatted(this, true);
+        }
+    };
+    URI._asFormatted = function (uri, skipEncoding) {
+        var encoder = !skipEncoding
+            ? encodeURIComponent2
+            : encodeNoop;
+        var parts = [];
+        var scheme = uri.scheme, authority = uri.authority, path = uri.path, query = uri.query, fragment = uri.fragment;
+        if (scheme) {
+            parts.push(scheme, ':');
+        }
+        if (authority || scheme === 'file') {
+            parts.push('//');
+        }
+        if (authority) {
+            authority = authority.toLowerCase();
+            var idx = authority.indexOf(':');
+            if (idx === -1) {
+                parts.push(encoder(authority));
+            }
+            else {
+                parts.push(encoder(authority.substr(0, idx)), authority.substr(idx));
+            }
+        }
+        if (path) {
+            // lower-case windown drive letters in /C:/fff
+            var m = URI._upperCaseDrive.exec(path);
+            if (m) {
+                path = m[1] + m[2].toLowerCase() + path.substr(m[1].length + m[2].length);
+            }
+            // encode every segement but not slashes
+            // make sure that # and ? are always encoded
+            // when occurring in paths - otherwise the result
+            // cannot be parsed back again
+            var lastIdx = 0;
+            while (true) {
+                var idx = path.indexOf(URI._slash, lastIdx);
+                if (idx === -1) {
+                    parts.push(encoder(path.substring(lastIdx)).replace(/[#?]/, _encode));
+                    break;
+                }
+                parts.push(encoder(path.substring(lastIdx, idx)).replace(/[#?]/, _encode), URI._slash);
+                lastIdx = idx + 1;
+            }
+            ;
+        }
+        if (query) {
+            parts.push('?', encoder(query));
+        }
+        if (fragment) {
+            parts.push('#', encoder(fragment));
+        }
+        return parts.join(URI._empty);
     };
     URI.prototype.toJSON = function () {
-        return this.toString();
-    };
-    URI.isURI = function (thing) {
-        if (thing instanceof URI) {
-            return true;
-        }
-        if (!thing) {
-            return false;
-        }
-        if (typeof thing.scheme !== 'string') {
-            return false;
-        }
-        if (typeof thing.authority !== 'string') {
-            return false;
-        }
-        if (typeof thing.fsPath !== 'string') {
-            return false;
-        }
-        if (typeof thing.query !== 'string') {
-            return false;
-        }
-        if (typeof thing.fragment !== 'string') {
-            return false;
-        }
-        if (typeof thing.with !== 'function') {
-            return false;
-        }
-        if (typeof thing.withScheme !== 'function') {
-            return false;
-        }
-        if (typeof thing.withAuthority !== 'function') {
-            return false;
-        }
-        if (typeof thing.withPath !== 'function') {
-            return false;
-        }
-        if (typeof thing.withQuery !== 'function') {
-            return false;
-        }
-        if (typeof thing.withFragment !== 'function') {
-            return false;
-        }
-        if (typeof thing.toString !== 'function') {
-            return false;
-        }
-        if (typeof thing.toJSON !== 'function') {
-            return false;
-        }
-        return true;
+        return {
+            scheme: this.scheme,
+            authority: this.authority,
+            path: this.path,
+            fsPath: this.fsPath,
+            query: this.query,
+            fragment: this.fragment,
+            external: this.toString(),
+            $mid: 1
+        };
     };
     URI._empty = '';
+    URI._slash = '/';
     URI._regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
     URI._driveLetterPath = /^\/[a-zA-z]:/;
-    URI._driveLetter = /^[a-zA-z]:/;
+    URI._upperCaseDrive = /^(\/)?([A-Z]:)/;
     return URI;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });

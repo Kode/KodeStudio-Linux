@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/languages/html/common/htmlWorker.nls.it", {
 	"vs/languages/html/common/htmlTags": [
 		"L\'elemento html rappresenta la radice di un documento HTML.",
@@ -114,7 +113,7 @@ define("vs/languages/html/common/htmlWorker.nls.it", {
 		"L\'elemento template viene usato per dichiarare frammenti di HTML che è possibile clonare e inserire nel documento tramite lo script.",
 		"L\'elemento canvas fornisce script con un\'area di disegno bitmap dipendente dalla risoluzione che può essere usata per il rendering di grafici, grafica di giochi, opere d\'arte o altre immagini visuali create al momento.",
 		"La casella di controllo è uguale alle caselle di controllo HTML in termini di input, ma lo stile è diverso. Il comportamento della casella di controllo è analogo a quello di qualsiasi altra casella di controllo AngularJS.",
-		"Con direttiva ionContent è disponibile un\'area del contenuto di facile utilizzo che può essere configurata per usare la visualizzazione a scorrimento personalizzata di Ionic oppure lo scorrimento predefinito del browser in caso di overflow.",
+		"Con la direttiva ionContent è disponibile un\'area del contenuto di facile utilizzo che può essere configurata per usare la visualizzazione a scorrimento personalizzata di Ionic oppure lo scorrimento predefinito del browser in caso di overflow.",
 		"Elemento figlio di ionItem",
 		"Aggiunge una barra fissa per il piè di pagina sotto parte del contenuto. Se viene applicata la classe \"bar-subfooter\", può essere un piè di pagina secondario (più in alto).",
 		"Aggiunge una barra fissa per l\'intestazione sopra parte del contenuto. Se viene applicata la classe \"bar-subheader\", può essere un\'intestazione secondaria (più in basso).",
@@ -129,7 +128,7 @@ define("vs/languages/html/common/htmlWorker.nls.it", {
 		"Elemento figlio di ionNavView. La direttiva ionNavTitle sostituisce il testo del titolo di un elemento ionNavBar con codice HTML personalizzato dall\'interno di un modello ionView.",
 		"La direttiva ionNavView viene usata per il rendering di modelli nell\'applicazione. Ogni modello fa parte di uno stato. Gli stati sono in genere associati a un URL e vengono definiti a livello di codice con angular-ui-router.",
 		"Elemento figlio di ionItem. Consente di creare un pulsante di opzione all\'interno di una voce di elenco che è visibile quando l\'utente scorre rapidamente verso sinistra con il dito sull\'elemento.",
-		"Semplice contenitore del contenuto senza effetti collaterali. Consente di aggiungere il riquadro \"pane\" all\'elemento.",
+		"Semplice contenitore del contenuto senza effetti collaterali. Consente di aggiungere la classe \"pane\" all\'elemento.",
 		"Popover è una visualizzazione che può essere spostata sul contenuto di un\'app. Questi elementi costituiscono il modo più semplice per presentare o raccogliere informazioni dall\'utente.",
 		"Il pulsante di opzione ionRirective è uguale ai pulsanti di opzione HTML in termini di input, ma lo stile è diverso. Il comportamento di ionRadio è analogo a quello di qualsiasi input di pulsante di opzione di AngularJS.",
 		"Elemento figlio di ionContent o ionScroll. Consente di aggiungere la funzionalità che consente di aggiornare un elemento scrollView trascinando verso il basso. Inserirlo come primo elemento figlio dell\'elemento ionContent o ionScroll.",

@@ -50,10 +50,9 @@
 			}
 		},
 		{
-			"name": "C includes must match meta.preprocessor",
-			"scope": "keyword.control.import",
+			"scope": ["markup.quote", "markup.list"],
 			"settings": {
-				"foreground": "#0000FF"
+				"foreground": "#0451a5"
 			}
 		}
 	]

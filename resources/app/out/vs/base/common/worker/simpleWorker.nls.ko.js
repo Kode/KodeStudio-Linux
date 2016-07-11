@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/base/common/worker/simpleWorker.nls.ko", {
 	"vs/base/common/errors": [
 		"{0}. 오류 코드: {1}",
@@ -24,5 +23,23 @@ define("vs/base/common/worker/simpleWorker.nls.ko", {
 		"잘못된 상태",
 		"필요한 파일을 로드하지 못했습니다. 인터넷에 연결되지 않았거나 연결된 서버가 오프라인 상태입니다. 브라우저를 새로 고친 후 다시 시도해 보세요.",
 		"필요한 파일을 로드하지 못했습니다. 응용 프로그램을 다시 시작하여 다시 시도하세요. 세부 정보: {0}",
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"Ctrl",
+		"Shift",
+		"Alt",
+		"명령",
+		"Windows",
+		"Ctrl",
+		"Shift",
+		"Alt",
+		"명령",
+		"Windows",
+	],
+	"vs/base/common/severity": [
+		"오류",
+		"경고",
+		"정보",
 	]
 });

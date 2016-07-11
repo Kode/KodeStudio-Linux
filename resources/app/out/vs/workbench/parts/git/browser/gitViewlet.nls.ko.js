@@ -1,11 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/git/browser/gitViewlet.nls.ko", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"커밋 메시지를 입력하세요. 언제든지 **{0}**을(를) 눌러 변경 내용을 커밋할 수 있습니다. 스테이징된 변경 내용이 있으면 해당 변경 내용만 커밋되고 그렇지 않으면 모든 변경 내용이 커밋됩니다.",
 		"커밋할 변경 내용이 있으면 커밋 메시지를 입력하고 **{0}**을(를) 눌러 변경 내용을 커밋하세요. 스테이징된 변경 내용이 있으면 해당 변경 내용만 커밋되고 그렇지 않으면 모든 변경 내용이 커밋됩니다.",
+		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
 		"메시지(커밋하려면 {0} 누름)",
 		"Git: 커밋하려면 커밋 메시지를 입력하고 {0}을(를) 누르세요.",
 		"Git 변경 내용 보기",
@@ -67,6 +67,11 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.ko", {
 		"{0}에서 다운로드할 수 있습니다.",
 		"git가 시스템에 설치되지 않은 것 같습니다.",
 		"git가 설치되면 {0}을(를) 다시 시작하세요.",
+	],
+	"vs/workbench/parts/git/browser/views/huge/hugeView": [
+		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
+		"You can permanently disable this warning with the following setting:",
+		"Allow large repositories",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"이 디렉터리가 git 리포지토리에 포함되어 있는 것 같습니다.",

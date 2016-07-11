@@ -177,6 +177,8 @@ class Graphics implements kha.graphics4.Graphics {
 			return 4;
 		case InverseDestinationAlpha:
 			return 5;
+		default:
+			return 0;
 		}
 	}
 	
@@ -378,7 +380,9 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	public function setTextureDepth(unit: kha.graphics4.TextureUnit, texture: kha.Image): Void {
-		
+		if (texture == null) return;
+		var koreUnit = cast(unit, kha.kore.graphics4.TextureUnit);
+		untyped __cpp__("texture->renderTarget->useDepthAsTexture(koreUnit->unit);");
 	}
 
 	public function setVideoTexture(unit: kha.graphics4.TextureUnit, texture: kha.Video): Void {

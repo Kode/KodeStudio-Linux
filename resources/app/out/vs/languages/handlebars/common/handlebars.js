@@ -1,7 +1,16 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
-define("vs/languages/handlebars/common/handlebarsTokenTypes", ["require", "exports"], function (require, exports) {
+(function() {
+var __m = ["vs/languages/handlebars/common/handlebarsTokenTypes","exports","require","vs/languages/handlebars/common/handlebars","vs/editor/common/modes","vs/languages/html/common/html","vs/platform/workspace/common/workspace","vs/editor/common/services/modeService","vs/editor/common/modes/languageConfigurationRegistry","vs/editor/common/modes/abstractMode","vs/base/common/async","vs/editor/common/services/compatWorkerService","vs/platform/instantiation/common/instantiation"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
+define(__m[0], __M([2,1]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -27,7 +36,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define("vs/languages/handlebars/common/handlebars", ["require", "exports", 'vs/editor/common/modes', 'vs/languages/html/common/html', 'vs/languages/handlebars/common/handlebarsTokenTypes', 'vs/platform/instantiation/common/instantiation', 'vs/editor/common/services/modeService', 'vs/editor/common/modes/supports/richEditSupport', 'vs/editor/common/modes/abstractMode', 'vs/platform/thread/common/thread'], function (require, exports, Modes, htmlMode, handlebarsTokenTypes, instantiation_1, modeService_1, richEditSupport_1, abstractMode_1, thread_1) {
+define(__m[3], __M([2,1,4,5,0,12,7,8,9,10,11,6]), function (require, exports, modes, htmlMode, handlebarsTokenTypes, instantiation_1, modeService_1, languageConfigurationRegistry_1, abstractMode_1, async_1, compatWorkerService_1, workspace_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -114,50 +123,29 @@ define("vs/languages/handlebars/common/handlebars", ["require", "exports", 'vs/e
     exports.HandlebarsState = HandlebarsState;
     var HandlebarsMode = (function (_super) {
         __extends(HandlebarsMode, _super);
-        function HandlebarsMode(descriptor, instantiationService, modeService, threadService) {
-            _super.call(this, descriptor, instantiationService, modeService, threadService);
-            this.formattingSupport = null;
+        function HandlebarsMode(descriptor, instantiationService, modeService, compatWorkerService, workspaceContextService) {
+            _super.call(this, descriptor, instantiationService, modeService, compatWorkerService, workspaceContextService);
         }
-        HandlebarsMode.prototype._createRichEditSupport = function () {
-            return new richEditSupport_1.RichEditSupport(this.getId(), null, {
-                wordPattern: abstractMode_1.createWordRegExp('#-?%'),
-                comments: {
-                    blockComment: ['<!--', '-->']
-                },
-                brackets: [
-                    ['<!--', '-->'],
-                    ['{{', '}}']
-                ],
-                __electricCharacterSupport: {
-                    caseInsensitive: true,
-                    embeddedElectricCharacters: ['*', '}', ']', ')']
-                },
-                __characterPairSupport: {
-                    autoClosingPairs: [
-                        { open: '{', close: '}' },
-                        { open: '[', close: ']' },
-                        { open: '(', close: ')' },
-                        { open: '"', close: '"' },
-                        { open: '\'', close: '\'' }
-                    ],
-                    surroundingPairs: [
-                        { open: '<', close: '>' },
-                        { open: '"', close: '"' },
-                        { open: '\'', close: '\'' }
-                    ]
-                },
-                onEnterRules: [
-                    {
-                        beforeText: new RegExp("<(?!(?:" + htmlMode.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
-                        afterText: /^<\/(\w[\w\d]*)\s*>$/i,
-                        action: { indentAction: Modes.IndentAction.IndentOutdent }
-                    },
-                    {
-                        beforeText: new RegExp("<(?!(?:" + htmlMode.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
-                        action: { indentAction: Modes.IndentAction.Indent }
-                    }
-                ],
-            });
+        HandlebarsMode.prototype._registerSupports = function () {
+            var _this = this;
+            modes.SuggestRegistry.register(this.getId(), {
+                triggerCharacters: ['.', ':', '<', '"', '=', '/'],
+                shouldAutotriggerSuggest: true,
+                provideCompletionItems: function (model, position, token) {
+                    return async_1.wireCancellationToken(token, _this._provideCompletionItems(model.uri, position));
+                }
+            }, true);
+            modes.DocumentHighlightProviderRegistry.register(this.getId(), {
+                provideDocumentHighlights: function (model, position, token) {
+                    return async_1.wireCancellationToken(token, _this._provideDocumentHighlights(model.uri, position));
+                }
+            }, true);
+            modes.LinkProviderRegistry.register(this.getId(), {
+                provideLinks: function (model, token) {
+                    return async_1.wireCancellationToken(token, _this.provideLinks(model.uri));
+                }
+            }, true);
+            languageConfigurationRegistry_1.LanguageConfigurationRegistry.register(this.getId(), HandlebarsMode.LANG_CONFIG);
         };
         HandlebarsMode.prototype.getInitialState = function () {
             return new HandlebarsState(this, htmlMode.States.Content, States.HTML, '', '', '', '', '');
@@ -169,14 +157,52 @@ define("vs/languages/handlebars/common/handlebars", ["require", "exports", 'vs/e
             }
             return leavingNestedModeData;
         };
+        HandlebarsMode.LANG_CONFIG = {
+            wordPattern: abstractMode_1.createWordRegExp('#-?%'),
+            comments: {
+                blockComment: ['<!--', '-->']
+            },
+            brackets: [
+                ['<!--', '-->'],
+                ['{{', '}}']
+            ],
+            __electricCharacterSupport: {
+                embeddedElectricCharacters: ['*', '}', ']', ')']
+            },
+            autoClosingPairs: [
+                { open: '{', close: '}' },
+                { open: '[', close: ']' },
+                { open: '(', close: ')' },
+                { open: '"', close: '"' },
+                { open: '\'', close: '\'' }
+            ],
+            surroundingPairs: [
+                { open: '<', close: '>' },
+                { open: '"', close: '"' },
+                { open: '\'', close: '\'' }
+            ],
+            onEnterRules: [
+                {
+                    beforeText: new RegExp("<(?!(?:" + htmlMode.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
+                    afterText: /^<\/(\w[\w\d]*)\s*>$/i,
+                    action: { indentAction: modes.IndentAction.IndentOutdent }
+                },
+                {
+                    beforeText: new RegExp("<(?!(?:" + htmlMode.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
+                    action: { indentAction: modes.IndentAction.Indent }
+                }
+            ],
+        };
         HandlebarsMode = __decorate([
             __param(1, instantiation_1.IInstantiationService),
             __param(2, modeService_1.IModeService),
-            __param(3, thread_1.IThreadService)
+            __param(3, compatWorkerService_1.ICompatWorkerService),
+            __param(4, workspace_1.IWorkspaceContextService)
         ], HandlebarsMode);
         return HandlebarsMode;
     }(htmlMode.HTMLMode));
     exports.HandlebarsMode = HandlebarsMode;
 });
 
+}).call(this);
 //# sourceMappingURL=handlebars.js.map

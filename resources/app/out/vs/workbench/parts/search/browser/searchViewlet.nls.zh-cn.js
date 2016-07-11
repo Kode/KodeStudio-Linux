@@ -1,29 +1,22 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/search/browser/searchViewlet.nls.zh-cn", {
+	"vs/workbench/parts/search/browser/patternInputWidget": [
+		"input",
+		"Use Glob Patterns",
+		"The pattern to match. e.g. **\\*\\*/*.js** to match all JavaScript files or **myFolder/\\*\\*** to match that folder with all children.\n\n**Reference**:\n**\\*** matches 0 or more characters\n**?** matches 1 character\n**\\*\\*** matches zero or more directories\n**[a-z]** matches a range of characters\n**{a,b}** matches any of the patterns)",
+	],
+	"vs/workbench/parts/search/browser/searchResultsView": [
+		"{0} matches found",
+		"{0} match found",
+		"no matches",
+		"{0} matches in file {1} of folder {2}, Search result",
+		"No matches",
+		"Replace preview result, {0}",
+		"{0}, Search result",
+	],
 	"vs/workbench/parts/search/browser/searchViewlet": [
-		"在文件夹中查找",
-		"文件夹 {2} 的文件 {1} 中有 {0} 个匹配，搜索结果",
-		"{0}，搜索结果",
-		"删除",
-		"已找到 {0} 个匹配项",
-		"已找到 {0} 个匹配项",
-		"无匹配",
-		"刷新",
-		"选择",
-		"选择",
-		"删除",
-		"折叠",
-		"清理搜索结果",
-		"打开设置",
-		"输入",
-		"使用 Glob 模式",
-		"要匹配的模式。例如，****/*.js** 与所有 JavaScript 文件匹配，或 **myFolder/**** 与包含所有子级的文件夹匹配。\n\n**Reference**:\n***** 匹配 0 个或更多字符\n**?** 匹配 1 个字符\n****** 匹配零个或更多目录\n**[a-z]** 匹配一系列字符\n**{a,b}** 匹配任何一种模式)",
-		"搜索: 键入搜索术语，然后按 Enter 进行搜索或按 Escape 取消",
-		"表达式与所有内容相匹配",
-		"按 Enter 进行搜索，按 Esc 取消",
 		"切换搜索详细信息",
 		"要包含的文件",
 		"搜索包含模式",
@@ -31,6 +24,12 @@ define("vs/workbench/parts/search/browser/searchViewlet.nls.zh-cn", {
 		"搜索排除模式",
 		"通过设置排除的文件",
 		"配置的搜索排除模式",
+		"Replaced {0} occurrences across {1} files with {2}.",
+		"Removed {0} occurrences across {1} files.",
+		"Replace All",
+		"Replace {0} occurrences across {1} files with \'{2}\'?",
+		"Remove {0} occurrences across {1} files?",
+		"Replace",
 		"搜索结果",
 		"{1} 时为 {0}",
 		"结果集仅包含所有匹配项的子集。请使你的搜索更加具体，减少结果。",

@@ -1,6 +1,15 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+(function() {
+var __m = ["vs/workbench/parts/output/common/outputMode","require","exports","vs/platform/instantiation/common/instantiation","vs/editor/common/modes","vs/editor/common/modes/abstractMode","vs/base/common/async","vs/editor/common/services/compatWorkerService","vs/platform/workspace/common/workspace"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -15,56 +24,50 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define("vs/workbench/parts/output/common/outputMode", ["require", "exports", 'vs/editor/common/modes/monarch/monarch', 'vs/editor/common/modes/monarch/monarchCompile', 'vs/platform/instantiation/common/instantiation', 'vs/editor/common/services/modelService', 'vs/editor/common/services/modeService', 'vs/platform/thread/common/threadService', 'vs/editor/common/services/editorWorkerService', 'vs/editor/common/modes/abstractMode'], function (require, exports, monarch_1, monarchCompile_1, instantiation_1, modelService_1, modeService_1, threadService_1, editorWorkerService_1, abstractMode_1) {
+define(__m[0], __M([1,2,3,4,5,6,7,8]), function (require, exports, instantiation_1, modes, abstractMode_1, async_1, compatWorkerService_1, workspace_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    exports.language = {
-        displayName: 'Log',
-        name: 'Log',
-        defaultToken: '',
-        ignoreCase: true,
-        tokenizer: {
-            root: [
-                // Monaco log levels
-                [/^\[trace.*?\]|trace:?/, 'debug-token.output'],
-                [/^\[http.*?\]|http:?/, 'debug-token.output'],
-                [/^\[debug.*?\]|debug:?/, 'debug-token.output'],
-                [/^\[verbose.*?\]|verbose:?/, 'debug-token.output'],
-                [/^\[information.*?\]|information:?/, 'info-token.output'],
-                [/^\[info.*?\]|info:?/, 'info-token.output'],
-                [/^\[warning.*?\]|warning:?/, 'warn-token.output'],
-                [/^\[warn.*?\]|warn:?/, 'warn-token.output'],
-                [/^\[error.*?\]|error:?/, 'error-token.output'],
-                [/^\[fatal.*?\]|fatal:?/, 'error-token.output']
-            ]
-        }
-    };
     var OutputMode = (function (_super) {
         __extends(OutputMode, _super);
-        function OutputMode(descriptor, instantiationService, modeService, modelService, editorWorkerService) {
-            _super.call(this, descriptor.id, monarchCompile_1.compile(exports.language), modeService, modelService, editorWorkerService);
+        function OutputMode(descriptor, instantiationService, compatWorkerService, contextService) {
+            var _this = this;
+            _super.call(this, descriptor.id, compatWorkerService);
             this._modeWorkerManager = new abstractMode_1.ModeWorkerManager(descriptor, 'vs/workbench/parts/output/common/outputWorker', 'OutputWorker', null, instantiationService);
-            this.linkSupport = this;
+            modes.LinkProviderRegistry.register(this.getId(), {
+                provideLinks: function (model, token) {
+                    return async_1.wireCancellationToken(token, _this._provideLinks(model.uri));
+                }
+            });
+            if (compatWorkerService.isInMainThread) {
+                var workspace = contextService.getWorkspace();
+                if (workspace) {
+                    this._configure(workspace.resource);
+                }
+            }
         }
         OutputMode.prototype._worker = function (runner) {
             return this._modeWorkerManager.worker(runner);
         };
-        OutputMode.prototype.computeLinks = function (resource) {
-            return this._worker(function (w) { return w.computeLinks(resource); });
+        OutputMode.prototype._configure = function (workspaceResource) {
+            return this._worker(function (w) { return w.configure(workspaceResource); });
         };
-        OutputMode.$computeLinks = threadService_1.OneWorkerAttr(OutputMode, OutputMode.prototype.computeLinks);
+        OutputMode.prototype._provideLinks = function (resource) {
+            return this._worker(function (w) { return w.provideLinks(resource); });
+        };
+        OutputMode.$_configure = compatWorkerService_1.CompatWorkerAttr(OutputMode, OutputMode.prototype._configure);
+        OutputMode.$_provideLinks = compatWorkerService_1.CompatWorkerAttr(OutputMode, OutputMode.prototype._provideLinks);
         OutputMode = __decorate([
             __param(1, instantiation_1.IInstantiationService),
-            __param(2, modeService_1.IModeService),
-            __param(3, modelService_1.IModelService),
-            __param(4, editorWorkerService_1.IEditorWorkerService)
+            __param(2, compatWorkerService_1.ICompatWorkerService),
+            __param(3, workspace_1.IWorkspaceContextService)
         ], OutputMode);
         return OutputMode;
-    }(monarch_1.MonarchMode));
+    }(abstractMode_1.CompatMode));
     exports.OutputMode = OutputMode;
 });
 
+}).call(this);
 //# sourceMappingURL=outputMode.js.map

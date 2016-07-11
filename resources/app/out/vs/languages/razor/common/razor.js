@@ -1,7 +1,16 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
-define("vs/languages/razor/common/razorTokenTypes", ["require", "exports"], function (require, exports) {
+(function() {
+var __m = ["exports","require","vs/languages/razor/common/razorTokenTypes","vs/languages/razor/common/vsxmlTokenTypes","vs/languages/razor/common/vsxml","vs/base/common/objects","vs/editor/common/modes/abstractMode","vs/editor/common/modes/abstractState","vs/languages/razor/common/csharpTokenization","vs/languages/html/common/html","vs/base/common/errors","vs/languages/razor/common/razor","vs/editor/common/modes","vs/platform/instantiation/common/instantiation","vs/editor/common/services/modeService","vs/editor/common/modes/languageConfigurationRegistry","vs/base/common/async","vs/editor/common/services/compatWorkerService","vs/platform/workspace/common/workspace"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
+define(__m[2], __M([1,0]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10,7 +19,7 @@ define("vs/languages/razor/common/razorTokenTypes", ["require", "exports"], func
     exports.EMBED_CS = 'support.function.cshtml';
 });
 
-define("vs/languages/razor/common/vsxmlTokenTypes", ["require", "exports"], function (require, exports) {
+define(__m[3], __M([1,0]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -34,7 +43,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define("vs/languages/razor/common/vsxml", ["require", "exports", 'vs/base/common/objects', 'vs/base/common/errors', 'vs/editor/common/modes/abstractState', 'vs/languages/razor/common/vsxmlTokenTypes'], function (require, exports, objects, errors, abstractState_1, vsxmlTokenTypes) {
+define(__m[4], __M([1,0,5,10,7,3]), function (require, exports, objects, errors, abstractState_1, vsxmlTokenTypes) {
     'use strict';
     var separators = '<>"=/';
     var whitespace = '\t ';
@@ -223,12 +232,12 @@ define("vs/languages/razor/common/vsxml", ["require", "exports", 'vs/base/common
     exports.VSXMLExpression = VSXMLExpression;
 });
 
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define("vs/languages/razor/common/csharpTokenization", ["require", "exports", 'vs/base/common/objects', 'vs/languages/html/common/html', 'vs/languages/razor/common/vsxml', 'vs/editor/common/modes/abstractState', 'vs/editor/common/modes/abstractMode', 'vs/languages/razor/common/razorTokenTypes'], function (require, exports, objects, htmlMode, VSXML, abstractState_1, abstractMode_1, razorTokenTypes) {
+
+
+
+
+
+define(__m[8], __M([1,0,5,9,4,7,6,2]), function (require, exports, objects, htmlMode, VSXML, abstractState_1, abstractMode_1, razorTokenTypes) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -274,7 +283,7 @@ define("vs/languages/razor/common/csharpTokenization", ["require", "exports", 'v
         'float', 'for', 'foreach', 'from',
         'goto', 'group', 'if', 'implicit',
         'in', 'int', 'interface', 'internal',
-        'into', 'is', 'lock', 'long',
+        'into', 'is', 'lock', 'long', 'nameof',
         'new', 'null', 'namespace', 'object',
         'operator', 'out', 'override', 'orderby',
         'params', 'private', 'protected', 'public',
@@ -284,7 +293,7 @@ define("vs/languages/razor/common/csharpTokenization", ["require", "exports", 'v
         'select', 'this', 'throw', 'true',
         'try', 'typeof', 'uint', 'ulong',
         'unchecked', 'unsafe', 'ushort', 'using',
-        'var', 'virtual', 'volatile', 'void',
+        'var', 'virtual', 'volatile', 'void', 'when',
         'while', 'where', 'yield',
         'model', 'inject' // Razor specific
     ]);
@@ -759,11 +768,11 @@ define("vs/languages/razor/common/csharpTokenization", ["require", "exports", 'v
     }(CSState));
 });
 
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+
+
+
+
+
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -773,7 +782,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define("vs/languages/razor/common/razor", ["require", "exports", 'vs/editor/common/modes', 'vs/languages/html/common/html', 'vs/languages/razor/common/csharpTokenization', 'vs/editor/common/modes/abstractMode', 'vs/languages/razor/common/razorTokenTypes', 'vs/platform/instantiation/common/instantiation', 'vs/editor/common/services/modeService', 'vs/editor/common/modes/supports/richEditSupport', 'vs/platform/thread/common/thread'], function (require, exports, Modes, htmlMode, csharpTokenization, abstractMode_1, razorTokenTypes, instantiation_1, modeService_1, richEditSupport_1, thread_1) {
+define(__m[11], __M([1,0,12,9,8,6,2,13,14,15,16,17,18]), function (require, exports, modes, htmlMode, csharpTokenization, abstractMode_1, razorTokenTypes, instantiation_1, modeService_1, languageConfigurationRegistry_1, async_1, compatWorkerService_1, workspace_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -810,53 +819,32 @@ define("vs/languages/razor/common/razor", ["require", "exports", 'vs/editor/comm
     }(htmlMode.State));
     var RAZORMode = (function (_super) {
         __extends(RAZORMode, _super);
-        function RAZORMode(descriptor, instantiationService, modeService, threadService) {
-            _super.call(this, descriptor, instantiationService, modeService, threadService);
-            this.formattingSupport = null;
+        function RAZORMode(descriptor, instantiationService, modeService, compatWorkerService, workspaceContextService) {
+            _super.call(this, descriptor, instantiationService, modeService, compatWorkerService, workspaceContextService);
         }
+        RAZORMode.prototype._registerSupports = function () {
+            var _this = this;
+            modes.SuggestRegistry.register(this.getId(), {
+                triggerCharacters: ['.', ':', '<', '"', '=', '/'],
+                shouldAutotriggerSuggest: true,
+                provideCompletionItems: function (model, position, token) {
+                    return async_1.wireCancellationToken(token, _this._provideCompletionItems(model.uri, position));
+                }
+            }, true);
+            modes.DocumentHighlightProviderRegistry.register(this.getId(), {
+                provideDocumentHighlights: function (model, position, token) {
+                    return async_1.wireCancellationToken(token, _this._provideDocumentHighlights(model.uri, position));
+                }
+            }, true);
+            modes.LinkProviderRegistry.register(this.getId(), {
+                provideLinks: function (model, token) {
+                    return async_1.wireCancellationToken(token, _this.provideLinks(model.uri));
+                }
+            }, true);
+            languageConfigurationRegistry_1.LanguageConfigurationRegistry.register(this.getId(), RAZORMode.LANG_CONFIG);
+        };
         RAZORMode.prototype._createModeWorkerManager = function (descriptor, instantiationService) {
             return new abstractMode_1.ModeWorkerManager(descriptor, 'vs/languages/razor/common/razorWorker', 'RAZORWorker', 'vs/languages/html/common/htmlWorker', instantiationService);
-        };
-        RAZORMode.prototype._createRichEditSupport = function () {
-            return new richEditSupport_1.RichEditSupport(this.getId(), null, {
-                wordPattern: abstractMode_1.createWordRegExp('#?%'),
-                comments: {
-                    blockComment: ['<!--', '-->']
-                },
-                brackets: [
-                    ['<!--', '-->'],
-                    ['{', '}'],
-                    ['(', ')']
-                ],
-                __electricCharacterSupport: {
-                    caseInsensitive: true,
-                    embeddedElectricCharacters: ['*', '}', ']', ')']
-                },
-                __characterPairSupport: {
-                    autoClosingPairs: [
-                        { open: '{', close: '}' },
-                        { open: '[', close: ']' },
-                        { open: '(', close: ')' },
-                        { open: '"', close: '"' },
-                        { open: '\'', close: '\'' }
-                    ],
-                    surroundingPairs: [
-                        { open: '"', close: '"' },
-                        { open: '\'', close: '\'' }
-                    ]
-                },
-                onEnterRules: [
-                    {
-                        beforeText: new RegExp("<(?!(?:" + htmlMode.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
-                        afterText: /^<\/(\w[\w\d]*)\s*>$/i,
-                        action: { indentAction: Modes.IndentAction.IndentOutdent }
-                    },
-                    {
-                        beforeText: new RegExp("<(?!(?:" + htmlMode.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
-                        action: { indentAction: Modes.IndentAction.Indent }
-                    }
-                ],
-            });
         };
         RAZORMode.prototype.getInitialState = function () {
             return new RAZORState(this, htmlMode.States.Content, '', '', '', '', '');
@@ -868,14 +856,52 @@ define("vs/languages/razor/common/razor", ["require", "exports", 'vs/editor/comm
             }
             return leavingNestedModeData;
         };
+        RAZORMode.LANG_CONFIG = {
+            wordPattern: abstractMode_1.createWordRegExp('#?%'),
+            comments: {
+                blockComment: ['<!--', '-->']
+            },
+            brackets: [
+                ['<!--', '-->'],
+                ['{', '}'],
+                ['(', ')']
+            ],
+            __electricCharacterSupport: {
+                embeddedElectricCharacters: ['*', '}', ']', ')']
+            },
+            autoClosingPairs: [
+                { open: '{', close: '}' },
+                { open: '[', close: ']' },
+                { open: '(', close: ')' },
+                { open: '"', close: '"' },
+                { open: '\'', close: '\'' }
+            ],
+            surroundingPairs: [
+                { open: '"', close: '"' },
+                { open: '\'', close: '\'' }
+            ],
+            onEnterRules: [
+                {
+                    beforeText: new RegExp("<(?!(?:" + htmlMode.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
+                    afterText: /^<\/(\w[\w\d]*)\s*>$/i,
+                    action: { indentAction: modes.IndentAction.IndentOutdent }
+                },
+                {
+                    beforeText: new RegExp("<(?!(?:" + htmlMode.EMPTY_ELEMENTS.join('|') + "))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$", 'i'),
+                    action: { indentAction: modes.IndentAction.Indent }
+                }
+            ],
+        };
         RAZORMode = __decorate([
             __param(1, instantiation_1.IInstantiationService),
             __param(2, modeService_1.IModeService),
-            __param(3, thread_1.IThreadService)
+            __param(3, compatWorkerService_1.ICompatWorkerService),
+            __param(4, workspace_1.IWorkspaceContextService)
         ], RAZORMode);
         return RAZORMode;
     }(htmlMode.HTMLMode));
     exports.RAZORMode = RAZORMode;
 });
 
+}).call(this);
 //# sourceMappingURL=razor.js.map

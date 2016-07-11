@@ -44,6 +44,10 @@ namespace {
 	
 	int _width;
 	int _height;
+
+#if defined(OPENGLES) && defined(SYS_ANDROID) && SYS_ANDROID_API >= 18
+	void* glesDrawBuffers;
+#endif
 }
 
 void Graphics::destroy(int windowId) {
@@ -184,6 +188,10 @@ void Graphics::init(int windowId, int depthBufferBits, int stencilBufferBits) {
 	
 	_width = System::windowWidth(0);
 	_height = System::windowHeight(0);
+
+#if defined(OPENGLES) && defined(SYS_ANDROID) && SYS_ANDROID_API >= 18
+	glesDrawBuffers = (void*)eglGetProcAddress("glDrawBuffers");
+#endif
 }
 
 void Graphics::changeResolution(int width, int height){
@@ -748,7 +756,7 @@ void Graphics::setRenderTarget(RenderTarget* texture, int num, int additionalTar
 		//System::makeCurrent(texture->contextId);
 		glBindFramebuffer(GL_FRAMEBUFFER, texture->_framebuffer);
 		glCheckErrors();
-		glViewport(0, 0, texture->texWidth, texture->texHeight);
+		glViewport(0, 0, texture->width, texture->height);
 		glCheckErrors();
 	}
 	
@@ -757,7 +765,9 @@ void Graphics::setRenderTarget(RenderTarget* texture, int num, int additionalTar
 		if (num == additionalTargets) {
 			GLenum buffers[16];
 			for (int i = 0; i <= additionalTargets; ++i) buffers[i] = GL_COLOR_ATTACHMENT0 + i;
-#ifndef OPENGLES
+#if defined(OPENGLES) && defined(SYS_ANDROID) && SYS_ANDROID_API >= 18
+            ((void(*)(GLsizei, GLenum*))glesDrawBuffers)(additionalTargets + 1, buffers);
+#elif !defined(OPENGLES)
 			glDrawBuffers(additionalTargets + 1, buffers);
 #endif
 		}

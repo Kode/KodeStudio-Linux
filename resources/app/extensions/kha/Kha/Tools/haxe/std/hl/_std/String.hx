@@ -31,11 +31,11 @@ class String {
 	}
 
 	public function toUpperCase() : String {
-		return __alloc__(@:privateAccess bytes.ucs2Upper(0,length<<1), length);
+		return __alloc__(@:privateAccess bytes.ucs2Upper(0,length), length);
 	}
 
 	public function toLowerCase() : String {
-		return __alloc__(@:privateAccess bytes.ucs2Lower(0,length<<1), length);
+		return __alloc__(@:privateAccess bytes.ucs2Lower(0,length), length);
 	}
 
 	public function charAt(index : Int) : String {
@@ -170,6 +170,11 @@ class String {
 			return __alloc__(b, 2); // UTF16 encoding but UCS2 API (same as JS)
 		} else
 			throw "Invalid unicode char " + code;
+	}
+
+	function toUtf8() : hl.types.Bytes {
+		var size = 0;
+		return bytes.utf16ToUtf8(0, size);
 	}
 
 	@:keep function __string() : hl.types.Bytes {

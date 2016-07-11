@@ -335,7 +335,7 @@ class Image implements Canvas implements Resource {
 
 	public function isOpaque(x: Int, y: Int): Bool {
 		//return (b.getPixel(x, y) >> 24) != 0;
-		return false;
+		return true;
 	}
 
 	private var bytes: Bytes = null;
@@ -371,6 +371,10 @@ class Image implements Canvas implements Resource {
 
 	public function setMipmaps(mipmaps: Array<Image>): Void {
 
+	}
+
+	public function setDepthStencilFrom(image: Image): Void {
+		
 	}
 
 	public static var maxSize(get, null): Int;

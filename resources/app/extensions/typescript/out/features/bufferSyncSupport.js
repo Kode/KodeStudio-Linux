@@ -49,22 +49,27 @@ var SyncedBuffer = (function () {
     return SyncedBuffer;
 }());
 var BufferSyncSupport = (function () {
-    function BufferSyncSupport(client, modeIds, validate) {
+    function BufferSyncSupport(client, modeIds, diagnostics, extensions, validate) {
         var _this = this;
         if (validate === void 0) { validate = true; }
         this.disposables = [];
         this.client = client;
         this.modeIds = Object.create(null);
         modeIds.forEach(function (modeId) { return _this.modeIds[modeId] = true; });
+        this.diagnostics = diagnostics;
+        this.extensions = extensions;
         this._validate = validate;
+        this.projectValidationRequested = false;
         this.pendingDiagnostics = Object.create(null);
         this.diagnosticDelayer = new async_1.Delayer(100);
         this.syncedBuffers = Object.create(null);
-        vscode_1.workspace.onDidOpenTextDocument(this.onDidAddDocument, this, this.disposables);
-        vscode_1.workspace.onDidCloseTextDocument(this.onDidRemoveDocument, this, this.disposables);
-        vscode_1.workspace.onDidChangeTextDocument(this.onDidChangeDocument, this, this.disposables);
-        vscode_1.workspace.textDocuments.forEach(this.onDidAddDocument, this);
     }
+    BufferSyncSupport.prototype.listen = function () {
+        vscode_1.workspace.onDidOpenTextDocument(this.onDidOpenTextDocument, this, this.disposables);
+        vscode_1.workspace.onDidCloseTextDocument(this.onDidCloseTextDocument, this, this.disposables);
+        vscode_1.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument, this, this.disposables);
+        vscode_1.workspace.textDocuments.forEach(this.onDidOpenTextDocument, this);
+    };
     Object.defineProperty(BufferSyncSupport.prototype, "validate", {
         get: function () {
             return this._validate;
@@ -89,7 +94,7 @@ var BufferSyncSupport = (function () {
             this.disposables.pop().dispose();
         }
     };
-    BufferSyncSupport.prototype.onDidAddDocument = function (document) {
+    BufferSyncSupport.prototype.onDidOpenTextDocument = function (document) {
         if (!this.modeIds[document.languageId]) {
             return;
         }
@@ -106,7 +111,7 @@ var BufferSyncSupport = (function () {
         syncedBuffer.open();
         this.requestDiagnostic(filepath);
     };
-    BufferSyncSupport.prototype.onDidRemoveDocument = function (document) {
+    BufferSyncSupport.prototype.onDidCloseTextDocument = function (document) {
         var filepath = this.client.asAbsolutePath(document.uri);
         if (!filepath) {
             return;
@@ -115,10 +120,11 @@ var BufferSyncSupport = (function () {
         if (!syncedBuffer) {
             return;
         }
+        this.diagnostics.delete(filepath);
         delete this.syncedBuffers[filepath];
         syncedBuffer.close();
     };
-    BufferSyncSupport.prototype.onDidChangeDocument = function (e) {
+    BufferSyncSupport.prototype.onDidChangeTextDocument = function (e) {
         var filepath = this.client.asAbsolutePath(e.document.uri);
         if (!filepath) {
             return;
@@ -141,7 +147,7 @@ var BufferSyncSupport = (function () {
     };
     BufferSyncSupport.prototype.requestDiagnostic = function (file) {
         var _this = this;
-        if (!this._validate) {
+        if (!this._validate || this.client.experimentalAutoBuild) {
             return;
         }
         this.pendingDiagnostics[file] = Date.now();

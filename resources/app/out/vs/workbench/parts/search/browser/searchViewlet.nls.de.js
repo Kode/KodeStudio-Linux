@@ -1,29 +1,22 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/search/browser/searchViewlet.nls.de", {
+	"vs/workbench/parts/search/browser/patternInputWidget": [
+		"input",
+		"Use Glob Patterns",
+		"The pattern to match. e.g. **\\*\\*/*.js** to match all JavaScript files or **myFolder/\\*\\*** to match that folder with all children.\n\n**Reference**:\n**\\*** matches 0 or more characters\n**?** matches 1 character\n**\\*\\*** matches zero or more directories\n**[a-z]** matches a range of characters\n**{a,b}** matches any of the patterns)",
+	],
+	"vs/workbench/parts/search/browser/searchResultsView": [
+		"{0} matches found",
+		"{0} match found",
+		"no matches",
+		"{0} matches in file {1} of folder {2}, Search result",
+		"No matches",
+		"Replace preview result, {0}",
+		"{0}, Search result",
+	],
 	"vs/workbench/parts/search/browser/searchViewlet": [
-		"In Ordner suchen",
-		"{0} stimmt in der Datei \"{1}\" des Ordners \"{2}\" überein, Suchergebnis",
-		"{0}, Suchergebnis",
-		"Entfernen",
-		"{0} Übereinstimmungen gefunden",
-		"{0} Übereinstimmung gefunden",
-		"Keine Übereinstimmungen",
-		"Aktualisieren",
-		"Auswählen",
-		"Auswählen",
-		"Entfernen",
-		"Reduzieren",
-		"Suchergebnisse löschen",
-		"Einstellungen öffnen",
-		"Eingabe",
-		"Globmuster verwenden",
-		"Das Muster, mit dem eine Übereinstimmung vorliegen soll, z. B. ****/*.js** für alle JavaScript-Dateien oder **meinOrdner/**** für eine Übereinstimmung mit diesem Ordner und allen seinen untergeordneten Elementen.\n\n**Referenz**:\n***** stimmt mit 0 oder mehr Zeichen überein.\n**?** stimmt mit 1 Zeichen überein.\n****** stimmt mit null oder mehr Verzeichnissen überein.\n**[a-z]** stimmt mit einem Zeichenbereich überein.\n**{a,b}** stimmt mit einem beliebigen Muster überein.",
-		"Suche: Geben Sie den Suchbegriff ein, und drücken Sie die EINGABETASTE, um zu suchen, oder ESC, um den Vorgang abzubrechen.",
-		"Der Ausdruck stimmt mit allem überein.",
-		"Drücken Sie die EINGABETASTE, um den Suchvorgang zu starten oder ESC zum Abbrechen.",
 		"Suchdetails umschalten",
 		"Einzuschließende Dateien",
 		"Sucheinschlussmuster",
@@ -31,6 +24,12 @@ define("vs/workbench/parts/search/browser/searchViewlet.nls.de", {
 		"Suchausschlussmuster",
 		"Durch Einstellungen ausgeschlossene Dateien",
 		"Konfigurierte Suchausschlussmuster",
+		"Replaced {0} occurrences across {1} files with {2}.",
+		"Removed {0} occurrences across {1} files.",
+		"Replace All",
+		"Replace {0} occurrences across {1} files with \'{2}\'?",
+		"Remove {0} occurrences across {1} files?",
+		"Replace",
 		"Suchergebnisse",
 		"{0} wenn {1}",
 		"Das Resultset enthält nur eine Teilmenge aller Übereinstimmungen. Verfeinern Sie Ihre Suche, um die Ergebnisse einzugrenzen.",

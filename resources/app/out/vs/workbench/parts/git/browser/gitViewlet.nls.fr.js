@@ -1,11 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/git/browser/gitViewlet.nls.fr", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"Indiquez un message de validation. Vous pouvez toujours appuyer sur **{0}** pour valider les modifications. S\'il existe des modifications en zone de transit, seules ces dernières sont validées ; sinon, toutes les modifications sont validées.",
 		"Quand il existe des modifications à valider, tapez le message de validation et appuyez sur **{0}** pour valider les modifications. S\'il existe des modifications en zone de transit, seules ces dernières sont validées ; sinon, toutes les modifications sont validées.",
+		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
 		"Message (appuyez sur {0} pour valider)",
 		"Git : tapez le message de validation, puis appuyez sur {0} pour valider",
 		"Affichage des modifications Git",
@@ -67,6 +67,11 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.fr", {
 		"Vous pouvez le télécharger à partir de {0}.",
 		"Il semble que git ne soit pas installé sur votre système.",
 		"Une fois git installé, redémarrez {0}.",
+	],
+	"vs/workbench/parts/git/browser/views/huge/hugeView": [
+		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
+		"You can permanently disable this warning with the following setting:",
+		"Allow large repositories",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"Ce répertoire semble être contenu dans un dépôt git.",

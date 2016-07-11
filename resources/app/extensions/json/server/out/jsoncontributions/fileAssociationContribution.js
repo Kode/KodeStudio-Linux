@@ -20,17 +20,17 @@ var FileAssociationContribution = (function () {
     FileAssociationContribution.prototype.isSettingsFile = function (resource) {
         return Strings.endsWith(resource, '/settings.json');
     };
-    FileAssociationContribution.prototype.collectDefaultSuggestions = function (resource, result) {
+    FileAssociationContribution.prototype.collectDefaultCompletions = function (resource, result) {
         return null;
     };
-    FileAssociationContribution.prototype.collectPropertySuggestions = function (resource, location, currentWord, addValue, isLast, result) {
-        if (this.isSettingsFile(resource) && location.matches(['files.associations'])) {
+    FileAssociationContribution.prototype.collectPropertyCompletions = function (resource, location, currentWord, addValue, isLast, result) {
+        if (this.isSettingsFile(resource) && location.length === 1 && location[0] === 'files.associations') {
             globProperties.forEach(function (e) { return result.add(e); });
         }
         return null;
     };
-    FileAssociationContribution.prototype.collectValueSuggestions = function (resource, location, currentKey, result) {
-        if (this.isSettingsFile(resource) && location.matches(['files.associations'])) {
+    FileAssociationContribution.prototype.collectValueCompletions = function (resource, location, currentKey, result) {
+        if (this.isSettingsFile(resource) && location.length === 1 && location[0] === 'files.associations') {
             this.languageIds.forEach(function (l) {
                 result.add({
                     kind: vscode_languageserver_1.CompletionItemKind.Value,

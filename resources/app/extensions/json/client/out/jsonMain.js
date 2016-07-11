@@ -7,10 +7,6 @@ var path = require('path');
 var vscode_1 = require('vscode');
 var vscode_languageclient_1 = require('vscode-languageclient');
 var vscode_extension_telemetry_1 = require('vscode-extension-telemetry');
-var TelemetryNotification;
-(function (TelemetryNotification) {
-    TelemetryNotification.type = { get method() { return 'telemetry'; } };
-})(TelemetryNotification || (TelemetryNotification = {}));
 var VSCodeContentRequest;
 (function (VSCodeContentRequest) {
     VSCodeContentRequest.type = { get method() { return 'vscode/content'; } };
@@ -25,7 +21,7 @@ function activate(context) {
     // Resolve language ids to pass around as initialization data
     vscode_1.languages.getLanguages().then(function (languageIds) {
         // The server is implemented in node
-        var serverModule = context.asAbsolutePath(path.join('server', 'out', 'server.js'));
+        var serverModule = context.asAbsolutePath(path.join('server', 'out', 'jsonServerMain.js'));
         // The debug options for the server
         var debugOptions = { execArgv: ['--nolazy', '--debug=6004'] };
         // If the extension is launch in debug mode the debug server options are use
@@ -41,7 +37,7 @@ function activate(context) {
             synchronize: {
                 // Synchronize the setting section 'json' to the server
                 configurationSection: ['json.schemas', 'http.proxy', 'http.proxyStrictSSL'],
-                fileEvents: vscode_1.workspace.createFileSystemWatcher('**/.json')
+                fileEvents: vscode_1.workspace.createFileSystemWatcher('**/*.json')
             },
             initializationOptions: {
                 languageIds: languageIds
@@ -49,7 +45,7 @@ function activate(context) {
         };
         // Create the language client and start the client.
         var client = new vscode_languageclient_1.LanguageClient('JSON Server', serverOptions, clientOptions);
-        client.onNotification(TelemetryNotification.type, function (e) {
+        client.onTelemetry(function (e) {
             if (telemetryReporter) {
                 telemetryReporter.sendTelemetryEvent(e.key, e.data);
             }

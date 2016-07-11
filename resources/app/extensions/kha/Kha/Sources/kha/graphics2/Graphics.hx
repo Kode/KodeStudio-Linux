@@ -36,6 +36,7 @@ class Graphics {
 	public function fillTriangle(x1: Float, y1: Float, x2: Float, y2: Float, x3: Float, y3: Float): Void { }
 	
 	public var imageScaleQuality(get, set): ImageScaleQuality;
+	public var mipmapScaleQuality(get, set): ImageScaleQuality;
 	
 	private function get_imageScaleQuality(): ImageScaleQuality {
 		return ImageScaleQuality.Low;
@@ -45,6 +46,14 @@ class Graphics {
 		return ImageScaleQuality.High;
 	}
 	
+	private function get_mipmapScaleQuality(): ImageScaleQuality {
+		return ImageScaleQuality.Low;
+	}
+
+	private function set_mipmapScaleQuality(value: ImageScaleQuality): ImageScaleQuality {
+		return ImageScaleQuality.High;
+	}
+    
 	/**
 	The color value is used for geometric primitives as well as for images. Remember to set it back to white to draw images unaltered.
 	*/
@@ -76,6 +85,16 @@ class Graphics {
 	
 	private function set_fontSize(value: Int): Int {
 		return myFontSize = value;
+	}
+	
+	public var fontGlyphs(get, set): Array<Int>;
+	
+	private function get_fontGlyphs(): Array<Int> {
+		return myFontGlyphs;
+	}
+	
+	private function set_fontGlyphs(value: Array<Int>): Array<Int> {
+		return myFontGlyphs = value;
 	}
 	
 	public var transformation(get, set): FastMatrix3; // works on the top of the transformation stack
@@ -172,6 +191,7 @@ class Graphics {
 	private var transformations: Array<FastMatrix3>;
 	private var opacities: Array<Float>;
 	private var myFontSize: Int;
+	private var myFontGlyphs: Array<Int>;
 	
 	public function new() {
 		transformations = new Array<FastMatrix3>();
@@ -179,6 +199,10 @@ class Graphics {
 		opacities = new Array<Float>();
 		opacities.push(1);
 		myFontSize = 12;
+		myFontGlyphs = [];
+		for (i in 32...256) {
+			myFontGlyphs.push(i);
+		}
 		#if sys_g4
 		pipe = null;
 		#end

@@ -1,14 +1,23 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
-define("vs/css!vs/workbench/parts/debug/browser/media/repl",['vs/css!vs/workbench/parts/debug/browser/repl'], {});
+(function() {
+var __m = ["require","exports","vs/workbench/parts/debug/common/debugModel","vs/workbench/parts/debug/electron-browser/debugActions","vs/nls!vs/workbench/parts/debug/browser/repl","vs/workbench/parts/debug/common/replHistory","vs/css!vs/workbench/parts/debug/browser/media/repl","vs/nls!vs/workbench/parts/debug/browser/replViewer","vs/workbench/parts/debug/browser/replViewer","vs/base/common/errors","vs/base/browser/dom","vs/base/common/platform","vs/base/common/lifecycle","vs/base/common/uri","vs/base/common/strings","vs/base/common/winjs.base","vs/base/common/severity","vs/base/browser/mouseEvent","vs/css!vs/workbench/parts/debug/browser/repl","vs/workbench/parts/debug/browser/debugViewer","vs/nls","vs/workbench/services/editor/common/editorService","vs/platform/workspace/common/workspace","vs/workbench/parts/debug/browser/repl","vs/base/browser/ui/actionbar/actionbar","vs/base/parts/tree/browser/treeImpl","vs/platform/event/common/event","vs/workbench/common/events","vs/workbench/parts/debug/common/debug","vs/workbench/browser/panel","vs/platform/telemetry/common/telemetry","vs/platform/contextview/browser/contextView","vs/platform/instantiation/common/instantiation","vs/workbench/services/workspace/common/contextService","vs/platform/storage/common/storage","vs/base/common/keyCodes"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
+define(__m[6], __M([18]), {});
 
-define("vs/nls!vs/workbench/parts/debug/browser/replViewer",['vs/nls', 'vs/nls!vs/workbench/parts/debug/browser/repl'], function(nls, data) { return nls.create("vs/workbench/parts/debug/browser/replViewer", data); });
+define(__m[7], __M([20,4]), function(nls, data) { return nls.create("vs/workbench/parts/debug/browser/replViewer", data); });
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define("vs/workbench/parts/debug/common/replHistory", ["require", "exports"], function (require, exports) {
+define(__m[5], __M([0,1]), function (require, exports) {
     "use strict";
     var MAX_HISTORY_ENTRIES = 50;
     /**
@@ -124,7 +133,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define("vs/workbench/parts/debug/browser/replViewer", ["require", "exports", 'vs/nls!vs/workbench/parts/debug/browser/replViewer', 'vs/base/common/winjs.base', 'vs/base/common/strings', 'vs/base/common/uri', 'vs/base/common/platform', 'vs/base/browser/ui/actionbar/actionbar', 'vs/base/browser/dom', 'vs/base/common/errors', 'vs/base/common/severity', 'vs/base/browser/mouseEvent', 'vs/workbench/parts/debug/common/debugModel', 'vs/workbench/parts/debug/browser/debugViewer', 'vs/workbench/parts/debug/electron-browser/debugActions', 'vs/workbench/services/editor/common/editorService', 'vs/platform/workspace/common/workspace'], function (require, exports, nls, winjs_base_1, strings, uri_1, platform_1, actionbar, dom, errors, severity_1, mouse, model, debugviewer, debugactions, editorService_1, workspace_1) {
+define(__m[8], __M([0,1,7,15,14,13,11,24,10,9,16,17,2,19,3,21,22]), function (require, exports, nls, winjs_base_1, strings, uri_1, platform_1, actionbar, dom, errors, severity_1, mouse, model, debugviewer, debugactions, editorService_1, workspace_1) {
     "use strict";
     var $ = dom.emmet;
     function getExpressionClassName() {
@@ -353,11 +362,14 @@ define("vs/workbench/parts/debug/browser/replViewer", ["require", "exports", 'vs
         ReplExpressionsRenderer.prototype.handleLinks = function (text) {
             var _this = this;
             var linkContainer;
-            for (var _i = 0, _a = ReplExpressionsRenderer.FILE_LOCATION_PATTERNS; _i < _a.length; _i++) {
-                var pattern = _a[_i];
+            var _loop_1 = function(pattern) {
                 pattern.lastIndex = 0; // the holy grail of software development
                 var match = pattern.exec(text);
-                var resource = match && uri_1.default.file(match[1]);
+                var resource = null;
+                try {
+                    resource = match && uri_1.default.file(match[1]);
+                }
+                catch (e) { }
                 if (resource) {
                     linkContainer = document.createElement('span');
                     var textBeforeLink = text.substr(0, match.index);
@@ -377,8 +389,13 @@ define("vs/workbench/parts/debug/browser/replViewer", ["require", "exports", 'vs
                         span.textContent = textAfterLink;
                         linkContainer.appendChild(span);
                     }
-                    break; // support one link per line for now
+                    return "break"; // support one link per line for now
                 }
+            };
+            for (var _i = 0, _a = ReplExpressionsRenderer.FILE_LOCATION_PATTERNS; _i < _a.length; _i++) {
+                var pattern = _a[_i];
+                var state_1 = _loop_1(pattern);
+                if (state_1 === "break") break;
             }
             return linkContainer || text;
         };
@@ -482,6 +499,7 @@ define("vs/workbench/parts/debug/browser/replViewer", ["require", "exports", 'vs
                 actions.push(this.instantiationService.createInstance(debugactions.AddToWatchExpressionsAction, debugactions.AddToWatchExpressionsAction.ID, debugactions.AddToWatchExpressionsAction.LABEL, element));
                 actions.push(new actionbar.Separator());
             }
+            actions.push(new debugactions.CopyAction(debugactions.CopyAction.ID, debugactions.CopyAction.LABEL));
             actions.push(this.instantiationService.createInstance(debugactions.ClearReplAction, debugactions.ClearReplAction.ID, debugactions.ClearReplAction.LABEL));
             return winjs_base_1.TPromise.as(actions);
         };
@@ -534,21 +552,21 @@ define("vs/workbench/parts/debug/browser/replViewer", ["require", "exports", 'vs
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-define("vs/workbench/parts/debug/browser/repl", ["require", "exports", 'vs/nls!vs/workbench/parts/debug/browser/repl', 'vs/base/common/errors', 'vs/base/common/lifecycle', 'vs/base/browser/dom', 'vs/base/common/platform', 'vs/base/parts/tree/browser/treeImpl', 'vs/workbench/parts/debug/browser/replViewer', 'vs/workbench/parts/debug/common/debug', 'vs/workbench/parts/debug/electron-browser/debugActions', 'vs/workbench/parts/debug/common/replHistory', 'vs/workbench/browser/panel', 'vs/platform/telemetry/common/telemetry', 'vs/platform/contextview/browser/contextView', 'vs/platform/instantiation/common/instantiation', 'vs/workbench/services/workspace/common/contextService', 'vs/platform/storage/common/storage', 'vs/base/common/keyCodes', 'vs/css!./media/repl'], function (require, exports, nls, errors, lifecycle, dom, platform, treeimpl, viewer, debug, debugactions, replhistory, panel_1, telemetry_1, contextView_1, instantiation_1, contextService_1, storage_1, keyCodes_1) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[23], __M([0,1,4,9,12,10,11,25,26,27,8,28,2,3,5,29,30,31,32,33,34,35,6]), function (require, exports, nls, errors, lifecycle, dom, platform, treeimpl, event_1, events_1, viewer, debug, debugModel_1, debugactions, replhistory, panel_1, telemetry_1, contextView_1, instantiation_1, contextService_1, storage_1, keyCodes_1) {
     "use strict";
     var $ = dom.emmet;
     var replTreeOptions = {
@@ -560,7 +578,7 @@ define("vs/workbench/parts/debug/browser/repl", ["require", "exports", 'vs/nls!v
     var HISTORY_STORAGE_KEY = 'debug.repl.history';
     var Repl = (function (_super) {
         __extends(Repl, _super);
-        function Repl(debugService, contextMenuService, contextService, telemetryService, instantiationService, contextViewService, storageService) {
+        function Repl(debugService, contextMenuService, contextService, telemetryService, instantiationService, contextViewService, storageService, eventService) {
             _super.call(this, debug.REPL_ID, telemetryService);
             this.debugService = debugService;
             this.contextMenuService = contextMenuService;
@@ -568,16 +586,25 @@ define("vs/workbench/parts/debug/browser/repl", ["require", "exports", 'vs/nls!v
             this.instantiationService = instantiationService;
             this.contextViewService = contextViewService;
             this.storageService = storageService;
+            this.eventService = eventService;
             this.toDispose = [];
             this.registerListeners();
         }
         Repl.prototype.registerListeners = function () {
             var _this = this;
-            this.toDispose.push(this.debugService.getModel().addListener2(debug.ModelEvents.REPL_ELEMENTS_UPDATED, function (re) {
-                _this.onReplElementsUpdated(re);
+            this.toDispose.push(this.debugService.getModel().onDidChangeReplElements(function () {
+                _this.onReplElementsUpdated();
+            }));
+            this.toDispose.push(this.eventService.addListener2(events_1.EventType.COMPOSITE_OPENED, function (e) {
+                if (e.compositeId === debug.REPL_ID) {
+                    var elements = _this.debugService.getModel().getReplElements();
+                    if (elements.length > 0) {
+                        return _this.reveal(elements[elements.length - 1]);
+                    }
+                }
             }));
         };
-        Repl.prototype.onReplElementsUpdated = function (re) {
+        Repl.prototype.onReplElementsUpdated = function () {
             var _this = this;
             if (this.tree) {
                 if (this.refreshTimeoutHandle) {
@@ -588,7 +615,15 @@ define("vs/workbench/parts/debug/browser/repl", ["require", "exports", 'vs/nls!v
                     var scrollPosition = _this.tree.getScrollPosition();
                     _this.tree.refresh().then(function () {
                         if (scrollPosition === 0 || scrollPosition === 1) {
-                            return _this.tree.setScrollPosition(1); // keep scrolling to the end unless user scrolled up
+                            _this.tree.setScrollPosition(1); // keep scrolling to the end unless user scrolled up
+                        }
+                        // If the last repl element has children - auto expand it #6019
+                        var elements = _this.debugService.getModel().getReplElements();
+                        var lastElement = elements.length > 0 ? elements[elements.length - 1] : null;
+                        if (lastElement instanceof debugModel_1.Expression && lastElement.reference > 0) {
+                            return _this.tree.expand(elements[elements.length - 1]).then(function () {
+                                return _this.tree.reveal(elements[elements.length - 1], 0);
+                            });
                         }
                     }, errors.onUnexpectedError);
                 }, Repl.REFRESH_DELAY);
@@ -603,10 +638,9 @@ define("vs/workbench/parts/debug/browser/repl", ["require", "exports", 'vs/nls!v
             this.replInput = dom.append(replInputContainer, $('input.repl-input'));
             this.replInput.type = 'text';
             this.toDispose.push(dom.addStandardDisposableListener(this.replInput, 'keydown', function (e) {
-                var trimmedValue = _this.replInput.value.trim();
-                if (e.equals(keyCodes_1.CommonKeybindings.ENTER) && trimmedValue) {
-                    _this.debugService.addReplExpression(trimmedValue);
-                    Repl.HISTORY.evaluated(trimmedValue);
+                if (e.equals(keyCodes_1.CommonKeybindings.ENTER)) {
+                    _this.debugService.addReplExpression(_this.replInput.value);
+                    Repl.HISTORY.evaluated(_this.replInput.value);
                     _this.replInput.value = '';
                     e.preventDefault();
                 }
@@ -671,7 +705,7 @@ define("vs/workbench/parts/debug/browser/repl", ["require", "exports", 'vs/nls!v
         };
         Repl.prototype.dispose = function () {
             // destroy container
-            this.toDispose = lifecycle.disposeAll(this.toDispose);
+            this.toDispose = lifecycle.dispose(this.toDispose);
             _super.prototype.dispose.call(this);
         };
         Repl.HALF_WIDTH_TYPICAL = 'n';
@@ -683,11 +717,13 @@ define("vs/workbench/parts/debug/browser/repl", ["require", "exports", 'vs/nls!v
             __param(3, telemetry_1.ITelemetryService),
             __param(4, instantiation_1.IInstantiationService),
             __param(5, contextView_1.IContextViewService),
-            __param(6, storage_1.IStorageService)
+            __param(6, storage_1.IStorageService),
+            __param(7, event_1.IEventService)
         ], Repl);
         return Repl;
     }(panel_1.Panel));
     exports.Repl = Repl;
 });
 
+}).call(this);
 //# sourceMappingURL=repl.js.map

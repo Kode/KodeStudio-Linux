@@ -5,27 +5,21 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 define("vs/workbench/parts/search/browser/searchViewlet.nls", {
-	"vs/workbench/parts/search/browser/searchViewlet": [
-		"Find in Folder",
-		"{0} matches in file {1} of folder {2}, Search result",
-		"{0}, Search result",
-		"Remove",
+	"vs/workbench/parts/search/browser/patternInputWidget": [
+		"input",
+		"Use Glob Patterns",
+		"The pattern to match. e.g. **\\*\\*/*.js** to match all JavaScript files or **myFolder/\\*\\*** to match that folder with all children.\n\n**Reference**:\n**\\*** matches 0 or more characters\n**?** matches 1 character\n**\\*\\*** matches zero or more directories\n**[a-z]** matches a range of characters\n**{a,b}** matches any of the patterns)"
+	],
+	"vs/workbench/parts/search/browser/searchResultsView": [
 		"{0} matches found",
 		"{0} match found",
 		"no matches",
-		"Refresh",
-		"Select",
-		"Select",
-		"Remove",
-		"Collapse",
-		"Clear Search Results",
-		"Open Settings",
-		"input",
-		"Use Glob Patterns",
-		"The pattern to match. e.g. **\\*\\*/*.js** to match all JavaScript files or **myFolder/\\*\\*** to match that folder with all children.\n\n**Reference**:\n**\\*** matches 0 or more characters\n**?** matches 1 character\n**\\*\\*** matches zero or more directories\n**[a-z]** matches a range of characters\n**{a,b}** matches any of the patterns)",
-		"Search: Type Search Term and press Enter to search or Escape to cancel",
-		"Expression matches everything",
-		"Press Enter to Search, ESC to Cancel",
+		"{0} matches in file {1} of folder {2}, Search result",
+		"No matches",
+		"Replace preview result, {0}",
+		"{0}, Search result"
+	],
+	"vs/workbench/parts/search/browser/searchViewlet": [
 		"Toggle Search Details",
 		"files to include",
 		"Search Include Patterns",
@@ -33,6 +27,12 @@ define("vs/workbench/parts/search/browser/searchViewlet.nls", {
 		"Search Exclude Patterns",
 		"files excluded through settings",
 		"Configured Search Exclude Patterns",
+		"Replaced {0} occurrences across {1} files with {2}.",
+		"Removed {0} occurrences across {1} files.",
+		"Replace All",
+		"Replace {0} occurrences across {1} files with '{2}'?",
+		"Remove {0} occurrences across {1} files?",
+		"Replace",
 		"Search Results",
 		"{0} when {1}",
 		"The result set only contains a subset of all matches. Please be more specific in your search to narrow down the results.",

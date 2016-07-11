@@ -16,7 +16,6 @@
  *---------------------------------------------------------------------------------------------
  *---------------------------------------------------------------------------------------------
  *--------------------------------------------------------------------------------------------*/
-/// <reference path="declares.ts" />
 'use strict';
 // Limitation: To load jquery through the loader, always require 'jquery' and add a path for it in the loader configuration
 var _amdLoaderGlobal = this, define;
@@ -126,7 +125,7 @@ var AMDLoader;
         };
         Utilities.NEXT_ANONYMOUS_ID = 1;
         return Utilities;
-    })();
+    }());
     AMDLoader.Utilities = Utilities;
     var ConfigurationOptionsUtil = (function () {
         function ConfigurationOptionsUtil() {
@@ -192,6 +191,9 @@ var AMDLoader;
                     options.baseUrl += '/';
                 }
             }
+            if (!Array.isArray(options.nodeModules)) {
+                options.nodeModules = [];
+            }
             return options;
         };
         ConfigurationOptionsUtil.mergeConfigurationOptions = function (overwrite, base) {
@@ -235,7 +237,7 @@ var AMDLoader;
             return ConfigurationOptionsUtil.validateConfigurationOptions(result);
         };
         return ConfigurationOptionsUtil;
-    })();
+    }());
     AMDLoader.ConfigurationOptionsUtil = ConfigurationOptionsUtil;
     var Configuration = (function () {
         function Configuration(options) {
@@ -431,6 +433,10 @@ var AMDLoader;
          * Transform a module id to a location. Appends .js to module ids
          */
         Configuration.prototype.moduleIdToPaths = function (moduleId) {
+            if (this.isBuild() && this.options.nodeModules.indexOf(moduleId) >= 0) {
+                // This is a node module and we are at build time, drop it
+                return ['empty:'];
+            }
             var result = moduleId;
             if (this.overwriteModuleIdToPath.hasOwnProperty(result)) {
                 result = this.overwriteModuleIdToPath[result];
@@ -525,7 +531,7 @@ var AMDLoader;
             this.options.onError(err);
         };
         return Configuration;
-    })();
+    }());
     AMDLoader.Configuration = Configuration;
     // ------------------------------------------------------------------------
     // ModuleIdResolver
@@ -605,7 +611,7 @@ var AMDLoader;
             this._config.onError(err);
         };
         return ModuleIdResolver;
-    })();
+    }());
     AMDLoader.ModuleIdResolver = ModuleIdResolver;
     // ------------------------------------------------------------------------
     // Module
@@ -835,7 +841,7 @@ var AMDLoader;
             return this._unresolvedDependenciesCount === 0;
         };
         return Module;
-    })();
+    }());
     AMDLoader.Module = Module;
     // ------------------------------------------------------------------------
     // LoaderEvent
@@ -862,7 +868,7 @@ var AMDLoader;
             this.timestamp = timestamp;
         }
         return LoaderEvent;
-    })();
+    }());
     AMDLoader.LoaderEvent = LoaderEvent;
     var LoaderEventRecorder = (function () {
         function LoaderEventRecorder(loaderAvailableTimestamp) {
@@ -875,7 +881,7 @@ var AMDLoader;
             return this._events;
         };
         return LoaderEventRecorder;
-    })();
+    }());
     AMDLoader.LoaderEventRecorder = LoaderEventRecorder;
     var NullLoaderEventRecorder = (function () {
         function NullLoaderEventRecorder() {
@@ -888,7 +894,7 @@ var AMDLoader;
         };
         NullLoaderEventRecorder.INSTANCE = new NullLoaderEventRecorder();
         return NullLoaderEventRecorder;
-    })();
+    }());
     AMDLoader.NullLoaderEventRecorder = NullLoaderEventRecorder;
     var ModuleManager = (function () {
         function ModuleManager(scriptLoader) {
@@ -1523,7 +1529,7 @@ var AMDLoader;
             }
         };
         return ModuleManager;
-    })();
+    }());
     AMDLoader.ModuleManager = ModuleManager;
     /**
      * Load `scriptSrc` only once (avoid multiple <script> tags)
@@ -1564,7 +1570,7 @@ var AMDLoader;
             }
         };
         return OnlyOnceScriptLoader;
-    })();
+    }());
     var BrowserScriptLoader = (function () {
         function BrowserScriptLoader() {
         }
@@ -1631,7 +1637,7 @@ var AMDLoader;
             document.getElementsByTagName('head')[0].appendChild(script);
         };
         return BrowserScriptLoader;
-    })();
+    }());
     var WorkerScriptLoader = (function () {
         function WorkerScriptLoader() {
             this.loadCalls = [];
@@ -1684,7 +1690,7 @@ var AMDLoader;
             }
         };
         return WorkerScriptLoader;
-    })();
+    }());
     var NodeScriptLoader = (function () {
         function NodeScriptLoader() {
             this._initialized = false;
@@ -1763,7 +1769,7 @@ var AMDLoader;
         };
         NodeScriptLoader._BOM = 0xFEFF;
         return NodeScriptLoader;
-    })();
+    }());
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -1793,7 +1799,7 @@ var AMDLoader;
             jQuery: true
         };
         return DefineFunc;
-    })();
+    }());
     var RequireFunc = (function () {
         function RequireFunc() {
             if (arguments.length === 1) {
@@ -1840,7 +1846,7 @@ var AMDLoader;
             return moduleManager.getLoaderEvents();
         };
         return RequireFunc;
-    })();
+    }());
     var global = _amdLoaderGlobal, hasPerformanceNow = (global.performance && typeof global.performance.now === 'function'), isWebWorker, isElectronRenderer, isElectronMain, isNode, scriptLoader, moduleManager, loaderAvailableTimestamp;
     function initVars() {
         isWebWorker = (typeof global.importScripts === 'function');
@@ -1955,8 +1961,6 @@ var AMDLoader;
  *---------------------------------------------------------------------------------------------
  *---------------------------------------------------------------------------------------------
  *--------------------------------------------------------------------------------------------*/
-/// <reference path="declares.ts" />
-/// <reference path="loader.ts" />
 'use strict';
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -2042,7 +2046,7 @@ var CSSLoaderPlugin;
             this._insertLinkNode(linkNode);
         };
         return BrowserCSSLoader;
-    })();
+    }());
     /**
      * Prior to IE10, IE could not go above 31 stylesheets in a page
      * http://blogs.msdn.com/b/ieinternals/archive/2011/05/14/internet-explorer-stylesheet-rule-selector-import-sheet-limit-maximum.aspx
@@ -2143,7 +2147,7 @@ var CSSLoaderPlugin;
             }
         };
         return IE9CSSLoader;
-    })(BrowserCSSLoader);
+    }(BrowserCSSLoader));
     var IE8CSSLoader = (function (_super) {
         __extends(IE8CSSLoader, _super);
         function IE8CSSLoader() {
@@ -2156,7 +2160,7 @@ var CSSLoaderPlugin;
             };
         };
         return IE8CSSLoader;
-    })(IE9CSSLoader);
+    }(IE9CSSLoader));
     var NodeCSSLoader = (function () {
         function NodeCSSLoader() {
             this.fs = require.nodeRequire('fs');
@@ -2171,7 +2175,7 @@ var CSSLoaderPlugin;
         };
         NodeCSSLoader.BOM_CHAR_CODE = 65279;
         return NodeCSSLoader;
-    })();
+    }());
     // ------------------------------ Finally, the plugin
     var CSSPlugin = (function () {
         function CSSPlugin(cssLoader) {
@@ -2179,11 +2183,16 @@ var CSSLoaderPlugin;
         }
         CSSPlugin.prototype.load = function (name, req, load, config) {
             config = config || {};
+            var myConfig = config['vs/css'] || {};
+            if (myConfig.inlineResources) {
+                global.inlineResources = true;
+            }
             var cssUrl = req.toUrl(name + '.css');
             this.cssLoader.load(name, cssUrl, function (contents) {
                 // Contents has the CSS file contents if we are in a build
                 if (config.isBuild) {
                     CSSPlugin.BUILD_MAP[name] = contents;
+                    CSSPlugin.BUILD_PATH_MAP[name] = cssUrl;
                 }
                 load({});
             }, function (err) {
@@ -2201,7 +2210,8 @@ var CSSLoaderPlugin;
             global.cssPluginEntryPoints[entryPoint] = global.cssPluginEntryPoints[entryPoint] || [];
             global.cssPluginEntryPoints[entryPoint].push({
                 moduleName: moduleName,
-                contents: CSSPlugin.BUILD_MAP[moduleName]
+                contents: CSSPlugin.BUILD_MAP[moduleName],
+                fsPath: CSSPlugin.BUILD_PATH_MAP[moduleName],
             });
             write.asModule(pluginName + '!' + moduleName, 'define([\'vs/css!' + entryPoint + '\'], {});');
         };
@@ -2214,14 +2224,23 @@ var CSSLoaderPlugin;
                     ' *--------------------------------------------------------*/'
                 ], entries = global.cssPluginEntryPoints[moduleName];
                 for (var i = 0; i < entries.length; i++) {
-                    contents.push(Utilities.rewriteUrls(entries[i].moduleName, moduleName, entries[i].contents));
+                    if (global.inlineResources) {
+                        contents.push(Utilities.rewriteOrInlineUrls(entries[i].fsPath, entries[i].moduleName, moduleName, entries[i].contents));
+                    }
+                    else {
+                        contents.push(Utilities.rewriteUrls(entries[i].moduleName, moduleName, entries[i].contents));
+                    }
                 }
                 write(fileName, contents.join('\r\n'));
             }
         };
+        CSSPlugin.prototype.getInlinedResources = function () {
+            return global.cssInlinedResources || [];
+        };
         CSSPlugin.BUILD_MAP = {};
+        CSSPlugin.BUILD_PATH_MAP = {};
         return CSSPlugin;
-    })();
+    }());
     CSSLoaderPlugin.CSSPlugin = CSSPlugin;
     var Utilities = (function () {
         function Utilities() {
@@ -2325,7 +2344,7 @@ var CSSLoaderPlugin;
             }
             return result + toPath;
         };
-        Utilities.rewriteUrls = function (originalFile, newFile, contents) {
+        Utilities._replaceURL = function (contents, replacer) {
             // Use ")" as the terminator as quotes are oftentimes not used at all
             return contents.replace(/url\(\s*([^\)]+)\s*\)?/g, function (_) {
                 var matches = [];
@@ -2346,14 +2365,56 @@ var CSSLoaderPlugin;
                     url = url.substring(0, url.length - 1);
                 }
                 if (!Utilities.startsWith(url, 'data:') && !Utilities.startsWith(url, 'http://') && !Utilities.startsWith(url, 'https://')) {
-                    var absoluteUrl = Utilities.joinPaths(Utilities.pathOf(originalFile), url);
-                    url = Utilities.relativePath(newFile, absoluteUrl);
+                    url = replacer(url);
                 }
                 return 'url(' + url + ')';
             });
         };
+        Utilities.rewriteUrls = function (originalFile, newFile, contents) {
+            return this._replaceURL(contents, function (url) {
+                var absoluteUrl = Utilities.joinPaths(Utilities.pathOf(originalFile), url);
+                return Utilities.relativePath(newFile, absoluteUrl);
+            });
+        };
+        Utilities.rewriteOrInlineUrls = function (originalFileFSPath, originalFile, newFile, contents) {
+            var fs = require.nodeRequire('fs');
+            var path = require.nodeRequire('path');
+            return this._replaceURL(contents, function (url) {
+                if (/\.(svg|png)$/.test(url)) {
+                    var fsPath = path.join(path.dirname(originalFileFSPath), url);
+                    var fileContents = fs.readFileSync(fsPath);
+                    if (fileContents.length < 3000) {
+                        global.cssInlinedResources = global.cssInlinedResources || [];
+                        var normalizedFSPath = fsPath.replace(/\\/g, '/');
+                        if (global.cssInlinedResources.indexOf(normalizedFSPath) >= 0) {
+                            console.warn('CSS INLINING IMAGE AT ' + fsPath + ' MORE THAN ONCE. CONSIDER CONSOLIDATING CSS RULES');
+                        }
+                        global.cssInlinedResources.push(normalizedFSPath);
+                        var MIME = /\.svg$/.test(url) ? 'image/svg+xml' : 'image/png';
+                        var DATA = ';base64,' + fileContents.toString('base64');
+                        if (/\.svg$/.test(url)) {
+                            // .svg => url encode as explained at https://codepen.io/tigt/post/optimizing-svgs-in-data-uris
+                            var newText = fileContents.toString()
+                                .replace(/"/g, '\'')
+                                .replace(/</g, '%3C')
+                                .replace(/>/g, '%3E')
+                                .replace(/&/g, '%26')
+                                .replace(/#/g, '%23')
+                                .replace(/\s+/g, ' ');
+                            var encodedData = ',' + newText;
+                            if (encodedData.length < DATA.length) {
+                                DATA = encodedData;
+                            }
+                        }
+                        return '"data:' + MIME + DATA + '"';
+                    }
+                }
+                var absoluteUrl = Utilities.joinPaths(Utilities.pathOf(originalFile), url);
+                return Utilities.relativePath(newFile, absoluteUrl);
+            });
+        };
         return Utilities;
-    })();
+    }());
     CSSLoaderPlugin.Utilities = Utilities;
     (function () {
         var cssLoader = null;
@@ -2457,7 +2518,7 @@ var NLSLoaderPlugin;
                 });
             }
             else {
-                var suffix;
+                var suffix = void 0;
                 if (Resources && Resources.getString) {
                     suffix = '.nls.keys';
                     req([name + suffix], function (keyMap) {
@@ -2551,199 +2612,11 @@ var NLSLoaderPlugin;
         NLSPlugin.BUILD_MAP = {};
         NLSPlugin.BUILD_MAP_KEYS = {};
         return NLSPlugin;
-    })();
+    }());
     NLSLoaderPlugin.NLSPlugin = NLSPlugin;
     (function () {
         define('vs/nls', new NLSPlugin());
     })();
 })(NLSLoaderPlugin || (NLSLoaderPlugin = {}));
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------
- *---------------------------------------------------------------------------------------------
- *---------------------------------------------------------------------------------------------
- *---------------------------------------------------------------------------------------------
- *---------------------------------------------------------------------------------------------
- * Please make sure to make edits in the .ts file at https://github.com/Microsoft/vscode-loader/
- *---------------------------------------------------------------------------------------------
- *---------------------------------------------------------------------------------------------
- *---------------------------------------------------------------------------------------------
- *---------------------------------------------------------------------------------------------
- *--------------------------------------------------------------------------------------------*/
-/// <reference path="declares.ts" />
-/// <reference path="loader.ts" />
-'use strict';
-var TextLoaderPlugin;
-(function (TextLoaderPlugin) {
-    var BrowserTextLoader = (function () {
-        function BrowserTextLoader() {
-        }
-        BrowserTextLoader.prototype.load = function (name, fileUrl, externalCallback, externalErrorback) {
-            var req = new XMLHttpRequest();
-            req.onreadystatechange = function () {
-                if (req.readyState === 4) {
-                    if ((req.status >= 200 && req.status < 300) || req.status === 1223 || (req.status === 0 && req.responseText && req.responseText.length > 0)) {
-                        externalCallback(req.responseText);
-                    }
-                    else {
-                        externalErrorback(req);
-                    }
-                    req.onreadystatechange = null;
-                }
-            };
-            req.open('GET', fileUrl, true);
-            req.responseType = '';
-            req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            req.send(null);
-        };
-        return BrowserTextLoader;
-    })();
-    function readFileAndRemoveBOM(fs, path) {
-        var BOM_CHAR_CODE = 65279;
-        var contents = fs.readFileSync(path, 'utf8');
-        // Remove BOM
-        if (contents.charCodeAt(0) === BOM_CHAR_CODE) {
-            contents = contents.substring(1);
-        }
-        return contents;
-    }
-    var NodeTextLoader = (function () {
-        function NodeTextLoader() {
-            this.fs = require.nodeRequire('fs');
-        }
-        NodeTextLoader.prototype.load = function (name, fileUrl, callback, errorback) {
-            callback(readFileAndRemoveBOM(this.fs, fileUrl));
-        };
-        return NodeTextLoader;
-    })();
-    // ------------------------------ Finally, the plugin
-    var TextPlugin = (function () {
-        function TextPlugin(textLoader) {
-            this.textLoader = textLoader;
-        }
-        TextPlugin.prototype.load = function (name, req, load, config) {
-            config = config || {};
-            var myConfig = config['vs/text'] || {};
-            var myPaths = myConfig.paths || {};
-            var redirectedName = name;
-            for (var path in myPaths) {
-                if (myPaths.hasOwnProperty(path)) {
-                    if (name.indexOf(path) === 0) {
-                        redirectedName = myPaths[path] + name.substr(path.length);
-                    }
-                }
-            }
-            var fileUrl = req.toUrl(redirectedName);
-            this.textLoader.load(name, fileUrl, function (contents) {
-                if (config.isBuild) {
-                    TextPlugin.BUILD_MAP[name] = contents;
-                }
-                load(contents);
-            }, function (err) {
-                if (typeof load.error === 'function') {
-                    load.error('Could not find ' + fileUrl);
-                }
-            });
-        };
-        TextPlugin.prototype.write = function (pluginName, moduleName, write) {
-            if (TextPlugin.BUILD_MAP.hasOwnProperty(moduleName)) {
-                var escapedText = Utilities.escapeText(TextPlugin.BUILD_MAP[moduleName]);
-                write('define("' + pluginName + '!' + moduleName + '", function () { return "' + escapedText + '"; });');
-            }
-        };
-        TextPlugin.BUILD_MAP = {};
-        return TextPlugin;
-    })();
-    TextLoaderPlugin.TextPlugin = TextPlugin;
-    var Utilities = (function () {
-        function Utilities() {
-        }
-        /**
-         * Escape text such that it can be used in a javascript string enclosed by double quotes (")
-         */
-        Utilities.escapeText = function (text) {
-            // http://www.javascriptkit.com/jsref/escapesequence.shtml
-            // \b	Backspace.
-            // \f	Form feed.
-            // \n	Newline.
-            // \O	Nul character.
-            // \r	Carriage return.
-            // \t	Horizontal tab.
-            // \v	Vertical tab.
-            // \'	Single quote or apostrophe.
-            // \"	Double quote.
-            // \\	Backslash.
-            // \ddd	The Latin-1 character specified by the three octal digits between 0 and 377. ie, copyright symbol is \251.
-            // \xdd	The Latin-1 character specified by the two hexadecimal digits dd between 00 and FF.  ie, copyright symbol is \xA9.
-            // \udddd	The Unicode character specified by the four hexadecimal digits dddd. ie, copyright symbol is \u00A9.
-            var _backspace = '\b'.charCodeAt(0);
-            var _formFeed = '\f'.charCodeAt(0);
-            var _newLine = '\n'.charCodeAt(0);
-            var _nullChar = 0;
-            var _carriageReturn = '\r'.charCodeAt(0);
-            var _tab = '\t'.charCodeAt(0);
-            var _verticalTab = '\v'.charCodeAt(0);
-            var _backslash = '\\'.charCodeAt(0);
-            var _doubleQuote = '"'.charCodeAt(0);
-            var startPos = 0, chrCode, replaceWith = null, resultPieces = [];
-            for (var i = 0, len = text.length; i < len; i++) {
-                chrCode = text.charCodeAt(i);
-                switch (chrCode) {
-                    case _backspace:
-                        replaceWith = '\\b';
-                        break;
-                    case _formFeed:
-                        replaceWith = '\\f';
-                        break;
-                    case _newLine:
-                        replaceWith = '\\n';
-                        break;
-                    case _nullChar:
-                        replaceWith = '\\0';
-                        break;
-                    case _carriageReturn:
-                        replaceWith = '\\r';
-                        break;
-                    case _tab:
-                        replaceWith = '\\t';
-                        break;
-                    case _verticalTab:
-                        replaceWith = '\\v';
-                        break;
-                    case _backslash:
-                        replaceWith = '\\\\';
-                        break;
-                    case _doubleQuote:
-                        replaceWith = '\\"';
-                        break;
-                }
-                if (replaceWith !== null) {
-                    resultPieces.push(text.substring(startPos, i));
-                    resultPieces.push(replaceWith);
-                    startPos = i + 1;
-                    replaceWith = null;
-                }
-            }
-            resultPieces.push(text.substring(startPos, len));
-            return resultPieces.join('');
-        };
-        return Utilities;
-    })();
-    TextLoaderPlugin.Utilities = Utilities;
-    (function () {
-        var textLoader = null;
-        var isElectron = (typeof process !== 'undefined' && typeof process.versions !== 'undefined' && typeof process.versions['electron'] !== 'undefined');
-        if (typeof process !== 'undefined' && process.versions && !!process.versions.node && !isElectron) {
-            textLoader = new NodeTextLoader();
-        }
-        else {
-            textLoader = new BrowserTextLoader();
-        }
-        define('vs/text', new TextPlugin(textLoader));
-    })();
-})(TextLoaderPlugin || (TextLoaderPlugin = {}));
 
 //# sourceMappingURL=loader.js.map

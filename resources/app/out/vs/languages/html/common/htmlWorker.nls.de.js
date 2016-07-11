@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/languages/html/common/htmlWorker.nls.de", {
 	"vs/languages/html/common/htmlTags": [
 		"Das html-Element stellt den Stamm eines HTML-Dokuments dar.",
@@ -92,7 +91,7 @@ define("vs/languages/html/common/htmlWorker.nls.de", {
 		"Das tr-Element stellt eine Zeile mit Zellen in einer Tabelle dar.",
 		"Das td-Element stellt eine Datenzelle in einer Tabelle dar.",
 		"Das th-Element stellt eine Kopfzeilenzelle in einer Tabelle dar.",
-		"Das form-Element stellt eine Auflistung von Elementen dar, die einem Formular zugeordnet sind. Einige dieser Elemente können bearbeitbare Werte darstellen, die an einen Server für die Verarbeitung übermittelt werden können.",
+		"Das form-Element stellt eine Sammlung von Elementen dar, die einem Formular zugeordnet sind. Einige dieser Elemente können bearbeitbare Werte darstellen, die an einen Server für die Verarbeitung übermittelt werden können.",
 		"Das label-Element stellt eine Beschriftung in einer Benutzeroberfläche dar. Die Beschriftung kann einem bestimmten Formularsteuerelement zugeordnet werden, das als das Beschriftungssteuerelement des label-Elements bezeichnet wird. Dies geschieht mithilfe des for-Attributs oder durch Positionieren des Formularsteuerelements im label-Element selbst.",
 		"Das input-Element stellt ein typisiertes Datenfeld dar und besitzt normalerweise ein Formularsteuerelement, damit Benutzer die Daten bearbeiten können.",
 		"Das button-Element stellt eine Schaltfläche dar, die durch ihren Inhalt beschriftet wird.",

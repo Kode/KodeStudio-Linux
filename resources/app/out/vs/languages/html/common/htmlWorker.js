@@ -1,7 +1,16 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
-define("vs/languages/html/common/htmlScanner", ["require", "exports", 'vs/languages/html/common/htmlTokenTypes'], function (require, exports, htmlTokenTypes_1) {
+(function() {
+var __m = ["exports","require","vs/languages/html/common/htmlTags","vs/languages/html/common/htmlTokenTypes","vs/base/common/network","vs/base/common/winjs.base","vs/nls!vs/languages/html/common/htmlTags","vs/base/common/strings","vs/languages/html/common/htmlScanner","vs/nls!vs/languages/html/common/htmlWorker","vs/nls","vs/languages/html/common/htmlWorker","vs/base/common/uri","vs/languages/lib/common/beautify-html","vs/editor/common/modes","vs/editor/common/services/resourceService","vs/languages/html/common/htmlEmptyTagsShared","vs/editor/common/modes/supports/suggestSupport","vs/base/common/paths"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
+define(__m[8], __M([1,0,3]), function (require, exports, htmlTokenTypes_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -119,11 +128,82 @@ define("vs/languages/html/common/htmlScanner", ["require", "exports", 'vs/langua
     exports.getScanner = getScanner;
 });
 
-define("vs/nls!vs/languages/html/common/htmlTags",['vs/nls', 'vs/nls!vs/languages/html/common/htmlWorker'], function(nls, data) { return nls.create("vs/languages/html/common/htmlTags", data); });
+define(__m[4], __M([1,0,5]), function (require, exports, winjs_base_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var Schemas;
+    (function (Schemas) {
+        /**
+         * A schema that is used for models that exist in memory
+         * only and that have no correspondence on a server or such.
+         */
+        Schemas.inMemory = 'inmemory';
+        /**
+         * A schema that is used for setting files
+         */
+        Schemas.vscode = 'vscode';
+        /**
+         * A schema that is used for internal private files
+         */
+        Schemas.internal = 'private';
+        Schemas.http = 'http';
+        Schemas.https = 'https';
+        Schemas.file = 'file';
+    })(Schemas = exports.Schemas || (exports.Schemas = {}));
+    function xhr(options) {
+        var req = null;
+        var canceled = false;
+        return new winjs_base_1.TPromise(function (c, e, p) {
+            req = new XMLHttpRequest();
+            req.onreadystatechange = function () {
+                if (canceled) {
+                    return;
+                }
+                if (req.readyState === 4) {
+                    // Handle 1223: http://bugs.jquery.com/ticket/1450
+                    if ((req.status >= 200 && req.status < 300) || req.status === 1223) {
+                        c(req);
+                    }
+                    else {
+                        e(req);
+                    }
+                    req.onreadystatechange = function () { };
+                }
+                else {
+                    p(req);
+                }
+            };
+            req.open(options.type || 'GET', options.url, 
+            // Promise based XHR does not support sync.
+            //
+            true, options.user, options.password);
+            req.responseType = options.responseType || '';
+            Object.keys(options.headers || {}).forEach(function (k) {
+                req.setRequestHeader(k, options.headers[k]);
+            });
+            if (options.customRequestInitializer) {
+                options.customRequestInitializer(req);
+            }
+            req.send(options.data);
+        }, function () {
+            canceled = true;
+            req.abort();
+        });
+    }
+    exports.xhr = xhr;
+});
+
+define(__m[6], __M([10,9]), function(nls, data) { return nls.create("vs/languages/html/common/htmlTags", data); });
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+/*!
+BEGIN THIRD PARTY
+*/
 /*--------------------------------------------------------------------------------------------
  *  This file is based on or incorporates material from the projects listed below (Third Party IP).
  *  The original copyright notice and the license under which Microsoft received such Third Party IP,
@@ -152,7 +232,7 @@ define("vs/nls!vs/languages/html/common/htmlTags",['vs/nls', 'vs/nls!vs/language
  *  See the Apache Version 2.0 License for specific language governing permissions
  *  and limitations under the License.
  *--------------------------------------------------------------------------------------------*/
-define("vs/languages/html/common/htmlTags", ["require", "exports", 'vs/base/common/strings', 'vs/nls!vs/languages/html/common/htmlTags'], function (require, exports, strings, nls) {
+define(__m[2], __M([1,0,7,6]), function (require, exports, strings, nls) {
     "use strict";
     var HTMLTagSpecification = (function () {
         function HTMLTagSpecification(label, attributes) {
@@ -272,13 +352,13 @@ define("vs/languages/html/common/htmlTags", ["require", "exports", 'vs/base/comm
         // Forms
         form: new HTMLTagSpecification(nls.localize(88, null), ['accept-charset', 'action', 'autocomplete:o', 'enctype:et', 'method:m', 'name', 'novalidate:v', 'target']),
         label: new HTMLTagSpecification(nls.localize(89, null), ['form', 'for']),
-        input: new HTMLTagSpecification(nls.localize(90, null), ['accept', 'alt', 'autocomplete:o', 'autofocus:v', 'checked:v', 'dirname', 'disabled:v', 'form', 'formaction', 'formenctype:et', 'formmethod:fm', 'formnovalidate:v', 'formtarget', 'height', 'inputmode:im', 'list', 'max', 'maxlength', 'min', 'minlength', 'multiple:v', 'name', 'pattern', 'placeholder', 'readonly:v', 'required:v', 'size', 'src', 'step', 'type:t', 'value', 'width']),
+        input: new HTMLTagSpecification(nls.localize(90, null), ['accept', 'alt', 'autocomplete:inputautocomplete', 'autofocus:v', 'checked:v', 'dirname', 'disabled:v', 'form', 'formaction', 'formenctype:et', 'formmethod:fm', 'formnovalidate:v', 'formtarget', 'height', 'inputmode:im', 'list', 'max', 'maxlength', 'min', 'minlength', 'multiple:v', 'name', 'pattern', 'placeholder', 'readonly:v', 'required:v', 'size', 'src', 'step', 'type:t', 'value', 'width']),
         button: new HTMLTagSpecification(nls.localize(91, null), ['autofocus:v', 'disabled:v', 'form', 'formaction', 'formenctype:et', 'formmethod:fm', 'formnovalidate:v', 'formtarget', 'name', 'type:bt', 'value']),
-        select: new HTMLTagSpecification(nls.localize(92, null), ['autocomplete:o', 'autofocus:v', 'disabled:v', 'form', 'multiple:v', 'name', 'required:v', 'size']),
+        select: new HTMLTagSpecification(nls.localize(92, null), ['autocomplete:inputautocomplete', 'autofocus:v', 'disabled:v', 'form', 'multiple:v', 'name', 'required:v', 'size']),
         datalist: new HTMLTagSpecification(nls.localize(93, null)),
         optgroup: new HTMLTagSpecification(nls.localize(94, null), ['disabled:v', 'label']),
         option: new HTMLTagSpecification(nls.localize(95, null), ['disabled:v', 'label', 'selected:v', 'value']),
-        textarea: new HTMLTagSpecification(nls.localize(96, null), ['autocomplete:o', 'autofocus:v', 'cols', 'dirname', 'disabled:v', 'form', 'inputmode:im', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly:v', 'required:v', 'rows', 'wrap:w']),
+        textarea: new HTMLTagSpecification(nls.localize(96, null), ['autocomplete:inputautocomplete', 'autofocus:v', 'cols', 'dirname', 'disabled:v', 'form', 'inputmode:im', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly:v', 'required:v', 'rows', 'wrap:w']),
         output: new HTMLTagSpecification(nls.localize(97, null), ['for', 'form', 'name']),
         progress: new HTMLTagSpecification(nls.localize(98, null), ['value', 'max']),
         meter: new HTMLTagSpecification(nls.localize(99, null), ['value', 'min', 'max', 'low', 'high', 'optimum']),
@@ -371,6 +451,7 @@ define("vs/languages/html/common/htmlTags", ["require", "exports", 'vs/base/comm
             xo: ['anonymous', 'use-credentials'],
             sb: ['allow-forms', 'allow-modals', 'allow-pointer-lock', 'allow-popups', 'allow-popups-to-escape-sandbox', 'allow-same-origin', 'allow-scripts', 'allow-top-navigation'],
             tristate: ['true', 'false', 'mixed', 'undefined'],
+            inputautocomplete: ['additional-name', 'address-level1', 'address-level2', 'address-level3', 'address-level4', 'address-line1', 'address-line2', 'address-line3', 'bday', 'bday-year', 'bday-day', 'bday-month', 'billing', 'cc-additional-name', 'cc-csc', 'cc-exp', 'cc-exp-month', 'cc-exp-year', 'cc-family-name', 'cc-given-name', 'cc-name', 'cc-number', 'cc-type', 'country', 'country-name', 'current-password', 'email', 'family-name', 'fax', 'given-name', 'home', 'honorific-prefix', 'honorific-suffix', 'impp', 'language', 'mobile', 'name', 'new-password', 'nickname', 'organization', 'organization-title', 'pager', 'photo', 'postal-code', 'sex', 'shipping', 'street-address', 'tel-area-code', 'tel', 'tel-country-code', 'tel-extension', 'tel-local', 'tel-local-prefix', 'tel-local-suffix', 'tel-national', 'transaction-amount', 'transaction-currency', 'url', 'username', 'work'],
             autocomplete: ['inline', 'list', 'both', 'none'],
             current: ['page', 'step', 'location', 'date', 'time', 'true', 'false'],
             dropeffect: ['copy', 'move', 'link', 'execute', 'popup', 'none'],
@@ -530,6 +611,9 @@ define("vs/languages/html/common/htmlTags", ["require", "exports", 'vs/base/comm
         }
     }
 });
+/*!
+END THIRD PARTY
+*/ 
 
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -540,7 +624,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/common/uri', 'vs/base/common/winjs.base', 'vs/languages/lib/common/beautify-html', 'vs/languages/html/common/htmlTags', 'vs/base/common/network', 'vs/base/common/strings', 'vs/editor/common/core/position', 'vs/platform/workspace/common/workspace', 'vs/platform/markers/common/markers', 'vs/editor/common/services/resourceService', 'vs/languages/html/common/htmlScanner', 'vs/languages/html/common/htmlTokenTypes', 'vs/languages/html/common/htmlEmptyTagsShared', 'vs/editor/common/modes/supports/suggestSupport', 'vs/base/common/paths'], function (require, exports, uri_1, winjs, beautifyHTML, htmlTags, network, strings, position_1, workspace_1, markers_1, resourceService_1, htmlScanner_1, htmlTokenTypes_1, htmlEmptyTagsShared_1, suggestSupport_1, paths) {
+define(__m[11], __M([1,0,12,5,13,2,4,14,7,15,8,3,16,17,18]), function (require, exports, uri_1, winjs, beautifyHTML, htmlTags, network, modes, strings, resourceService_1, htmlScanner_1, htmlTokenTypes_1, htmlEmptyTagsShared_1, suggestSupport_1, paths) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -552,11 +636,9 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
         LinkDetectionState[LinkDetectionState["AFTER_HREF_OR_SRC"] = 2] = "AFTER_HREF_OR_SRC";
     })(LinkDetectionState || (LinkDetectionState = {}));
     var HTMLWorker = (function () {
-        function HTMLWorker(modeId, participants, resourceService, markerService, contextService) {
+        function HTMLWorker(modeId, resourceService) {
             this._modeId = modeId;
             this.resourceService = resourceService;
-            this.markerService = markerService;
-            this._contextService = contextService;
             this._tagProviders = [];
             this._tagProviders.push(htmlTags.getHTML5TagProvider());
             this.addCustomTagProviders(this._tagProviders);
@@ -565,14 +647,8 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
             providers.push(htmlTags.getAngularTagProvider());
             providers.push(htmlTags.getIonicTagProvider());
         };
-        HTMLWorker.prototype.format = function (resource, range, options) {
-            var _this = this;
-            return this._delegateToModeAtPosition(resource, position_1.Position.startPosition(range), function (isEmbeddedMode, model) {
-                if (isEmbeddedMode && model.getMode().formattingSupport) {
-                    return model.getMode().formattingSupport.formatRange(model.getAssociatedResource(), range, options);
-                }
-                return _this.formatHTML(resource, range, options);
-            });
+        HTMLWorker.prototype.provideDocumentRangeFormattingEdits = function (resource, range, options) {
+            return this.formatHTML(resource, range, options);
         };
         HTMLWorker.prototype.formatHTML = function (resource, range, options) {
             var model = this.resourceService.get(resource);
@@ -606,81 +682,17 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
         };
         HTMLWorker.prototype.getTagsFormatOption = function (key, dflt) {
             var list = this.getFormatOption(key, null);
-            if (list) {
-                return list.split(',').map(function (t) { return t.trim().toLowerCase(); });
+            if (typeof list === 'string') {
+                if (list.length > 0) {
+                    return list.split(',').map(function (t) { return t.trim().toLowerCase(); });
+                }
+                return [];
             }
             return dflt;
         };
         HTMLWorker.prototype._doConfigure = function (options) {
             this.formatSettings = options && options.format;
             return winjs.TPromise.as(null);
-        };
-        HTMLWorker.prototype._delegateToModeAtPosition = function (resource, position, callback) {
-            var model = this.resourceService.get(resource);
-            if (!model) {
-                return null;
-            }
-            var modelAtPosition = model.getEmbeddedAtPosition(position);
-            if (!modelAtPosition) {
-                return callback(false, model);
-            }
-            var modeAtPosition = modelAtPosition.getMode();
-            return callback(modeAtPosition.getId() !== this._modeId, modelAtPosition);
-        };
-        HTMLWorker.prototype._delegateToAllModes = function (resource, callback) {
-            var model = this.resourceService.get(resource);
-            if (!model) {
-                return null;
-            }
-            return callback(model.getAllEmbedded());
-        };
-        HTMLWorker.prototype.computeInfo = function (resource, position) {
-            return this._delegateToModeAtPosition(resource, position, function (isEmbeddedMode, model) {
-                if (isEmbeddedMode && model.getMode().extraInfoSupport) {
-                    return model.getMode().extraInfoSupport.computeInfo(model.getAssociatedResource(), position);
-                }
-            });
-        };
-        HTMLWorker.prototype.findReferences = function (resource, position, includeDeclaration) {
-            return this._delegateToModeAtPosition(resource, position, function (isEmbeddedMode, model) {
-                if (isEmbeddedMode && model.getMode().referenceSupport) {
-                    return model.getMode().referenceSupport.findReferences(model.getAssociatedResource(), position, includeDeclaration);
-                }
-            });
-        };
-        HTMLWorker.prototype.getRangesToPosition = function (resource, position) {
-            return this._delegateToModeAtPosition(resource, position, function (isEmbeddedMode, model) {
-                if (isEmbeddedMode && model.getMode().logicalSelectionSupport) {
-                    return model.getMode().logicalSelectionSupport.getRangesToPosition(model.getAssociatedResource(), position);
-                }
-            });
-        };
-        HTMLWorker.prototype.findDeclaration = function (resource, position) {
-            return this._delegateToModeAtPosition(resource, position, function (isEmbeddedMode, model) {
-                if (isEmbeddedMode && model.getMode().declarationSupport) {
-                    return model.getMode().declarationSupport.findDeclaration(model.getAssociatedResource(), position);
-                }
-            });
-        };
-        HTMLWorker.prototype.findColorDeclarations = function (resource) {
-            return this._delegateToAllModes(resource, function (models) {
-                var allPromises = [];
-                allPromises = models
-                    .filter(function (model) { return (typeof model.getMode()['findColorDeclarations'] === 'function'); })
-                    .map(function (model) { return model.getMode()['findColorDeclarations'](model.getAssociatedResource()); });
-                return winjs.TPromise.join(allPromises).then(function (results) {
-                    var result = [];
-                    results.forEach(function (oneResult) { return result = result.concat(oneResult); });
-                    return result;
-                });
-            });
-        };
-        HTMLWorker.prototype.getParameterHints = function (resource, position) {
-            return this._delegateToModeAtPosition(resource, position, function (isEmbeddedMode, model) {
-                if (isEmbeddedMode && model.getMode().parameterHintsSupport) {
-                    return model.getMode().parameterHintsSupport.getParameterHints(model.getAssociatedResource(), position);
-                }
-            });
         };
         HTMLWorker.prototype.findMatchingOpenTag = function (scanner) {
             var closedTags = {};
@@ -710,7 +722,8 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
         HTMLWorker.prototype.collectTagSuggestions = function (scanner, position, suggestions) {
             var _this = this;
             var model = scanner.getModel();
-            var contentAfter = model.getLineContent(position.lineNumber).substr(position.column - 1);
+            var currentLine = model.getLineContent(position.lineNumber);
+            var contentAfter = currentLine.substr(position.column - 1);
             var closeTag = isWhiteSpace(contentAfter) || strings.startsWith(contentAfter, '<') ? '>' : '';
             var collectClosingTagSuggestion = function (overwriteBefore) {
                 var endPosition = scanner.getTokenPosition();
@@ -731,6 +744,7 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
                         if (isWhiteSpace(startIndent) && isWhiteSpace(endIndent)) {
                             suggestion.overwriteBefore = position.column - 1; // replace from start of line
                             suggestion.codeSnippet = startIndent + '</' + matchingTag + closeTag;
+                            suggestion.filterText = currentLine.substring(0, position.column - 1);
                         }
                     }
                     return true;
@@ -824,14 +838,15 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
                 });
             });
         };
-        HTMLWorker.prototype.suggest = function (resource, position, triggerCharacter) {
-            var _this = this;
-            return this._delegateToModeAtPosition(resource, position, function (isEmbeddedMode, model) {
-                if (isEmbeddedMode && model.getMode().suggestSupport) {
-                    return model.getMode().suggestSupport.suggest(model.getAssociatedResource(), position, triggerCharacter);
-                }
-                return _this.suggestHTML(resource, position);
-            });
+        HTMLWorker.prototype.provideCompletionItems = function (resource, position) {
+            var model = this.resourceService.get(resource);
+            var modeIdAtPosition = model.getModeIdAtPosition(position.lineNumber, position.column);
+            if (modeIdAtPosition === this._modeId) {
+                return this.suggestHTML(resource, position);
+            }
+            else {
+                return winjs.TPromise.as([]);
+            }
         };
         HTMLWorker.prototype.suggestHTML = function (resource, position) {
             return this.doSuggest(resource, position).then(function (value) { return suggestSupport_1.filterSuggestions(value); });
@@ -963,28 +978,21 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
             }
             return null;
         };
-        HTMLWorker.prototype.findOccurrences = function (resource, position, strict) {
-            var _this = this;
+        HTMLWorker.prototype.provideDocumentHighlights = function (resource, position, strict) {
             if (strict === void 0) { strict = false; }
-            return this._delegateToModeAtPosition(resource, position, function (isEmbeddedMode, model) {
-                if (isEmbeddedMode && model.getMode().occurrencesSupport) {
-                    return model.getMode().occurrencesSupport.findOccurrences(model.getAssociatedResource(), position, strict);
-                }
-                return _this.findOccurrencesHTML(resource, position, strict);
-            });
-        };
-        HTMLWorker.prototype.findOccurrencesHTML = function (resource, position, strict) {
             var model = this.resourceService.get(resource), wordAtPosition = model.getWordAtPosition(position), currentWord = (wordAtPosition ? wordAtPosition.word : ''), result = [];
             var scanner = htmlScanner_1.getScanner(model, position);
             if (htmlTokenTypes_1.isTag(scanner.getTokenType())) {
                 var tagname = scanner.getTokenContent();
                 result.push({
-                    range: scanner.getTokenRange()
+                    range: scanner.getTokenRange(),
+                    kind: modes.DocumentHighlightKind.Read
                 });
                 var range = this.findMatchingBracket(tagname, scanner);
                 if (range) {
                     result.push({
-                        range: range
+                        range: range,
+                        kind: modes.DocumentHighlightKind.Read
                     });
                 }
             }
@@ -993,7 +1001,8 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
                 for (var i = 0; i < upperBound; i++) {
                     if (words[i].text === currentWord) {
                         result.push({
-                            range: words[i].range
+                            range: words[i].range,
+                            kind: modes.DocumentHighlightKind.Read
                         });
                     }
                 }
@@ -1031,7 +1040,7 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
                 alternativeResultPath = paths.join(modelPath, tokenContent);
                 alternativeResultPath = alternativeResultPath.replace(/^(\/\.\.)+/, '');
             }
-            var potentialResult = modelAbsoluteUri.withPath(alternativeResultPath).toString();
+            var potentialResult = modelAbsoluteUri.with({ path: alternativeResultPath }).toString();
             var rootAbsoluteUrlStr = (rootAbsoluteUri ? rootAbsoluteUri.toString() : null);
             if (rootAbsoluteUrlStr && strings.startsWith(modelAbsoluteUri.toString(), rootAbsoluteUrlStr)) {
                 // The `rootAbsoluteUrl` is set and matches our current model
@@ -1060,13 +1069,12 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
                 url: workspaceUrl
             };
         };
-        HTMLWorker.prototype._computeHTMLLinks = function (model) {
-            var lineCount = model.getLineCount(), newLinks = [], state = LinkDetectionState.LOOKING_FOR_HREF_OR_SRC, modelAbsoluteUrl = model.getAssociatedResource(), lineNumber, lineContent, lineContentLength, tokens, tokenType, tokensLength, i, nextTokenEndIndex, tokenContent, link;
+        HTMLWorker.prototype._computeHTMLLinks = function (model, workspaceResource) {
+            var lineCount = model.getLineCount(), newLinks = [], state = LinkDetectionState.LOOKING_FOR_HREF_OR_SRC, modelAbsoluteUrl = model.uri, lineNumber, lineContent, lineContentLength, tokens, tokenType, tokensLength, i, nextTokenEndIndex, tokenContent, link;
             var rootAbsoluteUrl = null;
-            var workspace = this._contextService.getWorkspace();
-            if (workspace) {
+            if (workspaceResource) {
                 // The workspace can be null in the no folder opened case
-                var strRootAbsoluteUrl = String(workspace.resource);
+                var strRootAbsoluteUrl = String(workspaceResource);
                 if (strRootAbsoluteUrl.charAt(strRootAbsoluteUrl.length - 1) === '/') {
                     rootAbsoluteUrl = uri_1.default.parse(strRootAbsoluteUrl);
                 }
@@ -1116,14 +1124,12 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
             }
             return newLinks;
         };
-        HTMLWorker.prototype.computeLinks = function (resource) {
+        HTMLWorker.prototype.provideLinks = function (resource, workspaceResource) {
             var model = this.resourceService.get(resource);
-            return winjs.TPromise.as(this._computeHTMLLinks(model));
+            return winjs.TPromise.as(this._computeHTMLLinks(model, workspaceResource));
         };
         HTMLWorker = __decorate([
-            __param(2, resourceService_1.IResourceService),
-            __param(3, markers_1.IMarkerService),
-            __param(4, workspace_1.IWorkspaceContextService)
+            __param(1, resourceService_1.IResourceService)
         ], HTMLWorker);
         return HTMLWorker;
     }());
@@ -1133,4 +1139,5 @@ define("vs/languages/html/common/htmlWorker", ["require", "exports", 'vs/base/co
     }
 });
 
+}).call(this);
 //# sourceMappingURL=htmlWorker.js.map

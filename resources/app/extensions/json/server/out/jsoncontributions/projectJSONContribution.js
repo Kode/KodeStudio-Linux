@@ -5,7 +5,8 @@
 'use strict';
 var vscode_languageserver_1 = require('vscode-languageserver');
 var Strings = require('../utils/strings');
-var httpRequest_1 = require('../utils/httpRequest');
+var request_light_1 = require('request-light');
+var request_light_2 = require('request-light');
 var nls = require('vscode-nls');
 var localize = nls.loadMessageBundle(__filename);
 var FEED_INDEX_URL = 'https://api.nuget.org/v3/index.json';
@@ -13,10 +14,9 @@ var LIMIT = 30;
 var RESOLVE_ID = 'ProjectJSONContribution-';
 var CACHE_EXPIRY = 1000 * 60 * 5; // 5 minutes
 var ProjectJSONContribution = (function () {
-    function ProjectJSONContribution(requestService) {
+    function ProjectJSONContribution() {
         this.cachedProjects = {};
         this.cacheSize = 0;
-        this.requestService = requestService;
     }
     ProjectJSONContribution.prototype.isProjectJSONFile = function (resource) {
         return Strings.endsWith(resource, '/project.json');
@@ -78,7 +78,7 @@ var ProjectJSONContribution = (function () {
             return serviceURL;
         });
     };
-    ProjectJSONContribution.prototype.collectDefaultSuggestions = function (resource, result) {
+    ProjectJSONContribution.prototype.collectDefaultCompletions = function (resource, result) {
         if (this.isProjectJSONFile(resource)) {
             var defaultValue = {
                 'version': '{{1.0.0-*}}',
@@ -93,7 +93,7 @@ var ProjectJSONContribution = (function () {
         return null;
     };
     ProjectJSONContribution.prototype.makeJSONRequest = function (url) {
-        return this.requestService({
+        return request_light_2.xhr({
             url: url
         }).then(function (success) {
             if (success.status === 200) {
@@ -106,12 +106,12 @@ var ProjectJSONContribution = (function () {
             }
             return Promise.reject(localize(3, null, url, success.responseText));
         }, function (error) {
-            return Promise.reject(localize(4, null, url, httpRequest_1.getErrorStatusDescription(error.status)));
+            return Promise.reject(localize(4, null, url, request_light_1.getErrorStatusDescription(error.status)));
         });
     };
-    ProjectJSONContribution.prototype.collectPropertySuggestions = function (resource, location, currentWord, addValue, isLast, result) {
+    ProjectJSONContribution.prototype.collectPropertyCompletions = function (resource, location, currentWord, addValue, isLast, result) {
         var _this = this;
-        if (this.isProjectJSONFile(resource) && (location.matches(['dependencies']) || location.matches(['frameworks', '*', 'dependencies']) || location.matches(['frameworks', '*', 'frameworkAssemblies']))) {
+        if (this.isProjectJSONFile(resource) && (matches(location, ['dependencies']) || matches(location, ['frameworks', '*', 'dependencies']) || matches(location, ['frameworks', '*', 'frameworkAssemblies']))) {
             return this.getNugetService('SearchAutocompleteService').then(function (service) {
                 var queryUrl;
                 if (currentWord.length > 0) {
@@ -152,9 +152,9 @@ var ProjectJSONContribution = (function () {
         ;
         return null;
     };
-    ProjectJSONContribution.prototype.collectValueSuggestions = function (resource, location, currentKey, result) {
+    ProjectJSONContribution.prototype.collectValueCompletions = function (resource, location, currentKey, result) {
         var _this = this;
-        if (this.isProjectJSONFile(resource) && (location.matches(['dependencies']) || location.matches(['frameworks', '*', 'dependencies']) || location.matches(['frameworks', '*', 'frameworkAssemblies']))) {
+        if (this.isProjectJSONFile(resource) && (matches(location, ['dependencies']) || matches(location, ['frameworks', '*', 'dependencies']) || matches(location, ['frameworks', '*', 'frameworkAssemblies']))) {
             return this.getNugetService('PackageBaseAddress/3.0.0').then(function (service) {
                 var queryUrl = service + currentKey + '/index.json';
                 return _this.makeJSONRequest(queryUrl).then(function (obj) {
@@ -182,8 +182,8 @@ var ProjectJSONContribution = (function () {
     };
     ProjectJSONContribution.prototype.getInfoContribution = function (resource, location) {
         var _this = this;
-        if (this.isProjectJSONFile(resource) && (location.matches(['dependencies', '*']) || location.matches(['frameworks', '*', 'dependencies', '*']) || location.matches(['frameworks', '*', 'frameworkAssemblies', '*']))) {
-            var pack_1 = location.getSegments()[location.getSegments().length - 1];
+        if (this.isProjectJSONFile(resource) && (matches(location, ['dependencies', '*']) || matches(location, ['frameworks', '*', 'dependencies', '*']) || matches(location, ['frameworks', '*', 'frameworkAssemblies', '*']))) {
+            var pack_1 = location[location.length - 1];
             return this.getNugetService('SearchQueryService').then(function (service) {
                 var queryUrl = service + '?q=' + encodeURIComponent(pack_1) + '&take=' + 5;
                 return _this.makeJSONRequest(queryUrl).then(function (resultObj) {
@@ -247,4 +247,16 @@ var ProjectJSONContribution = (function () {
     return ProjectJSONContribution;
 }());
 exports.ProjectJSONContribution = ProjectJSONContribution;
+function matches(segments, pattern) {
+    var k = 0;
+    for (var i = 0; k < pattern.length && i < segments.length; i++) {
+        if (pattern[k] === segments[i] || pattern[k] === '*') {
+            k++;
+        }
+        else if (pattern[k] !== '**') {
+            return false;
+        }
+    }
+    return k === pattern.length;
+}
 //# sourceMappingURL=projectJSONContribution.js.map

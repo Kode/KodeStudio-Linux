@@ -1,29 +1,22 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/workbench/parts/search/browser/searchViewlet.nls.fr", {
+	"vs/workbench/parts/search/browser/patternInputWidget": [
+		"input",
+		"Use Glob Patterns",
+		"The pattern to match. e.g. **\\*\\*/*.js** to match all JavaScript files or **myFolder/\\*\\*** to match that folder with all children.\n\n**Reference**:\n**\\*** matches 0 or more characters\n**?** matches 1 character\n**\\*\\*** matches zero or more directories\n**[a-z]** matches a range of characters\n**{a,b}** matches any of the patterns)",
+	],
+	"vs/workbench/parts/search/browser/searchResultsView": [
+		"{0} matches found",
+		"{0} match found",
+		"no matches",
+		"{0} matches in file {1} of folder {2}, Search result",
+		"No matches",
+		"Replace preview result, {0}",
+		"{0}, Search result",
+	],
 	"vs/workbench/parts/search/browser/searchViewlet": [
-		"Rechercher dans le dossier",
-		"{0} correspondances dans le fichier {1} du dossier {2}, Résultat de la recherche",
-		"{0}, Résultat de la recherche",
-		"Supprimer",
-		"{0} correspondances trouvées",
-		"{0} correspondance trouvée",
-		"aucune correspondance",
-		"Actualiser",
-		"Sélectionner",
-		"Sélectionner",
-		"Supprimer",
-		"Réduire",
-		"Effacer les résultats de la recherche",
-		"Ouvrir les paramètres",
-		"entrée",
-		"Utiliser des modèles Glob",
-		"Modèle de correspondance. Exemple : ****/*.js** pour établir une correspondance avec tous les fichiers JavaScript, ou **myFolder/**** pour établir une correspondance avec le dossier indiqué et tous ses enfants.\n\n**Référence** :\n***** correspond à 0 caractère ou plus\n**?** correspond à 1 caractère\n****** correspond à zéro répertoire ou plus\n**[a-z]** correspond à une plage de caractères\n**{a,b}** correspond à tous les modèles)",
-		"Rechercher : tapez le terme de recherche, puis appuyez sur Entrée pour lancer la recherche, ou sur Échap pour l\'annuler",
-		"L\'expression correspond à tout",
-		"Appuyez sur Entrée pour effectuer la recherche, ou sur Échap pour l\'annuler",
 		"Activer/désactiver les détails de la recherche",
 		"fichiers à inclure",
 		"Modèles d\'inclusion de recherche",
@@ -31,6 +24,12 @@ define("vs/workbench/parts/search/browser/searchViewlet.nls.fr", {
 		"Modèles d\'exclusion de recherche",
 		"fichiers exclus via les paramètres",
 		"Modèles d\'exclusion de recherche configurés",
+		"Replaced {0} occurrences across {1} files with {2}.",
+		"Removed {0} occurrences across {1} files.",
+		"Replace All",
+		"Replace {0} occurrences across {1} files with \'{2}\'?",
+		"Remove {0} occurrences across {1} files?",
+		"Replace",
 		"Résultats de la recherche",
 		"{0} quand {1}",
 		"Le jeu de résultats contient uniquement un sous-ensemble de toutes les correspondances. Soyez plus précis dans votre recherche de façon à limiter les résultats retournés.",

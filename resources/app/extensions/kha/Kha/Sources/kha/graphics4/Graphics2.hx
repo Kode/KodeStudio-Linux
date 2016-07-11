@@ -43,6 +43,7 @@ class ImageShaderPainter {
 	private var indexBuffer: IndexBuffer;
 	private var lastTexture: Image;
 	private var bilinear: Bool = false;
+	private var bilinearMipmaps: Bool = false;    
 	private var g: Graphics;
 	private var myPipeline: PipelineState = null;
 	public var pipeline(get, set): PipelineState;
@@ -184,7 +185,7 @@ class ImageShaderPainter {
 		g.setIndexBuffer(indexBuffer);
 		g.setPipeline(pipeline == null ? shaderPipeline : pipeline);
 		g.setTexture(textureLocation, lastTexture);
-		g.setTextureParameters(textureLocation, TextureAddressing.Clamp, TextureAddressing.Clamp, bilinear ? TextureFilter.LinearFilter : TextureFilter.PointFilter, bilinear ? TextureFilter.LinearFilter : TextureFilter.PointFilter, MipMapFilter.NoMipFilter);
+		g.setTextureParameters(textureLocation, TextureAddressing.Clamp, TextureAddressing.Clamp, bilinear ? TextureFilter.LinearFilter : TextureFilter.PointFilter, bilinear ? TextureFilter.LinearFilter : TextureFilter.PointFilter, bilinearMipmaps ? MipMapFilter.LinearMipFilter : MipMapFilter.NoMipFilter);
 		g.setMatrix(projectionLocation, projectionMatrix);
 		//if (sourceBlend == BlendingOperation.Undefined || destinationBlend == BlendingOperation.Undefined) {
 		//	g.setBlendingMode(BlendingOperation.BlendOne, BlendingOperation.InverseSourceAlpha);
@@ -205,6 +206,11 @@ class ImageShaderPainter {
 		this.bilinear = bilinear;
 	}
 	
+	public function setBilinearMipmapFilter(bilinear: Bool): Void {
+		end();
+		this.bilinearMipmaps = bilinear;
+	}
+    
 	public inline function drawImage(img: kha.Image,
 		bottomleftx: FastFloat, bottomlefty: FastFloat,
 		topleftx: FastFloat, toplefty: FastFloat,
@@ -486,14 +492,18 @@ class ColoredShaderPainter {
 		topleftx: Float, toplefty: Float,
 		toprightx: Float, toprighty: Float,
 		bottomrightx: Float, bottomrighty: Float): Void {
+		if (triangleBufferIndex > 0) drawTriBuffer(true); // Flush other buffer for right render order
+		
 		if (bufferIndex + 1 >= bufferSize) drawBuffer(false);
-				
+		
 		setRectColors(opacity, color);
 		setRectVertices(bottomleftx, bottomlefty, topleftx, toplefty, toprightx, toprighty, bottomrightx, bottomrighty);
 		++bufferIndex;
 	}
 	
 	public function fillTriangle(opacity: FastFloat, color: Color, x1: Float, y1: Float, x2: Float, y2: Float, x3: Float, y3: Float) {
+		if (bufferIndex > 0) drawBuffer(true); // Flush other buffer for right render order
+		
 		if (triangleBufferIndex + 1 >= triangleBufferSize) drawTriBuffer(false);
 		
 		setTriColors(opacity, color);
@@ -738,8 +748,16 @@ class TextShaderPainter {
 		text = null;
 	}
 	
-	public function drawString(text: String, opacity: FastFloat, color: Color, x: Float, y: Float, transformation: FastMatrix3): Void {
-		var font = this.font._get(fontSize);
+	//TODO: Make this fast
+	private static function findIndex(charcode: Int, fontGlyphs: Array<Int>): Int {
+		for (i in 0...fontGlyphs.length) {
+			if (fontGlyphs[i] == charcode) return i;
+		}
+		return 0;
+	}
+	
+	public function drawString(text: String, opacity: FastFloat, color: Color, x: Float, y: Float, transformation: FastMatrix3, fontGlyphs: Array<Int>): Void {
+		var font = this.font._get(fontSize, fontGlyphs);
 		var tex = font.getTexture();
 		if (lastTexture != null && tex != lastTexture) drawBuffer();
 		lastTexture = tex;
@@ -748,7 +766,7 @@ class TextShaderPainter {
 		var ypos = y;
 		startString(text);
 		for (i in 0...stringLength()) {
-			var q = font.getBakedQuad(charCodeAt(i) - 32, xpos, ypos);
+			var q = font.getBakedQuad(findIndex(charCodeAt(i), fontGlyphs), xpos, ypos);
 			if (q != null) {
 				if (bufferIndex + 1 >= bufferSize) drawBuffer();
 				setRectColors(opacity, color);
@@ -942,7 +960,7 @@ class Graphics2 extends kha.graphics2.Graphics {
 		imagePainter.end();
 		coloredPainter.end();
 		
-		textPainter.drawString(text, opacity, color, x, y, transformation);
+		textPainter.drawString(text, opacity, color, x, y, transformation, fontGlyphs);
 	}
 
 	override public function get_font(): Font {
@@ -1002,6 +1020,18 @@ class Graphics2 extends kha.graphics2.Graphics {
 		return myImageScaleQuality = value;
 	}
 	
+	private var myMipmapScaleQuality: ImageScaleQuality = ImageScaleQuality.High;
+
+	override private function get_mipmapScaleQuality(): ImageScaleQuality {
+		return myMipmapScaleQuality;
+	}
+
+	override private function set_mipmapScaleQuality(value: ImageScaleQuality): ImageScaleQuality {
+		imagePainter.setBilinearMipmapFilter(value == ImageScaleQuality.High);
+		//textPainter.setBilinearMipmapFilter(value == ImageScaleQuality.High); // TODO (DK) implement for fonts as well?
+		return myMipmapScaleQuality = value;
+	}
+    
 	override private function setPipeline(pipeline: PipelineState): Void {
 		flush();
 		imagePainter.pipeline = pipeline;

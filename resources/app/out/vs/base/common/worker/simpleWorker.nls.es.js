@@ -1,7 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- *---------------------------------------------------------------------------------------------*/
+/*!--------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
 define("vs/base/common/worker/simpleWorker.nls.es", {
 	"vs/base/common/errors": [
 		"{0}. Código de error: {1}",
@@ -24,5 +23,23 @@ define("vs/base/common/worker/simpleWorker.nls.es", {
 		"Estado no válido",
 		"No se pudo cargar un archivo necesario. O bien no está conectado a Internet o el servidor al que se había conectado está sin conexión. Actualice el explorador y vuelva a intentarlo.",
 		"No se pudo cargar un archivo requerido. Reinicie la aplicación para intentarlo de nuevo. Detalles: {0}",
+	],
+	"vs/base/common/keyCodes": [
+		"Windows",
+		"Control",
+		"Mayús",
+		"Alt",
+		"Cmd",
+		"Windows",
+		"Ctrl",
+		"Mayús",
+		"Alt",
+		"Cmd",
+		"Windows",
+	],
+	"vs/base/common/severity": [
+		"Error",
+		"Advertencia",
+		"Información",
 	]
 });

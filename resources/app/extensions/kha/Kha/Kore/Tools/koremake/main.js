@@ -54,6 +54,8 @@ function fromPlatform(platform) {
 			return "Tizen";
 		case Platform.Pi:
 			return "Pi";
+		case Platform.tvOS:
+			return "tvOS";
 		default:
 			return "unknown";
 	}
@@ -82,6 +84,7 @@ function shaderLang(platform) {
 		case Platform.PlayStation3:
 			return "d3d9";
 		case Platform.iOS:
+		case Platform.tvOS:
 			switch (Options.graphicsApi) {
 				case GraphicsApi.Metal:
 					return 'metal';
@@ -175,7 +178,7 @@ function exportKoremakeProject(from, to, platform, options) {
 	}
 
 	let exporter = null;
-	if (platform == Platform.iOS || platform == Platform.OSX) exporter = new ExporterXCode();
+	if (platform === Platform.iOS || platform === Platform.OSX || platform === Platform.tvOS) exporter = new ExporterXCode();
 	else if (platform == Platform.Android) exporter = new ExporterAndroid();
 	else if (platform == Platform.HTML5) exporter = new ExporterEmscripten();
 	else if (platform == Platform.Linux || platform === Platform.Pi) {
@@ -301,10 +304,10 @@ exports.run = function (options, loglog, callback) {
 					}
 					if (options.run) {
 						if (options.target === Platform.OSX) {
-							child_process.spawn('open', ['build/Release/' + solutionName + '.app/Contents/MacOS/' + solutionName], {cwd: options.to});
+							child_process.spawn('open', ['build/Release/' + solutionName + '.app/Contents/MacOS/' + solutionName], {stdio: 'inherit', cwd: options.to});
 						}
 						else if (options.target === Platform.Linux || options.target === Platform.Windows) {
-							child_process.spawn(path.resolve(path.join(options.from.toString(), project.getDebugDir(), solutionName)), [], {cwd: path.join(options.from.toString(), project.getDebugDir())});
+							child_process.spawn(path.resolve(path.join(options.from.toString(), project.getDebugDir(), solutionName)), [], {stdio: 'inherit', cwd: path.join(options.from.toString(), project.getDebugDir())});
 						}
 						else {
 							log.info('--run not yet implemented for this platform');

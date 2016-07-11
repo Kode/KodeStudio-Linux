@@ -73,7 +73,7 @@ declare namespace vscode {
 
 		/**
 		 * The offset of the first character which is not a whitespace character as defined
-		 * by `/\s/`.
+		 * by `/\s/`. **Note** that if a line is all whitespaces the length of the line is returned.
 		 *
 		 * @readonly
 		 */
@@ -329,6 +329,15 @@ declare namespace vscode {
 		translate(lineDelta?: number, characterDelta?: number): Position;
 
 		/**
+		 * Derived a new position relative to this position.
+		 *
+		 * @param change An object that describes a delta to this position.
+		 * @return A position that reflects the given delta. Will return `this` position if the change
+		 * is not changing anything.
+		 */
+		translate(change: { lineDelta?: number; characterDelta?: number; }): Position;
+
+		/**
 		 * Create a new position derived from this position.
 		 *
 		 * @param line Value that should be used as line value, default is the [existing value](#Position.line)
@@ -336,6 +345,15 @@ declare namespace vscode {
 		 * @return A position where line and character are replaced by the given values.
 		 */
 		with(line?: number, character?: number): Position;
+
+		/**
+		 * Derived a new position from this position.
+		 *
+		 * @param change An object that describes a change to this position.
+		 * @return A position that reflects the given change. Will return `this` position if the change
+		 * is not changing anything.
+		 */
+		with(change: { line?: number; character?: number; }): Position;
 	}
 
 	/**
@@ -427,14 +445,23 @@ declare namespace vscode {
 		union(other: Range): Range;
 
 		/**
-		 * Create a new range derived from this range.
+		 * Derived a new range from this range.
 		 *
 		 * @param start A position that should be used as start. The default value is the [current start](#Range.start).
 		 * @param end A position that should be used as end. The default value is the [current end](#Range.end).
 		 * @return A range derived from this range with the given start and end position.
-		 * If start and end are not different this range will be returned.
+		 * If start and end are not different `this` range will be returned.
 		 */
 		with(start?: Position, end?: Position): Range;
+
+		/**
+		 * Derived a new range from this range.
+		 *
+		 * @param change An object that describes a change to this range.
+		 * @return A range that reflects the given change. Will return `this` range if the change
+		 * is not changing anything.
+		 */
+		with (change: { start ?: Position, end ?: Position }): Range;
 	}
 
 	/**
@@ -547,6 +574,7 @@ declare namespace vscode {
 		 * The size in spaces a tab takes. This is used for two purposes:
 		 *  - the rendering width of a tab character;
 		 *  - the number of spaces to insert when [insertSpaces](#TextEditorOptions.insertSpaces) is true.
+		 *
 		 * When getting a text editor's options, this property will always be a number (resolved).
 		 * When setting a text editor's options, this property is optional and it can be a number or `"auto"`.
 		 */
@@ -630,40 +658,58 @@ declare namespace vscode {
 		/**
 		 * CSS styling property that will be applied to text enclosed by a decoration.
 		 */
+		outline?: string;
+
+		/**
+		 * CSS styling property that will be applied to text enclosed by a decoration.
+		 * Better use 'outline' for setting one or more of the individual outline properties.
+		 */
 		outlineColor?: string;
 
 		/**
 		 * CSS styling property that will be applied to text enclosed by a decoration.
+		 * Better use 'outline' for setting one or more of the individual outline properties.
 		 */
 		outlineStyle?: string;
 
 		/**
 		 * CSS styling property that will be applied to text enclosed by a decoration.
+		 * Better use 'outline' for setting one or more of the individual outline properties.
 		 */
 		outlineWidth?: string;
 
 		/**
 		 * CSS styling property that will be applied to text enclosed by a decoration.
 		 */
+		border?: string;
+
+		/**
+		 * CSS styling property that will be applied to text enclosed by a decoration.
+		 * Better use 'border' for setting one or more of the individual border properties.
+		 */
 		borderColor?: string;
 
 		/**
 		 * CSS styling property that will be applied to text enclosed by a decoration.
+		 * Better use 'border' for setting one or more of the individual border properties.
 		 */
 		borderRadius?: string;
 
 		/**
 		 * CSS styling property that will be applied to text enclosed by a decoration.
+		 * Better use 'border' for setting one or more of the individual border properties.
 		 */
 		borderSpacing?: string;
 
 		/**
 		 * CSS styling property that will be applied to text enclosed by a decoration.
+		 * Better use 'border' for setting one or more of the individual border properties.
 		 */
 		borderStyle?: string;
 
 		/**
 		 * CSS styling property that will be applied to text enclosed by a decoration.
+		 * Better use 'border' for setting one or more of the individual border properties.
 		 */
 		borderWidth?: string;
 
@@ -693,9 +739,65 @@ declare namespace vscode {
 		gutterIconPath?: string;
 
 		/**
+		 * Specifies the size of the gutter icon.
+		 * Available values are 'auto', 'contain', 'cover' and any percentage value.
+		 * For further information: https://msdn.microsoft.com/en-us/library/jj127316(v=vs.85).aspx
+		 */
+		gutterIconSize?: string;
+
+		/**
 		 * The color of the decoration in the overview ruler. Use rgba() and define transparent colors to play well with other decorations.
 		 */
 		overviewRulerColor?: string;
+
+		/**
+		 * Defines the rendering options of the attachment that is inserted before the decorated text
+		 */
+		before?: ThemableDecorationAttachmentRenderOptions;
+
+		/**
+		 * Defines the rendering options of the attachment that is inserted after the decorated text
+		 */
+		after?: ThemableDecorationAttachmentRenderOptions;
+	}
+
+	export interface ThemableDecorationAttachmentRenderOptions {
+		/**
+		 * Defines a text content that is shown in the attachment. Either an icon or a text can be shown, but not both.
+		 */
+		contentText?: string;
+		/**
+		 * An **absolute path** to an image to be rendered in the attachment. Either an icon or a text can be shown, but not both.
+		 */
+		contentIconPath?: string;
+		/**
+		 * CSS styling property that will be applied to the decoration attachment.
+		 */
+		border?: string;
+		/**
+		 * CSS styling property that will be applied to the decoration attachment.
+		 */
+		textDecoration?: string;
+		/**
+		 * CSS styling property that will be applied to the decoration attachment.
+		 */
+		color?: string;
+		/**
+		 * CSS styling property that will be applied to the decoration attachment.
+		 */
+		backgroundColor?: string;
+		/**
+		 * CSS styling property that will be applied to the decoration attachment.
+		 */
+		margin?: string;
+		/**
+		 * CSS styling property that will be applied to the decoration attachment.
+		 */
+		width?: string;
+		/**
+		 * CSS styling property that will be applied to the decoration attachment.
+		 */
+		height?: string;
 	}
 
 	/**
@@ -737,7 +839,37 @@ declare namespace vscode {
 		/**
 		 * A message that should be rendered when hovering over the decoration.
 		 */
-		hoverMessage: MarkedString | MarkedString[];
+		hoverMessage?: MarkedString | MarkedString[];
+
+		/**
+		 * Render options applied to the current decoration. For performance reasons, keep the
+		 * number of decoration specific options small, and use decoration types whereever possible.
+		 */
+		renderOptions?: DecorationInstanceRenderOptions;
+	}
+
+	export interface ThemableDecorationInstanceRenderOptions {
+		/**
+		 * Defines the rendering options of the attachment that is inserted before the decorated text
+		 */
+		before?: ThemableDecorationAttachmentRenderOptions;
+
+		/**
+		 * Defines the rendering options of the attachment that is inserted after the decorated text
+		 */
+		after?: ThemableDecorationAttachmentRenderOptions;
+	}
+
+	export interface DecorationInstanceRenderOptions extends ThemableDecorationInstanceRenderOptions {
+		/**
+		 * Overwrite options for light themes.
+		 */
+		light?: ThemableDecorationInstanceRenderOptions;
+
+		/**
+		 * Overwrite options for dark themes.
+		 */
+		dark?: ThemableDecorationInstanceRenderOptions
 	}
 
 	/**
@@ -928,21 +1060,39 @@ declare namespace vscode {
 		fragment: string;
 
 		/**
-		 * The string representing the corresponding file system path of this URI.
+		 * The string representing the corresponding file system path of this Uri.
 		 *
 		 * Will handle UNC paths and normalize windows drive letters to lower-case. Also
 		 * uses the platform specific path separator. Will *not* validate the path for
-		 * invalid characters and semantics. Will *not* look at the scheme of this URI.
+		 * invalid characters and semantics. Will *not* look at the scheme of this Uri.
 		 */
 		fsPath: string;
 
 		/**
-		 * Returns a canonical representation of this URI. The representation and normalization
-		 * of a URI depends on the scheme.
+		 * Derive a new Uri from this Uri.
 		 *
-		 * @returns A string that is the encoded version of this Uri.
+		 * @param change An object that describes a change to this Uri. To unset components use `null` or
+		 *  the empty string.
+		 * @return A new Uri that reflects the given change. Will return `this` Uri if the change
+		 *  is not changing anything.
+		 * @sample ```
+			let file = Uri.parse('before:some/file/path');
+			let other = file.with({ scheme: 'after' });
+			assert.ok(other.toString() === 'after:some/file/path');
+		 * ```
 		 */
-		toString(): string;
+		with(change: { scheme?: string; authority?: string; path?: string; query?: string; fragment?: string }): Uri;
+
+		/**
+		 * Returns a string representation of this Uri. The representation and normalization
+		 * of a URI depends on the scheme. The resulting string can be safely used with
+		 * [Uri.parse](#Uri.parse).
+		 *
+		 * @param skipEncoding Do not percentage-encode the result, defaults to `false`. Note that
+		 *	the `#` and `?` characters occuring in the path will always be encoded.
+		 * @returns A string representation of this Uri.
+		 */
+		toString(skipEncoding?: boolean): string;
 
 		/**
 		 * Returns a JSON representation of this Uri.
@@ -1209,6 +1359,12 @@ declare namespace vscode {
 		 * A short title like 'Retry', 'Open Log' etc.
 		 */
 		title: string;
+
+		/**
+		 * Indicates that this item replaces the default
+		 * 'Close' action.
+		 */
+		isCloseAffordance?: boolean;
 	}
 
 	/**
@@ -2014,6 +2170,12 @@ declare namespace vscode {
 	 * A completion item represents a text snippet that is
 	 * proposed to complete text that is being typed.
 	 *
+	 * It is suffient to create a completion item from just
+	 * a [label](#CompletionItem.label). In that case the completion
+	 * item will replace the [word](#TextDocument.getWordRangeAtPosition)
+	 * until the cursor with the given label.
+	 *
+	 *
 	 * @see [CompletionItemProvider.provideCompletionItems](#CompletionItemProvider.provideCompletionItems)
 	 * @see [CompletionItemProvider.resolveCompletionItem](#CompletionItemProvider.resolveCompletionItem)
 	 */
@@ -2081,8 +2243,9 @@ declare namespace vscode {
 		 * will be used as insert text as well as for sorting and filtering.
 		 *
 		 * @param label The label of the completion.
+		 * @param kind The [kind](#CompletionItemKind) of the completion.
 		 */
-		constructor(label: string);
+		constructor(label: string, kind?: CompletionItemKind);
 	}
 
 	/**
@@ -2307,7 +2470,7 @@ declare namespace vscode {
 		/**
 		 * **Deprecated** Do not use.
 		 *
-		 * @deprecated Will be replaced by a better API soon.
+		 * @deprecated Use the language configuration file instead.
 		 */
 		__characterPairSupport?: {
 			autoClosingPairs: {
@@ -2448,7 +2611,7 @@ declare namespace vscode {
 	/**
 	 * A diagnostics collection is a container that manages a set of
 	 * [diagnostics](#Diagnostic). Diagnostics are always scopes to a
-	 * a diagnostics collection and a resource.
+	 * diagnostics collection and a resource.
 	 *
 	 * To get an instance of a `DiagnosticCollection` use
 	 * [createDiagnosticCollection](#languages.createDiagnosticCollection).
@@ -2472,6 +2635,18 @@ declare namespace vscode {
 		set(uri: Uri, diagnostics: Diagnostic[]): void;
 
 		/**
+		 * Replace all entries in this collection.
+		 *
+		 * Diagnostics of multiple tuples of the same uri will be merged, e.g
+		 * `[[file1, [d1]], [file1, [d2]]]` is equivalent to `[[file1, [d1, d2]]]`.
+		 * If a diagnostics item is `undefined` as in `[file1, undefined]`
+		 * all previous but not subsequent diagnostics are removed.
+		 *
+		 * @param entries An array of tuples, like `[[file1, [d1, d2]], [file2, [d3, d4, d5]]]`, or `undefined`.
+		 */
+		set(entries: [Uri, Diagnostic[]][]): void;
+
+		/**
 		 * Remove all diagnostics from this collection that belong
 		 * to the provided `uri`. The same as `#set(uri, undefined)`.
 		 *
@@ -2480,17 +2655,36 @@ declare namespace vscode {
 		delete(uri: Uri): void;
 
 		/**
-		 * Replace all entries in this collection.
-		 *
-		 * @param entries An array of tuples, like `[[file1, [d1, d2]], [file2, [d3, d4, d5]]]`, or `undefined`.
-		 */
-		set(entries: [Uri, Diagnostic[]][]): void;
-
-		/**
 		 * Remove all diagnostics from this collection. The same
 		 * as calling `#set(undefined)`;
 		 */
 		clear(): void;
+
+		/**
+		 * Iterate over each entry in this collection.
+		 *
+		 * @param callback Function to execute for each entry.
+		 * @param thisArg The `this` context used when invoking the handler function.
+		 */
+		forEach(callback: (uri: Uri, diagnostics: Diagnostic[], collection: DiagnosticCollection) => any, thisArg?: any): void;
+
+		/**
+		 * Get the diagnostics for a given resource. *Note* that you cannot
+		 * modify the diagnostics-array returned from this call.
+		 *
+		 * @param uri A resource identifier.
+		 * @returns An immutable array of [diagnostics](#Diagnostic) or `undefined`.
+		 */
+		get(uri: Uri): Diagnostic[];
+
+		/**
+		 * Check if this collection contains diagnostics for a
+		 * given resource.
+		 *
+		 * @param uri A resource identifier.
+		 * @returns `true` if this collection has diagnostic for the given resource.
+		 */
+		has(uri: Uri): boolean;
 
 		/**
 		 * Dispose and free associated resources. Calls
@@ -2545,9 +2739,11 @@ declare namespace vscode {
 
 		/**
 		 * Reveal this channel in the UI.
-		 * @deprecated **This method is deprecated.**
 		 *
-		 * @param @deprecated column **This argument is deprecated.**
+		 * @deprecated This method is **deprecated** and the overload with
+		 * just one parameter should be used (`show(preservceFocus?: boolean): void`).
+		 *
+		 * @param column This argument is **deprecated** and will be ignored.
 		 * @param preserveFocus When `true` the channel will not take focus.
 		 */
 		show(column?: ViewColumn, preserveFocus?: boolean): void;
@@ -2740,6 +2936,16 @@ declare namespace vscode {
 		 * @return The absolute path of the resource.
 		 */
 		asAbsolutePath(relativePath: string): string;
+
+		/**
+		 * An absolute file path of a workspace specific directory in which the extension
+		 * can store private state. The directory might not exist on disk and creation is
+		 * up to the extension. However, the parent directory is guaranteed to be existent.
+		 *
+		 * Use [`workspaceState`](ExtensionContext#workspaceState) or
+		 * [`globalState`](ExtensionContext#globalState) to store key value data.
+		 */
+		storagePath: string;
 	}
 
 	/**
@@ -2771,6 +2977,13 @@ declare namespace vscode {
 	 * Namespace describing the environment the editor runs in.
 	 */
 	export namespace env {
+
+		/**
+		 * The application name of the editor, like 'VS Code'.
+		 *
+		 * @readonly
+		 */
+		export let appName: string;
 
 		/**
 		 * Represents the preferred user-language, like `de-CH`, `fr`, or `en-US`.
@@ -2860,7 +3073,7 @@ declare namespace vscode {
 		 * @param thisArg The `this` context used when invoking the handler function.
 		 * @return Disposable which unregisters this command on disposal.
 		 */
-		export function registerTextEditorCommand(command: string, callback: (textEditor: TextEditor, edit: TextEditorEdit) => void, thisArg?: any): Disposable;
+		export function registerTextEditorCommand(command: string, callback: (textEditor: TextEditor, edit: TextEditorEdit, ...args: any[]) => void, thisArg?: any): Disposable;
 
 		/**
 		 * Executes the command denoted by the given command identifier.
@@ -2896,7 +3109,7 @@ declare namespace vscode {
 	export namespace window {
 
 		/**
-		 * The currently active editor or undefined. The active editor is the one
+		 * The currently active editor or `undefined`. The active editor is the one
 		 * that currently has focus or, when none has focus, the one that has changed
 		 * input most recently.
 		 */
@@ -2909,7 +3122,8 @@ declare namespace vscode {
 
 		/**
 		 * An [event](#Event) which fires when the [active editor](#window.activeTextEditor)
-		 * has changed.
+		 * has changed. *Note* that the event also fires when the active editor changes
+		 * to `undefined`.
 		 */
 		export const onDidChangeActiveTextEditor: Event<TextEditor>;
 

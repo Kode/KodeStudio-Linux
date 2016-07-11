@@ -102,7 +102,28 @@ var TypeScriptFormattingProvider = (function () {
         };
         return this.ensureFormatOptions(document, options, token).then(function () {
             return _this.client.execute('formatonkey', args, token).then(function (response) {
-                return response.body.map(_this.codeEdit2SingleEditOperation);
+                var edits = response.body;
+                var result = [];
+                for (var _i = 0, edits_1 = edits; _i < edits_1.length; _i++) {
+                    var edit = edits_1[_i];
+                    var textEdit = _this.codeEdit2SingleEditOperation(edit);
+                    var range = textEdit.range;
+                    // Work around for https://github.com/Microsoft/TypeScript/issues/6700.
+                    // Check if we have an edit at the beginning of the line which only removes white spaces and leaves
+                    // an empty line. Drop those edits
+                    if (range.start.character === 0 && range.start.line === range.end.line && textEdit.newText === '') {
+                        var lText = document.lineAt(range.start.line).text;
+                        // If the edit leaves something on the line keep the edit (note that the end character is exclusive).
+                        // Keep it also if it removes something else than whitespace
+                        if (lText.trim().length > 0 || lText.length > range.end.character) {
+                            result.push(textEdit);
+                        }
+                    }
+                    else {
+                        result.push(textEdit);
+                    }
+                }
+                return result;
             }, function (err) {
                 return [];
             });

@@ -4,6 +4,8 @@
 	"configuration.typescript": "Configurazione di TypeScript",
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "Completare le funzioni con la relativa firma del parametro.",
 	"typescript.tsdk.desc": "Specifica il percorso della cartella che contiene i file tsserver e lib*.d.ts da usare.",
+	"typescript.tsserver.trace": "Consente la traccia dell'invio dei messaggi al server di Servizi terminal",
+	"typescript.tsserver.experimentalAutoBuild": "Enables experimental auto build. Requires 1.9 dev or 2.x tsserver version and a restart of VS Code after changing it.",
 	"typescript.validate.enable": "Abilita/Disabilita la convalida TypeScript",
 	"format.insertSpaceAfterCommaDelimiter": "Consente di definire la gestione dello spazio dopo una virgola di delimitazione",
 	"format.insertSpaceAfterSemicolonInForStatements": " Consente di definire la gestione dello spazio dopo un punto e virgola in un'istruzione for",

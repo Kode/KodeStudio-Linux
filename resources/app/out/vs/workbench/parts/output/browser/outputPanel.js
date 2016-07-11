@@ -1,6 +1,15 @@
 /*!--------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
+(function() {
+var __m = ["vs/platform/event/common/event","vs/workbench/parts/output/browser/outputPanel","exports","vs/nls!vs/workbench/parts/output/browser/outputPanel","vs/base/common/lifecycle","vs/editor/common/services/modeService","vs/platform/telemetry/common/telemetry","vs/platform/storage/common/storage","vs/platform/configuration/common/configuration","require","vs/platform/instantiation/common/instantiation","vs/platform/message/common/message","vs/workbench/browser/parts/editor/stringEditor","vs/workbench/parts/output/common/output","vs/workbench/parts/output/common/outputEditorInput","vs/workbench/parts/output/browser/outputActions","vs/workbench/services/workspace/common/contextService","vs/workbench/services/editor/common/editorService","vs/workbench/services/themes/common/themeService"];
+var __M = function(deps) {
+  var result = [];
+  for (var i = 0, len = deps.length; i < len; i++) {
+    result[i] = __m[deps[i]];
+  }
+  return result;
+};
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -20,12 +29,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define("vs/workbench/parts/output/browser/outputPanel", ["require", "exports", 'vs/nls!vs/workbench/parts/output/browser/outputPanel', 'vs/base/common/lifecycle', 'vs/editor/common/services/modeService', 'vs/platform/telemetry/common/telemetry', 'vs/platform/storage/common/storage', 'vs/platform/configuration/common/configuration', 'vs/platform/event/common/event', 'vs/platform/instantiation/common/instantiation', 'vs/platform/message/common/message', 'vs/workbench/browser/parts/editor/stringEditor', 'vs/workbench/parts/output/common/output', 'vs/workbench/parts/output/common/outputEditorInput', 'vs/workbench/parts/output/browser/outputActions', 'vs/workbench/services/workspace/common/contextService', 'vs/workbench/services/editor/common/editorService'], function (require, exports, nls, lifecycle, modeService_1, telemetry_1, storage_1, configuration_1, event_1, instantiation_1, message_1, stringEditor_1, output_1, outputEditorInput_1, outputActions_1, contextService_1, editorService_1) {
+define(__m[1], __M([9,2,3,4,5,6,7,8,0,10,11,12,13,14,15,16,17,18]), function (require, exports, nls, lifecycle, modeService_1, telemetry_1, storage_1, configuration_1, event_1, instantiation_1, message_1, stringEditor_1, output_1, outputEditorInput_1, outputActions_1, contextService_1, editorService_1, themeService_1) {
     "use strict";
     var OutputPanel = (function (_super) {
         __extends(OutputPanel, _super);
-        function OutputPanel(telemetryService, instantiationService, contextService, storageService, messageService, configurationService, eventService, editorService, modeService, outputService) {
-            _super.call(this, telemetryService, instantiationService, contextService, storageService, messageService, configurationService, eventService, editorService, modeService);
+        function OutputPanel(telemetryService, instantiationService, contextService, storageService, messageService, configurationService, eventService, editorService, modeService, themeService, outputService) {
+            _super.call(this, telemetryService, instantiationService, contextService, storageService, messageService, configurationService, eventService, editorService, modeService, themeService);
             this.outputService = outputService;
             this.toDispose = [];
         }
@@ -59,25 +68,25 @@ define("vs/workbench/parts/output/browser/outputPanel", ["require", "exports", '
             options.lineDecorationsWidth = 20;
             options.rulers = [];
             options.folding = false;
+            options.scrollBeyondLastLine = false;
             var channel = this.outputService.getActiveChannel();
-            options.ariaLabel = channel ? nls.localize(0, null, channel) : nls.localize(1, null);
+            options.ariaLabel = channel ? nls.localize(0, null, channel.label) : nls.localize(1, null);
             return options;
         };
         OutputPanel.prototype.setInput = function (input, options) {
             var _this = this;
             return _super.prototype.setInput.call(this, input, options).then(function () { return _this.revealLastLine(); });
         };
-        OutputPanel.prototype.create = function (parent) {
-            var _this = this;
-            return _super.prototype.create.call(this, parent)
-                .then(function () { return _this.setInput(outputEditorInput_1.OutputEditorInput.getInstance(_this.instantiationService, _this.outputService.getActiveChannel()), null); });
+        OutputPanel.prototype.createEditor = function (parent) {
+            _super.prototype.createEditor.call(this, parent);
+            this.setInput(outputEditorInput_1.OutputEditorInput.getInstance(this.instantiationService, this.outputService.getActiveChannel()), null);
         };
         OutputPanel.prototype.focus = function () {
             _super.prototype.focus.call(this);
             this.revealLastLine();
         };
         OutputPanel.prototype.dispose = function () {
-            this.toDispose = lifecycle.disposeAll(this.toDispose);
+            this.toDispose = lifecycle.dispose(this.toDispose);
             _super.prototype.dispose.call(this);
         };
         OutputPanel = __decorate([
@@ -90,11 +99,13 @@ define("vs/workbench/parts/output/browser/outputPanel", ["require", "exports", '
             __param(6, event_1.IEventService),
             __param(7, editorService_1.IWorkbenchEditorService),
             __param(8, modeService_1.IModeService),
-            __param(9, output_1.IOutputService)
+            __param(9, themeService_1.IThemeService),
+            __param(10, output_1.IOutputService)
         ], OutputPanel);
         return OutputPanel;
     }(stringEditor_1.StringEditor));
     exports.OutputPanel = OutputPanel;
 });
 
+}).call(this);
 //# sourceMappingURL=outputPanel.js.map
