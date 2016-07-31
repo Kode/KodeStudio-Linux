@@ -132,30 +132,17 @@ export class ChromeDebugAdapter implements IDebugAdapter {
                 server: false,
                 port: 8080,
                 debug: false,
-                silent: false
+                silent: false,
+                watch: false
             };
 
-            let success = false;
-            try {
-                success = require(path.join(args.kha, 'Tools/khamake/main.js'))
-                    .run(options, {
-                        info: message => {
-                            this.fireEvent(new OutputEvent(message + '\n', 'stdout'));
-                        }, error: message => {
-                            this.fireEvent(new OutputEvent(message + '\n', 'stderr'));
-                        }
-                    }, function (name) { });
-            }
-            catch (error) {
-                this.fireEvent(new OutputEvent('Error: ' + error.toString() + '\n', 'stderr'));
-            }
-
-            if (!success) {
-                this.fireEvent(new OutputEvent('Launch canceled.\n', 'stderr'));
-                resolve();
-                this.fireEvent(new TerminatedEvent());
-                this.clearEverything();
-            } else {
+            require(path.join(args.kha, 'Tools/khamake/out/main.js')).run(options, {
+                info: message => {
+                    this.fireEvent(new OutputEvent(message + '\n', 'stdout'));
+                }, error: message => {
+                    this.fireEvent(new OutputEvent(message + '\n', 'stderr'));
+                }
+            }).then((value: string) => {
                 // Check exists?
                 const chromePath = args.runtimeExecutable;
                 let chromeDir = chromePath;
@@ -192,7 +179,12 @@ export class ChromeDebugAdapter implements IDebugAdapter {
                 this._attach(port, launchUrl, args.address).then(() => {
                     resolve();
                 });
-            }
+            }, (reason) => {
+                this.fireEvent(new OutputEvent('Launch canceled.\n', 'stderr'));
+                resolve();
+                this.fireEvent(new TerminatedEvent());
+                this.clearEverything();
+            });
         });
     }
 

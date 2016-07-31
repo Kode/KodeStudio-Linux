@@ -90,29 +90,16 @@ var ChromeDebugAdapter = (function () {
                 server: false,
                 port: 8080,
                 debug: false,
-                silent: false
+                silent: false,
+                watch: false
             };
-            var success = false;
-            try {
-                success = require(path.join(args.kha, 'Tools/khamake/main.js'))
-                    .run(options, {
-                    info: function (message) {
-                        _this.fireEvent(new vscode_debugadapter_1.OutputEvent(message + '\n', 'stdout'));
-                    }, error: function (message) {
-                        _this.fireEvent(new vscode_debugadapter_1.OutputEvent(message + '\n', 'stderr'));
-                    }
-                }, function (name) { });
-            }
-            catch (error) {
-                _this.fireEvent(new vscode_debugadapter_1.OutputEvent('Error: ' + error.toString() + '\n', 'stderr'));
-            }
-            if (!success) {
-                _this.fireEvent(new vscode_debugadapter_1.OutputEvent('Launch canceled.\n', 'stderr'));
-                resolve();
-                _this.fireEvent(new vscode_debugadapter_1.TerminatedEvent());
-                _this.clearEverything();
-            }
-            else {
+            require(path.join(args.kha, 'Tools/khamake/out/main.js')).run(options, {
+                info: function (message) {
+                    _this.fireEvent(new vscode_debugadapter_1.OutputEvent(message + '\n', 'stdout'));
+                }, error: function (message) {
+                    _this.fireEvent(new vscode_debugadapter_1.OutputEvent(message + '\n', 'stderr'));
+                }
+            }).then(function (value) {
                 // Check exists?
                 var chromePath = args.runtimeExecutable;
                 var chromeDir = chromePath;
@@ -124,7 +111,7 @@ var ChromeDebugAdapter = (function () {
                 var port = args.port || Math.floor((Math.random() * 10000) + 10000);
                 var chromeArgs = ['--chromedebug', '--remote-debugging-port=' + port];
                 chromeArgs.push(path.resolve(args.cwd, args.file));
-                var launchUrl = void 0;
+                var launchUrl;
                 if (args.file) {
                     launchUrl = utils.pathToFileURL(path.join(args.cwd, args.file, 'index.html'));
                 }
@@ -145,7 +132,12 @@ var ChromeDebugAdapter = (function () {
                 _this._attach(port, launchUrl, args.address).then(function () {
                     resolve();
                 });
-            }
+            }, function (reason) {
+                _this.fireEvent(new vscode_debugadapter_1.OutputEvent('Launch canceled.\n', 'stderr'));
+                resolve();
+                _this.fireEvent(new vscode_debugadapter_1.TerminatedEvent());
+                _this.clearEverything();
+            });
         });
     };
     ChromeDebugAdapter.prototype.attach = function (args) {

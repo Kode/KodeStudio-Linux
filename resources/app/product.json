@@ -7,7 +7,7 @@
 	"licenseUrl": "https://github.com/KTXSoftware/KodeStudio/blob/master/LICENSE.txt",
 	"darwinBundleIdentifier": "org.kodestudio",
 	"reportIssueUrl": "https://github.com/Microsoft/vscode/issues/new",
-	"kodeStudioVersion": "16.7.1",
-	"commit": "8f4464773e78ef33a257c4869c12d68c2802d4b1",
-	"date": "2016-07-11T16:13:26.130Z"
+	"kodeStudioVersion": "16.7.2",
+	"commit": "79d8d40755244c0c4577903266595658293acc19",
+	"date": "2016-07-31T16:18:11.105Z"
 }

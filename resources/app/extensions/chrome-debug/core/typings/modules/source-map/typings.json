@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/roblourens/source-map/6f5d5946d022312f41433c8f847635427ed2e854/source-map.d.ts",
+    "raw": "github:roblourens/source-map/source-map.d.ts#6f5d5946d022312f41433c8f847635427ed2e854",
+    "typings": "https://raw.githubusercontent.com/roblourens/source-map/6f5d5946d022312f41433c8f847635427ed2e854/source-map.d.ts"
+  }
+}

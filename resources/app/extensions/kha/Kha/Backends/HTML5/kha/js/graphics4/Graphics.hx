@@ -112,7 +112,7 @@ class Graphics implements kha.graphics4.Graphics {
 	public function setDepthMode(write: Bool, mode: CompareMode): Void {
 		switch (mode) {
 		case Always:
-			SystemImpl.gl.disable(GL.DEPTH_TEST);
+			write ? SystemImpl.gl.enable(GL.DEPTH_TEST) : SystemImpl.gl.disable(GL.DEPTH_TEST);
 			SystemImpl.gl.depthFunc(GL.ALWAYS);
 		case Never:
 			SystemImpl.gl.enable(GL.DEPTH_TEST);
@@ -310,10 +310,10 @@ class Graphics implements kha.graphics4.Graphics {
 			SystemImpl.gl.disable(GL.CULL_FACE);
 		case Clockwise:
 			SystemImpl.gl.enable(GL.CULL_FACE);
-			SystemImpl.gl.cullFace(GL.FRONT);
+			SystemImpl.gl.cullFace(GL.BACK);
 		case CounterClockwise:
 			SystemImpl.gl.enable(GL.CULL_FACE);
-			SystemImpl.gl.cullFace(GL.BACK);
+			SystemImpl.gl.cullFace(GL.FRONT);
 		}
 	}
 

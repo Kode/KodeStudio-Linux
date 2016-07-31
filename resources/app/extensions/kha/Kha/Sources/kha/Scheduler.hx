@@ -36,6 +36,7 @@ class FrameTask {
 
 class Scheduler {
 	private static var timeTasks: Array<TimeTask>;
+	private static var pausedTimeTasks: Array<TimeTask>;
 	private static var frameTasks: Array<FrameTask>;
 	
 	private static var toDeleteTime : Array<TimeTask>;
@@ -79,6 +80,7 @@ class Scheduler {
 		currentGroupId     = 0;
 		
 		timeTasks = new Array<TimeTask>();
+		pausedTimeTasks = new Array<TimeTask>();
 		frameTasks = new Array<FrameTask>();
 		toDeleteTime = new Array<TimeTask>();
 		toDeleteFrame = new Array<FrameTask>();
@@ -190,13 +192,23 @@ class Scheduler {
 			current = frameEnd;
 		}
 		
-		for (t in timeTasks) {
-			activeTimeTask = t;
-			if (stopped || activeTimeTask.paused) { // Extend endpoint by paused time
-				activeTimeTask.next += delta;
+		// Extend endpoint by paused time (individually paused tasks)
+		for (pausedTask in pausedTimeTasks) {
+			pausedTask.next += delta;
+		}
+
+		if (stopped) {
+			// Extend endpoint by paused time (running tasks)
+			for (timeTask in timeTasks) {
+				timeTask.next += delta;
 			}
-			else if (activeTimeTask.next <= frameEnd) {
-				activeTimeTask.next += t.period;
+		}
+
+		while (timeTasks.length > 0) {
+			activeTimeTask = timeTasks[0];
+			
+			if (activeTimeTask.next <= frameEnd) {
+				activeTimeTask.next += activeTimeTask.period;
 				timeTasks.remove(activeTimeTask);
 				
 				if (activeTimeTask.active && activeTimeTask.task()) {
@@ -207,6 +219,9 @@ class Scheduler {
 				else {
 					activeTimeTask.active = false;
 				}
+			}
+			else {
+				break;
 			}
 		}
 		activeTimeTask = null;
@@ -223,7 +238,7 @@ class Scheduler {
 
 		sortFrameTasks();
 		for (frameTask in frameTasks) {
-			if (!stopped && !frameTask.paused) {
+			if (!stopped && !frameTask.paused && frameTask.active) {
 				if (!frameTask.task()) frameTask.active = false;
 			}
 		}
@@ -284,7 +299,6 @@ class Scheduler {
 		for (frameTask in frameTasks) {
 			if (frameTask.id == id) {
 				frameTask.active = false;
-				frameTasks.remove(frameTask);
 				break;
 			}
 		}
@@ -332,24 +346,44 @@ class Scheduler {
 				return timeTask;
 			}
 		}
+		for (timeTask in pausedTimeTasks) {
+			if (timeTask.id == id) {
+				return timeTask;
+			}
+		}
 		return null;
 	}
 
 	public static function pauseTimeTask(id: Int, paused: Bool): Void {
 		var timeTask = getTimeTask(id);
 		if (timeTask != null) {
-			timeTask.paused = paused;
+			pauseRunningTimeTask(timeTask, paused);
+		}
+		if (activeTimeTask != null && activeTimeTask.id == id) {
+			activeTimeTask.paused = paused;
+		}
+	}
+
+	private static function pauseRunningTimeTask(timeTask: TimeTask, paused: Bool): Void {
+		timeTask.paused = paused;
+		if (paused) {
+			timeTasks.remove(timeTask);
+			pausedTimeTasks.push(timeTask);
+		}
+		else {
+			insertSorted(timeTasks, timeTask);
+			pausedTimeTasks.remove(timeTask);
 		}
 	}
 	
 	public static function pauseTimeTasks(groupId: Int, paused: Bool): Void {
 		for (timeTask in timeTasks) {
 			if (timeTask.groupId == groupId) {
-				timeTask.paused = paused;
+				pauseRunningTimeTask(timeTask, paused);
 			}
 		}
 		if (activeTimeTask != null && activeTimeTask.groupId == groupId) {
-			activeTimeTask.paused = true;
+			activeTimeTask.paused = paused;
 		}
 	}
 

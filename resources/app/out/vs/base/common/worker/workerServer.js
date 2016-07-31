@@ -13498,7 +13498,7 @@ define(__m[68], __M([1,0,67,10,22]), function (require, exports, nls, platform, 
     'use strict';
     exports.DEFAULT_INDENTATION = {
         tabSize: 4,
-        insertSpaces: true,
+        insertSpaces: false,
         detectIndentation: true
     };
     exports.DEFAULT_TRIM_AUTO_WHITESPACE = true;
