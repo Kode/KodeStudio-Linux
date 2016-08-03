@@ -1,4 +1,4 @@
-﻿// Called from entry point, e.g. Kha/make.js
+// Called from entry point, e.g. Kha/make.js
 // This is where options are processed:
 // e.g. '-t html5 --server'
 
@@ -88,7 +88,6 @@ var options: Array<any> = [
 	},
 	{
 		full: 'haxe',
-		short: 'h',
 		description: 'Location of Haxe directory',
 		value: true,
 		default: ''

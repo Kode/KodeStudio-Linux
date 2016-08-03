@@ -1,4 +1,4 @@
-﻿export let GraphicsApi = {
+export let GraphicsApi = {
 	OpenGL: 'opengl',
 	OpenGL2: 'opengl2',
 	Direct3D9: 'direct3d9',

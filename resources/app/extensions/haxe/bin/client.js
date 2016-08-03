@@ -293,6 +293,7 @@ vshaxe_InitProject.prototype = {
 	}
 };
 var vshaxe_Main = function(ctx) {
+	var _gthis = this;
 	this.context = ctx;
 	this.displayConfig = new vshaxe_DisplayConfiguration(ctx);
 	new vshaxe_InitProject(ctx);
@@ -301,9 +302,13 @@ var vshaxe_Main = function(ctx) {
 	this.context.subscriptions.push(Vscode.commands.registerCommand("haxe.restartLanguageServer",$bind(this,this.restartLanguageServer)));
 	this.context.subscriptions.push(Vscode.commands.registerCommand("haxe.applyFixes",$bind(this,this.applyFixes)));
 	if(!js_node_Fs.existsSync(js_node_Path.join(Vscode.workspace.rootPath,"build","project-debug-html5.hxml"))) {
-		Vscode.extensions.getExtension("ktx.kha").exports.compile("debug-html5");
+		Vscode.extensions.getExtension("ktx.kha").exports.compile("debug-html5").then(function(value) {
+			_gthis.startLanguageServer();
+		},function(error) {
+		});
+	} else {
+		this.startLanguageServer();
 	}
-	this.startLanguageServer();
 };
 vshaxe_Main.findKha = function() {
 	return Vscode.extensions.getExtension("ktx.kha").exports.findKha();

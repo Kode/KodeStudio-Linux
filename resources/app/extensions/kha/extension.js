@@ -53,7 +53,7 @@ function compile(target) {
 		silent: false,
 		watch: false
 	};
-	require(path.join(findKha(), 'Tools/khamake/out/main.js'))
+	return require(path.join(findKha(), 'Tools/khamake/out/main.js'))
 	.run(options, {
 		info: message => {
 			channel.appendLine(message);
@@ -117,7 +117,7 @@ exports.activate = function (context) {
 	channel = vscode.window.createOutputChannel('Kha');
 
 	let disposable = vscode.commands.registerCommand('kha.init', function () {
-		require(path.join(findKha(), 'Tools', 'khamake', 'init.js')).run('Project', vscode.workspace.rootPath, 'khafile.js');
+		require(path.join(findKha(), 'Tools', 'khamake', 'out', 'init.js')).run('Project', vscode.workspace.rootPath, 'khafile.js');
 		vscode.commands.executeCommand('workbench.action.reloadWindow');
 		vscode.window.showInformationMessage('Kha project created.');
 	});
