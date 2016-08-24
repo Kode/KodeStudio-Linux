@@ -74,14 +74,12 @@ var JSONCompletionItemProvider = (function () {
         else {
             overwriteRange = new vscode_1.Range(document.positionAt(offset - currentWord.length), position);
         }
-        var filterText = document.getText(new vscode_1.Range(overwriteRange.start, position));
         var proposed = {};
         var collector = {
             add: function (suggestion) {
                 if (!proposed[suggestion.label]) {
                     proposed[suggestion.label] = true;
                     suggestion.textEdit = vscode_1.TextEdit.replace(overwriteRange, suggestion.insertText);
-                    suggestion.filterText = filterText;
                     items.push(suggestion);
                 }
             },

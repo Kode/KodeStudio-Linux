@@ -17,6 +17,11 @@ const VrApi_1 = require('./VrApi');
 const Options_1 = require('./Options');
 const Platform_1 = require('./Platform');
 const VisualStudioVersion_1 = require('./VisualStudioVersion');
+let version = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
+if (version < 6) {
+    console.error('Requires Node.js version 6 or higher.');
+    process.exit(1);
+}
 var defaultTarget;
 if (os.platform() === "linux") {
     defaultTarget = Platform_1.Platform.Linux;
@@ -106,6 +111,11 @@ var options = [
         default: ''
     },
     {
+        full: 'noproject',
+        description: 'Only source files. Don\'t generate project files.',
+        value: false,
+    },
+    {
         full: 'embedflashassets',
         description: 'Embed assets in swf for flash target',
         value: false
@@ -156,6 +166,11 @@ var options = [
         full: 'watch',
         short: 'w',
         description: 'Watch files and recompile on change.',
+        value: false
+    },
+    {
+        full: 'glsl2',
+        description: 'Use experimental SPIRV-Cross glsl mode.',
         value: false
     }
 ];

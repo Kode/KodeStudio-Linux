@@ -5,7 +5,7 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.ja", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"コミット メッセージを入力してください。**{0}** を押すといつでも変更をコミットできます。ステージング済みの変更がある場合は、それらの変更だけがコミットされます。それ以外の場合は、すべての変更がコミットされます。",
 		"コミットする変更があった時点で、コミット メッセージを入力するか、**{0}** を押して変更をコミットしてください。ステージング済みの変更がある場合は、それらの変更だけがコミットされます。それ以外の場合は、すべての変更がコミットされます。",
-		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
+		"コミットの最初の行は 50 文字を超えない長さにすることをお勧めします。補足情報は追加の行を使用して記載できます。",
 		"メッセージ ({0} を押してコミット)",
 		"Git: コミット メッセージを入力し、{0} を押してコミットしてください",
 		"Git 変更の表示",
@@ -69,9 +69,9 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.ja", {
 		"Git をインストールし終えたら、{0} を再起動してください。",
 	],
 	"vs/workbench/parts/git/browser/views/huge/hugeView": [
-		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
-		"You can permanently disable this warning with the following setting:",
-		"Allow large repositories",
+		"リポジトリに有効な変更が数多くある可能性があります。\nこれにより、コードの速度が大幅に低下することがあります。",
+		"次の設定を使用してこの警告を完全に無効にできます:",
+		"大規模なリポジトリを許可します",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"このディレクトリは Git リポジトリに含まれているようです。",

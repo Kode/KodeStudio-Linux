@@ -93,6 +93,32 @@ define(__m[27], __M([1,0]), function (require, exports) {
         return low;
     }
     exports.findFirst = findFirst;
+    /**
+     * Returns the top N elements from the array.
+     *
+     * Faster than sorting the entire array when the array is a lot larger than N.
+     *
+     * @param array The unsorted array.
+     * @param compare A sort function for the elements.
+     * @param n The number of elements to return.
+     * @return The first n elemnts from array when sorted with compare.
+     */
+    function top(array, compare, n) {
+        var result = array.slice(0, n).sort(compare);
+        var _loop_1 = function(i, m) {
+            var element = array[i];
+            if (compare(element, result[n - 1]) < 0) {
+                result.pop();
+                var j = findFirst(result, function (e) { return compare(element, e) < 0; });
+                result.splice(j, 0, element);
+            }
+        };
+        for (var i = n, m = array.length; i < m; i++) {
+            _loop_1(i, m);
+        }
+        return result;
+    }
+    exports.top = top;
     function merge(arrays, hashFn) {
         var result = new Array();
         if (!hashFn) {
@@ -236,10 +262,13 @@ define(__m[27], __M([1,0]), function (require, exports) {
         return arr;
     }
     exports.fill = fill;
-    function index(array, indexer) {
-        var result = Object.create(null);
-        array.forEach(function (t) { return result[indexer(t)] = t; });
-        return result;
+    function index(array, indexer, merger) {
+        if (merger === void 0) { merger = function (t) { return t; }; }
+        return array.reduce(function (r, t) {
+            var key = indexer(t);
+            r[key] = merger(t, r[key]);
+            return r;
+        }, Object.create(null));
     }
     exports.index = index;
 });
@@ -1033,6 +1062,13 @@ define(__m[8], __M([1,0]), function (require, exports) {
             }
             return keys;
         };
+        SimpleMap.prototype.values = function () {
+            var values = [];
+            for (var key in this.map) {
+                values.push(this.map[key].value);
+            }
+            return values;
+        };
         SimpleMap.prototype.entries = function () {
             var entries = [];
             for (var key in this.map) {
@@ -1587,10 +1623,18 @@ define(__m[4], __M([1,0,8]), function (require, exports, map_1) {
         return -1;
     }
     exports.lastNonWhitespaceIndex = lastNonWhitespaceIndex;
-    function localeCompare(strA, strB) {
-        return strA.localeCompare(strB);
+    function compare(a, b) {
+        if (a < b) {
+            return -1;
+        }
+        else if (a > b) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
-    exports.localeCompare = localeCompare;
+    exports.compare = compare;
     function isAsciiChar(code) {
         return (code >= 97 && code <= 122) || (code >= 65 && code <= 90);
     }
@@ -2917,17 +2961,27 @@ define(__m[13], __M([1,0,3]), function (require, exports, platform) {
             return new URI().with(components);
         };
         URI._validate = function (ret) {
-            // validation
+            // scheme, https://tools.ietf.org/html/rfc3986#section-3.1
+            // ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+            if (ret.scheme && !URI._schemePattern.test(ret.scheme)) {
+                throw new Error('[UriError]: Scheme contains illegal characters.');
+            }
             // path, http://tools.ietf.org/html/rfc3986#section-3.3
             // If a URI contains an authority component, then the path component
             // must either be empty or begin with a slash ("/") character.  If a URI
             // does not contain an authority component, then the path cannot begin
             // with two slash characters ("//").
-            if (ret.authority && ret.path && ret.path[0] !== '/') {
-                throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
-            }
-            if (!ret.authority && ret.path.indexOf('//') === 0) {
-                throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
+            if (ret.path) {
+                if (ret.authority) {
+                    if (!URI._singleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
+                    }
+                }
+                else {
+                    if (URI._doubleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
+                    }
+                }
             }
         };
         // ---- printing/externalize ---------------------------
@@ -2971,10 +3025,15 @@ define(__m[13], __M([1,0,3]), function (require, exports, platform) {
                 }
             }
             if (path) {
-                // lower-case windown drive letters in /C:/fff
+                // lower-case windows drive letters in /C:/fff or C:/fff
                 var m = URI._upperCaseDrive.exec(path);
                 if (m) {
-                    path = m[1] + m[2].toLowerCase() + path.substr(m[1].length + m[2].length);
+                    if (m[1]) {
+                        path = '/' + m[2].toLowerCase() + path.substr(3); // "/c:".length === 3
+                    }
+                    else {
+                        path = m[2].toLowerCase() + path.substr(2); // // "c:".length === 2
+                    }
                 }
                 // encode every segement but not slashes
                 // make sure that # and ? are always encoded
@@ -3029,6 +3088,9 @@ define(__m[13], __M([1,0,3]), function (require, exports, platform) {
         URI._regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
         URI._driveLetterPath = /^\/[a-zA-z]:/;
         URI._upperCaseDrive = /^(\/)?([A-Z]:)/;
+        URI._schemePattern = /^\w[\w\d+.-]*$/;
+        URI._singleSlashStart = /^\//;
+        URI._doubleSlashStart = /^\/\//;
         return URI;
     }());
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -5991,19 +6053,22 @@ define(__m[18], __M([1,0]), function (require, exports) {
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    // State machine for http:// or https://
-    var STATE_MAP = [], START_STATE = 1, END_STATE = 9, ACCEPT_STATE = 10;
-    STATE_MAP[1] = { 'h': 2, 'H': 2, 'f': 11, 'F': 11 };
+    // State machine for http:// or https:// or file://
+    var STATE_MAP = [];
+    var START_STATE = 1;
+    var END_STATE = 12;
+    var ACCEPT_STATE = 13;
+    STATE_MAP[1] = { 'h': 2, 'H': 2, 'f': 6, 'F': 6 };
     STATE_MAP[2] = { 't': 3, 'T': 3 };
     STATE_MAP[3] = { 't': 4, 'T': 4 };
     STATE_MAP[4] = { 'p': 5, 'P': 5 };
-    STATE_MAP[5] = { 's': 6, 'S': 6, ':': 7 };
-    STATE_MAP[6] = { ':': 7 };
-    STATE_MAP[7] = { '/': 8 };
-    STATE_MAP[8] = { '/': 9 };
-    STATE_MAP[11] = { 'i': 12, 'I': 12 };
-    STATE_MAP[12] = { 'l': 13, 'L': 13 };
-    STATE_MAP[13] = { 'e': 6, 'E': 6 };
+    STATE_MAP[5] = { 's': 9, 'S': 9, ':': 10 };
+    STATE_MAP[6] = { 'i': 7, 'I': 7 };
+    STATE_MAP[7] = { 'l': 8, 'L': 8 };
+    STATE_MAP[8] = { 'e': 9, 'E': 9 };
+    STATE_MAP[9] = { ':': 10 };
+    STATE_MAP[10] = { '/': 11 };
+    STATE_MAP[11] = { '/': END_STATE };
     var CharacterClass;
     (function (CharacterClass) {
         CharacterClass[CharacterClass["None"] = 0] = "None";
@@ -6050,37 +6115,47 @@ define(__m[18], __M([1,0]), function (require, exports) {
         };
         return CharacterClassifier;
     }());
+    var characterClassifier = new CharacterClassifier();
     var LinkComputer = (function () {
         function LinkComputer() {
         }
         LinkComputer._createLink = function (line, lineNumber, linkBeginIndex, linkEndIndex) {
+            // Do not allow to end link in certain characters...
+            var lastIncludedCharIndex = linkEndIndex - 1;
+            do {
+                var chCode = line.charCodeAt(lastIncludedCharIndex);
+                var chClass = characterClassifier.classify(chCode);
+                if (chClass !== CharacterClass.CannotEndIn) {
+                    break;
+                }
+                lastIncludedCharIndex--;
+            } while (lastIncludedCharIndex > linkBeginIndex);
             return {
                 range: {
                     startLineNumber: lineNumber,
                     startColumn: linkBeginIndex + 1,
                     endLineNumber: lineNumber,
-                    endColumn: linkEndIndex + 1
+                    endColumn: lastIncludedCharIndex + 2
                 },
-                url: line.substring(linkBeginIndex, linkEndIndex)
+                url: line.substring(linkBeginIndex, lastIncludedCharIndex + 1)
             };
         };
         LinkComputer.computeLinks = function (model) {
-            var i, lineCount, result = [];
-            var line, j, lastIncludedCharIndex, len, linkBeginIndex, state, ch, chCode, chClass, resetStateMachine, hasOpenParens, hasOpenSquareBracket, hasOpenCurlyBracket, characterClassifier = LinkComputer._characterClassifier;
-            for (i = 1, lineCount = model.getLineCount(); i <= lineCount; i++) {
-                line = model.getLineContent(i);
-                j = 0;
-                len = line.length;
-                linkBeginIndex = 0;
-                state = START_STATE;
-                hasOpenParens = false;
-                hasOpenSquareBracket = false;
-                hasOpenCurlyBracket = false;
+            var result = [];
+            for (var i = 1, lineCount = model.getLineCount(); i <= lineCount; i++) {
+                var line = model.getLineContent(i);
+                var len = line.length;
+                var j = 0;
+                var linkBeginIndex = 0;
+                var state = START_STATE;
+                var hasOpenParens = false;
+                var hasOpenSquareBracket = false;
+                var hasOpenCurlyBracket = false;
                 while (j < len) {
-                    ch = line.charAt(j);
-                    chCode = line.charCodeAt(j);
-                    resetStateMachine = false;
+                    var resetStateMachine = false;
                     if (state === ACCEPT_STATE) {
+                        var chCode = line.charCodeAt(j);
+                        var chClass = void 0;
                         switch (chCode) {
                             case _openParens:
                                 hasOpenParens = true;
@@ -6108,22 +6183,13 @@ define(__m[18], __M([1,0]), function (require, exports) {
                         }
                         // Check if character terminates link
                         if (chClass === CharacterClass.ForceTermination) {
-                            // Do not allow to end link in certain characters...
-                            lastIncludedCharIndex = j - 1;
-                            do {
-                                chCode = line.charCodeAt(lastIncludedCharIndex);
-                                chClass = characterClassifier.classify(chCode);
-                                if (chClass !== CharacterClass.CannotEndIn) {
-                                    break;
-                                }
-                                lastIncludedCharIndex--;
-                            } while (lastIncludedCharIndex > linkBeginIndex);
-                            result.push(LinkComputer._createLink(line, i, linkBeginIndex, lastIncludedCharIndex + 1));
+                            result.push(LinkComputer._createLink(line, i, linkBeginIndex, j));
                             resetStateMachine = true;
                         }
                     }
                     else if (state === END_STATE) {
-                        chClass = characterClassifier.classify(chCode);
+                        var chCode = line.charCodeAt(j);
+                        var chClass = characterClassifier.classify(chCode);
                         // Check if character terminates link
                         if (chClass === CharacterClass.ForceTermination) {
                             resetStateMachine = true;
@@ -6133,6 +6199,7 @@ define(__m[18], __M([1,0]), function (require, exports) {
                         }
                     }
                     else {
+                        var ch = line.charAt(j);
                         if (STATE_MAP[state].hasOwnProperty(ch)) {
                             state = STATE_MAP[state][ch];
                         }
@@ -6156,7 +6223,6 @@ define(__m[18], __M([1,0]), function (require, exports) {
             }
             return result;
         };
-        LinkComputer._characterClassifier = new CharacterClassifier();
         return LinkComputer;
     }());
     /**
@@ -7056,6 +7122,27 @@ define(__m[14], __M([1,0,26]), function (require, exports, callbackList_1) {
         };
     }
     exports.fromEventEmitter = fromEventEmitter;
+    function fromPromise(promise) {
+        var toCancel = null;
+        var listener = null;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
+            },
+            onLastListenerRemove: function () {
+                if (toCancel) {
+                    toCancel.cancel();
+                    toCancel = null;
+                }
+                if (listener) {
+                    listener.dispose();
+                    listener = null;
+                }
+            }
+        });
+        return emitter.event;
+    }
+    exports.fromPromise = fromPromise;
     function mapEvent(event, map) {
         return function (listener, thisArgs, disposables) {
             if (thisArgs === void 0) { thisArgs = null; }
@@ -7081,8 +7168,9 @@ define(__m[14], __M([1,0,26]), function (require, exports, callbackList_1) {
                     output = merger(output, cur);
                     clearTimeout(handle);
                     handle = setTimeout(function () {
-                        emitter.fire(output);
+                        var _output = output;
                         output = undefined;
+                        emitter.fire(_output);
                     }, delay);
                 });
             },
@@ -8570,9 +8658,11 @@ define(__m[34], __M([1,0,33,3]), function (require, exports, nls, defaultPlatfor
         CommonKeybindings.SHIFT_DELETE = KeyMod.Shift | KeyCode.Delete;
         CommonKeybindings.CTRLCMD_BACKSPACE = KeyMod.CtrlCmd | KeyCode.Backspace;
         CommonKeybindings.UP_ARROW = KeyCode.UpArrow;
+        CommonKeybindings.WINCTRL_P = KeyMod.WinCtrl | KeyCode.KEY_P;
         CommonKeybindings.SHIFT_UP_ARROW = KeyMod.Shift | KeyCode.UpArrow;
         CommonKeybindings.CTRLCMD_UP_ARROW = KeyMod.CtrlCmd | KeyCode.UpArrow;
         CommonKeybindings.DOWN_ARROW = KeyCode.DownArrow;
+        CommonKeybindings.WINCTRL_N = KeyMod.WinCtrl | KeyCode.KEY_N;
         CommonKeybindings.SHIFT_DOWN_ARROW = KeyMod.Shift | KeyCode.DownArrow;
         CommonKeybindings.CTRLCMD_DOWN_ARROW = KeyMod.CtrlCmd | KeyCode.DownArrow;
         CommonKeybindings.LEFT_ARROW = KeyCode.LeftArrow;

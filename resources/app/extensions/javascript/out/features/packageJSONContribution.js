@@ -62,6 +62,7 @@ var PackageJSONContribution = (function () {
                                         var proposal = new vscode_1.CompletionItem(name);
                                         proposal.kind = vscode_1.CompletionItemKind.Property;
                                         proposal.insertText = insertText;
+                                        proposal.filterText = JSON.stringify(name);
                                         proposal.documentation = '';
                                         collector.add(proposal);
                                     }
@@ -95,6 +96,7 @@ var PackageJSONContribution = (function () {
                     var proposal = new vscode_1.CompletionItem(name);
                     proposal.kind = vscode_1.CompletionItemKind.Property;
                     proposal.insertText = insertText;
+                    proposal.filterText = JSON.stringify(name);
                     proposal.documentation = '';
                     collector.add(proposal);
                 });
@@ -195,7 +197,7 @@ var PackageJSONContribution = (function () {
                 htmlContent_1.push(localize(7, null, pack));
                 return this.getInfo(pack).then(function (infos) {
                     infos.forEach(function (info) {
-                        htmlContent_1.push(info);
+                        htmlContent_1.push({ language: 'string', value: info });
                     });
                     return htmlContent_1;
                 });

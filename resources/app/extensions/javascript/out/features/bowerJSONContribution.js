@@ -60,6 +60,7 @@ var BowerJSONContribution = (function () {
                                     var proposal = new vscode_1.CompletionItem(name);
                                     proposal.kind = vscode_1.CompletionItemKind.Property;
                                     proposal.insertText = insertText;
+                                    proposal.filterText = JSON.stringify(name);
                                     proposal.documentation = description;
                                     collector.add(proposal);
                                 }
@@ -90,6 +91,7 @@ var BowerJSONContribution = (function () {
                     var proposal = new vscode_1.CompletionItem(name);
                     proposal.kind = vscode_1.CompletionItemKind.Property;
                     proposal.insertText = insertText;
+                    proposal.filterText = JSON.stringify(name);
                     proposal.documentation = '';
                     collector.add(proposal);
                 });
@@ -104,6 +106,7 @@ var BowerJSONContribution = (function () {
             // not implemented. Could be do done calling the bower command. Waiting for web API: https://github.com/bower/registry/issues/26
             var proposal = new vscode_1.CompletionItem(localize(3, null));
             proposal.insertText = '"{{latest}}"';
+            proposal.filterText = '""';
             proposal.kind = vscode_1.CompletionItemKind.Value;
             proposal.documentation = 'The latest version of the package';
             collector.add(proposal);
@@ -156,7 +159,7 @@ var BowerJSONContribution = (function () {
                 htmlContent_1.push(localize(4, null, pack));
                 return this.getInfo(pack).then(function (documentation) {
                     if (documentation) {
-                        htmlContent_1.push(documentation);
+                        htmlContent_1.push({ language: 'string', value: documentation });
                     }
                     return htmlContent_1;
                 });

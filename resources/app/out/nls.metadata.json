@@ -38,11 +38,16 @@
 			"noWorkspace",
 			"pleaseRestartToDebug"
 		],
-		"vs/workbench/parts/debug/browser/repl": [
+		"vs/workbench/parts/debug/electron-browser/repl": [
 			"replAriaLabel"
 		],
 		"vs/workbench/parts/extensions/electron-browser/extensionsViewlet": [
 			"searchExtensions"
+		],
+		"vs/workbench/parts/terminal/electron-browser/terminalPanel": [
+			"createNewTerminal",
+			"copy",
+			"paste"
 		],
 		"vs/code/electron-main/main": [
 			"newWindow"
@@ -51,6 +56,7 @@
 			"notFound",
 			"notInstalled",
 			"useId",
+			"successVsixInstall",
 			"alreadyInstalled",
 			"foundExtension",
 			"installing",
@@ -90,6 +96,9 @@
 			"illegalStateError2",
 			"loaderError",
 			"loaderErrorNative"
+		],
+		"vs/editor/contrib/suggest/electron-browser/snippetCompletion": [
+			"snippet.suggestions.label"
 		],
 		"vs/platform/actions/browser/menusExtensionPoint": [
 			"requirearry",
@@ -202,7 +211,8 @@
 			"explorerConfigurationTitle",
 			"openEditorsVisible",
 			"dynamicHeight",
-			"autoReveal"
+			"autoReveal",
+			"enableDragAndDrop"
 		],
 		"vs/workbench/parts/files/electron-browser/files.electron.contribution": [
 			"filesCategory"
@@ -252,7 +262,6 @@
 			"showDebugHover",
 			"conditionalBreakpointEditorAction",
 			"debugEvaluate",
-			"addToWatch",
 			"runToCursor",
 			"debug",
 			{
@@ -272,7 +281,6 @@
 			"extensionsCommands",
 			"galleryExtensionsCommands",
 			"extension",
-			"extensions",
 			"view"
 		],
 		"vs/workbench/parts/extensions/electron-browser/extensionsQuickOpen": [
@@ -293,8 +301,11 @@
 			"terminal.integrated.shellArgs.osx",
 			"terminal.integrated.shell.windows",
 			"terminal.integrated.fontFamily",
+			"terminal.integrated.fontLigatures",
 			"terminal.integrated.fontSize",
 			"terminal.integrated.lineHeight",
+			"terminal.integrated.cursorBlinking",
+			"terminal.integrated.setLocaleVariables",
 			"terminal",
 			"viewCategory"
 		],
@@ -414,6 +425,7 @@
 			"selectTheme.label",
 			"problemChangingTheme",
 			"themes.selectTheme",
+			"findMore",
 			"preferences"
 		],
 		"vs/workbench/parts/update/electron-browser/update.contribution": [
@@ -445,6 +457,12 @@
 			"later",
 			"laterInfo",
 			"shellCommand"
+		],
+		"vs/workbench/electron-browser/nps.contribution": [
+			"surveyQuestion",
+			"takeSurvey",
+			"remindLater",
+			"neverAgain"
 		],
 		"vs/workbench/electron-browser/main.contribution": [
 			"view",
@@ -489,44 +507,10 @@
 			"opt.mimetypes",
 			"invalid"
 		],
-		"vs/platform/jsonschemas/common/jsonContributionRegistry": [
-			"schema.json",
-			"schema.json.id",
-			"schema.json.$schema",
-			"schema.json.title",
-			"schema.json.description",
-			"schema.json.default",
-			"schema.json.multipleOf",
-			"schema.json.maximum",
-			"schema.json.exclusiveMaximum",
-			"schema.json.minimum",
-			"schema.json.exclusiveMininum",
-			"schema.json.maxLength",
-			"schema.json.minLength",
-			"schema.json.pattern",
-			"schema.json.additionalItems",
-			"schema.json.items",
-			"schema.json.maxItems",
-			"schema.json.minItems",
-			"schema.json.uniqueItems",
-			"schema.json.maxProperties",
-			"schema.json.minProperties",
-			"schema.json.required",
-			"schema.json.additionalProperties",
-			"schema.json.definitions",
-			"schema.json.properties",
-			"schema.json.patternProperties",
-			"schema.json.dependencies",
-			"schema.json.enum",
-			"schema.json.type",
-			"schema.json.format",
-			"schema.json.allOf",
-			"schema.json.anyOf",
-			"schema.json.oneOf",
-			"schema.json.not"
-		],
-		"vs/editor/common/modes/supports/suggestSupport": [
-			"editor.wordBasedSuggestions"
+		"vs/editor/common/editorCommon": [
+			"editorCommand.cursorMove.description",
+			"editorCommand.cursorMove.arg.name",
+			"editorCommand.cursorMove.arg.description"
 		],
 		"vs/languages/html/common/htmlTags": [
 			"tags.html",
@@ -693,6 +677,7 @@
 		],
 		"vs/platform/message/common/message": [
 			"close",
+			"later",
 			"cancel"
 		],
 		"vs/base/common/keyCodes": [
@@ -716,9 +701,7 @@
 		"vs/workbench/parts/search/browser/searchResultsView": [
 			"searchMatches",
 			"searchMatch",
-			"noMatches",
 			"fileMatchAriaLabel",
-			"emptyMatchAriaLabel",
 			"replacePreviewResultAria",
 			"searchResultAria"
 		],
@@ -774,9 +757,11 @@
 			"gitConfigurationTitle",
 			"gitEnabled",
 			"gitPath",
+			"gitAutoRefresh",
 			"gitAutoFetch",
 			"gitLongCommit",
-			"gitLargeRepos"
+			"gitLargeRepos",
+			"confirmSync"
 		],
 		"vs/workbench/parts/git/browser/views/changes/changesView": [
 			"needMessage",
@@ -815,9 +800,6 @@
 			"setting",
 			"allo"
 		],
-		"vs/workbench/parts/git/node/git.lib": [
-			"fileBinaryError"
-		],
 		"vs/workbench/browser/parts/editor/stringEditor": [
 			"textEditor",
 			"readonlyEditorWithInputAriaLabel",
@@ -825,7 +807,7 @@
 			"untitledFileEditorWithInputAriaLabel",
 			"untitledFileEditorAriaLabel"
 		],
-		"vs/workbench/parts/output/common/outputEditorInput": [
+		"vs/workbench/parts/output/browser/outputEditorInput": [
 			"output",
 			"outputChannel"
 		],
@@ -834,7 +816,7 @@
 			"clearOutput",
 			"switchToOutput.label"
 		],
-		"vs/workbench/parts/debug/electron-browser/debugActions": [
+		"vs/workbench/parts/debug/browser/debugActions": [
 			"debugActionLabelAndKeybinding",
 			"openLaunchJson",
 			"launchJsonNeedsConfigurtion",
@@ -850,6 +832,7 @@
 			"disconnectDebug",
 			"continueDebug",
 			"pauseDebug",
+			"restartFrame",
 			"removeBreakpoint",
 			"removeAllBreakpoints",
 			"toggleEnablement",
@@ -863,14 +846,12 @@
 			"addConditionalBreakpoint",
 			"editConditionalBreakpoint",
 			"setValue",
-			"copyValue",
 			"addWatchExpression",
 			"addToWatchExpressions",
 			"renameWatchExpression",
 			"removeWatchExpression",
 			"removeAllWatchExpressions",
 			"clearRepl",
-			"copy",
 			{
 				"comment": [
 					"Debug is a noun in this context, not a verb."
@@ -883,7 +864,7 @@
 		"vs/workbench/parts/debug/browser/debugActionItems": [
 			"noConfigurations"
 		],
-		"vs/workbench/parts/debug/browser/replViewer": [
+		"vs/workbench/parts/debug/electron-browser/replViewer": [
 			"stateCapture",
 			"fileLinkMac",
 			"fileLink",
@@ -911,11 +892,11 @@
 			"restartNow",
 			"toggleExtensionsViewlet",
 			"installExtensions",
+			"showInstalledExtensions",
 			"clearExtensionsInput",
 			"showOutdatedExtensions",
 			"showPopularExtensions",
-			"showExtensionRecommendations",
-			"showInstalledExtensions"
+			"showRecommendedExtensions"
 		],
 		"vs/platform/extensionManagement/common/extensionManagement": [
 			"extensions"
@@ -964,13 +945,27 @@
 			"workbench.action.terminal.toggleTerminal",
 			"workbench.action.terminal.kill",
 			"workbench.action.terminal.kill.short",
+			"workbench.action.terminal.copySelection",
 			"workbench.action.terminal.new",
 			"workbench.action.terminal.new.short",
 			"workbench.action.terminal.focus",
 			"workbench.action.terminal.focusNext",
 			"workbench.action.terminal.focusPrevious",
+			"workbench.action.terminal.paste",
 			"workbench.action.terminal.runSelectedText",
 			"workbench.action.terminal.switchTerminalInstance"
+		],
+		"vs/base/browser/ui/actionbar/actionbar": [
+			{
+				"key": "titleLabel",
+				"comment": [
+					"action title",
+					"action keybinding"
+				]
+			}
+		],
+		"vs/workbench/parts/terminal/electron-browser/terminalInstance": [
+			"terminal.integrated.exitedWithCode"
 		],
 		"vs/workbench/node/extensionHostMain": [
 			"overwritingExtension",
@@ -1579,7 +1574,6 @@
 			"miDownloadingUpdate",
 			"miInstallingUpdate",
 			"miCheckForUpdates",
-			"miLastCheckedAt",
 			"aboutDetail",
 			"okButton"
 		],
@@ -1592,10 +1586,12 @@
 			"goto",
 			"locale",
 			"newWindow",
+			"performance",
 			"reuseWindow",
 			"userDataDir",
 			"verbose",
 			"wait",
+			"extensionHomePath",
 			"listExtensions",
 			"installExtension",
 			"uninstallExtension",
@@ -1705,6 +1701,7 @@
 			"references.action.name"
 		],
 		"vs/editor/contrib/rename/browser/rename": [
+			"rename.failed",
 			"rename.label"
 		],
 		"vs/editor/contrib/smartSelect/common/smartSelect": [
@@ -1831,8 +1828,7 @@
 			"actionNotEnabled",
 			"",
 			"commandLabel",
-			"noCommandsMatching",
-			"QuickCommandsAction.label"
+			"noCommandsMatching"
 		],
 		"vs/workbench/parts/quickopen/browser/gotoLineHandler": [
 			"gotoLine",
@@ -1876,15 +1872,6 @@
 			"openEditors",
 			"treeAriaLabel",
 			"dirtyCounter"
-		],
-		"vs/base/browser/ui/actionbar/actionbar": [
-			{
-				"key": "titleLabel",
-				"comment": [
-					"action title",
-					"action keybinding"
-				]
-			}
 		],
 		"vs/workbench/parts/files/browser/fileActions": [
 			"retry",
@@ -2082,19 +2069,11 @@
 			},
 			"publishPickMessage",
 			"authFailed",
+			"sureSync",
 			"authFailed",
-			"synchronizing",
-			"currentlyDetached",
-			"noUpstream",
-			"currentBranch",
-			"dirtyChanges",
-			"currentBranchSingle",
-			"currentBranchSinglePlural",
-			"currentBranchPluralSingle",
-			"currentBranchPlural",
 			"undoLastCommit"
 		],
-		"vs/workbench/parts/debug/browser/debugViews": [
+		"vs/workbench/parts/debug/electron-browser/debugViews": [
 			"variablesSection",
 			"variables",
 			"variablesAriaTreeLabel",
@@ -2150,7 +2129,7 @@
 			"debugSourceNotAvailable",
 			"debuggingContinued"
 		],
-		"vs/workbench/parts/debug/browser/debugEditorContribution": [
+		"vs/workbench/parts/debug/electron-browser/debugEditorContribution": [
 			"addBreakpoint"
 		],
 		"vs/workbench/parts/html/browser/htmlPreviewPart": [
@@ -2169,10 +2148,14 @@
 			"outdatedExtensions"
 		],
 		"vs/workbench/parts/extensions/electron-browser/extensionEditor": [
-			"license"
+			"license",
+			"noReadme"
 		],
 		"vs/editor/common/modes/modesRegistry": [
 			"plainText.alias"
+		],
+		"vs/workbench/parts/terminal/electron-browser/terminalService": [
+			"terminal.integrated.copySelection.noSelection"
 		],
 		"vs/workbench/services/history/browser/history": [
 			"devExtensionWindowTitle",
@@ -2198,6 +2181,8 @@
 		"vs/workbench/browser/parts/panel/panelPart": [
 			"closePanel",
 			"togglePanel",
+			"focusPanel",
+			"view",
 			"view"
 		],
 		"vs/workbench/browser/parts/statusbar/statusbarPart": [
@@ -2243,7 +2228,8 @@
 			"tsc.watch",
 			"dotnetCore",
 			"msbuild",
-			"externalCommand"
+			"externalCommand",
+			"Maven"
 		],
 		"vs/workbench/parts/tasks/node/processRunnerSystem": [
 			"TaskRunnerSystem.noBuildTask",
@@ -2371,7 +2357,18 @@
 			"invalid.url.schema"
 		],
 		"vs/editor/node/languageConfiguration": [
-			"parseErrors"
+			"parseErrors",
+			"schema.openBracket",
+			"schema.closeBracket",
+			"schema.comments",
+			"schema.blockComments",
+			"schema.blockComment.begin",
+			"schema.blockComment.end",
+			"schema.lineComment",
+			"schema.brackets",
+			"schema.autoClosingPairs",
+			"schema.autoClosingPairs.notIn",
+			"schema.surroundingPairs"
 		],
 		"vs/workbench/electron-browser/actions": [
 			"closeActiveEditor",
@@ -2418,7 +2415,9 @@
 			"previousSelectionMatchFindAction",
 			"startReplace",
 			"moveSelectionToNextFindMatch",
-			"addSelectionToNextFindMatch"
+			"moveSelectionToPreviousFindMatch",
+			"addSelectionToNextFindMatch",
+			"addSelectionToPreviousFindMatch"
 		],
 		"vs/workbench/parts/git/browser/gitWidgets": [
 			"publishBranch",
@@ -2467,11 +2466,14 @@
 			"ariaLabelChanges",
 			"ariaLabelMerge"
 		],
+		"vs/workbench/parts/git/node/git.lib": [
+			"fileBinaryError"
+		],
 		"vs/workbench/parts/debug/browser/breakpointWidget": [
 			"breakpointWidgetPlaceholder",
 			"breakpointWidgetAriaLabel"
 		],
-		"vs/workbench/parts/debug/browser/debugViewer": [
+		"vs/workbench/parts/debug/electron-browser/debugViewer": [
 			"thread",
 			"paused",
 			{
@@ -2492,17 +2494,73 @@
 			"watchVariableAriaLabel",
 			"functionBreakpointPlaceholder",
 			"functionBreakPointInputAriaLabel",
+			"functionBreakpointsNotSupported",
 			"breakpointAriaLabel",
 			"functionBreakpointAriaLabel",
 			"exceptionBreakpointAriaLabel"
+		],
+		"vs/workbench/parts/debug/electron-browser/electronDebugActions": [
+			"copyValue",
+			"copy"
 		],
 		"vs/workbench/parts/files/common/editors/textFileEditorModel": [
 			"genericSaveError",
 			"unexpectedEventError",
 			"saveFileFirst"
 		],
+		"vs/editor/common/config/defaultConfig": [
+			"editorViewAccessibleLabel"
+		],
 		"vs/base/node/processes": [
 			"TaskRunner.UNC"
+		],
+		"vs/editor/common/config/commonEditorConfig": [
+			"editorConfigurationTitle",
+			"fontFamily",
+			"fontSize",
+			"lineHeight",
+			"lineNumbers",
+			"glyphMargin",
+			"rulers",
+			"wordSeparators",
+			"tabSize",
+			"tabSize.errorMessage",
+			"insertSpaces",
+			"insertSpaces.errorMessage",
+			"detectIndentation",
+			"roundedSelection",
+			"scrollBeyondLastLine",
+			"wrappingColumn",
+			"wrappingIndent",
+			"mouseWheelScrollSensitivity",
+			"quickSuggestions",
+			"quickSuggestionsDelay",
+			"parameterHints",
+			"autoClosingBrackets",
+			"formatOnType",
+			"suggestOnTriggerCharacters",
+			"acceptSuggestionOnEnter",
+			"snippetSuggestions",
+			"wordBasedSuggestions",
+			"tabCompletion",
+			"selectionHighlight",
+			"overviewRulerLanes",
+			"cursorBlinking",
+			"mouseWheelZoom",
+			"cursorStyle",
+			"fontLigatures",
+			"hideCursorInOverviewRuler",
+			"renderWhitespace",
+			"renderControlCharacters",
+			"renderIndentGuides",
+			"referenceInfos",
+			"folding",
+			"useTabStops",
+			"trimAutoWhitespace",
+			"stablePeek",
+			"sideBySide",
+			"ignoreTrimWhitespace",
+			"selectionClipboard"
 		],
 		"vs/workbench/node/extensionPoints": [
 			"jsonParseFail",
@@ -2531,57 +2589,6 @@
 			"error.closeBraceExpected",
 			"error.closeBracketExpected",
 			"error.endOfFileExpected"
-		],
-		"vs/editor/common/config/defaultConfig": [
-			"editorViewAccessibleLabel"
-		],
-		"vs/editor/common/config/commonEditorConfig": [
-			"editorConfigurationTitle",
-			"fontFamily",
-			"fontSize",
-			"lineHeight",
-			"lineNumbers",
-			"glyphMargin",
-			"rulers",
-			"wordSeparators",
-			"tabSize",
-			"tabSize.errorMessage",
-			"insertSpaces",
-			"insertSpaces.errorMessage",
-			"detectIndentation",
-			"roundedSelection",
-			"scrollBeyondLastLine",
-			"wrappingColumn",
-			"wrappingIndent",
-			"mouseWheelScrollSensitivity",
-			"quickSuggestions",
-			"quickSuggestionsDelay",
-			"parameterHints",
-			"autoClosingBrackets",
-			"formatOnType",
-			"suggestOnTriggerCharacters",
-			"acceptSuggestionOnEnter",
-			"selectionHighlight",
-			"overviewRulerLanes",
-			"cursorBlinking",
-			"mouseWheelZoom",
-			"cursorStyle",
-			"fontLigatures",
-			"hideCursorInOverviewRuler",
-			"renderWhitespace",
-			"renderControlCharacters",
-			"renderIndentGuides",
-			"referenceInfos",
-			"folding",
-			"useTabStops",
-			"trimAutoWhitespace",
-			"stablePeek",
-			"sideBySide",
-			"ignoreTrimWhitespace",
-			"selectionClipboard"
-		],
-		"vs/platform/actions/browser/menuItemActionItem": [
-			"titleAndKb"
 		],
 		"vs/editor/contrib/find/browser/findWidget": [
 			"label.find",
@@ -2647,6 +2654,9 @@
 			"ariaCurrentSuggestionWithDetails",
 			"ariaCurrentSuggestion"
 		],
+		"vs/platform/actions/browser/menuItemActionItem": [
+			"titleAndKb"
+		],
 		"vs/workbench/parts/files/browser/views/openEditorsViewer": [
 			"editorGroupAriaLabel",
 			"openEditorAriaLabel",
@@ -2696,7 +2706,9 @@
 			"removeFromEditorHistory",
 			"quickNavigateNext",
 			"quickNavigatePrevious",
-			"focusLastEditorInStack"
+			"focusLastEditorInStack",
+			"moveEditorToLeftGroup",
+			"moveEditorToRightGroup"
 		],
 		"vs/workbench/parts/files/browser/saveErrorHandler": [
 			"overwrite",
@@ -2771,6 +2783,8 @@
 			"vscode.extension.contributes.debuggers.osx.runtime",
 			"vscode.extension.contributes.debuggers.linux",
 			"vscode.extension.contributes.debuggers.linux.runtime",
+			"vscode.extension.contributes.breakpoints",
+			"vscode.extension.contributes.breakpoints.language",
 			"app.launch.json.title",
 			"app.launch.json.version",
 			"app.launch.json.configurations",
@@ -2787,7 +2801,7 @@
 			"extensionHostProcess.crash",
 			"reloadWindow"
 		],
-		"vs/workbench/parts/debug/browser/debugHover": [
+		"vs/workbench/parts/debug/electron-browser/debugHover": [
 			"treeAriaLabel"
 		],
 		"vs/workbench/browser/parts/activitybar/activityAction": [
@@ -2806,9 +2820,7 @@
 			"showEditorTabs",
 			"enablePreview",
 			"enablePreviewFromQuickOpen",
-			"editorOpenPositioning",
-			"commandDeprecated",
-			"openKeybindings"
+			"editorOpenPositioning"
 		],
 		"vs/workbench/browser/parts/compositePart": [
 			"compositeTitleTooltip",
@@ -2916,6 +2928,7 @@
 			"corrupt.commands"
 		],
 		"vs/base/browser/ui/resourceviewer/resourceViewer": [
+			"imgTitle",
 			"missingAudioSupport",
 			"missingVideoSupport",
 			"nativeBinaryError"
@@ -2940,8 +2953,7 @@
 			"closeRight",
 			"closeAll",
 			"keepOpen",
-			"moveLeft",
-			"moveRight",
+			"showOpenedEditors",
 			"araLabelEditorActions"
 		],
 		"vs/workbench/browser/parts/editor/binaryDiffEditor": [
@@ -2998,6 +3010,11 @@
 			"pickAction",
 			"pickEncodingForReopen",
 			"pickEncodingForSave"
+		],
+		"vs/workbench/browser/parts/editor/editorCommands": [
+			"editorCommand.activeEditorMove.description",
+			"editorCommand.activeEditorMove.arg.name",
+			"editorCommand.activeEditorMove.arg.description"
 		],
 		"vs/platform/markers/common/problemMatcher": [
 			"ProblemMatcherParser.invalidMarkerDescription",
@@ -3057,11 +3074,16 @@
 			"There is no currently opened folder.",
 			"Open a folder in order to start debugging."
 		],
-		"vs/workbench/parts/debug/browser/repl": [
+		"vs/workbench/parts/debug/electron-browser/repl": [
 			"Read Eval Print Loop Panel"
 		],
 		"vs/workbench/parts/extensions/electron-browser/extensionsViewlet": [
 			"Search Extensions in Marketplace"
+		],
+		"vs/workbench/parts/terminal/electron-browser/terminalPanel": [
+			"New Terminal",
+			"Copy",
+			"Paste"
 		],
 		"vs/code/electron-main/main": [
 			"New Window"
@@ -3069,7 +3091,8 @@
 		"vs/code/node/cliProcessMain": [
 			"Extension '{0}' not found.",
 			"Extension '{0}' is not installed.",
-			"Make sure you use the full extension ID, eg: {0}",
+			"Make sure you use the full extension ID, including the publisher, eg: {0}",
+			"Extension '{0}' was successfully installed!",
 			"Extension '{0}' is already installed.",
 			"Found '{0}' in the marketplace.",
 			"Installing...",
@@ -3098,6 +3121,9 @@
 			"Illegal state",
 			"Failed to load a required file. Either you are no longer connected to the internet or the server you are connected to is offline. Please refresh the browser to try again.",
 			"Failed to load a required file. Please restart the application to try again. Details: {0}"
+		],
+		"vs/editor/contrib/suggest/electron-browser/snippetCompletion": [
+			"Insert Snippet"
 		],
 		"vs/platform/actions/browser/menusExtensionPoint": [
 			"menu items must be an arry",
@@ -3210,7 +3236,8 @@
 			"File Explorer",
 			"Number of editors shown in the Open Editors pane. Set it to 0 to hide the pane.",
 			"Controls if the height of the open editors section should adapt dynamically to the number of elements or not.",
-			"Controls if the explorer should automatically reveal files when opening them."
+			"Controls if the explorer should automatically reveal files when opening them.",
+			"Controls if the explorer should allow to move files and folders via drag and drop."
 		],
 		"vs/workbench/parts/files/electron-browser/files.electron.contribution": [
 			"Files"
@@ -3255,7 +3282,6 @@
 			"Debug: Show Hover",
 			"Debug: Conditional Breakpoint",
 			"Debug: Evaluate",
-			"Debug: Add to Watch",
 			"Debug: Run to Cursor",
 			"Debug",
 			"Debug Console",
@@ -3270,7 +3296,6 @@
 			"Manage Extensions",
 			"Install Gallery Extensions",
 			"Extension",
-			"Extensions",
 			"View"
 		],
 		"vs/workbench/parts/extensions/electron-browser/extensionsQuickOpen": [
@@ -3289,10 +3314,13 @@
 			"The command line arguments to use when on the Linux terminal.",
 			"The path of the shell that the terminal uses on OS X.",
 			"The command line arguments to use when on the OS X terminal.",
-			"The path of the shell that the terminal uses on Windows.",
+			"The path of the shell that the terminal uses on Windows. When using shells shipped with Windows (cmd, PowerShell or Bash on Ubuntu), prefer C:\\Windows\\sysnative over C:\\Windows\\System32 to use the 64-bit versions.",
 			"Controls the font family of the terminal, this defaults to editor.fontFamily's value.",
+			"Controls whether font ligatures are enabled in the terminal.",
 			"Controls the font size of the terminal, this defaults to editor.fontSize's value.",
-			"Controls the line height of the terminal, this defaults to normal.",
+			"Controls the line height of the terminal, this number is multipled by the terminal font size to get the actual line-height in pixels.",
+			"Controls whether the terminal cursor blinks.",
+			"Controls whether locale variables are set at startup of the terminal, this defaults to true on OS X, false on other platforms.",
 			"Terminal",
 			"View"
 		],
@@ -3393,7 +3421,7 @@
 			"Open in Terminal"
 		],
 		"vs/workbench/parts/snippets/electron-browser/snippets.contribution": [
-			"Snippets",
+			"Open User Snippets",
 			"Select Language for Snippet",
 			"Unable to create {0}",
 			"Preferences",
@@ -3407,6 +3435,7 @@
 			"Color Theme",
 			"Problem loading theme: {0}",
 			"Select Color Theme",
+			"Find more in the Marketplace...",
 			"Preferences"
 		],
 		"vs/workbench/parts/update/electron-browser/update.contribution": [
@@ -3438,6 +3467,12 @@
 			"Later",
 			"Remember you can always run the '{0}' action from the Command Palette.",
 			"Shell Command"
+		],
+		"vs/workbench/electron-browser/nps.contribution": [
+			"Do you mind taking a quick feedback survey?",
+			"Take Survey",
+			"Remind Me later",
+			"Never Show Again"
 		],
 		"vs/workbench/electron-browser/main.contribution": [
 			"View",
@@ -3482,44 +3517,10 @@
 			"property `{0}` can be omitted and must be of type `string[]`",
 			"Invalid `contributes.{0}`. Expected an array."
 		],
-		"vs/platform/jsonschemas/common/jsonContributionRegistry": [
-			"Describes a JSON file using a schema. See json-schema.org for more info.",
-			"A unique identifier for the schema.",
-			"The schema to verify this document against ",
-			"A descriptive title of the element",
-			"A long description of the element. Used in hover menus and suggestions.",
-			"A default value. Used by suggestions.",
-			"A number that should cleanly divide the current value (i.e. have no remainder)",
-			"The maximum numerical value, inclusive by default.",
-			"Makes the maximum property exclusive.",
-			"The minimum numerical value, inclusive by default.",
-			"Makes the minimum property exclusive.",
-			"The maximum length of a string.",
-			"The minimum length of a string.",
-			"A regular expression to match the string against. It is not implicitly anchored.",
-			"For arrays, only when items is set as an array. If it is a schema, then this schema validates items after the ones specified by the items array. If it is false, then additional items will cause validation to fail.",
-			"For arrays. Can either be a schema to validate every element against or an array of schemas to validate each item against in order (the first schema will validate the first element, the second schema will validate the second element, and so on.",
-			"The maximum number of items that can be inside an array. Inclusive.",
-			"The minimum number of items that can be inside an array. Inclusive.",
-			"If all of the items in the array must be unique. Defaults to false.",
-			"The maximum number of properties an object can have. Inclusive.",
-			"The minimum number of properties an object can have. Inclusive.",
-			"An array of strings that lists the names of all properties required on this object.",
-			"Either a schema or a boolean. If a schema, then used to validate all properties not matched by 'properties' or 'patternProperties'. If false, then any properties not matched by either will cause this schema to fail.",
-			"Not used for validation. Place subschemas here that you wish to reference inline with $ref",
-			"A map of property names to schemas for each property.",
-			"A map of regular expressions on property names to schemas for matching properties.",
-			"A map of property names to either an array of property names or a schema. An array of property names means the property named in the key depends on the properties in the array being present in the object in order to be valid. If the value is a schema, then the schema is only applied to the object if the property in the key exists on the object.",
-			"The set of literal values that are valid",
-			"Either a string of one of the basic schema types (number, integer, null, array, object, boolean, string) or an array of strings specifying a subset of those types.",
-			"Describes the format expected for the value.",
-			"An array of schemas, all of which must match.",
-			"An array of schemas, where at least one must match.",
-			"An array of schemas, exactly one of which must match.",
-			"A schema which must not match."
-		],
-		"vs/editor/common/modes/supports/suggestSupport": [
-			"Enable word based suggestions."
+		"vs/editor/common/editorCommon": [
+			"Move cursor to a logical position in the view",
+			"Cursor move argument",
+			"Argument containing mandatory 'to' value and an optional 'inSelectionMode' value. Value of 'to' has to be a defined value in `CursorMoveViewPosition`."
 		],
 		"vs/languages/html/common/htmlTags": [
 			"The html element represents the root of an HTML document.",
@@ -3686,6 +3687,7 @@
 		],
 		"vs/platform/message/common/message": [
 			"Close",
+			"Later",
 			"Cancel"
 		],
 		"vs/base/common/keyCodes": [
@@ -3709,9 +3711,7 @@
 		"vs/workbench/parts/search/browser/searchResultsView": [
 			"{0} matches found",
 			"{0} match found",
-			"no matches",
 			"{0} matches in file {1} of folder {2}, Search result",
-			"No matches",
 			"Replace preview result, {0}",
 			"{0}, Search result"
 		],
@@ -3767,9 +3767,11 @@
 			"Git",
 			"Is git enabled",
 			"Path to the git executable",
+			"Whether auto refreshing is enabled",
 			"Whether auto fetching is enabled.",
 			"Whether long commit messages should be warned about.",
-			"Always allow large repositories to be managed by Code."
+			"Always allow large repositories to be managed by Code.",
+			"Confirm before synchronizing git repositories."
 		],
 		"vs/workbench/parts/git/browser/views/changes/changesView": [
 			"Please provide a commit message. You can always press **{0}** to commit changes. If there are any staged changes, only those will be committed; otherwise, all changes will.",
@@ -3808,9 +3810,6 @@
 			"You can permanently disable this warning with the following setting:",
 			"Allow large repositories"
 		],
-		"vs/workbench/parts/git/node/git.lib": [
-			"File seems to be binary and cannot be opened as text"
-		],
 		"vs/workbench/browser/parts/editor/stringEditor": [
 			"Text Editor",
 			"{0}. Readonly text editor.",
@@ -3818,7 +3817,7 @@
 			"{0}. Untitled file text editor.",
 			"Untitled file text editor."
 		],
-		"vs/workbench/parts/output/common/outputEditorInput": [
+		"vs/workbench/parts/output/browser/outputEditorInput": [
 			"Output",
 			"for '{0}'"
 		],
@@ -3827,7 +3826,7 @@
 			"Clear Output",
 			"Switch to Output"
 		],
-		"vs/workbench/parts/debug/electron-browser/debugActions": [
+		"vs/workbench/parts/debug/browser/debugActions": [
 			"{0} ({1})",
 			"Open {0}",
 			"Configure or Fix 'launch.json'",
@@ -3843,6 +3842,7 @@
 			"Disconnect",
 			"Continue",
 			"Pause",
+			"Restart Frame",
 			"Remove Breakpoint",
 			"Remove All Breakpoints",
 			"Enable/Disable Breakpoint",
@@ -3856,14 +3856,12 @@
 			"Add Conditional Breakpoint",
 			"Edit Breakpoint",
 			"Set Value",
-			"Copy Value",
 			"Add Expression",
 			"Add to Watch",
 			"Rename Expression",
 			"Remove Expression",
 			"Remove All Expressions",
 			"Clear Console",
-			"Copy",
 			"Debug Console",
 			"New Output in Debug Console",
 			"Start Without Debugging"
@@ -3871,7 +3869,7 @@
 		"vs/workbench/parts/debug/browser/debugActionItems": [
 			"No Configurations"
 		],
-		"vs/workbench/parts/debug/browser/replViewer": [
+		"vs/workbench/parts/debug/electron-browser/replViewer": [
 			"Object state is captured from first evaluation",
 			"Click to follow (Cmd + click opens to the side)",
 			"Click to follow (Ctrl + click opens to the side)",
@@ -3899,11 +3897,11 @@
 			"Restart Now",
 			"Show Extensions",
 			"Install Extensions",
+			"Show Installed Extensions",
 			"Clear Extensions Input",
 			"Show Outdated Extensions",
 			"Show Popular Extensions",
-			"Show Extension Recommendations",
-			"Show Installed Extensions"
+			"Show Recommended Extensions"
 		],
 		"vs/platform/extensionManagement/common/extensionManagement": [
 			"Extensions"
@@ -3952,13 +3950,21 @@
 			"Toggle Integrated Terminal",
 			"Terminal: Kill the Active Terminal Instance",
 			"Kill Terminal",
+			"Terminal: Copy Selection",
 			"Terminal: Create New Integrated Terminal",
 			"New Terminal",
 			"Terminal: Focus Terminal",
 			"Terminal: Focus Next Terminal",
 			"Terminal: Focus Previous Terminal",
+			"Terminal: Paste into Active Terminal",
 			"Terminal: Run Selected Text In Active Terminal",
 			"Terminal: Switch Terminal Instance"
+		],
+		"vs/base/browser/ui/actionbar/actionbar": [
+			"{0} ({1})"
+		],
+		"vs/workbench/parts/terminal/electron-browser/terminalInstance": [
+			"The terminal process terminated with exit code: {0}"
 		],
 		"vs/workbench/node/extensionHostMain": [
 			"Overwriting extension {0} with {1}.",
@@ -3985,7 +3991,7 @@
 			"&&File",
 			"&&Edit",
 			"&&View",
-			"&&Goto",
+			"&&Go",
 			"Window",
 			"&&Help",
 			"&&New Window",
@@ -4092,7 +4098,6 @@
 			"Downloading Update...",
 			"Installing Update...",
 			"Check For Updates...",
-			"Last checked at {0}",
 			"\nVersion {0}\nCommit {1}\nDate {2}\nShell {3}\nRenderer {4}\nNode {5}",
 			"OK"
 		],
@@ -4105,10 +4110,12 @@
 			"Open the file at path at the line and column (add :line[:column] to path).",
 			"The locale to use (e.g. en-US or zh-TW).",
 			"Force a new instance of Code.",
+			"Start with the 'Developer: Startup Performance' command enabled.",
 			"Force opening a file or folder in the last active window.",
 			"Specifies the directory that user data is kept in, useful when running as root.",
 			"Print verbose output (implies --wait).",
 			"Wait for the window to be closed before returning.",
+			"Set the root path for extensions.",
 			"List the installed extensions.",
 			"Installs an extension.",
 			"Uninstalls an extension.",
@@ -4218,6 +4225,7 @@
 			"Find All References"
 		],
 		"vs/editor/contrib/rename/browser/rename": [
+			"Sorry, rename failed to execute.",
 			"Rename Symbol"
 		],
 		"vs/editor/contrib/smartSelect/common/smartSelect": [
@@ -4339,8 +4347,7 @@
 			"Command '{0}' is not enabled in the current context.",
 			"{0}: {1}",
 			"{0}: {1}",
-			"No commands matching",
-			"Show Editor Commands"
+			"No commands matching"
 		],
 		"vs/workbench/parts/quickopen/browser/gotoLineHandler": [
 			"Go to Line...",
@@ -4379,9 +4386,6 @@
 			"Open Editors",
 			"Open Editors",
 			"{0} unsaved"
-		],
-		"vs/base/browser/ui/actionbar/actionbar": [
-			"{0} ({1})"
 		],
 		"vs/workbench/parts/files/browser/fileActions": [
 			"Retry",
@@ -4534,19 +4538,11 @@
 			"&&Publish",
 			"Pick a remote to publish the branch '{0}' to:",
 			"Authentication failed on the git remote.",
+			"Are you sure you want to synchronize your git repository?",
 			"Authentication failed on the git remote.",
-			"Synchronizing...",
-			"Can't sync in detached mode.",
-			"Current branch '{0} doesn't have an upstream branch configured.",
-			"Current branch '{0}' is up to date.",
-			"Please commit, undo or stash your changes before synchronizing.",
-			"Current branch '{0}' is {1} commit behind and {2} commit ahead of '{3}'.",
-			"Current branch '{0}' is {1} commit behind and {2} commits ahead of '{3}'.",
-			"Current branch '{0}' is {1} commits behind and {2} commit ahead of '{3}'.",
-			"Current branch '{0}' is {1} commits behind and {2} commits ahead of '{3}'.",
 			"Undo Last Commit"
 		],
-		"vs/workbench/parts/debug/browser/debugViews": [
+		"vs/workbench/parts/debug/electron-browser/debugViews": [
 			"Variables Section",
 			"Variables",
 			"Debug Variables",
@@ -4587,7 +4583,7 @@
 			"Source {0} is not available.",
 			"Debugging continued."
 		],
-		"vs/workbench/parts/debug/browser/debugEditorContribution": [
+		"vs/workbench/parts/debug/electron-browser/debugEditorContribution": [
 			"Add Breakpoint"
 		],
 		"vs/workbench/parts/html/browser/htmlPreviewPart": [
@@ -4600,16 +4596,20 @@
 		],
 		"vs/workbench/parts/extensions/electron-browser/extensionsWorkbenchExtension": [
 			"Extensions were successfully installed. Restart to enable them.",
-			"{0} was successfully installed. Restart to enable it.",
+			"Extension was successfully installed. Restart to enable it.",
 			"Restart Now",
 			"Extensions",
 			"{0} Outdated Extensions"
 		],
 		"vs/workbench/parts/extensions/electron-browser/extensionEditor": [
-			"License"
+			"License",
+			"No README available."
 		],
 		"vs/editor/common/modes/modesRegistry": [
 			"Plain Text"
+		],
+		"vs/workbench/parts/terminal/electron-browser/terminalService": [
+			"Cannot copy terminal selection when terminal does not have focus"
 		],
 		"vs/workbench/services/history/browser/history": [
 			"[Extension Development Host] - {0}",
@@ -4635,6 +4635,8 @@
 		"vs/workbench/browser/parts/panel/panelPart": [
 			"Close",
 			"Toggle Panel Visibility",
+			"Focus into Panel",
+			"View",
 			"View"
 		],
 		"vs/workbench/browser/parts/statusbar/statusbarPart": [
@@ -4680,7 +4682,8 @@
 			"Compiles a TypeScript project in watch mode",
 			"Executes .NET Core build command",
 			"Executes the build target",
-			"Example to run an arbitrary external command"
+			"Example to run an arbitrary external command",
+			"Executes common maven commands"
 		],
 		"vs/workbench/parts/tasks/node/processRunnerSystem": [
 			"No build task configured.",
@@ -4790,7 +4793,7 @@
 			"Expected `contributes.{0}.path` ({1}) to be included inside extension's folder ({2}). This might make the extension non-portable."
 		],
 		"vs/editor/node/textMate/TMSnippets": [
-			"Contributes TextMate snippets.",
+			"Contributes snippets.",
 			"Language identifier for which this snippet is contributed to.",
 			"Path of the snippets file. The path is relative to the extension folder and typically starts with './snippets/'.",
 			"Unknown language in `contributes.{0}.language`. Provided value: {1}",
@@ -4808,7 +4811,18 @@
 			"'configuration.jsonValidation.url' must start with 'http:', 'https:' or './' to reference schemas located in the extension"
 		],
 		"vs/editor/node/languageConfiguration": [
-			"Errors parsing {0}: {1}"
+			"Errors parsing {0}: {1}",
+			"The opening bracket character or string sequence.",
+			"The closing bracket character or string sequence.",
+			"Defines the comment symbols",
+			"Defines how block comments are marked.",
+			"The character sequence that starts a block comment.",
+			"The character sequence that ends a block comment.",
+			"The character sequence that starts a line comment.",
+			"Defines the bracket symbols that increase or decrease the indentation.",
+			"Defines the bracket pairs. When a opening bracket is entered, the closing bracket is inserted automatically.",
+			"Defines a list of scopes where the auto pairs are disabled.",
+			"Defines the bracket pairs that can be used to surround a selected string."
 		],
 		"vs/workbench/electron-browser/actions": [
 			"Close Editor",
@@ -4855,7 +4869,9 @@
 			"Find Previous Selection",
 			"Replace",
 			"Move Last Selection To Next Find Match",
-			"Add Selection To Next Find Match"
+			"Move Last Selection To Previous Find Match",
+			"Add Selection To Next Find Match",
+			"Add Selection To Previous Find Match"
 		],
 		"vs/workbench/parts/git/browser/gitWidgets": [
 			"Publish Branch",
@@ -4904,11 +4920,14 @@
 			"Changes, Git",
 			"Merge, Git"
 		],
+		"vs/workbench/parts/git/node/git.lib": [
+			"File seems to be binary and cannot be opened as text"
+		],
 		"vs/workbench/parts/debug/browser/breakpointWidget": [
 			"Breakpoint on line {0} will only stop if this condition is true. 'Enter' to accept, 'esc' to cancel.",
 			"Type the breakpoint condition for line {0}. The program will only stop here if this condition is true. Press Enter to accept or Escape to cancel."
 		],
-		"vs/workbench/parts/debug/browser/debugViewer": [
+		"vs/workbench/parts/debug/electron-browser/debugViewer": [
 			"Thread",
 			"paused",
 			"running",
@@ -4924,17 +4943,73 @@
 			"{0} value {1}, watch, debug",
 			"Function to break on",
 			"Type function breakpoint",
+			"Function breakpoints are not supported by this debug type",
 			"Breakpoint line {0} {1}, breakpoints, debug",
 			"Function breakpoint {0}, breakpoints, debug",
 			"Exception breakpoint {0}, breakpoints, debug"
+		],
+		"vs/workbench/parts/debug/electron-browser/electronDebugActions": [
+			"Copy Value",
+			"Copy"
 		],
 		"vs/workbench/parts/files/common/editors/textFileEditorModel": [
 			"Failed to save '{0}': {1}",
 			"An unexpected error was thrown from a file change listener of type: {0}",
 			"The file is dirty. Please save it first before reopening it with another encoding."
 		],
+		"vs/editor/common/config/defaultConfig": [
+			"Editor content"
+		],
 		"vs/base/node/processes": [
 			"Can't execute a shell command on an UNC drive."
+		],
+		"vs/editor/common/config/commonEditorConfig": [
+			"Editor",
+			"Controls the font family.",
+			"Controls the font size.",
+			"Controls the line height. Use 0 to compute the lineHeight from the fontSize.",
+			"Controls visibility of line numbers",
+			"Controls visibility of the glyph margin",
+			"Columns at which to show vertical rulers",
+			"Characters that will be used as word separators when doing word related navigations or operations",
+			"The number of spaces a tab is equal to.",
+			"Expected 'number'. Note that the value \"auto\" has been replaced by the `editor.detectIndentation` setting.",
+			"Insert spaces when pressing Tab.",
+			"Expected 'boolean'. Note that the value \"auto\" has been replaced by the `editor.detectIndentation` setting.",
+			"When opening a file, `editor.tabSize` and `editor.insertSpaces` will be detected based on the file contents.",
+			"Controls if selections have rounded corners",
+			"Controls if the editor will scroll beyond the last line",
+			"Controls after how many characters the editor will wrap to the next line. Setting this to 0 turns on viewport width wrapping (word wrapping). Setting this to -1 forces the editor to never wrap.",
+			"Controls the indentation of wrapped lines. Can be one of 'none', 'same' or 'indent'.",
+			"A multiplier to be used on the `deltaX` and `deltaY` of mouse wheel scroll events",
+			"Controls if quick suggestions should show up or not while typing",
+			"Controls the delay in ms after which quick suggestions will show up",
+			"Enables parameter hints",
+			"Controls if the editor should automatically close brackets after opening them",
+			"Controls if the editor should automatically format the line after typing",
+			"Controls if suggestions should automatically show up when typing trigger characters",
+			"Controls if suggestions should be accepted 'Enter' - in addition to 'Tab'. Helps to avoid ambiguity between inserting new lines or accepting suggestions.",
+			"Controls whether snippets are shown with other suggestions and how they are sorted.",
+			"Enable word based suggestions.",
+			"Insert snippets when their prefix matches. Works best when 'quickSuggestions' aren't enabled.",
+			"Controls whether the editor should highlight similar matches to the selection",
+			"Controls the number of decorations that can show up at the same position in the overview ruler",
+			"Control the cursor animation style, possible values are 'blink', 'smooth', 'phase', 'expand' and 'solid'",
+			"Zoom the font of the editor when using mouse wheel and holding Ctrl",
+			"Controls the cursor style, accepted values are 'block', 'line' and 'underline'",
+			"Enables font ligatures",
+			"Controls if the cursor should be hidden in the overview ruler.",
+			"Controls whether the editor should render whitespace characters",
+			"Controls whether the editor should render control characters",
+			"Controls whether the editor should render indent guides",
+			"Controls if the editor shows reference information for the modes that support it",
+			"Controls whether the editor has code folding enabled",
+			"Inserting and deleting whitespace follows tab stops",
+			"Remove trailing auto inserted whitespace",
+			"Keep peek editors open even when double clicking their content or when hitting Escape.",
+			"Controls if the diff editor shows the diff side by side or inline",
+			"Controls if the diff editor shows changes in leading or trailing whitespace as diffs",
+			"Controls if the Linux primary clipboard should be supported."
 		],
 		"vs/workbench/node/extensionPoints": [
 			"Failed to parse {0}: {1}.",
@@ -4963,57 +5038,6 @@
 			"Closing brace expected",
 			"Closing bracket expected",
 			"End of file expected"
-		],
-		"vs/editor/common/config/defaultConfig": [
-			"Editor content"
-		],
-		"vs/editor/common/config/commonEditorConfig": [
-			"Editor",
-			"Controls the font family.",
-			"Controls the font size.",
-			"Controls the line height.",
-			"Controls visibility of line numbers",
-			"Controls visibility of the glyph margin",
-			"Columns at which to show vertical rulers",
-			"Characters that will be used as word separators when doing word related navigations or operations",
-			"The number of spaces a tab is equal to.",
-			"Expected 'number'. Note that the value \"auto\" has been replaced by the `editor.detectIndentation` setting.",
-			"Insert spaces when pressing Tab.",
-			"Expected 'boolean'. Note that the value \"auto\" has been replaced by the `editor.detectIndentation` setting.",
-			"When opening a file, `editor.tabSize` and `editor.insertSpaces` will be detected based on the file contents.",
-			"Controls if selections have rounded corners",
-			"Controls if the editor will scroll beyond the last line",
-			"Controls after how many characters the editor will wrap to the next line. Setting this to 0 turns on viewport width wrapping (word wrapping). Setting this to -1 forces the editor to never wrap.",
-			"Controls the indentation of wrapped lines. Can be one of 'none', 'same' or 'indent'.",
-			"A multiplier to be used on the `deltaX` and `deltaY` of mouse wheel scroll events",
-			"Controls if quick suggestions should show up or not while typing",
-			"Controls the delay in ms after which quick suggestions will show up",
-			"Enables parameter hints",
-			"Controls if the editor should automatically close brackets after opening them",
-			"Controls if the editor should automatically format the line after typing",
-			"Controls if suggestions should automatically show up when typing trigger characters",
-			"Controls if suggestions should be accepted 'Enter' - in addition to 'Tab'. Helps to avoid ambiguity between inserting new lines or accepting suggestions.",
-			"Controls whether the editor should highlight similar matches to the selection",
-			"Controls the number of decorations that can show up at the same position in the overview ruler",
-			"Controls the cursor blinking animation, accepted values are 'blink', 'visible', and 'hidden'",
-			"Zoom the font of the editor when using mouse wheel and holding Ctrl",
-			"Controls the cursor style, accepted values are 'block' and 'line'",
-			"Enables font ligatures",
-			"Controls if the cursor should be hidden in the overview ruler.",
-			"Controls whether the editor should render whitespace characters",
-			"Controls whether the editor should render control characters",
-			"Controls whether the editor should render indent guides",
-			"Controls if the editor shows reference information for the modes that support it",
-			"Controls whether the editor has code folding enabled",
-			"Inserting and deleting whitespace follows tab stops",
-			"Remove trailing auto inserted whitespace",
-			"Keep peek editors open even when double clicking their content or when hitting Escape.",
-			"Controls if the diff editor shows the diff side by side or inline",
-			"Controls if the diff editor shows changes in leading or trailing whitespace as diffs",
-			"Controls if the Linux primary clipboard should be supported."
-		],
-		"vs/platform/actions/browser/menuItemActionItem": [
-			"{0} ({1})"
 		],
 		"vs/editor/contrib/find/browser/findWidget": [
 			"Find",
@@ -5079,6 +5103,9 @@
 			"{0}, suggestion, has details",
 			"{0}, suggestion"
 		],
+		"vs/platform/actions/browser/menuItemActionItem": [
+			"{0} ({1})"
+		],
 		"vs/workbench/parts/files/browser/views/openEditorsViewer": [
 			"{0}, Editor Group",
 			"{0}, Open Editor",
@@ -5128,7 +5155,9 @@
 			"Remove From Editor History",
 			"Navigate Next in Quick Open",
 			"Navigate Previous in Quick Open",
-			"Open Last Editor in Group"
+			"Open Last Editor in Group",
+			"Move Editor into Group to the Left",
+			"Move Editor into Group to the Right"
 		],
 		"vs/workbench/parts/files/browser/saveErrorHandler": [
 			"Overwrite",
@@ -5203,6 +5232,8 @@
 			"Runtime used for OSX.",
 			"Linux specific settings.",
 			"Runtime used for Linux.",
+			"Contributes breakpoints.",
+			"Allow breakpoints for this language.",
 			"Launch",
 			"Version of this file format.",
 			"List of configurations. Add new configurations or edit existing ones.",
@@ -5219,7 +5250,7 @@
 			"Extension host terminated unexpectedly. Please reload the window to recover.",
 			"Reload Window"
 		],
-		"vs/workbench/parts/debug/browser/debugHover": [
+		"vs/workbench/parts/debug/electron-browser/debugHover": [
 			"Debug Hover"
 		],
 		"vs/workbench/browser/parts/activitybar/activityAction": [
@@ -5238,9 +5269,7 @@
 			"Controls if opened editors should show in tabs or not.",
 			"Controls if opened editors show as preview. Preview editors are reused until they are kept (e.g. via double click or editing).",
 			"Controls if opened editors from quick open show as preview. Preview editors are reused until they are kept (e.g. via double click or editing).",
-			"Controls where editors open. Select 'left' or 'right' to open editors to the left or right of the current active one. Select 'first' or 'last' to open editors independently from the currently active one.",
-			"Command **{0}** is now deprecated. You can use **{1}** instead",
-			"Configure Keyboard Shortcuts"
+			"Controls where editors open. Select 'left' or 'right' to open editors to the left or right of the current active one. Select 'first' or 'last' to open editors independently from the currently active one."
 		],
 		"vs/workbench/browser/parts/compositePart": [
 			"{0} ({1})",
@@ -5343,9 +5372,10 @@
 			"Unexpected exception while executing command."
 		],
 		"vs/base/browser/ui/resourceviewer/resourceViewer": [
+			"{0} ({1}x{2})",
 			"Sorry but playback of audio files is not supported.",
 			"Sorry but playback of video files is not supported.",
-			"The file cannot be displayed in the editor because it is either binary, very large or uses an unsupported text encoding."
+			"The file will not be displayed in the editor because it is either binary, very large or uses an unsupported text encoding."
 		],
 		"vs/workbench/parts/debug/node/debugAdapter": [
 			"Type of configuration.",
@@ -5367,8 +5397,7 @@
 			"Close to the Right",
 			"Close All",
 			"Keep Open",
-			"Move Left",
-			"Move Right",
+			"Show Opened Editors",
 			"Editor actions"
 		],
 		"vs/workbench/browser/parts/editor/binaryDiffEditor": [
@@ -5421,6 +5450,11 @@
 			"Select File Encoding to Reopen File",
 			"Select File Encoding to Save with"
 		],
+		"vs/workbench/browser/parts/editor/editorCommands": [
+			"Move the active editor by tabs or groups",
+			"Active editor move argument",
+			"\n\t\t\t\t\t\tArgument Properties:\n\t\t\t\t\t\t'to': String value providing where to move.\n\t\t\t\t\t\t'by': String value providing the unit for move. By tab or by group.\n\t\t\t\t\t\t'value': Number value providing how many positions or an absolute position to move.\n\t\t\t\t\t"
+		],
 		"vs/platform/markers/common/problemMatcher": [
 			"Error: Invalid problemMatcher description. A matcher must at least define a pattern, owner and a file location. The problematic matcher is:\n{0}\n",
 			"Info: unknown severity {0}. Valid values are error, warning and info.\n",
@@ -5461,9 +5495,9 @@
 			"vs/editor/common/config/commonEditorConfig",
 			"vs/editor/common/config/defaultConfig",
 			"vs/editor/common/controller/cursor",
+			"vs/editor/common/editorCommon",
 			"vs/editor/common/model/textModelWithTokens",
 			"vs/editor/common/modes/modesRegistry",
-			"vs/editor/common/modes/supports/suggestSupport",
 			"vs/editor/common/services/bulkEdit",
 			"vs/editor/common/services/modeServiceImpl",
 			"vs/editor/common/services/modelServiceImpl",
@@ -5500,6 +5534,7 @@
 			"vs/editor/contrib/smartSelect/common/smartSelect",
 			"vs/editor/contrib/suggest/browser/suggest",
 			"vs/editor/contrib/suggest/browser/suggestWidget",
+			"vs/editor/contrib/suggest/electron-browser/snippetCompletion",
 			"vs/editor/contrib/toggleTabFocusMode/common/toggleTabFocusMode",
 			"vs/editor/contrib/toggleWordWrap/common/toggleWordWrap",
 			"vs/editor/contrib/zoneWidget/browser/peekViewWidget",
@@ -5513,7 +5548,6 @@
 			"vs/platform/extensionManagement/common/extensionManagement",
 			"vs/platform/extensions/common/abstractExtensionService",
 			"vs/platform/extensions/common/extensionsRegistry",
-			"vs/platform/jsonschemas/common/jsonContributionRegistry",
 			"vs/platform/jsonschemas/common/jsonValidationExtensionPoint",
 			"vs/platform/keybinding/browser/keybindingServiceImpl",
 			"vs/platform/markers/common/problemMatcher",
@@ -5532,6 +5566,7 @@
 			"vs/workbench/browser/parts/editor/binaryEditor",
 			"vs/workbench/browser/parts/editor/editor.contribution",
 			"vs/workbench/browser/parts/editor/editorActions",
+			"vs/workbench/browser/parts/editor/editorCommands",
 			"vs/workbench/browser/parts/editor/editorPart",
 			"vs/workbench/browser/parts/editor/editorPicker",
 			"vs/workbench/browser/parts/editor/editorStatus",
@@ -5551,18 +5586,20 @@
 			"vs/workbench/electron-browser/darwin/cli.contribution",
 			"vs/workbench/electron-browser/integration",
 			"vs/workbench/electron-browser/main.contribution",
+			"vs/workbench/electron-browser/nps.contribution",
 			"vs/workbench/electron-browser/shell",
 			"vs/workbench/electron-browser/update",
 			"vs/workbench/parts/debug/browser/breakpointWidget",
-			"vs/workbench/parts/debug/browser/debugEditorContribution",
+			"vs/workbench/parts/debug/browser/debugActions",
 			"vs/workbench/parts/debug/browser/debugEditorModelManager",
-			"vs/workbench/parts/debug/browser/debugHover",
-			"vs/workbench/parts/debug/browser/debugViewer",
-			"vs/workbench/parts/debug/browser/debugViews",
 			"vs/workbench/parts/debug/common/debugModel",
 			"vs/workbench/parts/debug/electron-browser/debug.contribution",
-			"vs/workbench/parts/debug/electron-browser/debugActions",
+			"vs/workbench/parts/debug/electron-browser/debugEditorContribution",
+			"vs/workbench/parts/debug/electron-browser/debugHover",
 			"vs/workbench/parts/debug/electron-browser/debugService",
+			"vs/workbench/parts/debug/electron-browser/debugViewer",
+			"vs/workbench/parts/debug/electron-browser/debugViews",
+			"vs/workbench/parts/debug/electron-browser/electronDebugActions",
 			"vs/workbench/parts/debug/node/debugAdapter",
 			"vs/workbench/parts/debug/node/debugConfigurationManager",
 			"vs/workbench/parts/debug/node/rawDebugSession",
@@ -5619,7 +5656,7 @@
 			"vs/workbench/parts/markers/common/messages",
 			"vs/workbench/parts/output/browser/output.contribution",
 			"vs/workbench/parts/output/browser/outputActions",
-			"vs/workbench/parts/output/common/outputEditorInput",
+			"vs/workbench/parts/output/browser/outputEditorInput",
 			"vs/workbench/parts/quickopen/browser/commandsHandler",
 			"vs/workbench/parts/quickopen/browser/gotoLineHandler",
 			"vs/workbench/parts/quickopen/browser/gotoSymbolHandler",
@@ -5638,6 +5675,7 @@
 			"vs/workbench/parts/tasks/node/processRunnerSystem",
 			"vs/workbench/parts/terminal/electron-browser/terminal.contribution",
 			"vs/workbench/parts/terminal/electron-browser/terminalActions",
+			"vs/workbench/parts/terminal/electron-browser/terminalService",
 			"vs/workbench/parts/themes/electron-browser/themes.contribution",
 			"vs/workbench/parts/update/electron-browser/update.contribution",
 			"vs/workbench/services/files/electron-browser/fileService",
@@ -5653,14 +5691,12 @@
 			"vs/base/common/errors",
 			"vs/base/common/severity",
 			"vs/editor/common/config/defaultConfig",
+			"vs/editor/common/editorCommon",
 			"vs/editor/common/model/textModelWithTokens",
 			"vs/editor/common/modes/modesRegistry",
-			"vs/editor/common/modes/supports/suggestSupport",
 			"vs/editor/common/services/modeServiceImpl",
-			"vs/platform/configuration/common/configurationRegistry",
 			"vs/platform/extensions/common/abstractExtensionService",
-			"vs/platform/extensions/common/extensionsRegistry",
-			"vs/platform/jsonschemas/common/jsonContributionRegistry"
+			"vs/platform/extensions/common/extensionsRegistry"
 		],
 		"vs/base/common/worker/simpleWorker": [
 			"vs/base/common/errors",
@@ -5704,9 +5740,9 @@
 			"vs/workbench/parts/debug/browser/debugActionItems",
 			"vs/workbench/parts/debug/browser/debugViewlet"
 		],
-		"vs/workbench/parts/debug/browser/repl": [
-			"vs/workbench/parts/debug/browser/repl",
-			"vs/workbench/parts/debug/browser/replViewer"
+		"vs/workbench/parts/debug/electron-browser/repl": [
+			"vs/workbench/parts/debug/electron-browser/repl",
+			"vs/workbench/parts/debug/electron-browser/replViewer"
 		],
 		"vs/workbench/parts/debug/node/telemetryApp": [
 			"vs/base/common/errors"
@@ -5716,6 +5752,10 @@
 		],
 		"vs/workbench/parts/markers/browser/markersPanel": [
 			"vs/workbench/parts/markers/browser/markersActionProvider"
+		],
+		"vs/workbench/parts/terminal/electron-browser/terminalPanel": [
+			"vs/workbench/parts/terminal/electron-browser/terminalInstance",
+			"vs/workbench/parts/terminal/electron-browser/terminalPanel"
 		],
 		"vs/workbench/services/search/node/searchApp": [
 			"vs/base/common/errors"
@@ -5727,11 +5767,10 @@
 			"vs/base/common/errors",
 			"vs/base/common/json",
 			"vs/base/common/severity",
-			"vs/platform/extensionManagement/common/extensionManagement",
+			"vs/editor/common/editorCommon",
 			"vs/platform/extensions/common/abstractExtensionService",
 			"vs/platform/extensions/common/extensionsRegistry",
 			"vs/platform/extensions/node/extensionValidator",
-			"vs/platform/jsonschemas/common/jsonContributionRegistry",
 			"vs/workbench/node/extensionHostMain",
 			"vs/workbench/node/extensionPoints"
 		],
@@ -5759,7 +5798,6 @@
 			"vs/platform/extensionManagement/node/extensionManagementService",
 			"vs/platform/extensions/common/extensionsRegistry",
 			"vs/platform/extensions/node/extensionValidator",
-			"vs/platform/jsonschemas/common/jsonContributionRegistry",
 			"vs/platform/telemetry/common/telemetryService"
 		],
 		"vs/code/node/sharedProcessMain": [
@@ -5773,7 +5811,6 @@
 			"vs/platform/extensionManagement/node/extensionManagementService",
 			"vs/platform/extensions/common/extensionsRegistry",
 			"vs/platform/extensions/node/extensionValidator",
-			"vs/platform/jsonschemas/common/jsonContributionRegistry",
 			"vs/platform/telemetry/common/telemetryService"
 		]
 	}

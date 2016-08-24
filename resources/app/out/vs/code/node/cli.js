@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/common/platform","vs/base/common/types","vs/base/common/objects","vs/platform/package","vs/nls!vs/code/node/cli","vs/base/common/arrays","vs/base/common/uri","vs/nls!vs/base/common/errors","vs/nls","vs/base/common/strings","vs/base/common/errors","vs/base/common/winjs.base","vs/code/node/argv","vs/nls!vs/code/node/argv","vs/base/common/map","path","vs/base/common/winjs.base.raw","os","minimist","vs/code/node/cli","child_process"];
+var __m = ["exports","require","vs/base/common/platform","vs/base/common/types","vs/base/common/objects","vs/nls!vs/code/node/cli","vs/base/common/map","vs/base/common/arrays","vs/base/common/uri","vs/nls!vs/base/common/errors","vs/nls","vs/base/common/strings","vs/base/common/errors","vs/base/common/winjs.base","vs/platform/package","vs/nls!vs/code/node/argv","vs/code/node/argv","os","minimist","vs/base/common/winjs.base.raw","path","vs/code/node/cli","child_process"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -93,6 +93,32 @@ define(__m[7], __M([1,0]), function (require, exports) {
         return low;
     }
     exports.findFirst = findFirst;
+    /**
+     * Returns the top N elements from the array.
+     *
+     * Faster than sorting the entire array when the array is a lot larger than N.
+     *
+     * @param array The unsorted array.
+     * @param compare A sort function for the elements.
+     * @param n The number of elements to return.
+     * @return The first n elemnts from array when sorted with compare.
+     */
+    function top(array, compare, n) {
+        var result = array.slice(0, n).sort(compare);
+        var _loop_1 = function(i, m) {
+            var element = array[i];
+            if (compare(element, result[n - 1]) < 0) {
+                result.pop();
+                var j = findFirst(result, function (e) { return compare(element, e) < 0; });
+                result.splice(j, 0, element);
+            }
+        };
+        for (var i = n, m = array.length; i < m; i++) {
+            _loop_1(i, m);
+        }
+        return result;
+    }
+    exports.top = top;
     function merge(arrays, hashFn) {
         var result = new Array();
         if (!hashFn) {
@@ -236,10 +262,13 @@ define(__m[7], __M([1,0]), function (require, exports) {
         return arr;
     }
     exports.fill = fill;
-    function index(array, indexer) {
-        var result = Object.create(null);
-        array.forEach(function (t) { return result[indexer(t)] = t; });
-        return result;
+    function index(array, indexer, merger) {
+        if (merger === void 0) { merger = function (t) { return t; }; }
+        return array.reduce(function (r, t) {
+            var key = indexer(t);
+            r[key] = merger(t, r[key]);
+            return r;
+        }, Object.create(null));
     }
     exports.index = index;
 });
@@ -253,7 +282,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[16], __M([1,0]), function (require, exports) {
+define(__m[6], __M([1,0]), function (require, exports) {
     'use strict';
     /**
      * A simple map to store value by a key object. Key can be any object that has toString() function to get
@@ -281,6 +310,13 @@ define(__m[16], __M([1,0]), function (require, exports) {
                 keys.push(this.map[key].key);
             }
             return keys;
+        };
+        SimpleMap.prototype.values = function () {
+            var values = [];
+            for (var key in this.map) {
+                values.push(this.map[key].value);
+            }
+            return values;
         };
         SimpleMap.prototype.entries = function () {
             var entries = [];
@@ -565,7 +601,7 @@ define(__m[2], __M([1,0]), function (require, exports) {
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[11], __M([1,0,16]), function (require, exports, map_1) {
+define(__m[11], __M([1,0,6]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -836,10 +872,18 @@ define(__m[11], __M([1,0,16]), function (require, exports, map_1) {
         return -1;
     }
     exports.lastNonWhitespaceIndex = lastNonWhitespaceIndex;
-    function localeCompare(strA, strB) {
-        return strA.localeCompare(strB);
+    function compare(a, b) {
+        if (a < b) {
+            return -1;
+        }
+        else if (a > b) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
-    exports.localeCompare = localeCompare;
+    exports.compare = compare;
     function isAsciiChar(code) {
         return (code >= 97 && code <= 122) || (code >= 65 && code <= 90);
     }
@@ -1788,17 +1832,27 @@ define(__m[8], __M([1,0,2]), function (require, exports, platform) {
             return new URI().with(components);
         };
         URI._validate = function (ret) {
-            // validation
+            // scheme, https://tools.ietf.org/html/rfc3986#section-3.1
+            // ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+            if (ret.scheme && !URI._schemePattern.test(ret.scheme)) {
+                throw new Error('[UriError]: Scheme contains illegal characters.');
+            }
             // path, http://tools.ietf.org/html/rfc3986#section-3.3
             // If a URI contains an authority component, then the path component
             // must either be empty or begin with a slash ("/") character.  If a URI
             // does not contain an authority component, then the path cannot begin
             // with two slash characters ("//").
-            if (ret.authority && ret.path && ret.path[0] !== '/') {
-                throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
-            }
-            if (!ret.authority && ret.path.indexOf('//') === 0) {
-                throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
+            if (ret.path) {
+                if (ret.authority) {
+                    if (!URI._singleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
+                    }
+                }
+                else {
+                    if (URI._doubleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
+                    }
+                }
             }
         };
         // ---- printing/externalize ---------------------------
@@ -1842,10 +1896,15 @@ define(__m[8], __M([1,0,2]), function (require, exports, platform) {
                 }
             }
             if (path) {
-                // lower-case windown drive letters in /C:/fff
+                // lower-case windows drive letters in /C:/fff or C:/fff
                 var m = URI._upperCaseDrive.exec(path);
                 if (m) {
-                    path = m[1] + m[2].toLowerCase() + path.substr(m[1].length + m[2].length);
+                    if (m[1]) {
+                        path = '/' + m[2].toLowerCase() + path.substr(3); // "/c:".length === 3
+                    }
+                    else {
+                        path = m[2].toLowerCase() + path.substr(2); // // "c:".length === 2
+                    }
                 }
                 // encode every segement but not slashes
                 // make sure that # and ? are always encoded
@@ -1900,6 +1959,9 @@ define(__m[8], __M([1,0,2]), function (require, exports, platform) {
         URI._regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
         URI._driveLetterPath = /^\/[a-zA-z]:/;
         URI._upperCaseDrive = /^(\/)?([A-Z]:)/;
+        URI._schemePattern = /^\w[\w\d+.-]*$/;
+        URI._singleSlashStart = /^\//;
+        URI._doubleSlashStart = /^\/\//;
         return URI;
     }());
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -3977,7 +4039,7 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
 }
 
 })();
-define(__m[9], __M([10,6]), function(nls, data) { return nls.create("vs/base/common/errors", data); });
+define(__m[9], __M([10,5]), function(nls, data) { return nls.create("vs/base/common/errors", data); });
 define(__m[12], __M([1,0,9,4,2,3,7,11]), function (require, exports, nls, objects, platform, types, arrays, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -4311,7 +4373,7 @@ define(__m[12], __M([1,0,9,4,2,3,7,11]), function (require, exports, nls, object
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define(__m[13], __M([18,12]), function (winjs, __Errors__) {
+define(__m[13], __M([19,12]), function (winjs, __Errors__) {
 	'use strict';
 
 	var outstandingPromiseErrors = {};
@@ -4368,24 +4430,12 @@ define(__m[13], __M([18,12]), function (winjs, __Errors__) {
 		PPromise: winjs.Promise
 	};
 });
-define(__m[15], __M([10,6]), function(nls, data) { return nls.create("vs/code/node/argv", data); });
+define(__m[15], __M([10,5]), function(nls, data) { return nls.create("vs/code/node/argv", data); });
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[5], __M([1,0,17,8]), function (require, exports, path, uri_1) {
-    "use strict";
-    var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
-    var packageJsonPath = path.join(rootPath, 'package.json');
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = require.__$__nodeRequire(packageJsonPath);
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[14], __M([1,0,19,20,5,15]), function (require, exports, os, minimist, package_1, nls_1) {
+define(__m[16], __M([1,0,17,18,15]), function (require, exports, os, minimist, nls_1) {
     "use strict";
     var options = {
         string: [
@@ -4435,28 +4485,75 @@ define(__m[14], __M([1,0,19,20,5,15]), function (require, exports, os, minimist,
         '-g, --goto': nls_1.localize(2, null),
         '--locale <locale>': nls_1.localize(3, null),
         '-n, --new-window': nls_1.localize(4, null),
-        '-r, --reuse-window': nls_1.localize(5, null),
-        '--user-data-dir <dir>': nls_1.localize(6, null),
-        '--verbose': nls_1.localize(7, null),
-        '-w, --wait': nls_1.localize(8, null),
-        '--list-extensions': nls_1.localize(9, null),
-        '--install-extension <extension>': nls_1.localize(10, null),
-        '--uninstall-extension <extension>': nls_1.localize(11, null),
-        '-v, --version': nls_1.localize(12, null),
-        '-h, --help': nls_1.localize(13, null)
+        '-p, --performance': nls_1.localize(5, null),
+        '-r, --reuse-window': nls_1.localize(6, null),
+        '--user-data-dir <dir>': nls_1.localize(7, null),
+        '--verbose': nls_1.localize(8, null),
+        '-w, --wait': nls_1.localize(9, null),
+        '--extensionHomePath': nls_1.localize(10, null),
+        '--list-extensions': nls_1.localize(11, null),
+        '--install-extension <ext>': nls_1.localize(12, null),
+        '--uninstall-extension <ext>': nls_1.localize(13, null),
+        '-v, --version': nls_1.localize(14, null),
+        '-h, --help': nls_1.localize(15, null)
     };
-    function formatOptions(options) {
-        return Object.keys(options)
-            .reduce(function (r, key) { return r.concat([("  " + key), ("      " + options[key])]); }, []).join('\n');
+    function formatOptions(options, columns) {
+        var keys = Object.keys(options);
+        var argLength = Math.max.apply(null, keys.map(function (k) { return k.length; })) + 2 /*left padding*/ + 1;
+        if (columns - argLength < 25) {
+            // Use a condensed version on narrow terminals
+            return keys.reduce(function (r, key) { return r.concat([("  " + key), ("      " + options[key])]); }, []).join('\n');
+        }
+        var descriptionColumns = columns - argLength - 1;
+        var result = '';
+        keys.forEach(function (k) {
+            var wrappedDescription = wrapText(options[k], descriptionColumns);
+            var keyPadding = ' '.repeat(argLength - k.length - 2 /*left padding*/);
+            if (result.length > 0) {
+                result += '\n';
+            }
+            result += '  ' + k + keyPadding + wrappedDescription[0];
+            for (var i = 1; i < wrappedDescription.length; i++) {
+                result += '\n' + ' '.repeat(argLength) + wrappedDescription[i];
+            }
+        });
+        return result;
     }
-    exports.helpMessage = "Visual Studio Code v" + package_1.default.version + "\n\nUsage: " + executable + " [arguments] [paths...]\n\nOptions:\n" + formatOptions(exports.optionsHelp);
+    exports.formatOptions = formatOptions;
+    function wrapText(text, columns) {
+        var lines = [];
+        while (text.length) {
+            var index = text.length < columns ? text.length : text.lastIndexOf(' ', columns);
+            var line = text.slice(0, index).trim();
+            text = text.slice(index);
+            lines.push(line);
+        }
+        return lines;
+    }
+    function buildHelpMessage(version) {
+        var columns = process.stdout.isTTY ? process.stdout.columns : 80;
+        return "Visual Studio Code v" + version + "\n\n\nUsage: " + executable + " [arguments] [paths...]\n\nOptions:\n" + formatOptions(exports.optionsHelp, columns);
+    }
+    exports.buildHelpMessage = buildHelpMessage;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[21], __M([1,0,22,13,4,14,5]), function (require, exports, child_process_1, winjs_base_1, objects_1, argv_1, package_1) {
+define(__m[14], __M([1,0,20,8]), function (require, exports, path, uri_1) {
+    "use strict";
+    var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
+    var packageJsonPath = path.join(rootPath, 'package.json');
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = require.__$__nodeRequire(packageJsonPath);
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[21], __M([1,0,22,13,4,16,14]), function (require, exports, child_process_1, winjs_base_1, objects_1, argv_1, package_1) {
     "use strict";
     function shouldSpawnCliProcess(argv) {
         return argv['list-extensions'] || !!argv['install-extension'] || !!argv['uninstall-extension'];
@@ -4464,7 +4561,7 @@ define(__m[21], __M([1,0,22,13,4,14,5]), function (require, exports, child_proce
     function main(args) {
         var argv = argv_1.parseArgs(args);
         if (argv.help) {
-            console.log(argv_1.helpMessage);
+            console.log(argv_1.buildHelpMessage(package_1.default.version));
         }
         else if (argv.version) {
             console.log(package_1.default.version);

@@ -85,6 +85,10 @@ export function remoteObjectToValue(object: Chrome.Runtime.RemoteObject, stringi
             // The value is a primitive value, or something that has a description (not object, primitive, or undefined). And force to be string
             if (typeof object.value === 'undefined') {
                 value = object.description;
+            } else if (object.type === 'number') {
+                // 3 => "3"
+                // "Infinity" => "Infinity" (not stringified)
+                value = object.value + '';
             } else {
                 value = stringify ? JSON.stringify(object.value) : object.value;
             }
@@ -94,23 +98,59 @@ export function remoteObjectToValue(object: Chrome.Runtime.RemoteObject, stringi
     return { value, variableHandleRef };
 }
 
-export function getMatchingTargets(targets: Chrome.ITarget[], targetUrl: string): Chrome.ITarget[] {
-    const standardizeUrl = aUrl => utils.canonicalizeUrl(aUrl).toLowerCase();
+/**
+ * Returns the targets from the given list that match the targetUrl, which may have * wildcards.
+ * Ignores the protocol and is case-insensitive.
+ */
+export function getMatchingTargets(targets: Chrome.ITarget[], targetUrlPattern: string): Chrome.ITarget[] {
+    const standardizeMatch = aUrl => {
+        // Strip file:///, if present
+        aUrl = utils.fileUrlToPath(aUrl).toLowerCase();
 
-    // Look for an exact match
-    targetUrl = standardizeUrl(targetUrl);
-    const exactMatchTargets = targets.filter(target => standardizeUrl(target.url) === targetUrl);
+        // Strip the protocol, if present
+        if (aUrl.indexOf('://') >= 0) aUrl = aUrl.split('://')[1];
 
-    if (exactMatchTargets.length) {
-        targets = exactMatchTargets;
-    } else {
-        // Strip the protocol, if present. Don't try parsing this since it may not be an actual url, e.g., 'localhost'.
-        // canonicalizeUrl would have already fixed file:/// or ?params
-        if (targetUrl.indexOf('://') >= 0) targetUrl = targetUrl.split('://')[1];
+        // Need to do a regex match, but URLs can have special regex chars. Escape those.
+        return encodeURIComponent(aUrl);
+    };
 
-        // Find targets that have the targetUrl as a substring
-        targets = targets.filter(target => standardizeUrl(target.url).indexOf(targetUrl) >= 0);
+    targetUrlPattern = standardizeMatch(targetUrlPattern).replace(/\*/g, '.*');
+    const encodedSlash = encodeURIComponent('/');
+    if (!targetUrlPattern.endsWith(encodedSlash)) {
+        // Add optional ending slash - so "localhost:3000" will match "localhost:3000/"
+        targetUrlPattern += `(${encodedSlash})?`;
     }
 
-    return targets;
+    const targetUrlRegex = new RegExp('^' + targetUrlPattern + '$', 'g');
+    return targets.filter(target => !!standardizeMatch(target.url).match(targetUrlRegex));
+}
+
+const PROTO_NAME = '__proto__';
+const NUM_REGEX = /^[0-9]+$/;
+export function compareVariableNames(var1: string, var2: string): number {
+    // __proto__ at the end
+    if (var1 === PROTO_NAME) {
+        return 1;
+    } else if (var2 === PROTO_NAME) {
+        return -1;
+    }
+
+    const isNum1 = !!var1.match(NUM_REGEX);
+    const isNum2 = !!var2.match(NUM_REGEX);
+
+    if (isNum1 && !isNum2) {
+        // Numbers after names
+        return 1;
+    } else if (!isNum1 && isNum2) {
+        // Names before numbers
+        return -1;
+    } else if (isNum1 && isNum2) {
+        // Compare numbers as numbers
+        const int1 = parseInt(var1, 10);
+        const int2 = parseInt(var2, 10);
+        return int1 - int2;
+    }
+
+    // Compare strings as strings
+    return var1.localeCompare(var2);
 }

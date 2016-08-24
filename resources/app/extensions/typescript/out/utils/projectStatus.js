@@ -37,7 +37,9 @@ function create(client, isOpen, memento) {
         delete projectHinted[e.document.fileName];
     }));
     function onEditor(editor) {
-        if (!editor || !vscode.languages.match(selector, editor.document)) {
+        if (!editor
+            || !vscode.languages.match(selector, editor.document)
+            || !client.asAbsolutePath(editor.document.uri)) {
             item.hide();
             return;
         }

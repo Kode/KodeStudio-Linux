@@ -43,8 +43,10 @@ define("vs/workbench/node/extensionHostProcess.nls", {
 		"Warning",
 		"Info"
 	],
-	"vs/platform/extensionManagement/common/extensionManagement": [
-		"Extensions"
+	"vs/editor/common/editorCommon": [
+		"Move cursor to a logical position in the view",
+		"Cursor move argument",
+		"Argument containing mandatory 'to' value and an optional 'inSelectionMode' value. Value of 'to' has to be a defined value in `CursorMoveViewPosition`."
 	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"Extension `{1}` failed to activate. Reason: unknown dependency `{0}`.",
@@ -82,42 +84,6 @@ define("vs/workbench/node/extensionHostProcess.nls", {
 		"Version specified in `engines.vscode` ({0}) is not specific enough. For vscode versions after 1.0.0, please define at a minimum the major desired version. E.g. ^1.10.0, 1.10.x, 1.x.x, 2.x.x, etc.",
 		"Extension is not compatible with Code {0}. Extension requires: {1}.",
 		"Extension version is not semver compatible."
-	],
-	"vs/platform/jsonschemas/common/jsonContributionRegistry": [
-		"Describes a JSON file using a schema. See json-schema.org for more info.",
-		"A unique identifier for the schema.",
-		"The schema to verify this document against ",
-		"A descriptive title of the element",
-		"A long description of the element. Used in hover menus and suggestions.",
-		"A default value. Used by suggestions.",
-		"A number that should cleanly divide the current value (i.e. have no remainder)",
-		"The maximum numerical value, inclusive by default.",
-		"Makes the maximum property exclusive.",
-		"The minimum numerical value, inclusive by default.",
-		"Makes the minimum property exclusive.",
-		"The maximum length of a string.",
-		"The minimum length of a string.",
-		"A regular expression to match the string against. It is not implicitly anchored.",
-		"For arrays, only when items is set as an array. If it is a schema, then this schema validates items after the ones specified by the items array. If it is false, then additional items will cause validation to fail.",
-		"For arrays. Can either be a schema to validate every element against or an array of schemas to validate each item against in order (the first schema will validate the first element, the second schema will validate the second element, and so on.",
-		"The maximum number of items that can be inside an array. Inclusive.",
-		"The minimum number of items that can be inside an array. Inclusive.",
-		"If all of the items in the array must be unique. Defaults to false.",
-		"The maximum number of properties an object can have. Inclusive.",
-		"The minimum number of properties an object can have. Inclusive.",
-		"An array of strings that lists the names of all properties required on this object.",
-		"Either a schema or a boolean. If a schema, then used to validate all properties not matched by 'properties' or 'patternProperties'. If false, then any properties not matched by either will cause this schema to fail.",
-		"Not used for validation. Place subschemas here that you wish to reference inline with $ref",
-		"A map of property names to schemas for each property.",
-		"A map of regular expressions on property names to schemas for matching properties.",
-		"A map of property names to either an array of property names or a schema. An array of property names means the property named in the key depends on the properties in the array being present in the object in order to be valid. If the value is a schema, then the schema is only applied to the object if the property in the key exists on the object.",
-		"The set of literal values that are valid",
-		"Either a string of one of the basic schema types (number, integer, null, array, object, boolean, string) or an array of strings specifying a subset of those types.",
-		"Describes the format expected for the value.",
-		"An array of schemas, all of which must match.",
-		"An array of schemas, where at least one must match.",
-		"An array of schemas, exactly one of which must match.",
-		"A schema which must not match."
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"Overwriting extension {0} with {1}.",

@@ -69,9 +69,9 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.it", {
 		"Dopo aver installato GIT, riavviare {0}.",
 	],
 	"vs/workbench/parts/git/browser/views/huge/hugeView": [
-		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
-		"You can permanently disable this warning with the following setting:",
-		"Allow large repositories",
+		"Sembra che nel repository siano presenti molte modifiche attive.\nQuesto può causare un notevole rallentamento di Code.",
+		"Per disabilitare definitivamente questo avviso, usare l\'impostazione seguente:",
+		"Consenti repository di grandi dimensioni",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"Questa directory sembra essere inclusa in un repository GIT.",

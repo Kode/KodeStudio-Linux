@@ -10,10 +10,12 @@ import * as path from 'path';
 
 import * as logger from './logger';
 
+const WIN_APPDATA = process.env.LOCALAPPDATA || '/';
 const DEFAULT_CHROME_PATH = {
     OSX: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     WIN: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
     WINx86: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+    WIN_LOCALAPPDATA: path.join(WIN_APPDATA, 'Google\\Chrome\\Application\\chrome.exe'),
     LINUX: '/usr/bin/google-chrome'
 };
 
@@ -26,6 +28,8 @@ export function getBrowserPath(): string {
             return DEFAULT_CHROME_PATH.WINx86;
         } else if (existsSync(DEFAULT_CHROME_PATH.WIN)) {
             return DEFAULT_CHROME_PATH.WIN;
+        } else if (existsSync(DEFAULT_CHROME_PATH.WIN_LOCALAPPDATA)) {
+            return DEFAULT_CHROME_PATH.WIN_LOCALAPPDATA;
         } else {
             return null;
         }
@@ -119,14 +123,14 @@ export function promiseTimeout(p?: Promise<any>, timeoutMs = 1000, timeoutMsg?: 
     });
 }
 
-export function retryAsync(fn: () => Promise<any>, timeoutMs: number): Promise<any> {
+export function retryAsync(fn: () => Promise<any>, timeoutMs: number, intervalDelay = 0): Promise<any> {
     const startTime = Date.now();
 
     function tryUntilTimeout(): Promise<any> {
         return fn().catch(
             e => {
-                if (Date.now() - startTime < timeoutMs) {
-                    return tryUntilTimeout();
+                if (Date.now() - startTime < (timeoutMs - intervalDelay)) {
+                    return promiseTimeout(null, intervalDelay).then(tryUntilTimeout);
                 } else {
                     return errP(e);
                 }
@@ -146,15 +150,7 @@ export function retryAsync(fn: () => Promise<any>, timeoutMs: number): Promise<a
  * http://site.com/ => http://site.com
  */
 export function canonicalizeUrl(urlOrPath: string): string {
-    if (urlOrPath.startsWith('file:///')) {
-        urlOrPath = urlOrPath.replace('file:///', '');
-        urlOrPath = decodeURIComponent(urlOrPath);
-        if (urlOrPath[0] !== '/' && urlOrPath.indexOf(':') < 0) {
-            // Ensure unix-style path starts with /, it can be removed when file:/// was stripped.
-            // Don't add if the url still has a protocol
-            urlOrPath = '/' + urlOrPath;
-        }
-    }
+    urlOrPath = fileUrlToPath(urlOrPath);
 
     // Remove query params
     if (urlOrPath.indexOf('?') >= 0) {
@@ -163,6 +159,25 @@ export function canonicalizeUrl(urlOrPath: string): string {
 
     urlOrPath = stripTrailingSlash(urlOrPath);
     urlOrPath = fixDriveLetterAndSlashes(urlOrPath);
+
+    return urlOrPath;
+}
+
+/**
+ * If urlOrPath is a file URL, removes the 'file:///', adjusting for platform differences
+ */
+export function fileUrlToPath(urlOrPath: string): string {
+    if (urlOrPath.startsWith('file:///')) {
+        urlOrPath = urlOrPath.replace('file:///', '');
+        urlOrPath = decodeURIComponent(urlOrPath);
+        if (urlOrPath[0] !== '/' && urlOrPath.indexOf(':') < 0) {
+            // Ensure unix-style path starts with /, it can be removed when file:/// was stripped.
+            // Don't add if the url still has a protocol
+            urlOrPath = '/' + urlOrPath;
+        }
+
+        urlOrPath = fixDriveLetterAndSlashes(urlOrPath);
+    }
 
     return urlOrPath;
 }
@@ -210,11 +225,13 @@ export function stripTrailingSlash(aPath: string): string {
  * when passing on a failure from a Promise error handler.
  * @param msg - Should be either a string or an Error
  */
-export function errP(msg: any): Promise<any> {
+export function errP(msg: string|Error): Promise<any> {
+    const isErrorLike = (thing: any): thing is Error => !!thing.message;
+
     let e: Error;
     if (!msg) {
         e = new Error('Unknown error');
-    } else if (msg.message) {
+    } else if (isErrorLike(msg)) {
         // msg is already an Error object
         e = msg;
     } else {
@@ -237,7 +254,7 @@ export function getURL(aUrl: string): Promise<string> {
                 if (response.statusCode === 200) {
                     resolve(responseData);
                 } else {
-                    logger.log('Http Get failed with: ' + response.statusCode.toString() + ' ' + response.statusMessage.toString());
+                    logger.error('HTTP GET failed with: ' + response.statusCode.toString() + ' ' + response.statusMessage.toString());
                     reject(responseData);
                 }
             });

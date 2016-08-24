@@ -5,7 +5,7 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.zh-cn", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"请提供提交消息。您可以始终按下“{0}”以提交更改。如果存在任何暂存的更改，将仅提交这些更改；否则，提交所有更改。",
 		"在有一些更改要提交时，键入提交信息，并按下“{0}”以提交更改。如果存在任何暂存的更改，将仅提交这些更改；否则，提交所有更改。",
-		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
+		"建议保持提交的第一行在 50 个字符以内。可以随时使用更多行显示额外信息。",
 		"消息(按 {0} 提交)",
 		"GIT: 键入提交信息并按 {0} 以提交",
 		"GIT 更改视图",
@@ -69,9 +69,9 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.zh-cn", {
 		"安装 GIT 后，请重启 {0}。",
 	],
 	"vs/workbench/parts/git/browser/views/huge/hugeView": [
-		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
-		"You can permanently disable this warning with the following setting:",
-		"Allow large repositories",
+		"你的存储库中似乎存在大量活动更改。\n这会导致 Code 变得非常缓慢。",
+		"可通过以下设置永久禁用此警告:",
+		"允许使用大型存储库",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"此目录似乎包含在 GIT 存储库中。",

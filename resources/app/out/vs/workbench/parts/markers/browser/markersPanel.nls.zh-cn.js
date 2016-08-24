@@ -3,6 +3,6 @@
  *--------------------------------------------------------*/
 define("vs/workbench/parts/markers/browser/markersPanel.nls.zh-cn", {
 	"vs/workbench/parts/markers/browser/markersActionProvider": [
-		"Remove",
+		"删除",
 	]
 });

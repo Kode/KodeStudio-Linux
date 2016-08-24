@@ -5,7 +5,7 @@
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "完成函数的参数签名。",
 	"typescript.tsdk.desc": "指定包含要使用的 tsserver 和 lib*.d.ts 文件的文件夹路径。",
 	"typescript.tsserver.trace": "启用对发送到 TS 服务器的消息进行跟踪",
-	"typescript.tsserver.experimentalAutoBuild": "Enables experimental auto build. Requires 1.9 dev or 2.x tsserver version and a restart of VS Code after changing it.",
+	"typescript.tsserver.experimentalAutoBuild": "启用实验性自动生成。要求安装 1.9 dev 或 2.x tsserver 版本并在更改后重启 VS Code。",
 	"typescript.validate.enable": "启用/禁用 TypeScript 验证",
 	"format.insertSpaceAfterCommaDelimiter": "定义逗号分隔符后面的空格处理",
 	"format.insertSpaceAfterSemicolonInForStatements": "在 For 语句中，定义分号之后的空格处理",

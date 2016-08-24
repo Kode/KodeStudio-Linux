@@ -1312,12 +1312,22 @@ define(__m[41], __M([0,1,27,11,13,6,53,33,16,2,7,54,55,39,56,8,15,44,35,57,58,59
             this.visible = visible;
             if (visible) {
                 this.tree.onVisible();
+                this.updateCommitInputTemplate();
                 return this.onEditorsChanged(this.editorService.getActiveEditorInput());
             }
             else {
                 this.tree.onHidden();
                 return WinJS.TPromise.as(null);
             }
+        };
+        ChangesView.prototype.updateCommitInputTemplate = function () {
+            var _this = this;
+            if (this.commitInputBox.value) {
+                return;
+            }
+            this.gitService.getCommitTemplate()
+                .then(function (template) { return template && (_this.commitInputBox.value = template); })
+                .done(null, Errors.onUnexpectedError);
         };
         ChangesView.prototype.getControl = function () {
             return this.tree;
@@ -1446,6 +1456,7 @@ define(__m[41], __M([0,1,27,11,13,6,53,33,16,2,7,54,55,39,56,8,15,44,35,57,58,59
                     this.commitInputBox.enable();
                     if (!e.error) {
                         this.commitInputBox.value = '';
+                        this.updateCommitInputTemplate();
                     }
                 }
             }
@@ -1608,7 +1619,7 @@ define(__m[38], __M([0,1,43,13,6,10,34,2,7,8,15,67,9,14,21]), function (require,
             this.initButton.enabled = true;
         };
         EmptyView.prototype.focus = function () {
-            // no-op
+            this.initButton.focus();
         };
         EmptyView.prototype.layout = function (dimension) {
             // no-op

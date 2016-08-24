@@ -4,7 +4,8 @@
 
 import {DebugProtocol} from 'vscode-debugprotocol';
 
-import {IStackTraceResponseBody} from '../src/chrome/debugAdapterInterfaces';
+import {IStackTraceResponseBody} from '../src/debugAdapterInterfaces';
+import * as utils from '../src/utils';
 
 import {Mock, It, MockBehavior} from 'typemoq';
 import * as path from 'path';
@@ -39,12 +40,6 @@ export class MockEvent implements DebugProtocol.Event {
     public type = 'event';
 
     constructor(public event: string, public body?: any) { }
-}
-
-export function registerEmptyMocks(...moduleNames: string[]): void {
-    (<string[]>moduleNames).forEach(name => {
-        mockery.registerMock(name, {});
-    });
 }
 
 export function getStackTraceResponseBody(aPath: string, lines: number[], sourceReferences: number[] = []): IStackTraceResponseBody {
@@ -100,4 +95,34 @@ export function registerMockReadFile(...entries: { absPath: string; data: string
             .setup(x => x.readFile(It.isValue(entry.absPath), It.isAny()))
             .callback((path, callback) => callback(null, entry.data));
     });
+}
+
+/**
+ * Mock utils.getURL to return the specified contents.
+ * Note that if you call this twice, the second call will overwrite the first.
+ */
+export function registerMockGetURL(utilsRelativePath: string, url: string, contents: string, isError = false): void {
+    const utilsMock = Mock.ofInstance(utils);
+    utilsMock.callBase = true;
+    mockery.registerMock(utilsRelativePath, utilsMock.object);
+    utilsMock
+        .setup(x => x.getURL(It.isValue(url)))
+        .returns(() => isError ? Promise.reject(contents) : Promise.resolve(contents));
+    utilsMock
+        .setup(x => x.isURL(It.isValue(url)))
+        .returns(() => true);
+}
+
+export function registerMockGetURLFail(utilsRelativePath: string, url: string, failContents?: string): void {
+    return registerMockGetURL(utilsRelativePath, url, failContents, /*isError=*/true);
+}
+
+/**
+ * Returns a promise that is resolved if the given promise is rejected, and is rejected if the given
+ * promise is resolved
+ */
+export function assertPromiseRejected(promise: Promise<any>): Promise<any> {
+    return promise.then(
+        result => { throw new Error('Promise was expected to be rejected, but was resolved with ' + result); },
+        () => { /* as expected */ });
 }

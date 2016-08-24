@@ -1,6 +1,6 @@
 {
-	"markdown.category": "Markdown",
-	"markdown.preview.title": "Open Preview",
-	"markdown.previewSide.title": "Open Preview to the Side",
-	"markdown.showSource.title": "Show Source"
+	"markdown.category": "マークダウン",
+	"markdown.preview.title": "プレビューを開く",
+	"markdown.previewSide.title": "プレビューを横に表示",
+	"markdown.showSource.title": "ソースの表示"
 }

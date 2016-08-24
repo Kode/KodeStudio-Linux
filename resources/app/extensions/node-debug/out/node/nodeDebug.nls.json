@@ -5,6 +5,7 @@
 		"entry",
 		"breakpoint",
 		"debugger statement",
+		"frame entry",
 		"step",
 		"All Exceptions",
 		"Uncaught Exceptions",
@@ -19,6 +20,7 @@
 		"Cannot connect to runtime process (timeout after {0} ms).",
 		"Cannot connect to runtime process (reason: {0}).",
 		"entry",
+		"Unverified because file on disk has changed. Please restart debug session.",
 		"Internal module {0} not found.",
 		"Breakpoint ignored because generated code not found (source map problem?).",
 		"breakpoint",
@@ -28,6 +30,7 @@
 		"read-only content from Node.js",
 		"read-only content from remote Node.js",
 		"read-only core module",
+		"{0} <error: {1}>",
 		"read-only inlined content from source map",
 		"(anonymous function)",
 		"Local ({0} of {1})",
@@ -37,7 +40,7 @@
 		"not available",
 		"not available",
 		"invalid expression: {0}",
-		"<source not found>",
+		"Could not retrieve content.",
 		"Attribute '{0}' is missing or empty.",
 		"Attribute '{0}' does not exist ('{1}').",
 		"Attribute '{0}' is not absolute ('{1}'); consider adding '{2}' as a prefix to make it absolute.",
@@ -79,6 +82,12 @@
 			]
 		},
 		{
+			"key": "reason.restart",
+			"comment": [
+				"https://github.com/Microsoft/vscode/issues/4568"
+			]
+		},
+		{
 			"key": "reason.step",
 			"comment": [
 				"https://github.com/Microsoft/vscode/issues/4568"
@@ -102,6 +111,7 @@
 				"https://github.com/Microsoft/vscode/issues/4568"
 			]
 		},
+		"file.on.disk.changed",
 		"VSND2019",
 		"sourcemapping.fail.message",
 		{
@@ -116,6 +126,7 @@
 		"origin.from.node",
 		"origin.from.remote.node",
 		"origin.core.module",
+		"frame.error",
 		"origin.inlined.source.map",
 		"anonymous.function",
 		{

@@ -93,6 +93,32 @@ define(__m[15], __M([0,1]), function (require, exports) {
         return low;
     }
     exports.findFirst = findFirst;
+    /**
+     * Returns the top N elements from the array.
+     *
+     * Faster than sorting the entire array when the array is a lot larger than N.
+     *
+     * @param array The unsorted array.
+     * @param compare A sort function for the elements.
+     * @param n The number of elements to return.
+     * @return The first n elemnts from array when sorted with compare.
+     */
+    function top(array, compare, n) {
+        var result = array.slice(0, n).sort(compare);
+        var _loop_1 = function(i, m) {
+            var element = array[i];
+            if (compare(element, result[n - 1]) < 0) {
+                result.pop();
+                var j = findFirst(result, function (e) { return compare(element, e) < 0; });
+                result.splice(j, 0, element);
+            }
+        };
+        for (var i = n, m = array.length; i < m; i++) {
+            _loop_1(i, m);
+        }
+        return result;
+    }
+    exports.top = top;
     function merge(arrays, hashFn) {
         var result = new Array();
         if (!hashFn) {
@@ -236,10 +262,13 @@ define(__m[15], __M([0,1]), function (require, exports) {
         return arr;
     }
     exports.fill = fill;
-    function index(array, indexer) {
-        var result = Object.create(null);
-        array.forEach(function (t) { return result[indexer(t)] = t; });
-        return result;
+    function index(array, indexer, merger) {
+        if (merger === void 0) { merger = function (t) { return t; }; }
+        return array.reduce(function (r, t) {
+            var key = indexer(t);
+            r[key] = merger(t, r[key]);
+            return r;
+        }, Object.create(null));
     }
     exports.index = index;
 });
@@ -341,6 +370,13 @@ define(__m[18], __M([0,1]), function (require, exports) {
                 keys.push(this.map[key].key);
             }
             return keys;
+        };
+        SimpleMap.prototype.values = function () {
+            var values = [];
+            for (var key in this.map) {
+                values.push(this.map[key].value);
+            }
+            return values;
         };
         SimpleMap.prototype.entries = function () {
             var entries = [];
@@ -834,6 +870,9 @@ define(__m[7], __M([0,1,5]), function (require, exports, platform_1) {
     }
     exports.getRoot = getRoot;
     exports.join = function () {
+        // Not using a function with var-args because of how TS compiles
+        // them to JS - it would result in 2*n runtime cost instead
+        // of 1*n, where n is parts.length.
         var value = '';
         for (var i = 0; i < arguments.length; i++) {
             var part = arguments[i];
@@ -1365,10 +1404,18 @@ define(__m[2], __M([0,1,18]), function (require, exports, map_1) {
         return -1;
     }
     exports.lastNonWhitespaceIndex = lastNonWhitespaceIndex;
-    function localeCompare(strA, strB) {
-        return strA.localeCompare(strB);
+    function compare(a, b) {
+        if (a < b) {
+            return -1;
+        }
+        else if (a > b) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
-    exports.localeCompare = localeCompare;
+    exports.compare = compare;
     function isAsciiChar(code) {
         return (code >= 97 && code <= 122) || (code >= 65 && code <= 90);
     }
@@ -6049,6 +6096,27 @@ define(__m[13], __M([0,1,24]), function (require, exports, callbackList_1) {
         };
     }
     exports.fromEventEmitter = fromEventEmitter;
+    function fromPromise(promise) {
+        var toCancel = null;
+        var listener = null;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
+            },
+            onLastListenerRemove: function () {
+                if (toCancel) {
+                    toCancel.cancel();
+                    toCancel = null;
+                }
+                if (listener) {
+                    listener.dispose();
+                    listener = null;
+                }
+            }
+        });
+        return emitter.event;
+    }
+    exports.fromPromise = fromPromise;
     function mapEvent(event, map) {
         return function (listener, thisArgs, disposables) {
             if (thisArgs === void 0) { thisArgs = null; }
@@ -6074,8 +6142,9 @@ define(__m[13], __M([0,1,24]), function (require, exports, callbackList_1) {
                     output = merger(output, cur);
                     clearTimeout(handle);
                     handle = setTimeout(function () {
-                        emitter.fire(output);
+                        var _output = output;
                         output = undefined;
+                        emitter.fire(_output);
                     }, delay);
                 });
             },
@@ -7656,6 +7725,8 @@ define(__m[33], __M([0,1,6,17,25,15,2,3,16,21,14]), function (require, exports, 
             this.walkedPaths = Object.create(null);
             this.resultCount = 0;
             this.isLimitHit = false;
+            this.directoriesWalked = 0;
+            this.filesWalked = 0;
             if (this.filePattern) {
                 this.filePattern = this.filePattern.replace(/\\/g, '/'); // Normalize file patterns to forward slashes
                 this.normalizedFilePatternLowercase = strings.stripWildcards(this.filePattern).toLowerCase();
@@ -7666,6 +7737,7 @@ define(__m[33], __M([0,1,6,17,25,15,2,3,16,21,14]), function (require, exports, 
         };
         FileWalker.prototype.walk = function (rootFolders, extraFiles, onResult, done) {
             var _this = this;
+            this.fileWalkStartTime = Date.now();
             // Support that the file pattern is a full path to a file that exists
             this.checkFilePatternAbsoluteMatch(function (exists, size) {
                 if (_this.isCanceled) {
@@ -7691,6 +7763,7 @@ define(__m[33], __M([0,1,6,17,25,15,2,3,16,21,14]), function (require, exports, 
                 }
                 // For each root folder
                 flow.parallel(rootFolders, function (absolutePath, perEntryCallback) {
+                    _this.directoriesWalked++;
                     extfs.readdir(absolutePath, function (error, files) {
                         if (error || _this.isCanceled || _this.isLimitHit) {
                             return perEntryCallback(null, null);
@@ -7711,6 +7784,14 @@ define(__m[33], __M([0,1,6,17,25,15,2,3,16,21,14]), function (require, exports, 
                     done(err ? err[0] : null, _this.isLimitHit);
                 });
             });
+        };
+        FileWalker.prototype.getStats = function () {
+            return {
+                fileWalkStartTime: this.fileWalkStartTime,
+                fileWalkResultTime: Date.now(),
+                directoriesWalked: this.directoriesWalked,
+                filesWalked: this.filesWalked
+            };
         };
         FileWalker.prototype.checkFilePatternAbsoluteMatch = function (clb) {
             if (!this.filePattern || !paths.isAbsolute(this.filePattern)) {
@@ -7764,6 +7845,7 @@ define(__m[33], __M([0,1,6,17,25,15,2,3,16,21,14]), function (require, exports, 
                         }
                         // Directory: Follow directories
                         if (stat.isDirectory()) {
+                            _this.directoriesWalked++;
                             // to really prevent loops with links we need to resolve the real path of them
                             return _this.realPathIfNeeded(currentAbsolutePath, lstat, function (error, realpath) {
                                 if (error || _this.isCanceled || _this.isLimitHit) {
@@ -7783,6 +7865,7 @@ define(__m[33], __M([0,1,6,17,25,15,2,3,16,21,14]), function (require, exports, 
                             });
                         }
                         else {
+                            _this.filesWalked++;
                             if (currentRelativePathWithSlashes === _this.filePattern) {
                                 return clb(null); // ignore file if its path matches with the file pattern because checkFilePatternRelativeMatch() takes care of those
                             }
@@ -7853,7 +7936,13 @@ define(__m[33], __M([0,1,6,17,25,15,2,3,16,21,14]), function (require, exports, 
             this.walker = new FileWalker(config);
         }
         Engine.prototype.search = function (onResult, onProgress, done) {
-            this.walker.walk(this.rootFolders, this.extraFiles, onResult, done);
+            var _this = this;
+            this.walker.walk(this.rootFolders, this.extraFiles, onResult, function (err, isLimitHit) {
+                done(err, {
+                    limitHit: isLimitHit,
+                    stats: _this.walker.getStats()
+                });
+            });
         };
         Engine.prototype.cancel = function () {
             this.walker.cancel();
@@ -7939,7 +8028,10 @@ define(__m[35], __M([0,1,2,6,11,28,19]), function (require, exports, strings, fs
                 // Emit done()
                 if (_this.worked === _this.total && _this.walkerIsDone && !_this.isDone) {
                     _this.isDone = true;
-                    done(_this.walkerError, _this.limitReached);
+                    done(_this.walkerError, {
+                        limitHit: _this.limitReached,
+                        stats: _this.walker.getStats()
+                    });
                 }
             };
             // Walk over the file system
@@ -8158,7 +8250,7 @@ define(__m[36], __M([0,1,6,43,4,32,33,35]), function (require, exports, fs, grac
         }
         SearchService.prototype.fileSearch = function (config) {
             var engine = new fileSearch_1.Engine(config);
-            return this.doSearch(engine);
+            return this.doSearch(engine, SearchService.BATCH_SIZE);
         };
         SearchService.prototype.textSearch = function (config) {
             var engine = new textSearch_1.Engine(config, new fileSearch_1.FileWalker({
@@ -8169,28 +8261,40 @@ define(__m[36], __M([0,1,6,43,4,32,33,35]), function (require, exports, fs, grac
                 filePattern: config.filePattern,
                 maxFilesize: files_1.MAX_FILE_SIZE
             }));
-            return this.doSearch(engine);
+            return this.doSearch(engine, SearchService.BATCH_SIZE);
         };
-        SearchService.prototype.doSearch = function (engine) {
+        SearchService.prototype.doSearch = function (engine, batchSize) {
             return new winjs_base_1.PPromise(function (c, e, p) {
+                var batch = [];
                 engine.search(function (match) {
                     if (match) {
-                        p(match);
+                        if (batchSize) {
+                            batch.push(match);
+                            if (batchSize > 0 && batch.length >= batchSize) {
+                                p(batch);
+                                batch = [];
+                            }
+                        }
+                        else {
+                            p(match);
+                        }
                     }
                 }, function (progress) {
                     p(progress);
-                }, function (error, isLimitHit) {
+                }, function (error, stats) {
+                    if (batch.length) {
+                        p(batch);
+                    }
                     if (error) {
                         e(error);
                     }
                     else {
-                        c({
-                            limitHit: isLimitHit
-                        });
+                        c(stats);
                     }
                 });
             }, function () { return engine.cancel(); });
         };
+        SearchService.BATCH_SIZE = 500;
         return SearchService;
     }());
     exports.SearchService = SearchService;

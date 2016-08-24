@@ -3,6 +3,6 @@
  *--------------------------------------------------------*/
 define("vs/workbench/parts/extensions/electron-browser/extensionsViewlet.nls.es", {
 	"vs/workbench/parts/extensions/electron-browser/extensionsViewlet": [
-		"Search Extensions in Marketplace",
+		"Buscar extensiones en Marketplace",
 	]
 });

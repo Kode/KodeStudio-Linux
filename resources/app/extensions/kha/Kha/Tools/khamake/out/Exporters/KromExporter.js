@@ -13,6 +13,7 @@ const KhaExporter_1 = require('./KhaExporter');
 const Converter_1 = require('../Converter');
 const ImageTool_1 = require('../ImageTool');
 const HaxeProject_1 = require('../HaxeProject');
+const HaxeProject_2 = require('../HaxeProject');
 class KromExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
@@ -21,7 +22,7 @@ class KromExporter extends KhaExporter_1.KhaExporter {
     sysdir() {
         return 'krom';
     }
-    haxeOptions(name, defines) {
+    haxeOptions(name, targetOptions, defines) {
         defines.push('js-classic');
         defines.push('sys_g1');
         defines.push('sys_g2');
@@ -45,12 +46,13 @@ class KromExporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    exportSolution(name, _targetOptions, defines) {
+    exportSolution(name, targetOptions, haxeOptions) {
         return __awaiter(this, void 0, Promise, function* () {
             fs.ensureDirSync(path.join(this.options.to, this.sysdir()));
-            let haxeOptions = this.haxeOptions(name, defines);
-            HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
-            return haxeOptions;
+            HaxeProject_2.hxml(this.options.to, haxeOptions);
+            if (this.projectFiles) {
+                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
+            }
         });
     }
     copySound(platform, from, to) {

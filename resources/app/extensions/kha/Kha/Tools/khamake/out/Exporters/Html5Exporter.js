@@ -13,6 +13,7 @@ const KhaExporter_1 = require('./KhaExporter');
 const Converter_1 = require('../Converter');
 const ImageTool_1 = require('../ImageTool');
 const HaxeProject_1 = require('../HaxeProject');
+const HaxeProject_2 = require('../HaxeProject');
 class Html5Exporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
@@ -27,13 +28,17 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
     isNode() {
         return this.sysdir() === 'node';
     }
-    haxeOptions(name, defines) {
+    haxeOptions(name, targetOptions, defines) {
         defines.push('sys_g1');
         defines.push('sys_g2');
         defines.push('sys_g3');
         defines.push('sys_g4');
         defines.push('sys_a1');
         defines.push('sys_a2');
+        let webgl = targetOptions.html5.webgl == null ? true : targetOptions.html5.webgl;
+        if (webgl) {
+            defines.push('webgl');
+        }
         if (this.isNode()) {
             defines.push('sys_node');
             defines.push('sys_server');
@@ -61,11 +66,13 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    exportSolution(name, _targetOptions, defines) {
+    exportSolution(name, targetOptions, haxeOptions) {
         return __awaiter(this, void 0, Promise, function* () {
             fs.ensureDirSync(path.join(this.options.to, this.sysdir()));
-            let haxeOptions = this.haxeOptions(name, defines);
-            HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
+            HaxeProject_2.hxml(this.options.to, haxeOptions);
+            if (this.projectFiles) {
+                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
+            }
             if (this.isDebugHtml5()) {
                 let index = path.join(this.options.to, this.sysdir(), 'index.html');
                 if (!fs.existsSync(index)) {
@@ -87,9 +94,11 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
             }
             else if (this.isNode()) {
                 let pack = path.join(this.options.to, this.sysdir(), 'package.json');
-                let protopackage = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'node', 'package.json'), { encoding: 'utf8' });
+                let protopackage = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'node', 'package.json'), 'utf8');
                 protopackage = protopackage.replace(/{Name}/g, name);
-                fs.writeFileSync(pack.toString(), protopackage);
+                fs.writeFileSync(pack, protopackage);
+                let protoserver = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'node', 'server.js'), 'utf8');
+                fs.writeFileSync(path.join(this.options.to, this.sysdir(), 'server.js'), protoserver);
             }
             else {
                 let index = path.join(this.options.to, this.sysdir(), 'index.html');
@@ -101,7 +110,6 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
                     fs.writeFileSync(index.toString(), protoindex);
                 }
             }
-            return haxeOptions;
         });
     }
     /*copyMusic(platform, from, to, encoders, callback) {

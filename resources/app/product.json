@@ -5,9 +5,14 @@
 	"dataFolderName": ".kodestudio",
 	"win32MutexName": "kodestudio",
 	"licenseUrl": "https://github.com/KTXSoftware/KodeStudio/blob/master/LICENSE.txt",
+	"win32DirName": "Kode Studio",
+	"win32NameVersion": "Kode Studio",
+	"win32RegValueName": "KodeStudio",
+	"win32AppId": "{{E34003BB-9E10-4501-8C11-BE3FAA83F23F}",
+	"win32AppUserModelId": "KodeStudio",
 	"darwinBundleIdentifier": "org.kodestudio",
-	"reportIssueUrl": "https://github.com/Microsoft/vscode/issues/new",
-	"kodeStudioVersion": "16.7.3",
-	"commit": "e698221ac971850e0a3766dc5bafda21e7ee796d",
-	"date": "2016-08-03T19:24:49.649Z"
+	"reportIssueUrl": "https://github.com/KTXSoftware/KodeStudio/issues/new",
+	"kodeStudioVersion": "16.8.0",
+	"commit": "c9038f8e16ebca8ffc83e6dd81e38f0bb8cf1cea",
+	"date": "2016-08-24T18:33:53.502Z"
 }

@@ -6,9 +6,10 @@ import * as os from 'os';
 import {DebugProtocol} from 'vscode-debugprotocol';
 import {DebugSession, ErrorDestination, OutputEvent} from 'vscode-debugadapter';
 
-import {IDebugAdapter} from './debugAdapterInterfaces';
+import {IDebugAdapter} from '../debugAdapterInterfaces';
 import {ChromeDebugAdapter} from './chromeDebugAdapter';
 import {ChromeConnection, ITargetFilter} from './chromeConnection';
+import {getChromeTargetWebSocketURL} from './chromeTargetDiscoveryStrategy';
 
 import * as logger from '../logger';
 
@@ -20,7 +21,7 @@ import {SourceMapTransformer} from '../transformers/sourceMapTransformer';
 export interface IChromeDebugSessionOpts {
     adapter?: IDebugAdapter;
     targetFilter?: ITargetFilter;
-    logFileDirectory?: string;
+    logFilePath?: string;
 }
 
 export class ChromeDebugSession extends DebugSession {
@@ -51,11 +52,11 @@ export class ChromeDebugSession extends DebugSession {
         opts: IChromeDebugSessionOpts = {}) {
         super(targetLinesStartAt1, isServer);
 
-        const connection = new ChromeConnection(opts.targetFilter);
+        const connection = new ChromeConnection(getChromeTargetWebSocketURL, opts.targetFilter);
         const adapter = opts.adapter || new ChromeDebugAdapter(connection);
-        const logFileDirectory = opts.logFileDirectory;
+        const logFilePath =  opts.logFilePath;
 
-        logger.init((msg, level) => this.onLog(msg, level), logFileDirectory);
+        logger.init((msg, level) => this.onLog(msg, level), logFilePath);
         logVersionInfo();
 
         process.addListener('unhandledRejection', reason => {

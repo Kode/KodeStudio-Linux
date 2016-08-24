@@ -3,6 +3,6 @@
  *--------------------------------------------------------*/
 define("vs/workbench/parts/markers/browser/markersPanel.nls.ko", {
 	"vs/workbench/parts/markers/browser/markersActionProvider": [
-		"Remove",
+		"제거",
 	]
 });

@@ -132,7 +132,7 @@ var ProjectJSONContribution = (function () {
                                     insertText += ',';
                                 }
                             }
-                            var item = { kind: vscode_languageserver_1.CompletionItemKind.Property, label: name, insertText: insertText };
+                            var item = { kind: vscode_languageserver_1.CompletionItemKind.Property, label: name, insertText: insertText, filterText: JSON.stringify(name) };
                             if (!_this.completeWithCache(name, item)) {
                                 item.data = RESOLVE_ID + name;
                             }
@@ -196,10 +196,10 @@ var ProjectJSONContribution = (function () {
                             _this.addCached(res.id, res.version, res.description);
                             if (res.id === pack_1) {
                                 if (res.description) {
-                                    htmlContent.push(res.description);
+                                    htmlContent.push({ language: 'string', value: res.description });
                                 }
                                 if (res.version) {
-                                    htmlContent.push(localize(6, null, res.version));
+                                    htmlContent.push({ language: 'string', value: localize(6, null, res.version) });
                                 }
                                 break;
                             }

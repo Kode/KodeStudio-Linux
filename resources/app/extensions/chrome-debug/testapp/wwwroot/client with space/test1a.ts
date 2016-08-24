@@ -2,12 +2,9 @@ const globalCode = 'page loaded';
 console.log(globalCode);
 
 function locals() {
-    var arr1 = [1, 2];
+    const manyPropsObj: any = { prop2: 'abc', prop1: 'def' };
+    for (let i=0; i<=100; i++) manyPropsObj[i] = Math.random();
 
-
-    arr1.forEach(x => {
-        console.log(x);
-    });
     var r = /^asdf.*$/g;
     var longStr = `this is a
 string with
@@ -23,6 +20,9 @@ newlines`;
     m.set('a', 1);
 
     var b = document.body;
+    let nan = NaN;
+    let inf = 1/0;
+    let infStr = "Infinity";
 
     eval('var evalVar3 = [1,2,3]');
     eval('var evalVar1 = 16');

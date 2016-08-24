@@ -32,9 +32,10 @@ define("vs/workbench/workbench.main.nls", {
 		"Close"
 	],
 	"vs/base/browser/ui/resourceviewer/resourceViewer": [
+		"{0} ({1}x{2})",
 		"Sorry but playback of audio files is not supported.",
 		"Sorry but playback of video files is not supported.",
-		"The file cannot be displayed in the editor because it is either binary, very large or uses an unsupported text encoding."
+		"The file will not be displayed in the editor because it is either binary, very large or uses an unsupported text encoding."
 	],
 	"vs/base/browser/ui/toolbar/toolbar": [
 		"More"
@@ -114,7 +115,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Editor",
 		"Controls the font family.",
 		"Controls the font size.",
-		"Controls the line height.",
+		"Controls the line height. Use 0 to compute the lineHeight from the fontSize.",
 		"Controls visibility of line numbers",
 		"Controls visibility of the glyph margin",
 		"Columns at which to show vertical rulers",
@@ -136,11 +137,14 @@ define("vs/workbench/workbench.main.nls", {
 		"Controls if the editor should automatically format the line after typing",
 		"Controls if suggestions should automatically show up when typing trigger characters",
 		"Controls if suggestions should be accepted 'Enter' - in addition to 'Tab'. Helps to avoid ambiguity between inserting new lines or accepting suggestions.",
+		"Controls whether snippets are shown with other suggestions and how they are sorted.",
+		"Enable word based suggestions.",
+		"Insert snippets when their prefix matches. Works best when 'quickSuggestions' aren't enabled.",
 		"Controls whether the editor should highlight similar matches to the selection",
 		"Controls the number of decorations that can show up at the same position in the overview ruler",
-		"Controls the cursor blinking animation, accepted values are 'blink', 'visible', and 'hidden'",
+		"Control the cursor animation style, possible values are 'blink', 'smooth', 'phase', 'expand' and 'solid'",
 		"Zoom the font of the editor when using mouse wheel and holding Ctrl",
-		"Controls the cursor style, accepted values are 'block' and 'line'",
+		"Controls the cursor style, accepted values are 'block', 'line' and 'underline'",
 		"Enables font ligatures",
 		"Controls if the cursor should be hidden in the overview ruler.",
 		"Controls whether the editor should render whitespace characters",
@@ -161,14 +165,16 @@ define("vs/workbench/workbench.main.nls", {
 	"vs/editor/common/controller/cursor": [
 		"Unexpected exception while executing command."
 	],
+	"vs/editor/common/editorCommon": [
+		"Move cursor to a logical position in the view",
+		"Cursor move argument",
+		"Argument containing mandatory 'to' value and an optional 'inSelectionMode' value. Value of 'to' has to be a defined value in `CursorMoveViewPosition`."
+	],
 	"vs/editor/common/model/textModelWithTokens": [
 		"The mode has failed while tokenizing the input."
 	],
 	"vs/editor/common/modes/modesRegistry": [
 		"Plain Text"
-	],
-	"vs/editor/common/modes/supports/suggestSupport": [
-		"Enable word based suggestions."
 	],
 	"vs/editor/common/services/bulkEdit": [
 		"These files have changed in the meantime: {0}"
@@ -257,7 +263,9 @@ define("vs/workbench/workbench.main.nls", {
 		"Find Previous Selection",
 		"Replace",
 		"Move Last Selection To Next Find Match",
-		"Add Selection To Next Find Match"
+		"Move Last Selection To Previous Find Match",
+		"Add Selection To Next Find Match",
+		"Add Selection To Previous Find Match"
 	],
 	"vs/editor/contrib/folding/browser/folding": [
 		"Unfold",
@@ -370,6 +378,7 @@ define("vs/workbench/workbench.main.nls", {
 		"References"
 	],
 	"vs/editor/contrib/rename/browser/rename": [
+		"Sorry, rename failed to execute.",
 		"Rename Symbol"
 	],
 	"vs/editor/contrib/rename/browser/renameInputField": [
@@ -399,6 +408,9 @@ define("vs/workbench/workbench.main.nls", {
 		"{0}, suggestion, has details",
 		"{0}, suggestion"
 	],
+	"vs/editor/contrib/suggest/electron-browser/snippetCompletion": [
+		"Insert Snippet"
+	],
 	"vs/editor/contrib/toggleTabFocusMode/common/toggleTabFocusMode": [
 		"Toggle Use of Tab Key for Setting Focus"
 	],
@@ -409,10 +421,21 @@ define("vs/workbench/workbench.main.nls", {
 		"Close"
 	],
 	"vs/editor/node/languageConfiguration": [
-		"Errors parsing {0}: {1}"
+		"Errors parsing {0}: {1}",
+		"The opening bracket character or string sequence.",
+		"The closing bracket character or string sequence.",
+		"Defines the comment symbols",
+		"Defines how block comments are marked.",
+		"The character sequence that starts a block comment.",
+		"The character sequence that ends a block comment.",
+		"The character sequence that starts a line comment.",
+		"Defines the bracket symbols that increase or decrease the indentation.",
+		"Defines the bracket pairs. When a opening bracket is entered, the closing bracket is inserted automatically.",
+		"Defines a list of scopes where the auto pairs are disabled.",
+		"Defines the bracket pairs that can be used to surround a selected string."
 	],
 	"vs/editor/node/textMate/TMSnippets": [
-		"Contributes TextMate snippets.",
+		"Contributes snippets.",
 		"Language identifier for which this snippet is contributed to.",
 		"Path of the snippets file. The path is relative to the extension folder and typically starts with './snippets/'.",
 		"Unknown language in `contributes.{0}.language`. Provided value: {1}",
@@ -519,42 +542,6 @@ define("vs/workbench/workbench.main.nls", {
 		"Script executed before the package is published as a VS Code extension.",
 		"All contributions of the VS Code extension represented by this package."
 	],
-	"vs/platform/jsonschemas/common/jsonContributionRegistry": [
-		"Describes a JSON file using a schema. See json-schema.org for more info.",
-		"A unique identifier for the schema.",
-		"The schema to verify this document against ",
-		"A descriptive title of the element",
-		"A long description of the element. Used in hover menus and suggestions.",
-		"A default value. Used by suggestions.",
-		"A number that should cleanly divide the current value (i.e. have no remainder)",
-		"The maximum numerical value, inclusive by default.",
-		"Makes the maximum property exclusive.",
-		"The minimum numerical value, inclusive by default.",
-		"Makes the minimum property exclusive.",
-		"The maximum length of a string.",
-		"The minimum length of a string.",
-		"A regular expression to match the string against. It is not implicitly anchored.",
-		"For arrays, only when items is set as an array. If it is a schema, then this schema validates items after the ones specified by the items array. If it is false, then additional items will cause validation to fail.",
-		"For arrays. Can either be a schema to validate every element against or an array of schemas to validate each item against in order (the first schema will validate the first element, the second schema will validate the second element, and so on.",
-		"The maximum number of items that can be inside an array. Inclusive.",
-		"The minimum number of items that can be inside an array. Inclusive.",
-		"If all of the items in the array must be unique. Defaults to false.",
-		"The maximum number of properties an object can have. Inclusive.",
-		"The minimum number of properties an object can have. Inclusive.",
-		"An array of strings that lists the names of all properties required on this object.",
-		"Either a schema or a boolean. If a schema, then used to validate all properties not matched by 'properties' or 'patternProperties'. If false, then any properties not matched by either will cause this schema to fail.",
-		"Not used for validation. Place subschemas here that you wish to reference inline with $ref",
-		"A map of property names to schemas for each property.",
-		"A map of regular expressions on property names to schemas for matching properties.",
-		"A map of property names to either an array of property names or a schema. An array of property names means the property named in the key depends on the properties in the array being present in the object in order to be valid. If the value is a schema, then the schema is only applied to the object if the property in the key exists on the object.",
-		"The set of literal values that are valid",
-		"Either a string of one of the basic schema types (number, integer, null, array, object, boolean, string) or an array of strings specifying a subset of those types.",
-		"Describes the format expected for the value.",
-		"An array of schemas, all of which must match.",
-		"An array of schemas, where at least one must match.",
-		"An array of schemas, exactly one of which must match.",
-		"A schema which must not match."
-	],
 	"vs/platform/jsonschemas/common/jsonValidationExtensionPoint": [
 		"Contributes json schema configuration.",
 		"The file pattern to match, for example \"package.json\" or \"*.launch\".",
@@ -582,6 +569,7 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/platform/message/common/message": [
 		"Close",
+		"Later",
 		"Cancel"
 	],
 	"vs/platform/telemetry/common/telemetryService": [
@@ -660,9 +648,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Controls if opened editors should show in tabs or not.",
 		"Controls if opened editors show as preview. Preview editors are reused until they are kept (e.g. via double click or editing).",
 		"Controls if opened editors from quick open show as preview. Preview editors are reused until they are kept (e.g. via double click or editing).",
-		"Controls where editors open. Select 'left' or 'right' to open editors to the left or right of the current active one. Select 'first' or 'last' to open editors independently from the currently active one.",
-		"Command **{0}** is now deprecated. You can use **{1}** instead",
-		"Configure Keyboard Shortcuts"
+		"Controls where editors open. Select 'left' or 'right' to open editors to the left or right of the current active one. Select 'first' or 'last' to open editors independently from the currently active one."
 	],
 	"vs/workbench/browser/parts/editor/editorActions": [
 		"Split Editor",
@@ -704,7 +690,14 @@ define("vs/workbench/workbench.main.nls", {
 		"Remove From Editor History",
 		"Navigate Next in Quick Open",
 		"Navigate Previous in Quick Open",
-		"Open Last Editor in Group"
+		"Open Last Editor in Group",
+		"Move Editor into Group to the Left",
+		"Move Editor into Group to the Right"
+	],
+	"vs/workbench/browser/parts/editor/editorCommands": [
+		"Move the active editor by tabs or groups",
+		"Active editor move argument",
+		"\n\t\t\t\t\t\tArgument Properties:\n\t\t\t\t\t\t'to': String value providing where to move.\n\t\t\t\t\t\t'by': String value providing the unit for move. By tab or by group.\n\t\t\t\t\t\t'value': Number value providing how many positions or an absolute position to move.\n\t\t\t\t\t"
 	],
 	"vs/workbench/browser/parts/editor/editorPart": [
 		"Left",
@@ -793,13 +786,14 @@ define("vs/workbench/workbench.main.nls", {
 		"Close to the Right",
 		"Close All",
 		"Keep Open",
-		"Move Left",
-		"Move Right",
+		"Show Opened Editors",
 		"Editor actions"
 	],
 	"vs/workbench/browser/parts/panel/panelPart": [
 		"Close",
 		"Toggle Panel Visibility",
+		"Focus into Panel",
+		"View",
 		"View"
 	],
 	"vs/workbench/browser/parts/quickopen/quickOpenController": [
@@ -900,6 +894,12 @@ define("vs/workbench/workbench.main.nls", {
 		"Update",
 		"Configure whether you receive automatic updates from an update channel. Requires a restart after change."
 	],
+	"vs/workbench/electron-browser/nps.contribution": [
+		"Do you mind taking a quick feedback survey?",
+		"Take Survey",
+		"Remind Me later",
+		"Never Show Again"
+	],
 	"vs/workbench/electron-browser/shell": [
 		"It is recommended not to run Code as 'root'.",
 		"The shared process terminated unexpectedly. Please reload the window to recover."
@@ -917,75 +917,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Breakpoint on line {0} will only stop if this condition is true. 'Enter' to accept, 'esc' to cancel.",
 		"Type the breakpoint condition for line {0}. The program will only stop here if this condition is true. Press Enter to accept or Escape to cancel."
 	],
-	"vs/workbench/parts/debug/browser/debugEditorContribution": [
-		"Add Breakpoint"
-	],
-	"vs/workbench/parts/debug/browser/debugEditorModelManager": [
-		"Breakpoint",
-		"Disabled Breakpoint",
-		"Unverified Breakpoint",
-		"Unverified breakpoint. File is modified, please restart debug session.",
-		"Conditional breakpoints not supported by this debug type"
-	],
-	"vs/workbench/parts/debug/browser/debugHover": [
-		"Debug Hover"
-	],
-	"vs/workbench/parts/debug/browser/debugViewer": [
-		"Thread",
-		"paused",
-		"running",
-		"Load More Stack Frames",
-		"Thread {0}, callstack, debug",
-		"Stack Frame {0} line {1} {2}, callstack, debug",
-		"Type new variable value",
-		"Scope {0}, variables, debug",
-		"{0} value {1}, variables, debug",
-		"Expression to watch",
-		"Type watch expression",
-		"{0} value {1}, watch, debug",
-		"{0} value {1}, watch, debug",
-		"Function to break on",
-		"Type function breakpoint",
-		"Breakpoint line {0} {1}, breakpoints, debug",
-		"Function breakpoint {0}, breakpoints, debug",
-		"Exception breakpoint {0}, breakpoints, debug"
-	],
-	"vs/workbench/parts/debug/browser/debugViews": [
-		"Variables Section",
-		"Variables",
-		"Debug Variables",
-		"Expressions Section",
-		"Watch",
-		"Debug Watch Expressions",
-		"Call Stack Section",
-		"Call Stack",
-		"Debug Call Stack",
-		"Paused on {0}",
-		"Breakpoints Section",
-		"Breakpoints",
-		"Debug Breakpoints"
-	],
-	"vs/workbench/parts/debug/common/debugModel": [
-		"Unknown Source",
-		"Please start a debug session to evaluate",
-		"Unknown stack location",
-		"Only primitive values are shown for this object."
-	],
-	"vs/workbench/parts/debug/electron-browser/debug.contribution": [
-		"Show Debug",
-		"Debug: Toggle Breakpoint",
-		"Debug: Show Hover",
-		"Debug: Conditional Breakpoint",
-		"Debug: Evaluate",
-		"Debug: Add to Watch",
-		"Debug: Run to Cursor",
-		"Debug",
-		"Debug Console",
-		"View",
-		"Debug",
-		"Launch configuration '{0}' does not exist."
-	],
-	"vs/workbench/parts/debug/electron-browser/debugActions": [
+	"vs/workbench/parts/debug/browser/debugActions": [
 		"{0} ({1})",
 		"Open {0}",
 		"Configure or Fix 'launch.json'",
@@ -1001,6 +933,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Disconnect",
 		"Continue",
 		"Pause",
+		"Restart Frame",
 		"Remove Breakpoint",
 		"Remove All Breakpoints",
 		"Enable/Disable Breakpoint",
@@ -1014,17 +947,47 @@ define("vs/workbench/workbench.main.nls", {
 		"Add Conditional Breakpoint",
 		"Edit Breakpoint",
 		"Set Value",
-		"Copy Value",
 		"Add Expression",
 		"Add to Watch",
 		"Rename Expression",
 		"Remove Expression",
 		"Remove All Expressions",
 		"Clear Console",
-		"Copy",
 		"Debug Console",
 		"New Output in Debug Console",
 		"Start Without Debugging"
+	],
+	"vs/workbench/parts/debug/browser/debugEditorModelManager": [
+		"Breakpoint",
+		"Disabled Breakpoint",
+		"Unverified Breakpoint",
+		"Unverified breakpoint. File is modified, please restart debug session.",
+		"Conditional breakpoints not supported by this debug type"
+	],
+	"vs/workbench/parts/debug/common/debugModel": [
+		"Unknown Source",
+		"Please start a debug session to evaluate",
+		"Unknown stack location",
+		"Only primitive values are shown for this object."
+	],
+	"vs/workbench/parts/debug/electron-browser/debug.contribution": [
+		"Show Debug",
+		"Debug: Toggle Breakpoint",
+		"Debug: Show Hover",
+		"Debug: Conditional Breakpoint",
+		"Debug: Evaluate",
+		"Debug: Run to Cursor",
+		"Debug",
+		"Debug Console",
+		"View",
+		"Debug",
+		"Launch configuration '{0}' does not exist."
+	],
+	"vs/workbench/parts/debug/electron-browser/debugEditorContribution": [
+		"Add Breakpoint"
+	],
+	"vs/workbench/parts/debug/electron-browser/debugHover": [
+		"Debug Hover"
 	],
 	"vs/workbench/parts/debug/electron-browser/debugService": [
 		"Debugging started.",
@@ -1044,6 +1007,46 @@ define("vs/workbench/workbench.main.nls", {
 		"There is a task {0} running. Can not run pre launch task {1}.",
 		"Source {0} is not available.",
 		"Debugging continued."
+	],
+	"vs/workbench/parts/debug/electron-browser/debugViewer": [
+		"Thread",
+		"paused",
+		"running",
+		"Load More Stack Frames",
+		"Thread {0}, callstack, debug",
+		"Stack Frame {0} line {1} {2}, callstack, debug",
+		"Type new variable value",
+		"Scope {0}, variables, debug",
+		"{0} value {1}, variables, debug",
+		"Expression to watch",
+		"Type watch expression",
+		"{0} value {1}, watch, debug",
+		"{0} value {1}, watch, debug",
+		"Function to break on",
+		"Type function breakpoint",
+		"Function breakpoints are not supported by this debug type",
+		"Breakpoint line {0} {1}, breakpoints, debug",
+		"Function breakpoint {0}, breakpoints, debug",
+		"Exception breakpoint {0}, breakpoints, debug"
+	],
+	"vs/workbench/parts/debug/electron-browser/debugViews": [
+		"Variables Section",
+		"Variables",
+		"Debug Variables",
+		"Expressions Section",
+		"Watch",
+		"Debug Watch Expressions",
+		"Call Stack Section",
+		"Call Stack",
+		"Debug Call Stack",
+		"Paused on {0}",
+		"Breakpoints Section",
+		"Breakpoints",
+		"Debug Breakpoints"
+	],
+	"vs/workbench/parts/debug/electron-browser/electronDebugActions": [
+		"Copy Value",
+		"Copy"
 	],
 	"vs/workbench/parts/debug/node/debugAdapter": [
 		"Type of configuration.",
@@ -1075,6 +1078,8 @@ define("vs/workbench/workbench.main.nls", {
 		"Runtime used for OSX.",
 		"Linux specific settings.",
 		"Runtime used for Linux.",
+		"Contributes breakpoints.",
+		"Allow breakpoints for this language.",
 		"Launch",
 		"Version of this file format.",
 		"List of configurations. Add new configurations or edit existing ones.",
@@ -1166,7 +1171,8 @@ define("vs/workbench/workbench.main.nls", {
 		"Open in Terminal"
 	],
 	"vs/workbench/parts/extensions/electron-browser/extensionEditor": [
-		"License"
+		"License",
+		"No README available."
 	],
 	"vs/workbench/parts/extensions/electron-browser/extensionTipsService": [
 		"It is recommended to install the '{0}' extension.",
@@ -1177,7 +1183,6 @@ define("vs/workbench/workbench.main.nls", {
 		"Manage Extensions",
 		"Install Gallery Extensions",
 		"Extension",
-		"Extensions",
 		"View"
 	],
 	"vs/workbench/parts/extensions/electron-browser/extensionsActions": [
@@ -1193,11 +1198,11 @@ define("vs/workbench/workbench.main.nls", {
 		"Restart Now",
 		"Show Extensions",
 		"Install Extensions",
+		"Show Installed Extensions",
 		"Clear Extensions Input",
 		"Show Outdated Extensions",
 		"Show Popular Extensions",
-		"Show Extension Recommendations",
-		"Show Installed Extensions"
+		"Show Recommended Extensions"
 	],
 	"vs/workbench/parts/extensions/electron-browser/extensionsInput": [
 		"Extension: {0}"
@@ -1209,7 +1214,7 @@ define("vs/workbench/workbench.main.nls", {
 	],
 	"vs/workbench/parts/extensions/electron-browser/extensionsWorkbenchExtension": [
 		"Extensions were successfully installed. Restart to enable them.",
-		"{0} was successfully installed. Restart to enable it.",
+		"Extension was successfully installed. Restart to enable it.",
 		"Restart Now",
 		"Extensions",
 		"{0} Outdated Extensions"
@@ -1325,7 +1330,8 @@ define("vs/workbench/workbench.main.nls", {
 		"File Explorer",
 		"Number of editors shown in the Open Editors pane. Set it to 0 to hide the pane.",
 		"Controls if the height of the open editors section should adapt dynamically to the number of elements or not.",
-		"Controls if the explorer should automatically reveal files when opening them."
+		"Controls if the explorer should automatically reveal files when opening them.",
+		"Controls if the explorer should allow to move files and folders via drag and drop."
 	],
 	"vs/workbench/parts/files/browser/saveErrorHandler": [
 		"Overwrite",
@@ -1445,16 +1451,8 @@ define("vs/workbench/workbench.main.nls", {
 		"&&Publish",
 		"Pick a remote to publish the branch '{0}' to:",
 		"Authentication failed on the git remote.",
+		"Are you sure you want to synchronize your git repository?",
 		"Authentication failed on the git remote.",
-		"Synchronizing...",
-		"Can't sync in detached mode.",
-		"Current branch '{0} doesn't have an upstream branch configured.",
-		"Current branch '{0}' is up to date.",
-		"Please commit, undo or stash your changes before synchronizing.",
-		"Current branch '{0}' is {1} commit behind and {2} commit ahead of '{3}'.",
-		"Current branch '{0}' is {1} commit behind and {2} commits ahead of '{3}'.",
-		"Current branch '{0}' is {1} commits behind and {2} commit ahead of '{3}'.",
-		"Current branch '{0}' is {1} commits behind and {2} commits ahead of '{3}'.",
 		"Undo Last Commit"
 	],
 	"vs/workbench/parts/git/browser/gitActions.contribution": [
@@ -1520,9 +1518,11 @@ define("vs/workbench/workbench.main.nls", {
 		"Git",
 		"Is git enabled",
 		"Path to the git executable",
+		"Whether auto refreshing is enabled",
 		"Whether auto fetching is enabled.",
 		"Whether long commit messages should be warned about.",
-		"Always allow large repositories to be managed by Code."
+		"Always allow large repositories to be managed by Code.",
+		"Confirm before synchronizing git repositories."
 	],
 	"vs/workbench/parts/git/node/git.lib": [
 		"File seems to be binary and cannot be opened as text"
@@ -1577,7 +1577,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Clear Output",
 		"Switch to Output"
 	],
-	"vs/workbench/parts/output/common/outputEditorInput": [
+	"vs/workbench/parts/output/browser/outputEditorInput": [
 		"Output",
 		"for '{0}'"
 	],
@@ -1589,8 +1589,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Command '{0}' is not enabled in the current context.",
 		"{0}: {1}",
 		"{0}: {1}",
-		"No commands matching",
-		"Show Editor Commands"
+		"No commands matching"
 	],
 	"vs/workbench/parts/quickopen/browser/gotoLineHandler": [
 		"Go to Line...",
@@ -1680,7 +1679,7 @@ define("vs/workbench/workbench.main.nls", {
 		"Expression matches everything"
 	],
 	"vs/workbench/parts/snippets/electron-browser/snippets.contribution": [
-		"Snippets",
+		"Open User Snippets",
 		"Select Language for Snippet",
 		"Unable to create {0}",
 		"Preferences",
@@ -1701,7 +1700,8 @@ define("vs/workbench/workbench.main.nls", {
 		"Compiles a TypeScript project in watch mode",
 		"Executes .NET Core build command",
 		"Executes the build target",
-		"Example to run an arbitrary external command"
+		"Example to run an arbitrary external command",
+		"Executes common maven commands"
 	],
 	"vs/workbench/parts/tasks/electron-browser/task.contribution": [
 		"Tasks are only available on a workspace folder.",
@@ -1819,10 +1819,13 @@ define("vs/workbench/workbench.main.nls", {
 		"The command line arguments to use when on the Linux terminal.",
 		"The path of the shell that the terminal uses on OS X.",
 		"The command line arguments to use when on the OS X terminal.",
-		"The path of the shell that the terminal uses on Windows.",
+		"The path of the shell that the terminal uses on Windows. When using shells shipped with Windows (cmd, PowerShell or Bash on Ubuntu), prefer C:\\Windows\\sysnative over C:\\Windows\\System32 to use the 64-bit versions.",
 		"Controls the font family of the terminal, this defaults to editor.fontFamily's value.",
+		"Controls whether font ligatures are enabled in the terminal.",
 		"Controls the font size of the terminal, this defaults to editor.fontSize's value.",
-		"Controls the line height of the terminal, this defaults to normal.",
+		"Controls the line height of the terminal, this number is multipled by the terminal font size to get the actual line-height in pixels.",
+		"Controls whether the terminal cursor blinks.",
+		"Controls whether locale variables are set at startup of the terminal, this defaults to true on OS X, false on other platforms.",
 		"Terminal",
 		"View"
 	],
@@ -1830,18 +1833,24 @@ define("vs/workbench/workbench.main.nls", {
 		"Toggle Integrated Terminal",
 		"Terminal: Kill the Active Terminal Instance",
 		"Kill Terminal",
+		"Terminal: Copy Selection",
 		"Terminal: Create New Integrated Terminal",
 		"New Terminal",
 		"Terminal: Focus Terminal",
 		"Terminal: Focus Next Terminal",
 		"Terminal: Focus Previous Terminal",
+		"Terminal: Paste into Active Terminal",
 		"Terminal: Run Selected Text In Active Terminal",
 		"Terminal: Switch Terminal Instance"
+	],
+	"vs/workbench/parts/terminal/electron-browser/terminalService": [
+		"Cannot copy terminal selection when terminal does not have focus"
 	],
 	"vs/workbench/parts/themes/electron-browser/themes.contribution": [
 		"Color Theme",
 		"Problem loading theme: {0}",
 		"Select Color Theme",
+		"Find more in the Marketplace...",
 		"Preferences"
 	],
 	"vs/workbench/parts/update/electron-browser/update.contribution": [

@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["require","exports","vs/platform/configuration/common/configuration","vs/base/common/winjs.base","vs/nls!vs/workbench/parts/search/browser/openAnythingHandler","vs/base/common/labels","vs/base/parts/quickopen/browser/quickOpenModel","vs/workbench/browser/quickopen","vs/platform/instantiation/common/instantiation","vs/base/common/paths","vs/nls!vs/workbench/parts/search/browser/openSymbolHandler","vs/platform/search/common/search","vs/workbench/parts/search/common/searchQuery","vs/workbench/parts/search/browser/openFileHandler","vs/nls","vs/workbench/services/editor/common/editorService","vs/nls!vs/workbench/parts/search/browser/openFileHandler","vs/platform/message/common/message","vs/platform/workspace/common/workspace","vs/workbench/parts/search/browser/openSymbolHandler","vs/base/common/async","vs/workbench/services/workspace/common/contextService","vs/workbench/services/group/common/groupService","vs/base/common/objects","vs/workbench/parts/files/common/files","vs/base/common/filters","vs/editor/common/services/modeService","vs/workbench/parts/search/common/search","vs/workbench/parts/search/browser/openAnythingHandler","vs/base/common/types","vs/base/common/platform","vs/base/common/scorer","vs/base/common/strings","vs/workbench/common/editor"];
+var __m = ["require","exports","vs/platform/configuration/common/configuration","vs/base/common/winjs.base","vs/nls!vs/workbench/parts/search/browser/openAnythingHandler","vs/base/common/labels","vs/base/parts/quickopen/browser/quickOpenModel","vs/workbench/browser/quickopen","vs/platform/instantiation/common/instantiation","vs/workbench/parts/search/browser/openFileHandler","vs/nls!vs/workbench/parts/search/browser/openFileHandler","vs/base/common/paths","vs/nls!vs/workbench/parts/search/browser/openSymbolHandler","vs/base/common/objects","vs/platform/search/common/search","vs/nls","vs/workbench/services/editor/common/editorService","vs/workbench/parts/search/common/searchQuery","vs/platform/workspace/common/workspace","vs/workbench/parts/search/browser/openSymbolHandler","vs/base/common/async","vs/workbench/services/workspace/common/contextService","vs/workbench/common/editor","vs/base/common/filters","vs/editor/common/services/modeService","vs/workbench/parts/search/common/search","vs/workbench/parts/search/browser/openAnythingHandler","vs/base/common/arrays","vs/base/common/types","vs/base/common/platform","vs/base/common/scorer","vs/base/common/strings","vs/platform/message/common/message","vs/platform/telemetry/common/telemetry","vs/workbench/services/group/common/groupService"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -11,8 +11,8 @@ var __M = function(deps) {
   return result;
 };
 
-define(__m[16], __M([14,4]), function(nls, data) { return nls.create("vs/workbench/parts/search/browser/openFileHandler", data); });
-define(__m[10], __M([14,4]), function(nls, data) { return nls.create("vs/workbench/parts/search/browser/openSymbolHandler", data); });
+define(__m[10], __M([15,4]), function(nls, data) { return nls.create("vs/workbench/parts/search/browser/openFileHandler", data); });
+define(__m[12], __M([15,4]), function(nls, data) { return nls.create("vs/workbench/parts/search/browser/openSymbolHandler", data); });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -22,7 +22,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(__m[12], __M([0,1,23,11,2]), function (require, exports, objects, search, configuration_1) {
+define(__m[17], __M([0,1,13,14,2]), function (require, exports, objects, search, configuration_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -97,7 +97,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 
 
 
-define(__m[13], __M([0,1,3,16,9,5,6,7,12,24,33,22,15,2,8,17,11,18]), function (require, exports, winjs_base_1, nls, paths, labels, quickOpenModel_1, quickopen_1, searchQuery_1, files_1, editor_1, groupService_1, editorService_1, configuration_1, instantiation_1, message_1, search_1, workspace_1) {
+define(__m[9], __M([0,1,3,10,11,5,6,7,17,22,34,16,2,8,14,18]), function (require, exports, winjs_base_1, nls, paths, labels, quickOpenModel_1, quickopen_1, searchQuery_1, editor_1, groupService_1, editorService_1, configuration_1, instantiation_1, search_1, workspace_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -154,29 +154,29 @@ define(__m[13], __M([0,1,3,16,9,5,6,7,12,24,33,22,15,2,8,17,11,18]), function (r
     exports.FileEntry = FileEntry;
     var OpenFileHandler = (function (_super) {
         __extends(OpenFileHandler, _super);
-        function OpenFileHandler(editorService, editorGroupService, messageService, instantiationService, configurationService, contextService, textFileService, searchService) {
+        function OpenFileHandler(editorGroupService, instantiationService, contextService, searchService) {
             _super.call(this);
-            this.editorService = editorService;
             this.editorGroupService = editorGroupService;
-            this.messageService = messageService;
             this.instantiationService = instantiationService;
-            this.configurationService = configurationService;
             this.contextService = contextService;
-            this.textFileService = textFileService;
             this.searchService = searchService;
             this.queryBuilder = this.instantiationService.createInstance(searchQuery_1.QueryBuilder);
         }
         OpenFileHandler.prototype.getResults = function (searchValue) {
+            return this.getResultsWithStats(searchValue)
+                .then(function (result) { return result[0]; });
+        };
+        OpenFileHandler.prototype.getResultsWithStats = function (searchValue) {
             searchValue = searchValue.trim();
             var promise;
             // Respond directly to empty search
             if (!searchValue) {
-                promise = winjs_base_1.TPromise.as([]);
+                promise = winjs_base_1.TPromise.as([[], undefined]);
             }
             else {
                 promise = this.doFindResults(searchValue);
             }
-            return promise.then(function (e) { return new quickOpenModel_1.QuickOpenModel(e); });
+            return promise.then(function (result) { return [new quickOpenModel_1.QuickOpenModel(result[0]), result[1]]; });
         };
         OpenFileHandler.prototype.doFindResults = function (searchValue) {
             var _this = this;
@@ -193,7 +193,7 @@ define(__m[13], __M([0,1,3,16,9,5,6,7,12,24,33,22,15,2,8,17,11,18]), function (r
                     var description = labels.getPathLabel(paths.dirname(fileMatch.resource.fsPath), _this.contextService);
                     results.push(_this.instantiationService.createInstance(FileEntry, label, description, fileMatch.resource));
                 }
-                return results;
+                return [results, complete.stats];
             });
         };
         OpenFileHandler.prototype.getGroupLabel = function () {
@@ -205,14 +205,10 @@ define(__m[13], __M([0,1,3,16,9,5,6,7,12,24,33,22,15,2,8,17,11,18]), function (r
             };
         };
         OpenFileHandler = __decorate([
-            __param(0, editorService_1.IWorkbenchEditorService),
-            __param(1, groupService_1.IEditorGroupService),
-            __param(2, message_1.IMessageService),
-            __param(3, instantiation_1.IInstantiationService),
-            __param(4, configuration_1.IConfigurationService),
-            __param(5, workspace_1.IWorkspaceContextService),
-            __param(6, files_1.ITextFileService),
-            __param(7, search_1.ISearchService)
+            __param(0, groupService_1.IEditorGroupService),
+            __param(1, instantiation_1.IInstantiationService),
+            __param(2, workspace_1.IWorkspaceContextService),
+            __param(3, search_1.ISearchService)
         ], OpenFileHandler);
         return OpenFileHandler;
     }(quickopen_1.QuickOpenHandler));
@@ -233,7 +229,7 @@ define(__m[13], __M([0,1,3,16,9,5,6,7,12,24,33,22,15,2,8,17,11,18]), function (r
 
 
 
-define(__m[19], __M([0,1,3,10,20,7,6,25,5,15,8,18,26,2,27]), function (require, exports, winjs_base_1, nls, async_1, quickopen_1, quickOpenModel_1, filters, labels, editorService_1, instantiation_1, workspace_1, modeService_1, configuration_1, search_1) {
+define(__m[19], __M([0,1,3,12,20,7,6,23,5,16,8,18,24,2,25]), function (require, exports, winjs_base_1, nls, async_1, quickopen_1, quickOpenModel_1, filters, labels, editorService_1, instantiation_1, workspace_1, modeService_1, configuration_1, search_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -427,17 +423,18 @@ define(__m[19], __M([0,1,3,10,20,7,6,25,5,15,8,18,26,2,27]), function (require, 
 
 
 
-define(__m[28], __M([0,1,3,4,20,29,30,31,9,5,32,6,7,13,19,17,8,21,2]), function (require, exports, winjs_base_1, nls, async_1, types, platform_1, scorer, paths, labels, strings, quickOpenModel_1, quickopen_1, openFileHandler_1, openSymbolHandler, message_1, instantiation_1, contextService_1, configuration_1) {
+define(__m[26], __M([0,1,27,13,3,4,20,28,29,30,11,5,31,6,7,9,19,32,8,33,21,2]), function (require, exports, arrays, objects, winjs_base_1, nls, async_1, types, platform_1, scorer, paths, labels, strings, quickOpenModel_1, quickopen_1, openFileHandler_1, openSymbolHandler, message_1, instantiation_1, telemetry_1, contextService_1, configuration_1) {
     'use strict';
     // OpenSymbolHandler is used from an extension and must be in the main bundle file so it can load
     exports.OpenSymbolHandler = openSymbolHandler.OpenSymbolHandler;
     var OpenAnythingHandler = (function (_super) {
         __extends(OpenAnythingHandler, _super);
-        function OpenAnythingHandler(messageService, contextService, instantiationService, configurationService) {
+        function OpenAnythingHandler(messageService, contextService, instantiationService, configurationService, telemetryService) {
             _super.call(this);
             this.messageService = messageService;
             this.contextService = contextService;
             this.configurationService = configurationService;
+            this.telemetryService = telemetryService;
             // Instantiate delegate handlers
             this.openSymbolHandler = instantiationService.createInstance(exports.OpenSymbolHandler);
             this.openFileHandler = instantiationService.createInstance(openFileHandler_1.OpenFileHandler);
@@ -452,6 +449,8 @@ define(__m[28], __M([0,1,3,4,20,29,30,31,9,5,32,6,7,13,19,17,8,21,2]), function 
         }
         OpenAnythingHandler.prototype.getResults = function (searchValue) {
             var _this = this;
+            var timerEvent = this.telemetryService.timedPublicLog('openAnything');
+            var startTime = timerEvent.startTime ? timerEvent.startTime.getTime() : Date.now(); // startTime is undefined when telemetry is disabled
             searchValue = searchValue.replace(/ /g, ''); // get rid of all whitespace
             // Help Windows users to search for paths when using slash
             if (platform_1.isWindows) {
@@ -473,11 +472,15 @@ define(__m[28], __M([0,1,3,4,20,29,30,31,9,5,32,6,7,13,19,17,8,21,2]), function 
             // Check Cache first
             var cachedResults = this.getResultsFromCache(searchValue, searchWithRange ? searchWithRange.range : null);
             if (cachedResults) {
-                return winjs_base_1.TPromise.as(new quickOpenModel_1.QuickOpenModel(cachedResults));
+                var viewResults = cachedResults[0], telemetry = cachedResults[1];
+                timerEvent.data = this.createTimerEventData(startTime, telemetry);
+                timerEvent.stop();
+                return winjs_base_1.TPromise.as(new quickOpenModel_1.QuickOpenModel(viewResults));
             }
             // The throttler needs a factory for its promises
             var promiseFactory = function () {
                 var receivedFileResults = false;
+                var searchStats;
                 // Symbol Results (unless a range is specified)
                 var resultPromises = [];
                 if (!searchWithRange) {
@@ -504,12 +507,15 @@ define(__m[28], __M([0,1,3,4,20,29,30,31,9,5,32,6,7,13,19,17,8,21,2]), function 
                     resultPromises.push(winjs_base_1.TPromise.as(new quickOpenModel_1.QuickOpenModel())); // We need this empty promise because we are using the throttler below!
                 }
                 // File Results
-                resultPromises.push(_this.openFileHandler.getResults(searchValue).then(function (results) {
+                resultPromises.push(_this.openFileHandler.getResultsWithStats(searchValue).then(function (_a) {
+                    var results = _a[0], stats = _a[1];
                     receivedFileResults = true;
+                    searchStats = stats;
                     return results;
                 }));
                 // Join and sort unified
                 _this.pendingSearch = winjs_base_1.TPromise.join(resultPromises).then(function (results) {
+                    var unsortedResultTime = Date.now();
                     _this.pendingSearch = null;
                     // If the quick open widget has been closed meanwhile, ignore the result
                     if (_this.isClosed) {
@@ -517,26 +523,30 @@ define(__m[28], __M([0,1,3,4,20,29,30,31,9,5,32,6,7,13,19,17,8,21,2]), function 
                     }
                     // Combine symbol results and file results
                     var result = results[0].entries.concat(results[1].entries);
-                    // Sort
-                    var normalizedSearchValue = strings.stripWildcards(searchValue).toLowerCase();
-                    result.sort(function (elementA, elementB) { return quickOpenModel_1.QuickOpenEntry.compareByScore(elementA, elementB, searchValue, normalizedSearchValue, _this.scorerCache); });
-                    // Apply Range
-                    result.forEach(function (element) {
-                        if (element instanceof openFileHandler_1.FileEntry) {
-                            element.setRange(searchWithRange ? searchWithRange.range : null);
-                        }
-                    });
                     // Cache for fast lookup
                     _this.resultsToSearchCache[searchValue] = result;
-                    // Cap the number of results to make the view snappy
-                    var viewResults = result.length > OpenAnythingHandler.MAX_DISPLAYED_RESULTS ? result.slice(0, OpenAnythingHandler.MAX_DISPLAYED_RESULTS) : result;
-                    // Apply highlights to file entries
+                    // Sort
+                    var normalizedSearchValue = strings.stripWildcards(searchValue).toLowerCase();
+                    var compare = function (elementA, elementB) { return quickOpenModel_1.QuickOpenEntry.compareByScore(elementA, elementB, searchValue, normalizedSearchValue, _this.scorerCache); };
+                    var viewResults = arrays.top(result, compare, OpenAnythingHandler.MAX_DISPLAYED_RESULTS);
+                    var sortedResultTime = Date.now();
+                    // Apply range and highlights to file entries
                     viewResults.forEach(function (entry) {
                         if (entry instanceof openFileHandler_1.FileEntry) {
+                            entry.setRange(searchWithRange ? searchWithRange.range : null);
                             var _a = quickOpenModel_1.QuickOpenEntry.highlight(entry, searchValue, true /* fuzzy highlight */), labelHighlights = _a.labelHighlights, descriptionHighlights = _a.descriptionHighlights;
                             entry.setHighlights(labelHighlights, descriptionHighlights);
                         }
                     });
+                    timerEvent.data = _this.createTimerEventData(startTime, {
+                        fromCache: false,
+                        searchLength: searchValue.length,
+                        searchStats: searchStats,
+                        unsortedResultTime: unsortedResultTime,
+                        sortedResultTime: sortedResultTime,
+                        numberOfResultEntries: result.length
+                    });
+                    timerEvent.stop();
                     return winjs_base_1.TPromise.as(new quickOpenModel_1.QuickOpenModel(viewResults));
                 }, function (error) {
                     _this.pendingSearch = null;
@@ -625,22 +635,26 @@ define(__m[28], __M([0,1,3,4,20,29,30,31,9,5,32,6,7,13,19,17,8,21,2]), function 
                 }
                 results.push(entry);
             }
+            var unsortedResultTime = Date.now();
             // Sort
-            results.sort(function (elementA, elementB) { return quickOpenModel_1.QuickOpenEntry.compareByScore(elementA, elementB, searchValue, normalizedSearchValueLowercase, _this.scorerCache); });
-            // Apply Range
-            results.forEach(function (element) {
-                if (element instanceof openFileHandler_1.FileEntry) {
-                    element.setRange(range);
-                }
-            });
-            // Cap the number of results to make the view snappy
-            var viewResults = results.length > OpenAnythingHandler.MAX_DISPLAYED_RESULTS ? results.slice(0, OpenAnythingHandler.MAX_DISPLAYED_RESULTS) : results;
-            // Apply highlights
+            var compare = function (elementA, elementB) { return quickOpenModel_1.QuickOpenEntry.compareByScore(elementA, elementB, searchValue, normalizedSearchValueLowercase, _this.scorerCache); };
+            var viewResults = arrays.top(results, compare, OpenAnythingHandler.MAX_DISPLAYED_RESULTS);
+            var sortedResultTime = Date.now();
+            // Apply range and highlights
             viewResults.forEach(function (entry) {
+                if (entry instanceof openFileHandler_1.FileEntry) {
+                    entry.setRange(range);
+                }
                 var _a = quickOpenModel_1.QuickOpenEntry.highlight(entry, searchValue, true /* fuzzy highlight */), labelHighlights = _a.labelHighlights, descriptionHighlights = _a.descriptionHighlights;
                 entry.setHighlights(labelHighlights, descriptionHighlights);
             });
-            return viewResults;
+            return [viewResults, {
+                    fromCache: true,
+                    searchLength: searchValue.length,
+                    unsortedResultTime: unsortedResultTime,
+                    sortedResultTime: sortedResultTime,
+                    numberOfResultEntries: results.length
+                }];
         };
         OpenAnythingHandler.prototype.getGroupLabel = function () {
             return nls.localize(0, null);
@@ -667,6 +681,22 @@ define(__m[28], __M([0,1,3,4,20,29,30,31,9,5,32,6,7,13,19,17,8,21,2]), function 
                 this.pendingSearch = null;
             }
         };
+        OpenAnythingHandler.prototype.createTimerEventData = function (startTime, telemetry) {
+            var data = {
+                fromCache: telemetry.fromCache,
+                searchLength: telemetry.searchLength,
+                unsortedResultDuration: telemetry.unsortedResultTime - startTime,
+                sortedResultDuration: telemetry.sortedResultTime - startTime,
+                numberOfResultEntries: telemetry.numberOfResultEntries
+            };
+            var stats = telemetry.searchStats;
+            return stats ? objects.assign(data, {
+                fileWalkStartDuration: stats.fileWalkStartTime - startTime,
+                fileWalkResultDuration: stats.fileWalkResultTime - startTime,
+                directoriesWalked: stats.directoriesWalked,
+                filesWalked: stats.filesWalked
+            }) : data;
+        };
         OpenAnythingHandler.LINE_COLON_PATTERN = /[#|:|\(](\d*)([#|:|,](\d*))?\)?$/;
         OpenAnythingHandler.SYMBOL_SEARCH_INITIAL_TIMEOUT = 500; // Ignore symbol search after a timeout to not block search results
         OpenAnythingHandler.SYMBOL_SEARCH_SUBSEQUENT_TIMEOUT = 100;
@@ -676,7 +706,8 @@ define(__m[28], __M([0,1,3,4,20,29,30,31,9,5,32,6,7,13,19,17,8,21,2]), function 
             __param(0, message_1.IMessageService),
             __param(1, contextService_1.IWorkspaceContextService),
             __param(2, instantiation_1.IInstantiationService),
-            __param(3, configuration_1.IConfigurationService)
+            __param(3, configuration_1.IConfigurationService),
+            __param(4, telemetry_1.ITelemetryService)
         ], OpenAnythingHandler);
         return OpenAnythingHandler;
     }(quickopen_1.QuickOpenHandler));

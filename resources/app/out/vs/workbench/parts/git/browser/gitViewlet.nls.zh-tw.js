@@ -5,7 +5,7 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.zh-tw", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"請提供認可訊息。您可以隨時按下 **[{0}]** 來認可變更。如有任何已分段的變更，將只有那些分段的變更會獲得認可，否則，所有變更都會獲得認可。",
 		"一旦有些變更要進行認可，請在認可訊息中輸入，或者按下 **[{0}]** 來認可變更。如有任何已分段的變更，將只有那些分段的變更會獲得認可，否則，所有變更都會獲得認可。",
-		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
+		"建議讓認可訊息的第一行文字少於 50 個字元。但您可在額外的資訊中使用多行文字。",
 		"訊息 (按 {0} 認可)",
 		"Git: 輸入認可訊息並按 {0} 認可",
 		"Git 變更檢視",
@@ -69,9 +69,9 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.zh-tw", {
 		"安裝 Git 之後，請重新啟動 {0}。",
 	],
 	"vs/workbench/parts/git/browser/views/huge/hugeView": [
-		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
-		"You can permanently disable this warning with the following setting:",
-		"Allow large repositories",
+		"您的存放庫似乎有多個進行中的變更。\n這會造成 Code 的速度非常緩慢。",
+		"您可以使用下列設定永久停用此警告:",
+		"允許大型存放庫",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"此目錄似乎包含在 Git 儲存機制中。",

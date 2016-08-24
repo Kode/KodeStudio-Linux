@@ -3,6 +3,6 @@
  *--------------------------------------------------------*/
 define("vs/workbench/parts/extensions/electron-browser/extensionsViewlet.nls.zh-cn", {
 	"vs/workbench/parts/extensions/electron-browser/extensionsViewlet": [
-		"Search Extensions in Marketplace",
+		"在应用商店中搜索扩展",
 	]
 });

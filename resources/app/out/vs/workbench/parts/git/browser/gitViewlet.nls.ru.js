@@ -69,9 +69,9 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.ru", {
 		"После установки GIT перезапустите {0}.",
 	],
 	"vs/workbench/parts/git/browser/views/huge/hugeView": [
-		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
-		"You can permanently disable this warning with the following setting:",
-		"Allow large repositories",
+		"Репозиторий включает много активных изменений.\nЭто может замедлить работу Code.",
+		"Вы можете навсегда отключить это предупреждение с помощью следующего параметра:",
+		"Разрешать большие репозитории",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"Кажется, каталог находится в репозитории GIT.",

@@ -4,5 +4,5 @@
 	"El servidor del lenguaje TypeScript no se pudo iniciar. El mensaje de error es: {0}",
 	"personalizada",
 	"El servicio de lenguaje Typescript finalizó de forma inesperada cinco veces en los últimos cinco minutos. Considere la posibilidad de abrir un informe de errores.",
-	"El servicio de lenguaje Typescript finalizó de forma inesperada cinco veces después de haberse iniciado y no se reiniciará. Abra un informe de errores."
+	"El servicio de lenguaje TypeScript finalizó de forma inesperada cinco veces después de haberse iniciado y no se reiniciará. Abra un informe de errores."
 ]

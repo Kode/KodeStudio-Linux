@@ -791,11 +791,11 @@ define(__m[11], __M([1,0,12,9,8,6,2,13,14,15,16,17,18]), function (require, expo
     // for a brief description of the razor syntax see http://www.mikesdotnetting.com/Article/153/Inline-Razor-Syntax-Overview
     var RAZORState = (function (_super) {
         __extends(RAZORState, _super);
-        function RAZORState(mode, kind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValue) {
-            _super.call(this, mode, kind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValue);
+        function RAZORState(mode, kind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValueLength) {
+            _super.call(this, mode, kind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValueLength);
         }
         RAZORState.prototype.makeClone = function () {
-            return new RAZORState(this.getMode(), this.kind, this.lastTagName, this.lastAttributeName, this.embeddedContentType, this.attributeValueQuote, this.attributeValue);
+            return new RAZORState(this.getMode(), this.kind, this.lastTagName, this.lastAttributeName, this.embeddedContentType, this.attributeValueQuote, this.attributeValueLength);
         };
         RAZORState.prototype.equals = function (other) {
             if (other instanceof RAZORState) {
@@ -826,7 +826,6 @@ define(__m[11], __M([1,0,12,9,8,6,2,13,14,15,16,17,18]), function (require, expo
             var _this = this;
             modes.SuggestRegistry.register(this.getId(), {
                 triggerCharacters: ['.', ':', '<', '"', '=', '/'],
-                shouldAutotriggerSuggest: true,
                 provideCompletionItems: function (model, position, token) {
                     return async_1.wireCancellationToken(token, _this._provideCompletionItems(model.uri, position));
                 }
@@ -847,12 +846,12 @@ define(__m[11], __M([1,0,12,9,8,6,2,13,14,15,16,17,18]), function (require, expo
             return new abstractMode_1.ModeWorkerManager(descriptor, 'vs/languages/razor/common/razorWorker', 'RAZORWorker', 'vs/languages/html/common/htmlWorker', instantiationService);
         };
         RAZORMode.prototype.getInitialState = function () {
-            return new RAZORState(this, htmlMode.States.Content, '', '', '', '', '');
+            return new RAZORState(this, htmlMode.States.Content, '', '', '', '', 0);
         };
         RAZORMode.prototype.getLeavingNestedModeData = function (line, state) {
             var leavingNestedModeData = _super.prototype.getLeavingNestedModeData.call(this, line, state);
             if (leavingNestedModeData) {
-                leavingNestedModeData.stateAfterNestedMode = new RAZORState(this, htmlMode.States.Content, '', '', '', '', '');
+                leavingNestedModeData.stateAfterNestedMode = new RAZORState(this, htmlMode.States.Content, '', '', '', '', 0);
             }
             return leavingNestedModeData;
         };

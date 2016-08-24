@@ -26,7 +26,6 @@ suite('ChromeUtils', () => {
         testUtils.registerWin32Mocks();
 
         mockery.registerMock('fs', { statSync: () => { } });
-        testUtils.registerEmptyMocks('http');
 
         // Get path with win32 mocks
         path = require('path');
@@ -108,13 +107,22 @@ suite('ChromeUtils', () => {
             testRemoteObjectToValue({ type: 'string', value }, `"${value}"`);
             testRemoteObjectToValue({ type: 'string', value }, `${value}`, undefined, /*stringify=*/false);
 
+            value = 'NaN';
+            testRemoteObjectToValue({ type: 'string', value }, `"${value}"`);
+
+            value = '-Infinity';
+            testRemoteObjectToValue({ type: 'string', value }, `"${value}"`);
+
             value = 'test string\r\nwith\nnewlines\n\n';
             const expValue = 'test string\\r\\nwith\\nnewlines\\n\\n';
             testRemoteObjectToValue({ type: 'string', value }, `"${expValue}"`);
         });
 
         test('number', () => {
-            testRemoteObjectToValue({ type: 'number', value: 1, description: '1' }, '1');
+            testRemoteObjectToValue({ type: 'number', value: 1 }, '1');
+            testRemoteObjectToValue({ type: 'number', value: 'NaN' }, 'NaN');
+            testRemoteObjectToValue({ type: 'number', value: 'Infinity' }, 'Infinity');
+            testRemoteObjectToValue({ type: 'number', value: '-Infinity' }, '-Infinity');
         });
 
         test('array', () => {
@@ -160,18 +168,11 @@ suite('ChromeUtils', () => {
             return <any>urls.map(url => ({ url }));
         }
 
-        test('tries exact match before fuzzy match', () => {
+        test('returns exact match', () => {
             const targets = makeTargets('http://localhost/site/page', 'http://localhost/site');
             assert.deepEqual(
                 chromeUtils.getMatchingTargets(targets, 'http://localhost/site'),
                 [targets[1]]);
-        });
-
-        test('returns fuzzy matches if exact match fails', () => {
-            const targets = makeTargets('http://localhost:8080/site/app/page1?something=3', 'http://cnn.com', 'http://localhost/site');
-            assert.deepEqual(
-                chromeUtils.getMatchingTargets(targets, 'http://localhost'),
-                [targets[0], targets[2]]);
         });
 
         test('ignores the url protocol', () => {
@@ -181,18 +182,73 @@ suite('ChromeUtils', () => {
                 [targets[1]]);
         });
 
-        test('"exact match" is case-insensitive', () => {
-            const targets = makeTargets('http://localhost/site', 'http://localhost');
+        test('really ignores the url protocol', () => {
+            const targets = makeTargets('https://outlook.com', 'http://localhost');
             assert.deepEqual(
-                chromeUtils.getMatchingTargets(targets, 'http://Localhost'),
+                chromeUtils.getMatchingTargets(targets, 'localhost'),
                 [targets[1]]);
         });
 
-        test('ignores query params', () => {
-            const targets = makeTargets('http://testsite.com?q=5');
+        test('is case-insensitive', () => {
+            const targets = makeTargets('http://localhost/site', 'http://localhost');
             assert.deepEqual(
-                chromeUtils.getMatchingTargets(targets, 'testsite.com?q=1'),
+                chromeUtils.getMatchingTargets(targets, 'http://LOCALHOST'),
+                [targets[1]]);
+        });
+
+        test('does not return substring fuzzy match as in pre 0.1.9', () => {
+            const targets = makeTargets('http://localhost/site/page');
+            assert.deepEqual(
+                chromeUtils.getMatchingTargets(targets, 'http://localhost/site'),
+                []);
+        });
+
+        test('respects one wildcard', () => {
+            const targets = makeTargets('http://localhost/site/app', 'http://localhost/site/', 'http://localhost/');
+            assert.deepEqual(
+                chromeUtils.getMatchingTargets(targets, 'localhost/site/*'),
+                [targets[0], targets[1]]);
+        });
+
+        test('respects wildcards with query params', () => {
+            const targets = makeTargets('http://localhost:3000/site/?blah=1', 'http://localhost:3000/site/?blah=2', 'http://localhost:3000/site/');
+            assert.deepEqual(
+                chromeUtils.getMatchingTargets(targets, 'localhost:3000/site/?*'),
+                [targets[0], targets[1]]);
+        });
+
+        // Because the match is regex-based
+        test('works with other special chars', () => {
+            const targets = makeTargets('http://localhost/[bar]/?(words)', 'http://localhost/bar/?words', 'http://localhost/[bar]/?(somethingelse)');
+            assert.deepEqual(
+                chromeUtils.getMatchingTargets(targets, 'http://localhost/[bar]/?(*)'),
+                [targets[0], targets[2]]);
+        });
+
+        test('matches an ending slash', () => {
+            const targets = makeTargets('http://localhost/', 'http://localhost');
+            assert.deepEqual(
+                chromeUtils.getMatchingTargets(targets, 'http://localhost'),
                 targets);
+        });
+    });
+
+    suite('compareVariableNames', () => {
+        const chromeUtils = getChromeUtils();
+
+        test('numbers sorted numerically', () => {
+            assert(chromeUtils.compareVariableNames('6', '1') > 0);
+            assert(chromeUtils.compareVariableNames('2', '10') < 0);
+        });
+
+        test('string names before number names', () => {
+            assert(chromeUtils.compareVariableNames('a', '1') < 0);
+            assert(chromeUtils.compareVariableNames('16', 'b') > 0);
+        });
+
+        test('string names ordered correctly', () => {
+            assert.equal(chromeUtils.compareVariableNames('a', 'b'), 'a'.localeCompare('b'));
+            assert.equal(chromeUtils.compareVariableNames('xyz123', '890kjh'), 'xyz123'.localeCompare('890kjh'));
         });
     });
 });

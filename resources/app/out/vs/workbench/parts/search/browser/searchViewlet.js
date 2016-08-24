@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["require","exports","vs/nls!vs/workbench/parts/search/browser/searchViewlet","vs/base/common/strings","vs/base/browser/builder","vs/base/common/keyCodes","vs/workbench/parts/search/common/searchModel","vs/nls!vs/workbench/parts/search/browser/patternInputWidget","vs/nls","vs/css!vs/workbench/parts/search/browser/media/searchviewlet","vs/nls!vs/workbench/parts/search/browser/searchResultsView","vs/platform/instantiation/common/instantiation","vs/workbench/parts/search/browser/searchActions","vs/platform/workspace/common/workspace","vs/base/browser/ui/inputbox/inputBox","vs/workbench/parts/search/browser/patternInputWidget","vs/base/common/winjs.base","vs/workbench/parts/search/common/searchQuery","vs/base/browser/dom","vs/platform/search/common/search","vs/platform/configuration/common/configuration","vs/workbench/parts/search/browser/searchResultsView","vs/base/common/errors","vs/base/common/timer","vs/base/common/platform","vs/base/common/objects","vs/base/common/event","vs/base/parts/tree/browser/actionsRenderer","vs/base/browser/ui/countBadge/countBadge","vs/base/browser/ui/fileLabel/fileLabel","vs/base/browser/ui/leftRightWidget/leftRightWidget","vs/base/parts/tree/browser/treeDefaults","vs/workbench/browser/actionBarRegistry","vs/css!vs/workbench/parts/search/browser/searchViewlet","vs/base/browser/ui/checkbox/checkbox","vs/editor/common/core/range","vs/base/common/glob","vs/base/browser/ui/widget","vs/workbench/parts/search/browser/searchViewlet","vs/editor/common/editorCommon","vs/base/common/lifecycle","vs/base/browser/ui/aria/aria","vs/base/common/types","vs/base/browser/keyboardEvent","vs/base/common/paths","vs/base/browser/ui/findinput/findInput","vs/base/parts/tree/browser/treeImpl","vs/workbench/common/memento","vs/workbench/browser/actions/openSettings","vs/workbench/common/events","vs/workbench/services/group/common/groupService","vs/workbench/common/editor","vs/platform/files/common/files","vs/workbench/browser/viewlet","vs/workbench/parts/search/common/constants","vs/workbench/services/editor/common/editorService","vs/platform/storage/common/storage","vs/platform/contextview/browser/contextView","vs/platform/event/common/event","vs/platform/message/common/message","vs/platform/progress/common/progress","vs/platform/keybinding/common/keybindingService","vs/platform/telemetry/common/telemetry","vs/workbench/parts/search/browser/searchWidget","vs/workbench/parts/search/common/replace","vs/base/common/severity"];
+var __m = ["require","exports","vs/base/common/keyCodes","vs/nls!vs/workbench/parts/search/browser/searchViewlet","vs/base/common/strings","vs/base/browser/builder","vs/nls","vs/css!vs/workbench/parts/search/browser/media/searchviewlet","vs/nls!vs/workbench/parts/search/browser/searchResultsView","vs/workbench/parts/search/browser/patternInputWidget","vs/base/browser/ui/inputbox/inputBox","vs/nls!vs/workbench/parts/search/browser/patternInputWidget","vs/workbench/parts/search/common/searchQuery","vs/platform/search/common/search","vs/platform/configuration/common/configuration","vs/workbench/parts/search/browser/searchResultsView","vs/base/common/errors","vs/base/browser/dom","vs/base/common/winjs.base","vs/workbench/parts/search/common/searchModel","vs/platform/workspace/common/workspace","vs/workbench/parts/search/browser/searchActions","vs/platform/instantiation/common/instantiation","vs/base/common/event","vs/base/common/paths","vs/base/common/glob","vs/base/common/objects","vs/base/parts/tree/browser/actionsRenderer","vs/base/browser/ui/countBadge/countBadge","vs/base/browser/ui/fileLabel/fileLabel","vs/base/browser/ui/leftRightWidget/leftRightWidget","vs/base/parts/tree/browser/treeDefaults","vs/css!vs/workbench/parts/search/browser/searchViewlet","vs/base/browser/ui/checkbox/checkbox","vs/base/common/severity","vs/editor/common/core/range","vs/base/browser/ui/widget","vs/base/common/platform","vs/workbench/parts/search/browser/searchViewlet","vs/editor/common/editorCommon","vs/base/common/lifecycle","vs/base/browser/ui/aria/aria","vs/base/common/types","vs/base/browser/keyboardEvent","vs/base/browser/ui/findinput/findInput","vs/base/parts/tree/browser/treeImpl","vs/workbench/common/memento","vs/workbench/browser/actions/openSettings","vs/workbench/common/events","vs/workbench/services/group/common/groupService","vs/workbench/common/editor","vs/platform/files/common/files","vs/workbench/browser/viewlet","vs/workbench/parts/search/common/constants","vs/workbench/services/editor/common/editorService","vs/platform/storage/common/storage","vs/platform/contextview/browser/contextView","vs/platform/event/common/event","vs/platform/message/common/message","vs/platform/progress/common/progress","vs/platform/keybinding/common/keybinding","vs/platform/telemetry/common/telemetry","vs/workbench/parts/search/browser/searchWidget","vs/workbench/parts/search/common/replace","vs/workbench/browser/actionBarRegistry"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,9 +10,9 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[9], __M([33]), {});
-define(__m[7], __M([8,2]), function(nls, data) { return nls.create("vs/workbench/parts/search/browser/patternInputWidget", data); });
-define(__m[10], __M([8,2]), function(nls, data) { return nls.create("vs/workbench/parts/search/browser/searchResultsView", data); });
+define(__m[7], __M([32]), {});
+define(__m[11], __M([6,3]), function(nls, data) { return nls.create("vs/workbench/parts/search/browser/patternInputWidget", data); });
+define(__m[8], __M([6,3]), function(nls, data) { return nls.create("vs/workbench/parts/search/browser/searchResultsView", data); });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -23,7 +23,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[15], __M([0,1,7,3,4,37,36,34,14,5,26]), function (require, exports, nls, strings, builder_1, widget_1, glob_1, checkbox_1, inputBox_1, keyCodes_1, event_1) {
+define(__m[9], __M([0,1,11,4,5,36,25,33,10,2,23]), function (require, exports, nls, strings, builder_1, widget_1, glob_1, checkbox_1, inputBox_1, keyCodes_1, event_1) {
     "use strict";
     var PatternInputWidget = (function (_super) {
         __extends(PatternInputWidget, _super);
@@ -194,7 +194,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(__m[17], __M([0,1,25,19,20]), function (require, exports, objects, search, configuration_1) {
+define(__m[12], __M([0,1,26,13,14]), function (require, exports, objects, search, configuration_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -273,7 +273,7 @@ define(__m[17], __M([0,1,25,19,20]), function (require, exports, objects, search
 
 
 
-define(__m[21], __M([0,1,10,3,24,22,44,18,4,16,27,28,29,30,31,32,6,13,35,5,12,11]), function (require, exports, nls, strings, platform, errors, paths, dom, builder_1, winjs_base_1, actionsRenderer_1, countBadge_1, fileLabel_1, leftRightWidget_1, treeDefaults_1, actionBarRegistry_1, searchModel_1, workspace_1, range_1, keyCodes_1, searchActions_1, instantiation_1) {
+define(__m[15], __M([0,1,8,4,37,16,24,17,5,18,27,28,29,30,31,64,19,20,35,2,21,22]), function (require, exports, nls, strings, platform, errors, paths, dom, builder_1, winjs_base_1, actionsRenderer_1, countBadge_1, fileLabel_1, leftRightWidget_1, treeDefaults_1, actionBarRegistry_1, searchModel_1, workspace_1, range_1, keyCodes_1, searchActions_1, instantiation_1) {
     "use strict";
     var SearchDataSource = (function () {
         function SearchDataSource() {
@@ -318,7 +318,7 @@ define(__m[21], __M([0,1,10,3,24,22,44,18,4,16,27,28,29,30,31,32,6,13,35,5,12,11
         }
         SearchSorter.prototype.compare = function (tree, elementA, elementB) {
             if (elementA instanceof searchModel_1.FileMatch && elementB instanceof searchModel_1.FileMatch) {
-                return strings.localeCompare(elementA.resource().fsPath, elementB.resource().fsPath) || strings.localeCompare(elementA.name(), elementB.name());
+                return elementA.resource().fsPath.localeCompare(elementB.resource().fsPath) || elementA.name().localeCompare(elementB.name());
             }
             if (elementA instanceof searchModel_1.Match && elementB instanceof searchModel_1.Match) {
                 return range_1.Range.compareRangesUsingStarts(elementA.range(), elementB.range());
@@ -335,19 +335,21 @@ define(__m[21], __M([0,1,10,3,24,22,44,18,4,16,27,28,29,30,31,32,6,13,35,5,12,11
             this.instantiationService = instantiationService;
         }
         SearchActionProvider.prototype.hasActions = function (tree, element) {
-            return element instanceof searchModel_1.FileMatch || (tree.getInput().isReplaceActive() || element instanceof searchModel_1.Match) || _super.prototype.hasActions.call(this, tree, element);
+            var input = tree.getInput();
+            return element instanceof searchModel_1.FileMatch || (input.searchModel.isReplaceActive() || element instanceof searchModel_1.Match) || _super.prototype.hasActions.call(this, tree, element);
         };
         SearchActionProvider.prototype.getActions = function (tree, element) {
             var _this = this;
             return _super.prototype.getActions.call(this, tree, element).then(function (actions) {
+                var input = tree.getInput();
                 if (element instanceof searchModel_1.FileMatch) {
                     actions.unshift(new searchActions_1.RemoveAction(tree, element));
-                    if (tree.getInput().isReplaceActive() && element.count() > 0) {
+                    if (input.searchModel.isReplaceActive() && element.count() > 0) {
                         actions.unshift(_this.instantiationService.createInstance(searchActions_1.ReplaceAllAction, tree, element, _this.viewlet));
                     }
                 }
-                if (element instanceof searchModel_1.Match && !(element instanceof searchModel_1.EmptyMatch)) {
-                    if (tree.getInput().isReplaceActive()) {
+                if (element instanceof searchModel_1.Match) {
+                    if (input.searchModel.isReplaceActive()) {
                         actions.unshift(_this.instantiationService.createInstance(searchActions_1.ReplaceAction, tree, element, _this.viewlet), new searchActions_1.RemoveAction(tree, element));
                     }
                 }
@@ -393,30 +395,27 @@ define(__m[21], __M([0,1,10,3,24,22,44,18,4,16,27,28,29,30,31,32,6,13,35,5,12,11
                 container.appendTo(domElement);
                 return widget.dispose.bind(widget);
             }
-            else if (element instanceof searchModel_1.EmptyMatch) {
-                dom.addClass(domElement, 'linematch');
-                builder_1.$('a.plain.label').innerHtml(nls.localize(2, null)).appendTo(domElement);
-            }
             else if (element instanceof searchModel_1.Match) {
                 dom.addClass(domElement, 'linematch');
+                var match = element;
                 var elements = [];
-                var preview = element.preview();
+                var preview = match.preview();
                 elements.push('<span>');
                 elements.push(strings.escape(preview.before));
-                var input = tree.getInput();
-                var showReplaceText = input.hasReplaceText();
+                var searchModel = tree.getInput().searchModel;
+                var showReplaceText = searchModel.isReplaceActive() && !!searchModel.replaceString;
                 elements.push('</span><span class="' + (showReplaceText ? 'replace ' : '') + 'findInFileMatch">');
                 elements.push(strings.escape(preview.inside));
                 if (showReplaceText) {
                     elements.push('</span><span class="replaceMatch">');
-                    elements.push(strings.escape(input.replaceText));
+                    elements.push(strings.escape(match.replaceString));
                 }
                 elements.push('</span><span>');
                 elements.push(strings.escape(preview.after));
                 elements.push('</span>');
                 builder_1.$('a.plain')
                     .innerHtml(elements.join(strings.empty))
-                    .title((preview.before + (input.isReplaceActive() ? input.replaceText : preview.inside) + preview.after).trim().substr(0, 999))
+                    .title((preview.before + (showReplaceText ? match.replaceString : preview.inside) + preview.after).trim().substr(0, 999))
                     .appendTo(domElement);
             }
             return null;
@@ -435,18 +434,16 @@ define(__m[21], __M([0,1,10,3,24,22,44,18,4,16,27,28,29,30,31,32,6,13,35,5,12,11
         SearchAccessibilityProvider.prototype.getAriaLabel = function (tree, element) {
             if (element instanceof searchModel_1.FileMatch) {
                 var path = this.contextService.toWorkspaceRelativePath(element.resource()) || element.resource().fsPath;
-                return nls.localize(3, null, element.count(), element.name(), paths.dirname(path));
-            }
-            if (element instanceof searchModel_1.EmptyMatch) {
-                return nls.localize(4, null);
+                return nls.localize(2, null, element.count(), element.name(), paths.dirname(path));
             }
             if (element instanceof searchModel_1.Match) {
+                var match = element;
                 var input = tree.getInput();
-                if (input.isReplaceActive()) {
-                    var preview = element.preview();
-                    return nls.localize(5, null, preview.before + input.replaceText + preview.after);
+                if (input.searchModel.isReplaceActive()) {
+                    var preview = match.preview();
+                    return nls.localize(3, null, preview.before + match.replaceString + preview.after);
                 }
-                return nls.localize(6, null, element.text());
+                return nls.localize(4, null, match.text());
             }
         };
         SearchAccessibilityProvider = __decorate([
@@ -481,19 +478,21 @@ define(__m[21], __M([0,1,10,3,24,22,44,18,4,16,27,28,29,30,31,32,6,13,35,5,12,11
             return _super.prototype.onEscape.call(this, tree, event);
         };
         SearchController.prototype.onDelete = function (tree, event) {
+            var input = tree.getInput();
             var result = false;
             var element = tree.getFocus();
             if (element instanceof searchModel_1.FileMatch ||
-                (element instanceof searchModel_1.Match && tree.getInput().isReplaceActive() && !(element instanceof searchModel_1.EmptyMatch))) {
+                (element instanceof searchModel_1.Match && input.searchModel.isReplaceActive())) {
                 new searchActions_1.RemoveAction(tree, element).run().done(null, errors.onUnexpectedError);
                 result = true;
             }
             return result;
         };
         SearchController.prototype.onReplace = function (tree, event) {
+            var input = tree.getInput();
             var result = false;
             var element = tree.getFocus();
-            if (element instanceof searchModel_1.Match && tree.getInput().isReplaceActive() && !(element instanceof searchModel_1.EmptyMatch)) {
+            if (element instanceof searchModel_1.Match && input.searchModel.isReplaceActive()) {
                 this.instantiationService.createInstance(searchActions_1.ReplaceAction, tree, element, this.viewlet).run().done(null, errors.onUnexpectedError);
                 result = true;
             }
@@ -514,6 +513,13 @@ define(__m[21], __M([0,1,10,3,24,22,44,18,4,16,27,28,29,30,31,32,6,13,35,5,12,11
                 return true;
             }
             return _super.prototype.onUp.call(this, tree, event);
+        };
+        SearchController.prototype.onSpace = function (tree, event) {
+            var element = tree.getFocus();
+            if (element instanceof searchModel_1.Match) {
+                return this.onEnter(tree, event);
+            }
+            _super.prototype.onSpace.call(this, tree, event);
         };
         SearchController = __decorate([
             __param(1, instantiation_1.IInstantiationService)
@@ -550,7 +556,7 @@ define(__m[21], __M([0,1,10,3,24,22,44,18,4,16,27,28,29,30,31,32,6,13,35,5,12,11
 
 
 
-define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,52,53,6,17,54,14,55,56,20,57,58,11,59,19,60,13,61,62,5,15,21,63,12,64,65,9]), function (require, exports, nls, winjs_base_1, editorCommon_1, lifecycle, errors, aria, types_1, strings, dom, keyboardEvent_1, timer, builder_1, findInput_1, treeImpl_1, memento_1, openSettings_1, events_1, groupService_1, editor_1, files_1, viewlet_1, searchModel_1, searchQuery_1, constants_1, inputBox_1, editorService_1, storage_1, configuration_1, contextView_1, event_1, instantiation_1, message_1, search_1, progress_1, workspace_1, keybindingService_1, telemetry_1, keyCodes_1, patternInputWidget_1, searchResultsView_1, searchWidget_1, searchActions_1, replace_1, severity_1) {
+define(__m[38], __M([0,1,3,18,39,40,16,41,42,4,17,43,5,44,45,46,47,48,49,50,51,52,19,12,53,10,54,55,14,56,57,22,58,13,59,20,60,61,2,9,15,62,21,63,34,7]), function (require, exports, nls, winjs_base_1, editorCommon_1, lifecycle, errors, aria, types_1, strings, dom, keyboardEvent_1, builder_1, findInput_1, treeImpl_1, memento_1, openSettings_1, events_1, groupService_1, editor_1, files_1, viewlet_1, searchModel_1, searchQuery_1, constants_1, inputBox_1, editorService_1, storage_1, configuration_1, contextView_1, event_1, instantiation_1, message_1, search_1, progress_1, workspace_1, keybinding_1, telemetry_1, keyCodes_1, patternInputWidget_1, searchResultsView_1, searchWidget_1, searchActions_1, replace_1, severity_1) {
     'use strict';
     var SearchViewlet = (function (_super) {
         __extends(SearchViewlet, _super);
@@ -570,7 +576,6 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             this.searchService = searchService;
             this.keybindingService = keybindingService;
             this.replaceService = replaceService;
-            this.replacingAll = false;
             this.toDispose = [];
             this.viewletVisible = keybindingService.createKey('searchViewletVisible', true);
             this.callOnModelChange = [];
@@ -583,12 +588,10 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
         SearchViewlet.prototype.onConfigurationUpdated = function (configuration) {
             this.updateGlobalPatternExclusions(configuration);
         };
-        SearchViewlet.prototype.getResults = function () {
-            return this.results;
-        };
         SearchViewlet.prototype.create = function (parent) {
             var _this = this;
             _super.prototype.create.call(this, parent);
+            this.viewModel = this.instantiationService.createInstance(searchModel_1.SearchModel);
             var builder;
             this.domNode = parent.div({
                 'class': 'search-viewlet'
@@ -702,6 +705,7 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                 this.toggleFileTypes(true, true, true);
             }
             this.updateGlobalPatternExclusions(this.configurationService.getConfiguration());
+            this.toUnbind.push(this.viewModel.searchResult.onChange(function (event) { return _this.onSearchResultsChanged(event); }));
             return winjs_base_1.TPromise.as(null);
         };
         Object.defineProperty(SearchViewlet.prototype, "searchAndReplaceWidget", {
@@ -723,49 +727,80 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                 isCaseSensitive: isCaseSensitive,
                 isWholeWords: isWholeWords
             }, this.keybindingService, this.instantiationService);
-            this.searchWidget.onSearchSubmit(function (refresh) { return _this.onQueryChanged(refresh); });
-            this.searchWidget.onSearchCancel(function () { return _this.cancelSearch(); });
-            this.searchWidget.searchInput.onDidOptionChange(function (viaKeyboard) { return _this.onQueryChanged(true, viaKeyboard); });
-            this.searchWidget.onReplaceToggled(function (state) { return _this.layout(_this.size); });
-            this.searchWidget.onReplaceStateChange(function (state) {
-                if (_this.viewModel) {
-                    _this.viewModel.replaceText = _this.searchWidget.getReplaceValue();
-                }
+            if (this.storageService.getBoolean(SearchViewlet.SHOW_REPLACE_STORAGE_KEY, storage_1.StorageScope.WORKSPACE, true)) {
+                this.searchWidget.toggleReplace(true);
+            }
+            this.toUnbind.push(this.searchWidget);
+            this.toUnbind.push(this.searchWidget.onSearchSubmit(function (refresh) { return _this.onQueryChanged(refresh); }));
+            this.toUnbind.push(this.searchWidget.onSearchCancel(function () { return _this.cancelSearch(); }));
+            this.toUnbind.push(this.searchWidget.searchInput.onDidOptionChange(function (viaKeyboard) { return _this.onQueryChanged(true, viaKeyboard); }));
+            this.toUnbind.push(this.searchWidget.onReplaceToggled(function () { return _this.onReplaceToggled(); }));
+            this.toUnbind.push(this.searchWidget.onReplaceStateChange(function (state) {
+                _this.viewModel.replaceActive = state;
                 _this.tree.refresh();
-            });
-            this.searchWidget.onReplaceValueChanged(function (value) {
-                if (_this.viewModel) {
-                    _this.viewModel.replaceText = _this.searchWidget.getReplaceValue();
-                }
+            }));
+            this.toUnbind.push(this.searchWidget.onReplaceValueChanged(function (value) {
+                _this.viewModel.replaceString = _this.searchWidget.getReplaceValue();
                 _this.refreshInputs();
                 _this.tree.refresh();
-            });
-            this.searchWidget.onKeyDownArrow(function () {
+            }));
+            this.toUnbind.push(this.searchWidget.onKeyDownArrow(function () {
                 if (_this.showsFileTypes()) {
                     _this.toggleFileTypes(true, _this.showsFileTypes());
                 }
                 else {
                     _this.selectTreeIfNotSelected();
                 }
+            }));
+            this.toUnbind.push(this.searchWidget.onReplaceAll(function () { return _this.replaceAll(); }));
+        };
+        SearchViewlet.prototype.onReplaceToggled = function () {
+            this.layout(this.size);
+            this.storageService.store(SearchViewlet.SHOW_REPLACE_STORAGE_KEY, this.searchAndReplaceWidget.isReplaceShown(), storage_1.StorageScope.WORKSPACE);
+        };
+        SearchViewlet.prototype.onSearchResultsChanged = function (event) {
+            var _this = this;
+            return this.refreshTree(event).then(function () {
+                _this.searchWidget.setReplaceAllActionState(!_this.viewModel.searchResult.isEmpty());
             });
-            this.searchWidget.onReplaceAll(function () { return _this.replaceAll(); });
+        };
+        SearchViewlet.prototype.refreshTree = function (event) {
+            var _this = this;
+            if (!event) {
+                return this.tree.refresh(this.viewModel.searchResult);
+            }
+            if (event.added || event.removed) {
+                return this.tree.refresh(this.viewModel.searchResult).then(function () {
+                    if (event.added) {
+                        event.elements.forEach(function (element) {
+                            _this.autoExpandFileMatch(element, true);
+                        });
+                    }
+                });
+            }
+            else {
+                if (event.elements.length === 1) {
+                    return this.tree.refresh(event.elements[0]);
+                }
+                else {
+                    return this.tree.refresh(event.elements);
+                }
+            }
         };
         SearchViewlet.prototype.refreshInputs = function () {
             var _this = this;
-            if (this.viewModel) {
-                this.viewModel.matches().forEach(function (fileMatch) {
-                    _this.replaceService.refreshInput(fileMatch, _this.viewModel.replaceText);
-                });
-            }
+            this.viewModel.searchResult.matches().forEach(function (fileMatch) {
+                _this.replaceService.refreshInput(fileMatch);
+            });
         };
         SearchViewlet.prototype.replaceAll = function () {
             var _this = this;
-            if (this.viewModel.count() === 0) {
+            if (this.viewModel.searchResult.count() === 0) {
                 return;
             }
             var progressRunner = this.progressService.show(100);
-            var occurrences = this.viewModel.count();
-            var fileCount = this.viewModel.fileCount();
+            var occurrences = this.viewModel.searchResult.count();
+            var fileCount = this.viewModel.searchResult.fileCount();
             var replaceValue = this.searchWidget.getReplaceValue() || '';
             var afterReplaceAllMessage = replaceValue ? nls.localize(7, null, occurrences, fileCount, replaceValue)
                 : nls.localize(8, null, occurrences, fileCount);
@@ -776,20 +811,12 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                 primaryButton: nls.localize(12, null)
             };
             if (this.messageService.confirm(confirmation)) {
-                var replaceAllTimer_1 = this.telemetryService.timedPublicLog('replaceAll.started');
-                this.replacingAll = true;
-                this.replaceService.replace(this.viewModel.matches(), replaceValue, progressRunner).then(function () {
-                    replaceAllTimer_1.stop();
-                    _this.replacingAll = false;
-                    setTimeout(function () {
-                        progressRunner.done();
-                        _this.showEmptyStage();
-                        _this.showMessage(afterReplaceAllMessage);
-                    }, 200);
-                }, function (error) {
-                    replaceAllTimer_1.stop();
+                this.searchWidget.setReplaceAllActionState(false);
+                this.viewModel.searchResult.replaceAll(progressRunner).then(function () {
                     progressRunner.done();
-                    _this.replacingAll = false;
+                    _this.showMessage(afterReplaceAllMessage);
+                }, function (error) {
+                    progressRunner.done();
                     errors.isPromiseCanceledError(error);
                     _this.messageService.show(severity_1.default.Error, error);
                 });
@@ -814,6 +841,7 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                 }, {
                     ariaLabel: nls.localize(13, null)
                 });
+                _this.tree.setInput(_this.viewModel.searchResult);
                 _this.toUnbind.push(renderer);
                 _this.toUnbind.push(_this.tree.addListener2('selection', function (event) {
                     var element;
@@ -830,8 +858,16 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                         originalEvent.preventDefault(); // focus moves to editor, we need to prevent default
                     }
                     var sideBySide = (originalEvent && (originalEvent.ctrlKey || originalEvent.metaKey));
-                    var focusEditor = keyboard || doubleClick;
-                    _this.onFocus(element, !focusEditor, sideBySide, doubleClick);
+                    var focusEditor = (keyboard && originalEvent.keyCode === keyCodes_1.KeyCode.Enter) || doubleClick;
+                    if (element instanceof searchModel_1.Match) {
+                        var selectedMatch = element;
+                        if (_this.currentSelectedFileMatch) {
+                            _this.currentSelectedFileMatch.setSelectedMatch(null);
+                        }
+                        _this.currentSelectedFileMatch = selectedMatch.parent();
+                        _this.currentSelectedFileMatch.setSelectedMatch(selectedMatch);
+                        _this.onFocus(selectedMatch, !focusEditor, sideBySide, doubleClick);
+                    }
                 }));
             });
         };
@@ -870,7 +906,7 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             }
             // Enable highlights if there are searchresults
             if (this.viewModel) {
-                this.viewModel.toggleHighlights(visible);
+                this.viewModel.searchResult.toggleHighlights(visible);
             }
             // Open focused element from results in case the editor area is otherwise empty
             if (visible && !this.editorService.getActiveEditor()) {
@@ -888,10 +924,6 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                 this.searchWidget.searchInput.setValue(selectedText);
             }
             this.searchWidget.focus();
-            if (this.storageService.getBoolean('show.replace.firstTime', storage_1.StorageScope.GLOBAL, true)) {
-                this.searchWidget.toggleReplace(true);
-                this.storageService.store('show.replace.firstTime', false, storage_1.StorageScope.GLOBAL);
-            }
         };
         SearchViewlet.prototype.moveFocusFromResults = function () {
             if (this.showsFileTypes()) {
@@ -905,10 +937,10 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             if (this.isDisposed) {
                 return;
             }
-            this.searchWidget.setWidth(this.size.width - 34 /* container margin */);
-            this.inputPatternExclusions.setWidth(this.size.width - 36 /* container margin */);
-            this.inputPatternIncludes.setWidth(this.size.width - 36 /* container margin */);
-            this.inputPatternGlobalExclusions.width = this.size.width - 36 /* container margin */ - 24 /* actions */;
+            this.searchWidget.setWidth(this.size.width - 25 /* container margin */);
+            this.inputPatternExclusions.setWidth(this.size.width - 28 /* container margin */);
+            this.inputPatternIncludes.setWidth(this.size.width - 28 /* container margin */);
+            this.inputPatternGlobalExclusions.width = this.size.width - 28 /* container margin */ - 24 /* actions */;
             var searchResultContainerSize = this.size.height - dom.getTotalHeight(this.searchWidgetsContainer.getContainer()) - 6;
             this.results.style({ height: searchResultContainerSize + 'px' });
             this.tree.layout(searchResultContainerSize);
@@ -921,19 +953,14 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             return this.tree;
         };
         SearchViewlet.prototype.clearSearchResults = function () {
-            this.disposeModel();
+            this.viewModel.searchResult.clear();
             this.showEmptyStage();
             this.searchWidget.clear();
-            if (this.currentRequest) {
-                this.currentRequest.cancel();
-                this.currentRequest = null;
-            }
+            this.viewModel.cancelSearch();
         };
         SearchViewlet.prototype.cancelSearch = function () {
-            if (this.currentRequest) {
+            if (this.viewModel.cancelSearch()) {
                 this.searchWidget.focus();
-                this.currentRequest.cancel();
-                this.currentRequest = null;
                 return true;
             }
             return false;
@@ -1061,48 +1088,41 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                 this.searchWidget.focus(false); // focus back to input field
             }
         };
+        SearchViewlet.prototype.autoExpandFileMatch = function (fileMatch, alwaysExpandIfOneResult) {
+            var length = fileMatch.matches().length;
+            if (length < 10 || (alwaysExpandIfOneResult && this.viewModel.searchResult.count() === 1 && length < 50)) {
+                this.tree.expand(fileMatch).done(null, errors.onUnexpectedError);
+            }
+            else {
+                this.tree.collapse(fileMatch).done(null, errors.onUnexpectedError);
+            }
+        };
         SearchViewlet.prototype.onQueryTriggered = function (query, excludePattern, includePattern) {
             var _this = this;
-            if (this.currentRequest) {
-                this.currentRequest.cancel();
-                this.currentRequest = null;
-            }
-            var progressTimer = this.telemetryService.timedPublicLog('searchResultsFirstRender');
-            var doneTimer = this.telemetryService.timedPublicLog('searchResultsFinished');
+            this.viewModel.cancelSearch();
             // Progress total is 100%
             var progressTotal = 100;
             var progressRunner = this.progressService.show(progressTotal);
             var progressWorked = 0;
             this.loading = true;
             this.searchWidget.searchInput.clearMessage();
-            this.disposeModel();
             this.showEmptyStage();
             var handledMatches = Object.create(null);
             var autoExpand = function (alwaysExpandIfOneResult) {
                 // Auto-expand / collapse based on number of matches:
                 // - alwaysExpandIfOneResult: expand file results if we have just one file result and less than 50 matches on a file
                 // - expand file results if we have more than one file result and less than 10 matches on a file
-                if (_this.viewModel) {
-                    var matches_1 = _this.viewModel.matches();
-                    matches_1.forEach(function (match) {
-                        if (handledMatches[match.id()]) {
-                            return; // if we once handled a result, do not do it again to keep results stable (the user might have expanded/collapsed meanwhile)
-                        }
-                        handledMatches[match.id()] = true;
-                        var length = match.matches().length;
-                        if (length < 10 || (alwaysExpandIfOneResult && matches_1.length === 1 && length < 50)) {
-                            _this.tree.expand(match).done(null, errors.onUnexpectedError);
-                        }
-                        else {
-                            _this.tree.collapse(match).done(null, errors.onUnexpectedError);
-                        }
-                    });
-                }
+                var matches = _this.viewModel.searchResult.matches();
+                matches.forEach(function (match) {
+                    if (handledMatches[match.id()]) {
+                        return; // if we once handled a result, do not do it again to keep results stable (the user might have expanded/collapsed meanwhile)
+                    }
+                    handledMatches[match.id()] = true;
+                    _this.autoExpandFileMatch(match, alwaysExpandIfOneResult);
+                });
             };
-            var timerEvent = timer.start(timer.Topic.WORKBENCH, 'Search');
             var isDone = false;
             var onComplete = function (completed) {
-                timerEvent.stop();
                 isDone = true;
                 // Complete up to 100% as needed
                 if (completed) {
@@ -1112,20 +1132,10 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                 else {
                     progressRunner.done();
                 }
-                // Show the final results
-                if (!_this.viewModel) {
-                    _this.viewModel = _this.instantiationService.createInstance(searchModel_1.SearchResult, query.contentPattern);
-                    if (completed) {
-                        _this.viewModel.append(completed.results);
-                    }
-                }
-                _this.viewModel.replaceText = _this.searchWidget.getReplaceValue();
-                _this.tree.refresh().then(function () {
-                    autoExpand(true);
-                }).done(undefined, errors.onUnexpectedError);
-                var hasResults = !_this.viewModel.isEmpty();
+                _this.onSearchResultsChanged().then(function () { return autoExpand(true); });
+                _this.viewModel.replaceString = _this.searchWidget.getReplaceValue();
+                var hasResults = !_this.viewModel.searchResult.isEmpty();
                 _this.loading = false;
-                _this.telemetryService.publicLog('searchResultsShown', { count: _this.viewModel.count(), fileCount: _this.viewModel.fileCount() });
                 _this.actionRegistry['refresh'].enabled = true;
                 _this.actionRegistry['vs.tree.collapse'].enabled = hasResults;
                 _this.actionRegistry['clearSearchResults'].enabled = hasResults;
@@ -1193,12 +1203,10 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                     }
                 }
                 else {
-                    _this.viewModel.toggleHighlights(true); // show highlights
+                    _this.viewModel.searchResult.toggleHighlights(true); // show highlights
                     // Indicate as status to ARIA
-                    aria.status(nls.localize(24, null, _this.viewModel.count(), _this.viewModel.fileCount()));
+                    aria.status(nls.localize(24, null, _this.viewModel.searchResult.count(), _this.viewModel.searchResult.fileCount()));
                 }
-                doneTimer.stop();
-                _this.searchWidget.setReplaceAllActionState(_this.viewModel.count() > 0);
             };
             var onError = function (e) {
                 if (errors.isPromiseCanceledError(e)) {
@@ -1208,15 +1216,12 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                     _this.loading = false;
                     isDone = true;
                     progressRunner.done();
-                    progressTimer.stop();
-                    doneTimer.stop();
                     _this.messageService.show(2 /* ERROR */, e);
                 }
             };
             var total = 0;
             var worked = 0;
             var visibleMatches = 0;
-            var matches = [];
             var onProgress = function (p) {
                 // Progress
                 if (p.total) {
@@ -1224,27 +1229,6 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                 }
                 if (p.worked) {
                     worked = p.worked;
-                }
-                // Results
-                if (p.resource) {
-                    matches.push(p);
-                    // Create view model
-                    if (!_this.viewModel) {
-                        _this.viewModel = _this.instantiationService.createInstance(searchModel_1.SearchResult, query.contentPattern);
-                        _this.tree.setInput(_this.viewModel).then(function () {
-                            autoExpand(false);
-                            _this.callOnModelChange.push(_this.viewModel.addListener2('changed', function (e) {
-                                if (!_this.replacingAll) {
-                                    _this.tree.refresh(e, true);
-                                    if (e instanceof searchModel_1.FileMatch) {
-                                        _this.replaceService.refreshInput(e, _this.viewModel.replaceText, true);
-                                    }
-                                }
-                            }));
-                        }).done(null, errors.onUnexpectedError);
-                    }
-                    _this.viewModel.append([p]);
-                    progressTimer.stop();
                 }
             };
             // Handle UI updates in an interval to show frequent progress and results
@@ -1269,11 +1253,14 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                     progressRunner.worked(1);
                 }
                 // Search result tree update
-                if (visibleMatches !== matches.length) {
-                    visibleMatches = matches.length;
+                var count = _this.viewModel.searchResult.fileCount();
+                if (visibleMatches !== count) {
+                    visibleMatches = count;
                     _this.tree.refresh().then(function () {
                         autoExpand(false);
                     }).done(null, errors.onUnexpectedError);
+                }
+                if (count > 0) {
                     // since we have results now, enable some actions
                     if (!_this.actionRegistry['vs.tree.collapse'].enabled) {
                         _this.actionRegistry['vs.tree.collapse'].enabled = true;
@@ -1282,8 +1269,7 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             }, 200);
             this.searchWidget.setReplaceAllActionState(false);
             this.replaceService.disposeAllInputs();
-            this.currentRequest = this.searchService.search(query);
-            this.currentRequest.then(onComplete, onError, onProgress);
+            this.viewModel.search(query).done(onComplete, onError, onProgress);
         };
         SearchViewlet.prototype.showEmptyStage = function () {
             // disable 'result'-actions
@@ -1293,16 +1279,16 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             // clean up ui
             this.replaceService.disposeAllInputs();
             this.messages.hide();
-            this.tree.setInput(this.instantiationService.createInstance(searchModel_1.SearchResult, null)).done(null, errors.onUnexpectedError);
             this.results.show();
             this.tree.onVisible();
+            this.currentSelectedFileMatch = null;
         };
         SearchViewlet.prototype.onFocus = function (lineMatch, preserveFocus, sideBySide, pinned) {
             if (!(lineMatch instanceof searchModel_1.Match)) {
                 return winjs_base_1.TPromise.as(true);
             }
             this.telemetryService.publicLog('searchResultChosen');
-            return this.viewModel.hasReplaceText() ? this.openReplacePreviewEditor(lineMatch, preserveFocus, sideBySide, pinned) : this.open(lineMatch, preserveFocus, sideBySide, pinned);
+            return (this.viewModel.isReplaceActive() && !!this.viewModel.replaceString) ? this.replaceService.openReplacePreviewEditor(lineMatch, preserveFocus, sideBySide, pinned) : this.open(lineMatch, preserveFocus, sideBySide, pinned);
         };
         SearchViewlet.prototype.open = function (element, preserveFocus, sideBySide, pinned) {
             var selection = this.getSelectionFrom(element);
@@ -1312,26 +1298,12 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
                 options: {
                     preserveFocus: preserveFocus,
                     pinned: pinned,
-                    selection: selection
+                    selection: selection,
+                    revealIfVisible: true
                 }
             }, sideBySide);
         };
-        SearchViewlet.prototype.openReplacePreviewEditor = function (element, preserveFocus, sideBySide, pinned) {
-            var _this = this;
-            this.telemetryService.publicLog('replace.open.previewEditor');
-            return this.replaceService.getInput(element instanceof searchModel_1.Match ? element.parent() : element, this.viewModel.replaceText).then(function (editorInput) {
-                _this.editorService.openEditor(editorInput, { preserveFocus: preserveFocus, pinned: pinned }).then(function (editor) {
-                    var editorControl = editor.getControl();
-                    if (element instanceof searchModel_1.Match) {
-                        editorControl.revealLineInCenter(element.range().startLineNumber);
-                    }
-                }, errors.onUnexpectedError);
-            }, errors.onUnexpectedError);
-        };
         SearchViewlet.prototype.getSelectionFrom = function (element) {
-            if (element instanceof searchModel_1.EmptyMatch) {
-                return void 0;
-            }
             var match = null;
             if (element instanceof searchModel_1.Match) {
                 match = element;
@@ -1342,12 +1314,12 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             if (match) {
                 var range = match.range();
                 if (this.viewModel.isReplaceActive()) {
-                    var replaceText = this.viewModel.replaceText;
+                    var replaceString = match.replaceString;
                     return {
                         startLineNumber: range.startLineNumber,
-                        startColumn: range.startColumn + replaceText.length,
+                        startColumn: range.startColumn + replaceString.length,
                         endLineNumber: range.startLineNumber,
-                        endColumn: range.startColumn + replaceText.length
+                        endColumn: range.startColumn + replaceString.length
                     };
                 }
                 return range;
@@ -1358,10 +1330,10 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             if (!this.viewModel) {
                 return;
             }
-            var matches = this.viewModel.matches();
+            var matches = this.viewModel.searchResult.matches();
             for (var i = 0, len = matches.length; i < len; i++) {
                 if (e.resource.toString() === matches[i].resource().toString()) {
-                    this.viewModel.remove(matches[i]);
+                    this.viewModel.searchResult.remove(matches[i]);
                 }
             }
         };
@@ -1369,10 +1341,10 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             if (!this.viewModel) {
                 return;
             }
-            var matches = this.viewModel.matches();
+            var matches = this.viewModel.searchResult.matches();
             for (var i = 0, len = matches.length; i < len; i++) {
                 if (e.contains(matches[i].resource(), files_1.FileChangeType.DELETED)) {
-                    this.viewModel.remove(matches[i]);
+                    this.viewModel.searchResult.remove(matches[i]);
                 }
             }
         };
@@ -1392,17 +1364,11 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             this.searchWidget.dispose();
             this.inputPatternIncludes.dispose();
             this.inputPatternExclusions.dispose();
-            this.disposeModel();
+            this.viewModel.dispose();
             _super.prototype.dispose.call(this);
         };
-        SearchViewlet.prototype.disposeModel = function () {
-            if (this.viewModel) {
-                this.viewModel.dispose();
-                this.viewModel = null;
-            }
-            this.callOnModelChange = lifecycle.dispose(this.callOnModelChange);
-        };
         SearchViewlet.MAX_TEXT_RESULTS = 2048;
+        SearchViewlet.SHOW_REPLACE_STORAGE_KEY = 'vs.search.show.replace';
         SearchViewlet = __decorate([
             __param(0, telemetry_1.ITelemetryService),
             __param(1, event_1.IEventService),
@@ -1416,7 +1382,7 @@ define(__m[38], __M([0,1,2,16,39,40,22,41,42,3,18,43,23,4,45,46,47,48,49,50,51,5
             __param(9, configuration_1.IConfigurationService),
             __param(10, workspace_1.IWorkspaceContextService),
             __param(11, search_1.ISearchService),
-            __param(12, keybindingService_1.IKeybindingService),
+            __param(12, keybinding_1.IKeybindingService),
             __param(13, replace_1.IReplaceService)
         ], SearchViewlet);
         return SearchViewlet;

@@ -86,6 +86,7 @@ sys_io_File.copy = function(srcPath,dstPath) {
 	js_node_Fs.closeSync(src);
 	js_node_Fs.closeSync(dst);
 };
+var vscode_Position = require("vscode").Position;
 var vscode_Range = require("vscode").Range;
 var vshaxe_DisplayConfiguration = function(context) {
 	this.context = context;
@@ -344,6 +345,25 @@ vshaxe_Main.prototype = {
 			_gthis.displayConfig.onDidChangeIndex = function(index) {
 				client.sendNotification({ method : "vshaxe/didChangeDisplayConfigurationIndex"},{ index : index});
 			};
+			_gthis.hxFileWatcher = Vscode.workspace.createFileSystemWatcher("**/*.hx",false,true,true);
+			_gthis.context.subscriptions.push(_gthis.hxFileWatcher.onDidCreate(function(uri) {
+				var editor = Vscode.window.activeTextEditor;
+				if(editor == null || editor.document.uri.fsPath != uri.fsPath) {
+					return;
+				}
+				if(editor.document.getText(new vscode_Range(0,0,0,1)).length > 0) {
+					return;
+				}
+				client.sendRequest({ method : "vshaxe/calculatePackage"},{ fsPath : uri.fsPath}).then(function(result) {
+					if(result.pack == "") {
+						return;
+					}
+					editor.edit(function(edit) {
+						edit.insert(new vscode_Position(0,0),"package " + result.pack + ";\n");
+					});
+				});
+			}));
+			_gthis.context.subscriptions.push(_gthis.hxFileWatcher);
 		});
 		this.serverDisposable = client.start();
 		this.context.subscriptions.push(this.serverDisposable);
@@ -352,6 +372,12 @@ vshaxe_Main.prototype = {
 		if(this.serverDisposable != null) {
 			HxOverrides.remove(this.context.subscriptions,this.serverDisposable);
 			this.serverDisposable.dispose();
+			this.serverDisposable = null;
+		}
+		if(this.hxFileWatcher != null) {
+			HxOverrides.remove(this.context.subscriptions,this.hxFileWatcher);
+			this.hxFileWatcher.dispose();
+			this.hxFileWatcher = null;
 		}
 		this.startLanguageServer();
 	}

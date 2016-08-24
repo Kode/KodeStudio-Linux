@@ -46,7 +46,7 @@ connection.onInitialize(function (params) {
         capabilities: {
             // Tell the client that the server works in FULL text document sync mode
             textDocumentSync: documents.syncKind,
-            completionProvider: { resolveProvider: true },
+            completionProvider: { resolveProvider: true, triggerCharacters: ['"', ':'] },
             hoverProvider: true,
             documentSymbolProvider: true,
             documentRangeFormattingProvider: true,
@@ -86,7 +86,7 @@ var schemaRequestService = function (uri) {
     return request_light_1.xhr({ url: uri, followRedirects: 5 }).then(function (response) {
         return response.responseText;
     }, function (error) {
-        return error.responseText || request_light_1.getErrorStatusDescription(error.status) || error.toString();
+        return Promise.reject(error.responseText || request_light_1.getErrorStatusDescription(error.status) || error.toString());
     });
 };
 // create the JSON language service
@@ -131,21 +131,19 @@ function updateConfiguration() {
     }
     if (jsonConfigurationSettings) {
         jsonConfigurationSettings.forEach(function (schema) {
-            if (schema.fileMatch) {
-                var uri = schema.url;
-                if (!uri && schema.schema) {
-                    uri = schema.schema.id;
-                    if (!uri) {
-                        uri = 'vscode://schemas/custom/' + encodeURIComponent(schema.fileMatch.join('&'));
-                    }
-                }
-                if (Strings.startsWith(uri, '.') && workspaceRoot) {
+            var uri = schema.url;
+            if (!uri && schema.schema) {
+                uri = schema.schema.id;
+            }
+            if (!uri && schema.fileMatch) {
+                uri = 'vscode://schemas/custom/' + encodeURIComponent(schema.fileMatch.join('&'));
+            }
+            if (uri) {
+                if (uri[0] === '.' && workspaceRoot) {
                     // workspace relative path
                     uri = uri_1.default.file(path.normalize(path.join(workspaceRoot.fsPath, uri))).toString();
                 }
-                if (uri) {
-                    languageSettings.schemas.push({ uri: uri, fileMatch: schema.fileMatch, schema: schema.schema });
-                }
+                languageSettings.schemas.push({ uri: uri, fileMatch: schema.fileMatch, schema: schema.schema });
             }
         });
     }

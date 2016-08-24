@@ -5,6 +5,7 @@ const path = require('path');
 const log = require('./log');
 class Library {
 }
+exports.Library = Library;
 class Target {
     constructor(baseTarget, backends) {
         this.baseTarget = baseTarget;
@@ -12,6 +13,15 @@ class Target {
     }
 }
 exports.Target = Target;
+function contains(main, sub) {
+    main = path.resolve(main);
+    sub = path.resolve(sub);
+    if (process.platform === 'win32') {
+        main = main.toLowerCase();
+        sub = sub.toLowerCase();
+    }
+    return sub.indexOf(main) === 0 && sub.slice(main.length)[0] === path.sep;
+}
 class Project {
     constructor(name) {
         this.name = name;
@@ -26,9 +36,11 @@ class Project {
         this.customTargets = new Map();
         this.windowOptions = {};
         this.targetOptions = {
+            html5: {},
             flash: {},
             android: {},
-            android_native: {}
+            android_native: {},
+            ios: {}
         };
     }
     /**
@@ -37,7 +49,14 @@ class Project {
      * The regex syntax is very simple: * for anything, ** for anything across directories.
      */
     addAssets(match, options) {
-        this.assetMatchers.push({ match: path.resolve(this.scriptdir, match), options: options });
+        if (!options)
+            options = {};
+        // try to avoid weird paths - remove when https://github.com/paulmillr/chokidar/issues/300 is fixed
+        match = path.resolve(this.scriptdir, match);
+        if (contains(process.cwd(), match)) {
+            match = path.relative(process.cwd(), match);
+        }
+        this.assetMatchers.push({ match: match, options: options });
     }
     addSources(source) {
         this.sources.push(source);
@@ -47,7 +66,14 @@ class Project {
      * The regex syntax is very simple: * for anything, ** for anything across directories.
      */
     addShaders(match, options) {
-        this.shaderMatchers.push({ match: path.resolve(this.scriptdir, match), options: options });
+        if (!options)
+            options = {};
+        // try to avoid weird paths - remove when https://github.com/paulmillr/chokidar/issues/300 is fixed
+        match = path.resolve(this.scriptdir, match);
+        if (contains(process.cwd(), match)) {
+            match = path.relative(process.cwd(), match);
+        }
+        this.shaderMatchers.push({ match: match, options: options });
     }
     addDefine(define) {
         this.defines.push(define);
@@ -59,6 +85,7 @@ class Project {
         this.customTargets.set(name, new Target(baseTarget, backends));
     }
     addLibrary(library) {
+        this.addDefine(library);
         let self = this;
         function findLibraryDirectory(name) {
             // Tries to load the default library from inside the kha project.
@@ -74,25 +101,25 @@ class Project {
                 libpath = path.join(child_process.execSync('haxelib config', { encoding: 'utf8' }).trim(), name.replace(/\./g, ',').toLowerCase());
             }
             catch (error) {
-                libpath = path.join(process.env.HAXEPATH, 'lib', name.toLowerCase());
+                if (process.env.HAXEPATH) {
+                    libpath = path.join(process.env.HAXEPATH, 'lib', name.toLowerCase());
+                }
             }
             if (fs.existsSync(libpath) && fs.statSync(libpath).isDirectory()) {
                 if (fs.existsSync(path.join(libpath, '.dev'))) {
-                    //return fs.readFileSync(path.join(libpath, '.dev'), 'utf8');
                     return { libpath: fs.readFileSync(path.join(libpath, '.dev'), 'utf8'), libroot: libpath };
                 }
                 else if (fs.existsSync(path.join(libpath, '.current'))) {
                     // Get the latest version of the haxelib path,
                     // e.g. for 'hxcpp', latest version '3,2,193'
                     let current = fs.readFileSync(path.join(libpath, '.current'), 'utf8');
-                    //return path.join(libpath, current.replace(/\./g, ','));
                     return { libpath: path.join(libpath, current.replace(/\./g, ',')), libroot: libpath };
                 }
             }
             // Show error if library isn't found in Libraries or haxelib folder
             log.error('Error: Library ' + name + ' not found.');
-            log.error('Install it using \'haxelib install ' + name + '\' or add it to the \'Libraries\' folder.');
-            process.exit(1);
+            log.error('Add it to the \'Libraries\' subdirectory of your project. You may also install it via haxelib but that\'s less cool.');
+            throw 'Library ' + name + ' not found.';
         }
         let libInfo = findLibraryDirectory(library);
         let dir = libInfo.libpath;

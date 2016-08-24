@@ -37,9 +37,11 @@ class FrameTask {
 class Scheduler {
 	private static var timeTasks: Array<TimeTask>;
 	private static var pausedTimeTasks: Array<TimeTask>;
-	private static var frameTasks: Array<FrameTask>;
-	
-	private static var toDeleteTime : Array<TimeTask>;
+	private static var outdatedTimeTasks: Array<TimeTask>;
+	private static var timeTasksScratchpad: Array<TimeTask>;
+	private static inline var timeWarpSaveTime: Float = 1.0;
+
+	private static var frameTasks: Array<FrameTask>;	
 	private static var toDeleteFrame : Array<FrameTask>;
 	
 	private static var current: Float;
@@ -62,8 +64,6 @@ class Scheduler {
 	
 	private static var startTime: Float = 0;
 	
-	private static var lastNow: Float = 0;
-	
 	private static var activeTimeTask: TimeTask = null;
 	
 	public static function init(): Void {
@@ -79,11 +79,12 @@ class Scheduler {
 		currentTimeTaskId  = 0;
 		currentGroupId     = 0;
 		
-		timeTasks = new Array<TimeTask>();
-		pausedTimeTasks = new Array<TimeTask>();
-		frameTasks = new Array<FrameTask>();
-		toDeleteTime = new Array<TimeTask>();
-		toDeleteFrame = new Array<FrameTask>();
+		timeTasks = [];
+		pausedTimeTasks = [];
+		outdatedTimeTasks = [];
+		timeTasksScratchpad = [];
+		frameTasks = [];
+		toDeleteFrame = [];
 	}
 	
 	public static function start(restartTimers : Bool = false): Void {
@@ -115,26 +116,59 @@ class Scheduler {
 	public static function isStopped(): Bool {
 		return stopped;
 	}
-	
-	public static function back(time: Float): Void {
-		lastTime = time;
-		for (timeTask in timeTasks) {
+
+	private static function warpTimeTasks(time: Float, tasks: Array<TimeTask>): Void {
+		for (timeTask in tasks) {
 			if (timeTask.start >= time) {
 				timeTask.next = timeTask.start;
 			}
-			else {
-				timeTask.next = timeTask.start;
-				while (timeTask.next < time) { // TODO: Implement without looping
-					timeTask.next += timeTask.period;
-				}
+			else if (timeTask.period > 0) {
+				var sinceStart = time - timeTask.start;
+				var times = Math.ceil(sinceStart / timeTask.period);
+				timeTask.next = timeTask.start + times * timeTask.period;
 			}
+		}
+	}
+	
+	public static function back(time: Float): Void {
+		if (time >= lastTime) return; // No back to the future
+
+		current = time;
+		lastTime = time;
+		warpTimeTasks(time, outdatedTimeTasks);
+		warpTimeTasks(time, timeTasks);
+		
+		for (task in outdatedTimeTasks) {
+			if (task.next >= time) {
+				timeTasksScratchpad.push(task);
+			}
+		}
+		for (task in timeTasksScratchpad) {
+			outdatedTimeTasks.remove(task);
+		}
+		for (task in timeTasksScratchpad) {
+			insertSorted(timeTasks, task);
+		}
+		while (timeTasksScratchpad.length > 0) {
+			timeTasksScratchpad.remove(timeTasksScratchpad[0]);
+		}
+
+		for (task in outdatedTimeTasks) {
+			if (task.next < time - timeWarpSaveTime) {
+				timeTasksScratchpad.push(task);
+			}
+		}
+		for (task in timeTasksScratchpad) {
+			outdatedTimeTasks.remove(task);
+		}
+		while (timeTasksScratchpad.length > 0) {
+			timeTasksScratchpad.remove(timeTasksScratchpad[0]);
 		}
 	}
 	
 	public static function executeFrame(): Void {
 		var now: Float = realTime();
-		var delta = now - lastNow;
-		lastNow = now;
+		var delta = now - lastTime;
 		
 		var frameEnd: Float = current;
 		 
@@ -215,9 +249,13 @@ class Scheduler {
 					if (activeTimeTask.period > 0 && (activeTimeTask.duration == 0 || activeTimeTask.duration >= activeTimeTask.start + activeTimeTask.next)) {
 						insertSorted(timeTasks, activeTimeTask);
 					}
+					else {
+						archiveTimeTask(activeTimeTask, frameEnd);
+					}
 				}
 				else {
 					activeTimeTask.active = false;
+					archiveTimeTask(activeTimeTask, frameEnd);
 				}
 			}
 			else {
@@ -226,16 +264,6 @@ class Scheduler {
 		}
 		activeTimeTask = null;
 		
-		for (timeTask in timeTasks) {
-			if (!timeTask.active) {
-				toDeleteTime.push(timeTask);
-			}
-		}
-		
-		while (toDeleteTime.length > 0) {
-			timeTasks.remove(toDeleteTime.pop());
-		}
-
 		sortFrameTasks();
 		for (frameTask in frameTasks) {
 			if (!stopped && !frameTask.paused && frameTask.active) {
@@ -254,6 +282,14 @@ class Scheduler {
 		}
 	}
 
+	private static function archiveTimeTask(timeTask: TimeTask, frameEnd: Float) {
+		#if sys_server
+		if (timeTask.next > frameEnd - timeWarpSaveTime) {
+			outdatedTimeTasks.push(timeTask);
+		}
+		#end
+	}
+
 	public static function time(): Float {
 		return current;
 	}
@@ -264,7 +300,6 @@ class Scheduler {
 	
 	public static function resetTime(): Void {
 		var now = System.time;
-		lastNow = 0;
 		var dif = now - startTime;
 		startTime = now;
 		for (timeTask in timeTasks) {
@@ -318,9 +353,8 @@ class Scheduler {
 		t.start = current + start;
 		t.period = 0;
 		if (period != 0) t.period = period;
-		//if (t.period == 0) throw std::exception("The period of a task must not be zero.");
 		t.duration = 0; //infinite
-		if (duration != 0) t.duration = t.start + duration; //-1 ?
+		if (duration != 0) t.duration = t.start + duration;
 
 		t.next = t.start;
 		insertSorted(timeTasks, t);
@@ -399,15 +433,19 @@ class Scheduler {
 		for (timeTask in timeTasks) {
 			if (timeTask.groupId == groupId) {
 				timeTask.active = false;
-				toDeleteTime.push(timeTask);
+				timeTasksScratchpad.push(timeTask);
+				
 			}
 		}
+		for (timeTask in timeTasksScratchpad) {
+			timeTasks.remove(timeTask);
+		}
+		while (timeTasksScratchpad.length > 0) {
+			timeTasksScratchpad.remove(timeTasksScratchpad[0]);
+		}
+
 		if (activeTimeTask != null && activeTimeTask.groupId == groupId) {
-			activeTimeTask.paused = false;
-		} 
-		
-		while (toDeleteTime.length > 0) {
-			timeTasks.remove(toDeleteTime.pop());
+			activeTimeTask.active = false;
 		}
 	}
 
@@ -430,12 +468,4 @@ class Scheduler {
 		frameTasks.sort(function(a: FrameTask, b: FrameTask): Int { return a.priority > b.priority ? 1 : ((a.priority < b.priority) ? -1 : 0); } );
 		frame_tasks_sorted = true;
 	}
-	
-	//private static function get_deltaTime():Float 
-	//{
-	//	return delta;
-	//}
-	
-	/** Delta time between frames*/
-	//static public var deltaTime(get_deltaTime, null):Float;
 }

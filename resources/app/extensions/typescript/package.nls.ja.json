@@ -5,7 +5,7 @@
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "パラメーター シグネチャを含む完全な関数。",
 	"typescript.tsdk.desc": "使用する tsserver と lib*.d.ts ファイルが含まれているフォルダーのパスを指定します。",
 	"typescript.tsserver.trace": "TS サーバーに送信されるメッセージのトレースをオンにします",
-	"typescript.tsserver.experimentalAutoBuild": "Enables experimental auto build. Requires 1.9 dev or 2.x tsserver version and a restart of VS Code after changing it.",
+	"typescript.tsserver.experimentalAutoBuild": "試験的な自動ビルドを有効にします。1.9 dev または 2.x tsserver バージョンと、変更後に VS Code の再起動が必要です。",
 	"typescript.validate.enable": "TypeScript の検証を有効/無効にします",
 	"format.insertSpaceAfterCommaDelimiter": "コンマ区切り記号の後のスペース処理を定義します",
 	"format.insertSpaceAfterSemicolonInForStatements": "for ステートメント内のセミコロンの後のスペース処理を定義します",

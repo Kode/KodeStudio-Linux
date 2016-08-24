@@ -43,56 +43,13 @@ function activate(context) {
     disposable = colorDecorators_1.activateColorDecorations(colorRequestor, { css: true, scss: true, less: true });
     context.subscriptions.push(disposable);
     vscode_1.languages.setLanguageConfiguration('css', {
-        wordPattern: /(#?-?\d*\.\d\w*%?)|((::|[@#.!:])?[\w-?]+%?)|::|[@#.!:]/g,
-        comments: {
-            blockComment: ['/*', '*/']
-        },
-        brackets: [['{', '}'], ['[', ']'], ['(', ')']],
-        __characterPairSupport: {
-            autoClosingPairs: [
-                { open: '{', close: '}' },
-                { open: '[', close: ']' },
-                { open: '(', close: ')' },
-                { open: '"', close: '"', notIn: ['string'] },
-                { open: '\'', close: '\'', notIn: ['string'] }
-            ]
-        }
+        wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]*(?=[^,{;]*[,{]))|(([@#.!])?[\w-?]+%?|[@#!.])/g
     });
     vscode_1.languages.setLanguageConfiguration('less', {
-        wordPattern: /(#?-?\d*\.\d\w*%?)|([@#!.:]?[\w-?]+%?)|[@#!.]/g,
-        comments: {
-            blockComment: ['/*', '*/'],
-            lineComment: '//'
-        },
-        brackets: [['{', '}'], ['[', ']'], ['(', ')'], ['<', '>']],
-        __characterPairSupport: {
-            autoClosingPairs: [
-                { open: '"', close: '"', notIn: ['string', 'comment'] },
-                { open: '\'', close: '\'', notIn: ['string', 'comment'] },
-                { open: '{', close: '}', notIn: ['string', 'comment'] },
-                { open: '[', close: ']', notIn: ['string', 'comment'] },
-                { open: '(', close: ')', notIn: ['string', 'comment'] },
-                { open: '<', close: '>', notIn: ['string', 'comment'] },
-            ]
-        }
+        wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]+(?=[^,{;]*[,{]))|(([@#.!])?[\w-?]+%?|[@#!.])/g
     });
     vscode_1.languages.setLanguageConfiguration('scss', {
-        wordPattern: /(#?-?\d*\.\d\w*%?)|([@#$!.:]?[\w-?]+%?)|[@#!.]/g,
-        comments: {
-            blockComment: ['/*', '*/'],
-            lineComment: '//'
-        },
-        brackets: [['{', '}'], ['[', ']'], ['(', ')'], ['<', '>']],
-        __characterPairSupport: {
-            autoClosingPairs: [
-                { open: '"', close: '"', notIn: ['string', 'comment'] },
-                { open: '\'', close: '\'', notIn: ['string', 'comment'] },
-                { open: '{', close: '}', notIn: ['string', 'comment'] },
-                { open: '[', close: ']', notIn: ['string', 'comment'] },
-                { open: '(', close: ')', notIn: ['string', 'comment'] },
-                { open: '<', close: '>', notIn: ['string', 'comment'] },
-            ]
-        }
+        wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]*(?=[^,{;]*[,{]))|(([@$#.!])?[\w-?]+%?|[@#!$.])/g
     });
     vscode_1.commands.registerCommand('_css.applyCodeAction', applyCodeAction);
 }

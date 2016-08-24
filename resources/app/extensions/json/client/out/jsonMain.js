@@ -65,17 +65,7 @@ function activate(context) {
         // client can be deactivated on extension deactivation
         context.subscriptions.push(disposable);
         vscode_1.languages.setLanguageConfiguration('json', {
-            wordPattern: /(-?\d*\.\d\w*)|([^\[\{\]\}\:\"\,\s]+)/g,
-            __characterPairSupport: {
-                autoClosingPairs: [
-                    { open: '{', close: '}' },
-                    { open: '[', close: ']' },
-                    { open: '(', close: ')' },
-                    { open: '"', close: '"', notIn: ['string'] },
-                    { open: '\'', close: '\'', notIn: ['string', 'comment'] },
-                    { open: '`', close: '`', notIn: ['string', 'comment'] }
-                ]
-            }
+            wordPattern: /("(?:[^\\\"]*(?:\\.)?)*"?)|[^\s{}\[\],:]+/
         });
     });
 }

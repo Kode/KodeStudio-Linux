@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["vs/workbench/parts/markers/common/markersModel","require","exports","vs/base/common/winjs.base","vs/workbench/parts/markers/browser/markersActionProvider","vs/css!vs/workbench/parts/markers/browser/media/markers","vs/platform/instantiation/common/instantiation","vs/nls!vs/workbench/parts/markers/browser/markersActionProvider","vs/workbench/parts/markers/browser/markersTreeController","vs/base/common/errors","vs/workbench/services/editor/common/editorService","vs/platform/telemetry/common/telemetry","vs/workbench/parts/markers/browser/markersTreeViewer","vs/base/browser/dom","vs/workbench/parts/markers/common/messages","vs/nls","vs/nls!vs/workbench/parts/markers/browser/markersPanel","vs/platform/configuration/common/configuration","vs/base/common/actions","vs/css!vs/workbench/parts/markers/browser/markersPanel","vs/workbench/services/workspace/common/contextService","vs/base/browser/ui/countBadge/countBadge","vs/base/browser/ui/fileLabel/fileLabel","vs/base/browser/ui/highlightedlabel/highlightedLabel","vs/base/parts/tree/browser/treeDefaults","vs/workbench/parts/markers/browser/markersPanel","vs/base/common/set","vs/base/common/async","vs/base/common/lifecycle","vs/platform/markers/common/markers","vs/platform/event/common/event","vs/workbench/services/group/common/groupService","vs/workbench/parts/files/browser/editors/fileEditorInput","vs/workbench/browser/panel","vs/workbench/parts/markers/common/constants","vs/base/parts/tree/browser/treeImpl","vs/workbench/parts/markers/browser/markersPanelActions","vs/base/common/severity"];
+var __m = ["vs/workbench/parts/markers/common/markersModel","require","exports","vs/base/common/winjs.base","vs/workbench/parts/markers/common/messages","vs/base/common/severity","vs/css!vs/workbench/parts/markers/browser/media/markers","vs/workbench/parts/markers/browser/markersActionProvider","vs/nls!vs/workbench/parts/markers/browser/markersActionProvider","vs/platform/instantiation/common/instantiation","vs/workbench/parts/markers/browser/markersTreeController","vs/base/common/errors","vs/workbench/services/editor/common/editorService","vs/platform/telemetry/common/telemetry","vs/workbench/parts/markers/browser/markersTreeViewer","vs/base/browser/dom","vs/nls!vs/workbench/parts/markers/browser/markersPanel","vs/base/common/paths","vs/base/common/actions","vs/base/common/types","vs/base/common/map","vs/platform/configuration/common/configuration","vs/css!vs/workbench/parts/markers/browser/markersPanel","vs/base/common/uri","vs/editor/common/core/range","vs/base/common/filters","vs/nls","vs/workbench/services/workspace/common/contextService","vs/base/browser/ui/countBadge/countBadge","vs/base/browser/ui/fileLabel/fileLabel","vs/base/browser/ui/highlightedlabel/highlightedLabel","vs/workbench/parts/markers/browser/markersPanel","vs/base/common/set","vs/base/common/async","vs/base/common/lifecycle","vs/platform/markers/common/markers","vs/platform/event/common/event","vs/workbench/services/group/common/groupService","vs/workbench/parts/files/common/editors/fileEditorInput","vs/workbench/browser/panel","vs/workbench/parts/markers/common/constants","vs/base/parts/tree/browser/treeImpl","vs/workbench/parts/markers/browser/markersPanelActions","vs/base/parts/tree/browser/treeDefaults"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,8 +10,305 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[5], __M([19]), {});
-define(__m[7], __M([15,16]), function(nls, data) { return nls.create("vs/workbench/parts/markers/browser/markersActionProvider", data); });
+define(__m[6], __M([22]), {});
+define(__m[8], __M([26,16]), function(nls, data) { return nls.create("vs/workbench/parts/markers/browser/markersActionProvider", data); });
+define(__m[0], __M([1,2,17,19,20,5,23,24,25,4]), function (require, exports, paths, types, Map, severity_1, uri_1, range_1, filters_1, messages_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var Resource = (function () {
+        function Resource(uri, markers, statistics, matches) {
+            if (matches === void 0) { matches = []; }
+            this.uri = uri;
+            this.markers = markers;
+            this.statistics = statistics;
+            this.matches = matches;
+            this.path = uri.fsPath;
+            this.name = paths.basename(uri.fsPath);
+        }
+        return Resource;
+    }());
+    exports.Resource = Resource;
+    var Marker = (function () {
+        function Marker(id, marker, labelMatches, sourceMatches) {
+            if (labelMatches === void 0) { labelMatches = []; }
+            if (sourceMatches === void 0) { sourceMatches = []; }
+            this.id = id;
+            this.marker = marker;
+            this.labelMatches = labelMatches;
+            this.sourceMatches = sourceMatches;
+        }
+        return Marker;
+    }());
+    exports.Marker = Marker;
+    var FilterOptions = (function () {
+        function FilterOptions(filter) {
+            if (filter === void 0) { filter = ''; }
+            this._filterErrors = false;
+            this._filterWarnings = false;
+            this._filterInfos = false;
+            this._filter = '';
+            this._completeFilter = '';
+            if (filter) {
+                this.parse(filter);
+            }
+        }
+        Object.defineProperty(FilterOptions.prototype, "filterErrors", {
+            get: function () {
+                return this._filterErrors;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FilterOptions.prototype, "filterWarnings", {
+            get: function () {
+                return this._filterWarnings;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FilterOptions.prototype, "filterInfos", {
+            get: function () {
+                return this._filterInfos;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FilterOptions.prototype, "filter", {
+            get: function () {
+                return this._filter;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FilterOptions.prototype, "completeFilter", {
+            get: function () {
+                return this._completeFilter;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        FilterOptions.prototype.hasFilters = function () {
+            return !!this._filter;
+        };
+        FilterOptions.prototype.parse = function (filter) {
+            this._completeFilter = filter;
+            this._filter = filter.trim();
+            this._filterErrors = this.matches(this._filter, messages_1.default.MARKERS_PANEL_FILTER_ERRORS);
+            this._filterWarnings = this.matches(this._filter, messages_1.default.MARKERS_PANEL_FILTER_WARNINGS);
+            this._filterInfos = this.matches(this._filter, messages_1.default.MARKERS_PANEL_FILTER_INFOS);
+        };
+        FilterOptions.prototype.matches = function (prefix, word) {
+            var result = filters_1.matchesPrefix(prefix, word);
+            return result && result.length > 0;
+        };
+        FilterOptions._filter = filters_1.or(filters_1.matchesPrefix, filters_1.matchesContiguousSubString);
+        FilterOptions._fuzzyFilter = filters_1.or(filters_1.matchesPrefix, filters_1.matchesContiguousSubString, filters_1.matchesFuzzy);
+        return FilterOptions;
+    }());
+    exports.FilterOptions = FilterOptions;
+    var MarkersModel = (function () {
+        function MarkersModel(markers) {
+            if (markers === void 0) { markers = []; }
+            this.markersByResource = new Map.SimpleMap();
+            this._filterOptions = new FilterOptions();
+            this.update(markers);
+        }
+        Object.defineProperty(MarkersModel.prototype, "filterOptions", {
+            get: function () {
+                return this._filterOptions;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MarkersModel.prototype, "filteredResources", {
+            get: function () {
+                return this._filteredResources;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        MarkersModel.prototype.hasFilteredResources = function () {
+            return this.filteredResources.length > 0;
+        };
+        MarkersModel.prototype.hasResources = function () {
+            return this.markersByResource.size > 0;
+        };
+        MarkersModel.prototype.hasResource = function (resource) {
+            return this.markersByResource.has(resource);
+        };
+        Object.defineProperty(MarkersModel.prototype, "nonFilteredResources", {
+            get: function () {
+                return this._nonFilteredResources;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        MarkersModel.prototype.update = function (arg1, arg2) {
+            if (arg1 instanceof FilterOptions) {
+                this._filterOptions = arg1;
+            }
+            if (arg1 instanceof uri_1.default) {
+                this.updateResource(arg1, arg2);
+            }
+            if (types.isArray(arg1)) {
+                this.updateMarkers(arg1);
+            }
+            this.refresh();
+        };
+        MarkersModel.prototype.refresh = function () {
+            this.refreshResources();
+        };
+        MarkersModel.prototype.refreshResources = function () {
+            var resources = this.markersByResource.entries().map(this.toFilteredResource.bind(this));
+            this._nonFilteredResources = resources.filter(function (resource) { return resource.markers.length === 0; });
+            this._filteredResources = resources.filter(function (resource) { return resource.markers.length > 0; });
+            this._filteredResources.sort(function (a, b) {
+                if (a.statistics.errors === 0 && b.statistics.errors > 0) {
+                    return 1;
+                }
+                if (b.statistics.errors === 0 && a.statistics.errors > 0) {
+                    return -1;
+                }
+                return a.path.localeCompare(b.path) || a.name.localeCompare(b.name);
+            });
+        };
+        MarkersModel.prototype.updateResource = function (resourceUri, markers) {
+            if (this.markersByResource.has(resourceUri)) {
+                this.markersByResource.delete(resourceUri);
+            }
+            if (markers.length > 0) {
+                this.markersByResource.set(resourceUri, markers);
+            }
+        };
+        MarkersModel.prototype.updateMarkers = function (markers) {
+            var _this = this;
+            markers.forEach(function (marker) {
+                var uri = marker.resource;
+                var markers = _this.markersByResource.get(uri);
+                if (!markers) {
+                    markers = [];
+                    _this.markersByResource.set(uri, markers);
+                }
+                markers.push(marker);
+            });
+        };
+        MarkersModel.prototype.toFilteredResource = function (entry) {
+            var _this = this;
+            var markers = entry.value.filter(this.filterMarker.bind(this)).map(function (marker, index) {
+                return _this.toMarker(marker, index);
+            });
+            markers.sort(this.compareMarkers.bind(this));
+            var matches = FilterOptions._filter(this._filterOptions.filter, paths.basename(entry.key.fsPath));
+            return new Resource(entry.key, markers, this.getStatistics(entry.value), matches || []);
+        };
+        MarkersModel.prototype.toMarker = function (marker, index) {
+            var labelMatches = FilterOptions._fuzzyFilter(this._filterOptions.filter, marker.message);
+            var sourceMatches = !!marker.source ? FilterOptions._filter(this._filterOptions.filter, marker.source) : [];
+            return new Marker(marker.resource.toString() + index, marker, labelMatches || [], sourceMatches || []);
+        };
+        MarkersModel.prototype.filterMarker = function (marker) {
+            if (this._filterOptions.filter) {
+                if (this._filterOptions.filterErrors && severity_1.default.Error === marker.severity) {
+                    return true;
+                }
+                if (this._filterOptions.filterWarnings && severity_1.default.Warning === marker.severity) {
+                    return true;
+                }
+                if (this._filterOptions.filterInfos && severity_1.default.Info === marker.severity) {
+                    return true;
+                }
+                if (!!FilterOptions._fuzzyFilter(this._filterOptions.filter, marker.message)) {
+                    return true;
+                }
+                if (!!FilterOptions._filter(this._filterOptions.filter, paths.basename(marker.resource.fsPath))) {
+                    return true;
+                }
+                if (!!marker.source && !!FilterOptions._filter(this._filterOptions.filter, marker.source)) {
+                    return true;
+                }
+                return false;
+            }
+            return true;
+        };
+        MarkersModel.prototype.compareMarkers = function (a, b) {
+            return range_1.Range.compareRangesUsingStarts({
+                startLineNumber: a.marker.startLineNumber,
+                startColumn: a.marker.startColumn,
+                endLineNumber: a.marker.endLineNumber,
+                endColumn: a.marker.endColumn
+            }, {
+                startLineNumber: b.marker.startLineNumber,
+                startColumn: b.marker.startColumn,
+                endLineNumber: b.marker.endLineNumber,
+                endColumn: b.marker.endColumn
+            });
+        };
+        MarkersModel.prototype.getStatistics = function (markers) {
+            var errors = 0, warnings = 0, infos = 0, unknowns = 0;
+            markers.forEach(function (marker) {
+                switch (marker.severity) {
+                    case severity_1.default.Error:
+                        errors++;
+                        return;
+                    case severity_1.default.Warning:
+                        warnings++;
+                        return;
+                    case severity_1.default.Info:
+                        infos++;
+                        return;
+                    default:
+                        unknowns++;
+                        return;
+                }
+            });
+            return { errors: errors, warnings: warnings, infos: infos, unknwons: unknowns };
+        };
+        MarkersModel.prototype.dispose = function () {
+            this.markersByResource.clear();
+            this._filteredResources = [];
+            this._nonFilteredResources = [];
+        };
+        MarkersModel.prototype.getTitle = function (markerStatistics) {
+            var title = MarkersModel.getStatisticsLabel(markerStatistics);
+            return title ? title : messages_1.default.MARKERS_PANEL_TITLE_NO_PROBLEMS;
+        };
+        MarkersModel.prototype.getMessage = function () {
+            if (this.hasFilteredResources()) {
+                return '';
+            }
+            if (this.hasResources()) {
+                if (this._filterOptions.hasFilters()) {
+                    return messages_1.default.MARKERS_PANEL_NO_PROBLEMS_FILTERS;
+                }
+            }
+            return messages_1.default.MARKERS_PANEL_NO_PROBLEMS_BUILT;
+        };
+        MarkersModel.getStatisticsLabel = function (markerStatistics, onlyErrors) {
+            if (onlyErrors === void 0) { onlyErrors = false; }
+            var label = this.getLabel('', markerStatistics.errors, messages_1.default.MARKERS_PANEL_SINGLE_ERROR_LABEL, messages_1.default.MARKERS_PANEL_MULTIPLE_ERRORS_LABEL);
+            if (!onlyErrors) {
+                label = this.getLabel(label, markerStatistics.warnings, messages_1.default.MARKERS_PANEL_SINGLE_WARNING_LABEL, messages_1.default.MARKERS_PANEL_MULTIPLE_WARNINGS_LABEL);
+                label = this.getLabel(label, markerStatistics.infos, messages_1.default.MARKERS_PANEL_SINGLE_INFO_LABEL, messages_1.default.MARKERS_PANEL_MULTIPLE_INFOS_LABEL);
+                label = this.getLabel(label, markerStatistics.unknwons, messages_1.default.MARKERS_PANEL_SINGLE_UNKNOWN_LABEL, messages_1.default.MARKERS_PANEL_MULTIPLE_UNKNOWNS_LABEL);
+            }
+            return label;
+        };
+        MarkersModel.getLabel = function (title, markersCount, singleMarkerString, multipleMarkersFunction) {
+            if (markersCount <= 0) {
+                return title;
+            }
+            title = title ? title + ', ' : '';
+            title += markersCount === 1 ? singleMarkerString : multipleMarkersFunction(markersCount);
+            return title;
+        };
+        return MarkersModel;
+    }());
+    exports.MarkersModel = MarkersModel;
+});
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -26,7 +323,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(__m[4], __M([1,2,7,3,18,6,0]), function (require, exports, nls, winjs, actions, instantiation_1, markersModel_1) {
+define(__m[7], __M([1,2,8,3,18,9,0]), function (require, exports, nls, winjs, actions, instantiation_1, markersModel_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -114,7 +411,7 @@ define(__m[4], __M([1,2,7,3,18,6,0]), function (require, exports, nls, winjs, ac
 
 
 
-define(__m[8], __M([1,2,9,24,0,10,11]), function (require, exports, errors, treedefaults, markersModel_1, editorService_1, telemetry_1) {
+define(__m[10], __M([1,2,11,43,0,12,13]), function (require, exports, errors, treedefaults, markersModel_1, editorService_1, telemetry_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -130,7 +427,7 @@ define(__m[8], __M([1,2,9,24,0,10,11]), function (require, exports, errors, tree
         Controller.prototype.onLeftClick = function (tree, element, event) {
             var currentFoucssed = tree.getFocus();
             if (_super.prototype.onLeftClick.call(this, tree, element, event)) {
-                if (this.openFileAtElement(element, event.detail !== 2, event.ctrlKey, event.detail === 2)) {
+                if (this.openFileAtElement(element, event.detail !== 2, event.ctrlKey || event.metaKey, event.detail === 2)) {
                     return true;
                 }
                 if (element instanceof markersModel_1.MarkersModel) {
@@ -147,9 +444,17 @@ define(__m[8], __M([1,2,9,24,0,10,11]), function (require, exports, errors, tree
         };
         Controller.prototype.onEnter = function (tree, event) {
             if (_super.prototype.onEnter.call(this, tree, event)) {
-                return this.openFileAtElement(tree.getFocus(), false, false, false);
+                return this.openFileAtElement(tree.getFocus(), false, event.ctrlKey || event.metaKey, true);
             }
             return false;
+        };
+        Controller.prototype.onSpace = function (tree, event) {
+            var element = tree.getFocus();
+            if (element instanceof markersModel_1.Marker) {
+                tree.setSelection([element]);
+                return this.openFileAtElement(tree.getFocus(), true, false, false);
+            }
+            return _super.prototype.onSpace.call(this, tree, event);
         };
         Controller.prototype.openFileAtElement = function (element, preserveFocus, sideByside, pinned) {
             if (element instanceof markersModel_1.Marker) {
@@ -165,7 +470,8 @@ define(__m[8], __M([1,2,9,24,0,10,11]), function (require, exports, errors, tree
                             endColumn: marker.endColumn
                         },
                         preserveFocus: preserveFocus,
-                        pinned: pinned
+                        pinned: pinned,
+                        revealIfVisible: true
                     },
                 }, sideByside).done(null, errors.onUnexpectedError);
                 return true;
@@ -190,7 +496,7 @@ define(__m[8], __M([1,2,9,24,0,10,11]), function (require, exports, errors, tree
 
 
 
-define(__m[12], __M([1,2,3,13,37,20,21,22,23,0,14]), function (require, exports, winjs_base_1, dom, severity_1, contextService_1, countBadge_1, fileLabel_1, highlightedLabel_1, markersModel_1, messages_1) {
+define(__m[14], __M([1,2,3,15,5,27,28,29,30,0,4]), function (require, exports, winjs_base_1, dom, severity_1, contextService_1, countBadge_1, fileLabel_1, highlightedLabel_1, markersModel_1, messages_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -318,21 +624,21 @@ define(__m[12], __M([1,2,3,13,37,20,21,22,23,0,14]), function (require, exports,
         return Renderer;
     }());
     exports.Renderer = Renderer;
-    var ProblemsTreeAccessibilityProvider = (function () {
-        function ProblemsTreeAccessibilityProvider() {
+    var MarkersTreeAccessibilityProvider = (function () {
+        function MarkersTreeAccessibilityProvider() {
         }
-        ProblemsTreeAccessibilityProvider.prototype.getAriaLabel = function (tree, element) {
+        MarkersTreeAccessibilityProvider.prototype.getAriaLabel = function (tree, element) {
             if (element instanceof markersModel_1.Resource) {
-                return messages_1.default.PROBLEMS_TREE_ARIA_LABEL_RESOURCE(element.name, element.markers.length);
+                return messages_1.default.MARKERS_TREE_ARIA_LABEL_RESOURCE(element.name, element.markers.length);
             }
             if (element instanceof markersModel_1.Marker) {
-                return messages_1.default.PROBLEMS_TREE_ARIA_LABEL_MARKER(element.marker);
+                return messages_1.default.MARKERS_TREE_ARIA_LABEL_MARKER(element.marker);
             }
             return null;
         };
-        return ProblemsTreeAccessibilityProvider;
+        return MarkersTreeAccessibilityProvider;
     }());
-    exports.ProblemsTreeAccessibilityProvider = ProblemsTreeAccessibilityProvider;
+    exports.MarkersTreeAccessibilityProvider = MarkersTreeAccessibilityProvider;
 });
 
 /*---------------------------------------------------------------------------------------------
@@ -353,7 +659,7 @@ define(__m[12], __M([1,2,3,13,37,20,21,22,23,0,14]), function (require, exports,
 
 
 
-define(__m[25], __M([1,2,9,26,3,27,13,28,29,11,30,31,32,33,10,34,0,8,35,12,6,4,36,17,14,5]), function (require, exports, errors, Set, winjs_base_1, async_1, dom, lifecycle, markers_1, telemetry_1, event_1, groupService_1, fileEditorInput_1, panel_1, editorService_1, constants_1, markersModel_1, markersTreeController_1, TreeImpl, Viewer, instantiation_1, markersActionProvider_1, markersPanelActions_1, configuration_1, messages_1) {
+define(__m[31], __M([1,2,11,32,3,33,15,34,35,13,36,37,38,39,12,40,0,10,41,14,9,7,42,21,4,6]), function (require, exports, errors, Set, winjs_base_1, async_1, dom, lifecycle, markers_1, telemetry_1, event_1, groupService_1, fileEditorInput_1, panel_1, editorService_1, constants_1, markersModel_1, markersTreeController_1, TreeImpl, Viewer, instantiation_1, markersActionProvider_1, markersPanelActions_1, configuration_1, messages_1) {
     "use strict";
     var MarkersPanel = (function (_super) {
         __extends(MarkersPanel, _super);
@@ -368,7 +674,7 @@ define(__m[25], __M([1,2,9,26,3,27,13,28,29,11,30,31,32,33,10,34,0,8,35,12,6,4,3
             this.lastSelectedRelativeTop = 0;
             this.currentActiveFile = null;
             this.toDispose = [];
-            this.delayedRefresh = new async_1.Delayer(1000);
+            this.delayedRefresh = new async_1.Delayer(500);
             this.autoExpanded = new Set.ArraySet();
         }
         MarkersPanel.prototype.create = function (parent) {
@@ -415,7 +721,6 @@ define(__m[25], __M([1,2,9,26,3,27,13,28,29,11,30,31,32,33,10,34,0,8,35,12,6,4,3
             var _this = this;
             if (updateTitleArea === void 0) { updateTitleArea = false; }
             this.collapseAllAction.enabled = this.markersModel.hasFilteredResources();
-            this.refreshAutoExpanded();
             if (updateTitleArea) {
                 this.updateTitleArea();
             }
@@ -427,6 +732,12 @@ define(__m[25], __M([1,2,9,26,3,27,13,28,29,11,30,31,32,33,10,34,0,8,35,12,6,4,3
                 });
             }
             return winjs_base_1.TPromise.as(null);
+        };
+        MarkersPanel.prototype.updateFilter = function (filter) {
+            this.markersModel.update(new markersModel_1.FilterOptions(filter));
+            this.autoExpanded = new Set.ArraySet();
+            this.refreshPanel();
+            this.autoReveal();
         };
         MarkersPanel.prototype.createMessageBox = function (parent) {
             this.messageBoxContainer = dom.append(parent, dom.emmet('.message-box-container'));
@@ -442,7 +753,7 @@ define(__m[25], __M([1,2,9,26,3,27,13,28,29,11,30,31,32,33,10,34,0,8,35,12,6,4,3
                 dataSource: new Viewer.DataSource(),
                 renderer: renderer,
                 controller: controller,
-                accessibilityProvider: new Viewer.ProblemsTreeAccessibilityProvider()
+                accessibilityProvider: new Viewer.MarkersTreeAccessibilityProvider()
             }, {
                 indentPixels: 0,
                 twistiePixels: 20,
@@ -469,10 +780,12 @@ define(__m[25], __M([1,2,9,26,3,27,13,28,29,11,30,31,32,33,10,34,0,8,35,12,6,4,3
             this.toDispose.push(this.tree.addListener2('selection', function () { return _this.onSelected(); }));
         };
         MarkersPanel.prototype.onMarkerChanged = function (changedResources) {
+            var _this = this;
             this.updateResources(changedResources);
-            // this.delayedRefresh.trigger(() => {this.refreshPanel(true);});
-            this.refreshPanel(true);
-            this.autoReveal();
+            this.delayedRefresh.trigger(function () {
+                _this.refreshPanel(true);
+                _this.autoReveal();
+            });
         };
         MarkersPanel.prototype.onEditorsChanged = function () {
             var activeInput = this.editorService.getActiveEditorInput();
@@ -510,14 +823,6 @@ define(__m[25], __M([1,2,9,26,3,27,13,28,29,11,30,31,32,33,10,34,0,8,35,12,6,4,3
             this.messageBox.textContent = message;
             dom.toggleClass(this.messageBoxContainer, 'hidden', this.markersModel.hasFilteredResources());
         };
-        MarkersPanel.prototype.refreshAutoExpanded = function () {
-            var _this = this;
-            this.markersModel.nonFilteredResources.forEach(function (resource) {
-                if (_this.tree.isExpanded(resource)) {
-                    _this.autoExpanded.unset(resource.uri.toString());
-                }
-            });
-        };
         MarkersPanel.prototype.autoExpand = function () {
             var _this = this;
             this.markersModel.filteredResources.forEach(function (resource) {
@@ -532,10 +837,10 @@ define(__m[25], __M([1,2,9,26,3,27,13,28,29,11,30,31,32,33,10,34,0,8,35,12,6,4,3
             if (focus === void 0) { focus = false; }
             var conf = this.configurationService.getConfiguration();
             if (conf && conf.problems && conf.problems.autoReveal) {
-                this.revealProblemsForCurrentActiveEditor(focus);
+                this.revealMarkersForCurrentActiveEditor(focus);
             }
         };
-        MarkersPanel.prototype.revealProblemsForCurrentActiveEditor = function (focus) {
+        MarkersPanel.prototype.revealMarkersForCurrentActiveEditor = function (focus) {
             if (focus === void 0) { focus = false; }
             var currentActiveResource = this.getResourceForCurrentActiveFile();
             if (currentActiveResource) {

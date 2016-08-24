@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/browser/ui/list/listPaging","vs/base/common/event","vs/workbench/parts/extensions/electron-browser/extensionsList","vs/base/browser/dom","vs/base/common/lifecycle","vs/platform/instantiation/common/instantiation","vs/workbench/parts/extensions/electron-browser/extensionsActions","vs/css!vs/workbench/parts/extensions/electron-browser/media/extensionsViewlet","vs/base/browser/ui/actionbar/actionbar","vs/css!vs/base/browser/ui/list/list","vs/base/common/arrays","vs/workbench/parts/extensions/electron-browser/extensionsWidgets","vs/workbench/parts/extensions/electron-browser/extensionsViewlet","vs/base/browser/ui/list/listWidget","vs/base/common/async","vs/base/common/winjs.base","vs/base/common/errors","vs/base/browser/event","vs/base/browser/keyboardEvent","vs/base/common/keyCodes","vs/workbench/browser/viewlet","vs/base/common/paging","vs/platform/telemetry/common/telemetry","vs/workbench/parts/extensions/electron-browser/extensions","vs/platform/extensionManagement/common/extensionManagement","vs/workbench/parts/extensions/electron-browser/extensionsInput","vs/platform/progress/common/progress","vs/workbench/services/editor/common/editorService","vs/nls!vs/workbench/parts/extensions/electron-browser/extensionsViewlet"];
+var __m = ["exports","require","vs/base/browser/ui/list/listPaging","vs/base/common/event","vs/workbench/parts/extensions/electron-browser/extensionsList","vs/base/browser/dom","vs/base/common/lifecycle","vs/platform/instantiation/common/instantiation","vs/workbench/parts/extensions/electron-browser/extensionsActions","vs/css!vs/workbench/parts/extensions/electron-browser/media/extensionsViewlet","vs/base/browser/ui/actionbar/actionbar","vs/css!vs/base/browser/ui/list/list","vs/platform/message/common/message","vs/base/common/arrays","vs/workbench/parts/extensions/electron-browser/extensionsWidgets","vs/base/common/events","vs/base/browser/ui/list/listWidget","vs/nls!vs/workbench/parts/extensions/electron-browser/extensionsViewlet","vs/base/common/async","vs/base/common/winjs.base","vs/base/common/errors","vs/base/browser/event","vs/base/browser/keyboardEvent","vs/base/common/keyCodes","vs/workbench/browser/viewlet","vs/base/common/paging","vs/platform/telemetry/common/telemetry","vs/workbench/parts/extensions/electron-browser/extensions","vs/platform/extensionManagement/common/extensionManagement","vs/workbench/parts/extensions/electron-browser/extensionsInput","vs/platform/progress/common/progress","vs/workbench/services/editor/common/editorService","vs/workbench/parts/extensions/electron-browser/extensionsViewlet"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -14,7 +14,7 @@ var __M = function(deps) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[2], __M([1,0,12,15,3,11]), function (require, exports, arrays_1, listWidget_1, event_1) {
+define(__m[2], __M([1,0,13,16,3,11]), function (require, exports, arrays_1, listWidget_1, event_1) {
     "use strict";
     var PagedRenderer = (function () {
         function PagedRenderer(renderer, modelProvider) {
@@ -99,6 +99,9 @@ define(__m[2], __M([1,0,12,15,3,11]), function (require, exports, arrays_1, list
             get: function () {
                 return this.list.scrollTop;
             },
+            set: function (scrollTop) {
+                this.list.scrollTop = scrollTop;
+            },
             enumerable: true,
             configurable: true
         });
@@ -114,6 +117,12 @@ define(__m[2], __M([1,0,12,15,3,11]), function (require, exports, arrays_1, list
         PagedList.prototype.selectPrevious = function (n, loop) {
             this.list.selectPrevious(n, loop);
         };
+        PagedList.prototype.focusNextPage = function () {
+            this.list.focusNextPage();
+        };
+        PagedList.prototype.focusPreviousPage = function () {
+            this.list.focusPreviousPage();
+        };
         PagedList.prototype.getFocus = function () {
             return this.list.getFocus();
         };
@@ -127,6 +136,9 @@ define(__m[2], __M([1,0,12,15,3,11]), function (require, exports, arrays_1, list
         };
         PagedList.prototype.layout = function (height) {
             this.list.layout(height);
+        };
+        PagedList.prototype.reveal = function (index, relativeTop) {
+            this.list.reveal(index, relativeTop);
         };
         return PagedList;
     }());
@@ -147,7 +159,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(__m[4], __M([1,0,5,6,10,7,8,13]), function (require, exports, dom_1, lifecycle_1, actionbar_1, instantiation_1, extensionsActions_1, extensionsWidgets_1) {
+define(__m[4], __M([1,0,5,6,10,7,12,8,14,15]), function (require, exports, dom_1, lifecycle_1, actionbar_1, instantiation_1, message_1, extensionsActions_1, extensionsWidgets_1, events_1) {
     'use strict';
     var Delegate = (function () {
         function Delegate() {
@@ -159,8 +171,9 @@ define(__m[4], __M([1,0,5,6,10,7,8,13]), function (require, exports, dom_1, life
     exports.Delegate = Delegate;
     var actionOptions = { icon: true, label: true };
     var Renderer = (function () {
-        function Renderer(instantiationService) {
+        function Renderer(instantiationService, messageService) {
             this.instantiationService = instantiationService;
+            this.messageService = messageService;
         }
         Object.defineProperty(Renderer.prototype, "templateId", {
             get: function () { return 'extension'; },
@@ -168,63 +181,76 @@ define(__m[4], __M([1,0,5,6,10,7,8,13]), function (require, exports, dom_1, life
             configurable: true
         });
         Renderer.prototype.renderTemplate = function (root) {
+            var _this = this;
             var element = dom_1.append(root, dom_1.emmet('.extension'));
-            var icon = dom_1.append(element, dom_1.emmet('.icon'));
+            var icon = dom_1.append(element, dom_1.emmet('img.icon'));
             var details = dom_1.append(element, dom_1.emmet('.details'));
             var header = dom_1.append(details, dom_1.emmet('.header'));
             var name = dom_1.append(header, dom_1.emmet('span.name'));
-            var version = dom_1.append(header, dom_1.emmet('span.version.ellipsis'));
+            var version = dom_1.append(header, dom_1.emmet('span.version'));
             var installCount = dom_1.append(header, dom_1.emmet('span.install-count'));
             var ratings = dom_1.append(header, dom_1.emmet('span.ratings'));
             var description = dom_1.append(details, dom_1.emmet('.description.ellipsis'));
             var footer = dom_1.append(details, dom_1.emmet('.footer'));
             var author = dom_1.append(footer, dom_1.emmet('.author.ellipsis'));
             var actionbar = new actionbar_1.ActionBar(footer, { animated: false });
-            var disposables = [];
+            actionbar.addListener2(events_1.EventType.RUN, function (_a) {
+                var error = _a.error;
+                return error && _this.messageService.show(message_1.Severity.Error, error);
+            });
+            var versionWidget = this.instantiationService.createInstance(extensionsWidgets_1.Label, version, function (e) { return e.version; });
+            var installCountWidget = this.instantiationService.createInstance(extensionsWidgets_1.InstallWidget, installCount, { small: true });
+            var ratingsWidget = this.instantiationService.createInstance(extensionsWidgets_1.RatingsWidget, ratings, { small: true });
+            var installAction = this.instantiationService.createInstance(extensionsActions_1.CombinedInstallAction);
+            var updateAction = this.instantiationService.createInstance(extensionsActions_1.UpdateAction);
+            var restartAction = this.instantiationService.createInstance(extensionsActions_1.EnableAction);
+            actionbar.push([restartAction, updateAction, installAction], actionOptions);
+            var disposables = [versionWidget, installCountWidget, ratingsWidget, installAction, updateAction, restartAction, actionbar];
             return {
-                extension: null, element: element, icon: icon, name: name, version: version,
-                installCount: installCount, ratings: ratings, author: author, description: description,
-                actionbar: actionbar, disposables: disposables
+                element: element, icon: icon, name: name, installCount: installCount, ratings: ratings, author: author, description: description, disposables: disposables,
+                set extension(extension) {
+                    versionWidget.extension = extension;
+                    installCountWidget.extension = extension;
+                    ratingsWidget.extension = extension;
+                    installAction.extension = extension;
+                    updateAction.extension = extension;
+                    restartAction.extension = extension;
+                }
             };
         };
         Renderer.prototype.renderPlaceholder = function (index, data) {
-            data.disposables = lifecycle_1.dispose(data.disposables);
             dom_1.addClass(data.element, 'loading');
-            data.extension = null;
-            data.icon.style.backgroundImage = '';
+            data.icon.src = '';
             data.name.textContent = '';
-            data.version.textContent = '';
-            data.installCount.style.display = 'none';
-            data.ratings.style.display = 'none';
             data.author.textContent = '';
             data.description.textContent = '';
-            data.actionbar.clear();
+            data.installCount.style.display = 'none';
+            data.ratings.style.display = 'none';
+            data.extension = null;
         };
         Renderer.prototype.renderElement = function (extension, index, data) {
-            data.disposables = lifecycle_1.dispose(data.disposables);
             dom_1.removeClass(data.element, 'loading');
-            data.extension = extension;
-            data.icon.style.backgroundImage = "url(\"" + extension.iconUrl + "\")";
+            data.icon.src = extension.iconUrl;
+            if (!data.icon.complete) {
+                data.icon.style.visibility = 'hidden';
+                data.icon.onload = function () { return data.icon.style.visibility = 'inherit'; };
+            }
+            else {
+                data.icon.style.visibility = 'inherit';
+            }
             data.name.textContent = extension.displayName;
             data.author.textContent = extension.publisherDisplayName;
             data.description.textContent = extension.description;
-            data.installCount.style.display = 'initial';
-            data.ratings.style.display = 'initial';
-            var version = this.instantiationService.createInstance(extensionsWidgets_1.Label, data.version, extension, function (e) { return e.version; });
-            var installCount = this.instantiationService.createInstance(extensionsWidgets_1.InstallWidget, data.installCount, extension, { small: true });
-            var ratings = this.instantiationService.createInstance(extensionsWidgets_1.RatingsWidget, data.ratings, extension, { small: true });
-            var installAction = this.instantiationService.createInstance(extensionsActions_1.CombinedInstallAction, extension);
-            var updateAction = this.instantiationService.createInstance(extensionsActions_1.UpdateAction, extension);
-            var restartAction = this.instantiationService.createInstance(extensionsActions_1.EnableAction, extension);
-            data.actionbar.clear();
-            data.actionbar.push([restartAction, updateAction, installAction], actionOptions);
-            data.disposables.push(version, installCount, ratings, installAction, updateAction, restartAction);
+            data.installCount.style.display = '';
+            data.ratings.style.display = '';
+            data.extension = extension;
         };
         Renderer.prototype.disposeTemplate = function (data) {
-            data.actionbar = lifecycle_1.dispose(data.actionbar);
+            data.disposables = lifecycle_1.dispose(data.disposables);
         };
         Renderer = __decorate([
-            __param(0, instantiation_1.IInstantiationService)
+            __param(0, instantiation_1.IInstantiationService),
+            __param(1, message_1.IMessageService)
         ], Renderer);
         return Renderer;
     }());
@@ -249,7 +275,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 
 
 
-define(__m[14], __M([1,0,30,16,17,6,18,3,19,20,21,22,5,23,24,2,7,4,25,8,26,27,28,29,9]), function (require, exports, nls_1, async_1, winjs_base_1, lifecycle_1, errors_1, event_1, event_2, keyboardEvent_1, keyCodes_1, viewlet_1, dom_1, paging_1, telemetry_1, listPaging_1, instantiation_1, extensionsList_1, extensions_1, extensionsActions_1, extensionManagement_1, extensionsInput_1, progress_1, editorService_1) {
+define(__m[32], __M([1,0,17,18,19,6,20,3,21,22,23,24,5,25,26,2,7,4,27,8,28,29,30,31,9]), function (require, exports, nls_1, async_1, winjs_base_1, lifecycle_1, errors_1, event_1, event_2, keyboardEvent_1, keyCodes_1, viewlet_1, dom_1, paging_1, telemetry_1, listPaging_1, instantiation_1, extensionsList_1, extensions_1, extensionsActions_1, extensionManagement_1, extensionsInput_1, progress_1, editorService_1) {
     'use strict';
     var ExtensionsViewlet = (function (_super) {
         __extends(ExtensionsViewlet, _super);
@@ -261,6 +287,8 @@ define(__m[14], __M([1,0,30,16,17,6,18,3,19,20,21,22,5,23,24,2,7,4,25,8,26,27,28
             this.instantiationService = instantiationService;
             this.editorService = editorService;
             this.extensionsWorkbenchService = extensionsWorkbenchService;
+            this._onSearchChange = new event_1.Emitter();
+            this.onSearchChange = this._onSearchChange.event;
             this.disposables = [];
             this.searchDelayer = new async_1.ThrottledDelayer(500);
         }
@@ -284,21 +312,16 @@ define(__m[14], __M([1,0,30,16,17,6,18,3,19,20,21,22,5,23,24,2,7,4,25,8,26,27,28
             var onEscape = event_1.filterEvent(onKeyDown, function (e) { return e.keyCode === keyCodes_1.KeyCode.Escape; });
             var onUpArrow = event_1.filterEvent(onKeyDown, function (e) { return e.keyCode === keyCodes_1.KeyCode.UpArrow; });
             var onDownArrow = event_1.filterEvent(onKeyDown, function (e) { return e.keyCode === keyCodes_1.KeyCode.DownArrow; });
-            var onTab = event_1.filterEvent(onKeyDown, function (e) { return e.keyCode === keyCodes_1.KeyCode.Tab; });
+            var onPageUpArrow = event_1.filterEvent(onKeyDown, function (e) { return e.keyCode === keyCodes_1.KeyCode.PageUp; });
+            var onPageDownArrow = event_1.filterEvent(onKeyDown, function (e) { return e.keyCode === keyCodes_1.KeyCode.PageDown; });
             onEnter(this.onEnter, this, this.disposables);
             onEscape(this.onEscape, this, this.disposables);
             onUpArrow(this.onUpArrow, this, this.disposables);
             onDownArrow(this.onDownArrow, this, this.disposables);
-            onTab(this.onTab, this, this.disposables);
+            onPageUpArrow(this.onPageUpArrow, this, this.disposables);
+            onPageDownArrow(this.onPageDownArrow, this, this.disposables);
             var onInput = event_2.domEvent(this.searchBox, 'input');
             onInput(function () { return _this.triggerSearch(); }, null, this.disposables);
-            this.list.onDOMFocus(function (focusEvent) {
-                // Allow tab to move focus out of search box #7966
-                if (!_this.focusInvokedByTab) {
-                    _this.searchBox.focus();
-                }
-                _this.focusInvokedByTab = false;
-            }, null, this.disposables);
             var onSelectedExtension = event_1.filterEvent(event_1.mapEvent(this.list.onSelectionChange, function (e) { return e.elements[0]; }), function (e) { return !!e; });
             onSelectedExtension(this.onExtensionSelected, this, this.disposables);
             return winjs_base_1.TPromise.as(null);
@@ -320,24 +343,31 @@ define(__m[14], __M([1,0,30,16,17,6,18,3,19,20,21,22,5,23,24,2,7,4,25,8,26,27,28
             this.searchBox.focus();
         };
         ExtensionsViewlet.prototype.layout = function (_a) {
-            var height = _a.height;
+            var height = _a.height, width = _a.width;
             this.list.layout(height - 38);
+            dom_1.toggleClass(this.root, 'narrow', width <= 300);
+        };
+        ExtensionsViewlet.prototype.getOptimalWidth = function () {
+            return 400;
         };
         ExtensionsViewlet.prototype.getActions = function () {
-            if (!this.clearAction) {
-                this.clearAction = this.instantiationService.createInstance(extensionsActions_1.ClearExtensionsInputAction, extensionsActions_1.ClearExtensionsInputAction.ID, extensionsActions_1.ClearExtensionsInputAction.LABEL);
+            if (!this.primaryActions) {
+                this.primaryActions = [
+                    this.instantiationService.createInstance(extensionsActions_1.ClearExtensionsInputAction, extensionsActions_1.ClearExtensionsInputAction.ID, extensionsActions_1.ClearExtensionsInputAction.LABEL, this.onSearchChange)
+                ];
             }
-            return [
-                this.clearAction
-            ];
+            return this.primaryActions;
         };
         ExtensionsViewlet.prototype.getSecondaryActions = function () {
-            return [
-                this.instantiationService.createInstance(extensionsActions_1.ShowInstalledExtensionsAction, extensionsActions_1.ShowInstalledExtensionsAction.ID, extensionsActions_1.ShowInstalledExtensionsAction.LABEL),
-                this.instantiationService.createInstance(extensionsActions_1.ListOutdatedExtensionsAction, extensionsActions_1.ListOutdatedExtensionsAction.ID, extensionsActions_1.ListOutdatedExtensionsAction.LABEL),
-                this.instantiationService.createInstance(extensionsActions_1.ShowExtensionRecommendationsAction, extensionsActions_1.ShowExtensionRecommendationsAction.ID, extensionsActions_1.ShowExtensionRecommendationsAction.LABEL),
-                this.instantiationService.createInstance(extensionsActions_1.ShowPopularExtensionsAction, extensionsActions_1.ShowPopularExtensionsAction.ID, extensionsActions_1.ShowPopularExtensionsAction.LABEL)
-            ];
+            if (!this.secondaryActions) {
+                this.secondaryActions = [
+                    this.instantiationService.createInstance(extensionsActions_1.ShowInstalledExtensionsAction, extensionsActions_1.ShowInstalledExtensionsAction.ID, extensionsActions_1.ShowInstalledExtensionsAction.LABEL),
+                    this.instantiationService.createInstance(extensionsActions_1.ShowOutdatedExtensionsAction, extensionsActions_1.ShowOutdatedExtensionsAction.ID, extensionsActions_1.ShowOutdatedExtensionsAction.LABEL),
+                    this.instantiationService.createInstance(extensionsActions_1.ShowRecommendedExtensionsAction, extensionsActions_1.ShowRecommendedExtensionsAction.ID, extensionsActions_1.ShowRecommendedExtensionsAction.LABEL),
+                    this.instantiationService.createInstance(extensionsActions_1.ShowPopularExtensionsAction, extensionsActions_1.ShowPopularExtensionsAction.ID, extensionsActions_1.ShowPopularExtensionsAction.LABEL)
+                ];
+            }
+            return this.secondaryActions;
         };
         ExtensionsViewlet.prototype.search = function (text, immediate) {
             if (immediate === void 0) { immediate = false; }
@@ -349,8 +379,7 @@ define(__m[14], __M([1,0,30,16,17,6,18,3,19,20,21,22,5,23,24,2,7,4,25,8,26,27,28
             if (immediate === void 0) { immediate = false; }
             if (suggestPopular === void 0) { suggestPopular = false; }
             var text = this.searchBox.value;
-            // Joao do not kill me for this hack -isidor
-            this.clearAction.enabled = !!text;
+            this._onSearchChange.fire(text);
             this.searchDelayer.trigger(function () { return _this.doSearch(text, suggestPopular); }, immediate || !text ? 0 : 500);
         };
         ExtensionsViewlet.prototype.doSearch = function (text, suggestPopular) {
@@ -383,7 +412,10 @@ define(__m[14], __M([1,0,30,16,17,6,18,3,19,20,21,22,5,23,24,2,7,4,25,8,26,27,28
             }
             return async_1.always(promise, function () { return progressRunner.done(); })
                 .then(function (result) { return new paging_1.PagedModel(result); })
-                .then(function (model) { return _this.list.model = model; });
+                .then(function (model) {
+                _this.list.model = model;
+                _this.list.scrollTop = 0;
+            });
         };
         ExtensionsViewlet.prototype.onExtensionSelected = function (extension) {
             this.editorService.openEditor(this.instantiationService.createInstance(extensionsInput_1.ExtensionsInput, extension))
@@ -399,12 +431,19 @@ define(__m[14], __M([1,0,30,16,17,6,18,3,19,20,21,22,5,23,24,2,7,4,25,8,26,27,28
         };
         ExtensionsViewlet.prototype.onUpArrow = function () {
             this.list.focusPrevious();
+            this.list.reveal(this.list.getFocus()[0]);
         };
         ExtensionsViewlet.prototype.onDownArrow = function () {
             this.list.focusNext();
+            this.list.reveal(this.list.getFocus()[0]);
         };
-        ExtensionsViewlet.prototype.onTab = function () {
-            this.focusInvokedByTab = true;
+        ExtensionsViewlet.prototype.onPageUpArrow = function () {
+            this.list.focusPreviousPage();
+            this.list.reveal(this.list.getFocus()[0]);
+        };
+        ExtensionsViewlet.prototype.onPageDownArrow = function () {
+            this.list.focusNextPage();
+            this.list.reveal(this.list.getFocus()[0]);
         };
         ExtensionsViewlet.prototype.dispose = function () {
             this.disposables = lifecycle_1.dispose(this.disposables);

@@ -5,7 +5,7 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.ko", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"커밋 메시지를 입력하세요. 언제든지 **{0}**을(를) 눌러 변경 내용을 커밋할 수 있습니다. 스테이징된 변경 내용이 있으면 해당 변경 내용만 커밋되고 그렇지 않으면 모든 변경 내용이 커밋됩니다.",
 		"커밋할 변경 내용이 있으면 커밋 메시지를 입력하고 **{0}**을(를) 눌러 변경 내용을 커밋하세요. 스테이징된 변경 내용이 있으면 해당 변경 내용만 커밋되고 그렇지 않으면 모든 변경 내용이 커밋됩니다.",
-		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
+		"커밋의 첫 번째 줄은 50자 미만으로 유지하는 것이 좋습니다. 추가 정보를 위해 자유롭게 더 많은 줄을 사용하세요.",
 		"메시지(커밋하려면 {0} 누름)",
 		"Git: 커밋하려면 커밋 메시지를 입력하고 {0}을(를) 누르세요.",
 		"Git 변경 내용 보기",
@@ -69,9 +69,9 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.ko", {
 		"git가 설치되면 {0}을(를) 다시 시작하세요.",
 	],
 	"vs/workbench/parts/git/browser/views/huge/hugeView": [
-		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
-		"You can permanently disable this warning with the following setting:",
-		"Allow large repositories",
+		"리포지토리에 활성 변경 내용이 많은 것 같습니다.\n코드가 매우 느려질 수 있습니다.",
+		"다음 설정을 사용하여 이 경고를 영구적으로 사용하지 않을 수 있습니다.",
+		"대규모 리포지토리 허용",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"이 디렉터리가 git 리포지토리에 포함되어 있는 것 같습니다.",

@@ -744,14 +744,14 @@ define(__m[11], __M([1,0,12,5,13,2,4,14,7,15,8,3,16,17,18]), function (require, 
                         if (isWhiteSpace(startIndent) && isWhiteSpace(endIndent)) {
                             suggestion.overwriteBefore = position.column - 1; // replace from start of line
                             suggestion.codeSnippet = startIndent + '</' + matchingTag + closeTag;
-                            suggestion.filterText = currentLine.substring(0, position.column - 1);
+                            suggestion.filterText = endIndent + '</' + matchingTag + closeTag;
                         }
                     }
                     return true;
                 }
                 return false;
             };
-            if (scanner.getTokenType() === htmlTokenTypes_1.DELIM_END) {
+            if (scanner.getTokenType() === htmlTokenTypes_1.DELIM_END && scanner.getTokenRange().endColumn === position.column) {
                 var hasClose = collectClosingTagSuggestion(suggestions.currentWord.length + 1);
                 if (!hasClose) {
                     this._tagProviders.forEach(function (provider) {
@@ -761,7 +761,8 @@ define(__m[11], __M([1,0,12,5,13,2,4,14,7,15,8,3,16,17,18]), function (require, 
                                 overwriteBefore: suggestions.currentWord.length + 1,
                                 codeSnippet: '/' + tag + closeTag,
                                 type: 'property',
-                                documentationLabel: label
+                                documentationLabel: label,
+                                filterText: '</' + tag + closeTag
                             });
                         });
                     });
@@ -775,7 +776,8 @@ define(__m[11], __M([1,0,12,5,13,2,4,14,7,15,8,3,16,17,18]), function (require, 
                             label: tag,
                             codeSnippet: tag,
                             type: 'property',
-                            documentationLabel: label
+                            documentationLabel: label,
+                            overwriteBefore: suggestions.currentWord.length
                         });
                     });
                 });
@@ -804,7 +806,8 @@ define(__m[11], __M([1,0,12,5,13,2,4,14,7,15,8,3,16,17,18]), function (require, 
                     suggestions.suggestions.push({
                         label: attribute,
                         codeSnippet: codeSnippet,
-                        type: type === 'handler' ? 'function' : 'value'
+                        type: type === 'handler' ? 'function' : 'value',
+                        overwriteBefore: suggestions.currentWord.length
                     });
                 });
             });
@@ -833,7 +836,8 @@ define(__m[11], __M([1,0,12,5,13,2,4,14,7,15,8,3,16,17,18]), function (require, 
                     suggestions.suggestions.push({
                         label: value,
                         codeSnippet: needsQuotes ? '"' + value + '"' : value,
-                        type: 'unit'
+                        type: 'unit',
+                        overwriteBefore: suggestions.currentWord.length
                     });
                 });
             });

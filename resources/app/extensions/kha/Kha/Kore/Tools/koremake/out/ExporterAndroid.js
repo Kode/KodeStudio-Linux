@@ -7,55 +7,50 @@ const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
 function filesDifferWin(file1, file2) {
-    // Treat them as different if one of them does not exist.
     if (!fs.existsSync(file1))
         return true;
     if (!fs.existsSync(file2))
         return true;
-    let isDifferent = true;
-    let output;
     try {
-        output = child_process_1.execSync("fc " + file1 + " " + file2, { encoding: 'utf8' });
+        let output = child_process_1.execSync('fc ' + file1 + ' ' + file2, { encoding: 'utf8' });
+        return output.indexOf('no differences encountered') < 0;
     }
     catch (error) {
-        output = "";
+        return true;
     }
-    if (output.indexOf("no differences encountered") > -1) {
-        isDifferent = false;
-    }
-    return isDifferent;
 }
 function filesDifferUnix(file1, file2) {
-    // Treat them as different if one of them does not exist.
     if (!fs.existsSync(file1))
         return true;
     if (!fs.existsSync(file2))
         return true;
-    let isDifferent = false;
-    let output = "";
     try {
-        output = child_process_1.execSync("diff " + file1 + " " + file2, { encoding: 'utf8' });
+        return child_process_1.execSync('diff ' + file1 + ' ' + file2, { encoding: 'utf8' }) !== '';
     }
     catch (error) {
         return true;
     }
-    if (output != "") {
-        isDifferent = true;
-    }
-    return isDifferent;
 }
 function copyIfDifferent(from, to, replace) {
     fs.ensureDirSync(path.normalize(path.join(to, '..')));
     if (replace || !fs.existsSync(to)) {
-        if (os.platform() === 'win32' && filesDifferWin(to, from)) {
-            fs.writeFileSync(to, fs.readFileSync(from));
-        }
-        else if (os.platform() !== 'win32' && filesDifferUnix(to, from)) {
-            fs.writeFileSync(to, fs.readFileSync(from));
+        if (os.platform() === 'win32') {
+            if (filesDifferWin(to, from)) {
+                fs.writeFileSync(to, fs.readFileSync(from));
+            }
         }
         else {
+            if (filesDifferUnix(to, from)) {
+                fs.writeFileSync(to, fs.readFileSync(from));
+            }
         }
     }
+}
+function sourceCopyLocation(somePath, from, to, safename) {
+    somePath = path.relative(from, somePath);
+    while (somePath.startsWith('..' + path.sep))
+        somePath = somePath.substr(3);
+    return path.resolve(to, safename, 'app', 'src', 'main', 'jni', somePath);
 }
 class ExporterAndroid extends Exporter_1.Exporter {
     constructor() {
@@ -76,7 +71,7 @@ class ExporterAndroid extends Exporter_1.Exporter {
             if (userOptions.screenOrientation != null)
                 targetOptions.screenOrientation = userOptions.screenOrientation;
         }
-        const indir = path.join(__dirname, 'Data', 'android');
+        const indir = path.join(__dirname, '..', 'Data', 'android');
         const outdir = path.join(to.toString(), safename);
         fs.copySync(path.join(indir, 'build.gradle'), path.join(outdir, 'build.gradle'));
         //fs.copySync(path.join(indir, 'gradle.properties'), path.join(outdir, 'gradle.properties'));
@@ -102,18 +97,18 @@ class ExporterAndroid extends Exporter_1.Exporter {
             flags += "            CFlags.add('-D" + def + "')\n";
         }
         for (let inc of project.getIncludeDirs()) {
+            inc = sourceCopyLocation(inc, from, to, safename);
+            inc = path.relative(path.resolve(to, safename, 'app'), inc);
             inc = inc.replace(/\\/g, '/');
-            while (inc.startsWith('../'))
-                inc = inc.substr(3);
-            flags += '            cppFlags.add("-I${file("src/main/jni/' + inc + '")}".toString())\n';
-            flags += '            CFlags.add("-I${file("src/main/jni/' + inc + '")}".toString())\n';
+            flags += '            cppFlags.add("-I${file("' + inc + '")}".toString())\n';
+            flags += '            CFlags.add("-I${file("' + inc + '")}".toString())\n';
         }
         let gradle = fs.readFileSync(path.join(indir, 'app', 'build.gradle'), { encoding: 'utf8' });
         gradle = gradle.replace(/{package}/g, targetOptions.package);
         gradle = gradle.replace(/{flags}/g, flags);
         let javasources = '';
         for (let dir of project.getJavaDirs()) {
-            javasources += "                        srcDir '" + path.relative(path.join(outdir, 'app'), path.resolve(from, dir).replace(/\\/g, '/') + "'\n");
+            javasources += "                        srcDir '" + path.relative(path.join(outdir, 'app'), path.resolve(from, dir)).replace(/\\/g, '/') + "'\n";
         }
         javasources += "                        srcDir '" + path.relative(path.join(outdir, 'app'), path.join(Project_1.Project.koreDir.toString(), 'Backends', 'Android', 'Java-Sources')).replace(/\\/g, '/') + "'\n";
         gradle = gradle.replace(/{javasources}/g, javasources);
@@ -160,11 +155,7 @@ class ExporterAndroid extends Exporter_1.Exporter {
         if (project.getDebugDir().length > 0)
             fs.copySync(path.resolve(from, project.getDebugDir()), path.resolve(to, safename, 'app', 'src', 'main', 'assets'));
         for (let file of project.getFiles()) {
-            let localFile = file.file;
-            while (localFile.startsWith('../'))
-                localFile = localFile.substr(3);
-            let target = path.resolve(to, safename, 'app', 'src', 'main', 'jni', localFile);
-            fs.ensureDirSync(path.join(target.substr(0, target.lastIndexOf('/'))));
+            let target = sourceCopyLocation(file.file, from, to, safename);
             copyIfDifferent(path.resolve(from, file.file), target, true);
         }
     }

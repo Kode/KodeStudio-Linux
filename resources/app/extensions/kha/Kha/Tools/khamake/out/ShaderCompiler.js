@@ -13,6 +13,7 @@ const path = require('path');
 const chokidar = require('chokidar');
 const GraphicsApi_1 = require('./GraphicsApi');
 const Platform_1 = require('./Platform');
+const AssetConverter_1 = require('./AssetConverter');
 const log = require('./log');
 class ShaderCompiler {
     constructor(exporter, platform, compiler, to, temp, options, shaderMatchers) {
@@ -24,6 +25,7 @@ class ShaderCompiler {
         this.platform = platform;
         this.compiler = compiler;
         this.type = ShaderCompiler.findType(platform, options);
+        this.options = options;
         this.to = to;
         this.temp = temp;
         this.shaderMatchers = shaderMatchers;
@@ -99,7 +101,12 @@ class ShaderCompiler {
             case Platform_1.Platform.Unity:
                 return 'hlsl';
             default:
-                return 'none';
+                for (let p in Platform_1.Platform) {
+                    if (platform === p) {
+                        return 'none';
+                    }
+                }
+                return 'glsl';
         }
     }
     watch(watch, match, options) {
@@ -111,7 +118,7 @@ class ShaderCompiler {
                 if (ready) {
                     switch (path.parse(file).ext) {
                         case '.glsl':
-                            this.compileShader(file);
+                            this.compileShader(file, options);
                             break;
                     }
                 }
@@ -122,7 +129,7 @@ class ShaderCompiler {
             this.watcher.on('change', (file) => {
                 switch (path.parse(file).ext) {
                     case '.glsl':
-                        this.compileShader(file);
+                        this.compileShader(file, options);
                         break;
                 }
             });
@@ -133,10 +140,16 @@ class ShaderCompiler {
                 let parsedShaders = [];
                 let index = 0;
                 for (let shader of shaders) {
-                    yield this.compileShader(shader);
                     let parsed = path.parse(shader);
                     log.info('Compiling shader ' + (index + 1) + ' of ' + shaders.length + ' (' + parsed.base + ').');
-                    parsedShaders.push({ files: [parsed.name + '.' + this.type], name: parsed.name });
+                    try {
+                        yield this.compileShader(shader, options);
+                    }
+                    catch (error) {
+                        reject(error);
+                        return;
+                    }
+                    parsedShaders.push({ files: [parsed.name + '.' + this.type], name: AssetConverter_1.AssetConverter.createName(parsed, false, options, this.exporter.options.from) });
                     ++index;
                 }
                 resolve(parsedShaders);
@@ -152,7 +165,7 @@ class ShaderCompiler {
             return shaders;
         });
     }
-    compileShader(file) {
+    compileShader(file, options) {
         return new Promise((resolve, reject) => {
             if (!this.compiler)
                 reject('No shader compiler found.');
@@ -172,20 +185,31 @@ class ShaderCompiler {
                         resolve();
                     }
                     else {
-                        let process = child_process.spawn(this.compiler, [this.type, from, temp, this.temp, this.platform]);
-                        process.stdout.on('data', (data) => {
+                        let parameters = [this.type === 'hlsl' ? 'd3d9' : this.type, from, temp, this.temp, this.platform];
+                        if (this.options.glsl2) {
+                            parameters.push('--glsl2');
+                        }
+                        if (options.defines) {
+                            for (let define of options.defines) {
+                                parameters.push('-D' + define);
+                            }
+                        }
+                        let child = child_process.spawn(this.compiler, parameters);
+                        child.stdout.on('data', (data) => {
                             log.info(data.toString());
                         });
-                        process.stderr.on('data', (data) => {
+                        child.stderr.on('data', (data) => {
                             log.info(data.toString());
                         });
-                        process.on('close', (code) => {
+                        child.on('close', (code) => {
                             if (code === 0) {
                                 fs.renameSync(temp, to);
                                 resolve();
                             }
-                            else
+                            else {
+                                process.exitCode = 1;
                                 reject('Shader compiler error.');
+                            }
                         });
                     }
                 });

@@ -18,11 +18,11 @@
 /* Actionbar actions */
 
 .monaco-workbench .debug-action.configure {
-	background: url(media/configure.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cg fill='%23424242'%3E%3Cpath d='M12.714 9.603c-.07.207-.15.407-.246.601l1.017 2.139c-.335.424-.718.807-1.142 1.143l-2.14-1.018c-.193.097-.394.176-.601.247l-.795 2.235c-.265.03-.534.05-.807.05-.272 0-.541-.02-.806-.05l-.795-2.235c-.207-.071-.408-.15-.602-.247l-2.14 1.017c-.424-.336-.807-.719-1.143-1.143l1.017-2.139c-.094-.193-.175-.393-.245-.6l-2.236-.796c-.03-.265-.05-.534-.05-.807s.02-.542.05-.807l2.236-.795c.07-.207.15-.407.246-.601l-1.016-2.139c.336-.423.719-.807 1.143-1.142l2.14 1.017c.193-.096.394-.176.602-.247l.793-2.236c.265-.03.534-.05.806-.05.273 0 .542.02.808.05l.795 2.236c.207.07.407.15.601.246l2.14-1.017c.424.335.807.719 1.142 1.142l-1.017 2.139c.096.194.176.394.246.601l2.236.795c.029.266.049.535.049.808s-.02.542-.05.807l-2.236.796zm-4.714-4.603c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z'/%3E%3Ccircle cx='8' cy='8' r='1.5'/%3E%3C/g%3E%3C/svg%3E") center center no-repeat;
 }
 
 .monaco-workbench .debug-action.toggle-repl {
-	background: url(media/repl.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cstyle type='text/css'%3E.icon-canvas-transparent{opacity:0;fill:%23F6F6F6;} .icon-vs-out{fill:%23F6F6F6;} .icon-vs-bg{fill:%23424242;} .icon-vs-fg{fill:%23F0EFF1;}%3C/style%3E%3Cpath class='icon-canvas-transparent' d='M32 32h-32v-32h32v32z' id='canvas'/%3E%3Cpath class='icon-vs-out' d='M32 28h-32v-24h32v24z' id='outline'/%3E%3Cpath class='icon-vs-bg' d='M2 6v20h28v-20h-28zm26 18h-24v-16h24v16zm-13-8l-5.25 5.5-1.75-1.833 3.5-3.667-3.5-3.667 1.75-1.833 5.25 5.5z' id='iconBg'/%3E%3Cg id='iconFg'%3E%3Cpath class='icon-vs-fg' d='M4 8v16h24v-16h-24zm5.75 13.5l-1.75-1.833 3.5-3.667-3.5-3.667 1.75-1.833 5.25 5.5-5.25 5.5z'/%3E%3C/g%3E%3C/svg%3E") center center no-repeat;
 }
 
 .monaco-workbench .debug-action.notification:before {
@@ -37,20 +37,14 @@
 	border: 1px solid white;
 }
 
-.vs-dark .monaco-workbench .debug-action.configure {
-	background: url(media/configure-inverse.svg) center center no-repeat;
-}
-
-.vs-dark .monaco-workbench .debug-action.toggle-repl {
-	background: url(media/repl-inverse.svg) center center no-repeat;
-}
-
+.vs-dark .monaco-workbench .debug-action.configure,
 .hc-black .monaco-workbench .debug-action.configure {
-	background: url(media/configure-inverse.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cg fill='%23C5C5C5'%3E%3Cpath d='M12.714 9.603c-.07.207-.15.407-.246.601l1.017 2.139c-.335.424-.718.807-1.142 1.143l-2.14-1.018c-.193.097-.394.176-.601.247l-.795 2.235c-.265.03-.534.05-.807.05-.272 0-.541-.02-.806-.05l-.795-2.235c-.207-.071-.408-.15-.602-.247l-2.14 1.017c-.424-.336-.807-.719-1.143-1.143l1.017-2.139c-.094-.193-.175-.393-.245-.6l-2.236-.796c-.03-.265-.05-.534-.05-.807s.02-.542.05-.807l2.236-.795c.07-.207.15-.407.246-.601l-1.016-2.139c.336-.423.719-.807 1.143-1.142l2.14 1.017c.193-.096.394-.176.602-.247l.793-2.236c.265-.03.534-.05.806-.05.273 0 .542.02.808.05l.795 2.236c.207.07.407.15.601.246l2.14-1.017c.424.335.807.719 1.142 1.142l-1.017 2.139c.096.194.176.394.246.601l2.236.795c.029.266.049.535.049.808s-.02.542-.05.807l-2.236.796zm-4.714-4.603c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z'/%3E%3Ccircle cx='8' cy='8' r='1.5'/%3E%3C/g%3E%3C/svg%3E") center center no-repeat;
 }
 
+.vs-dark .monaco-workbench .debug-action.toggle-repl,
 .hc-black .monaco-workbench .debug-action.toggle-repl {
-	background: url(media/repl-inverse.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cstyle type='text/css'%3E.icon-canvas-transparent{opacity:0;fill:%23F6F6F6;} .icon-vs-out{fill:%23252526;} .icon-vs-bg{fill:%23c5c5c5;} .icon-vs-fg{fill:%232a292c;}%3C/style%3E%3Cpath class='icon-canvas-transparent' d='M32 32h-32v-32h32v32z' id='canvas'/%3E%3Cpath class='icon-vs-out' d='M32 28h-32v-24h32v24z' id='outline'/%3E%3Cpath class='icon-vs-bg' d='M2 6v20h28v-20h-28zm26 18h-24v-16h24v16zm-13-8l-5.25 5.5-1.75-1.833 3.5-3.667-3.5-3.667 1.75-1.833 5.25 5.5z' id='iconBg'/%3E%3Cg id='iconFg'%3E%3Cpath class='icon-vs-fg' d='M4 8v16h24v-16h-24zm5.75 13.5l-1.75-1.833 3.5-3.667-3.5-3.667 1.75-1.833 5.25 5.5-5.25 5.5z'/%3E%3C/g%3E%3C/svg%3E") center center no-repeat;
 }
 
 /* Debug viewlet trees */
@@ -96,16 +90,6 @@
 
 .debug-viewlet .disabled {
 	opacity: 0.35;
-}
-
-.monaco-workbench .debug-select.windows {
-	margin-top: 7px; /* Center the select box */
-}
-
-.vs-dark .monaco-workbench .debug-select {
-	background-color: #3C3C3C;
-	border-color: #3C3C3C;
-	color: rgb(204, 204, 204);
 }
 
 /* Call stack */
@@ -203,11 +187,6 @@
 	overflow: hidden;
 }
 
-.monaco-workbench.mac .debug-viewlet .debug-call-stack .load-more,
-.monaco-workbench.mac .debug-viewlet .debug-call-stack .error {
-	font-weight: 300; /* makes the italic font appear the same as normal */
-}
-
 /* Variables & Expression view */
 
 .debug-viewlet .scope {
@@ -262,16 +241,17 @@
 
 .debug-viewlet .debug-action.add-watch-expression,
 .debug-viewlet .debug-action.add-function-breakpoint {
-	background: url(media/add.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect height='11' width='3' y='3' x='7' fill='%23424242'/%3E%3Crect height='3' width='11' y='7' x='3' fill='%23424242'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .debug-viewlet .focused .monaco-tree-row.selected:not(.highlighted) > .content.actions .debug-action.add-watch-expression {
-	background: url(media/add-focus.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect height='11' width='3' y='3' x='7' fill='%23fff'/%3E%3Crect height='3' width='11' y='7' x='3' fill='%23fff'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .vs-dark .debug-viewlet .debug-action.add-watch-expression,
-.vs-dark .debug-viewlet .debug-action.add-function-breakpoint {
-	background: url(media/add-inverse.svg) center center no-repeat;
+.vs-dark .debug-viewlet .debug-action.add-function-breakpoint,
+.hc-black .debug-viewlet .debug-action.add-watch-expression {
+	background: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect height='11' width='3' y='3' x='7' fill='%23C5C5C5'/%3E%3Crect height='3' width='11' y='7' x='3' fill='%23C5C5C5'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .vs-dark .debug-viewlet .monaco-tree-row .expression .value.changed {
@@ -296,40 +276,41 @@
 	margin-left: 0.8em;
 }
 
-.debug-viewlet .debug-breakpoints .breakpoint > .checkbox-win-linux {
+.monaco-workbench.windows debug-viewlet .debug-breakpoints .breakpoint > .checkbox,
+.monaco-workbench.linux debug-viewlet .debug-breakpoints .breakpoint > .checkbox {
 	vertical-align: middle;
 }
 
 .debug-viewlet .debug-action.remove {
-	background: url(media/remove.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='3 3 16 16' enable-background='new 3 3 16 16'%3E%3Cpolygon fill='%23424242' points='12.597,11.042 15.4,13.845 13.844,15.4 11.042,12.598 8.239,15.4 6.683,13.845 9.485,11.042 6.683,8.239 8.238,6.683 11.042,9.486 13.845,6.683 15.4,8.239'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .debug-viewlet .debug-action.remove-all {
-	background: url(media/remove-all.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' enable-background='new 0 0 16 16' height='16' width='16'%3E%3Cpath fill='%23F6F6F6' d='M16 12h-2v2h-2v2H0V5h2V3h2V1h12v11z'/%3E%3Cg fill='%23424242'%3E%3Cpath d='M3 5h9v8h1V4H3zM5 2v1h9v8h1V2zM1 6v9h10V6H1zm8 7H7.5L6 11.5 4.5 13H3l2.3-2.3L3 8.5h1.5L6 10l1.5-1.5H9l-2.3 2.3L9 13z'/%3E%3C/g%3E%3C/svg%3E") center center no-repeat;
 }
 
 .debug-viewlet .debug-action.breakpoints-activate {
-	background: url(media/breakpoints-activate.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' enable-background='new 0 0 16 16' height='16' width='16'%3E%3Cpath fill='%23F6F6F6' d='M16 5.5c0-3-2.5-5.5-5.5-5.5C7.6 0 5.3 2.2 5 5c-2.8.2-5 2.6-5 5.5 0 3 2.5 5.5 5.5 5.5 2.9 0 5.2-2.2 5.5-5 2.8-.3 5-2.6 5-5.5z'/%3E%3Cg fill='%23424242'%3E%3Cpath d='M10.5 1C8.2 1 6.3 2.8 6 5c.3 0 .7.1 1 .2C7.2 3.4 8.7 2 10.5 2 12.4 2 14 3.6 14 5.5c0 1.8-1.4 3.3-3.2 3.5.1.3.2.6.2 1 2.3-.2 4-2.1 4-4.5C15 3 13 1 10.5 1z'/%3E%3Ccircle cx='5.5' cy='10.5' r='4.5'/%3E%3C/g%3E%3C/svg%3E") center center no-repeat;
 }
 
-.debug-viewlet .focused .monaco-tree-row.selected:not(.highlighted) > .content.actions .debug-action.remove {
-	background: url(media/remove-focus.svg) center center no-repeat;
-}
-
-.vs-dark .debug-viewlet .debug-action.remove {
-	background: url(media/remove-inverse.svg) center center no-repeat;
-}
-
-.vs-dark .debug-viewlet .debug-action.remove-all {
-	background: url(media/remove-all-inverse.svg) center center no-repeat;
-}
-
+.debug-viewlet .focused .monaco-tree-row.selected:not(.highlighted) > .content.actions .debug-action.remove,
 .vs-dark .debug-viewlet .focused .monaco-tree-row.selected:not(.highlighted) > .content.actions .debug-action.remove {
-	background: url(media/remove-focus.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='3 3 16 16' enable-background='new 3 3 16 16'%3E%3Cpolygon fill='%23FFF' points='12.597,11.042 15.4,13.845 13.844,15.4 11.042,12.598 8.239,15.4 6.683,13.845 9.485,11.042 6.683,8.239 8.238,6.683 11.042,9.486 13.845,6.683 15.4,8.239'/%3E%3C/svg%3E") center center no-repeat;
 }
 
-.vs-dark .debug-viewlet .debug-action.breakpoints-activate {
-	background: url(media/breakpoints-activate-inverse.svg) center center no-repeat;
+.vs-dark .debug-viewlet .debug-action.remove,
+.hc-black .debug-viewlet .debug-action.remove {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='3 3 16 16' enable-background='new 3 3 16 16'%3E%3Cpolygon fill='%23e8e8e8' points='12.597,11.042 15.4,13.845 13.844,15.4 11.042,12.598 8.239,15.4 6.683,13.845 9.485,11.042 6.683,8.239 8.238,6.683 11.042,9.486 13.845,6.683 15.4,8.239'/%3E%3C/svg%3E") center center no-repeat;
+}
+
+.vs-dark .debug-viewlet .debug-action.remove-all,
+.hc-black .debug-viewlet .debug-action.remove-all {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' enable-background='new 0 0 16 16' height='16' width='16'%3E%3Cpath fill='%231E1E1E' d='M16 12h-2v2h-2v2H0V5h2V3h2V1h12v11z'/%3E%3Cg fill='%23C5C5C5'%3E%3Cpath d='M3 5h9v8h1V4H3zM5 2v1h9v8h1V2zM1 6v9h10V6H1zm8 7H7.5L6 11.5 4.5 13H3l2.3-2.3L3 8.5h1.5L6 10l1.5-1.5H9l-2.3 2.3L9 13z'/%3E%3C/g%3E%3C/svg%3E") center center no-repeat;
+}
+
+.vs-dark .debug-viewlet .debug-action.breakpoints-activate,
+.hc-black .debug-viewlet .debug-action.breakpoints-activate {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' enable-background='new 0 0 16 16' height='16' width='16'%3E%3Cpath fill='%231E1E1E' d='M16 5.5c0-3-2.5-5.5-5.5-5.5C7.6 0 5.3 2.2 5 5c-2.8.2-5 2.6-5 5.5 0 3 2.5 5.5 5.5 5.5 2.9 0 5.2-2.2 5.5-5 2.8-.3 5-2.6 5-5.5z'/%3E%3Cg fill='%23C5C5C5'%3E%3Cpath d='M10.5 1C8.2 1 6.3 2.8 6 5c.3 0 .7.1 1 .2C7.2 3.4 8.7 2 10.5 2 12.4 2 14 3.6 14 5.5c0 1.8-1.4 3.3-3.2 3.5.1.3.2.6.2 1 2.3-.2 4-2.1 4-4.5C15 3 13 1 10.5 1z'/%3E%3Ccircle cx='5.5' cy='10.5' r='4.5'/%3E%3C/g%3E%3C/svg%3E") center center no-repeat;
 }
 
 /* No workspace view */
@@ -340,28 +321,4 @@
 
 .debug-viewlet > .noworkspace-view > p {
 	line-height: 1.5em;
-}
-
-/* High Contrast Theming */
-
-.hc-black .monaco-workbench .debug-select {
-	background-color: #3C3C3C;
-	border-color: #3C3C3C;
-	color: rgb(204, 204, 204);
-}
-
-.hc-black .debug-viewlet .debug-action.remove {
-	content: url(media/remove-inverse.svg);
-}
-
-.hc-black .debug-viewlet .debug-action.add-watch-expression {
-	background: url(media/add-inverse.svg) center center no-repeat;
-}
-
-.hc-black .debug-viewlet .debug-action.breakpoints-activate {
-	background: url(media/breakpoints-activate-inverse.svg) center center no-repeat;
-}
-
-.hc-black .debug-viewlet .debug-action.remove-all {
-	background: url(media/remove-all-inverse.svg) center center no-repeat;
 }

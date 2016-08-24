@@ -22,51 +22,66 @@ function activateColorDecorations(decoratorProvider, supportedLanguages) {
     var disposables = [];
     var colorsDecorationType = vscode_1.window.createTextEditorDecorationType(decorationType);
     disposables.push(colorsDecorationType);
-    var activeEditor = vscode_1.window.activeTextEditor;
-    if (activeEditor) {
-        triggerUpdateDecorations();
-    }
+    var pendingUpdateRequests = {};
+    // we care about all visible editors
+    vscode_1.window.visibleTextEditors.forEach(function (editor) {
+        if (editor.document) {
+            triggerUpdateDecorations(editor.document);
+        }
+    });
+    // to get visible one has to become active
     vscode_1.window.onDidChangeActiveTextEditor(function (editor) {
-        activeEditor = editor;
-        if (editor && supportedLanguages[activeEditor.document.languageId]) {
-            triggerUpdateDecorations();
+        if (editor) {
+            triggerUpdateDecorations(editor.document);
         }
     }, null, disposables);
-    vscode_1.workspace.onDidChangeTextDocument(function (event) {
-        if (activeEditor && event.document === activeEditor.document && supportedLanguages[activeEditor.document.languageId]) {
-            triggerUpdateDecorations();
-        }
-    }, null, disposables);
-    var timeout = null;
-    function triggerUpdateDecorations() {
-        if (timeout) {
+    vscode_1.workspace.onDidChangeTextDocument(function (event) { return triggerUpdateDecorations(event.document); }, null, disposables);
+    vscode_1.workspace.onDidOpenTextDocument(triggerUpdateDecorations, null, disposables);
+    vscode_1.workspace.onDidCloseTextDocument(triggerUpdateDecorations, null, disposables);
+    function triggerUpdateDecorations(document) {
+        var triggerUpdate = supportedLanguages[document.languageId];
+        var uri = document.uri.toString();
+        var timeout = pendingUpdateRequests[uri];
+        if (typeof timeout !== 'undefined') {
             clearTimeout(timeout);
+            triggerUpdate = true; // force update, even if languageId is not supported (anymore)
         }
-        timeout = setTimeout(updateDecorations, 500);
+        if (triggerUpdate) {
+            pendingUpdateRequests[uri] = setTimeout(function () {
+                updateDecorations(uri);
+                delete pendingUpdateRequests[uri];
+            }, 500);
+        }
     }
-    function updateDecorations() {
-        if (!activeEditor) {
-            return;
-        }
-        var document = activeEditor.document;
-        if (!supportedLanguages[document.languageId]) {
-            return;
-        }
-        var uri = activeEditor.document.uri.toString();
-        decoratorProvider(uri).then(function (ranges) {
-            var decorations = ranges.map(function (range) {
-                var color = document.getText(range);
-                return {
-                    range: range,
-                    renderOptions: {
-                        before: {
-                            backgroundColor: color
-                        }
-                    }
-                };
-            });
-            activeEditor.setDecorations(colorsDecorationType, decorations);
+    function updateDecorations(uri) {
+        vscode_1.window.visibleTextEditors.forEach(function (editor) {
+            var document = editor.document;
+            if (document && document.uri.toString() === uri) {
+                updateDecorationForEditor(editor);
+            }
         });
+    }
+    function updateDecorationForEditor(editor) {
+        var document = editor.document;
+        if (supportedLanguages[document.languageId]) {
+            decoratorProvider(document.uri.toString()).then(function (ranges) {
+                var decorations = ranges.map(function (range) {
+                    var color = document.getText(range);
+                    return {
+                        range: range,
+                        renderOptions: {
+                            before: {
+                                backgroundColor: color
+                            }
+                        }
+                    };
+                });
+                editor.setDecorations(colorsDecorationType, decorations);
+            });
+        }
+        else {
+            editor.setDecorations(colorsDecorationType, []);
+        }
     }
     return vscode_1.Disposable.from.apply(vscode_1.Disposable, disposables);
 }

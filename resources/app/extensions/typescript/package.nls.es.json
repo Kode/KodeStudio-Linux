@@ -5,7 +5,7 @@
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "Complete las funciones con la signatura de parámetro.",
 	"typescript.tsdk.desc": "Especifica la ruta de acceso de carpeta que contiene los archivos lib*.d.ts y tsserver que se van a usar.",
 	"typescript.tsserver.trace": "Habilita el seguimiento de los mensajes enviados al servidor de TS.",
-	"typescript.tsserver.experimentalAutoBuild": "Enables experimental auto build. Requires 1.9 dev or 2.x tsserver version and a restart of VS Code after changing it.",
+	"typescript.tsserver.experimentalAutoBuild": "Permite la generación automática experimental. Requiere la versión de desarrollo 1.9 o tsserver 2.x y un reinicio de VS Code después de modificarlo.",
 	"typescript.validate.enable": "Habilitar o deshabilitar la validación de TypeScript",
 	"format.insertSpaceAfterCommaDelimiter": "Define el tratamiento del espacio después de un delimitador de coma",
 	"format.insertSpaceAfterSemicolonInForStatements": " Define el tratamiento del espacio después de punto y coma en una instrucción for",

@@ -189,21 +189,27 @@ function exportKoremakeProject(from, to, platform, options) {
             exporter = new ExporterVisualStudio_1.ExporterVisualStudio();
         }
         else {
-            let libdirs = fs.readdirSync(path.join(from.toString(), 'Backends'));
-            for (let libdir of libdirs) {
-                if (fs.statSync(path.join(from.toString(), 'Backends', libdir)).isDirectory()) {
-                    var libfiles = fs.readdirSync(path.join(from.toString(), 'Backends', libdir));
-                    for (var lf in libfiles) {
-                        var libfile = libfiles[lf];
-                        if (libfile.startsWith('Exporter') && libfile.endsWith('.js')) {
-                            var Exporter = require(path.relative(__dirname, path.join(from.toString(), 'Backends', libdir, libfile)));
-                            exporter = new Exporter();
-                            break;
+            let libsdir = path.join(from.toString(), 'Backends');
+            if (fs.existsSync(libsdir) && fs.statSync(libsdir).isDirectory()) {
+                let libdirs = fs.readdirSync(libsdir);
+                for (let libdir of libdirs) {
+                    if (fs.statSync(path.join(from.toString(), 'Backends', libdir)).isDirectory()) {
+                        var libfiles = fs.readdirSync(path.join(from.toString(), 'Backends', libdir));
+                        for (var lf in libfiles) {
+                            var libfile = libfiles[lf];
+                            if (libfile.startsWith('Exporter') && libfile.endsWith('.js')) {
+                                var Exporter = require(path.relative(__dirname, path.join(from.toString(), 'Backends', libdir, libfile)));
+                                exporter = new Exporter();
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
+    }
+    if (exporter === null) {
+        throw 'No exporter found for platform ' + platform + '.';
     }
     exporter.exportSolution(solution, from, to, platform, options.vrApi, options.nokrafix, options);
     return solution;
@@ -231,10 +237,10 @@ function compileProject(make, project, solutionName, options) {
         make.on('close', function (code) {
             if (code === 0) {
                 if (options.target === Platform_1.Platform.Linux) {
-                    fs.copySync(path.join(options.to.toString(), solutionName), path.join(options.from.toString(), project.getDebugDir(), solutionName));
+                    fs.copySync(path.join(options.to.toString(), solutionName), path.join(options.from.toString(), project.getDebugDir(), solutionName), { clobber: true });
                 }
                 else if (options.target === Platform_1.Platform.Windows) {
-                    fs.copySync(path.join(options.to.toString(), 'Debug', solutionName + '.exe'), path.join(options.from.toString(), project.getDebugDir(), solutionName + '.exe'));
+                    fs.copySync(path.join(options.to.toString(), 'Debug', solutionName + '.exe'), path.join(options.from.toString(), project.getDebugDir(), solutionName + '.exe'), { clobber: true });
                 }
                 if (options.run) {
                     if (options.target === Platform_1.Platform.OSX) {

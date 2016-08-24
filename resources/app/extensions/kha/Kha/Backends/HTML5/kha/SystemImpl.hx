@@ -61,14 +61,14 @@ class SystemImpl {
 		SystemImpl.options = options;
 		#if sys_debug_html5
 		Browser.window.onerror = cast errorHandler;
-		untyped require('web-frame').setZoomLevelLimits(1, 1);
 		var electron = untyped __js__("require('electron')");
+		electron.webFrame.setZoomLevelLimits(1, 1);
 		electron.ipcRenderer.send('asynchronous-message', {type: 'showWindow', width: options.width, height: options.height});
 		// Wait a second so the debugger can attach
-		//Browser.window.setTimeout(function () {
+		Browser.window.setTimeout(function () {
 			init2();
 			callback();
-		//}, 1000);
+		}, 1000);
 		#else
 		mobile = isMobile();
 		init2();
@@ -108,6 +108,19 @@ class SystemImpl {
 
 	public static function windowHeight(windowId: Int = 0): Int {
 		return khanvas.height;
+	}
+
+	public static function screenDpi(): Int {
+		var dpiElement = Browser.document.createElement('div');
+		dpiElement.style.position = "absolute";
+		dpiElement.style.width = "1in";
+		dpiElement.style.height = "1in";
+		dpiElement.style.left = "-100%";
+		dpiElement.style.top = "-100%";
+		Browser.document.body.appendChild(dpiElement);
+		var dpi:Int = dpiElement.offsetHeight;
+		dpiElement.remove();
+		return dpi;
 	}
 
 	public static function setCanvas(canvas: CanvasElement): Void {
@@ -253,6 +266,7 @@ class SystemImpl {
 
 		var gl: Bool = false;
 
+		#if webgl
 		try {
 			SystemImpl.gl = canvas.getContext("experimental-webgl", { alpha: false, antialias: options.samplesPerPixel > 1, stencil: true } ); // , preserveDrawingBuffer: true } ); // Firefox 36 does not like the preserveDrawingBuffer option
 			if (SystemImpl.gl != null) {
@@ -274,6 +288,7 @@ class SystemImpl {
 		catch (e: Dynamic) {
 			trace(e);
 		}
+		#end
 
 		setCanvas(canvas);
 		//var widthTransform: Float = canvas.width / Loader.the.width;

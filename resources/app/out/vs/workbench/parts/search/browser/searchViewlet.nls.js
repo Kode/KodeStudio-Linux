@@ -13,9 +13,7 @@ define("vs/workbench/parts/search/browser/searchViewlet.nls", {
 	"vs/workbench/parts/search/browser/searchResultsView": [
 		"{0} matches found",
 		"{0} match found",
-		"no matches",
 		"{0} matches in file {1} of folder {2}, Search result",
-		"No matches",
 		"Replace preview result, {0}",
 		"{0}, Search result"
 	],

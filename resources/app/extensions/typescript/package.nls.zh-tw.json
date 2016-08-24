@@ -5,7 +5,7 @@
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "使用其參數簽章完成函式。",
 	"typescript.tsdk.desc": "指定資料夾路徑，其中包含要使用的 tsserver 和 lib*.d.ts 檔案。",
 	"typescript.tsserver.trace": "允許追蹤傳送到 TS 伺服器的訊息",
-	"typescript.tsserver.experimentalAutoBuild": "Enables experimental auto build. Requires 1.9 dev or 2.x tsserver version and a restart of VS Code after changing it.",
+	"typescript.tsserver.experimentalAutoBuild": "啟用實驗性自動建置。需要 1.9 dev 或 2.x tsserver 版本，且在變更後必須重新啟動 VS Code。",
 	"typescript.validate.enable": "啟用 / 停用 TypeScript 驗證",
 	"format.insertSpaceAfterCommaDelimiter": "定義逗號分隔符號後的空格處理",
 	"format.insertSpaceAfterSemicolonInForStatements": "定義 for 陳述式內分號後的空格處理",

@@ -5,7 +5,7 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.es", {
 	"vs/workbench/parts/git/browser/views/changes/changesView": [
 		"Especifique un mensaje de confirmación. Siempre puede presionar **{0}** para confirmar los cambios. Si hay cambios almacenados provisionalmente, solo se confirmarán dichos cambios; de lo contrario, se confirmarán todos los cambios.",
 		"Cuando haya cambios para confirmar, escriba el mensaje de confirmación y presione **{0}** para confirmarlos. Si hay cambios almacenados provisionalmente, solo se confirmarán estos cambios; de lo contrario, se confirmarán todos los cambios.",
-		"It is recommended to keep the commit\'s first line under 50 characters. Feel free to use more lines for extra information.",
+		"Se recomienda mantener la primera línea de la confirmación por debajo de 50 caracteres. Puede usar más líneas para información adicional.",
 		"Mensaje (presione {0} para confirmar)",
 		"GIT: Escriba un mensaje de confirmación y presione {0} para confirmar",
 		"Vista de cambios de GIT",
@@ -69,9 +69,9 @@ define("vs/workbench/parts/git/browser/gitViewlet.nls.es", {
 		"Una vez instalado GIT, reinicie {0}.",
 	],
 	"vs/workbench/parts/git/browser/views/huge/hugeView": [
-		"Your repository appears to have many active changes.\nThis can cause Code to become very slow.",
-		"You can permanently disable this warning with the following setting:",
-		"Allow large repositories",
+		"El repositorio parece tener muchos cambios activos.\nEsto puede hacer que Code se ejecute muy lento.",
+		"Puede deshabilitar permanentemente esta advertencia con el valor siguiente:",
+		"Permitir repositorios de gran tamaño",
 	],
 	"vs/workbench/parts/git/browser/views/notroot/notrootView": [
 		"Este directorio parece estar incluido en un repositorio GIT.",

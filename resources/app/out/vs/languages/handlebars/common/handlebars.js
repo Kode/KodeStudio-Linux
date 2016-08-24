@@ -50,18 +50,12 @@ define(__m[3], __M([2,1,4,5,0,12,7,8,9,10,11,6]), function (require, exports, mo
     var States = exports.States;
     var HandlebarsState = (function (_super) {
         __extends(HandlebarsState, _super);
-        function HandlebarsState(mode, kind, handlebarsKind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValue) {
-            _super.call(this, mode, kind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValue);
-            this.kind = kind;
+        function HandlebarsState(mode, kind, handlebarsKind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValueLength) {
+            _super.call(this, mode, kind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValueLength);
             this.handlebarsKind = handlebarsKind;
-            this.lastTagName = lastTagName;
-            this.lastAttributeName = lastAttributeName;
-            this.embeddedContentType = embeddedContentType;
-            this.attributeValueQuote = attributeValueQuote;
-            this.attributeValue = attributeValue;
         }
         HandlebarsState.prototype.makeClone = function () {
-            return new HandlebarsState(this.getMode(), this.kind, this.handlebarsKind, this.lastTagName, this.lastAttributeName, this.embeddedContentType, this.attributeValueQuote, this.attributeValue);
+            return new HandlebarsState(this.getMode(), this.kind, this.handlebarsKind, this.lastTagName, this.lastAttributeName, this.embeddedContentType, this.attributeValueQuote, this.attributeValueLength);
         };
         HandlebarsState.prototype.equals = function (other) {
             if (other instanceof HandlebarsState) {
@@ -130,7 +124,6 @@ define(__m[3], __M([2,1,4,5,0,12,7,8,9,10,11,6]), function (require, exports, mo
             var _this = this;
             modes.SuggestRegistry.register(this.getId(), {
                 triggerCharacters: ['.', ':', '<', '"', '=', '/'],
-                shouldAutotriggerSuggest: true,
                 provideCompletionItems: function (model, position, token) {
                     return async_1.wireCancellationToken(token, _this._provideCompletionItems(model.uri, position));
                 }
@@ -148,12 +141,12 @@ define(__m[3], __M([2,1,4,5,0,12,7,8,9,10,11,6]), function (require, exports, mo
             languageConfigurationRegistry_1.LanguageConfigurationRegistry.register(this.getId(), HandlebarsMode.LANG_CONFIG);
         };
         HandlebarsMode.prototype.getInitialState = function () {
-            return new HandlebarsState(this, htmlMode.States.Content, States.HTML, '', '', '', '', '');
+            return new HandlebarsState(this, htmlMode.States.Content, States.HTML, '', '', '', '', 0);
         };
         HandlebarsMode.prototype.getLeavingNestedModeData = function (line, state) {
             var leavingNestedModeData = _super.prototype.getLeavingNestedModeData.call(this, line, state);
             if (leavingNestedModeData) {
-                leavingNestedModeData.stateAfterNestedMode = new HandlebarsState(this, htmlMode.States.Content, States.HTML, '', '', '', '', '');
+                leavingNestedModeData.stateAfterNestedMode = new HandlebarsState(this, htmlMode.States.Content, States.HTML, '', '', '', '', 0);
             }
             return leavingNestedModeData;
         };

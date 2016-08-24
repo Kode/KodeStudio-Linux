@@ -89,20 +89,20 @@ define(__m[6], __M([1,0,7,16,9,10,11,3,2,12,13,14,15,4]), function (require, exp
     var tagsEmbeddingContent = ['script', 'style'];
     var State = (function (_super) {
         __extends(State, _super);
-        function State(mode, kind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValue) {
+        function State(mode, kind, lastTagName, lastAttributeName, embeddedContentType, attributeValueQuote, attributeValueLength) {
             _super.call(this, mode);
             this.kind = kind;
             this.lastTagName = lastTagName;
             this.lastAttributeName = lastAttributeName;
             this.embeddedContentType = embeddedContentType;
             this.attributeValueQuote = attributeValueQuote;
-            this.attributeValue = attributeValue;
+            this.attributeValueLength = attributeValueLength;
         }
         State.escapeTagName = function (s) {
             return htmlTokenTypes.getTag(s.replace(/[:_.]/g, '-'));
         };
         State.prototype.makeClone = function () {
-            return new State(this.getMode(), this.kind, this.lastTagName, this.lastAttributeName, this.embeddedContentType, this.attributeValueQuote, this.attributeValue);
+            return new State(this.getMode(), this.kind, this.lastTagName, this.lastAttributeName, this.embeddedContentType, this.attributeValueQuote, this.attributeValueLength);
         };
         State.prototype.equals = function (other) {
             if (other instanceof State) {
@@ -112,7 +112,7 @@ define(__m[6], __M([1,0,7,16,9,10,11,3,2,12,13,14,15,4]), function (require, exp
                     this.lastAttributeName === other.lastAttributeName &&
                     this.embeddedContentType === other.embeddedContentType &&
                     this.attributeValueQuote === other.attributeValueQuote &&
-                    this.attributeValue === other.attributeValue);
+                    this.attributeValueLength === other.attributeValueLength);
             }
             return false;
         };
@@ -250,12 +250,12 @@ define(__m[6], __M([1,0,7,16,9,10,11,3,2,12,13,14,15,4]), function (require, exp
                     }
                     // We are in a attribute value
                     if (this.attributeValueQuote === '"' || this.attributeValueQuote === '\'') {
-                        if (this.attributeValue === this.attributeValueQuote && ('script' === this.lastTagName || 'style' === this.lastTagName) && 'type' === this.lastAttributeName) {
-                            this.attributeValue = stream.advanceUntilString(this.attributeValueQuote, true);
-                            if (this.attributeValue.length > 0) {
-                                this.embeddedContentType = this.unquote(this.attributeValue);
+                        if (this.attributeValueLength === 1 && ('script' === this.lastTagName || 'style' === this.lastTagName) && 'type' === this.lastAttributeName) {
+                            var attributeValue = stream.advanceUntilString(this.attributeValueQuote, true);
+                            if (attributeValue.length > 0) {
+                                this.embeddedContentType = this.unquote(attributeValue);
                                 this.kind = States.WithinTag;
-                                this.attributeValue = '';
+                                this.attributeValueLength = 0;
                                 this.attributeValueQuote = '';
                                 return { type: htmlTokenTypes.ATTRIB_VALUE };
                             }
@@ -263,13 +263,13 @@ define(__m[6], __M([1,0,7,16,9,10,11,3,2,12,13,14,15,4]), function (require, exp
                         else {
                             if (stream.advanceIfCharCode2(this.attributeValueQuote.charCodeAt(0))) {
                                 this.kind = States.WithinTag;
-                                this.attributeValue = '';
+                                this.attributeValueLength = 0;
                                 this.attributeValueQuote = '';
                                 this.lastAttributeName = null;
                             }
                             else {
-                                var part = stream.next();
-                                this.attributeValue += part;
+                                stream.next();
+                                this.attributeValueLength++;
                             }
                             return { type: htmlTokenTypes.ATTRIB_VALUE };
                         }
@@ -284,7 +284,7 @@ define(__m[6], __M([1,0,7,16,9,10,11,3,2,12,13,14,15,4]), function (require, exp
                         var ch = stream.peek();
                         if (ch === '\'' || ch === '"') {
                             this.attributeValueQuote = ch;
-                            this.attributeValue = ch;
+                            this.attributeValueLength = 1;
                             stream.next2();
                             return { type: htmlTokenTypes.ATTRIB_VALUE };
                         }
@@ -331,7 +331,6 @@ define(__m[6], __M([1,0,7,16,9,10,11,3,2,12,13,14,15,4]), function (require, exp
             }
             modes.SuggestRegistry.register(this.getId(), {
                 triggerCharacters: ['.', ':', '<', '"', '=', '/'],
-                shouldAutotriggerSuggest: true,
                 provideCompletionItems: function (model, position, token) {
                     return async_1.wireCancellationToken(token, _this._provideCompletionItems(model.uri, position));
                 }
@@ -361,7 +360,7 @@ define(__m[6], __M([1,0,7,16,9,10,11,3,2,12,13,14,15,4]), function (require, exp
         };
         // TokenizationSupport
         HTMLMode.prototype.getInitialState = function () {
-            return new State(this, States.Content, '', '', '', '', '');
+            return new State(this, States.Content, '', '', '', '', 0);
         };
         HTMLMode.prototype.enterNestedMode = function (state) {
             return state instanceof State && state.kind === States.WithinEmbeddedContent;
@@ -407,7 +406,7 @@ define(__m[6], __M([1,0,7,16,9,10,11,3,2,12,13,14,15,4]), function (require, exp
                 return {
                     nestedModeBuffer: line.substring(0, match.index),
                     bufferAfterNestedMode: line.substring(match.index),
-                    stateAfterNestedMode: new State(this, States.Content, '', '', '', '', '')
+                    stateAfterNestedMode: new State(this, States.Content, '', '', '', '', 0)
                 };
             }
             return null;

@@ -1,11 +1,11 @@
 {
 	"typescript.reloadProjects.title": "TypeScript-Projekt erneut laden",
 	"javascript.reloadProjects.title": "JavaScript-Projekt erneut laden",
-	"configuration.typescript": "TypeScript-Konfiguration",
+	"configuration.typescript": "TypeScript",
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "Vervollständigen Sie Funktionen mit deren Parametersignatur.",
 	"typescript.tsdk.desc": "Gibt den Ordnerpfad mit den zu verwendenden tsserver- und lib*.d.ts-Dateien an.",
 	"typescript.tsserver.trace": "Aktiviert die Nachverfolgung von an den TS-Server gesendeten Nachrichten.",
-	"typescript.tsserver.experimentalAutoBuild": "Enables experimental auto build. Requires 1.9 dev or 2.x tsserver version and a restart of VS Code after changing it.",
+	"typescript.tsserver.experimentalAutoBuild": "Ermöglicht experimentelle automatische Buildvorgänge. Erfordert Version 1.9 dev oder 2.x tsserver sowie einen Neustart von VS Code nach der Änderung.",
 	"typescript.validate.enable": "TypeScript-Überprüfung aktivieren/deaktivieren",
 	"format.insertSpaceAfterCommaDelimiter": "Definiert die Verarbeitung von Leerzeichen nach einem Kommatrennzeichen.",
 	"format.insertSpaceAfterSemicolonInForStatements": " Definiert die Verarbeitung von Leerzeichen nach einem Semikolon in einer for-Anweisung.",

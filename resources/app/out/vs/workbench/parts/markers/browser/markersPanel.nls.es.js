@@ -3,6 +3,6 @@
  *--------------------------------------------------------*/
 define("vs/workbench/parts/markers/browser/markersPanel.nls.es", {
 	"vs/workbench/parts/markers/browser/markersActionProvider": [
-		"Remove",
+		"Quitar",
 	]
 });

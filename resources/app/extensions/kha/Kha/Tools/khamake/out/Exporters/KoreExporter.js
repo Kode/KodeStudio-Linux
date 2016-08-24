@@ -14,12 +14,17 @@ const Converter_1 = require('../Converter');
 const Platform_1 = require('../Platform');
 const ImageTool_1 = require('../ImageTool');
 const HaxeProject_1 = require('../HaxeProject');
+const HaxeProject_2 = require('../HaxeProject');
 class KoreExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
         this.addSourceDirectory(path.join(options.kha, 'Backends', 'Kore'));
     }
     sysdir() {
+        if (this.options.target === 'android')
+            return 'android-native';
+        else if (this.options.target === 'html5')
+            return 'html5-native';
         return this.options.target;
     }
     haxeOptions(name, targetOptions, defines) {
@@ -55,12 +60,13 @@ class KoreExporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    exportSolution(name, _targetOptions, defines) {
+    exportSolution(name, targetOptions, haxeOptions) {
         return __awaiter(this, void 0, Promise, function* () {
-            let haxeOptions = this.haxeOptions(name, _targetOptions, defines);
-            HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
+            HaxeProject_2.hxml(this.options.to, haxeOptions);
+            if (this.projectFiles) {
+                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
+            }
             //Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
-            return haxeOptions;
         });
     }
     /*copyMusic(platform, from, to, encoders, callback) {
@@ -82,7 +88,7 @@ class KoreExporter extends KhaExporter_1.KhaExporter {
                 return [to + '.' + format];
             }
             else {
-                let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, 'png' /*'snappy'*/, true);
+                let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, undefined /*'snappy'*/, true);
                 return [to + '.' + format];
             }
         });

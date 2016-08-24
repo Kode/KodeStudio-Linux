@@ -44,6 +44,9 @@ namespace {
 	
 	int _width;
 	int _height;
+	int _renderTargetWidth;
+	int _renderTargetHeight;
+	bool renderToBackbuffer;
 
 #if defined(OPENGLES) && defined(SYS_ANDROID) && SYS_ANDROID_API >= 18
 	void* glesDrawBuffers;
@@ -188,15 +191,22 @@ void Graphics::init(int windowId, int depthBufferBits, int stencilBufferBits) {
 	
 	_width = System::windowWidth(0);
 	_height = System::windowHeight(0);
+	_renderTargetWidth = _width;
+	_renderTargetHeight = _height;
+	renderToBackbuffer = true;
 
 #if defined(OPENGLES) && defined(SYS_ANDROID) && SYS_ANDROID_API >= 18
 	glesDrawBuffers = (void*)eglGetProcAddress("glDrawBuffers");
 #endif
 }
 
-void Graphics::changeResolution(int width, int height){
+void Graphics::changeResolution(int width, int height) {
 	_width = width;
 	_height = height;
+	if (renderToBackbuffer) {
+		_renderTargetWidth = _width;
+		_renderTargetHeight = _height;
+	}
 }
 
 // TODO (DK) should return displays refreshrate?
@@ -329,7 +339,7 @@ void Graphics::begin(int contextId) {
 	//System::setCurrentDevice(contextId);
     System::makeCurrent(contextId);
 
-	viewport(0, 0, _width, _height);
+	glViewport(0, 0, _width, _height);
 	
 #ifdef SYS_IOS
 	beginGL();
@@ -343,12 +353,12 @@ void Graphics::begin(int contextId) {
 }
 
 void Graphics::viewport(int x, int y, int width, int height) {
-	glViewport(x, y, width, height);
+	glViewport(x, _renderTargetHeight - y - height, width, height);
 }
 
 void Graphics::scissor(int x, int y, int width, int height) {
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(x, y, width, height);
+	glScissor(x, _renderTargetHeight - y - height, width, height);
 }
 
 void Graphics::disableScissor() {
@@ -735,6 +745,14 @@ namespace {
 			return GL_ONE_MINUS_SRC_ALPHA;
 		case InverseDestinationAlpha:
 			return GL_ONE_MINUS_DST_ALPHA;
+		case SourceColor:
+			return GL_SRC_COLOR;
+		case DestinationColor:
+			return GL_DST_COLOR;
+		case InverseSourceColor:
+			return GL_ONE_MINUS_SRC_COLOR;
+		case InverseDestinationColor:
+			return GL_ONE_MINUS_DST_COLOR;
 		default:
 			return GL_ONE;
 		}
@@ -757,6 +775,9 @@ void Graphics::setRenderTarget(RenderTarget* texture, int num, int additionalTar
 		glBindFramebuffer(GL_FRAMEBUFFER, texture->_framebuffer);
 		glCheckErrors();
 		glViewport(0, 0, texture->width, texture->height);
+		_renderTargetWidth = texture->width;
+		_renderTargetHeight = texture->height;
+		renderToBackbuffer = false;
 		glCheckErrors();
 	}
 	
@@ -777,7 +798,12 @@ void Graphics::setRenderTarget(RenderTarget* texture, int num, int additionalTar
 void Graphics::restoreRenderTarget() {
 	glBindFramebuffer(GL_FRAMEBUFFER, originalFramebuffer[System::currentDevice()]);
 	glCheckErrors();
-	glViewport(0, 0, System::windowWidth(System::currentDevice()), System::windowHeight(System::currentDevice()));
+	int w = System::windowWidth(System::currentDevice());
+	int h = System::windowHeight(System::currentDevice());
+	glViewport(0, 0, w, h);
+	_renderTargetWidth = w;
+	_renderTargetHeight = h;
+	renderToBackbuffer = true;
 	glCheckErrors();
 }
 

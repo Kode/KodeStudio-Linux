@@ -123,15 +123,6 @@ var LanguageProvider = (function () {
                     increaseIndentPattern: /^.*\{[^}"']*$/
                 },
                 wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
-                comments: {
-                    lineComment: '//',
-                    blockComment: ['/*', '*/']
-                },
-                brackets: [
-                    ['{', '}'],
-                    ['[', ']'],
-                    ['(', ')'],
-                ],
                 onEnterRules: [
                     {
                         // e.g. /** | */
@@ -159,20 +150,7 @@ var LanguageProvider = (function () {
                         beforeText: /^(\t|(\ \ ))*\ \*[^/]*\*\/\s*$/,
                         action: { indentAction: vscode_1.IndentAction.None, removeText: 1 }
                     }
-                ],
-                __electricCharacterSupport: {
-                    docComment: { scope: 'comment.documentation', open: '/**', lineStart: ' * ', close: ' */' }
-                },
-                __characterPairSupport: {
-                    autoClosingPairs: [
-                        { open: '{', close: '}' },
-                        { open: '[', close: ']' },
-                        { open: '(', close: ')' },
-                        { open: '"', close: '"', notIn: ['string'] },
-                        { open: '\'', close: '\'', notIn: ['string', 'comment'] },
-                        { open: '`', close: '`', notIn: ['string', 'comment'] }
-                    ]
-                }
+                ]
             });
         });
     };
@@ -229,6 +207,7 @@ var LanguageProvider = (function () {
     };
     LanguageProvider.prototype.syntaxDiagnosticsReceived = function (file, diagnostics) {
         this.syntaxDiagnostics[file] = diagnostics;
+        this.currentDiagnostics.set(vscode_1.Uri.file(file), diagnostics);
     };
     LanguageProvider.prototype.semanticDiagnosticsReceived = function (file, diagnostics) {
         var syntaxMarkers = this.syntaxDiagnostics[file];

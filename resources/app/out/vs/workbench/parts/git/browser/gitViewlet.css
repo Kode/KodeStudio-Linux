@@ -12,135 +12,90 @@
 /* Git viewlet */
 
 .git-viewlet {
-	height: 100%;	
+	height: 100%;
 }
 
 /* Actionbar actions */
 
 .git-action.refresh {
-	background: url(media/Refresh.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M13.451 5.609l-.579-.939-1.068.812-.076.094c-.335.415-.927 1.341-1.124 2.876l-.021.165.033.163.071.345c0 1.654-1.346 3-3 3-.795 0-1.545-.311-2.107-.868-.563-.567-.873-1.317-.873-2.111 0-1.431 1.007-2.632 2.351-2.929v2.926s2.528-2.087 2.984-2.461h.012l3.061-2.582-4.919-4.1h-1.137v2.404c-3.429.318-6.121 3.211-6.121 6.721 0 1.809.707 3.508 1.986 4.782 1.277 1.282 2.976 1.988 4.784 1.988 3.722 0 6.75-3.028 6.75-6.75 0-1.245-.349-2.468-1.007-3.536z' fill='%23F6F6F6'/%3E%3Cpath d='M12.6 6.134l-.094.071c-.269.333-.746 1.096-.91 2.375.057.277.092.495.092.545 0 2.206-1.794 4-4 4-1.098 0-2.093-.445-2.817-1.164-.718-.724-1.163-1.718-1.163-2.815 0-2.206 1.794-4 4-4l.351.025v1.85s1.626-1.342 1.631-1.339l1.869-1.577-3.5-2.917v2.218l-.371-.03c-3.176 0-5.75 2.574-5.75 5.75 0 1.593.648 3.034 1.695 4.076 1.042 1.046 2.482 1.694 4.076 1.694 3.176 0 5.75-2.574 5.75-5.75-.001-1.106-.318-2.135-.859-3.012z' fill='%23424242'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .git-action.smart-commit {
-	background: url(media/check.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpolygon points='5.382,13 2.382,7 6.618,7 7,7.764 9.382,3 13.618,3 8.618,13' fill='%23F6F6F6'/%3E%3Cpath d='M12 4l-4 8h-2l-2-4h2l1 2 3-6h2z' fill='%23424242'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .git-action.run-pull {
-	background: url(media/pull.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='3' y='2' width='10' height='5' fill='%23424242'/%3E%3Cpolygon points='9,8 7,8 7,11 5,9 5,11 8,14 11,11 11,9 9,11' fill='%2300539C'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .git-action.run-push {
-	background: url(media/push.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M3 9v5h10v-5h-10z' fill='%23424242'/%3E%3Cpolygon points='7,8 9,8 9,5 11,7 11,5 8,2 5,5 5,7 7,5' fill='%2300539C'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 /* Tree actions */
 
 .git-action.stage {
-	background: url(media/add.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect height='11' width='3' y='3' x='7' fill='%23424242'/%3E%3Crect height='3' width='11' y='7' x='3' fill='%23424242'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .git-viewlet .focused .monaco-tree-row.selected:not(.highlighted) > .content.actions .git-action.stage {
-	background: url(media/add-focus.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect height='11' width='3' y='3' x='7' fill='%23fff'/%3E%3Crect height='3' width='11' y='7' x='3' fill='%23fff'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .git-action.undo {
-	background: url(media/undo.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='-0.994 0 16 16' enable-background='new -0.994 0 16 16'%3E%3Cpath fill='%23424242' d='M13 6c0 1.461-.636 2.846-1.746 3.797l-5.584 4.951-1.324-1.496 5.595-4.962c.678-.582 1.061-1.413 1.061-2.29 0-1.654-1.345-3-2.997-3-.71 0-1.399.253-1.938.713l-1.521 1.287h2.448l-1.998 2h-3.996v-4l1.998-2v2.692l1.775-1.504c.899-.766 2.047-1.188 3.232-1.188 2.754 0 4.995 2.243 4.995 5z'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .git-viewlet .focused .monaco-tree-row.selected:not(.highlighted) > .content.actions .git-action.undo {
-	background: url(media/undo-focus.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='-0.994 0 16 16' enable-background='new -0.994 0 16 16'%3E%3Cpath fill='%23fff' d='M13 6c0 1.461-.636 2.846-1.746 3.797l-5.584 4.951-1.324-1.496 5.595-4.962c.678-.582 1.061-1.413 1.061-2.29 0-1.654-1.345-3-2.997-3-.71 0-1.399.253-1.938.713l-1.521 1.287h2.448l-1.998 2h-3.996v-4l1.998-2v2.692l1.775-1.504c.899-.766 2.047-1.188 3.232-1.188 2.754 0 4.995 2.243 4.995 5z'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .git-action.unstage {
-	background: url(media/subtract.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect height='3' width='11' y='7' x='3' fill='%23424242'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .git-viewlet .focused .monaco-tree-row.selected:not(.highlighted) > .content.actions .git-action.unstage {
-	background: url(media/subtract-focus.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect height='3' width='11' y='7' x='3' fill='%23fff'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 /* Dark theme actions */
 
-.vs-dark .git-action.refresh {
-	background: url(media/refresh-inverse.svg) center center no-repeat;
+.vs-dark .git-action.refresh,
+.hc-black .git-action.refresh {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M13.451 5.609l-.579-.939-1.068.812-.076.094c-.335.415-.927 1.341-1.124 2.876l-.021.165.033.163.071.345c0 1.654-1.346 3-3 3-.795 0-1.545-.311-2.107-.868-.563-.567-.873-1.317-.873-2.111 0-1.431 1.007-2.632 2.351-2.929v2.926s2.528-2.087 2.984-2.461h.012l3.061-2.582-4.919-4.1h-1.137v2.404c-3.429.318-6.121 3.211-6.121 6.721 0 1.809.707 3.508 1.986 4.782 1.277 1.282 2.976 1.988 4.784 1.988 3.722 0 6.75-3.028 6.75-6.75 0-1.245-.349-2.468-1.007-3.536z' fill='%232D2D30'/%3E%3Cpath d='M12.6 6.134l-.094.071c-.269.333-.746 1.096-.91 2.375.057.277.092.495.092.545 0 2.206-1.794 4-4 4-1.098 0-2.093-.445-2.817-1.164-.718-.724-1.163-1.718-1.163-2.815 0-2.206 1.794-4 4-4l.351.025v1.85s1.626-1.342 1.631-1.339l1.869-1.577-3.5-2.917v2.218l-.371-.03c-3.176 0-5.75 2.574-5.75 5.75 0 1.593.648 3.034 1.695 4.076 1.042 1.046 2.482 1.694 4.076 1.694 3.176 0 5.75-2.574 5.75-5.75-.001-1.106-.318-2.135-.859-3.012z' fill='%23C5C5C5'/%3E%3C/svg%3E") center center no-repeat;
 }
 
-.vs-dark .git-action.commit {
-	background: url(media/check-inverse.svg) center center no-repeat;
-}
-
-.vs-dark .git-action.stage-and-commit {
-	background: url(media/check-inverse.svg) center center no-repeat;
+.vs-dark .git-action.commit,
+.hc-black .git-action.commit,
+.vs-dark .git-action.stage-and-commit,
+.hc-black .git-action.stage-and-commit,
+.vs-dark .git-action.smart-commit,
+.hc-black .git-action.smart-commit {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='-2 -2 16 16' enable-background='new -2 -2 16 16'%3E%3Cpolygon fill='%23C5C5C5' points='9,0 4.5,9 3,6 0,6 3,12 6,12 12,0'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .vs-dark .git-action.run-pull {
-	background: url(media/pull-inverse.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='3' y='2' width='10' height='5' fill='%23C5C5C5'/%3E%3Cpolygon points='9,8 7,8 7,11 5,9 5,11 8,14 11,11 11,9 9,11' fill='%2375BEFF'/%3E%3C/svg%3E") center center no-repeat;
 }
 
 .vs-dark .git-action.run-push {
-	background: url(media/push-inverse.svg) center center no-repeat;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M3 9v5h10v-5h-10z' fill='%23C5C5C5'/%3E%3Cpolygon points='7,8 9,8 9,5 11,7 11,5 8,2 5,5 5,7 7,5' fill='%2375BEFF'/%3E%3C/svg%3E") center center no-repeat;
 }
 
-.vs-dark .git-action.stage {
-	background: url(media/add-inverse.svg) center center no-repeat;
+.vs-dark .git-action.stage,
+.hc-black .git-action.stage {
+	background: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect height='11' width='3' y='3' x='7' fill='%23C5C5C5'/%3E%3Crect height='3' width='11' y='7' x='3' fill='%23C5C5C5'/%3E%3C/svg%3E") center center no-repeat;
 }
 
-.vs-dark .git-action.undo {
-	background: url(media/undo-inverse.svg) center center no-repeat;
+.vs-dark .git-action.undo,
+.hc-black .git-action.undo {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='-0.994 0 16 16' enable-background='new -0.994 0 16 16'%3E%3Cpath fill='%23C5C5C5' d='M13 6c0 1.461-.636 2.846-1.746 3.797l-5.584 4.951-1.324-1.496 5.595-4.962c.678-.582 1.061-1.413 1.061-2.29 0-1.654-1.345-3-2.997-3-.71 0-1.399.253-1.938.713l-1.521 1.287h2.448l-1.998 2h-3.996v-4l1.998-2v2.692l1.775-1.504c.899-.766 2.047-1.188 3.232-1.188 2.754 0 4.995 2.243 4.995 5z'/%3E%3C/svg%3E") center center no-repeat;
 }
 
-.vs-dark .git-action.unstage {
-	background: url(media/subtract-inverse.svg) center center no-repeat;
-}
-
-/* High Contrast Theming */
-.hc-black .git-action {
-	background: none;
-}
-
-.hc-black .title-actions .git-action:before {
-	position: absolute;
-	top: 12px;
-	left: 8px;
-	height: 16px;
-	width: 16px;
-}
-
-.hc-black .git-action.refresh:before {
-	content: url(media/refresh-inverse.svg);
-}
-
-.hc-black .git-action.smart-commit:before {
-	content: url(media/check-inverse.svg);
-}
-
-.hc-black .git-viewlet .focused .monaco-tree-row.selected:not(.highlighted) > .content.actions .git-action {
-	background: none;
-}
-
-.hc-black .git-viewlet .monaco-tree .monaco-tree-rows > .monaco-tree-row.has-children > .content:after,
-.hc-black .git-viewlet .monaco-tree .monaco-tree-rows > .monaco-tree-row.expanded > .content:before {
-	content: '';
-}
-
-.hc-black .monaco-tree .git-action:before {
-	display: inline-block;
-	position: relative;
-	top: -2px;
-	height: 16px;
-	width: 16px;
-}
-
-.hc-black .git-viewlet .git-action.stage:before {
-	content: url(media/add-inverse.svg);
-}
-
-.hc-black .git-viewlet .git-action.undo:before {
-	content: url(media/undo-inverse.svg);
-}
-
-.hc-black .git-viewlet .git-action.unstage:before {
-	content: url(media/subtract-inverse.svg);
+.vs-dark .git-action.unstage,
+.hc-black .git-action.unstage {
+	background: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect height='3' width='11' y='7' x='3' fill='%23C5C5C5'/%3E%3C/svg%3E") center center no-repeat;
 }
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -212,6 +167,12 @@
 	text-transform: uppercase;
 	cursor: default;
 }
+
+/* Bold font style does not go well with CJK fonts */
+.git-viewlet:lang(zh-Hans) > .changes-view > .status-view > .monaco-tree .monaco-tree-row .status-group,
+.git-viewlet:lang(zh-Hant) > .changes-view > .status-view > .monaco-tree .monaco-tree-row .status-group,
+.git-viewlet:lang(ja) > .changes-view > .status-view > .monaco-tree .monaco-tree-row .status-group,
+.git-viewlet:lang(ko) > .changes-view > .status-view > .monaco-tree .monaco-tree-row .status-group { font-weight: normal; }
 
 .git-viewlet > .changes-view > .status-view > .monaco-tree .monaco-tree-row .count-badge-wrapper {
 	padding-right: 12px;
