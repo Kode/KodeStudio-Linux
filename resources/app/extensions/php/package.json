@@ -19,7 +19,16 @@
 		"grammars": [{
 			"language": "php",
 			"scopeName": "text.html.php",
-			"path": "./syntaxes/php.json"
+			"path": "./syntaxes/php.json",
+			"embeddedLanguages": {
+				"text.html": "html",
+				"source.php": "php",
+				"source.sql": "sql",
+				"text.xml": "xml",
+				"source.js": "javascript",
+				"source.json": "json",
+				"source.css": "css"
+			}
 		}],
 		"snippets": [{
 			"language": "php",
@@ -47,7 +56,13 @@
 					"description": "%configuration.validate.run%"
 				}
 			}
-		}
+		},
+		"jsonValidation": [
+			{
+				"fileMatch": "composer.json",
+				"url": "https://getcomposer.org/schema.json"
+			}
+		]
 	},
 	"scripts": {
 		"compile": "gulp compile-extension:php",

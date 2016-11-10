@@ -1,22 +1,31 @@
 #include "pch.h"
-#include <Kore/Graphics/Shader.h>
-#include <Kore/Graphics/Graphics.h>
-#include <Kore/Log.h>
+
 #include "ogl.h"
+
+#include <Kore/Graphics/Graphics.h>
+#include <Kore/Graphics/Shader.h>
+#include <Kore/Log.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 using namespace Kore;
 
 namespace Kore {
 #ifndef OPENGLES
-	bool programUsesTesselation = false;
+	bool programUsesTessellation = false;
 #endif
 }
 
-ProgramImpl::ProgramImpl() : textureCount(0), vertexShader(nullptr), fragmentShader(nullptr), geometryShader(nullptr), tesselationEvaluationShader(nullptr), tesselationControlShader(nullptr) {
-	textures = new const char*[16];
+ProgramImpl::ProgramImpl()
+    : textureCount(0), vertexShader(nullptr), fragmentShader(nullptr), geometryShader(nullptr), tessellationEvaluationShader(nullptr),
+      tessellationControlShader(nullptr) {
+	// TODO: Get rid of allocations
+	textures = new char*[16];
+	for (int i = 0; i < 16; ++i) {
+		textures[i] = new char[128];
+		textures[i][0] = 0;
+	}
 	textureValues = new int[16];
 }
 
@@ -26,6 +35,11 @@ Program::Program() {
 }
 
 ProgramImpl::~ProgramImpl() {
+	for (int i = 0; i < 16; ++i) {
+		delete[] textures[i];
+	}
+	delete[] textures;
+	delete[] textureValues;
 	glDeleteProgram(programId);
 }
 
@@ -43,15 +57,15 @@ void Program::setGeometryShader(Shader* shader) {
 #endif
 }
 
-void Program::setTesselationControlShader(Shader* shader) {
+void Program::setTessellationControlShader(Shader* shader) {
 #ifndef OPENGLES
-	tesselationControlShader = shader;
+	tessellationControlShader = shader;
 #endif
 }
 
-void Program::setTesselationEvaluationShader(Shader* shader) {
+void Program::setTessellationEvaluationShader(Shader* shader) {
 #ifndef OPENGLES
-	tesselationEvaluationShader = shader;
+	tessellationEvaluationShader = shader;
 #endif
 }
 
@@ -66,9 +80,9 @@ namespace {
 #ifndef OPENGLES
 		case GeometryShader:
 			return GL_GEOMETRY_SHADER;
-		case TesselationControlShader:
+		case TessellationControlShader:
 			return GL_TESS_CONTROL_SHADER;
-		case TesselationEvaluationShader:
+		case TessellationEvaluationShader:
 			return GL_TESS_EVALUATION_SHADER;
 #endif
 		}
@@ -98,15 +112,18 @@ void Program::link(VertexStructure** structures, int count) {
 	compileShader(fragmentShader->id, fragmentShader->source, fragmentShader->length, FragmentShader);
 #ifndef OPENGLES
 	if (geometryShader != nullptr) compileShader(geometryShader->id, geometryShader->source, geometryShader->length, GeometryShader);
-	if (tesselationControlShader != nullptr) compileShader(tesselationControlShader->id, tesselationControlShader->source, tesselationControlShader->length, TesselationControlShader);
-	if (tesselationEvaluationShader != nullptr) compileShader(tesselationEvaluationShader->id, tesselationEvaluationShader->source, tesselationEvaluationShader->length, TesselationEvaluationShader);
+	if (tessellationControlShader != nullptr)
+		compileShader(tessellationControlShader->id, tessellationControlShader->source, tessellationControlShader->length, TessellationControlShader);
+	if (tessellationEvaluationShader != nullptr)
+		compileShader(tessellationEvaluationShader->id, tessellationEvaluationShader->source, tessellationEvaluationShader->length,
+		              TessellationEvaluationShader);
 #endif
 	glAttachShader(programId, vertexShader->id);
 	glAttachShader(programId, fragmentShader->id);
 #ifndef OPENGLES
 	if (geometryShader != nullptr) glAttachShader(programId, geometryShader->id);
-	if (tesselationControlShader != nullptr) glAttachShader(programId, tesselationControlShader->id);
-	if (tesselationEvaluationShader != nullptr) glAttachShader(programId, tesselationEvaluationShader->id);
+	if (tessellationControlShader != nullptr) glAttachShader(programId, tessellationControlShader->id);
+	if (tessellationEvaluationShader != nullptr) glAttachShader(programId, tessellationEvaluationShader->id);
 #endif
 	glCheckErrors();
 
@@ -140,7 +157,7 @@ void Program::link(VertexStructure** structures, int count) {
 
 #ifndef OPENGLES
 #ifndef SYS_LINUX
-	if (tesselationControlShader != nullptr) {
+	if (tessellationControlShader != nullptr) {
 		glPatchParameteri(GL_PATCH_VERTICES, 3);
 		glCheckErrors();
 	}
@@ -150,7 +167,7 @@ void Program::link(VertexStructure** structures, int count) {
 
 void Program::set() {
 #ifndef OPENGLES
-	programUsesTesselation = tesselationControlShader != nullptr;
+	programUsesTessellation = tessellationControlShader != nullptr;
 #endif
 	glUseProgram(programId);
 	glCheckErrors();
@@ -184,7 +201,7 @@ TextureUnit Program::getTextureUnit(const char* name) {
 		glCheckErrors();
 		index = textureCount;
 		textureValues[index] = location;
-		textures[index] = name;
+		strcpy(textures[index], name);
 		++textureCount;
 	}
 	TextureUnit unit;

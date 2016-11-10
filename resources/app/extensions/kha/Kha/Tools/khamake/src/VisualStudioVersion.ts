@@ -1,5 +1,3 @@
-"use strict";
-
 export var VisualStudioVersion = {
 	VS2010: 'vs2010',
 	VS2012: 'vs2012',

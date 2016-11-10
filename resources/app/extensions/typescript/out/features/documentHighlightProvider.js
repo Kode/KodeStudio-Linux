@@ -9,6 +9,7 @@ var TypeScriptDocumentHighlightProvider = (function () {
         this.client = client;
     }
     TypeScriptDocumentHighlightProvider.prototype.provideDocumentHighlights = function (resource, position, token) {
+        var _this = this;
         var args = {
             file: this.client.asAbsolutePath(resource.uri),
             line: position.line + 1,
@@ -25,11 +26,12 @@ var TypeScriptDocumentHighlightProvider = (function () {
                 });
             }
         }, function (err) {
+            _this.client.error("'occurrences' request failed with error.", err);
             return [];
         });
     };
     return TypeScriptDocumentHighlightProvider;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = TypeScriptDocumentHighlightProvider;
-//# sourceMappingURL=documentHighlightProvider.js.map
+exports.default = TypeScriptDocumentHighlightProvider;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/typescript/out/features/documentHighlightProvider.js.map

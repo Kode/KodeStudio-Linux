@@ -1,8 +1,8 @@
 #pragma once
 
 namespace Kore {
-	const float pi  = 3.141592654f;
-	const float tau = 6.283185307f; // :)
+	const float pi = 3.141592654f;
+	const float tau = 6.283185307f;
 	float sin(float value);
 	float cos(float value);
 	float tan(float x);
@@ -19,9 +19,16 @@ namespace Kore {
 	int abs(int value);
 	float asin(float value);
 	float acos(float value);
+	float atan(float value);
 	float atan2(float y, float x);
 	float floor(float value);
+	float mod(float numer, float denom);
 
-	template<class T> T min(T a, T b) { return (a < b) ? a : b; }
-	template<class T> T max(T a, T b) { return (a > b) ? a : b; }
+	template <class T> T min(T a, T b) {
+		return (a < b) ? a : b;
+	}
+
+	template <class T> T max(T a, T b) {
+		return (a > b) ? a : b;
+	}
 }

@@ -12,8 +12,6 @@ const path = require('path');
 const KhaExporter_1 = require('./KhaExporter');
 const Converter_1 = require('../Converter');
 const ImageTool_1 = require('../ImageTool');
-const HaxeProject_1 = require('../HaxeProject');
-const HaxeProject_2 = require('../HaxeProject');
 class Html5Exporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
@@ -66,13 +64,9 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    exportSolution(name, targetOptions, haxeOptions) {
-        return __awaiter(this, void 0, Promise, function* () {
+    export(name, targetOptions, haxeOptions) {
+        return __awaiter(this, void 0, void 0, function* () {
             fs.ensureDirSync(path.join(this.options.to, this.sysdir()));
-            HaxeProject_2.hxml(this.options.to, haxeOptions);
-            if (this.projectFiles) {
-                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
-            }
             if (this.isDebugHtml5()) {
                 let index = path.join(this.options.to, this.sysdir(), 'index.html');
                 if (!fs.existsSync(index)) {
@@ -127,11 +121,11 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
         return __awaiter(this, void 0, void 0, function* () {
             fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
             let ogg = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
-            let mp4 = null;
+            let mp4 = false;
             if (!this.isDebugHtml5()) {
                 mp4 = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.mp4'), this.options.aac);
             }
-            var files = [];
+            let files = [];
             if (ogg)
                 files.push(to + '.ogg');
             if (mp4)
@@ -154,7 +148,7 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
     copyVideo(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
             fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
-            let mp4 = null;
+            let mp4 = false;
             if (!this.isDebugHtml5()) {
                 mp4 = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.mp4'), this.options.h264);
             }
@@ -168,5 +162,5 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.Html5Exporter = Html5Exporter;
-//# sourceMappingURL=Html5Exporter.js.map
+exports.Html5Exporter = Html5Exporter;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/Html5Exporter.js.map

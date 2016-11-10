@@ -11,5 +11,5 @@ class Html5WorkerExporter extends Html5Exporter_1.Html5Exporter {
         return 'html5-worker';
     }
 }
-exports.Html5WorkerExporter = Html5WorkerExporter;
-//# sourceMappingURL=Html5WorkerExporter.js.map
+exports.Html5WorkerExporter = Html5WorkerExporter;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/Html5WorkerExporter.js.map

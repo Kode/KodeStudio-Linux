@@ -7,6 +7,8 @@ var path = require('path');
 var vscode_1 = require('vscode');
 var vscode_languageclient_1 = require('vscode-languageclient');
 var vscode_extension_telemetry_1 = require('vscode-extension-telemetry');
+var nls = require('vscode-nls');
+var localize = nls.loadMessageBundle(__filename);
 var VSCodeContentRequest;
 (function (VSCodeContentRequest) {
     VSCodeContentRequest.type = { get method() { return 'vscode/content'; } };
@@ -39,12 +41,15 @@ function activate(context) {
                 configurationSection: ['json.schemas', 'http.proxy', 'http.proxyStrictSSL'],
                 fileEvents: vscode_1.workspace.createFileSystemWatcher('**/*.json')
             },
-            initializationOptions: {
-                languageIds: languageIds
-            }
+            initializationOptions: (_a = {
+                    languageIds: languageIds
+                },
+                _a['format.enable'] = vscode_1.workspace.getConfiguration('json').get('format.enable'),
+                _a
+            )
         };
         // Create the language client and start the client.
-        var client = new vscode_languageclient_1.LanguageClient('JSON Server', serverOptions, clientOptions);
+        var client = new vscode_languageclient_1.LanguageClient('json', localize(0, null), serverOptions, clientOptions);
         client.onTelemetry(function (e) {
             if (telemetryReporter) {
                 telemetryReporter.sendTelemetryEvent(e.key, e.data);
@@ -67,6 +72,7 @@ function activate(context) {
         vscode_1.languages.setLanguageConfiguration('json', {
             wordPattern: /("(?:[^\\\"]*(?:\\.)?)*"?)|[^\s{}\[\],:]+/
         });
+        var _a;
     });
 }
 exports.activate = activate;
@@ -112,5 +118,5 @@ function getPackageInfo(context) {
         };
     }
     return null;
-}
-//# sourceMappingURL=jsonMain.js.map
+}
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/json/client/out/jsonMain.js.map

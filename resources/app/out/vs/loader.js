@@ -909,6 +909,7 @@ var AMDLoader;
             this._queuedDefineCalls = [];
             this._loadingScriptsCount = 0;
             this._resolvedScriptPaths = {};
+            this._checksums = {};
         }
         ModuleManager._findRelevantLocationInStack = function (needle, stack) {
             var normalize = function (str) { return str.replace(/\\/g, '/'); };
@@ -969,6 +970,12 @@ var AMDLoader;
         };
         ModuleManager.prototype.getLoaderEvents = function () {
             return this.getRecorder().getEvents();
+        };
+        ModuleManager.prototype.recordChecksum = function (scriptSrc, checksum) {
+            this._checksums[scriptSrc] = checksum;
+        };
+        ModuleManager.prototype.getChecksums = function () {
+            return this._checksums;
         };
         /**
          * Defines a module.
@@ -1292,6 +1299,9 @@ var AMDLoader;
             };
             result.getStats = function () {
                 return _this.getLoaderEvents();
+            };
+            result.getChecksums = function () {
+                return _this.getChecksums();
             };
             result.__$__nodeRequire = global.nodeRequire;
             return result;
@@ -1706,10 +1716,12 @@ var AMDLoader;
             this._fs = nodeRequire('fs');
             this._vm = nodeRequire('vm');
             this._path = nodeRequire('path');
+            this._crypto = nodeRequire('crypto');
         };
         NodeScriptLoader.prototype.load = function (scriptSrc, callback, errorback, recorder) {
             var _this = this;
             var opts = this._moduleManager.getConfigurationOptions();
+            var checksum = opts.checksum || false;
             var nodeRequire = (opts.nodeRequire || global.nodeRequire);
             var nodeInstrumenter = (opts.nodeInstrumenter || function (c) { return c; });
             this._init(nodeRequire);
@@ -1736,11 +1748,19 @@ var AMDLoader;
                         errorback(err);
                         return;
                     }
+                    if (checksum) {
+                        var hash = _this._crypto
+                            .createHash('md5')
+                            .update(data, 'utf8')
+                            .digest('base64')
+                            .replace(/=+$/, '');
+                        _this._moduleManager.recordChecksum(scriptSrc, hash);
+                    }
                     recorder.record(LoaderEventType.NodeBeginEvaluatingScript, scriptSrc);
                     var vmScriptSrc = _this._path.normalize(scriptSrc);
                     // Make the script src friendly towards electron
                     if (isElectronRenderer) {
-                        var driveLetterMatch = vmScriptSrc.match(/^([a-z])\:(.*)/);
+                        var driveLetterMatch = vmScriptSrc.match(/^([a-z])\:(.*)/i);
                         if (driveLetterMatch) {
                             vmScriptSrc = driveLetterMatch[1].toUpperCase() + ':' + driveLetterMatch[2];
                         }
@@ -1845,6 +1865,12 @@ var AMDLoader;
         RequireFunc.getStats = function () {
             return moduleManager.getLoaderEvents();
         };
+        /**
+         * Non standard extension to fetch checksums
+         */
+        RequireFunc.getChecksums = function () {
+            return moduleManager.getChecksums();
+        };
         return RequireFunc;
     }());
     var global = _amdLoaderGlobal, hasPerformanceNow = (global.performance && typeof global.performance.now === 'function'), isWebWorker, isElectronRenderer, isElectronMain, isNode, scriptLoader, moduleManager, loaderAvailableTimestamp;
@@ -1929,7 +1955,7 @@ var AMDLoader;
                 RequireFunc.config(global.require);
             }
             if (!isElectronRenderer) {
-                global.define = DefineFunc;
+                global.define = define = DefineFunc;
             }
             else {
                 define = function () {
@@ -1970,7 +1996,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var _cssPluginGlobal = this;
 var CSSLoaderPlugin;
 (function (CSSLoaderPlugin) {
-    var global = _cssPluginGlobal;
+    var global = _cssPluginGlobal || {};
     /**
      * Known issue:
      * - In IE there is no way to know if the CSS file loaded successfully or not.
@@ -2184,9 +2210,7 @@ var CSSLoaderPlugin;
         CSSPlugin.prototype.load = function (name, req, load, config) {
             config = config || {};
             var myConfig = config['vs/css'] || {};
-            if (myConfig.inlineResources) {
-                global.inlineResources = true;
-            }
+            global.inlineResources = myConfig.inlineResources;
             var cssUrl = req.toUrl(name + '.css');
             this.cssLoader.load(name, cssUrl, function (contents) {
                 // Contents has the CSS file contents if we are in a build
@@ -2225,7 +2249,7 @@ var CSSLoaderPlugin;
                 ], entries = global.cssPluginEntryPoints[moduleName];
                 for (var i = 0; i < entries.length; i++) {
                     if (global.inlineResources) {
-                        contents.push(Utilities.rewriteOrInlineUrls(entries[i].fsPath, entries[i].moduleName, moduleName, entries[i].contents));
+                        contents.push(Utilities.rewriteOrInlineUrls(entries[i].fsPath, entries[i].moduleName, moduleName, entries[i].contents, global.inlineResources === 'base64'));
                     }
                     else {
                         contents.push(Utilities.rewriteUrls(entries[i].moduleName, moduleName, entries[i].contents));
@@ -2376,7 +2400,7 @@ var CSSLoaderPlugin;
                 return Utilities.relativePath(newFile, absoluteUrl);
             });
         };
-        Utilities.rewriteOrInlineUrls = function (originalFileFSPath, originalFile, newFile, contents) {
+        Utilities.rewriteOrInlineUrls = function (originalFileFSPath, originalFile, newFile, contents, forceBase64) {
             var fs = require.nodeRequire('fs');
             var path = require.nodeRequire('path');
             return this._replaceURL(contents, function (url) {
@@ -2392,7 +2416,7 @@ var CSSLoaderPlugin;
                         global.cssInlinedResources.push(normalizedFSPath);
                         var MIME = /\.svg$/.test(url) ? 'image/svg+xml' : 'image/png';
                         var DATA = ';base64,' + fileContents.toString('base64');
-                        if (/\.svg$/.test(url)) {
+                        if (!forceBase64 && /\.svg$/.test(url)) {
                             // .svg => url encode as explained at https://codepen.io/tigt/post/optimizing-svgs-in-data-uris
                             var newText = fileContents.toString()
                                 .replace(/"/g, '\'')
@@ -2454,7 +2478,7 @@ var CSSLoaderPlugin;
 var _nlsPluginGlobal = this;
 var NLSLoaderPlugin;
 (function (NLSLoaderPlugin) {
-    var global = _nlsPluginGlobal;
+    var global = _nlsPluginGlobal || {};
     var Resources = global.Plugin && global.Plugin.Resources ? global.Plugin.Resources : undefined;
     var DEFAULT_TAG = 'i-default';
     var IS_PSEUDO = (global && global.document && global.document.location && global.document.location.hash.indexOf('pseudo=true') >= 0);

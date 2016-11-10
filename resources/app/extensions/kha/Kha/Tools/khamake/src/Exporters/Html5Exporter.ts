@@ -5,14 +5,13 @@ import {convert} from '../Converter';
 import {executeHaxe} from '../Haxe';
 import {Options} from '../Options';
 import {exportImage} from '../ImageTool';
-import {writeHaxeProject} from '../HaxeProject';
-import {hxml} from '../HaxeProject';
+import {Library} from '../Project';
 
 export class Html5Exporter extends KhaExporter {
 	parameters: Array<string>;
 	width: number;
 	height: number;
-	
+
 	constructor(options: Options) {
 		super(options);
 		this.addSourceDirectory(path.join(options.kha, 'Backends', 'HTML5'));
@@ -23,13 +22,13 @@ export class Html5Exporter extends KhaExporter {
 	}
 
 	isDebugHtml5() {
- 		return this.sysdir() === 'debug-html5';
- 	}
- 
- 	isNode() {
- 		return this.sysdir() === 'node';
- 	}
-	
+		return this.sysdir() === 'debug-html5';
+	}
+
+	isNode() {
+		return this.sysdir() === 'node';
+	}
+
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('sys_g1');
 		defines.push('sys_g2');
@@ -37,9 +36,9 @@ export class Html5Exporter extends KhaExporter {
 		defines.push('sys_g4');
 		defines.push('sys_a1');
 		defines.push('sys_a2');
-		
+
 		let webgl = targetOptions.html5.webgl == null ? true : targetOptions.html5.webgl;
-		
+
 		if (webgl) {
 			defines.push('webgl');
 		}
@@ -52,7 +51,7 @@ export class Html5Exporter extends KhaExporter {
 		else {
 			defines.push('sys_' + this.options.target);
 		}
-		
+
 		if (this.isDebugHtml5()) {
 			defines.push('sys_debug_html5');
 			this.parameters.push('-debug');
@@ -74,14 +73,8 @@ export class Html5Exporter extends KhaExporter {
 		};
 	}
 
-	async exportSolution(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
+	async export(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
 		fs.ensureDirSync(path.join(this.options.to, this.sysdir()));
-
-		hxml(this.options.to, haxeOptions);
-
-		if (this.projectFiles) {
-			writeHaxeProject(this.options.to, haxeOptions);
-		}
 
 		if (this.isDebugHtml5()) {
 			let index = path.join(this.options.to, this.sysdir(), 'index.html');
@@ -92,7 +85,7 @@ export class Html5Exporter extends KhaExporter {
 				protoindex = protoindex.replace(/{Height}/g, '' + this.height);
 				fs.writeFileSync(index.toString(), protoindex);
 			}
-			
+
 			let pack = path.join(this.options.to, this.sysdir(), 'package.json');
 			let protopackage = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'debug-html5', 'package.json'), {encoding: 'utf8'});
 			protopackage = protopackage.replace(/{Name}/g, name);
@@ -140,11 +133,11 @@ export class Html5Exporter extends KhaExporter {
 	async copySound(platform: string, from: string, to: string) {
 		fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
 		let ogg = await convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
-		let mp4 = null;
+		let mp4 = false;
 		if (!this.isDebugHtml5()) {
 			mp4 = await convert(from, path.join(this.options.to, this.sysdir(), to + '.mp4'), this.options.aac);
 		}
-		var files = [];
+		let files: string[] = [];
 		if (ogg) files.push(to + '.ogg');
 		if (mp4) files.push(to + '.mp4');
 		return files;
@@ -162,12 +155,12 @@ export class Html5Exporter extends KhaExporter {
 
 	async copyVideo(platform: string, from: string, to: string) {
 		fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
-		let mp4 = null;
+		let mp4 = false;
 		if (!this.isDebugHtml5()) {
 			mp4 = await convert(from, path.join(this.options.to, this.sysdir(), to + '.mp4'), this.options.h264);
 		}
 		let webm = await convert(from, path.join(this.options.to, this.sysdir(), to + '.webm'), this.options.webm);
-		let files = [];
+		let files: string[] = [];
 		if (mp4) files.push(to + '.mp4');
 		if (webm) files.push(to + '.webm');
 		return files;

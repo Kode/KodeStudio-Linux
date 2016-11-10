@@ -11,7 +11,7 @@ function copyAndReplace(from, to, names, values) {
 }
 function IntelliJ(projectdir, options) {
     let indir = path.join(__dirname, '..', 'Data', 'intellij');
-    let outdir = path.join(projectdir, 'project-' + options.system + '-intellij');
+    let outdir = path.join(projectdir, options.safeName + '-' + options.system + '-intellij');
     let sources = '';
     for (let i = 0; i < options.sources.length; ++i) {
         if (path.isAbsolute(options.sources[i])) {
@@ -70,7 +70,7 @@ function IntelliJ(projectdir, options) {
             break;
     }
     fs.copySync(path.join(indir, 'name.iml'), path.join(outdir, options.name + '.iml'), { clobber: true });
-    copyAndReplace(path.join(indir, 'name.iml'), path.join(outdir, options.name + '.iml'), ['{name}', '{sources}', '{libraries}', '{target}', '{system}', '{args}'], [options.name, sources, libraries, target, options.system, args]);
+    copyAndReplace(path.join(indir, 'name.iml'), path.join(outdir, options.name + '.iml'), ['{name}', '{sources}', '{libraries}', '{target}', '{system}', '{args}'], [options.safeName, sources, libraries, target, options.system, args]);
     fs.copySync(path.join(indir, 'idea', 'compiler.xml'), path.join(outdir, '.idea', 'compiler.xml'), { clobber: true });
     copyAndReplace(path.join(indir, 'idea', 'haxe.xml'), path.join(outdir, '.idea', 'haxe.xml'), ['{defines}'], [defines]);
     fs.copySync(path.join(indir, 'idea', 'misc.xml'), path.join(outdir, '.idea', 'misc.xml'), { clobber: true });
@@ -126,7 +126,7 @@ function hxml(projectdir, options) {
     }
     else if (options.language === 'xml') {
         data += '-xml ' + path.normalize(options.to) + '\n';
-        data += "--macro include('kha')\n";
+        data += '--macro include(\'kha\')\n';
     }
     else if (options.language === 'hl') {
         data += '-hl ' + path.normalize(options.to) + '\n';
@@ -137,7 +137,6 @@ function hxml(projectdir, options) {
     data += '-main Main' + '\n';
     fs.outputFileSync(path.join(projectdir, 'project-' + options.system + '.hxml'), data);
 }
-exports.hxml = hxml;
 function FlashDevelop(projectdir, options) {
     let platform;
     switch (options.language) {
@@ -213,7 +212,7 @@ function FlashDevelop(projectdir, options) {
             preferredSDK: path.relative(projectdir, options.haxeDirectory)
         });
     }
-    var classpaths = [];
+    let classpaths = [];
     for (let i = 0; i < options.sources.length; ++i) {
         if (path.isAbsolute(options.sources[i])) {
             classpaths.push(options.sources[i]);
@@ -379,11 +378,12 @@ function FlashDevelop(projectdir, options) {
             }
         ]
     };
-    XmlWriter_1.writeXml(project, path.join(projectdir, 'project-' + options.system + '.hxproj'));
+    XmlWriter_1.writeXml(project, path.join(projectdir, options.safeName + '-' + options.system + '.hxproj'));
 }
 function writeHaxeProject(projectdir, options) {
+    hxml(projectdir, options);
     FlashDevelop(projectdir, options);
     IntelliJ(projectdir, options);
 }
-exports.writeHaxeProject = writeHaxeProject;
-//# sourceMappingURL=HaxeProject.js.map
+exports.writeHaxeProject = writeHaxeProject;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/HaxeProject.js.map

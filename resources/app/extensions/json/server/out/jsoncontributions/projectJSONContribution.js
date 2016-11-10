@@ -84,11 +84,11 @@ var ProjectJSONContribution = (function () {
                 'version': '{{1.0.0-*}}',
                 'dependencies': {},
                 'frameworks': {
-                    'dnx451': {},
-                    'dnxcore50': {}
+                    'net461': {},
+                    'netcoreapp1.0': {}
                 }
             };
-            result.add({ kind: vscode_languageserver_1.CompletionItemKind.Class, label: localize(1, null), insertText: JSON.stringify(defaultValue, null, '\t'), documentation: '' });
+            result.add({ kind: 7 /* Class */, label: localize(1, null), insertText: JSON.stringify(defaultValue, null, '\t'), documentation: '' });
         }
         return null;
     };
@@ -132,7 +132,7 @@ var ProjectJSONContribution = (function () {
                                     insertText += ',';
                                 }
                             }
-                            var item = { kind: vscode_languageserver_1.CompletionItemKind.Property, label: name, insertText: insertText, filterText: JSON.stringify(name) };
+                            var item = { kind: 10 /* Property */, label: name, insertText: insertText, filterText: JSON.stringify(name) };
                             if (!_this.completeWithCache(name, item)) {
                                 item.data = RESOLVE_ID + name;
                             }
@@ -165,7 +165,7 @@ var ProjectJSONContribution = (function () {
                             var name = JSON.stringify(curr);
                             var label = name;
                             var documentation = '';
-                            result.add({ kind: vscode_languageserver_1.CompletionItemKind.Class, label: label, insertText: name, documentation: documentation });
+                            result.add({ kind: 7 /* Class */, label: label, insertText: name, documentation: documentation });
                         }
                         if (results.length === LIMIT) {
                             result.setAsIncomplete();
@@ -196,10 +196,10 @@ var ProjectJSONContribution = (function () {
                             _this.addCached(res.id, res.version, res.description);
                             if (res.id === pack_1) {
                                 if (res.description) {
-                                    htmlContent.push({ language: 'string', value: res.description });
+                                    htmlContent.push(vscode_languageserver_1.MarkedString.fromPlainText(res.description));
                                 }
                                 if (res.version) {
-                                    htmlContent.push({ language: 'string', value: localize(6, null, res.version) });
+                                    htmlContent.push(vscode_languageserver_1.MarkedString.fromPlainText(localize(6, null, res.version)));
                                 }
                                 break;
                             }
@@ -258,5 +258,5 @@ function matches(segments, pattern) {
         }
     }
     return k === pattern.length;
-}
-//# sourceMappingURL=projectJSONContribution.js.map
+}
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/json/server/out/jsoncontributions/projectJSONContribution.js.map

@@ -16,5 +16,5 @@ function sys() {
         return '-osx';
     }
 }
-exports.sys = sys;
-//# sourceMappingURL=exec.js.map
+exports.sys = sys;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/exec.js.map

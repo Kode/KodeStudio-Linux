@@ -52,8 +52,17 @@
 		// update iframe-contents
 		ipcRenderer.on('content', function(event, value) {
 
-			const parser = new DOMParser();
-			const newDocument = parser.parseFromString(value.join('\n'), 'text/html');
+			const text = value.join('\n');
+			const newDocument = new DOMParser().parseFromString(text, 'text/html');
+
+			// know what happens here
+			const stats = {
+				scriptTags: newDocument.documentElement.querySelectorAll('script').length,
+				inputTags: newDocument.documentElement.querySelectorAll('input').length,
+				styleTags: newDocument.documentElement.querySelectorAll('style').length,
+				linkStyleSheetTags: newDocument.documentElement.querySelectorAll('link[rel=stylesheet]').length,
+				stringLen: text.length
+			};
 
 			// set base-url if applicable
 			if(initData.baseUrl && newDocument.head.getElementsByTagName('base').length === 0) {
@@ -99,6 +108,9 @@
 			newDocument.body.appendChild(defaultScripts);
 			styleBody(newDocument.body);
 
+			// keep current scrollTop around and use later
+			const {scrollTop} = target.contentDocument.body;
+
 			// write new content onto iframe
 			target.contentDocument.open('text/html', 'replace');
 			// set DOCTYPE for newDocument explicitly as DOMParser.parseFromString strips it off
@@ -107,7 +119,15 @@
 			target.contentDocument.write(newDocument.documentElement.innerHTML);
 			target.contentDocument.close();
 
-			ipcRenderer.sendToHost('did-set-content');
+			// workaround for https://github.com/Microsoft/vscode/issues/12865
+			// check new scrollTop and reset if neccessary
+			setTimeout(() => {
+				if(scrollTop !== target.contentDocument.body.scrollTop) {
+					target.contentDocument.body.scrollTop = scrollTop;
+				}
+			}, 0);
+
+			ipcRenderer.sendToHost('did-set-content', stats);
 		});
 
 		// forward messages from the embedded iframe

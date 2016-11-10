@@ -5,16 +5,16 @@ import {convert} from '../Converter';
 import {executeHaxe} from '../Haxe';
 import {Platform} from '../Platform';
 import {exportImage} from '../ImageTool';
-import {writeHaxeProject} from '../HaxeProject';
-import {hxml} from '../HaxeProject';
 import {Options} from '../Options';
+import {Library} from '../Project';
 
 export class KoreExporter extends KhaExporter {
-	parameters: Array<string>
-	
+	parameters: Array<string>;
+
 	constructor(options: Options) {
 		super(options);
 		this.addSourceDirectory(path.join(options.kha, 'Backends', 'Kore'));
+		// Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
 	}
 
 	sysdir() {
@@ -26,6 +26,7 @@ export class KoreExporter extends KhaExporter {
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('no-compilation');
 		defines.push('sys_' + this.options.target);
+		defines.push('sys_kore');
 		defines.push('sys_g1');
 		defines.push('sys_g2');
 		defines.push('sys_g3');
@@ -59,25 +60,20 @@ export class KoreExporter extends KhaExporter {
 		};
 	}
 
-	async exportSolution(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
-		hxml(this.options.to, haxeOptions);
+	async export(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
 
-		if (this.projectFiles) {
-			writeHaxeProject(this.options.to, haxeOptions);
-		}
-		//Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
 	}
 
-	/*copyMusic(platform, from, to, encoders, callback) {
-		Files.createDirectories(this.directory.resolve(this.sysdir()).resolve(to).parent());
-		Converter.convert(from, this.directory.resolve(this.sysdir()).resolve(to + '.ogg'), encoders.oggEncoder, (success) => {
-			callback([to + '.ogg']);
-		});
-	}*/
-
-	async copySound(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { clobber: true });
-		return [to + '.wav'];
+	async copySound(platform: string, from: string, to: string, options: any) {
+		if (options.quality < 1) {
+			fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
+			let ogg = await convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
+			return [to + '.ogg'];
+		}
+		else {
+			fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { clobber: true });
+			return [to + '.wav'];
+		}
 	}
 
 	async copyImage(platform: string, from: string, to: string, options: any) {

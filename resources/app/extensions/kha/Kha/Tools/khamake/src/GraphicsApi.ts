@@ -1,5 +1,3 @@
-"use strict";
-
 export var GraphicsApi = {
 	OpenGL: 'opengl',
 	OpenGL2: 'opengl2',

@@ -12,8 +12,6 @@ const path = require('path');
 const KhaExporter_1 = require('./KhaExporter');
 const Converter_1 = require('../Converter');
 const ImageTool_1 = require('../ImageTool');
-const HaxeProject_1 = require('../HaxeProject');
-const HaxeProject_2 = require('../HaxeProject');
 class KromExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
@@ -29,7 +27,8 @@ class KromExporter extends KhaExporter_1.KhaExporter {
         defines.push('sys_g3');
         defines.push('sys_g4');
         defines.push('sys_a1');
-        //defines.push('sys_a2');
+        // defines.push('sys_a2');
+        this.parameters.push('-debug');
         return {
             from: this.options.from.toString(),
             to: path.join(this.sysdir(), 'krom.js.temp'),
@@ -46,20 +45,16 @@ class KromExporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    exportSolution(name, targetOptions, haxeOptions) {
-        return __awaiter(this, void 0, Promise, function* () {
+    export(name, targetOptions, haxeOptions) {
+        return __awaiter(this, void 0, void 0, function* () {
             fs.ensureDirSync(path.join(this.options.to, this.sysdir()));
-            HaxeProject_2.hxml(this.options.to, haxeOptions);
-            if (this.projectFiles) {
-                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
-            }
         });
     }
     copySound(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
             fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
             let ogg = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
-            var files = [];
+            let files = [];
             if (ogg)
                 files.push(to + '.ogg');
             return files;
@@ -68,7 +63,6 @@ class KromExporter extends KhaExporter_1.KhaExporter {
     copyImage(platform, from, to, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, undefined, false);
-            console.log('Image format is ' + format);
             return [to + '.' + format];
         });
     }
@@ -89,5 +83,5 @@ class KromExporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.KromExporter = KromExporter;
-//# sourceMappingURL=KromExporter.js.map
+exports.KromExporter = KromExporter;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/KromExporter.js.map

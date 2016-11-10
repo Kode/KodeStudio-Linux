@@ -11,9 +11,9 @@
 	"Hacer coincidir varias carpetas de nivel superior.",
 	"Carpeta por nombre (cualquier ubicación)",
 	"Hacer coincidir una carpeta con un nombre determinado en cualquier ubicación.",
-	"True",
+	"true",
 	"Habilitar el patrón.",
-	"False",
+	"false",
 	"Deshabilitar el patrón.",
 	"Archivos con elementos del mismo nivel por nombre",
 	"Hacer coincidir archivos que tienen elementos del mismo nivel con el mismo nombre pero con extensión diferente."

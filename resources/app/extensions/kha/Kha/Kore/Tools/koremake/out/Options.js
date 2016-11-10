@@ -8,5 +8,5 @@ exports.Options = {
     visualStudioVersion: VisualStudioVersion_1.VisualStudioVersion.VS2013,
     compile: false,
     run: false
-};
-//# sourceMappingURL=Options.js.map
+};
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Kore/Tools/koremake/out/Options.js.map

@@ -26,7 +26,7 @@ var VSCodeContentRequest;
     VSCodeContentRequest.type = { get method() { return 'vscode/content'; } };
 })(VSCodeContentRequest || (VSCodeContentRequest = {}));
 // Create a connection for the server
-var connection = vscode_languageserver_1.createConnection(new vscode_languageserver_1.IPCMessageReader(process), new vscode_languageserver_1.IPCMessageWriter(process));
+var connection = vscode_languageserver_1.createConnection();
 console.log = connection.console.log.bind(connection.console);
 console.error = connection.console.error.bind(connection.console);
 // Create a simple text document manager. The text document manager
@@ -37,11 +37,13 @@ var documents = new vscode_languageserver_1.TextDocuments();
 documents.listen(connection);
 var filesAssociationContribution = new fileAssociationContribution_1.FileAssociationContribution();
 // After the server has started the client sends an initilize request. The server receives
-// in the passed params the rootPath of the workspace plus the client capabilites.
+// in the passed params the rootPath of the workspace plus the client capabilities.
 var workspaceRoot;
 connection.onInitialize(function (params) {
     workspaceRoot = uri_1.default.parse(params.rootPath);
-    filesAssociationContribution.setLanguageIds(params.initializationOptions.languageIds);
+    if (params.initializationOptions) {
+        filesAssociationContribution.setLanguageIds(params.initializationOptions.languageIds);
+    }
     return {
         capabilities: {
             // Tell the client that the server works in FULL text document sync mode
@@ -49,8 +51,7 @@ connection.onInitialize(function (params) {
             completionProvider: { resolveProvider: true, triggerCharacters: ['"', ':'] },
             hoverProvider: true,
             documentSymbolProvider: true,
-            documentRangeFormattingProvider: true,
-            documentFormattingProvider: true
+            documentRangeFormattingProvider: !params.initializationOptions || params.initializationOptions['format.enable']
         }
     };
 });
@@ -223,14 +224,10 @@ connection.onDocumentSymbol(function (documentSymbolParams) {
     var jsonDocument = getJSONDocument(document);
     return languageService.findDocumentSymbols(document, jsonDocument);
 });
-connection.onDocumentFormatting(function (formatParams) {
-    var document = documents.get(formatParams.textDocument.uri);
-    return languageService.format(document, null, formatParams.options);
-});
 connection.onDocumentRangeFormatting(function (formatParams) {
     var document = documents.get(formatParams.textDocument.uri);
     return languageService.format(document, formatParams.range, formatParams.options);
 });
 // Listen on the connection
-connection.listen();
-//# sourceMappingURL=jsonServerMain.js.map
+connection.listen();
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/json/server/out/jsonServerMain.js.map

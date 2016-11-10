@@ -130,5 +130,5 @@ var JSONCompletionItemProvider = (function () {
     };
     return JSONCompletionItemProvider;
 }());
-exports.JSONCompletionItemProvider = JSONCompletionItemProvider;
-//# sourceMappingURL=jsonContributions.js.map
+exports.JSONCompletionItemProvider = JSONCompletionItemProvider;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/javascript/out/features/jsonContributions.js.map

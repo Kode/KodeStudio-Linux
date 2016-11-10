@@ -12,8 +12,6 @@ const path = require('path');
 const KhaExporter_1 = require('./KhaExporter');
 const Converter_1 = require('../Converter');
 const ImageTool_1 = require('../ImageTool');
-const HaxeProject_1 = require('../HaxeProject');
-const HaxeProject_2 = require('../HaxeProject');
 function adjustFilename(filename) {
     filename = filename.replace(/\./g, '_');
     filename = filename.replace(/-/g, '_');
@@ -66,37 +64,33 @@ class FlashExporter extends KhaExporter_1.KhaExporter {
             swfVersion: 'swfVersion' in flashOptions ? flashOptions.swfVersion : defaultFlashOptions.swfVersion
         };
     }
-    exportSolution(name, targetOptions, haxeOptions) {
-        return __awaiter(this, void 0, Promise, function* () {
-            HaxeProject_2.hxml(this.options.to, haxeOptions);
-            if (this.projectFiles) {
-                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
-            }
+    export(name, targetOptions, haxeOptions) {
+        return __awaiter(this, void 0, void 0, function* () {
             if (this.options.embedflashassets) {
                 this.writeFile(path.join(this.options.to, '..', 'Sources', 'Assets.hx'));
-                this.p("package;");
+                this.p('package;');
                 this.p();
-                this.p("import flash.display.BitmapData;");
-                this.p("import flash.media.Sound;");
-                this.p("import flash.utils.ByteArray;");
+                this.p('import flash.display.BitmapData;');
+                this.p('import flash.media.Sound;');
+                this.p('import flash.utils.ByteArray;');
                 this.p();
                 for (let image of this.images) {
-                    this.p("@:bitmap(\"flash/" + image + "\") class Assets_" + adjustFilename(image) + " extends BitmapData { }");
+                    this.p('@:bitmap("flash/' + image + '") class Assets_' + adjustFilename(image) + ' extends BitmapData { }');
                 }
                 this.p();
                 for (let sound of this.sounds) {
-                    this.p("@:file(\"flash/" + sound + "\") class Assets_" + adjustFilename(sound) + " extends ByteArray { }");
+                    this.p('@:file("flash/' + sound + '") class Assets_' + adjustFilename(sound) + ' extends ByteArray { }');
                 }
                 this.p();
                 for (let blob of this.blobs) {
-                    this.p("@:file(\"flash/" + blob + "\") class Assets_" + adjustFilename(blob) + " extends ByteArray { }");
+                    this.p('@:file("flash/' + blob + '") class Assets_' + adjustFilename(blob) + ' extends ByteArray { }');
                 }
                 this.p();
-                this.p("class Assets {");
-                this.p("public static function visit(): Void {", 1);
-                this.p("", 2);
-                this.p("}", 1);
-                this.p("}");
+                this.p('class Assets {');
+                this.p('public static function visit(): Void {', 1);
+                this.p('', 2);
+                this.p('}', 1);
+                this.p('}');
                 this.closeFile();
             }
         });
@@ -104,9 +98,9 @@ class FlashExporter extends KhaExporter_1.KhaExporter {
     copySound(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
             fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
-            var ogg = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
-            var mp3 = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.mp3'), this.options.mp3);
-            var files = [];
+            let ogg = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
+            let mp3 = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.mp3'), this.options.mp3);
+            let files = [];
             if (ogg) {
                 files.push(to + '.ogg');
                 if (this.options.embedflashassets)
@@ -148,5 +142,5 @@ class FlashExporter extends KhaExporter_1.KhaExporter {
             this.blobs.push(shader);
     }
 }
-exports.FlashExporter = FlashExporter;
-//# sourceMappingURL=FlashExporter.js.map
+exports.FlashExporter = FlashExporter;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/FlashExporter.js.map

@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["require","exports","vs/base/common/winjs.base","vs/base/common/platform","vs/code/electron-main/env","vs/platform/instantiation/common/instantiation","vs/base/common/types","path","electron","vs/nls!vs/code/electron-main/main","vs/base/common/objects","vs/nls","events","vs/code/electron-main/storage","vs/base/common/errors","vs/code/electron-main/settings","vs/base/common/arrays","vs/code/electron-main/log","vs/base/common/event","vs/base/common/uri","fs","original-fs","vs/code/electron-main/lifecycle","vs/platform/package","os","vs/base/common/strings","vs/base/common/paths","vs/code/electron-main/windows","vs/code/electron-main/update-manager","vs/platform/instantiation/common/descriptors","child_process","vs/platform/instantiation/common/serviceCollection","vs/base/common/uuid","vs/platform/product","vs/base/common/async","vs/base/node/pfs","vs/base/parts/ipc/common/ipc","vs/code/electron-main/window","vs/base/node/extfs","vs/base/node/request","vs/base/node/proxy","vs/base/common/lifecycle","vs/nls!vs/code/electron-main/menus","vs/nls!vs/code/electron-main/windows","vs/nls!vs/code/node/argv","url","vs/base/common/cancellation","vs/nls!vs/workbench/parts/git/electron-main/askpassService","vs/code/electron-main/sharedProcess","vs/code/electron-main/menus","vs/base/node/crypto","vs/platform/instantiation/common/instantiationService","crypto","vs/base/node/flow","vs/base/common/graph","vs/base/common/callbackList","vs/base/parts/ipc/node/ipc.net","vs/nls!vs/base/common/errors","vs/base/common/map","vs/base/common/collections","vs/base/common/assert","vs/nls!vs/base/common/json","vs/base/common/json","vs/workbench/parts/git/common/git","vs/workbench/parts/git/common/gitIpc","vs/workbench/parts/git/electron-main/askpassService","vs/base/node/userSettings","vs/code/electron-main/auto-updater.linux","vs/code/electron-main/auto-updater.win32","vs/nls!vs/base/common/keyCodes","vs/base/common/keyCodes","vs/code/electron-main/launch","vs/code/node/argv","https","http","zlib","vs/base/common/winjs.base.raw","http-proxy-agent","https-proxy-agent","minimist","assert","vs/code/electron-main/main","net"];
+var __m = ["exports","require","vs/base/common/winjs.base","vs/base/common/types","vs/platform/instantiation/common/instantiation","vs/base/common/platform","vs/base/common/event","path","vs/nls!vs/code/electron-main/main","vs/nls","vs/base/common/objects","vs/platform/product","vs/platform/environment/common/environment","vs/platform/configuration/common/configuration","electron","vs/base/common/errors","vs/base/common/uri","vs/base/common/lifecycle","vs/base/common/arrays","vs/platform/platform","vs/code/electron-main/log","vs/base/parts/ipc/common/ipc","vs/base/common/paths","vs/code/electron-main/storage","vs/code/electron-main/windows","fs","vs/base/common/strings","original-fs","vs/code/electron-main/lifecycle","events","vs/platform/request/common/request","vs/platform/configuration/common/configurationRegistry","vs/code/electron-main/update-manager","vs/base/node/event","os","vs/base/node/request","vs/base/node/extfs","vs/platform/environment/node/argv","vs/platform/jsonschemas/common/jsonContributionRegistry","vs/platform/instantiation/common/descriptors","vs/base/node/pfs","vs/code/electron-main/window","vs/base/common/assert","vs/base/common/async","vs/base/common/uuid","vs/code/electron-main/paths","vs/platform/url/common/url","child_process","vs/platform/instantiation/common/serviceCollection","vs/base/common/events","vs/nls!vs/base/common/json","vs/base/common/keyCodes","vs/platform/url/common/urlIpc","vs/base/common/json","vs/base/node/config","vs/base/common/callbackList","vs/base/common/keybinding","vs/nls!vs/base/common/severity","vs/base/common/severity","vs/nls!vs/code/electron-main/menus","vs/nls!vs/code/electron-main/windows","vs/nls!vs/platform/configuration/common/configurationRegistry","vs/nls!vs/platform/environment/node/argv","vs/nls!vs/platform/extensions/common/extensionsRegistry","vs/nls!vs/platform/request/common/request","vs/nls!vs/workbench/parts/git/electron-main/askpassService","vs/base/node/crypto","vs/base/common/eventEmitter","crypto","vs/base/common/graph","vs/base/node/flow","vs/code/common/windows","assert","vs/base/common/labels","vs/base/common/map","vs/base/node/paths","vs/platform/files/common/files","vs/nls!vs/base/common/keybinding","vs/platform/instantiation/common/instantiationService","vs/platform/package","vs/base/node/proxy","url","vs/platform/extensions/common/extensionsRegistry","vs/platform/request/node/requestService","vs/platform/configuration/common/model","vs/platform/configuration/node/configurationService","vs/code/electron-main/menus","vs/base/common/cancellation","vs/base/parts/ipc/common/ipc.electron","vs/base/parts/ipc/node/ipc.net","vs/code/electron-main/launch","vs/platform/environment/node/environmentService","vs/code/common/windowsIpc","vs/base/common/collections","vs/platform/url/electron-main/urlService","vs/workbench/parts/git/common/git","vs/workbench/parts/git/common/gitIpc","vs/workbench/parts/git/electron-main/askpassService","vs/base/common/decorators","vs/code/node/sharedProcess","vs/code/electron-main/auto-updater.win32","vs/code/electron-main/auto-updater.linux","zlib","http","https","minimist","net","https-proxy-agent","http-proxy-agent","vs/base/common/winjs.base.raw","vs/code/electron-main/main"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,7 +10,7 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[16], __M([0,1]), function (require, exports) {
+define(__m[18/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -104,6 +104,9 @@ define(__m[16], __M([0,1]), function (require, exports) {
      * @return The first n elemnts from array when sorted with compare.
      */
     function top(array, compare, n) {
+        if (n === 0) {
+            return [];
+        }
         var result = array.slice(0, n).sort(compare);
         var _loop_1 = function(i, m) {
             var element = array[i];
@@ -271,9 +274,23 @@ define(__m[16], __M([0,1]), function (require, exports) {
         }, Object.create(null));
     }
     exports.index = index;
+    /**
+     * Inserts an element into an array. Returns a function which, when
+     * called, will remove that element from the array.
+     */
+    function insert(array, element) {
+        array.push(element);
+        return function () {
+            var index = array.indexOf(element);
+            if (index > -1) {
+                array.splice(index, 1);
+            }
+        };
+    }
+    exports.insert = insert;
 });
 
-define(__m[60], __M([0,1]), function (require, exports) {
+define(__m[42/*vs/base/common/assert*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -290,7 +307,7 @@ define(__m[60], __M([0,1]), function (require, exports) {
     exports.ok = ok;
 });
 
-define(__m[59], __M([0,1]), function (require, exports) {
+define(__m[93/*vs/base/common/collections*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -383,105 +400,546 @@ define(__m[59], __M([0,1]), function (require, exports) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+define(__m[98/*vs/base/common/decorators*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    'use strict';
+    function memoize(target, key, descriptor) {
+        var fnKey = null;
+        var fn = null;
+        if (typeof descriptor.value === 'function') {
+            fnKey = 'value';
+            fn = descriptor.value;
+        }
+        else if (typeof descriptor.get === 'function') {
+            fnKey = 'get';
+            fn = descriptor.get;
+        }
+        if (!fn) {
+            throw new Error('not supported');
+        }
+        var memoizeKey = "$memoize$" + key;
+        descriptor[fnKey] = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            if (!this.hasOwnProperty(memoizeKey)) {
+                Object.defineProperty(this, memoizeKey, {
+                    configurable: false,
+                    enumerable: false,
+                    writable: false,
+                    value: fn.apply(this, args)
+                });
+            }
+            return this[memoizeKey];
+        };
+    }
+    exports.memoize = memoize;
+});
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[58], __M([0,1]), function (require, exports) {
+define(__m[49/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var Event = (function () {
+        function Event(originalEvent) {
+            this.time = (new Date()).getTime();
+            this.originalEvent = originalEvent;
+            this.source = null;
+        }
+        return Event;
+    }());
+    exports.Event = Event;
+    var PropertyChangeEvent = (function (_super) {
+        __extends(PropertyChangeEvent, _super);
+        function PropertyChangeEvent(key, oldValue, newValue, originalEvent) {
+            _super.call(this, originalEvent);
+            this.key = key;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
+        return PropertyChangeEvent;
+    }(Event));
+    exports.PropertyChangeEvent = PropertyChangeEvent;
+    var ViewerEvent = (function (_super) {
+        __extends(ViewerEvent, _super);
+        function ViewerEvent(element, originalEvent) {
+            _super.call(this, originalEvent);
+            this.element = element;
+        }
+        return ViewerEvent;
+    }(Event));
+    exports.ViewerEvent = ViewerEvent;
+    exports.EventType = {
+        PROPERTY_CHANGED: 'propertyChanged',
+        SELECTION: 'selection',
+        FOCUS: 'focus',
+        BLUR: 'blur',
+        HIGHLIGHT: 'highlight',
+        EXPAND: 'expand',
+        COLLAPSE: 'collapse',
+        TOGGLE: 'toggle',
+        BEFORE_RUN: 'beforeRun',
+        RUN: 'run',
+        EDIT: 'edit',
+        SAVE: 'save',
+        CANCEL: 'cancel',
+        CHANGE: 'change',
+        DISPOSE: 'dispose',
+    };
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[51/*vs/base/common/keyCodes*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    'use strict';
+    /**
+     * Virtual Key Codes, the value does not hold any inherent meaning.
+     * Inspired somewhat from https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
+     * But these are "more general", as they should work across browsers & OS`s.
+     */
+    (function (KeyCode) {
+        /**
+         * Placed first to cover the 0 value of the enum.
+         */
+        KeyCode[KeyCode["Unknown"] = 0] = "Unknown";
+        KeyCode[KeyCode["Backspace"] = 1] = "Backspace";
+        KeyCode[KeyCode["Tab"] = 2] = "Tab";
+        KeyCode[KeyCode["Enter"] = 3] = "Enter";
+        KeyCode[KeyCode["Shift"] = 4] = "Shift";
+        KeyCode[KeyCode["Ctrl"] = 5] = "Ctrl";
+        KeyCode[KeyCode["Alt"] = 6] = "Alt";
+        KeyCode[KeyCode["PauseBreak"] = 7] = "PauseBreak";
+        KeyCode[KeyCode["CapsLock"] = 8] = "CapsLock";
+        KeyCode[KeyCode["Escape"] = 9] = "Escape";
+        KeyCode[KeyCode["Space"] = 10] = "Space";
+        KeyCode[KeyCode["PageUp"] = 11] = "PageUp";
+        KeyCode[KeyCode["PageDown"] = 12] = "PageDown";
+        KeyCode[KeyCode["End"] = 13] = "End";
+        KeyCode[KeyCode["Home"] = 14] = "Home";
+        KeyCode[KeyCode["LeftArrow"] = 15] = "LeftArrow";
+        KeyCode[KeyCode["UpArrow"] = 16] = "UpArrow";
+        KeyCode[KeyCode["RightArrow"] = 17] = "RightArrow";
+        KeyCode[KeyCode["DownArrow"] = 18] = "DownArrow";
+        KeyCode[KeyCode["Insert"] = 19] = "Insert";
+        KeyCode[KeyCode["Delete"] = 20] = "Delete";
+        KeyCode[KeyCode["KEY_0"] = 21] = "KEY_0";
+        KeyCode[KeyCode["KEY_1"] = 22] = "KEY_1";
+        KeyCode[KeyCode["KEY_2"] = 23] = "KEY_2";
+        KeyCode[KeyCode["KEY_3"] = 24] = "KEY_3";
+        KeyCode[KeyCode["KEY_4"] = 25] = "KEY_4";
+        KeyCode[KeyCode["KEY_5"] = 26] = "KEY_5";
+        KeyCode[KeyCode["KEY_6"] = 27] = "KEY_6";
+        KeyCode[KeyCode["KEY_7"] = 28] = "KEY_7";
+        KeyCode[KeyCode["KEY_8"] = 29] = "KEY_8";
+        KeyCode[KeyCode["KEY_9"] = 30] = "KEY_9";
+        KeyCode[KeyCode["KEY_A"] = 31] = "KEY_A";
+        KeyCode[KeyCode["KEY_B"] = 32] = "KEY_B";
+        KeyCode[KeyCode["KEY_C"] = 33] = "KEY_C";
+        KeyCode[KeyCode["KEY_D"] = 34] = "KEY_D";
+        KeyCode[KeyCode["KEY_E"] = 35] = "KEY_E";
+        KeyCode[KeyCode["KEY_F"] = 36] = "KEY_F";
+        KeyCode[KeyCode["KEY_G"] = 37] = "KEY_G";
+        KeyCode[KeyCode["KEY_H"] = 38] = "KEY_H";
+        KeyCode[KeyCode["KEY_I"] = 39] = "KEY_I";
+        KeyCode[KeyCode["KEY_J"] = 40] = "KEY_J";
+        KeyCode[KeyCode["KEY_K"] = 41] = "KEY_K";
+        KeyCode[KeyCode["KEY_L"] = 42] = "KEY_L";
+        KeyCode[KeyCode["KEY_M"] = 43] = "KEY_M";
+        KeyCode[KeyCode["KEY_N"] = 44] = "KEY_N";
+        KeyCode[KeyCode["KEY_O"] = 45] = "KEY_O";
+        KeyCode[KeyCode["KEY_P"] = 46] = "KEY_P";
+        KeyCode[KeyCode["KEY_Q"] = 47] = "KEY_Q";
+        KeyCode[KeyCode["KEY_R"] = 48] = "KEY_R";
+        KeyCode[KeyCode["KEY_S"] = 49] = "KEY_S";
+        KeyCode[KeyCode["KEY_T"] = 50] = "KEY_T";
+        KeyCode[KeyCode["KEY_U"] = 51] = "KEY_U";
+        KeyCode[KeyCode["KEY_V"] = 52] = "KEY_V";
+        KeyCode[KeyCode["KEY_W"] = 53] = "KEY_W";
+        KeyCode[KeyCode["KEY_X"] = 54] = "KEY_X";
+        KeyCode[KeyCode["KEY_Y"] = 55] = "KEY_Y";
+        KeyCode[KeyCode["KEY_Z"] = 56] = "KEY_Z";
+        KeyCode[KeyCode["Meta"] = 57] = "Meta";
+        KeyCode[KeyCode["ContextMenu"] = 58] = "ContextMenu";
+        KeyCode[KeyCode["F1"] = 59] = "F1";
+        KeyCode[KeyCode["F2"] = 60] = "F2";
+        KeyCode[KeyCode["F3"] = 61] = "F3";
+        KeyCode[KeyCode["F4"] = 62] = "F4";
+        KeyCode[KeyCode["F5"] = 63] = "F5";
+        KeyCode[KeyCode["F6"] = 64] = "F6";
+        KeyCode[KeyCode["F7"] = 65] = "F7";
+        KeyCode[KeyCode["F8"] = 66] = "F8";
+        KeyCode[KeyCode["F9"] = 67] = "F9";
+        KeyCode[KeyCode["F10"] = 68] = "F10";
+        KeyCode[KeyCode["F11"] = 69] = "F11";
+        KeyCode[KeyCode["F12"] = 70] = "F12";
+        KeyCode[KeyCode["F13"] = 71] = "F13";
+        KeyCode[KeyCode["F14"] = 72] = "F14";
+        KeyCode[KeyCode["F15"] = 73] = "F15";
+        KeyCode[KeyCode["F16"] = 74] = "F16";
+        KeyCode[KeyCode["F17"] = 75] = "F17";
+        KeyCode[KeyCode["F18"] = 76] = "F18";
+        KeyCode[KeyCode["F19"] = 77] = "F19";
+        KeyCode[KeyCode["NumLock"] = 78] = "NumLock";
+        KeyCode[KeyCode["ScrollLock"] = 79] = "ScrollLock";
+        /**
+         * Used for miscellaneous characters; it can vary by keyboard.
+         * For the US standard keyboard, the ';:' key
+         */
+        KeyCode[KeyCode["US_SEMICOLON"] = 80] = "US_SEMICOLON";
+        /**
+         * For any country/region, the '+' key
+         * For the US standard keyboard, the '=+' key
+         */
+        KeyCode[KeyCode["US_EQUAL"] = 81] = "US_EQUAL";
+        /**
+         * For any country/region, the ',' key
+         * For the US standard keyboard, the ',<' key
+         */
+        KeyCode[KeyCode["US_COMMA"] = 82] = "US_COMMA";
+        /**
+         * For any country/region, the '-' key
+         * For the US standard keyboard, the '-_' key
+         */
+        KeyCode[KeyCode["US_MINUS"] = 83] = "US_MINUS";
+        /**
+         * For any country/region, the '.' key
+         * For the US standard keyboard, the '.>' key
+         */
+        KeyCode[KeyCode["US_DOT"] = 84] = "US_DOT";
+        /**
+         * Used for miscellaneous characters; it can vary by keyboard.
+         * For the US standard keyboard, the '/?' key
+         */
+        KeyCode[KeyCode["US_SLASH"] = 85] = "US_SLASH";
+        /**
+         * Used for miscellaneous characters; it can vary by keyboard.
+         * For the US standard keyboard, the '`~' key
+         */
+        KeyCode[KeyCode["US_BACKTICK"] = 86] = "US_BACKTICK";
+        /**
+         * Used for miscellaneous characters; it can vary by keyboard.
+         * For the US standard keyboard, the '[{' key
+         */
+        KeyCode[KeyCode["US_OPEN_SQUARE_BRACKET"] = 87] = "US_OPEN_SQUARE_BRACKET";
+        /**
+         * Used for miscellaneous characters; it can vary by keyboard.
+         * For the US standard keyboard, the '\|' key
+         */
+        KeyCode[KeyCode["US_BACKSLASH"] = 88] = "US_BACKSLASH";
+        /**
+         * Used for miscellaneous characters; it can vary by keyboard.
+         * For the US standard keyboard, the ']}' key
+         */
+        KeyCode[KeyCode["US_CLOSE_SQUARE_BRACKET"] = 89] = "US_CLOSE_SQUARE_BRACKET";
+        /**
+         * Used for miscellaneous characters; it can vary by keyboard.
+         * For the US standard keyboard, the ''"' key
+         */
+        KeyCode[KeyCode["US_QUOTE"] = 90] = "US_QUOTE";
+        /**
+         * Used for miscellaneous characters; it can vary by keyboard.
+         */
+        KeyCode[KeyCode["OEM_8"] = 91] = "OEM_8";
+        /**
+         * Either the angle bracket key or the backslash key on the RT 102-key keyboard.
+         */
+        KeyCode[KeyCode["OEM_102"] = 92] = "OEM_102";
+        KeyCode[KeyCode["NUMPAD_0"] = 93] = "NUMPAD_0";
+        KeyCode[KeyCode["NUMPAD_1"] = 94] = "NUMPAD_1";
+        KeyCode[KeyCode["NUMPAD_2"] = 95] = "NUMPAD_2";
+        KeyCode[KeyCode["NUMPAD_3"] = 96] = "NUMPAD_3";
+        KeyCode[KeyCode["NUMPAD_4"] = 97] = "NUMPAD_4";
+        KeyCode[KeyCode["NUMPAD_5"] = 98] = "NUMPAD_5";
+        KeyCode[KeyCode["NUMPAD_6"] = 99] = "NUMPAD_6";
+        KeyCode[KeyCode["NUMPAD_7"] = 100] = "NUMPAD_7";
+        KeyCode[KeyCode["NUMPAD_8"] = 101] = "NUMPAD_8";
+        KeyCode[KeyCode["NUMPAD_9"] = 102] = "NUMPAD_9";
+        KeyCode[KeyCode["NUMPAD_MULTIPLY"] = 103] = "NUMPAD_MULTIPLY";
+        KeyCode[KeyCode["NUMPAD_ADD"] = 104] = "NUMPAD_ADD";
+        KeyCode[KeyCode["NUMPAD_SEPARATOR"] = 105] = "NUMPAD_SEPARATOR";
+        KeyCode[KeyCode["NUMPAD_SUBTRACT"] = 106] = "NUMPAD_SUBTRACT";
+        KeyCode[KeyCode["NUMPAD_DECIMAL"] = 107] = "NUMPAD_DECIMAL";
+        KeyCode[KeyCode["NUMPAD_DIVIDE"] = 108] = "NUMPAD_DIVIDE";
+        /**
+         * Placed last to cover the length of the enum.
+         * Please do not depend on this value!
+         */
+        KeyCode[KeyCode["MAX_VALUE"] = 109] = "MAX_VALUE";
+    })(exports.KeyCode || (exports.KeyCode = {}));
+    var KeyCode = exports.KeyCode;
+    var Mapping = (function () {
+        function Mapping(fromKeyCode, toKeyCode) {
+            this._fromKeyCode = fromKeyCode;
+            this._toKeyCode = toKeyCode;
+        }
+        Mapping.prototype.fromKeyCode = function (keyCode) {
+            return this._fromKeyCode[keyCode];
+        };
+        Mapping.prototype.toKeyCode = function (str) {
+            if (this._toKeyCode.hasOwnProperty(str)) {
+                return this._toKeyCode[str];
+            }
+            return 0 /* Unknown */;
+        };
+        return Mapping;
+    }());
+    exports.Mapping = Mapping;
+    function createMapping(fill1, fill2) {
+        var MAP = [];
+        fill1(MAP);
+        var REVERSE_MAP = {};
+        for (var i = 0, len = MAP.length; i < len; i++) {
+            if (!MAP[i]) {
+                continue;
+            }
+            REVERSE_MAP[MAP[i]] = i;
+        }
+        fill2(REVERSE_MAP);
+        var FINAL_REVERSE_MAP = {};
+        for (var entry in REVERSE_MAP) {
+            if (REVERSE_MAP.hasOwnProperty(entry)) {
+                FINAL_REVERSE_MAP[entry] = REVERSE_MAP[entry];
+                FINAL_REVERSE_MAP[entry.toLowerCase()] = REVERSE_MAP[entry];
+            }
+        }
+        return new Mapping(MAP, FINAL_REVERSE_MAP);
+    }
+    var STRING = createMapping(function (TO_STRING_MAP) {
+        TO_STRING_MAP[0 /* Unknown */] = 'unknown';
+        TO_STRING_MAP[1 /* Backspace */] = 'Backspace';
+        TO_STRING_MAP[2 /* Tab */] = 'Tab';
+        TO_STRING_MAP[3 /* Enter */] = 'Enter';
+        TO_STRING_MAP[4 /* Shift */] = 'Shift';
+        TO_STRING_MAP[5 /* Ctrl */] = 'Ctrl';
+        TO_STRING_MAP[6 /* Alt */] = 'Alt';
+        TO_STRING_MAP[7 /* PauseBreak */] = 'PauseBreak';
+        TO_STRING_MAP[8 /* CapsLock */] = 'CapsLock';
+        TO_STRING_MAP[9 /* Escape */] = 'Escape';
+        TO_STRING_MAP[10 /* Space */] = 'Space';
+        TO_STRING_MAP[11 /* PageUp */] = 'PageUp';
+        TO_STRING_MAP[12 /* PageDown */] = 'PageDown';
+        TO_STRING_MAP[13 /* End */] = 'End';
+        TO_STRING_MAP[14 /* Home */] = 'Home';
+        TO_STRING_MAP[15 /* LeftArrow */] = 'LeftArrow';
+        TO_STRING_MAP[16 /* UpArrow */] = 'UpArrow';
+        TO_STRING_MAP[17 /* RightArrow */] = 'RightArrow';
+        TO_STRING_MAP[18 /* DownArrow */] = 'DownArrow';
+        TO_STRING_MAP[19 /* Insert */] = 'Insert';
+        TO_STRING_MAP[20 /* Delete */] = 'Delete';
+        TO_STRING_MAP[21 /* KEY_0 */] = '0';
+        TO_STRING_MAP[22 /* KEY_1 */] = '1';
+        TO_STRING_MAP[23 /* KEY_2 */] = '2';
+        TO_STRING_MAP[24 /* KEY_3 */] = '3';
+        TO_STRING_MAP[25 /* KEY_4 */] = '4';
+        TO_STRING_MAP[26 /* KEY_5 */] = '5';
+        TO_STRING_MAP[27 /* KEY_6 */] = '6';
+        TO_STRING_MAP[28 /* KEY_7 */] = '7';
+        TO_STRING_MAP[29 /* KEY_8 */] = '8';
+        TO_STRING_MAP[30 /* KEY_9 */] = '9';
+        TO_STRING_MAP[31 /* KEY_A */] = 'A';
+        TO_STRING_MAP[32 /* KEY_B */] = 'B';
+        TO_STRING_MAP[33 /* KEY_C */] = 'C';
+        TO_STRING_MAP[34 /* KEY_D */] = 'D';
+        TO_STRING_MAP[35 /* KEY_E */] = 'E';
+        TO_STRING_MAP[36 /* KEY_F */] = 'F';
+        TO_STRING_MAP[37 /* KEY_G */] = 'G';
+        TO_STRING_MAP[38 /* KEY_H */] = 'H';
+        TO_STRING_MAP[39 /* KEY_I */] = 'I';
+        TO_STRING_MAP[40 /* KEY_J */] = 'J';
+        TO_STRING_MAP[41 /* KEY_K */] = 'K';
+        TO_STRING_MAP[42 /* KEY_L */] = 'L';
+        TO_STRING_MAP[43 /* KEY_M */] = 'M';
+        TO_STRING_MAP[44 /* KEY_N */] = 'N';
+        TO_STRING_MAP[45 /* KEY_O */] = 'O';
+        TO_STRING_MAP[46 /* KEY_P */] = 'P';
+        TO_STRING_MAP[47 /* KEY_Q */] = 'Q';
+        TO_STRING_MAP[48 /* KEY_R */] = 'R';
+        TO_STRING_MAP[49 /* KEY_S */] = 'S';
+        TO_STRING_MAP[50 /* KEY_T */] = 'T';
+        TO_STRING_MAP[51 /* KEY_U */] = 'U';
+        TO_STRING_MAP[52 /* KEY_V */] = 'V';
+        TO_STRING_MAP[53 /* KEY_W */] = 'W';
+        TO_STRING_MAP[54 /* KEY_X */] = 'X';
+        TO_STRING_MAP[55 /* KEY_Y */] = 'Y';
+        TO_STRING_MAP[56 /* KEY_Z */] = 'Z';
+        TO_STRING_MAP[58 /* ContextMenu */] = 'ContextMenu';
+        TO_STRING_MAP[59 /* F1 */] = 'F1';
+        TO_STRING_MAP[60 /* F2 */] = 'F2';
+        TO_STRING_MAP[61 /* F3 */] = 'F3';
+        TO_STRING_MAP[62 /* F4 */] = 'F4';
+        TO_STRING_MAP[63 /* F5 */] = 'F5';
+        TO_STRING_MAP[64 /* F6 */] = 'F6';
+        TO_STRING_MAP[65 /* F7 */] = 'F7';
+        TO_STRING_MAP[66 /* F8 */] = 'F8';
+        TO_STRING_MAP[67 /* F9 */] = 'F9';
+        TO_STRING_MAP[68 /* F10 */] = 'F10';
+        TO_STRING_MAP[69 /* F11 */] = 'F11';
+        TO_STRING_MAP[70 /* F12 */] = 'F12';
+        TO_STRING_MAP[71 /* F13 */] = 'F13';
+        TO_STRING_MAP[72 /* F14 */] = 'F14';
+        TO_STRING_MAP[73 /* F15 */] = 'F15';
+        TO_STRING_MAP[74 /* F16 */] = 'F16';
+        TO_STRING_MAP[75 /* F17 */] = 'F17';
+        TO_STRING_MAP[76 /* F18 */] = 'F18';
+        TO_STRING_MAP[77 /* F19 */] = 'F19';
+        TO_STRING_MAP[78 /* NumLock */] = 'NumLock';
+        TO_STRING_MAP[79 /* ScrollLock */] = 'ScrollLock';
+        TO_STRING_MAP[80 /* US_SEMICOLON */] = ';';
+        TO_STRING_MAP[81 /* US_EQUAL */] = '=';
+        TO_STRING_MAP[82 /* US_COMMA */] = ',';
+        TO_STRING_MAP[83 /* US_MINUS */] = '-';
+        TO_STRING_MAP[84 /* US_DOT */] = '.';
+        TO_STRING_MAP[85 /* US_SLASH */] = '/';
+        TO_STRING_MAP[86 /* US_BACKTICK */] = '`';
+        TO_STRING_MAP[87 /* US_OPEN_SQUARE_BRACKET */] = '[';
+        TO_STRING_MAP[88 /* US_BACKSLASH */] = '\\';
+        TO_STRING_MAP[89 /* US_CLOSE_SQUARE_BRACKET */] = ']';
+        TO_STRING_MAP[90 /* US_QUOTE */] = '\'';
+        TO_STRING_MAP[91 /* OEM_8 */] = 'OEM_8';
+        TO_STRING_MAP[92 /* OEM_102 */] = 'OEM_102';
+        TO_STRING_MAP[93 /* NUMPAD_0 */] = 'NumPad0';
+        TO_STRING_MAP[94 /* NUMPAD_1 */] = 'NumPad1';
+        TO_STRING_MAP[95 /* NUMPAD_2 */] = 'NumPad2';
+        TO_STRING_MAP[96 /* NUMPAD_3 */] = 'NumPad3';
+        TO_STRING_MAP[97 /* NUMPAD_4 */] = 'NumPad4';
+        TO_STRING_MAP[98 /* NUMPAD_5 */] = 'NumPad5';
+        TO_STRING_MAP[99 /* NUMPAD_6 */] = 'NumPad6';
+        TO_STRING_MAP[100 /* NUMPAD_7 */] = 'NumPad7';
+        TO_STRING_MAP[101 /* NUMPAD_8 */] = 'NumPad8';
+        TO_STRING_MAP[102 /* NUMPAD_9 */] = 'NumPad9';
+        TO_STRING_MAP[103 /* NUMPAD_MULTIPLY */] = 'NumPad_Multiply';
+        TO_STRING_MAP[104 /* NUMPAD_ADD */] = 'NumPad_Add';
+        TO_STRING_MAP[105 /* NUMPAD_SEPARATOR */] = 'NumPad_Separator';
+        TO_STRING_MAP[106 /* NUMPAD_SUBTRACT */] = 'NumPad_Subtract';
+        TO_STRING_MAP[107 /* NUMPAD_DECIMAL */] = 'NumPad_Decimal';
+        TO_STRING_MAP[108 /* NUMPAD_DIVIDE */] = 'NumPad_Divide';
+        // for (let i = 0; i < KeyCode.MAX_VALUE; i++) {
+        // 	if (!TO_STRING_MAP[i]) {
+        // 		console.warn('Missing string representation for ' + KeyCode[i]);
+        // 	}
+        // }
+    }, function (FROM_STRING_MAP) {
+        FROM_STRING_MAP['\r'] = 3 /* Enter */;
+    });
+    exports.USER_SETTINGS = createMapping(function (TO_USER_SETTINGS_MAP) {
+        for (var i = 0, len = STRING._fromKeyCode.length; i < len; i++) {
+            TO_USER_SETTINGS_MAP[i] = STRING._fromKeyCode[i];
+        }
+        TO_USER_SETTINGS_MAP[15 /* LeftArrow */] = 'Left';
+        TO_USER_SETTINGS_MAP[16 /* UpArrow */] = 'Up';
+        TO_USER_SETTINGS_MAP[17 /* RightArrow */] = 'Right';
+        TO_USER_SETTINGS_MAP[18 /* DownArrow */] = 'Down';
+    }, function (FROM_USER_SETTINGS_MAP) {
+        FROM_USER_SETTINGS_MAP['OEM_1'] = 80 /* US_SEMICOLON */;
+        FROM_USER_SETTINGS_MAP['OEM_PLUS'] = 81 /* US_EQUAL */;
+        FROM_USER_SETTINGS_MAP['OEM_COMMA'] = 82 /* US_COMMA */;
+        FROM_USER_SETTINGS_MAP['OEM_MINUS'] = 83 /* US_MINUS */;
+        FROM_USER_SETTINGS_MAP['OEM_PERIOD'] = 84 /* US_DOT */;
+        FROM_USER_SETTINGS_MAP['OEM_2'] = 85 /* US_SLASH */;
+        FROM_USER_SETTINGS_MAP['OEM_3'] = 86 /* US_BACKTICK */;
+        FROM_USER_SETTINGS_MAP['OEM_4'] = 87 /* US_OPEN_SQUARE_BRACKET */;
+        FROM_USER_SETTINGS_MAP['OEM_5'] = 88 /* US_BACKSLASH */;
+        FROM_USER_SETTINGS_MAP['OEM_6'] = 89 /* US_CLOSE_SQUARE_BRACKET */;
+        FROM_USER_SETTINGS_MAP['OEM_7'] = 90 /* US_QUOTE */;
+        FROM_USER_SETTINGS_MAP['OEM_8'] = 91 /* OEM_8 */;
+        FROM_USER_SETTINGS_MAP['OEM_102'] = 92 /* OEM_102 */;
+    });
+    var KeyCodeUtils;
+    (function (KeyCodeUtils) {
+        function toString(key) {
+            return STRING.fromKeyCode(key);
+        }
+        KeyCodeUtils.toString = toString;
+        function fromString(key) {
+            return STRING.toKeyCode(key);
+        }
+        KeyCodeUtils.fromString = fromString;
+    })(KeyCodeUtils = exports.KeyCodeUtils || (exports.KeyCodeUtils = {}));
+    // Binary encoding strategy:
+    // 15:  1 bit for ctrlCmd
+    // 14:  1 bit for shift
+    // 13:  1 bit for alt
+    // 12:  1 bit for winCtrl
+    //  0: 12 bits for keyCode (up to a maximum keyCode of 4096. Given we have 83 at this point thats good enough)
+    var BinaryKeybindingsMask;
+    (function (BinaryKeybindingsMask) {
+        BinaryKeybindingsMask[BinaryKeybindingsMask["CtrlCmd"] = 32768] = "CtrlCmd";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["Shift"] = 16384] = "Shift";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["Alt"] = 8192] = "Alt";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["WinCtrl"] = 4096] = "WinCtrl";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["KeyCode"] = 4095] = "KeyCode";
+    })(BinaryKeybindingsMask || (BinaryKeybindingsMask = {}));
+    (function (KeyMod) {
+        KeyMod[KeyMod["CtrlCmd"] = 32768] = "CtrlCmd";
+        KeyMod[KeyMod["Shift"] = 16384] = "Shift";
+        KeyMod[KeyMod["Alt"] = 8192] = "Alt";
+        KeyMod[KeyMod["WinCtrl"] = 4096] = "WinCtrl";
+    })(exports.KeyMod || (exports.KeyMod = {}));
+    var KeyMod = exports.KeyMod;
+    function KeyChord(firstPart, secondPart) {
+        return firstPart | ((secondPart & 0x0000ffff) << 16);
+    }
+    exports.KeyChord = KeyChord;
+    var BinaryKeybindings = (function () {
+        function BinaryKeybindings() {
+        }
+        BinaryKeybindings.extractFirstPart = function (keybinding) {
+            return keybinding & 0x0000ffff;
+        };
+        BinaryKeybindings.extractChordPart = function (keybinding) {
+            return (keybinding >> 16) & 0x0000ffff;
+        };
+        BinaryKeybindings.hasChord = function (keybinding) {
+            return (this.extractChordPart(keybinding) !== 0);
+        };
+        BinaryKeybindings.hasCtrlCmd = function (keybinding) {
+            return (keybinding & 32768 /* CtrlCmd */ ? true : false);
+        };
+        BinaryKeybindings.hasShift = function (keybinding) {
+            return (keybinding & 16384 /* Shift */ ? true : false);
+        };
+        BinaryKeybindings.hasAlt = function (keybinding) {
+            return (keybinding & 8192 /* Alt */ ? true : false);
+        };
+        BinaryKeybindings.hasWinCtrl = function (keybinding) {
+            return (keybinding & 4096 /* WinCtrl */ ? true : false);
+        };
+        BinaryKeybindings.extractKeyCode = function (keybinding) {
+            return (keybinding & 4095 /* KeyCode */);
+        };
+        return BinaryKeybindings;
+    }());
+    exports.BinaryKeybindings = BinaryKeybindings;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+define(__m[74/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     'use strict';
     /**
      * A simple map to store value by a key object. Key can be any object that has toString() function to get
      * string value of the key.
      */
-    var SimpleMap = (function () {
-        function SimpleMap() {
-            this.map = Object.create(null);
-            this._size = 0;
-        }
-        Object.defineProperty(SimpleMap.prototype, "size", {
-            get: function () {
-                return this._size;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SimpleMap.prototype.get = function (k) {
-            var value = this.peek(k);
-            return value ? value : null;
-        };
-        SimpleMap.prototype.keys = function () {
-            var keys = [];
-            for (var key in this.map) {
-                keys.push(this.map[key].key);
-            }
-            return keys;
-        };
-        SimpleMap.prototype.values = function () {
-            var values = [];
-            for (var key in this.map) {
-                values.push(this.map[key].value);
-            }
-            return values;
-        };
-        SimpleMap.prototype.entries = function () {
-            var entries = [];
-            for (var key in this.map) {
-                entries.push(this.map[key]);
-            }
-            return entries;
-        };
-        SimpleMap.prototype.set = function (k, t) {
-            if (this.get(k)) {
-                return false; // already present!
-            }
-            this.push(k, t);
-            return true;
-        };
-        SimpleMap.prototype.delete = function (k) {
-            var value = this.get(k);
-            if (value) {
-                this.pop(k);
-                return value;
-            }
-            return null;
-        };
-        SimpleMap.prototype.has = function (k) {
-            return !!this.get(k);
-        };
-        SimpleMap.prototype.clear = function () {
-            this.map = Object.create(null);
-            this._size = 0;
-        };
-        SimpleMap.prototype.push = function (key, value) {
-            var entry = { key: key, value: value };
-            this.map[key.toString()] = entry;
-            this._size++;
-        };
-        SimpleMap.prototype.pop = function (k) {
-            delete this.map[k.toString()];
-            this._size--;
-        };
-        SimpleMap.prototype.peek = function (k) {
-            var entry = this.map[k.toString()];
-            return entry ? entry.value : null;
-        };
-        return SimpleMap;
-    }());
-    exports.SimpleMap = SimpleMap;
-    /**
-     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
-     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
-     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
-     */
     var LinkedMap = (function () {
-        function LinkedMap(limit, ratio) {
-            if (limit === void 0) { limit = Number.MAX_VALUE; }
-            if (ratio === void 0) { ratio = 1; }
-            this.limit = limit;
+        function LinkedMap() {
             this.map = Object.create(null);
             this._size = 0;
-            this.ratio = limit * ratio;
         }
         Object.defineProperty(LinkedMap.prototype, "size", {
             get: function () {
@@ -490,7 +948,99 @@ define(__m[58], __M([0,1]), function (require, exports) {
             enumerable: true,
             configurable: true
         });
-        LinkedMap.prototype.set = function (key, value) {
+        LinkedMap.prototype.get = function (k) {
+            var value = this.peek(k);
+            return value ? value : null;
+        };
+        LinkedMap.prototype.getOrSet = function (k, t) {
+            var res = this.get(k);
+            if (res) {
+                return res;
+            }
+            this.set(k, t);
+            return t;
+        };
+        LinkedMap.prototype.keys = function () {
+            var keys = [];
+            for (var key in this.map) {
+                keys.push(this.map[key].key);
+            }
+            return keys;
+        };
+        LinkedMap.prototype.values = function () {
+            var values = [];
+            for (var key in this.map) {
+                values.push(this.map[key].value);
+            }
+            return values;
+        };
+        LinkedMap.prototype.entries = function () {
+            var entries = [];
+            for (var key in this.map) {
+                entries.push(this.map[key]);
+            }
+            return entries;
+        };
+        LinkedMap.prototype.set = function (k, t) {
+            if (this.get(k)) {
+                return false; // already present!
+            }
+            this.push(k, t);
+            return true;
+        };
+        LinkedMap.prototype.delete = function (k) {
+            var value = this.get(k);
+            if (value) {
+                this.pop(k);
+                return value;
+            }
+            return null;
+        };
+        LinkedMap.prototype.has = function (k) {
+            return !!this.get(k);
+        };
+        LinkedMap.prototype.clear = function () {
+            this.map = Object.create(null);
+            this._size = 0;
+        };
+        LinkedMap.prototype.push = function (key, value) {
+            var entry = { key: key, value: value };
+            this.map[key.toString()] = entry;
+            this._size++;
+        };
+        LinkedMap.prototype.pop = function (k) {
+            delete this.map[k.toString()];
+            this._size--;
+        };
+        LinkedMap.prototype.peek = function (k) {
+            var entry = this.map[k.toString()];
+            return entry ? entry.value : null;
+        };
+        return LinkedMap;
+    }());
+    exports.LinkedMap = LinkedMap;
+    /**
+     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
+     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
+     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
+     */
+    var BoundedLinkedMap = (function () {
+        function BoundedLinkedMap(limit, ratio) {
+            if (limit === void 0) { limit = Number.MAX_VALUE; }
+            if (ratio === void 0) { ratio = 1; }
+            this.limit = limit;
+            this.map = Object.create(null);
+            this._size = 0;
+            this.ratio = limit * ratio;
+        }
+        Object.defineProperty(BoundedLinkedMap.prototype, "size", {
+            get: function () {
+                return this._size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        BoundedLinkedMap.prototype.set = function (key, value) {
             if (this.map[key]) {
                 return false; // already present!
             }
@@ -501,11 +1051,19 @@ define(__m[58], __M([0,1]), function (require, exports) {
             }
             return true;
         };
-        LinkedMap.prototype.get = function (key) {
+        BoundedLinkedMap.prototype.get = function (key) {
             var entry = this.map[key];
             return entry ? entry.value : null;
         };
-        LinkedMap.prototype.delete = function (key) {
+        BoundedLinkedMap.prototype.getOrSet = function (k, t) {
+            var res = this.get(k);
+            if (res) {
+                return res;
+            }
+            this.set(k, t);
+            return t;
+        };
+        BoundedLinkedMap.prototype.delete = function (key) {
             var entry = this.map[key];
             if (entry) {
                 this.map[key] = void 0;
@@ -526,16 +1084,16 @@ define(__m[58], __M([0,1]), function (require, exports) {
             }
             return null;
         };
-        LinkedMap.prototype.has = function (key) {
+        BoundedLinkedMap.prototype.has = function (key) {
             return !!this.map[key];
         };
-        LinkedMap.prototype.clear = function () {
+        BoundedLinkedMap.prototype.clear = function () {
             this.map = Object.create(null);
             this._size = 0;
             this.head = null;
             this.tail = null;
         };
-        LinkedMap.prototype.push = function (entry) {
+        BoundedLinkedMap.prototype.push = function (entry) {
             if (this.head) {
                 // [A]-[B] = [A]-[B]->[X]
                 entry.prev = this.head;
@@ -548,7 +1106,7 @@ define(__m[58], __M([0,1]), function (require, exports) {
             this.map[entry.key] = entry;
             this._size++;
         };
-        LinkedMap.prototype.trim = function () {
+        BoundedLinkedMap.prototype.trim = function () {
             if (this.tail) {
                 // Remove all elements until ratio is reached
                 if (this.ratio < this.limit) {
@@ -579,9 +1137,9 @@ define(__m[58], __M([0,1]), function (require, exports) {
                 }
             }
         };
-        return LinkedMap;
+        return BoundedLinkedMap;
     }());
-    exports.LinkedMap = LinkedMap;
+    exports.BoundedLinkedMap = BoundedLinkedMap;
     /**
      * A subclass of Map<T> that makes an entry the MRU entry as soon
      * as it is being accessed. In combination with the limit for the
@@ -605,11 +1163,67 @@ define(__m[58], __M([0,1]), function (require, exports) {
             return null;
         };
         return LRUCache;
-    }(LinkedMap));
+    }(BoundedLinkedMap));
     exports.LRUCache = LRUCache;
+    /**
+     * A trie map that allows for fast look up when keys are substrings
+     * to the actual search keys (dir/subdir-problem).
+     */
+    var TrieMap = (function () {
+        function TrieMap(splitter) {
+            this._root = { children: Object.create(null) };
+            this._splitter = splitter;
+        }
+        TrieMap.prototype.insert = function (path, element) {
+            var parts = this._splitter(path);
+            var i = 0;
+            // find insertion node
+            var node = this._root;
+            for (; i < parts.length; i++) {
+                var child = node.children[parts[i]];
+                if (child) {
+                    node = child;
+                    continue;
+                }
+                break;
+            }
+            // create new nodes
+            var newNode;
+            for (; i < parts.length; i++) {
+                newNode = { children: Object.create(null) };
+                node.children[parts[i]] = newNode;
+                node = newNode;
+            }
+            node.element = element;
+        };
+        TrieMap.prototype.findSubstr = function (path) {
+            var parts = this._splitter(path);
+            var lastNode;
+            var children = this._root.children;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                var node = children[part];
+                if (!node) {
+                    break;
+                }
+                if (node.element) {
+                    lastNode = node;
+                }
+                children = node.children;
+            }
+            // return the last matching node
+            // that had an element
+            if (lastNode) {
+                return lastNode.element;
+            }
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/); };
+        return TrieMap;
+    }());
+    exports.TrieMap = TrieMap;
 });
 
-define(__m[3], __M([0,1]), function (require, exports) {
+define(__m[5/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -632,10 +1246,10 @@ define(__m[3], __M([0,1]), function (require, exports) {
         _isMacintosh = (process.platform === 'darwin');
         _isLinux = (process.platform === 'linux');
         _isRootUser = !_isWindows && (process.getuid() === 0);
-        var vscode_nls_config = process.env['VSCODE_NLS_CONFIG'];
-        if (vscode_nls_config) {
+        var rawNlsConfig = process.env['VSCODE_NLS_CONFIG'];
+        if (rawNlsConfig) {
             try {
-                var nlsConfig = JSON.parse(vscode_nls_config);
+                var nlsConfig = JSON.parse(rawNlsConfig);
                 var resolved = nlsConfig.availableLanguages['*'];
                 _locale = nlsConfig.locale;
                 // VSCode's default language is 'en'
@@ -707,7 +1321,7 @@ define(__m[3], __M([0,1]), function (require, exports) {
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
+define(__m[22/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/platform*/,18/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -722,22 +1336,22 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
      */
     exports.nativeSep = platform_1.isWindows ? '\\' : '/';
     function relative(from, to) {
-        from = normalize(from);
-        to = normalize(to);
-        var fromParts = from.split(exports.sep), toParts = to.split(exports.sep);
-        while (fromParts.length > 0 && toParts.length > 0) {
-            if (fromParts[0] === toParts[0]) {
-                fromParts.shift();
-                toParts.shift();
-            }
-            else {
+        var originalNormalizedFrom = normalize(from);
+        var originalNormalizedTo = normalize(to);
+        // we're assuming here that any non=linux OS is case insensitive
+        // so we must compare each part in its lowercase form
+        var normalizedFrom = platform_1.isLinux ? originalNormalizedFrom : originalNormalizedFrom.toLowerCase();
+        var normalizedTo = platform_1.isLinux ? originalNormalizedTo : originalNormalizedTo.toLowerCase();
+        var fromParts = normalizedFrom.split(exports.sep);
+        var toParts = normalizedTo.split(exports.sep);
+        var i = 0, max = Math.min(fromParts.length, toParts.length);
+        for (; i < max; i++) {
+            if (fromParts[i] !== toParts[i]) {
                 break;
             }
         }
-        for (var i = 0, len = fromParts.length; i < len; i++) {
-            toParts.unshift('..');
-        }
-        return toParts.join(exports.sep);
+        var result = arrays_1.fill(fromParts.length - i, function () { return '..'; }).concat(originalNormalizedTo.split(exports.sep).slice(i));
+        return result.join(exports.sep);
     }
     exports.relative = relative;
     /**
@@ -808,7 +1422,7 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
         var res = '';
         for (var end = root.length; end <= len; end++) {
             // either at the end or at a path-separator character
-            if (end === len || path.charCodeAt(end) === _slash || path.charCodeAt(end) === _backslash) {
+            if (end === len || path.charCodeAt(end) === 47 /* Slash */ || path.charCodeAt(end) === 92 /* Backslash */) {
                 if (streql(path, start, end, '..')) {
                     // skip current and remove parent (if there is already something)
                     var prev_start = res.lastIndexOf(sep);
@@ -851,27 +1465,27 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
         }
         var len = path.length;
         var code = path.charCodeAt(0);
-        if (code === _slash || code === _backslash) {
+        if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
             code = path.charCodeAt(1);
-            if (code === _slash || code === _backslash) {
+            if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                 // UNC candidate \\localhost\shares\ddd
                 //               ^^^^^^^^^^^^^^^^^^^
                 code = path.charCodeAt(2);
-                if (code !== _slash && code !== _backslash) {
+                if (code !== 47 /* Slash */ && code !== 92 /* Backslash */) {
                     var pos_1 = 3;
                     var start = pos_1;
                     for (; pos_1 < len; pos_1++) {
                         code = path.charCodeAt(pos_1);
-                        if (code === _slash || code === _backslash) {
+                        if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                             break;
                         }
                     }
                     code = path.charCodeAt(pos_1 + 1);
-                    if (start !== pos_1 && code !== _slash && code !== _backslash) {
+                    if (start !== pos_1 && code !== 47 /* Slash */ && code !== 92 /* Backslash */) {
                         pos_1 += 1;
                         for (; pos_1 < len; pos_1++) {
                             code = path.charCodeAt(pos_1);
-                            if (code === _slash || code === _backslash) {
+                            if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                                 return path.slice(0, pos_1 + 1) // consume this separator
                                     .replace(/[\\/]/g, sep);
                             }
@@ -883,11 +1497,11 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
             // ^
             return sep;
         }
-        else if ((code >= _A && code <= _Z) || (code >= _a && code <= _z)) {
+        else if ((code >= 65 /* A */ && code <= 90 /* Z */) || (code >= 97 /* a */ && code <= 122 /* z */)) {
             // check for windows drive letter c:\ or c:
-            if (path.charCodeAt(1) === _colon) {
+            if (path.charCodeAt(1) === 58 /* Colon */) {
                 code = path.charCodeAt(2);
-                if (code === _slash || code === _backslash) {
+                if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                     // C:\fff
                     // ^^^
                     return path.slice(0, 2) + sep;
@@ -907,7 +1521,7 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
             pos += 3; // 3 -> "://".length
             for (; pos < len; pos++) {
                 code = path.charCodeAt(pos);
-                if (code === _slash || code === _backslash) {
+                if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                     return path.slice(0, pos + 1); // consume this separator
                 }
             }
@@ -926,9 +1540,9 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
                 // add the separater between two parts unless
                 // there already is one
                 var last = value.charCodeAt(value.length - 1);
-                if (last !== _slash && last !== _backslash) {
+                if (last !== 47 /* Slash */ && last !== 92 /* Backslash */) {
                     var next = part.charCodeAt(0);
-                    if (next !== _slash && next !== _backslash) {
+                    if (next !== 47 /* Slash */ && next !== 92 /* Backslash */) {
                         value += exports.sep;
                     }
                 }
@@ -954,18 +1568,18 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
             return false;
         }
         var code = path.charCodeAt(0);
-        if (code !== _backslash) {
+        if (code !== 92 /* Backslash */) {
             return false;
         }
         code = path.charCodeAt(1);
-        if (code !== _backslash) {
+        if (code !== 92 /* Backslash */) {
             return false;
         }
         var pos = 2;
         var start = pos;
         for (; pos < path.length; pos++) {
             code = path.charCodeAt(pos);
-            if (code === _backslash) {
+            if (code === 92 /* Backslash */) {
                 break;
             }
         }
@@ -973,7 +1587,7 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
             return false;
         }
         code = path.charCodeAt(pos + 1);
-        if (isNaN(code) || code === _backslash) {
+        if (isNaN(code) || code === 92 /* Backslash */) {
             return false;
         }
         return true;
@@ -986,13 +1600,6 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
         return isPosixAbsolute(normalize(path)) ? path : exports.sep + path;
     }
     exports.makePosixAbsolute = makePosixAbsolute;
-    var _slash = '/'.charCodeAt(0);
-    var _backslash = '\\'.charCodeAt(0);
-    var _colon = ':'.charCodeAt(0);
-    var _a = 'a'.charCodeAt(0);
-    var _A = 'A'.charCodeAt(0);
-    var _z = 'z'.charCodeAt(0);
-    var _Z = 'Z'.charCodeAt(0);
     function isEqualOrParent(path, candidate) {
         if (path === candidate) {
             return true;
@@ -1001,7 +1608,7 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
         candidate = normalize(candidate);
         var candidateLen = candidate.length;
         var lastCandidateChar = candidate.charCodeAt(candidateLen - 1);
-        if (lastCandidateChar === _slash) {
+        if (lastCandidateChar === 47 /* Slash */) {
             candidate = candidate.substring(0, candidateLen - 1);
             candidateLen -= 1;
         }
@@ -1020,7 +1627,7 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
             return false;
         }
         var char = path.charCodeAt(candidateLen);
-        return char === _slash;
+        return char === 47 /* Slash */;
     }
     exports.isEqualOrParent = isEqualOrParent;
     // Reference: https://en.wikipedia.org/wiki/Filename
@@ -1060,7 +1667,7 @@ define(__m[26], __M([0,1,3]), function (require, exports, platform_1) {
     exports.isAbsolute = isAbsolute;
 });
 
-define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
+define(__m[26/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/,74/*vs/base/common/map*/]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1070,6 +1677,13 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
      * The empty string.
      */
     exports.empty = '';
+    function isFalsyOrWhitespace(str) {
+        if (!str || typeof str !== 'string') {
+            return true;
+        }
+        return str.trim().length === 0;
+    }
+    exports.isFalsyOrWhitespace = isFalsyOrWhitespace;
     /**
      * @returns the provided number with the given number of preceding zeros.
      */
@@ -1215,7 +1829,7 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
     function endsWith(haystack, needle) {
         var diff = haystack.length - needle.length;
         if (diff > 0) {
-            return haystack.lastIndexOf(needle) === diff;
+            return haystack.indexOf(needle, diff) === diff;
         }
         else if (diff === 0) {
             return haystack === needle;
@@ -1225,14 +1839,28 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
         }
     }
     exports.endsWith = endsWith;
-    function createRegExp(searchString, isRegex, matchCase, wholeWord, global) {
+    function indexOfIgnoreCase(haystack, needle, position) {
+        if (position === void 0) { position = 0; }
+        var index = haystack.indexOf(needle, position);
+        if (index < 0) {
+            if (position > 0) {
+                haystack = haystack.substr(position);
+            }
+            needle = escapeRegExpCharacters(needle);
+            index = haystack.search(new RegExp(needle, 'i'));
+        }
+        return index;
+    }
+    exports.indexOfIgnoreCase = indexOfIgnoreCase;
+    function createRegExp(searchString, isRegex, options) {
+        if (options === void 0) { options = {}; }
         if (searchString === '') {
             throw new Error('Cannot create regex from empty string');
         }
         if (!isRegex) {
             searchString = searchString.replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&');
         }
-        if (wholeWord) {
+        if (options.wholeWord) {
             if (!/\B/.test(searchString.charAt(0))) {
                 searchString = '\\b' + searchString;
             }
@@ -1241,11 +1869,14 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
             }
         }
         var modifiers = '';
-        if (global) {
+        if (options.global) {
             modifiers += 'g';
         }
-        if (!matchCase) {
+        if (!options.matchCase) {
             modifiers += 'i';
+        }
+        if (options.multiline) {
+            modifiers += 'm';
         }
         return new RegExp(searchString, modifiers);
     }
@@ -1270,7 +1901,7 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
      */
     exports.canNormalize = typeof (''.normalize) === 'function';
     var nonAsciiCharactersPattern = /[^\u0000-\u0080]/;
-    var normalizedCache = new map_1.LinkedMap(10000); // bounded to 10000 elements
+    var normalizedCache = new map_1.BoundedLinkedMap(10000); // bounded to 10000 elements
     function normalizeNFC(str) {
         if (!exports.canNormalize || !str) {
             return str;
@@ -1297,7 +1928,8 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
      */
     function firstNonWhitespaceIndex(str) {
         for (var i = 0, len = str.length; i < len; i++) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
                 return i;
             }
         }
@@ -1310,7 +1942,8 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
      */
     function getLeadingWhitespace(str) {
         for (var i = 0, len = str.length; i < len; i++) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
                 return str.substring(0, i);
             }
         }
@@ -1324,7 +1957,8 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
     function lastNonWhitespaceIndex(str, startIndex) {
         if (startIndex === void 0) { startIndex = str.length - 1; }
         for (var i = startIndex; i >= 0; i--) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
                 return i;
             }
         }
@@ -1344,7 +1978,7 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
     }
     exports.compare = compare;
     function isAsciiChar(code) {
-        return (code >= 97 && code <= 122) || (code >= 65 && code <= 90);
+        return (code >= 97 /* a */ && code <= 122 /* z */) || (code >= 65 /* A */ && code <= 90 /* Z */);
     }
     function equalsIgnoreCase(a, b) {
         var len1 = a.length, len2 = b.length;
@@ -1414,15 +2048,25 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
     //	}
     //	return chrCode;
     //}
-    //export function isLeadSurrogate(chr:string) {
-    //	let chrCode = chr.charCodeAt(0);
-    //	return ;
-    //}
-    //
-    //export function isTrailSurrogate(chr:string) {
-    //	let chrCode = chr.charCodeAt(0);
-    //	return 0xDC00 <= chrCode && chrCode <= 0xDFFF;
-    //}
+    function isHighSurrogate(charCode) {
+        return (0xD800 <= charCode && charCode <= 0xDBFF);
+    }
+    exports.isHighSurrogate = isHighSurrogate;
+    function isLowSurrogate(charCode) {
+        return (0xDC00 <= charCode && charCode <= 0xDFFF);
+    }
+    exports.isLowSurrogate = isLowSurrogate;
+    /**
+     * Generated using https://github.com/alexandrudima/unicode-utils/blob/master/generate-rtl-test.js
+     */
+    var CONTAINS_RTL = /(?:[\u05BE\u05C0\u05C3\u05C6\u05D0-\u05F4\u0608\u060B\u060D\u061B-\u064A\u066D-\u066F\u0671-\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u0710\u0712-\u072F\u074D-\u07A5\u07B1-\u07EA\u07F4\u07F5\u07FA-\u0815\u081A\u0824\u0828\u0830-\u0858\u085E-\u08BD\u200F\uFB1D\uFB1F-\uFB28\uFB2A-\uFD3D\uFD50-\uFDFC\uFE70-\uFEFC]|\uD802[\uDC00-\uDD1B\uDD20-\uDE00\uDE10-\uDE33\uDE40-\uDEE4\uDEEB-\uDF35\uDF40-\uDFFF]|\uD803[\uDC00-\uDCFF]|\uD83A[\uDC00-\uDCCF\uDD00-\uDD43\uDD50-\uDFFF]|\uD83B[\uDC00-\uDEBB])/;
+    /**
+     * Returns true if `str` contains any Unicode character that is classified as "R" or "AL".
+     */
+    function containsRTL(str) {
+        return CONTAINS_RTL.test(str);
+    }
+    exports.containsRTL = containsRTL;
     function isFullWidthCharacter(charCode) {
         // Do a cheap trick to better support wrapping of wide characters, treat them as 2 columns
         // http://jrgraphix.net/research/unicode_blocks.php
@@ -1542,13 +2186,11 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
     // Escape codes
     // http://en.wikipedia.org/wiki/ANSI_escape_code
     var EL = /\x1B\x5B[12]?K/g; // Erase in line
-    var LF = /\xA/g; // line feed
     var COLOR_START = /\x1b\[\d+m/g; // Color
     var COLOR_END = /\x1b\[0?m/g; // Color
     function removeAnsiEscapeCodes(str) {
         if (str) {
             str = str.replace(EL, '');
-            str = str.replace(LF, '\n');
             str = str.replace(COLOR_START, '');
             str = str.replace(COLOR_END, '');
         }
@@ -1556,10 +2198,9 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
     }
     exports.removeAnsiEscapeCodes = removeAnsiEscapeCodes;
     // -- UTF-8 BOM
-    var __utf8_bom = 65279;
-    exports.UTF8_BOM_CHARACTER = String.fromCharCode(__utf8_bom);
+    exports.UTF8_BOM_CHARACTER = String.fromCharCode(65279 /* UTF8_BOM */);
     function startsWithUTF8BOM(str) {
-        return (str && str.length > 0 && str.charCodeAt(0) === __utf8_bom);
+        return (str && str.length > 0 && str.charCodeAt(0) === 65279 /* UTF8_BOM */);
     }
     exports.startsWithUTF8BOM = startsWithUTF8BOM;
     /**
@@ -1594,7 +2235,7 @@ define(__m[25], __M([0,1,58]), function (require, exports, map_1) {
     exports.repeat = repeat;
 });
 
-define(__m[6], __M([0,1]), function (require, exports) {
+define(__m[3/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1643,6 +2284,9 @@ define(__m[6], __M([0,1]), function (require, exports) {
      *	`null`, an `array`, a `regexp`, nor a `date`.
      */
     function isObject(obj) {
+        // The method can't do a type cast since there are type (like strings) which
+        // are subclasses of any put not positvely matched by the function. Hence type
+        // narrowing results in wrong results.
         return typeof obj === _typeof.object
             && obj !== null
             && !Array.isArray(obj)
@@ -1759,7 +2403,499 @@ define(__m[6], __M([0,1]), function (require, exports) {
     exports.create = create;
 });
 
-define(__m[54], __M([0,1,6,59]), function (require, exports, types_1, collections_1) {
+define(__m[15/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/platform*/,3/*vs/base/common/types*/]), function (require, exports, platform, types) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
+    var ErrorHandler = (function () {
+        function ErrorHandler() {
+            this.listeners = [];
+            this.unexpectedErrorHandler = function (e) {
+                platform.setTimeout(function () {
+                    if (e.stack) {
+                        throw new Error(e.message + '\n\n' + e.stack);
+                    }
+                    throw e;
+                }, 0);
+            };
+        }
+        ErrorHandler.prototype.addListener = function (listener) {
+            var _this = this;
+            this.listeners.push(listener);
+            return function () {
+                _this._removeListener(listener);
+            };
+        };
+        ErrorHandler.prototype.emit = function (e) {
+            this.listeners.forEach(function (listener) {
+                listener(e);
+            });
+        };
+        ErrorHandler.prototype._removeListener = function (listener) {
+            this.listeners.splice(this.listeners.indexOf(listener), 1);
+        };
+        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
+            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
+            return this.unexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.onUnexpectedError = function (e) {
+            this.unexpectedErrorHandler(e);
+            this.emit(e);
+        };
+        return ErrorHandler;
+    }());
+    exports.ErrorHandler = ErrorHandler;
+    exports.errorHandler = new ErrorHandler();
+    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
+        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
+    }
+    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
+    function onUnexpectedError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedError(e);
+        }
+    }
+    exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedPromiseError(promise) {
+        return promise.then(null, onUnexpectedError);
+    }
+    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
+    function transformErrorForSerialization(error) {
+        if (error instanceof Error) {
+            var name_1 = error.name, message = error.message;
+            var stack = error.stacktrace || error.stack;
+            return {
+                $isError: true,
+                name: name_1,
+                message: message,
+                stack: stack
+            };
+        }
+        // return as is
+        return error;
+    }
+    exports.transformErrorForSerialization = transformErrorForSerialization;
+    var canceledName = 'Canceled';
+    /**
+     * Checks if the given error is a promise in canceled state
+     */
+    function isPromiseCanceledError(error) {
+        return error instanceof Error && error.name === canceledName && error.message === canceledName;
+    }
+    exports.isPromiseCanceledError = isPromiseCanceledError;
+    /**
+     * Returns an error that signals cancellation.
+     */
+    function canceled() {
+        var error = new Error(canceledName);
+        error.name = error.message;
+        return error;
+    }
+    exports.canceled = canceled;
+    /**
+     * Returns an error that signals something is not implemented.
+     */
+    function notImplemented() {
+        return new Error('Not Implemented');
+    }
+    exports.notImplemented = notImplemented;
+    function illegalArgument(name) {
+        if (name) {
+            return new Error("Illegal argument: " + name);
+        }
+        else {
+            return new Error('Illegal argument');
+        }
+    }
+    exports.illegalArgument = illegalArgument;
+    function illegalState(name) {
+        if (name) {
+            return new Error("Illegal state: " + name);
+        }
+        else {
+            return new Error('Illegal state');
+        }
+    }
+    exports.illegalState = illegalState;
+    function readonly(name) {
+        return name
+            ? new Error("readonly property '" + name + " cannot be changed'")
+            : new Error('readonly property cannot be changed');
+    }
+    exports.readonly = readonly;
+    function create(message, options) {
+        if (options === void 0) { options = {}; }
+        var result = new Error(message);
+        if (types.isNumber(options.severity)) {
+            result.severity = options.severity;
+        }
+        if (options.actions) {
+            result.actions = options.actions;
+        }
+        return result;
+    }
+    exports.create = create;
+    function getErrorMessage(err) {
+        if (!err) {
+            return 'Error';
+        }
+        if (err.message) {
+            return err.message;
+        }
+        if (err.stack) {
+            return err.stack.split('\n')[0];
+        }
+        return String(err);
+    }
+    exports.getErrorMessage = getErrorMessage;
+});
+
+define(__m[55/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var CallbackList = (function () {
+        function CallbackList() {
+        }
+        CallbackList.prototype.add = function (callback, context, bucket) {
+            var _this = this;
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                this._callbacks = [];
+                this._contexts = [];
+            }
+            this._callbacks.push(callback);
+            this._contexts.push(context);
+            if (Array.isArray(bucket)) {
+                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
+            }
+        };
+        CallbackList.prototype.remove = function (callback, context) {
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                return;
+            }
+            var foundCallbackWithDifferentContext = false;
+            for (var i = 0, len = this._callbacks.length; i < len; i++) {
+                if (this._callbacks[i] === callback) {
+                    if (this._contexts[i] === context) {
+                        // callback & context match => remove it
+                        this._callbacks.splice(i, 1);
+                        this._contexts.splice(i, 1);
+                        return;
+                    }
+                    else {
+                        foundCallbackWithDifferentContext = true;
+                    }
+                }
+            }
+            if (foundCallbackWithDifferentContext) {
+                throw new Error('When adding a listener with a context, you should remove it with the same context');
+            }
+        };
+        CallbackList.prototype.invoke = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            if (!this._callbacks) {
+                return;
+            }
+            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
+            for (var i = 0, len = callbacks.length; i < len; i++) {
+                try {
+                    ret.push(callbacks[i].apply(contexts[i], args));
+                }
+                catch (e) {
+                    errors_1.onUnexpectedError(e);
+                }
+            }
+            return ret;
+        };
+        CallbackList.prototype.isEmpty = function () {
+            return !this._callbacks || this._callbacks.length === 0;
+        };
+        CallbackList.prototype.entries = function () {
+            var _this = this;
+            if (!this._callbacks) {
+                return [];
+            }
+            return this._callbacks.map(function (fn, index) { return [fn, _this._contexts[index]]; });
+        };
+        CallbackList.prototype.dispose = function () {
+            this._callbacks = undefined;
+            this._contexts = undefined;
+        };
+        return CallbackList;
+    }());
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = CallbackList;
+});
+
+
+
+
+
+
+define(__m[67/*vs/base/common/eventEmitter*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/errors*/]), function (require, exports, Errors) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var EmitterEvent = (function () {
+        function EmitterEvent(eventType, data) {
+            if (eventType === void 0) { eventType = null; }
+            if (data === void 0) { data = null; }
+            this._type = eventType;
+            this._data = data;
+        }
+        EmitterEvent.prototype.getType = function () {
+            return this._type;
+        };
+        EmitterEvent.prototype.getData = function () {
+            return this._data;
+        };
+        return EmitterEvent;
+    }());
+    exports.EmitterEvent = EmitterEvent;
+    var EventEmitter = (function () {
+        function EventEmitter(allowedEventTypes) {
+            if (allowedEventTypes === void 0) { allowedEventTypes = null; }
+            this._listeners = {};
+            this._bulkListeners = [];
+            this._collectedEvents = [];
+            this._deferredCnt = 0;
+            if (allowedEventTypes) {
+                this._allowedEventTypes = {};
+                for (var i = 0; i < allowedEventTypes.length; i++) {
+                    this._allowedEventTypes[allowedEventTypes[i]] = true;
+                }
+            }
+            else {
+                this._allowedEventTypes = null;
+            }
+        }
+        EventEmitter.prototype.dispose = function () {
+            this._listeners = {};
+            this._bulkListeners = [];
+            this._collectedEvents = [];
+            this._deferredCnt = 0;
+            this._allowedEventTypes = null;
+        };
+        EventEmitter.prototype.addListener = function (eventType, listener) {
+            if (eventType === '*') {
+                throw new Error('Use addBulkListener(listener) to register your listener!');
+            }
+            if (this._allowedEventTypes && !this._allowedEventTypes.hasOwnProperty(eventType)) {
+                throw new Error('This object will never emit this event type!');
+            }
+            if (this._listeners.hasOwnProperty(eventType)) {
+                this._listeners[eventType].push(listener);
+            }
+            else {
+                this._listeners[eventType] = [listener];
+            }
+            var bound = this;
+            return {
+                dispose: function () {
+                    if (!bound) {
+                        // Already called
+                        return;
+                    }
+                    bound._removeListener(eventType, listener);
+                    // Prevent leakers from holding on to the event emitter
+                    bound = null;
+                    listener = null;
+                }
+            };
+        };
+        EventEmitter.prototype.addListener2 = function (eventType, listener) {
+            return this.addListener(eventType, listener);
+        };
+        EventEmitter.prototype.addOneTimeDisposableListener = function (eventType, listener) {
+            var disposable = this.addListener(eventType, function (value) {
+                disposable.dispose();
+                listener(value);
+            });
+            return disposable;
+        };
+        EventEmitter.prototype.addBulkListener = function (listener) {
+            var _this = this;
+            this._bulkListeners.push(listener);
+            return {
+                dispose: function () {
+                    _this._removeBulkListener(listener);
+                }
+            };
+        };
+        EventEmitter.prototype.addBulkListener2 = function (listener) {
+            return this.addBulkListener(listener);
+        };
+        EventEmitter.prototype.addEmitter = function (eventEmitter) {
+            var _this = this;
+            return eventEmitter.addBulkListener2(function (events) {
+                var newEvents = events;
+                if (_this._deferredCnt === 0) {
+                    _this._emitEvents(newEvents);
+                }
+                else {
+                    // Collect for later
+                    _this._collectedEvents.push.apply(_this._collectedEvents, newEvents);
+                }
+            });
+        };
+        EventEmitter.prototype.addEmitter2 = function (eventEmitter) {
+            return this.addEmitter(eventEmitter);
+        };
+        EventEmitter.prototype._removeListener = function (eventType, listener) {
+            if (this._listeners.hasOwnProperty(eventType)) {
+                var listeners = this._listeners[eventType];
+                for (var i = 0, len = listeners.length; i < len; i++) {
+                    if (listeners[i] === listener) {
+                        listeners.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+        };
+        EventEmitter.prototype._removeBulkListener = function (listener) {
+            for (var i = 0, len = this._bulkListeners.length; i < len; i++) {
+                if (this._bulkListeners[i] === listener) {
+                    this._bulkListeners.splice(i, 1);
+                    break;
+                }
+            }
+        };
+        EventEmitter.prototype._emitToSpecificTypeListeners = function (eventType, data) {
+            if (this._listeners.hasOwnProperty(eventType)) {
+                var listeners = this._listeners[eventType].slice(0);
+                for (var i = 0, len = listeners.length; i < len; i++) {
+                    safeInvoke1Arg(listeners[i], data);
+                }
+            }
+        };
+        EventEmitter.prototype._emitToBulkListeners = function (events) {
+            var bulkListeners = this._bulkListeners.slice(0);
+            for (var i = 0, len = bulkListeners.length; i < len; i++) {
+                safeInvoke1Arg(bulkListeners[i], events);
+            }
+        };
+        EventEmitter.prototype._emitEvents = function (events) {
+            if (this._bulkListeners.length > 0) {
+                this._emitToBulkListeners(events);
+            }
+            for (var i = 0, len = events.length; i < len; i++) {
+                var e = events[i];
+                this._emitToSpecificTypeListeners(e.getType(), e.getData());
+            }
+        };
+        EventEmitter.prototype.emit = function (eventType, data) {
+            if (data === void 0) { data = {}; }
+            if (this._allowedEventTypes && !this._allowedEventTypes.hasOwnProperty(eventType)) {
+                throw new Error('Cannot emit this event type because it wasn\'t white-listed!');
+            }
+            // Early return if no listeners would get this
+            if (!this._listeners.hasOwnProperty(eventType) && this._bulkListeners.length === 0) {
+                return;
+            }
+            var emitterEvent = new EmitterEvent(eventType, data);
+            if (this._deferredCnt === 0) {
+                this._emitEvents([emitterEvent]);
+            }
+            else {
+                // Collect for later
+                this._collectedEvents.push(emitterEvent);
+            }
+        };
+        EventEmitter.prototype.deferredEmit = function (callback) {
+            this._deferredCnt = this._deferredCnt + 1;
+            var result = safeInvokeNoArg(callback);
+            this._deferredCnt = this._deferredCnt - 1;
+            if (this._deferredCnt === 0) {
+                this._emitCollected();
+            }
+            return result;
+        };
+        EventEmitter.prototype._emitCollected = function () {
+            // Flush collected events
+            var events = this._collectedEvents;
+            this._collectedEvents = [];
+            if (events.length > 0) {
+                this._emitEvents(events);
+            }
+        };
+        return EventEmitter;
+    }());
+    exports.EventEmitter = EventEmitter;
+    var EmitQueueElement = (function () {
+        function EmitQueueElement(target, arg) {
+            this.target = target;
+            this.arg = arg;
+        }
+        return EmitQueueElement;
+    }());
+    /**
+     * Same as EventEmitter, but guarantees events are delivered in order to each listener
+     */
+    var OrderGuaranteeEventEmitter = (function (_super) {
+        __extends(OrderGuaranteeEventEmitter, _super);
+        function OrderGuaranteeEventEmitter(allowedEventTypes) {
+            if (allowedEventTypes === void 0) { allowedEventTypes = null; }
+            _super.call(this, allowedEventTypes);
+            this._emitQueue = [];
+        }
+        OrderGuaranteeEventEmitter.prototype._emitToSpecificTypeListeners = function (eventType, data) {
+            if (this._listeners.hasOwnProperty(eventType)) {
+                var listeners = this._listeners[eventType];
+                for (var i = 0, len = listeners.length; i < len; i++) {
+                    this._emitQueue.push(new EmitQueueElement(listeners[i], data));
+                }
+            }
+        };
+        OrderGuaranteeEventEmitter.prototype._emitToBulkListeners = function (events) {
+            var bulkListeners = this._bulkListeners;
+            for (var i = 0, len = bulkListeners.length; i < len; i++) {
+                this._emitQueue.push(new EmitQueueElement(bulkListeners[i], events));
+            }
+        };
+        OrderGuaranteeEventEmitter.prototype._emitEvents = function (events) {
+            _super.prototype._emitEvents.call(this, events);
+            while (this._emitQueue.length > 0) {
+                var queueElement = this._emitQueue.shift();
+                safeInvoke1Arg(queueElement.target, queueElement.arg);
+            }
+        };
+        return OrderGuaranteeEventEmitter;
+    }(EventEmitter));
+    exports.OrderGuaranteeEventEmitter = OrderGuaranteeEventEmitter;
+    function safeInvokeNoArg(func) {
+        try {
+            return func();
+        }
+        catch (e) {
+            Errors.onUnexpectedError(e);
+        }
+    }
+    function safeInvoke1Arg(func, arg1) {
+        try {
+            return func(arg1);
+        }
+        catch (e) {
+            Errors.onUnexpectedError(e);
+        }
+    }
+});
+
+define(__m[69/*vs/base/common/graph*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/,93/*vs/base/common/collections*/]), function (require, exports, types_1, collections_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1848,12 +2984,61 @@ define(__m[54], __M([0,1,6,59]), function (require, exports, types_1, collection
     exports.Graph = Graph;
 });
 
+define(__m[73/*vs/base/common/labels*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/platform*/,3/*vs/base/common/types*/,26/*vs/base/common/strings*/,22/*vs/base/common/paths*/]), function (require, exports, platform, types, strings, paths) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var PathLabelProvider = (function () {
+        function PathLabelProvider(arg1) {
+            this.root = arg1 && getPath(arg1);
+        }
+        PathLabelProvider.prototype.getLabel = function (arg1) {
+            return getPathLabel(getPath(arg1), this.root);
+        };
+        return PathLabelProvider;
+    }());
+    exports.PathLabelProvider = PathLabelProvider;
+    function getPathLabel(resource, basePathProvider) {
+        var absolutePath = getPath(resource);
+        if (!absolutePath) {
+            return null;
+        }
+        var basepath = basePathProvider && getPath(basePathProvider);
+        if (basepath && paths.isEqualOrParent(absolutePath, basepath)) {
+            if (basepath === absolutePath) {
+                return ''; // no label if pathes are identical
+            }
+            return paths.normalize(strings.ltrim(absolutePath.substr(basepath.length), paths.nativeSep), true);
+        }
+        if (platform.isWindows && absolutePath && absolutePath[1] === ':') {
+            return paths.normalize(absolutePath.charAt(0).toUpperCase() + absolutePath.slice(1), true); // convert c:\something => C:\something
+        }
+        return paths.normalize(absolutePath, true);
+    }
+    exports.getPathLabel = getPathLabel;
+    function getPath(arg1) {
+        if (!arg1) {
+            return null;
+        }
+        if (typeof arg1 === 'string') {
+            return arg1;
+        }
+        if (types.isFunction(arg1.getWorkspace)) {
+            var ws = arg1.getWorkspace();
+            return ws ? ws.resource.fsPath : void 0;
+        }
+        return arg1.fsPath;
+    }
+});
 
 
 
 
 
-define(__m[41], __M([0,1,6]), function (require, exports, types_1) {
+
+define(__m[17/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1922,7 +3107,477 @@ define(__m[41], __M([0,1,6]), function (require, exports, types_1) {
     exports.Disposables = Disposables;
 });
 
-define(__m[10], __M([0,1,6]), function (require, exports, Types) {
+define(__m[6/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,17/*vs/base/common/lifecycle*/,55/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var Event;
+    (function (Event) {
+        var _disposable = { dispose: function () { } };
+        Event.None = function () { return _disposable; };
+    })(Event || (Event = {}));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Event;
+    /**
+     * The Emitter can be used to expose an Event to the public
+     * to fire it from the insides.
+     * Sample:
+        class Document {
+    
+            private _onDidChange = new Emitter<(value:string)=>any>();
+    
+            public onDidChange = this._onDidChange.event;
+    
+            // getter-style
+            // get onDidChange(): Event<(value:string)=>any> {
+            // 	return this._onDidChange.event;
+            // }
+    
+            private _doIt() {
+                //...
+                this._onDidChange.fire(value);
+            }
+        }
+     */
+    var Emitter = (function () {
+        function Emitter(_options) {
+            this._options = _options;
+        }
+        Object.defineProperty(Emitter.prototype, "event", {
+            /**
+             * For the public to allow to subscribe
+             * to events from this Emitter
+             */
+            get: function () {
+                var _this = this;
+                if (!this._event) {
+                    this._event = function (listener, thisArgs, disposables) {
+                        if (!_this._callbacks) {
+                            _this._callbacks = new callbackList_1.default();
+                        }
+                        var firstListener = _this._callbacks.isEmpty();
+                        if (firstListener && _this._options && _this._options.onFirstListenerAdd) {
+                            _this._options.onFirstListenerAdd(_this);
+                        }
+                        _this._callbacks.add(listener, thisArgs);
+                        if (firstListener && _this._options && _this._options.onFirstListenerDidAdd) {
+                            _this._options.onFirstListenerDidAdd(_this);
+                        }
+                        var result;
+                        result = {
+                            dispose: function () {
+                                result.dispose = Emitter._noop;
+                                if (!_this._disposed) {
+                                    _this._callbacks.remove(listener, thisArgs);
+                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
+                                        _this._options.onLastListenerRemove(_this);
+                                    }
+                                }
+                            }
+                        };
+                        if (Array.isArray(disposables)) {
+                            disposables.push(result);
+                        }
+                        return result;
+                    };
+                }
+                return this._event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * To be kept private to fire an event to
+         * subscribers
+         */
+        Emitter.prototype.fire = function (event) {
+            if (this._callbacks) {
+                this._callbacks.invoke.call(this._callbacks, event);
+            }
+        };
+        Emitter.prototype.dispose = function () {
+            if (this._callbacks) {
+                this._callbacks.dispose();
+                this._callbacks = undefined;
+                this._disposed = true;
+            }
+        };
+        Emitter._noop = function () { };
+        return Emitter;
+    }());
+    exports.Emitter = Emitter;
+    /**
+     * Creates an Event which is backed-up by the event emitter. This allows
+     * to use the existing eventing pattern and is likely using less memory.
+     * Sample:
+     *
+     * 	class Document {
+     *
+     *		private _eventbus = new EventEmitter();
+     *
+     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
+     *
+     *		// getter-style
+     *		// get onDidChange(): Event<(value:string)=>any> {
+     *		// 	cache fromEventEmitter result and return
+     *		// }
+     *
+     *		private _doIt() {
+     *			// ...
+     *			this._eventbus.emit('changed', value)
+     *		}
+     *	}
+     */
+    function fromEventEmitter(emitter, eventType) {
+        return function (listener, thisArgs, disposables) {
+            var result = emitter.addListener2(eventType, function () {
+                listener.apply(thisArgs, arguments);
+            });
+            if (Array.isArray(disposables)) {
+                disposables.push(result);
+            }
+            return result;
+        };
+    }
+    exports.fromEventEmitter = fromEventEmitter;
+    function fromPromise(promise) {
+        var emitter = new Emitter();
+        var shouldEmit = false;
+        promise
+            .then(null, function () { return null; })
+            .then(function () {
+            if (!shouldEmit) {
+                setTimeout(function () { return emitter.fire(); }, 0);
+            }
+            else {
+                emitter.fire();
+            }
+        });
+        shouldEmit = true;
+        return emitter.event;
+    }
+    exports.fromPromise = fromPromise;
+    function delayed(promise) {
+        var toCancel = null;
+        var listener = null;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
+            },
+            onLastListenerRemove: function () {
+                if (toCancel) {
+                    toCancel.cancel();
+                    toCancel = null;
+                }
+                if (listener) {
+                    listener.dispose();
+                    listener = null;
+                }
+            }
+        });
+        return emitter.event;
+    }
+    exports.delayed = delayed;
+    function once(event) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            var result = event(function (e) {
+                result.dispose();
+                return listener.call(thisArgs, e);
+            }, null, disposables);
+            return result;
+        };
+    }
+    exports.once = once;
+    function any() {
+        var events = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            events[_i - 0] = arguments[_i];
+        }
+        var listeners = [];
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                listeners = events.map(function (e) { return e(function (r) { return emitter.fire(r); }); });
+            },
+            onLastListenerRemove: function () {
+                listeners = lifecycle_1.dispose(listeners);
+            }
+        });
+        return emitter.event;
+    }
+    exports.any = any;
+    function debounceEvent(event, merger, delay) {
+        if (delay === void 0) { delay = 100; }
+        var subscription;
+        var output;
+        var handle;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                subscription = event(function (cur) {
+                    output = merger(output, cur);
+                    clearTimeout(handle);
+                    handle = setTimeout(function () {
+                        var _output = output;
+                        output = undefined;
+                        emitter.fire(_output);
+                    }, delay);
+                });
+            },
+            onLastListenerRemove: function () {
+                subscription.dispose();
+            }
+        });
+        return emitter.event;
+    }
+    exports.debounceEvent = debounceEvent;
+    /**
+     * The EventDelayer is useful in situations in which you want
+     * to delay firing your events during some code.
+     * You can wrap that code and be sure that the event will not
+     * be fired during that wrap.
+     *
+     * ```
+     * const emitter: Emitter;
+     * const delayer = new EventDelayer();
+     * const delayedEvent = delayer.wrapEvent(emitter.event);
+     *
+     * delayedEvent(console.log);
+     *
+     * delayer.bufferEvents(() => {
+     *   emitter.fire(); // event will not be fired yet
+     * });
+     *
+     * // event will only be fired at this point
+     * ```
+     */
+    var EventBufferer = (function () {
+        function EventBufferer() {
+            this.buffers = [];
+        }
+        EventBufferer.prototype.wrapEvent = function (event) {
+            var _this = this;
+            return function (listener, thisArgs, disposables) {
+                return event(function (i) {
+                    var buffer = _this.buffers[_this.buffers.length - 1];
+                    if (buffer) {
+                        buffer.push(function () { return listener.call(thisArgs, i); });
+                    }
+                    else {
+                        listener.call(thisArgs, i);
+                    }
+                }, void 0, disposables);
+            };
+        };
+        EventBufferer.prototype.bufferEvents = function (fn) {
+            var buffer = [];
+            this.buffers.push(buffer);
+            fn();
+            this.buffers.pop();
+            buffer.forEach(function (flush) { return flush(); });
+        };
+        return EventBufferer;
+    }());
+    exports.EventBufferer = EventBufferer;
+    function mapEvent(event, map) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
+        };
+    }
+    exports.mapEvent = mapEvent;
+    function filterEvent(event, filter) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
+        };
+    }
+    exports.filterEvent = filterEvent;
+    var ChainableEvent = (function () {
+        function ChainableEvent(_event) {
+            this._event = _event;
+        }
+        Object.defineProperty(ChainableEvent.prototype, "event", {
+            get: function () { return this._event; },
+            enumerable: true,
+            configurable: true
+        });
+        ChainableEvent.prototype.map = function (fn) {
+            return new ChainableEvent(mapEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.filter = function (fn) {
+            return new ChainableEvent(filterEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.on = function (listener, thisArgs, disposables) {
+            return this._event(listener, thisArgs, disposables);
+        };
+        return ChainableEvent;
+    }());
+    function chain(event) {
+        return new ChainableEvent(event);
+    }
+    exports.chain = chain;
+    function stopwatch(event) {
+        var start = new Date().getTime();
+        return mapEvent(once(event), function (_) { return new Date().getTime() - start; });
+    }
+    exports.stopwatch = stopwatch;
+    /**
+     * Buffers the provided event until a first listener comes
+     * along, at which point fire all the events at once and
+     * pipe the event from then on.
+     *
+     * ```typescript
+     * const emitter = new Emitter<number>();
+     * const event = emitter.event;
+     * const bufferedEvent = buffer(event);
+     *
+     * emitter.fire(1);
+     * emitter.fire(2);
+     * emitter.fire(3);
+     * // nothing...
+     *
+     * const listener = bufferedEvent(num => console.log(num));
+     * // 1, 2, 3
+     *
+     * emitter.fire(4);
+     * // 4
+     * ```
+     */
+    function buffer(event, nextTick, buffer) {
+        if (nextTick === void 0) { nextTick = false; }
+        if (buffer === void 0) { buffer = []; }
+        buffer = buffer.slice();
+        var listener = event(function (e) {
+            if (buffer) {
+                buffer.push(e);
+            }
+            else {
+                emitter.fire(e);
+            }
+        });
+        var flush = function () {
+            buffer.forEach(function (e) { return emitter.fire(e); });
+            buffer = null;
+        };
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                if (!listener) {
+                    listener = event(function (e) { return emitter.fire(e); });
+                }
+            },
+            onFirstListenerDidAdd: function () {
+                if (buffer) {
+                    if (nextTick) {
+                        setTimeout(flush);
+                    }
+                    else {
+                        flush();
+                    }
+                }
+            },
+            onLastListenerRemove: function () {
+                listener.dispose();
+                listener = null;
+            }
+        });
+        return emitter.event;
+    }
+    exports.buffer = buffer;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[87/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
+    'use strict';
+    var shortcutEvent = Object.freeze(function (callback, context) {
+        var handle = setTimeout(callback.bind(context), 0);
+        return { dispose: function () { clearTimeout(handle); } };
+    });
+    var CancellationToken;
+    (function (CancellationToken) {
+        CancellationToken.None = Object.freeze({
+            isCancellationRequested: false,
+            onCancellationRequested: event_1.default.None
+        });
+        CancellationToken.Cancelled = Object.freeze({
+            isCancellationRequested: true,
+            onCancellationRequested: shortcutEvent
+        });
+    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
+    var MutableToken = (function () {
+        function MutableToken() {
+            this._isCancelled = false;
+        }
+        MutableToken.prototype.cancel = function () {
+            if (!this._isCancelled) {
+                this._isCancelled = true;
+                if (this._emitter) {
+                    this._emitter.fire(undefined);
+                    this._emitter = undefined;
+                }
+            }
+        };
+        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
+            get: function () {
+                return this._isCancelled;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
+            get: function () {
+                if (this._isCancelled) {
+                    return shortcutEvent;
+                }
+                if (!this._emitter) {
+                    this._emitter = new event_1.Emitter();
+                }
+                return this._emitter.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return MutableToken;
+    }());
+    var CancellationTokenSource = (function () {
+        function CancellationTokenSource() {
+        }
+        Object.defineProperty(CancellationTokenSource.prototype, "token", {
+            get: function () {
+                if (!this._token) {
+                    // be lazy and create the token only when
+                    // actually needed
+                    this._token = new MutableToken();
+                }
+                return this._token;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CancellationTokenSource.prototype.cancel = function () {
+            if (!this._token) {
+                // save an object by returning the default
+                // cancelled token when cancellation happens
+                // before someone asks for the token
+                this._token = CancellationToken.Cancelled;
+            }
+            else {
+                this._token.cancel();
+            }
+        };
+        CancellationTokenSource.prototype.dispose = function () {
+            this.cancel();
+        };
+        return CancellationTokenSource;
+    }());
+    exports.CancellationTokenSource = CancellationTokenSource;
+});
+
+define(__m[10/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/]), function (require, exports, Types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1933,6 +3588,7 @@ define(__m[10], __M([0,1,6]), function (require, exports, Types) {
             return obj;
         }
         if (obj instanceof RegExp) {
+            // See https://github.com/Microsoft/TypeScript/issues/10990
             return obj;
         }
         var result = (Array.isArray(obj)) ? [] : {};
@@ -2213,7 +3869,7 @@ define(__m[10], __M([0,1,6]), function (require, exports, Types) {
     exports.getOrDefault = getOrDefault;
 });
 
-define(__m[19], __M([0,1,3]), function (require, exports, platform) {
+define(__m[16/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/platform*/]), function (require, exports, platform) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2255,6 +3911,19 @@ define(__m[19], __M([0,1,3]), function (require, exports, platform) {
             this._formatted = null;
             this._fsPath = null;
         }
+        URI.isUri = function (thing) {
+            if (thing instanceof URI) {
+                return true;
+            }
+            if (!thing) {
+                return false;
+            }
+            return typeof thing.authority === 'string'
+                && typeof thing.fragment === 'string'
+                && typeof thing.path === 'string'
+                && typeof thing.query === 'string'
+                && typeof thing.scheme === 'string';
+        };
         Object.defineProperty(URI.prototype, "scheme", {
             /**
              * scheme is the 'http' part of 'http://www.msft.com/some/path?query#fragment'.
@@ -2318,7 +3987,7 @@ define(__m[19], __M([0,1,3]), function (require, exports, platform) {
             get: function () {
                 if (!this._fsPath) {
                     var value;
-                    if (this._authority && this.scheme === 'file') {
+                    if (this._authority && this._path && this.scheme === 'file') {
                         // unc path: file://shares/c$/far/boo
                         value = "//" + this._authority + this._path;
                     }
@@ -2595,7 +4264,7 @@ define(__m[19], __M([0,1,3]), function (require, exports, platform) {
 
 
 
-define(__m[32], __M([0,1]), function (require, exports) {
+define(__m[44/*vs/base/common/uuid*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2657,8 +4326,7 @@ define(__m[32], __M([0,1]), function (require, exports) {
             ].join(''));
         }
         V4UUID._oneOf = function (array) {
-            var idx = Math.floor(array.length * Math.random());
-            return array[idx];
+            return array[Math.floor(array.length * Math.random())];
         };
         V4UUID._randomHex = function () {
             return V4UUID._oneOf(V4UUID._chars);
@@ -2675,13 +4343,17 @@ define(__m[32], __M([0,1]), function (require, exports) {
         return new V4UUID();
     }
     exports.v4 = v4;
-    var _UUIDPattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+    var _UUIDPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    function isUUID(value) {
+        return _UUIDPattern.test(value);
+    }
+    exports.isUUID = isUUID;
     /**
      * Parses a UUID that is of the format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
      * @param value A uuid string.
      */
     function parse(value) {
-        if (!_UUIDPattern.test(value)) {
+        if (!isUUID(value)) {
             throw new Error('invalid uuid');
         }
         return new ValueUUID(value);
@@ -4768,1263 +6440,8 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[53], __M([0,1,80]), function (require, exports, assert) {
-    'use strict';
-    /**
-     * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
-     * array to the callback (callback). The resulting errors and results are evaluated by calling the provided callback function.
-     */
-    function parallel(list, fn, callback) {
-        var results = new Array(list.length);
-        var errors = new Array(list.length);
-        var didErrorOccur = false;
-        var doneCount = 0;
-        if (list.length === 0) {
-            return callback(null, []);
-        }
-        list.forEach(function (item, index) {
-            fn(item, function (error, result) {
-                if (error) {
-                    didErrorOccur = true;
-                    results[index] = null;
-                    errors[index] = error;
-                }
-                else {
-                    results[index] = result;
-                    errors[index] = null;
-                }
-                if (++doneCount === list.length) {
-                    return callback(didErrorOccur ? errors : null, results);
-                }
-            });
-        });
-    }
-    exports.parallel = parallel;
-    function loop(param, fn, callback) {
-        // Assert
-        assert.ok(param, 'Missing first parameter');
-        assert.ok(typeof (fn) === 'function', 'Second parameter must be a function that is called for each element');
-        assert.ok(typeof (callback) === 'function', 'Third parameter must be a function that is called on error and success');
-        // Param is function, execute to retrieve array
-        if (typeof (param) === 'function') {
-            try {
-                param(function (error, result) {
-                    if (error) {
-                        callback(error, null);
-                    }
-                    else {
-                        loop(result, fn, callback);
-                    }
-                });
-            }
-            catch (error) {
-                callback(error, null);
-            }
-        }
-        else {
-            var results_1 = [];
-            var looper_1 = function (i) {
-                // Still work to do
-                if (i < param.length) {
-                    // Execute function on array element
-                    try {
-                        fn(param[i], function (error, result) {
-                            // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
-                            if (error === true || error === false) {
-                                result = error;
-                                error = null;
-                            }
-                            // Quit looping on error
-                            if (error) {
-                                callback(error, null);
-                            }
-                            else {
-                                if (result) {
-                                    results_1.push(result);
-                                }
-                                process.nextTick(function () {
-                                    looper_1(i + 1);
-                                });
-                            }
-                        }, i, param.length);
-                    }
-                    catch (error) {
-                        callback(error, null);
-                    }
-                }
-                else {
-                    callback(null, results_1);
-                }
-            };
-            // Start looping with first element in array
-            looper_1(0);
-        }
-    }
-    exports.loop = loop;
-    function Sequence(sequences) {
-        // Assert
-        assert.ok(sequences.length > 1, 'Need at least one error handler and one function to process sequence');
-        sequences.forEach(function (sequence) {
-            assert.ok(typeof (sequence) === 'function');
-        });
-        // Execute in Loop
-        var errorHandler = sequences.splice(0, 1)[0]; //Remove error handler
-        var sequenceResult = null;
-        loop(sequences, function (sequence, clb) {
-            var sequenceFunction = function (error, result) {
-                // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
-                if (error === true || error === false) {
-                    result = error;
-                    error = null;
-                }
-                // Handle Error and Result
-                if (error) {
-                    clb(error, null);
-                }
-                else {
-                    sequenceResult = result; //Remember result of sequence
-                    clb(null, null); //Don't pass on result to Looper as we are not aggregating it
-                }
-            };
-            // We call the sequence function setting "this" to be the callback we define here
-            // and we pass in the "sequenceResult" as first argument. Doing all this avoids having
-            // to pass in a callback to the sequence because the callback is already "this".
-            try {
-                sequence.call(sequenceFunction, sequenceResult);
-            }
-            catch (error) {
-                clb(error, null);
-            }
-        }, function (error, result) {
-            if (error) {
-                errorHandler(error);
-            }
-        });
-    }
-    function sequence(sequences) {
-        Sequence((Array.isArray(sequences)) ? sequences : Array.prototype.slice.call(arguments));
-    }
-    exports.sequence = sequence;
-});
 
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[38], __M([0,1,32,25,3,53,20,7]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
-    'use strict';
-    var loop = flow.loop;
-    function readdir(path, callback) {
-        // Mac: uses NFD unicode form on disk, but we want NFC
-        // See also https://github.com/nodejs/node/issues/2165
-        if (platform.isMacintosh) {
-            return readdirNormalize(path, function (error, children) {
-                if (error) {
-                    return callback(error, null);
-                }
-                return callback(null, children.map(function (c) { return strings.normalizeNFC(c); }));
-            });
-        }
-        return readdirNormalize(path, callback);
-    }
-    exports.readdir = readdir;
-    function readdirNormalize(path, callback) {
-        fs.readdir(path, function (error, children) {
-            if (error) {
-                return callback(error, null);
-            }
-            // Bug in node: In some environments we get "." and ".." as entries from the call to readdir().
-            // For example Sharepoint via WebDav on Windows includes them. We never want those
-            // entries in the result set though because they are not valid children of the folder
-            // for our concerns.
-            // See https://github.com/nodejs/node/issues/4002
-            return callback(null, children.filter(function (c) { return c !== '.' && c !== '..'; }));
-        });
-    }
-    function mkdirp(path, mode, callback) {
-        fs.exists(path, function (exists) {
-            if (exists) {
-                return isDirectory(path, function (err, itIs) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    if (!itIs) {
-                        return callback(new Error('"' + path + '" is not a directory.'));
-                    }
-                    callback(null);
-                });
-            }
-            mkdirp(paths.dirname(path), mode, function (err) {
-                if (err) {
-                    callback(err);
-                    return;
-                }
-                if (mode) {
-                    fs.mkdir(path, mode, function (error) {
-                        if (error) {
-                            return callback(error);
-                        }
-                        fs.chmod(path, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
-                    });
-                }
-                else {
-                    fs.mkdir(path, null, callback);
-                }
-            });
-        });
-    }
-    exports.mkdirp = mkdirp;
-    function isDirectory(path, callback) {
-        fs.stat(path, function (error, stat) {
-            if (error) {
-                return callback(error);
-            }
-            callback(null, stat.isDirectory());
-        });
-    }
-    function copy(source, target, callback, copiedSources) {
-        if (!copiedSources) {
-            copiedSources = Object.create(null);
-        }
-        fs.stat(source, function (error, stat) {
-            if (error) {
-                return callback(error);
-            }
-            if (!stat.isDirectory()) {
-                return pipeFs(source, target, stat.mode & 511, callback);
-            }
-            if (copiedSources[source]) {
-                return callback(null); // escape when there are cycles (can happen with symlinks)
-            }
-            else {
-                copiedSources[source] = true; // remember as copied
-            }
-            mkdirp(target, stat.mode & 511, function (err) {
-                readdir(source, function (err, files) {
-                    loop(files, function (file, clb) {
-                        copy(paths.join(source, file), paths.join(target, file), clb, copiedSources);
-                    }, callback);
-                });
-            });
-        });
-    }
-    exports.copy = copy;
-    function pipeFs(source, target, mode, callback) {
-        var callbackHandled = false;
-        var readStream = fs.createReadStream(source);
-        var writeStream = fs.createWriteStream(target, { mode: mode });
-        var onError = function (error) {
-            if (!callbackHandled) {
-                callbackHandled = true;
-                callback(error);
-            }
-        };
-        readStream.on('error', onError);
-        writeStream.on('error', onError);
-        readStream.on('end', function () {
-            writeStream.end(function () {
-                if (!callbackHandled) {
-                    callbackHandled = true;
-                    fs.chmod(target, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
-                }
-            });
-        });
-        // In node 0.8 there is no easy way to find out when the pipe operation has finished. As such, we use the end property = false
-        // so that we are in charge of calling end() on the write stream and we will be notified when the write stream is really done.
-        // We can do this because file streams have an end() method that allows to pass in a callback.
-        // In node 0.10 there is an event 'finish' emitted from the write stream that can be used. See
-        // https://groups.google.com/forum/?fromgroups=#!topic/nodejs/YWQ1sRoXOdI
-        readStream.pipe(writeStream, { end: false });
-    }
-    // Deletes the given path by first moving it out of the workspace. This has two benefits. For one, the operation can return fast because
-    // after the rename, the contents are out of the workspace although not yet deleted. The greater benefit however is that this operation
-    // will fail in case any file is used by another process. fs.unlink() in node will not bail if a file unlinked is used by another process.
-    // However, the consequences are bad as outlined in all the related bugs from https://github.com/joyent/node/issues/7164
-    function del(path, tmpFolder, callback, done) {
-        fs.exists(path, function (exists) {
-            if (!exists) {
-                return callback(null);
-            }
-            fs.stat(path, function (err, stat) {
-                if (err || !stat) {
-                    return callback(err);
-                }
-                // Special windows workaround: A file or folder that ends with a "." cannot be moved to another place
-                // because it is not a valid file name. In this case, we really have to do the deletion without prior move.
-                if (path[path.length - 1] === '.' || strings.endsWith(path, './') || strings.endsWith(path, '.\\')) {
-                    return rmRecursive(path, callback);
-                }
-                var pathInTemp = paths.join(tmpFolder, uuid.generateUuid());
-                fs.rename(path, pathInTemp, function (error) {
-                    if (error) {
-                        return rmRecursive(path, callback); // if rename fails, delete without tmp dir
-                    }
-                    // Return early since the move succeeded
-                    callback(null);
-                    // do the heavy deletion outside the callers callback
-                    rmRecursive(pathInTemp, function (error) {
-                        if (error) {
-                            console.error(error);
-                        }
-                        if (done) {
-                            done(error);
-                        }
-                    });
-                });
-            });
-        });
-    }
-    exports.del = del;
-    function rmRecursive(path, callback) {
-        if (path === '\\' || path === '/') {
-            return callback(new Error('Will not delete root!'));
-        }
-        fs.exists(path, function (exists) {
-            if (!exists) {
-                callback(null);
-            }
-            else {
-                fs.lstat(path, function (err, stat) {
-                    if (err || !stat) {
-                        callback(err);
-                    }
-                    else if (!stat.isDirectory() || stat.isSymbolicLink() /* !!! never recurse into links when deleting !!! */) {
-                        var mode = stat.mode;
-                        if (!(mode & 128)) {
-                            fs.chmod(path, mode | 128, function (err) {
-                                if (err) {
-                                    callback(err);
-                                }
-                                else {
-                                    fs.unlink(path, callback);
-                                }
-                            });
-                        }
-                        else {
-                            fs.unlink(path, callback);
-                        }
-                    }
-                    else {
-                        readdir(path, function (err, children) {
-                            if (err || !children) {
-                                callback(err);
-                            }
-                            else if (children.length === 0) {
-                                fs.rmdir(path, callback);
-                            }
-                            else {
-                                var firstError_1 = null;
-                                var childrenLeft_1 = children.length;
-                                children.forEach(function (child) {
-                                    rmRecursive(paths.join(path, child), function (err) {
-                                        childrenLeft_1--;
-                                        if (err) {
-                                            firstError_1 = firstError_1 || err;
-                                        }
-                                        if (childrenLeft_1 === 0) {
-                                            if (firstError_1) {
-                                                callback(firstError_1);
-                                            }
-                                            else {
-                                                fs.rmdir(path, callback);
-                                            }
-                                        }
-                                    });
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-    function mv(source, target, callback) {
-        if (source === target) {
-            return callback(null);
-        }
-        function updateMtime(err) {
-            if (err) {
-                return callback(err);
-            }
-            fs.stat(target, function (error, stat) {
-                if (error) {
-                    return callback(error);
-                }
-                if (stat.isDirectory()) {
-                    return callback(null);
-                }
-                fs.open(target, 'a', null, function (err, fd) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    fs.futimes(fd, stat.atime, new Date(), function (err) {
-                        if (err) {
-                            return callback(err);
-                        }
-                        fs.close(fd, callback);
-                    });
-                });
-            });
-        }
-        // Try native rename()
-        fs.rename(source, target, function (err) {
-            if (!err) {
-                return updateMtime(null);
-            }
-            // In two cases we fallback to classic copy and delete:
-            //
-            // 1.) The EXDEV error indicates that source and target are on different devices
-            // In this case, fallback to using a copy() operation as there is no way to
-            // rename() between different devices.
-            //
-            // 2.) The user tries to rename a file/folder that ends with a dot. This is not
-            // really possible to move then, at least on UNC devices.
-            if (err && source.toLowerCase() !== target.toLowerCase() && (err.code === 'EXDEV') || strings.endsWith(source, '.')) {
-                return copy(source, target, function (err) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    rmRecursive(source, updateMtime);
-                });
-            }
-            return callback(err);
-        });
-    }
-    exports.mv = mv;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[40], __M([0,1,45,6,77,78]), function (require, exports, url_1, types_1, HttpProxyAgent, HttpsProxyAgent) {
-    'use strict';
-    function getSystemProxyURI(requestURL) {
-        if (requestURL.protocol === 'http:') {
-            return process.env.HTTP_PROXY || process.env.http_proxy || null;
-        }
-        else if (requestURL.protocol === 'https:') {
-            return process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy || null;
-        }
-        return null;
-    }
-    function getProxyAgent(rawRequestURL, options) {
-        if (options === void 0) { options = {}; }
-        var requestURL = url_1.parse(rawRequestURL);
-        var proxyURL = options.proxyUrl || getSystemProxyURI(requestURL);
-        if (!proxyURL) {
-            return null;
-        }
-        var proxyEndpoint = url_1.parse(proxyURL);
-        if (!/^https?:$/.test(proxyEndpoint.protocol)) {
-            return null;
-        }
-        var opts = {
-            host: proxyEndpoint.hostname,
-            port: Number(proxyEndpoint.port),
-            auth: proxyEndpoint.auth,
-            rejectUnauthorized: types_1.isBoolean(options.strictSSL) ? options.strictSSL : true
-        };
-        return requestURL.protocol === 'http:' ? new HttpProxyAgent(opts) : new HttpsProxyAgent(opts);
-    }
-    exports.getProxyAgent = getProxyAgent;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[48], __M([0,1,30,19,10]), function (require, exports, cp, uri_1, objects_1) {
-    "use strict";
-    var boostrapPath = uri_1.default.parse(require.toUrl('bootstrap')).fsPath;
-    function _spawnSharedProcess(options) {
-        var execArgv = [];
-        var env = objects_1.assign({}, process.env, {
-            AMD_ENTRYPOINT: 'vs/code/node/sharedProcessMain'
-        });
-        if (options.allowOutput) {
-            env['VSCODE_ALLOW_IO'] = 'true';
-        }
-        if (options.debugPort) {
-            execArgv.push("--debug=" + options.debugPort);
-        }
-        var result = cp.fork(boostrapPath, ['--type=SharedProcess'], { env: env, execArgv: execArgv });
-        // handshake
-        result.once('message', function () { return result.send('hey'); });
-        return result;
-    }
-    function spawnSharedProcess(options) {
-        if (options === void 0) { options = {}; }
-        var spawnCount = 0;
-        var child;
-        var spawn = function () {
-            if (++spawnCount > 10) {
-                return;
-            }
-            child = _spawnSharedProcess(options);
-            child.on('exit', spawn);
-        };
-        spawn();
-        return {
-            dispose: function () {
-                if (child) {
-                    child.removeListener('exit', spawn);
-                    child.kill();
-                    child = null;
-                }
-            }
-        };
-    }
-    exports.spawnSharedProcess = spawnSharedProcess;
-});
-
-define(__m[57], __M([11,9]), function(nls, data) { return nls.create("vs/base/common/errors", data); });
-define(__m[14], __M([0,1,57,10,3,6,16,25]), function (require, exports, nls, objects, platform, types, arrays, strings) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
-    var ErrorHandler = (function () {
-        function ErrorHandler() {
-            this.listeners = [];
-            this.unexpectedErrorHandler = function (e) {
-                platform.setTimeout(function () {
-                    if (e.stack) {
-                        throw new Error(e.message + '\n\n' + e.stack);
-                    }
-                    throw e;
-                }, 0);
-            };
-        }
-        ErrorHandler.prototype.addListener = function (listener) {
-            var _this = this;
-            this.listeners.push(listener);
-            return function () {
-                _this._removeListener(listener);
-            };
-        };
-        ErrorHandler.prototype.emit = function (e) {
-            this.listeners.forEach(function (listener) {
-                listener(e);
-            });
-        };
-        ErrorHandler.prototype._removeListener = function (listener) {
-            this.listeners.splice(this.listeners.indexOf(listener), 1);
-        };
-        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
-            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
-            return this.unexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.onUnexpectedError = function (e) {
-            this.unexpectedErrorHandler(e);
-            this.emit(e);
-        };
-        return ErrorHandler;
-    }());
-    exports.ErrorHandler = ErrorHandler;
-    exports.errorHandler = new ErrorHandler();
-    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
-        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
-    }
-    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
-    function onUnexpectedError(e) {
-        // ignore errors from cancelled promises
-        if (!isPromiseCanceledError(e)) {
-            exports.errorHandler.onUnexpectedError(e);
-        }
-    }
-    exports.onUnexpectedError = onUnexpectedError;
-    function onUnexpectedPromiseError(promise) {
-        return promise.then(null, onUnexpectedError);
-    }
-    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
-    function transformErrorForSerialization(error) {
-        if (error instanceof Error) {
-            var name_1 = error.name, message = error.message;
-            var stack = error.stacktrace || error.stack;
-            return {
-                $isError: true,
-                name: name_1,
-                message: message,
-                stack: stack
-            };
-        }
-        // return as is
-        return error;
-    }
-    exports.transformErrorForSerialization = transformErrorForSerialization;
-    /**
-     * The base class for all connection errors originating from XHR requests.
-     */
-    var ConnectionError = (function () {
-        function ConnectionError(arg) {
-            this.status = arg.status;
-            this.statusText = arg.statusText;
-            this.name = 'ConnectionError';
-            try {
-                this.responseText = arg.responseText;
-            }
-            catch (e) {
-                this.responseText = '';
-            }
-            this.errorMessage = null;
-            this.errorCode = null;
-            this.errorObject = null;
-            if (this.responseText) {
-                try {
-                    var errorObj = JSON.parse(this.responseText);
-                    this.errorMessage = errorObj.message;
-                    this.errorCode = errorObj.code;
-                    this.errorObject = errorObj;
-                }
-                catch (error) {
-                }
-            }
-        }
-        Object.defineProperty(ConnectionError.prototype, "message", {
-            get: function () {
-                return this.connectionErrorToMessage(this, false);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ConnectionError.prototype, "verboseMessage", {
-            get: function () {
-                return this.connectionErrorToMessage(this, true);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ConnectionError.prototype.connectionErrorDetailsToMessage = function (error, verbose) {
-            var errorCode = error.errorCode;
-            var errorMessage = error.errorMessage;
-            if (errorCode !== null && errorMessage !== null) {
-                return nls.localize(0, null, strings.rtrim(errorMessage, '.'), errorCode);
-
-
-
-
-
-
-            }
-            if (errorMessage !== null) {
-                return errorMessage;
-            }
-            if (verbose && error.responseText !== null) {
-                return error.responseText;
-            }
-            return null;
-        };
-        ConnectionError.prototype.connectionErrorToMessage = function (error, verbose) {
-            var details = this.connectionErrorDetailsToMessage(error, verbose);
-            // Status Code based Error
-            if (error.status === 401) {
-                if (details !== null) {
-                    return nls.localize(1, null, details);
-
-
-
-
-
-                }
-                return nls.localize(2, null);
-            }
-            // Return error details if present
-            if (details) {
-                return details;
-            }
-            // Fallback to HTTP Status and Code
-            if (error.status > 0 && error.statusText !== null) {
-                if (verbose && error.responseText !== null && error.responseText.length > 0) {
-                    return nls.localize(3, null, error.statusText, error.status, error.responseText);
-                }
-                return nls.localize(4, null, error.statusText, error.status);
-            }
-            // Finally its an Unknown Connection Error
-            if (verbose && error.responseText !== null && error.responseText.length > 0) {
-                return nls.localize(5, null, error.responseText);
-            }
-            return nls.localize(6, null);
-        };
-        return ConnectionError;
-    }());
-    exports.ConnectionError = ConnectionError;
-    // Bug: Can not subclass a JS Type. Do it manually (as done in WinJS.Class.derive)
-    objects.derive(Error, ConnectionError);
-    function xhrToErrorMessage(xhr, verbose) {
-        var ce = new ConnectionError(xhr);
-        if (verbose) {
-            return ce.verboseMessage;
-        }
-        else {
-            return ce.message;
-        }
-    }
-    function exceptionToErrorMessage(exception, verbose) {
-        if (exception.message) {
-            if (verbose && (exception.stack || exception.stacktrace)) {
-                return nls.localize(7, null, detectSystemErrorMessage(exception), exception.stack || exception.stacktrace);
-            }
-            return detectSystemErrorMessage(exception);
-        }
-        return nls.localize(8, null);
-    }
-    function detectSystemErrorMessage(exception) {
-        // See https://nodejs.org/api/errors.html#errors_class_system_error
-        if (typeof exception.code === 'string' && typeof exception.errno === 'number' && typeof exception.syscall === 'string') {
-            return nls.localize(9, null, exception.message);
-        }
-        return exception.message;
-    }
-    /**
-     * Tries to generate a human readable error message out of the error. If the verbose parameter
-     * is set to true, the error message will include stacktrace details if provided.
-     * @returns A string containing the error message.
-     */
-    function toErrorMessage(error, verbose) {
-        if (error === void 0) { error = null; }
-        if (verbose === void 0) { verbose = false; }
-        if (!error) {
-            return nls.localize(10, null);
-        }
-        if (Array.isArray(error)) {
-            var errors = arrays.coalesce(error);
-            var msg = toErrorMessage(errors[0], verbose);
-            if (errors.length > 1) {
-                return nls.localize(11, null, msg, errors.length);
-            }
-            return msg;
-        }
-        if (types.isString(error)) {
-            return error;
-        }
-        if (!types.isUndefinedOrNull(error.status)) {
-            return xhrToErrorMessage(error, verbose);
-        }
-        if (error.detail) {
-            var detail = error.detail;
-            if (detail.error) {
-                if (detail.error && !types.isUndefinedOrNull(detail.error.status)) {
-                    return xhrToErrorMessage(detail.error, verbose);
-                }
-                if (types.isArray(detail.error)) {
-                    for (var i = 0; i < detail.error.length; i++) {
-                        if (detail.error[i] && !types.isUndefinedOrNull(detail.error[i].status)) {
-                            return xhrToErrorMessage(detail.error[i], verbose);
-                        }
-                    }
-                }
-                else {
-                    return exceptionToErrorMessage(detail.error, verbose);
-                }
-            }
-            if (detail.exception) {
-                if (!types.isUndefinedOrNull(detail.exception.status)) {
-                    return xhrToErrorMessage(detail.exception, verbose);
-                }
-                return exceptionToErrorMessage(detail.exception, verbose);
-            }
-        }
-        if (error.stack) {
-            return exceptionToErrorMessage(error, verbose);
-        }
-        if (error.message) {
-            return error.message;
-        }
-        return nls.localize(12, null);
-    }
-    exports.toErrorMessage = toErrorMessage;
-    var canceledName = 'Canceled';
-    /**
-     * Checks if the given error is a promise in canceled state
-     */
-    function isPromiseCanceledError(error) {
-        return error instanceof Error && error.name === canceledName && error.message === canceledName;
-    }
-    exports.isPromiseCanceledError = isPromiseCanceledError;
-    /**
-     * Returns an error that signals cancellation.
-     */
-    function canceled() {
-        var error = new Error(canceledName);
-        error.name = error.message;
-        return error;
-    }
-    exports.canceled = canceled;
-    /**
-     * Returns an error that signals something is not implemented.
-     */
-    function notImplemented() {
-        return new Error(nls.localize(13, null));
-    }
-    exports.notImplemented = notImplemented;
-    function illegalArgument(name) {
-        if (name) {
-            return new Error(nls.localize(14, null, name));
-        }
-        else {
-            return new Error(nls.localize(15, null));
-        }
-    }
-    exports.illegalArgument = illegalArgument;
-    function illegalState(name) {
-        if (name) {
-            return new Error(nls.localize(16, null, name));
-        }
-        else {
-            return new Error(nls.localize(17, null));
-        }
-    }
-    exports.illegalState = illegalState;
-    function readonly(name) {
-        return name
-            ? new Error("readonly property '" + name + " cannot be changed'")
-            : new Error('readonly property cannot be changed');
-    }
-    exports.readonly = readonly;
-    function loaderError(err) {
-        if (platform.isWeb) {
-            return new Error(nls.localize(18, null));
-        }
-        return new Error(nls.localize(19, null, JSON.stringify(err)));
-    }
-    exports.loaderError = loaderError;
-    function create(message, options) {
-        if (options === void 0) { options = {}; }
-        var result = new Error(message);
-        if (types.isNumber(options.severity)) {
-            result.severity = options.severity;
-        }
-        if (options.actions) {
-            result.actions = options.actions;
-        }
-        return result;
-    }
-    exports.create = create;
-});
-
-define(__m[55], __M([0,1,14]), function (require, exports, errors_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var CallbackList = (function () {
-        function CallbackList() {
-        }
-        CallbackList.prototype.add = function (callback, context, bucket) {
-            var _this = this;
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                this._callbacks = [];
-                this._contexts = [];
-            }
-            this._callbacks.push(callback);
-            this._contexts.push(context);
-            if (Array.isArray(bucket)) {
-                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
-            }
-        };
-        CallbackList.prototype.remove = function (callback, context) {
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                return;
-            }
-            var foundCallbackWithDifferentContext = false;
-            for (var i = 0, len = this._callbacks.length; i < len; i++) {
-                if (this._callbacks[i] === callback) {
-                    if (this._contexts[i] === context) {
-                        // callback & context match => remove it
-                        this._callbacks.splice(i, 1);
-                        this._contexts.splice(i, 1);
-                        return;
-                    }
-                    else {
-                        foundCallbackWithDifferentContext = true;
-                    }
-                }
-            }
-            if (foundCallbackWithDifferentContext) {
-                throw new Error('When adding a listener with a context, you should remove it with the same context');
-            }
-        };
-        CallbackList.prototype.invoke = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            if (!this._callbacks) {
-                return;
-            }
-            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
-            for (var i = 0, len = callbacks.length; i < len; i++) {
-                try {
-                    ret.push(callbacks[i].apply(contexts[i], args));
-                }
-                catch (e) {
-                    errors_1.onUnexpectedError(e);
-                }
-            }
-            return ret;
-        };
-        CallbackList.prototype.isEmpty = function () {
-            return !this._callbacks || this._callbacks.length === 0;
-        };
-        CallbackList.prototype.dispose = function () {
-            this._callbacks = undefined;
-            this._contexts = undefined;
-        };
-        return CallbackList;
-    }());
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = CallbackList;
-});
-
-define(__m[18], __M([0,1,55]), function (require, exports, callbackList_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var Event;
-    (function (Event) {
-        var _disposable = { dispose: function () { } };
-        Event.None = function () { return _disposable; };
-    })(Event || (Event = {}));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Event;
-    /**
-     * The Emitter can be used to expose an Event to the public
-     * to fire it from the insides.
-     * Sample:
-        class Document {
-    
-            private _onDidChange = new Emitter<(value:string)=>any>();
-    
-            public onDidChange = this._onDidChange.event;
-    
-            // getter-style
-            // get onDidChange(): Event<(value:string)=>any> {
-            // 	return this._onDidChange.event;
-            // }
-    
-            private _doIt() {
-                //...
-                this._onDidChange.fire(value);
-            }
-        }
-     */
-    var Emitter = (function () {
-        function Emitter(_options) {
-            this._options = _options;
-        }
-        Object.defineProperty(Emitter.prototype, "event", {
-            /**
-             * For the public to allow to subscribe
-             * to events from this Emitter
-             */
-            get: function () {
-                var _this = this;
-                if (!this._event) {
-                    this._event = function (listener, thisArgs, disposables) {
-                        if (!_this._callbacks) {
-                            _this._callbacks = new callbackList_1.default();
-                        }
-                        if (_this._options && _this._options.onFirstListenerAdd && _this._callbacks.isEmpty()) {
-                            _this._options.onFirstListenerAdd(_this);
-                        }
-                        _this._callbacks.add(listener, thisArgs);
-                        var result;
-                        result = {
-                            dispose: function () {
-                                result.dispose = Emitter._noop;
-                                if (!_this._disposed) {
-                                    _this._callbacks.remove(listener, thisArgs);
-                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
-                                        _this._options.onLastListenerRemove(_this);
-                                    }
-                                }
-                            }
-                        };
-                        if (Array.isArray(disposables)) {
-                            disposables.push(result);
-                        }
-                        return result;
-                    };
-                }
-                return this._event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * To be kept private to fire an event to
-         * subscribers
-         */
-        Emitter.prototype.fire = function (event) {
-            if (this._callbacks) {
-                this._callbacks.invoke.call(this._callbacks, event);
-            }
-        };
-        Emitter.prototype.dispose = function () {
-            if (this._callbacks) {
-                this._callbacks.dispose();
-                this._callbacks = undefined;
-                this._disposed = true;
-            }
-        };
-        Emitter._noop = function () { };
-        return Emitter;
-    }());
-    exports.Emitter = Emitter;
-    /**
-     * Creates an Event which is backed-up by the event emitter. This allows
-     * to use the existing eventing pattern and is likely using less memory.
-     * Sample:
-     *
-     * 	class Document {
-     *
-     *		private _eventbus = new EventEmitter();
-     *
-     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
-     *
-     *		// getter-style
-     *		// get onDidChange(): Event<(value:string)=>any> {
-     *		// 	cache fromEventEmitter result and return
-     *		// }
-     *
-     *		private _doIt() {
-     *			// ...
-     *			this._eventbus.emit('changed', value)
-     *		}
-     *	}
-     */
-    function fromEventEmitter(emitter, eventType) {
-        return function (listener, thisArgs, disposables) {
-            var result = emitter.addListener2(eventType, function () {
-                listener.apply(thisArgs, arguments);
-            });
-            if (Array.isArray(disposables)) {
-                disposables.push(result);
-            }
-            return result;
-        };
-    }
-    exports.fromEventEmitter = fromEventEmitter;
-    function fromPromise(promise) {
-        var toCancel = null;
-        var listener = null;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
-            },
-            onLastListenerRemove: function () {
-                if (toCancel) {
-                    toCancel.cancel();
-                    toCancel = null;
-                }
-                if (listener) {
-                    listener.dispose();
-                    listener = null;
-                }
-            }
-        });
-        return emitter.event;
-    }
-    exports.fromPromise = fromPromise;
-    function mapEvent(event, map) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
-        };
-    }
-    exports.mapEvent = mapEvent;
-    function filterEvent(event, filter) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
-        };
-    }
-    exports.filterEvent = filterEvent;
-    function debounceEvent(event, merger, delay) {
-        if (delay === void 0) { delay = 100; }
-        var subscription;
-        var output;
-        var handle;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                subscription = event(function (cur) {
-                    output = merger(output, cur);
-                    clearTimeout(handle);
-                    handle = setTimeout(function () {
-                        var _output = output;
-                        output = undefined;
-                        emitter.fire(_output);
-                    }, delay);
-                });
-            },
-            onLastListenerRemove: function () {
-                subscription.dispose();
-            }
-        });
-        return emitter.event;
-    }
-    exports.debounceEvent = debounceEvent;
-    var EventDelayerState;
-    (function (EventDelayerState) {
-        EventDelayerState[EventDelayerState["Idle"] = 0] = "Idle";
-        EventDelayerState[EventDelayerState["Running"] = 1] = "Running";
-    })(EventDelayerState || (EventDelayerState = {}));
-    /**
-     * The EventDelayer is useful in situations in which you want
-     * to delay firing your events during some code.
-     * You can wrap that code and be sure that the event will not
-     * be fired during that wrap.
-     *
-     * ```
-     * const emitter: Emitter;
-     * const delayer = new EventDelayer();
-     * const delayedEvent = delayer.delay(emitter.event);
-     *
-     * delayedEvent(console.log);
-     *
-     * delayer.wrap(() => {
-     *   emitter.fire(); // event will not be fired yet
-     * });
-     *
-     * // event will only be fired at this point
-     * ```
-     */
-    var EventBufferer = (function () {
-        function EventBufferer() {
-            this.buffers = [];
-        }
-        EventBufferer.prototype.wrapEvent = function (event) {
-            var _this = this;
-            return function (listener, thisArgs, disposables) {
-                return event(function (i) {
-                    var buffer = _this.buffers[_this.buffers.length - 1];
-                    if (buffer) {
-                        buffer.push(function () { return listener.call(thisArgs, i); });
-                    }
-                    else {
-                        listener.call(thisArgs, i);
-                    }
-                }, void 0, disposables);
-            };
-        };
-        EventBufferer.prototype.bufferEvents = function (fn) {
-            var buffer = [];
-            this.buffers.push(buffer);
-            fn();
-            this.buffers.pop();
-            buffer.forEach(function (flush) { return flush(); });
-        };
-        return EventBufferer;
-    }());
-    exports.EventBufferer = EventBufferer;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[46], __M([0,1,18]), function (require, exports, event_1) {
-    'use strict';
-    var CancellationToken;
-    (function (CancellationToken) {
-        CancellationToken.None = Object.freeze({
-            isCancellationRequested: false,
-            onCancellationRequested: event_1.default.None
-        });
-        CancellationToken.Cancelled = Object.freeze({
-            isCancellationRequested: true,
-            onCancellationRequested: event_1.default.None
-        });
-    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
-    var shortcutEvent = Object.freeze(function (callback, context) {
-        var handle = setTimeout(callback.bind(context), 0);
-        return { dispose: function () { clearTimeout(handle); } };
-    });
-    var MutableToken = (function () {
-        function MutableToken() {
-            this._isCancelled = false;
-        }
-        MutableToken.prototype.cancel = function () {
-            if (!this._isCancelled) {
-                this._isCancelled = true;
-                if (this._emitter) {
-                    this._emitter.fire(undefined);
-                    this._emitter = undefined;
-                }
-            }
-        };
-        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
-            get: function () {
-                return this._isCancelled;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
-            get: function () {
-                if (this._isCancelled) {
-                    return shortcutEvent;
-                }
-                if (!this._emitter) {
-                    this._emitter = new event_1.Emitter();
-                }
-                return this._emitter.event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return MutableToken;
-    }());
-    var CancellationTokenSource = (function () {
-        function CancellationTokenSource() {
-        }
-        Object.defineProperty(CancellationTokenSource.prototype, "token", {
-            get: function () {
-                if (!this._token) {
-                    // be lazy and create the token only when
-                    // actually needed
-                    this._token = new MutableToken();
-                }
-                return this._token;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        CancellationTokenSource.prototype.cancel = function () {
-            if (!this._token) {
-                // save an object by returning the default
-                // cancelled token when cancellation happens
-                // before someone asks for the token
-                this._token = CancellationToken.Cancelled;
-            }
-            else {
-                this._token.cancel();
-            }
-        };
-        CancellationTokenSource.prototype.dispose = function () {
-            this.cancel();
-        };
-        return CancellationTokenSource;
-    }());
-    exports.CancellationTokenSource = CancellationTokenSource;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-define(__m[2], __M([76,14]), function (winjs, __Errors__) {
+define(__m[2/*vs/base/common/winjs.base*/], __M([109/*vs/base/common/winjs.base.raw*/,15/*vs/base/common/errors*/]), function (winjs, __Errors__) {
 	'use strict';
 
 	var outstandingPromiseErrors = {};
@@ -6090,7 +6507,7 @@ define(__m[2], __M([76,14]), function (winjs, __Errors__) {
 
 
 
-define(__m[34], __M([0,1,14,3,2,46,41]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
+define(__m[43/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/errors*/,5/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,87/*vs/base/common/cancellation*/,17/*vs/base/common/lifecycle*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -6106,9 +6523,12 @@ define(__m[34], __M([0,1,14,3,2,46,41]), function (require, exports, errors, pla
     exports.toThenable = toThenable;
     function asWinJsPromise(callback) {
         var source = new cancellation_1.CancellationTokenSource();
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new winjs_base_1.TPromise(function (resolve, reject, progress) {
             var item = callback(source.token);
-            if (isThenable(item)) {
+            if (item instanceof winjs_base_1.TPromise) {
+                item.then(resolve, reject, progress);
+            }
+            else if (isThenable(item)) {
                 item.then(resolve, reject);
             }
             else {
@@ -6122,9 +6542,16 @@ define(__m[34], __M([0,1,14,3,2,46,41]), function (require, exports, errors, pla
     /**
      * Hook a cancellation token to a WinJS Promise
      */
-    function wireCancellationToken(token, promise) {
-        token.onCancellationRequested(function () { return promise.cancel(); });
-        return promise;
+    function wireCancellationToken(token, promise, resolveAsUndefinedWhenCancelled) {
+        var subscription = token.onCancellationRequested(function () { return promise.cancel(); });
+        if (resolveAsUndefinedWhenCancelled) {
+            promise = promise.then(undefined, function (err) {
+                if (!errors.isPromiseCanceledError(err)) {
+                    return winjs_base_1.TPromise.wrapError(err);
+                }
+            });
+        }
+        return always(promise, function () { return subscription.dispose(); });
     }
     exports.wireCancellationToken = wireCancellationToken;
     /**
@@ -6419,7 +6846,7 @@ define(__m[34], __M([0,1,14,3,2,46,41]), function (require, exports, errors, pla
             return null;
         }
         function thenHandler(result) {
-            if (result) {
+            if (result !== undefined && result !== null) {
                 results.push(result);
             }
             var n = next();
@@ -6484,6 +6911,17 @@ define(__m[34], __M([0,1,14,3,2,46,41]), function (require, exports, errors, pla
         return Limiter;
     }());
     exports.Limiter = Limiter;
+    /**
+     * A queue is handles one promise at a time and guarantees that at any time only one promise is executing.
+     */
+    var Queue = (function (_super) {
+        __extends(Queue, _super);
+        function Queue() {
+            _super.call(this, 1);
+        }
+        return Queue;
+    }(Limiter));
+    exports.Queue = Queue;
     var TimeoutTimer = (function (_super) {
         __extends(TimeoutTimer, _super);
         function TimeoutTimer() {
@@ -6621,7 +7059,7 @@ define(__m[34], __M([0,1,14,3,2,46,41]), function (require, exports, errors, pla
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[50], __M([0,1,20,52,2,34]), function (require, exports, fs, crypto, winjs_base_1, async_1) {
+define(__m[66/*vs/base/node/crypto*/], __M([1/*require*/,0/*exports*/,25/*fs*/,68/*crypto*/,2/*vs/base/common/winjs.base*/,43/*vs/base/common/async*/]), function (require, exports, fs, crypto, winjs_base_1, async_1) {
     'use strict';
     function checksum(path, sha1hash) {
         var promise = new winjs_base_1.TPromise(function (c, e) {
@@ -6658,12 +7096,508 @@ define(__m[50], __M([0,1,20,52,2,34]), function (require, exports, fs, crypto, w
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[35], __M([0,1,2,38,26,7,34,20]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs) {
+define(__m[33/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
-    function isRoot(path) {
-        return path === path_1.dirname(path);
+    function fromEventEmitter(emitter, eventName, map) {
+        var fn = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            return result.fire(map.apply(void 0, args));
+        };
+        var onFirstListenerAdd = function () { return emitter.on(eventName, fn); };
+        var onLastListenerRemove = function () { return emitter.removeListener(eventName, fn); };
+        var result = new event_1.Emitter({ onFirstListenerAdd: onFirstListenerAdd, onLastListenerRemove: onLastListenerRemove });
+        return result.event;
     }
-    exports.isRoot = isRoot;
+    exports.fromEventEmitter = fromEventEmitter;
+    ;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[70/*vs/base/node/flow*/], __M([1/*require*/,0/*exports*/,72/*assert*/]), function (require, exports, assert) {
+    'use strict';
+    /**
+     * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
+     * array to the callback (callback). The resulting errors and results are evaluated by calling the provided callback function.
+     */
+    function parallel(list, fn, callback) {
+        var results = new Array(list.length);
+        var errors = new Array(list.length);
+        var didErrorOccur = false;
+        var doneCount = 0;
+        if (list.length === 0) {
+            return callback(null, []);
+        }
+        list.forEach(function (item, index) {
+            fn(item, function (error, result) {
+                if (error) {
+                    didErrorOccur = true;
+                    results[index] = null;
+                    errors[index] = error;
+                }
+                else {
+                    results[index] = result;
+                    errors[index] = null;
+                }
+                if (++doneCount === list.length) {
+                    return callback(didErrorOccur ? errors : null, results);
+                }
+            });
+        });
+    }
+    exports.parallel = parallel;
+    function loop(param, fn, callback) {
+        // Assert
+        assert.ok(param, 'Missing first parameter');
+        assert.ok(typeof (fn) === 'function', 'Second parameter must be a function that is called for each element');
+        assert.ok(typeof (callback) === 'function', 'Third parameter must be a function that is called on error and success');
+        // Param is function, execute to retrieve array
+        if (typeof (param) === 'function') {
+            try {
+                param(function (error, result) {
+                    if (error) {
+                        callback(error, null);
+                    }
+                    else {
+                        loop(result, fn, callback);
+                    }
+                });
+            }
+            catch (error) {
+                callback(error, null);
+            }
+        }
+        else {
+            var results_1 = [];
+            var looper_1 = function (i) {
+                // Still work to do
+                if (i < param.length) {
+                    // Execute function on array element
+                    try {
+                        fn(param[i], function (error, result) {
+                            // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
+                            if (error === true || error === false) {
+                                result = error;
+                                error = null;
+                            }
+                            // Quit looping on error
+                            if (error) {
+                                callback(error, null);
+                            }
+                            else {
+                                if (result) {
+                                    results_1.push(result);
+                                }
+                                process.nextTick(function () {
+                                    looper_1(i + 1);
+                                });
+                            }
+                        }, i, param.length);
+                    }
+                    catch (error) {
+                        callback(error, null);
+                    }
+                }
+                else {
+                    callback(null, results_1);
+                }
+            };
+            // Start looping with first element in array
+            looper_1(0);
+        }
+    }
+    exports.loop = loop;
+    function Sequence(sequences) {
+        // Assert
+        assert.ok(sequences.length > 1, 'Need at least one error handler and one function to process sequence');
+        sequences.forEach(function (sequence) {
+            assert.ok(typeof (sequence) === 'function');
+        });
+        // Execute in Loop
+        var errorHandler = sequences.splice(0, 1)[0]; //Remove error handler
+        var sequenceResult = null;
+        loop(sequences, function (sequence, clb) {
+            var sequenceFunction = function (error, result) {
+                // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
+                if (error === true || error === false) {
+                    result = error;
+                    error = null;
+                }
+                // Handle Error and Result
+                if (error) {
+                    clb(error, null);
+                }
+                else {
+                    sequenceResult = result; //Remember result of sequence
+                    clb(null, null); //Don't pass on result to Looper as we are not aggregating it
+                }
+            };
+            // We call the sequence function setting "this" to be the callback we define here
+            // and we pass in the "sequenceResult" as first argument. Doing all this avoids having
+            // to pass in a callback to the sequence because the callback is already "this".
+            try {
+                sequence.call(sequenceFunction, sequenceResult);
+            }
+            catch (error) {
+                clb(error, null);
+            }
+        }, function (error, result) {
+            if (error) {
+                errorHandler(error);
+            }
+        });
+    }
+    function sequence(sequences) {
+        Sequence((Array.isArray(sequences)) ? sequences : Array.prototype.slice.call(arguments));
+    }
+    exports.sequence = sequence;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[36/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,44/*vs/base/common/uuid*/,26/*vs/base/common/strings*/,5/*vs/base/common/platform*/,70/*vs/base/node/flow*/,25/*fs*/,7/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
+    'use strict';
+    var loop = flow.loop;
+    function readdirSync(path) {
+        // Mac: uses NFD unicode form on disk, but we want NFC
+        // See also https://github.com/nodejs/node/issues/2165
+        if (platform.isMacintosh) {
+            return fs.readdirSync(path).map(function (c) { return strings.normalizeNFC(c); });
+        }
+        return fs.readdirSync(path);
+    }
+    exports.readdirSync = readdirSync;
+    function readdir(path, callback) {
+        // Mac: uses NFD unicode form on disk, but we want NFC
+        // See also https://github.com/nodejs/node/issues/2165
+        if (platform.isMacintosh) {
+            return fs.readdir(path, function (error, children) {
+                if (error) {
+                    return callback(error, null);
+                }
+                return callback(null, children.map(function (c) { return strings.normalizeNFC(c); }));
+            });
+        }
+        return fs.readdir(path, callback);
+    }
+    exports.readdir = readdir;
+    function mkdirp(path, mode, callback) {
+        fs.exists(path, function (exists) {
+            if (exists) {
+                return isDirectory(path, function (err, itIs) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    if (!itIs) {
+                        return callback(new Error('"' + path + '" is not a directory.'));
+                    }
+                    callback(null);
+                });
+            }
+            mkdirp(paths.dirname(path), mode, function (err) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                if (mode) {
+                    fs.mkdir(path, mode, function (error) {
+                        if (error) {
+                            return callback(error);
+                        }
+                        fs.chmod(path, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
+                    });
+                }
+                else {
+                    fs.mkdir(path, null, callback);
+                }
+            });
+        });
+    }
+    exports.mkdirp = mkdirp;
+    function isDirectory(path, callback) {
+        fs.stat(path, function (error, stat) {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, stat.isDirectory());
+        });
+    }
+    function copy(source, target, callback, copiedSources) {
+        if (!copiedSources) {
+            copiedSources = Object.create(null);
+        }
+        fs.stat(source, function (error, stat) {
+            if (error) {
+                return callback(error);
+            }
+            if (!stat.isDirectory()) {
+                return pipeFs(source, target, stat.mode & 511, callback);
+            }
+            if (copiedSources[source]) {
+                return callback(null); // escape when there are cycles (can happen with symlinks)
+            }
+            else {
+                copiedSources[source] = true; // remember as copied
+            }
+            mkdirp(target, stat.mode & 511, function (err) {
+                readdir(source, function (err, files) {
+                    loop(files, function (file, clb) {
+                        copy(paths.join(source, file), paths.join(target, file), clb, copiedSources);
+                    }, callback);
+                });
+            });
+        });
+    }
+    exports.copy = copy;
+    function pipeFs(source, target, mode, callback) {
+        var callbackHandled = false;
+        var readStream = fs.createReadStream(source);
+        var writeStream = fs.createWriteStream(target, { mode: mode });
+        var onError = function (error) {
+            if (!callbackHandled) {
+                callbackHandled = true;
+                callback(error);
+            }
+        };
+        readStream.on('error', onError);
+        writeStream.on('error', onError);
+        readStream.on('end', function () {
+            writeStream.end(function () {
+                if (!callbackHandled) {
+                    callbackHandled = true;
+                    fs.chmod(target, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
+                }
+            });
+        });
+        // In node 0.8 there is no easy way to find out when the pipe operation has finished. As such, we use the end property = false
+        // so that we are in charge of calling end() on the write stream and we will be notified when the write stream is really done.
+        // We can do this because file streams have an end() method that allows to pass in a callback.
+        // In node 0.10 there is an event 'finish' emitted from the write stream that can be used. See
+        // https://groups.google.com/forum/?fromgroups=#!topic/nodejs/YWQ1sRoXOdI
+        readStream.pipe(writeStream, { end: false });
+    }
+    // Deletes the given path by first moving it out of the workspace. This has two benefits. For one, the operation can return fast because
+    // after the rename, the contents are out of the workspace although not yet deleted. The greater benefit however is that this operation
+    // will fail in case any file is used by another process. fs.unlink() in node will not bail if a file unlinked is used by another process.
+    // However, the consequences are bad as outlined in all the related bugs from https://github.com/joyent/node/issues/7164
+    function del(path, tmpFolder, callback, done) {
+        fs.exists(path, function (exists) {
+            if (!exists) {
+                return callback(null);
+            }
+            fs.stat(path, function (err, stat) {
+                if (err || !stat) {
+                    return callback(err);
+                }
+                // Special windows workaround: A file or folder that ends with a "." cannot be moved to another place
+                // because it is not a valid file name. In this case, we really have to do the deletion without prior move.
+                if (path[path.length - 1] === '.' || strings.endsWith(path, './') || strings.endsWith(path, '.\\')) {
+                    return rmRecursive(path, callback);
+                }
+                var pathInTemp = paths.join(tmpFolder, uuid.generateUuid());
+                fs.rename(path, pathInTemp, function (error) {
+                    if (error) {
+                        return rmRecursive(path, callback); // if rename fails, delete without tmp dir
+                    }
+                    // Return early since the move succeeded
+                    callback(null);
+                    // do the heavy deletion outside the callers callback
+                    rmRecursive(pathInTemp, function (error) {
+                        if (error) {
+                            console.error(error);
+                        }
+                        if (done) {
+                            done(error);
+                        }
+                    });
+                });
+            });
+        });
+    }
+    exports.del = del;
+    function rmRecursive(path, callback) {
+        if (path === '\\' || path === '/') {
+            return callback(new Error('Will not delete root!'));
+        }
+        fs.exists(path, function (exists) {
+            if (!exists) {
+                callback(null);
+            }
+            else {
+                fs.lstat(path, function (err, stat) {
+                    if (err || !stat) {
+                        callback(err);
+                    }
+                    else if (!stat.isDirectory() || stat.isSymbolicLink() /* !!! never recurse into links when deleting !!! */) {
+                        var mode = stat.mode;
+                        if (!(mode & 128)) {
+                            fs.chmod(path, mode | 128, function (err) {
+                                if (err) {
+                                    callback(err);
+                                }
+                                else {
+                                    fs.unlink(path, callback);
+                                }
+                            });
+                        }
+                        else {
+                            fs.unlink(path, callback);
+                        }
+                    }
+                    else {
+                        readdir(path, function (err, children) {
+                            if (err || !children) {
+                                callback(err);
+                            }
+                            else if (children.length === 0) {
+                                fs.rmdir(path, callback);
+                            }
+                            else {
+                                var firstError_1 = null;
+                                var childrenLeft_1 = children.length;
+                                children.forEach(function (child) {
+                                    rmRecursive(paths.join(path, child), function (err) {
+                                        childrenLeft_1--;
+                                        if (err) {
+                                            firstError_1 = firstError_1 || err;
+                                        }
+                                        if (childrenLeft_1 === 0) {
+                                            if (firstError_1) {
+                                                callback(firstError_1);
+                                            }
+                                            else {
+                                                fs.rmdir(path, callback);
+                                            }
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    function mv(source, target, callback) {
+        if (source === target) {
+            return callback(null);
+        }
+        function updateMtime(err) {
+            if (err) {
+                return callback(err);
+            }
+            fs.stat(target, function (error, stat) {
+                if (error) {
+                    return callback(error);
+                }
+                if (stat.isDirectory()) {
+                    return callback(null);
+                }
+                fs.open(target, 'a', null, function (err, fd) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    fs.futimes(fd, stat.atime, new Date(), function (err) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        fs.close(fd, callback);
+                    });
+                });
+            });
+        }
+        // Try native rename()
+        fs.rename(source, target, function (err) {
+            if (!err) {
+                return updateMtime(null);
+            }
+            // In two cases we fallback to classic copy and delete:
+            //
+            // 1.) The EXDEV error indicates that source and target are on different devices
+            // In this case, fallback to using a copy() operation as there is no way to
+            // rename() between different devices.
+            //
+            // 2.) The user tries to rename a file/folder that ends with a dot. This is not
+            // really possible to move then, at least on UNC devices.
+            if (err && source.toLowerCase() !== target.toLowerCase() && (err.code === 'EXDEV') || strings.endsWith(source, '.')) {
+                return copy(source, target, function (err) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    rmRecursive(source, updateMtime);
+                });
+            }
+            return callback(err);
+        });
+    }
+    exports.mv = mv;
+    // Calls fs.writeFile() followed by a fs.sync() call to flush the changes to disk
+    // We do this in cases where we want to make sure the data is really on disk and
+    // not in some cache.
+    //
+    // See https://github.com/nodejs/node/blob/v5.10.0/lib/fs.js#L1194
+    var canFlush = true;
+    function writeFileAndFlush(path, data, options, callback) {
+        if (!canFlush) {
+            return fs.writeFile(path, data, options, callback);
+        }
+        if (!options) {
+            options = { encoding: 'utf8', mode: 438, flag: 'w' };
+        }
+        else if (typeof options === 'string') {
+            options = { encoding: options, mode: 438, flag: 'w' };
+        }
+        // Open the file with same flags and mode as fs.writeFile()
+        fs.open(path, options.flag, options.mode, function (openError, fd) {
+            if (openError) {
+                return callback(openError);
+            }
+            // It is valid to pass a fd handle to fs.writeFile() and this will keep the handle open!
+            fs.writeFile(fd, data, options.encoding, function (writeError) {
+                if (writeError) {
+                    return fs.close(fd, function () { return callback(writeError); }); // still need to close the handle on error!
+                }
+                // Flush contents (not metadata) of the file to disk
+                fs.fdatasync(fd, function (syncError) {
+                    // In some exotic setups it is well possible that node fails to sync
+                    // In that case we disable flushing and warn to the console
+                    if (syncError) {
+                        console.warn('[node.js fs] fdatasync is now disabled for this session because it failed: ', syncError);
+                        canFlush = false;
+                    }
+                    return fs.close(fd, function (closeError) { return callback(closeError); });
+                });
+            });
+        });
+    }
+    exports.writeFileAndFlush = writeFileAndFlush;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[75/*vs/base/node/paths*/], __M([1/*require*/,0/*exports*/,16/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+    "use strict";
+    var pathsPath = uri_1.default.parse(require.toUrl('paths')).fsPath;
+    var paths = require.__$__nodeRequire(pathsPath);
+    exports.getAppDataPath = paths.getAppDataPath;
+    exports.getDefaultUserDataPath = paths.getDefaultUserDataPath;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[40/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,36/*vs/base/node/extfs*/,22/*vs/base/common/paths*/,7/*path*/,43/*vs/base/common/async*/,25/*fs*/]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs) {
+    'use strict';
     function readdir(path) {
         return async_1.nfcall(extfs.readdir, path);
     }
@@ -6687,7 +7621,8 @@ define(__m[35], __M([0,1,2,38,26,7,34,20]), function (require, exports, winjs_ba
             }
             return winjs_base_1.TPromise.wrapError(err);
         }); };
-        if (isRoot(path)) {
+        // is root?
+        if (path === path_1.dirname(path)) {
             return winjs_base_1.TPromise.as(true);
         }
         return mkdir().then(null, function (err) {
@@ -6728,10 +7663,6 @@ define(__m[35], __M([0,1,2,38,26,7,34,20]), function (require, exports, winjs_ba
         return async_1.nfcall(fs.lstat, path);
     }
     exports.lstat = lstat;
-    function mstat(paths) {
-        return doStatMultiple(paths.slice(0));
-    }
-    exports.mstat = mstat;
     function rename(oldPath, newPath) {
         return async_1.nfcall(fs.rename, oldPath, newPath);
     }
@@ -6752,20 +7683,10 @@ define(__m[35], __M([0,1,2,38,26,7,34,20]), function (require, exports, winjs_ba
         return async_1.nfcall(fs.readlink, path);
     }
     exports.readlink = readlink;
-    function doStatMultiple(paths) {
-        var path = paths.shift();
-        return stat(path).then(function (value) {
-            return {
-                path: path,
-                stats: value
-            };
-        }, function (err) {
-            if (paths.length === 0) {
-                return err;
-            }
-            return mstat(paths);
-        });
+    function utimes(path, atime, mtime) {
+        return async_1.nfcall(fs.utimes, path, atime, mtime);
     }
+    exports.utimes = utimes;
     function readFile(path, encoding) {
         return async_1.nfcall(fs.readFile, path, encoding);
     }
@@ -6775,22 +7696,22 @@ define(__m[35], __M([0,1,2,38,26,7,34,20]), function (require, exports, winjs_ba
         return async_1.nfcall(fs.writeFile, path, data, encoding);
     }
     exports.writeFile = writeFile;
+    function writeFileAndFlush(path, data, encoding) {
+        if (encoding === void 0) { encoding = 'utf8'; }
+        return async_1.nfcall(extfs.writeFileAndFlush, path, data, encoding);
+    }
+    exports.writeFileAndFlush = writeFileAndFlush;
     /**
     * Read a dir and return only subfolders
     */
     function readDirsInDir(dirPath) {
         return readdir(dirPath).then(function (children) {
-            return winjs_base_1.TPromise.join(children.map(function (child) { return dirExistsWithResult(paths.join(dirPath, child), child); })).then(function (subdirs) {
-                return removeNull(subdirs);
+            return winjs_base_1.TPromise.join(children.map(function (c) { return dirExists(paths.join(dirPath, c)); })).then(function (exists) {
+                return children.filter(function (_, i) { return exists[i]; });
             });
         });
     }
     exports.readDirsInDir = readDirsInDir;
-    function dirExistsWithResult(path, successResult) {
-        return dirExists(path).then(function (exists) {
-            return exists ? successResult : null;
-        });
-    }
     /**
     * `path` exists and is a directory
     */
@@ -6805,83 +7726,92 @@ define(__m[35], __M([0,1,2,38,26,7,34,20]), function (require, exports, winjs_ba
         return stat(path).then(function (stat) { return stat.isFile(); }, function () { return false; });
     }
     exports.fileExists = fileExists;
-    /**
-    * Read dir at `path` and return only files matching `pattern`
-    */
-    function readFiles(path, pattern) {
-        return readdir(path).then(function (children) {
-            children = children.filter(function (child) {
-                return pattern.test(child);
-            });
-            var fileChildren = children.map(function (child) {
-                return fileExistsWithResult(paths.join(path, child), child);
-            });
-            return winjs_base_1.TPromise.join(fileChildren).then(function (subdirs) {
-                return removeNull(subdirs);
-            });
-        });
-    }
-    exports.readFiles = readFiles;
-    function fileExistsWithResult(path, successResult) {
-        return fileExists(path).then(function (exists) {
-            return exists ? successResult : null;
-        }, function (err) {
-            return winjs_base_1.TPromise.wrapError(err);
-        });
-    }
-    exports.fileExistsWithResult = fileExistsWithResult;
-    function removeNull(arr) {
-        return arr.filter(function (item) { return (item !== null); });
-    }
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[36], __M([0,1,2,41,18]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+define(__m[80/*vs/base/node/proxy*/], __M([1/*require*/,0/*exports*/,81/*url*/,3/*vs/base/common/types*/,108/*http-proxy-agent*/,107/*https-proxy-agent*/]), function (require, exports, url_1, types_1, HttpProxyAgent, HttpsProxyAgent) {
     'use strict';
-    var RequestType;
-    (function (RequestType) {
-        RequestType[RequestType["Common"] = 0] = "Common";
-        RequestType[RequestType["Cancel"] = 1] = "Cancel";
-    })(RequestType || (RequestType = {}));
-    var ResponseType;
-    (function (ResponseType) {
-        ResponseType[ResponseType["Initialize"] = 0] = "Initialize";
-        ResponseType[ResponseType["Success"] = 1] = "Success";
-        ResponseType[ResponseType["Progress"] = 2] = "Progress";
-        ResponseType[ResponseType["Error"] = 3] = "Error";
-        ResponseType[ResponseType["ErrorObj"] = 4] = "ErrorObj";
-    })(ResponseType || (ResponseType = {}));
+    function getSystemProxyURI(requestURL) {
+        if (requestURL.protocol === 'http:') {
+            return process.env.HTTP_PROXY || process.env.http_proxy || null;
+        }
+        else if (requestURL.protocol === 'https:') {
+            return process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy || null;
+        }
+        return null;
+    }
+    function getProxyAgent(rawRequestURL, options) {
+        if (options === void 0) { options = {}; }
+        var requestURL = url_1.parse(rawRequestURL);
+        var proxyURL = options.proxyUrl || getSystemProxyURI(requestURL);
+        if (!proxyURL) {
+            return null;
+        }
+        var proxyEndpoint = url_1.parse(proxyURL);
+        if (!/^https?:$/.test(proxyEndpoint.protocol)) {
+            return null;
+        }
+        var opts = {
+            host: proxyEndpoint.hostname,
+            port: Number(proxyEndpoint.port),
+            auth: proxyEndpoint.auth,
+            rejectUnauthorized: types_1.isBoolean(options.strictSSL) ? options.strictSSL : true
+        };
+        return requestURL.protocol === 'http:' ? new HttpProxyAgent(opts) : new HttpsProxyAgent(opts);
+    }
+    exports.getProxyAgent = getProxyAgent;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[21/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,17/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+    'use strict';
+    var MessageType;
+    (function (MessageType) {
+        MessageType[MessageType["RequestCommon"] = 0] = "RequestCommon";
+        MessageType[MessageType["RequestCancel"] = 1] = "RequestCancel";
+        MessageType[MessageType["ResponseInitialize"] = 2] = "ResponseInitialize";
+        MessageType[MessageType["ResponseSuccess"] = 3] = "ResponseSuccess";
+        MessageType[MessageType["ResponseProgress"] = 4] = "ResponseProgress";
+        MessageType[MessageType["ResponseError"] = 5] = "ResponseError";
+        MessageType[MessageType["ResponseErrorObj"] = 6] = "ResponseErrorObj";
+    })(MessageType || (MessageType = {}));
+    function isResponse(messageType) {
+        return messageType >= MessageType.ResponseInitialize;
+    }
     var State;
     (function (State) {
         State[State["Uninitialized"] = 0] = "Uninitialized";
         State[State["Idle"] = 1] = "Idle";
     })(State || (State = {}));
-    var Server = (function () {
-        function Server(protocol) {
+    var ChannelServer = (function () {
+        function ChannelServer(protocol) {
             var _this = this;
             this.protocol = protocol;
             this.channels = Object.create(null);
             this.activeRequests = Object.create(null);
-            this.protocol.onMessage(function (r) { return _this.onMessage(r); });
-            this.protocol.send({ type: ResponseType.Initialize });
+            this.protocolListener = this.protocol.onMessage(function (r) { return _this.onMessage(r); });
+            this.protocol.send({ type: MessageType.ResponseInitialize });
         }
-        Server.prototype.registerChannel = function (channelName, channel) {
+        ChannelServer.prototype.registerChannel = function (channelName, channel) {
             this.channels[channelName] = channel;
         };
-        Server.prototype.onMessage = function (request) {
+        ChannelServer.prototype.onMessage = function (request) {
             switch (request.type) {
-                case RequestType.Common:
+                case MessageType.RequestCommon:
                     this.onCommonRequest(request);
                     break;
-                case RequestType.Cancel:
+                case MessageType.RequestCancel:
                     this.onCancelRequest(request);
                     break;
             }
         };
-        Server.prototype.onCommonRequest = function (request) {
+        ChannelServer.prototype.onCommonRequest = function (request) {
             var _this = this;
             var channel = this.channels[request.channelName];
             var promise;
@@ -6893,102 +7823,112 @@ define(__m[36], __M([0,1,2,41,18]), function (require, exports, winjs_base_1, li
             }
             var id = request.id;
             var requestPromise = promise.then(function (data) {
-                _this.protocol.send({ id: id, data: data, type: ResponseType.Success });
+                _this.protocol.send({ id: id, data: data, type: MessageType.ResponseSuccess });
                 delete _this.activeRequests[request.id];
             }, function (data) {
                 if (data instanceof Error) {
-                    _this.protocol.send({ id: id, data: {
+                    _this.protocol.send({
+                        id: id, data: {
                             message: data.message,
                             name: data.name,
                             stack: data.stack ? data.stack.split('\n') : void 0
-                        }, type: ResponseType.Error });
+                        }, type: MessageType.ResponseError
+                    });
                 }
                 else {
-                    _this.protocol.send({ id: id, data: data, type: ResponseType.ErrorObj });
+                    _this.protocol.send({ id: id, data: data, type: MessageType.ResponseErrorObj });
                 }
                 delete _this.activeRequests[request.id];
             }, function (data) {
-                _this.protocol.send({ id: id, data: data, type: ResponseType.Progress });
+                _this.protocol.send({ id: id, data: data, type: MessageType.ResponseProgress });
             });
             this.activeRequests[request.id] = lifecycle_1.toDisposable(function () { return requestPromise.cancel(); });
         };
-        Server.prototype.onCancelRequest = function (request) {
+        ChannelServer.prototype.onCancelRequest = function (request) {
             var disposable = this.activeRequests[request.id];
             if (disposable) {
                 disposable.dispose();
                 delete this.activeRequests[request.id];
             }
         };
-        Server.prototype.dispose = function () {
+        ChannelServer.prototype.dispose = function () {
             var _this = this;
+            this.protocolListener.dispose();
+            this.protocolListener = null;
             Object.keys(this.activeRequests).forEach(function (id) {
                 _this.activeRequests[id].dispose();
             });
             this.activeRequests = null;
         };
-        return Server;
+        return ChannelServer;
     }());
-    exports.Server = Server;
-    var Client = (function () {
-        function Client(protocol) {
+    exports.ChannelServer = ChannelServer;
+    var ChannelClient = (function () {
+        function ChannelClient(protocol) {
             var _this = this;
             this.protocol = protocol;
             this.state = State.Uninitialized;
+            this.activeRequests = [];
             this.bufferedRequests = [];
             this.handlers = Object.create(null);
             this.lastRequestId = 0;
-            this.protocol.onMessage(function (r) { return _this.onMessage(r); });
+            this.protocolListener = this.protocol.onMessage(function (r) { return _this.onMessage(r); });
         }
-        Client.prototype.getChannel = function (channelName) {
+        ChannelClient.prototype.getChannel = function (channelName) {
             var _this = this;
             var call = function (command, arg) { return _this.request(channelName, command, arg); };
             return { call: call };
         };
-        Client.prototype.request = function (channelName, name, arg) {
+        ChannelClient.prototype.request = function (channelName, name, arg) {
+            var _this = this;
             var request = {
                 raw: {
                     id: this.lastRequestId++,
-                    type: RequestType.Common,
+                    type: MessageType.RequestCommon,
                     channelName: channelName,
                     name: name,
                     arg: arg
                 }
             };
-            if (this.state === State.Uninitialized) {
-                return this.bufferRequest(request);
-            }
-            return this.doRequest(request);
+            var activeRequest = this.state === State.Uninitialized
+                ? this.bufferRequest(request)
+                : this.doRequest(request);
+            this.activeRequests.push(activeRequest);
+            activeRequest
+                .then(null, function (_) { return null; })
+                .done(function () { return _this.activeRequests = _this.activeRequests.filter(function (i) { return i !== activeRequest; }); });
+            return activeRequest;
         };
-        Client.prototype.doRequest = function (request) {
+        ChannelClient.prototype.doRequest = function (request) {
             var _this = this;
             var id = request.raw.id;
             return new winjs_base_1.Promise(function (c, e, p) {
                 _this.handlers[id] = function (response) {
                     switch (response.type) {
-                        case ResponseType.Success:
+                        case MessageType.ResponseSuccess:
                             delete _this.handlers[id];
                             c(response.data);
                             break;
-                        case ResponseType.Error:
+                        case MessageType.ResponseError:
                             delete _this.handlers[id];
                             var error = new Error(response.data.message);
                             error.stack = response.data.stack;
                             error.name = response.data.name;
                             e(error);
                             break;
-                        case ResponseType.ErrorObj:
+                        case MessageType.ResponseErrorObj:
                             delete _this.handlers[id];
                             e(response.data);
                             break;
-                        case ResponseType.Progress:
+                        case MessageType.ResponseProgress:
                             p(response.data);
                             break;
                     }
                 };
                 _this.send(request.raw);
-            }, function () { return _this.send({ id: id, type: RequestType.Cancel }); });
+            }, function () { return _this.send({ id: id, type: MessageType.RequestCancel }); });
         };
-        Client.prototype.bufferRequest = function (request) {
+        ChannelClient.prototype.bufferRequest = function (request) {
             var _this = this;
             var flushedRequest = null;
             return new winjs_base_1.Promise(function (c, e, p) {
@@ -7013,8 +7953,11 @@ define(__m[36], __M([0,1,2,41,18]), function (require, exports, winjs_base_1, li
                 _this.bufferedRequests.splice(idx, 1);
             });
         };
-        Client.prototype.onMessage = function (response) {
-            if (this.state === State.Uninitialized && response.type === ResponseType.Initialize) {
+        ChannelClient.prototype.onMessage = function (response) {
+            if (!isResponse(response.type)) {
+                return;
+            }
+            if (this.state === State.Uninitialized && response.type === MessageType.ResponseInitialize) {
                 this.state = State.Idle;
                 this.bufferedRequests.forEach(function (r) { return r.flush && r.flush(); });
                 this.bufferedRequests = null;
@@ -7025,16 +7968,22 @@ define(__m[36], __M([0,1,2,41,18]), function (require, exports, winjs_base_1, li
                 handler(response);
             }
         };
-        Client.prototype.send = function (raw) {
+        ChannelClient.prototype.send = function (raw) {
             try {
                 this.protocol.send(raw);
             }
             catch (err) {
             }
         };
-        return Client;
+        ChannelClient.prototype.dispose = function () {
+            this.protocolListener.dispose();
+            this.protocolListener = null;
+            this.activeRequests.forEach(function (r) { return r.cancel(); });
+            this.activeRequests = [];
+        };
+        return ChannelClient;
     }());
-    exports.Client = Client;
+    exports.ChannelClient = ChannelClient;
     function getDelayedChannel(promise) {
         var call = function (command, arg) { return promise.then(function (c) { return c.call(command, arg); }); };
         return { call: call };
@@ -7053,16 +8002,20 @@ define(__m[36], __M([0,1,2,41,18]), function (require, exports, winjs_base_1, li
         return { call: call };
     }
     exports.getNextTickChannel = getNextTickChannel;
-    function eventToCall(event) {
+    function eventToCall(event, serializer) {
+        if (serializer === void 0) { serializer = function (t) { return t; }; }
         var disposable;
-        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(p); }, function () { return disposable.dispose(); });
+        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(function (t) { return p(serializer(t)); }); }, function () { return disposable.dispose(); });
     }
     exports.eventToCall = eventToCall;
-    function eventFromCall(channel, name) {
+    function eventFromCall(channel, name, arg, deserializer) {
+        if (arg === void 0) { arg = null; }
+        if (deserializer === void 0) { deserializer = function (t) { return t; }; }
         var promise;
         var emitter = new event_1.Emitter({
             onFirstListenerAdd: function () {
-                promise = channel.call(name, null).then(null, function (err) { return null; }, function (e) { return emitter.fire(e); });
+                promise = channel.call(name, arg)
+                    .then(null, function (err) { return null; }, function (e) { return emitter.fire(deserializer(e)); });
             },
             onLastListenerRemove: function () {
                 promise.cancel();
@@ -7078,7 +8031,104 @@ define(__m[36], __M([0,1,2,41,18]), function (require, exports, winjs_base_1, li
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[56], __M([0,1,82,2,18,36]), function (require, exports, net_1, winjs_base_1, event_1, ipc_1) {
+define(__m[88/*vs/base/parts/ipc/common/ipc.electron*/], __M([1/*require*/,0/*exports*/,17/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/,33/*vs/base/node/event*/,21/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, lifecycle_1, event_1, event_2, ipc_1) {
+    "use strict";
+    var Hello = 'ipc:hello';
+    var Goodbye = 'ipc:goodbye';
+    var Message = 'ipc:message';
+    var Protocol = (function () {
+        function Protocol(sender, onMessageEvent) {
+            this.sender = sender;
+            this.onMessageEvent = onMessageEvent;
+            var emitter = new event_1.Emitter();
+            onMessageEvent(function (msg) { return emitter.fire(msg); });
+            this._onMessage = emitter.event;
+        }
+        Object.defineProperty(Protocol.prototype, "onMessage", {
+            get: function () { return this._onMessage; },
+            enumerable: true,
+            configurable: true
+        });
+        Protocol.prototype.send = function (message) {
+            this.sender.send(Message, message);
+        };
+        Protocol.prototype.dispose = function () {
+            this.listener = lifecycle_1.dispose(this.listener);
+        };
+        return Protocol;
+    }());
+    var Server = (function () {
+        function Server(ipc) {
+            var _this = this;
+            this.ipc = ipc;
+            this.channels = Object.create(null);
+            ipc.on(Hello, function (_a) {
+                var sender = _a.sender;
+                return _this.onHello(sender);
+            });
+        }
+        Server.prototype.registerChannel = function (channelName, channel) {
+            this.channels[channelName] = channel;
+        };
+        Server.prototype.onHello = function (sender) {
+            var _this = this;
+            var senderId = sender.getId();
+            var onMessage = this.createScopedEvent(Message, senderId);
+            var protocol = new Protocol(sender, onMessage);
+            var ipcServer = new ipc_1.ChannelServer(protocol);
+            Object.keys(this.channels)
+                .forEach(function (name) { return ipcServer.registerChannel(name, _this.channels[name]); });
+            var onGoodbye = this.createScopedEvent(Goodbye, senderId);
+            var listener = onGoodbye(function () {
+                listener.dispose();
+                ipcServer.dispose();
+                protocol.dispose();
+            });
+        };
+        Server.prototype.createScopedEvent = function (eventName, senderId) {
+            return event_1.chain(event_2.fromEventEmitter(this.ipc, eventName, function (event, message) { return ({ event: event, message: message }); }))
+                .filter(function (_a) {
+                var event = _a.event;
+                return event.sender.getId() === senderId;
+            })
+                .map(function (_a) {
+                var message = _a.message;
+                return message;
+            })
+                .event;
+        };
+        Server.prototype.dispose = function () {
+            this.channels = null;
+        };
+        return Server;
+    }());
+    exports.Server = Server;
+    var Client = (function () {
+        function Client(ipc) {
+            this.ipc = ipc;
+            ipc.send(Hello);
+            var receiverEvent = event_2.fromEventEmitter(ipc, Message, function (_, message) { return message; });
+            this.protocol = new Protocol(ipc, receiverEvent);
+            this.ipcClient = new ipc_1.ChannelClient(this.protocol);
+        }
+        Client.prototype.getChannel = function (channelName) {
+            return this.ipcClient.getChannel(channelName);
+        };
+        Client.prototype.dispose = function () {
+            this.ipc.send(Goodbye);
+            this.ipcClient = lifecycle_1.dispose(this.ipcClient);
+            this.protocol = lifecycle_1.dispose(this.protocol);
+        };
+        return Client;
+    }());
+    exports.Client = Client;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[89/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/,106/*net*/,2/*vs/base/common/winjs.base*/,6/*vs/base/common/event*/,33/*vs/base/node/event*/,21/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, net_1, winjs_base_1, event_1, event_2, ipc_1) {
     'use strict';
     function bufferIndexOf(buffer, value, start) {
         if (start === void 0) { start = 0; }
@@ -7090,8 +8140,40 @@ define(__m[56], __M([0,1,82,2,18,36]), function (require, exports, net_1, winjs_
     var Protocol = (function () {
         function Protocol(socket) {
             this.socket = socket;
-            this.buffer = null;
+            var buffer = null;
+            var emitter = new event_1.Emitter();
+            var onRawData = event_2.fromEventEmitter(socket, 'data', function (data) { return data; });
+            onRawData(function (data) {
+                var lastIndex = 0;
+                var index = 0;
+                while ((index = bufferIndexOf(data, 0, lastIndex)) < data.length) {
+                    var dataToParse = data.slice(lastIndex, index);
+                    if (buffer) {
+                        emitter.fire(JSON.parse(Buffer.concat([buffer, dataToParse]).toString('utf8')));
+                        buffer = null;
+                    }
+                    else {
+                        emitter.fire(JSON.parse(dataToParse.toString('utf8')));
+                    }
+                    lastIndex = index + 1;
+                }
+                if (index - lastIndex > 0) {
+                    var dataToBuffer = data.slice(lastIndex, index);
+                    if (buffer) {
+                        buffer = Buffer.concat([buffer, dataToBuffer]);
+                    }
+                    else {
+                        buffer = dataToBuffer;
+                    }
+                }
+            });
+            this._onMessage = emitter.event;
         }
+        Object.defineProperty(Protocol.prototype, "onMessage", {
+            get: function () { return this._onMessage; },
+            enumerable: true,
+            configurable: true
+        });
         Protocol.prototype.send = function (message) {
             try {
                 this.socket.write(JSON.stringify(message));
@@ -7100,52 +8182,91 @@ define(__m[56], __M([0,1,82,2,18,36]), function (require, exports, net_1, winjs_
             catch (e) {
             }
         };
-        Protocol.prototype.onMessage = function (callback) {
-            var _this = this;
-            this.socket.on('data', function (data) {
-                var lastIndex = 0;
-                var index = 0;
-                while ((index = bufferIndexOf(data, 0, lastIndex)) < data.length) {
-                    var dataToParse = data.slice(lastIndex, index);
-                    if (_this.buffer) {
-                        callback(JSON.parse(Buffer.concat([_this.buffer, dataToParse]).toString('utf8')));
-                        _this.buffer = null;
-                    }
-                    else {
-                        callback(JSON.parse(dataToParse.toString('utf8')));
-                    }
-                    lastIndex = index + 1;
-                }
-                if (index - lastIndex > 0) {
-                    var dataToBuffer = data.slice(lastIndex, index);
-                    if (_this.buffer) {
-                        _this.buffer = Buffer.concat([_this.buffer, dataToBuffer]);
-                    }
-                    else {
-                        _this.buffer = dataToBuffer;
-                    }
-                }
-            });
-        };
         Protocol.Boundary = new Buffer([0]);
         return Protocol;
     }());
+    var RoutingChannelClient = (function () {
+        function RoutingChannelClient() {
+            this.onClientAdded = new event_1.Emitter();
+            this.ipcClients = Object.create(null);
+        }
+        RoutingChannelClient.prototype.add = function (id, client) {
+            this.ipcClients[id] = client;
+            this.onClientAdded.fire();
+        };
+        RoutingChannelClient.prototype.remove = function (id) {
+            delete this.ipcClients[id];
+        };
+        RoutingChannelClient.prototype.getClient = function (clientId) {
+            var _this = this;
+            var getClientFn = function (clientId, c) {
+                var client = _this.ipcClients[clientId];
+                if (client) {
+                    c(client);
+                    return true;
+                }
+                return false;
+            };
+            return new winjs_base_1.TPromise(function (c, e) {
+                if (!getClientFn(clientId, c)) {
+                    var disposable_1 = _this.onClientAdded.event(function () {
+                        if (getClientFn(clientId, c)) {
+                            disposable_1.dispose();
+                        }
+                    });
+                }
+            });
+        };
+        RoutingChannelClient.prototype.getChannel = function (channelName, router) {
+            var _this = this;
+            var call = function (command, arg) {
+                var id = router.routeCall(command, arg);
+                if (!id) {
+                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
+                }
+                return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
+            };
+            return { call: call };
+        };
+        RoutingChannelClient.prototype.dispose = function () {
+            this.ipcClients = null;
+            this.onClientAdded.dispose();
+        };
+        return RoutingChannelClient;
+    }());
+    // TODO@joao: move multi channel implementation down to ipc
     var Server = (function () {
         function Server(server) {
             var _this = this;
             this.server = server;
             this.channels = Object.create(null);
+            this.router = new RoutingChannelClient();
             this.server.on('connection', function (socket) {
-                var ipcServer = new ipc_1.Server(new Protocol(socket));
-                Object.keys(_this.channels)
-                    .forEach(function (name) { return ipcServer.registerChannel(name, _this.channels[name]); });
-                socket.once('close', function () { return ipcServer.dispose(); });
+                var protocol = new Protocol(socket);
+                var onFirstMessage = event_1.once(protocol.onMessage);
+                onFirstMessage(function (id) {
+                    var channelServer = new ipc_1.ChannelServer(protocol);
+                    Object.keys(_this.channels)
+                        .forEach(function (name) { return channelServer.registerChannel(name, _this.channels[name]); });
+                    var channelClient = new ipc_1.ChannelClient(protocol);
+                    _this.router.add(id, channelClient);
+                    socket.once('close', function () {
+                        channelClient.dispose();
+                        _this.router.remove(id);
+                        channelServer.dispose();
+                    });
+                });
             });
         }
+        Server.prototype.getChannel = function (channelName, router) {
+            return this.router.getChannel(channelName, router);
+        };
         Server.prototype.registerChannel = function (channelName, channel) {
             this.channels[channelName] = channel;
         };
         Server.prototype.dispose = function () {
+            this.router.dispose();
+            this.router = null;
             this.channels = null;
             this.server.close();
             this.server = null;
@@ -7154,11 +8275,14 @@ define(__m[56], __M([0,1,82,2,18,36]), function (require, exports, net_1, winjs_
     }());
     exports.Server = Server;
     var Client = (function () {
-        function Client(socket) {
+        function Client(socket, id) {
             var _this = this;
             this.socket = socket;
             this._onClose = new event_1.Emitter();
-            this.ipcClient = new ipc_1.Client(new Protocol(socket));
+            var protocol = new Protocol(socket);
+            protocol.send(id);
+            this.channelClient = new ipc_1.ChannelClient(protocol);
+            this.channelServer = new ipc_1.ChannelServer(protocol);
             socket.once('close', function () { return _this._onClose.fire(); });
         }
         Object.defineProperty(Client.prototype, "onClose", {
@@ -7167,12 +8291,17 @@ define(__m[56], __M([0,1,82,2,18,36]), function (require, exports, net_1, winjs_
             configurable: true
         });
         Client.prototype.getChannel = function (channelName) {
-            return this.ipcClient.getChannel(channelName);
+            return this.channelClient.getChannel(channelName);
+        };
+        Client.prototype.registerChannel = function (channelName, channel) {
+            this.channelServer.registerChannel(channelName, channel);
         };
         Client.prototype.dispose = function () {
             this.socket.end();
             this.socket = null;
-            this.ipcClient = null;
+            this.channelClient = null;
+            this.channelServer.dispose();
+            this.channelServer = null;
         };
         return Client;
     }());
@@ -7188,11 +8317,11 @@ define(__m[56], __M([0,1,82,2,18,36]), function (require, exports, net_1, winjs_
         });
     }
     exports.serve = serve;
-    function connect(hook) {
+    function connect(hook, clientId) {
         return new winjs_base_1.TPromise(function (c, e) {
             var socket = net_1.createConnection(hook, function () {
                 socket.removeListener('error', e);
-                c(new Client(socket));
+                c(new Client(socket, clientId));
             });
             socket.once('error', e);
         });
@@ -7200,8 +8329,215 @@ define(__m[56], __M([0,1,82,2,18,36]), function (require, exports, net_1, winjs_
     exports.connect = connect;
 });
 
-define(__m[61], __M([11,9]), function(nls, data) { return nls.create("vs/base/common/json", data); });
-define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[92/*vs/code/common/windowsIpc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,21/*vs/base/parts/ipc/common/ipc*/,6/*vs/base/common/event*/]), function (require, exports, winjs_base_1, ipc_1, event_1) {
+    'use strict';
+    var WindowEventChannel = (function () {
+        function WindowEventChannel(service) {
+            this.service = service;
+            this.onNewWindowOpen = event_1.buffer(service.onNewWindowOpen, true);
+            this.onWindowFocus = event_1.buffer(service.onWindowFocus, true);
+        }
+        WindowEventChannel.prototype.call = function (command, args) {
+            switch (command) {
+                case 'event:onNewWindowOpen':
+                    return ipc_1.eventToCall(this.onNewWindowOpen);
+                case 'event:onWindowFocus':
+                    return ipc_1.eventToCall(this.onWindowFocus);
+            }
+            return winjs_base_1.TPromise.wrapError('invalid command');
+        };
+        return WindowEventChannel;
+    }());
+    exports.WindowEventChannel = WindowEventChannel;
+    var WindowEventChannelClient = (function () {
+        function WindowEventChannelClient(channel) {
+            this.channel = channel;
+            this._onNewWindowOpen = ipc_1.eventFromCall(this.channel, 'event:onNewWindowOpen');
+            this._onWindowFocus = ipc_1.eventFromCall(this.channel, 'event:onWindowFocus');
+        }
+        Object.defineProperty(WindowEventChannelClient.prototype, "onNewWindowOpen", {
+            get: function () {
+                return this._onNewWindowOpen;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WindowEventChannelClient.prototype, "onWindowFocus", {
+            get: function () {
+                return this._onWindowFocus;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return WindowEventChannelClient;
+    }());
+    exports.WindowEventChannelClient = WindowEventChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[45/*vs/code/electron-main/paths*/], __M([1/*require*/,0/*exports*/,27/*original-fs*/,7/*path*/,18/*vs/base/common/arrays*/,26/*vs/base/common/strings*/,22/*vs/base/common/paths*/,5/*vs/base/common/platform*/,3/*vs/base/common/types*/]), function (require, exports, fs, path, arrays, strings, paths, platform, types) {
+    'use strict';
+    function validatePaths(args) {
+        // Realpath/normalize paths and watch out for goto line mode
+        var paths = doValidatePaths(args._, args.goto);
+        // Update environment
+        args._ = paths;
+        args.diff = args.diff && paths.length === 2;
+        return args;
+    }
+    exports.validatePaths = validatePaths;
+    function doValidatePaths(args, gotoLineMode) {
+        var cwd = process.env['VSCODE_CWD'] || process.cwd();
+        var result = args.map(function (arg) {
+            var pathCandidate = String(arg);
+            var parsedPath;
+            if (gotoLineMode) {
+                parsedPath = parseLineAndColumnAware(pathCandidate);
+                pathCandidate = parsedPath.path;
+            }
+            if (pathCandidate) {
+                pathCandidate = preparePath(cwd, pathCandidate);
+            }
+            var realPath;
+            try {
+                realPath = fs.realpathSync(pathCandidate);
+            }
+            catch (error) {
+                // in case of an error, assume the user wants to create this file
+                // if the path is relative, we join it to the cwd
+                realPath = path.normalize(path.isAbsolute(pathCandidate) ? pathCandidate : path.join(cwd, pathCandidate));
+            }
+            var basename = path.basename(realPath);
+            if (basename /* can be empty if code is opened on root */ && !paths.isValidBasename(basename)) {
+                return null; // do not allow invalid file names
+            }
+            if (gotoLineMode) {
+                parsedPath.path = realPath;
+                return toPath(parsedPath);
+            }
+            return realPath;
+        });
+        var caseInsensitive = platform.isWindows || platform.isMacintosh;
+        var distinct = arrays.distinct(result, function (e) { return e && caseInsensitive ? e.toLowerCase() : e; });
+        return arrays.coalesce(distinct);
+    }
+    function preparePath(cwd, p) {
+        // Trim trailing quotes
+        if (platform.isWindows) {
+            p = strings.rtrim(p, '"'); // https://github.com/Microsoft/vscode/issues/1498
+        }
+        // Trim whitespaces
+        p = strings.trim(strings.trim(p, ' '), '\t');
+        if (platform.isWindows) {
+            // Resolve the path against cwd if it is relative
+            p = path.resolve(cwd, p);
+            // Trim trailing '.' chars on Windows to prevent invalid file names
+            p = strings.rtrim(p, '.');
+        }
+        return p;
+    }
+    function parseLineAndColumnAware(rawPath) {
+        var segments = rawPath.split(':'); // C:\file.txt:<line>:<column>
+        var path;
+        var line = null;
+        var column = null;
+        segments.forEach(function (segment) {
+            var segmentAsNumber = Number(segment);
+            if (!types.isNumber(segmentAsNumber)) {
+                path = !!path ? [path, segment].join(':') : segment; // a colon can well be part of a path (e.g. C:\...)
+            }
+            else if (line === null) {
+                line = segmentAsNumber;
+            }
+            else if (column === null) {
+                column = segmentAsNumber;
+            }
+        });
+        if (!path) {
+            throw new Error('Format for `--goto` should be: `FILE:LINE(:COLUMN)`');
+        }
+        return {
+            path: path,
+            line: line !== null ? line : void 0,
+            column: column !== null ? column : line !== null ? 1 : void 0 // if we have a line, make sure column is also set
+        };
+    }
+    exports.parseLineAndColumnAware = parseLineAndColumnAware;
+    function toPath(p) {
+        var segments = [p.path];
+        if (types.isNumber(p.line)) {
+            segments.push(String(p.line));
+        }
+        if (types.isNumber(p.column)) {
+            segments.push(String(p.column));
+        }
+        return segments.join(':');
+    }
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[99/*vs/code/node/sharedProcess*/], __M([1/*require*/,0/*exports*/,47/*child_process*/,16/*vs/base/common/uri*/,10/*vs/base/common/objects*/,2/*vs/base/common/winjs.base*/]), function (require, exports, cp, uri_1, objects_1, winjs_base_1) {
+    "use strict";
+    var boostrapPath = uri_1.default.parse(require.toUrl('bootstrap')).fsPath;
+    function _spawnSharedProcess(initData, options) {
+        var execArgv = [];
+        var env = objects_1.assign({}, process.env, {
+            AMD_ENTRYPOINT: 'vs/code/node/sharedProcessMain'
+        });
+        if (options.allowOutput) {
+            env['VSCODE_ALLOW_IO'] = 'true';
+        }
+        if (options.debugPort) {
+            execArgv.push("--debug=" + options.debugPort);
+        }
+        var result = cp.fork(boostrapPath, ['--type=SharedProcess'], { env: env, execArgv: execArgv });
+        return result;
+    }
+    function spawnSharedProcess(initData, options) {
+        if (options === void 0) { options = {}; }
+        var spawnCount = 0;
+        var child;
+        var promise;
+        var spawn = function () {
+            if (++spawnCount > 10) {
+                return;
+            }
+            child = _spawnSharedProcess(initData, options);
+            promise = new winjs_base_1.TPromise(function (c, e) {
+                // handshake
+                child.once('message', function () {
+                    child.send(initData);
+                    c({
+                        dispose: function () {
+                            if (child) {
+                                child.removeListener('exit', spawn);
+                                child.kill();
+                                child = null;
+                            }
+                        }
+                    });
+                });
+            });
+            child.on('exit', spawn);
+        };
+        spawn();
+        return promise;
+    }
+    exports.spawnSharedProcess = spawnSharedProcess;
+});
+
+define(__m[50/*vs/nls!vs/base/common/json*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/base/common/json", data); });
+define(__m[53/*vs/base/common/json*/], __M([1/*require*/,0/*exports*/,50/*vs/nls!vs/base/common/json*/]), function (require, exports, nls_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7248,14 +8584,14 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
             var value = 0;
             while (digits < count || !exact) {
                 var ch = text.charCodeAt(pos);
-                if (ch >= CharacterCodes._0 && ch <= CharacterCodes._9) {
-                    value = value * 16 + ch - CharacterCodes._0;
+                if (ch >= 48 /* _0 */ && ch <= 57 /* _9 */) {
+                    value = value * 16 + ch - 48 /* _0 */;
                 }
-                else if (ch >= CharacterCodes.A && ch <= CharacterCodes.F) {
-                    value = value * 16 + ch - CharacterCodes.A + 10;
+                else if (ch >= 65 /* A */ && ch <= 70 /* F */) {
+                    value = value * 16 + ch - 65 /* A */ + 10;
                 }
-                else if (ch >= CharacterCodes.a && ch <= CharacterCodes.f) {
-                    value = value * 16 + ch - CharacterCodes.a + 10;
+                else if (ch >= 97 /* a */ && ch <= 102 /* f */) {
+                    value = value * 16 + ch - 97 /* a */ + 10;
                 }
                 else {
                     break;
@@ -7277,7 +8613,7 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
         }
         function scanNumber() {
             var start = pos;
-            if (text.charCodeAt(pos) === CharacterCodes._0) {
+            if (text.charCodeAt(pos) === 48 /* _0 */) {
                 pos++;
             }
             else {
@@ -7286,7 +8622,7 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
                     pos++;
                 }
             }
-            if (pos < text.length && text.charCodeAt(pos) === CharacterCodes.dot) {
+            if (pos < text.length && text.charCodeAt(pos) === 46 /* dot */) {
                 pos++;
                 if (pos < text.length && isDigit(text.charCodeAt(pos))) {
                     pos++;
@@ -7300,9 +8636,9 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
                 }
             }
             var end = pos;
-            if (pos < text.length && (text.charCodeAt(pos) === CharacterCodes.E || text.charCodeAt(pos) === CharacterCodes.e)) {
+            if (pos < text.length && (text.charCodeAt(pos) === 69 /* E */ || text.charCodeAt(pos) === 101 /* e */)) {
                 pos++;
-                if (pos < text.length && text.charCodeAt(pos) === CharacterCodes.plus || text.charCodeAt(pos) === CharacterCodes.minus) {
+                if (pos < text.length && text.charCodeAt(pos) === 43 /* plus */ || text.charCodeAt(pos) === 45 /* minus */) {
                     pos++;
                 }
                 if (pos < text.length && isDigit(text.charCodeAt(pos))) {
@@ -7327,12 +8663,12 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
                     break;
                 }
                 var ch = text.charCodeAt(pos);
-                if (ch === CharacterCodes.doubleQuote) {
+                if (ch === 34 /* doubleQuote */) {
                     result += text.substring(start, pos);
                     pos++;
                     break;
                 }
-                if (ch === CharacterCodes.backslash) {
+                if (ch === 92 /* backslash */) {
                     result += text.substring(start, pos);
                     pos++;
                     if (pos >= len) {
@@ -7341,31 +8677,31 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
                     }
                     ch = text.charCodeAt(pos++);
                     switch (ch) {
-                        case CharacterCodes.doubleQuote:
+                        case 34 /* doubleQuote */:
                             result += '\"';
                             break;
-                        case CharacterCodes.backslash:
+                        case 92 /* backslash */:
                             result += '\\';
                             break;
-                        case CharacterCodes.slash:
+                        case 47 /* slash */:
                             result += '/';
                             break;
-                        case CharacterCodes.b:
+                        case 98 /* b */:
                             result += '\b';
                             break;
-                        case CharacterCodes.f:
+                        case 102 /* f */:
                             result += '\f';
                             break;
-                        case CharacterCodes.n:
+                        case 110 /* n */:
                             result += '\n';
                             break;
-                        case CharacterCodes.r:
+                        case 114 /* r */:
                             result += '\r';
                             break;
-                        case CharacterCodes.t:
+                        case 116 /* t */:
                             result += '\t';
                             break;
-                        case CharacterCodes.u:
+                        case 117 /* u */:
                             var ch_1 = scanHexDigits(4, true);
                             if (ch_1 >= 0) {
                                 result += String.fromCharCode(ch_1);
@@ -7412,7 +8748,7 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
             if (isLineBreak(code)) {
                 pos++;
                 value += String.fromCharCode(code);
-                if (code === CharacterCodes.carriageReturn && text.charCodeAt(pos) === CharacterCodes.lineFeed) {
+                if (code === 13 /* carriageReturn */ && text.charCodeAt(pos) === 10 /* lineFeed */) {
                     pos++;
                     value += '\n';
                 }
@@ -7420,34 +8756,34 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
             }
             switch (code) {
                 // tokens: []{}:,
-                case CharacterCodes.openBrace:
+                case 123 /* openBrace */:
                     pos++;
                     return token = SyntaxKind.OpenBraceToken;
-                case CharacterCodes.closeBrace:
+                case 125 /* closeBrace */:
                     pos++;
                     return token = SyntaxKind.CloseBraceToken;
-                case CharacterCodes.openBracket:
+                case 91 /* openBracket */:
                     pos++;
                     return token = SyntaxKind.OpenBracketToken;
-                case CharacterCodes.closeBracket:
+                case 93 /* closeBracket */:
                     pos++;
                     return token = SyntaxKind.CloseBracketToken;
-                case CharacterCodes.colon:
+                case 58 /* colon */:
                     pos++;
                     return token = SyntaxKind.ColonToken;
-                case CharacterCodes.comma:
+                case 44 /* comma */:
                     pos++;
                     return token = SyntaxKind.CommaToken;
                 // strings
-                case CharacterCodes.doubleQuote:
+                case 34 /* doubleQuote */:
                     pos++;
                     value = scanString();
                     return token = SyntaxKind.StringLiteral;
                 // comments
-                case CharacterCodes.slash:
+                case 47 /* slash */:
                     var start = pos - 1;
                     // Single-line comment
-                    if (text.charCodeAt(pos + 1) === CharacterCodes.slash) {
+                    if (text.charCodeAt(pos + 1) === 47 /* slash */) {
                         pos += 2;
                         while (pos < len) {
                             if (isLineBreak(text.charCodeAt(pos))) {
@@ -7459,13 +8795,13 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
                         return token = SyntaxKind.LineCommentTrivia;
                     }
                     // Multi-line comment
-                    if (text.charCodeAt(pos + 1) === CharacterCodes.asterisk) {
+                    if (text.charCodeAt(pos + 1) === 42 /* asterisk */) {
                         pos += 2;
                         var safeLength = len - 1; // For lookahead.
                         var commentClosed = false;
                         while (pos < safeLength) {
                             var ch = text.charCodeAt(pos);
-                            if (ch === CharacterCodes.asterisk && text.charCodeAt(pos + 1) === CharacterCodes.slash) {
+                            if (ch === 42 /* asterisk */ && text.charCodeAt(pos + 1) === 47 /* slash */) {
                                 pos += 2;
                                 commentClosed = true;
                                 break;
@@ -7484,7 +8820,7 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
                     pos++;
                     return token = SyntaxKind.Unknown;
                 // numbers
-                case CharacterCodes.minus:
+                case 45 /* minus */:
                     value += String.fromCharCode(code);
                     pos++;
                     if (pos === len || !isDigit(text.charCodeAt(pos))) {
@@ -7493,16 +8829,16 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
                 // found a minus, followed by a number so
                 // we fall through to proceed with scanning
                 // numbers
-                case CharacterCodes._0:
-                case CharacterCodes._1:
-                case CharacterCodes._2:
-                case CharacterCodes._3:
-                case CharacterCodes._4:
-                case CharacterCodes._5:
-                case CharacterCodes._6:
-                case CharacterCodes._7:
-                case CharacterCodes._8:
-                case CharacterCodes._9:
+                case 48 /* _0 */:
+                case 49 /* _1 */:
+                case 50 /* _2 */:
+                case 51 /* _3 */:
+                case 52 /* _4 */:
+                case 53 /* _5 */:
+                case 54 /* _6 */:
+                case 55 /* _7 */:
+                case 56 /* _8 */:
+                case 57 /* _9 */:
                     value += scanNumber();
                     return token = SyntaxKind.NumericLiteral;
                 // literals and unknown symbols
@@ -7533,13 +8869,13 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
                 return false;
             }
             switch (code) {
-                case CharacterCodes.closeBrace:
-                case CharacterCodes.closeBracket:
-                case CharacterCodes.openBrace:
-                case CharacterCodes.openBracket:
-                case CharacterCodes.doubleQuote:
-                case CharacterCodes.colon:
-                case CharacterCodes.comma:
+                case 125 /* closeBrace */:
+                case 93 /* closeBracket */:
+                case 123 /* openBrace */:
+                case 91 /* openBracket */:
+                case 34 /* doubleQuote */:
+                case 58 /* colon */:
+                case 44 /* comma */:
                     return false;
             }
             return true;
@@ -7564,15 +8900,15 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
     }
     exports.createScanner = createScanner;
     function isWhiteSpace(ch) {
-        return ch === CharacterCodes.space || ch === CharacterCodes.tab || ch === CharacterCodes.verticalTab || ch === CharacterCodes.formFeed ||
-            ch === CharacterCodes.nonBreakingSpace || ch === CharacterCodes.ogham || ch >= CharacterCodes.enQuad && ch <= CharacterCodes.zeroWidthSpace ||
-            ch === CharacterCodes.narrowNoBreakSpace || ch === CharacterCodes.mathematicalSpace || ch === CharacterCodes.ideographicSpace || ch === CharacterCodes.byteOrderMark;
+        return ch === 32 /* space */ || ch === 9 /* tab */ || ch === 11 /* verticalTab */ || ch === 12 /* formFeed */ ||
+            ch === 160 /* nonBreakingSpace */ || ch === 5760 /* ogham */ || ch >= 8192 /* enQuad */ && ch <= 8203 /* zeroWidthSpace */ ||
+            ch === 8239 /* narrowNoBreakSpace */ || ch === 8287 /* mathematicalSpace */ || ch === 12288 /* ideographicSpace */ || ch === 65279 /* byteOrderMark */;
     }
     function isLineBreak(ch) {
-        return ch === CharacterCodes.lineFeed || ch === CharacterCodes.carriageReturn || ch === CharacterCodes.lineSeparator || ch === CharacterCodes.paragraphSeparator;
+        return ch === 10 /* lineFeed */ || ch === 13 /* carriageReturn */ || ch === 8232 /* lineSeparator */ || ch === 8233 /* paragraphSeparator */;
     }
     function isDigit(ch) {
-        return ch >= CharacterCodes._0 && ch <= CharacterCodes._9;
+        return ch >= 48 /* _0 */ && ch <= 57 /* _9 */;
     }
     var CharacterCodes;
     (function (CharacterCodes) {
@@ -8250,622 +9586,183 @@ define(__m[62], __M([0,1,61]), function (require, exports, nls_1) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[66], __M([0,1,20,7,62,10,2,18]), function (require, exports, fs, path, json, objects, winjs_base_1, event_1) {
+define(__m[54/*vs/base/node/config*/], __M([1/*require*/,0/*exports*/,25/*fs*/,7/*path*/,10/*vs/base/common/objects*/,17/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/,53/*vs/base/common/json*/]), function (require, exports, fs, path, objects, lifecycle_1, event_1, json) {
     'use strict';
-    var UserSettings = (function () {
-        function UserSettings(appSettingsPath, appKeybindingsPath) {
-            this.appSettingsPath = appSettingsPath;
-            this.appKeybindingsPath = appKeybindingsPath;
-            this._onChange = new event_1.Emitter();
-            this.registerWatchers();
+    /**
+     * A simple helper to watch a configured file for changes and process its contents as JSON object.
+     * Supports:
+     * - comments in JSON files and errors
+     * - symlinks for the config file itself
+     * - delayed processing of changes to accomodate for lots of changes
+     * - configurable defaults
+     */
+    var ConfigWatcher = (function () {
+        function ConfigWatcher(_path, options) {
+            if (options === void 0) { options = { changeBufferDelay: 0, defaultConfig: Object.create(null) }; }
+            this._path = _path;
+            this.options = options;
+            this.disposables = [];
+            this._onDidUpdateConfiguration = new event_1.Emitter();
+            this.disposables.push(this._onDidUpdateConfiguration);
+            this.registerWatcher();
+            this.initAsync();
         }
-        UserSettings.getValue = function (userDataPath, key, fallback) {
-            // TODO@joao cleanup!
-            var appSettingsPath = path.join(userDataPath, 'User', 'settings.json');
-            return new winjs_base_1.TPromise(function (c, e) {
-                fs.readFile(appSettingsPath, function (error /* ignore */, fileContents) {
-                    var root = Object.create(null);
-                    var content = fileContents ? fileContents.toString() : '{}';
-                    var contents = Object.create(null);
-                    try {
-                        contents = json.parse(content);
-                    }
-                    catch (error) {
-                    }
-                    for (var key_1 in contents) {
-                        UserSettings.setNode(root, key_1, contents[key_1]);
-                    }
-                    return c(UserSettings.doGetValue(root, key, fallback));
-                });
-            });
-        };
-        Object.defineProperty(UserSettings.prototype, "onChange", {
+        Object.defineProperty(ConfigWatcher.prototype, "path", {
             get: function () {
-                return this._onChange.event;
+                return this._path;
             },
             enumerable: true,
             configurable: true
         });
-        UserSettings.prototype.getValue = function (key, fallback) {
-            return UserSettings.doGetValue(this.globalSettings.settings, key, fallback);
-        };
-        UserSettings.doGetValue = function (globalSettings, key, fallback) {
-            if (!key) {
-                return fallback;
-            }
-            var value = globalSettings;
-            var parts = key.split('\.');
-            while (parts.length && value) {
-                var part = parts.shift();
-                value = value[part];
-            }
-            return typeof value !== 'undefined' ? value : fallback;
-        };
-        UserSettings.prototype.registerWatchers = function () {
+        Object.defineProperty(ConfigWatcher.prototype, "hasParseErrors", {
+            get: function () {
+                return this.parseErrors && this.parseErrors.length > 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ConfigWatcher.prototype, "onDidUpdateConfiguration", {
+            get: function () {
+                return this._onDidUpdateConfiguration.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ConfigWatcher.prototype.initAsync = function () {
             var _this = this;
-            this.watcher = fs.watch(path.dirname(this.appSettingsPath));
-            this.watcher.on('change', function (eventType, fileName) { return _this.onSettingsFileChange(eventType, fileName); });
+            this.loadAsync(function (config) {
+                if (!_this.loaded) {
+                    _this.updateCache(config); // prevent race condition if config was loaded sync already
+                }
+            });
         };
-        UserSettings.prototype.onSettingsFileChange = function (eventType, fileName) {
+        ConfigWatcher.prototype.updateCache = function (value) {
+            this.cache = value;
+            this.loaded = true;
+        };
+        ConfigWatcher.prototype.loadSync = function () {
+            try {
+                return this.parse(fs.readFileSync(this._path).toString());
+            }
+            catch (error) {
+                return this.options.defaultConfig;
+            }
+        };
+        ConfigWatcher.prototype.loadAsync = function (callback) {
             var _this = this;
-            // we can get multiple change events for one change, so we buffer through a timeout
+            fs.readFile(this._path, function (error, raw) {
+                if (error) {
+                    return callback(_this.options.defaultConfig);
+                }
+                return callback(_this.parse(raw.toString()));
+            });
+        };
+        ConfigWatcher.prototype.parse = function (raw) {
+            var res;
+            try {
+                this.parseErrors = [];
+                res = json.parse(raw, this.parseErrors);
+            }
+            catch (error) {
+            }
+            return res || this.options.defaultConfig;
+        };
+        ConfigWatcher.prototype.registerWatcher = function () {
+            var _this = this;
+            // Watch the parent of the path so that we detect ADD and DELETES
+            var parentFolder = path.dirname(this._path);
+            this.watch(parentFolder);
+            // Check if the path is a symlink and watch its target if so
+            fs.lstat(this._path, function (err, stat) {
+                if (err || stat.isDirectory()) {
+                    return; // path is not a valid file
+                }
+                // We found a symlink
+                if (stat.isSymbolicLink()) {
+                    fs.readlink(_this._path, function (err, realPath) {
+                        if (err) {
+                            return; // path is not a valid symlink
+                        }
+                        _this.watch(realPath);
+                    });
+                }
+            });
+        };
+        ConfigWatcher.prototype.watch = function (path) {
+            var _this = this;
+            if (this.disposed) {
+                return; // avoid watchers that will never get disposed by checking for being disposed
+            }
+            try {
+                var watcher_1 = fs.watch(path);
+                watcher_1.on('change', function () { return _this.onConfigFileChange(); });
+                this.disposables.push(lifecycle_1.toDisposable(function () {
+                    watcher_1.removeAllListeners();
+                    watcher_1.close();
+                }));
+            }
+            catch (error) {
+                fs.exists(path, function (exists) {
+                    if (exists) {
+                        console.warn("Failed to watch " + path + " for configuration changes (" + error.toString() + ")");
+                    }
+                });
+            }
+        };
+        ConfigWatcher.prototype.onConfigFileChange = function () {
+            var _this = this;
             if (this.timeoutHandle) {
                 global.clearTimeout(this.timeoutHandle);
                 this.timeoutHandle = null;
             }
-            this.timeoutHandle = global.setTimeout(function () {
-                // Reload
-                var didChange = _this.loadSync();
-                // Emit event
-                if (didChange) {
-                    _this._onChange.fire(_this.globalSettings);
+            // we can get multiple change events for one change, so we buffer through a timeout
+            this.timeoutHandle = global.setTimeout(function () { return _this.reload(); }, this.options.changeBufferDelay);
+        };
+        ConfigWatcher.prototype.reload = function (callback) {
+            var _this = this;
+            this.loadAsync(function (currentConfig) {
+                if (!objects.equals(currentConfig, _this.cache)) {
+                    _this.updateCache(currentConfig);
+                    _this._onDidUpdateConfiguration.fire({ config: _this.cache });
                 }
-            }, UserSettings.CHANGE_BUFFER_DELAY);
-        };
-        UserSettings.prototype.loadSync = function () {
-            var loadedSettings = this.doLoadSync();
-            if (!objects.equals(loadedSettings, this.globalSettings)) {
-                // Keep in class
-                this.globalSettings = loadedSettings;
-                return true; // changed value
-            }
-            return false; // no changed value
-        };
-        UserSettings.prototype.doLoadSync = function () {
-            var settings = this.doLoadSettingsSync();
-            return {
-                settings: settings.contents,
-                settingsParseErrors: settings.parseErrors,
-                keybindings: this.doLoadKeybindingsSync()
-            };
-        };
-        UserSettings.prototype.doLoadSettingsSync = function () {
-            var root = Object.create(null);
-            var content = '{}';
-            try {
-                content = fs.readFileSync(this.appSettingsPath).toString();
-            }
-            catch (error) {
-            }
-            var contents = Object.create(null);
-            try {
-                contents = json.parse(content);
-            }
-            catch (error) {
-                // parse problem
-                return {
-                    contents: Object.create(null),
-                    parseErrors: [this.appSettingsPath]
-                };
-            }
-            for (var key in contents) {
-                UserSettings.setNode(root, key, contents[key]);
-            }
-            return {
-                contents: root
-            };
-        };
-        UserSettings.setNode = function (root, key, value) {
-            var segments = key.split('.');
-            var last = segments.pop();
-            var curr = root;
-            segments.forEach(function (s) {
-                var obj = curr[s];
-                switch (typeof obj) {
-                    case 'undefined':
-                        obj = curr[s] = {};
-                        break;
-                    case 'object':
-                        break;
-                    default:
-                        console.log('Conflicting user settings: ' + key + ' at ' + s + ' with ' + JSON.stringify(obj));
+                if (callback) {
+                    return callback(currentConfig);
                 }
-                curr = obj;
             });
-            curr[last] = value;
         };
-        UserSettings.prototype.doLoadKeybindingsSync = function () {
-            try {
-                return json.parse(fs.readFileSync(this.appKeybindingsPath).toString());
-            }
-            catch (error) {
-            }
-            return [];
+        ConfigWatcher.prototype.getConfig = function () {
+            this.ensureLoaded();
+            return this.cache;
         };
-        UserSettings.prototype.dispose = function () {
-            if (this.watcher) {
-                this.watcher.close();
-                this.watcher = null;
+        ConfigWatcher.prototype.getValue = function (key, fallback) {
+            this.ensureLoaded();
+            if (!key) {
+                return fallback;
+            }
+            var value = this.cache ? this.cache[key] : void 0;
+            return typeof value !== 'undefined' ? value : fallback;
+        };
+        ConfigWatcher.prototype.ensureLoaded = function () {
+            if (!this.loaded) {
+                this.updateCache(this.loadSync());
             }
         };
-        UserSettings.CHANGE_BUFFER_DELAY = 300;
-        return UserSettings;
+        ConfigWatcher.prototype.dispose = function () {
+            this.disposed = true;
+            this.disposables = lifecycle_1.dispose(this.disposables);
+        };
+        return ConfigWatcher;
     }());
-    exports.UserSettings = UserSettings;
+    exports.ConfigWatcher = ConfigWatcher;
 });
 
-define(__m[69], __M([11,9]), function(nls, data) { return nls.create("vs/base/common/keyCodes", data); });
+define(__m[77/*vs/nls!vs/base/common/keybinding*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/base/common/keybinding", data); });
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatform) {
+define(__m[56/*vs/base/common/keybinding*/], __M([1/*require*/,0/*exports*/,77/*vs/nls!vs/base/common/keybinding*/,5/*vs/base/common/platform*/,51/*vs/base/common/keyCodes*/]), function (require, exports, nls, defaultPlatform, keyCodes_1) {
     'use strict';
-    /**
-     * Virtual Key Codes, the value does not hold any inherent meaning.
-     * Inspired somewhat from https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
-     * But these are "more general", as they should work across browsers & OS`s.
-     */
-    (function (KeyCode) {
-        /**
-         * Placed first to cover the 0 value of the enum.
-         */
-        KeyCode[KeyCode["Unknown"] = 0] = "Unknown";
-        KeyCode[KeyCode["Backspace"] = 1] = "Backspace";
-        KeyCode[KeyCode["Tab"] = 2] = "Tab";
-        KeyCode[KeyCode["Enter"] = 3] = "Enter";
-        KeyCode[KeyCode["Shift"] = 4] = "Shift";
-        KeyCode[KeyCode["Ctrl"] = 5] = "Ctrl";
-        KeyCode[KeyCode["Alt"] = 6] = "Alt";
-        KeyCode[KeyCode["PauseBreak"] = 7] = "PauseBreak";
-        KeyCode[KeyCode["CapsLock"] = 8] = "CapsLock";
-        KeyCode[KeyCode["Escape"] = 9] = "Escape";
-        KeyCode[KeyCode["Space"] = 10] = "Space";
-        KeyCode[KeyCode["PageUp"] = 11] = "PageUp";
-        KeyCode[KeyCode["PageDown"] = 12] = "PageDown";
-        KeyCode[KeyCode["End"] = 13] = "End";
-        KeyCode[KeyCode["Home"] = 14] = "Home";
-        KeyCode[KeyCode["LeftArrow"] = 15] = "LeftArrow";
-        KeyCode[KeyCode["UpArrow"] = 16] = "UpArrow";
-        KeyCode[KeyCode["RightArrow"] = 17] = "RightArrow";
-        KeyCode[KeyCode["DownArrow"] = 18] = "DownArrow";
-        KeyCode[KeyCode["Insert"] = 19] = "Insert";
-        KeyCode[KeyCode["Delete"] = 20] = "Delete";
-        KeyCode[KeyCode["KEY_0"] = 21] = "KEY_0";
-        KeyCode[KeyCode["KEY_1"] = 22] = "KEY_1";
-        KeyCode[KeyCode["KEY_2"] = 23] = "KEY_2";
-        KeyCode[KeyCode["KEY_3"] = 24] = "KEY_3";
-        KeyCode[KeyCode["KEY_4"] = 25] = "KEY_4";
-        KeyCode[KeyCode["KEY_5"] = 26] = "KEY_5";
-        KeyCode[KeyCode["KEY_6"] = 27] = "KEY_6";
-        KeyCode[KeyCode["KEY_7"] = 28] = "KEY_7";
-        KeyCode[KeyCode["KEY_8"] = 29] = "KEY_8";
-        KeyCode[KeyCode["KEY_9"] = 30] = "KEY_9";
-        KeyCode[KeyCode["KEY_A"] = 31] = "KEY_A";
-        KeyCode[KeyCode["KEY_B"] = 32] = "KEY_B";
-        KeyCode[KeyCode["KEY_C"] = 33] = "KEY_C";
-        KeyCode[KeyCode["KEY_D"] = 34] = "KEY_D";
-        KeyCode[KeyCode["KEY_E"] = 35] = "KEY_E";
-        KeyCode[KeyCode["KEY_F"] = 36] = "KEY_F";
-        KeyCode[KeyCode["KEY_G"] = 37] = "KEY_G";
-        KeyCode[KeyCode["KEY_H"] = 38] = "KEY_H";
-        KeyCode[KeyCode["KEY_I"] = 39] = "KEY_I";
-        KeyCode[KeyCode["KEY_J"] = 40] = "KEY_J";
-        KeyCode[KeyCode["KEY_K"] = 41] = "KEY_K";
-        KeyCode[KeyCode["KEY_L"] = 42] = "KEY_L";
-        KeyCode[KeyCode["KEY_M"] = 43] = "KEY_M";
-        KeyCode[KeyCode["KEY_N"] = 44] = "KEY_N";
-        KeyCode[KeyCode["KEY_O"] = 45] = "KEY_O";
-        KeyCode[KeyCode["KEY_P"] = 46] = "KEY_P";
-        KeyCode[KeyCode["KEY_Q"] = 47] = "KEY_Q";
-        KeyCode[KeyCode["KEY_R"] = 48] = "KEY_R";
-        KeyCode[KeyCode["KEY_S"] = 49] = "KEY_S";
-        KeyCode[KeyCode["KEY_T"] = 50] = "KEY_T";
-        KeyCode[KeyCode["KEY_U"] = 51] = "KEY_U";
-        KeyCode[KeyCode["KEY_V"] = 52] = "KEY_V";
-        KeyCode[KeyCode["KEY_W"] = 53] = "KEY_W";
-        KeyCode[KeyCode["KEY_X"] = 54] = "KEY_X";
-        KeyCode[KeyCode["KEY_Y"] = 55] = "KEY_Y";
-        KeyCode[KeyCode["KEY_Z"] = 56] = "KEY_Z";
-        KeyCode[KeyCode["Meta"] = 57] = "Meta";
-        KeyCode[KeyCode["ContextMenu"] = 58] = "ContextMenu";
-        KeyCode[KeyCode["F1"] = 59] = "F1";
-        KeyCode[KeyCode["F2"] = 60] = "F2";
-        KeyCode[KeyCode["F3"] = 61] = "F3";
-        KeyCode[KeyCode["F4"] = 62] = "F4";
-        KeyCode[KeyCode["F5"] = 63] = "F5";
-        KeyCode[KeyCode["F6"] = 64] = "F6";
-        KeyCode[KeyCode["F7"] = 65] = "F7";
-        KeyCode[KeyCode["F8"] = 66] = "F8";
-        KeyCode[KeyCode["F9"] = 67] = "F9";
-        KeyCode[KeyCode["F10"] = 68] = "F10";
-        KeyCode[KeyCode["F11"] = 69] = "F11";
-        KeyCode[KeyCode["F12"] = 70] = "F12";
-        KeyCode[KeyCode["F13"] = 71] = "F13";
-        KeyCode[KeyCode["F14"] = 72] = "F14";
-        KeyCode[KeyCode["F15"] = 73] = "F15";
-        KeyCode[KeyCode["F16"] = 74] = "F16";
-        KeyCode[KeyCode["F17"] = 75] = "F17";
-        KeyCode[KeyCode["F18"] = 76] = "F18";
-        KeyCode[KeyCode["F19"] = 77] = "F19";
-        KeyCode[KeyCode["NumLock"] = 78] = "NumLock";
-        KeyCode[KeyCode["ScrollLock"] = 79] = "ScrollLock";
-        /**
-         * Used for miscellaneous characters; it can vary by keyboard.
-         * For the US standard keyboard, the ';:' key
-         */
-        KeyCode[KeyCode["US_SEMICOLON"] = 80] = "US_SEMICOLON";
-        /**
-         * For any country/region, the '+' key
-         * For the US standard keyboard, the '=+' key
-         */
-        KeyCode[KeyCode["US_EQUAL"] = 81] = "US_EQUAL";
-        /**
-         * For any country/region, the ',' key
-         * For the US standard keyboard, the ',<' key
-         */
-        KeyCode[KeyCode["US_COMMA"] = 82] = "US_COMMA";
-        /**
-         * For any country/region, the '-' key
-         * For the US standard keyboard, the '-_' key
-         */
-        KeyCode[KeyCode["US_MINUS"] = 83] = "US_MINUS";
-        /**
-         * For any country/region, the '.' key
-         * For the US standard keyboard, the '.>' key
-         */
-        KeyCode[KeyCode["US_DOT"] = 84] = "US_DOT";
-        /**
-         * Used for miscellaneous characters; it can vary by keyboard.
-         * For the US standard keyboard, the '/?' key
-         */
-        KeyCode[KeyCode["US_SLASH"] = 85] = "US_SLASH";
-        /**
-         * Used for miscellaneous characters; it can vary by keyboard.
-         * For the US standard keyboard, the '`~' key
-         */
-        KeyCode[KeyCode["US_BACKTICK"] = 86] = "US_BACKTICK";
-        /**
-         * Used for miscellaneous characters; it can vary by keyboard.
-         * For the US standard keyboard, the '[{' key
-         */
-        KeyCode[KeyCode["US_OPEN_SQUARE_BRACKET"] = 87] = "US_OPEN_SQUARE_BRACKET";
-        /**
-         * Used for miscellaneous characters; it can vary by keyboard.
-         * For the US standard keyboard, the '\|' key
-         */
-        KeyCode[KeyCode["US_BACKSLASH"] = 88] = "US_BACKSLASH";
-        /**
-         * Used for miscellaneous characters; it can vary by keyboard.
-         * For the US standard keyboard, the ']}' key
-         */
-        KeyCode[KeyCode["US_CLOSE_SQUARE_BRACKET"] = 89] = "US_CLOSE_SQUARE_BRACKET";
-        /**
-         * Used for miscellaneous characters; it can vary by keyboard.
-         * For the US standard keyboard, the ''"' key
-         */
-        KeyCode[KeyCode["US_QUOTE"] = 90] = "US_QUOTE";
-        /**
-         * Used for miscellaneous characters; it can vary by keyboard.
-         */
-        KeyCode[KeyCode["OEM_8"] = 91] = "OEM_8";
-        /**
-         * Either the angle bracket key or the backslash key on the RT 102-key keyboard.
-         */
-        KeyCode[KeyCode["OEM_102"] = 92] = "OEM_102";
-        KeyCode[KeyCode["NUMPAD_0"] = 93] = "NUMPAD_0";
-        KeyCode[KeyCode["NUMPAD_1"] = 94] = "NUMPAD_1";
-        KeyCode[KeyCode["NUMPAD_2"] = 95] = "NUMPAD_2";
-        KeyCode[KeyCode["NUMPAD_3"] = 96] = "NUMPAD_3";
-        KeyCode[KeyCode["NUMPAD_4"] = 97] = "NUMPAD_4";
-        KeyCode[KeyCode["NUMPAD_5"] = 98] = "NUMPAD_5";
-        KeyCode[KeyCode["NUMPAD_6"] = 99] = "NUMPAD_6";
-        KeyCode[KeyCode["NUMPAD_7"] = 100] = "NUMPAD_7";
-        KeyCode[KeyCode["NUMPAD_8"] = 101] = "NUMPAD_8";
-        KeyCode[KeyCode["NUMPAD_9"] = 102] = "NUMPAD_9";
-        KeyCode[KeyCode["NUMPAD_MULTIPLY"] = 103] = "NUMPAD_MULTIPLY";
-        KeyCode[KeyCode["NUMPAD_ADD"] = 104] = "NUMPAD_ADD";
-        KeyCode[KeyCode["NUMPAD_SEPARATOR"] = 105] = "NUMPAD_SEPARATOR";
-        KeyCode[KeyCode["NUMPAD_SUBTRACT"] = 106] = "NUMPAD_SUBTRACT";
-        KeyCode[KeyCode["NUMPAD_DECIMAL"] = 107] = "NUMPAD_DECIMAL";
-        KeyCode[KeyCode["NUMPAD_DIVIDE"] = 108] = "NUMPAD_DIVIDE";
-        /**
-         * Placed last to cover the length of the enum.
-         */
-        KeyCode[KeyCode["MAX_VALUE"] = 109] = "MAX_VALUE";
-    })(exports.KeyCode || (exports.KeyCode = {}));
-    var KeyCode = exports.KeyCode;
-    var Mapping = (function () {
-        function Mapping(fromKeyCode, toKeyCode) {
-            this._fromKeyCode = fromKeyCode;
-            this._toKeyCode = toKeyCode;
-        }
-        Mapping.prototype.fromKeyCode = function (keyCode) {
-            return this._fromKeyCode[keyCode];
-        };
-        Mapping.prototype.toKeyCode = function (str) {
-            if (this._toKeyCode.hasOwnProperty(str)) {
-                return this._toKeyCode[str];
-            }
-            return KeyCode.Unknown;
-        };
-        return Mapping;
-    }());
-    function createMapping(fill1, fill2) {
-        var MAP = [];
-        fill1(MAP);
-        var REVERSE_MAP = {};
-        for (var i = 0, len = MAP.length; i < len; i++) {
-            if (!MAP[i]) {
-                continue;
-            }
-            REVERSE_MAP[MAP[i]] = i;
-        }
-        fill2(REVERSE_MAP);
-        var FINAL_REVERSE_MAP = {};
-        for (var entry in REVERSE_MAP) {
-            if (REVERSE_MAP.hasOwnProperty(entry)) {
-                FINAL_REVERSE_MAP[entry] = REVERSE_MAP[entry];
-                FINAL_REVERSE_MAP[entry.toLowerCase()] = REVERSE_MAP[entry];
-            }
-        }
-        return new Mapping(MAP, FINAL_REVERSE_MAP);
-    }
-    var STRING = createMapping(function (TO_STRING_MAP) {
-        TO_STRING_MAP[KeyCode.Unknown] = 'unknown';
-        TO_STRING_MAP[KeyCode.Backspace] = 'Backspace';
-        TO_STRING_MAP[KeyCode.Tab] = 'Tab';
-        TO_STRING_MAP[KeyCode.Enter] = 'Enter';
-        TO_STRING_MAP[KeyCode.Shift] = 'Shift';
-        TO_STRING_MAP[KeyCode.Ctrl] = 'Ctrl';
-        TO_STRING_MAP[KeyCode.Alt] = 'Alt';
-        TO_STRING_MAP[KeyCode.PauseBreak] = 'PauseBreak';
-        TO_STRING_MAP[KeyCode.CapsLock] = 'CapsLock';
-        TO_STRING_MAP[KeyCode.Escape] = 'Escape';
-        TO_STRING_MAP[KeyCode.Space] = 'Space';
-        TO_STRING_MAP[KeyCode.PageUp] = 'PageUp';
-        TO_STRING_MAP[KeyCode.PageDown] = 'PageDown';
-        TO_STRING_MAP[KeyCode.End] = 'End';
-        TO_STRING_MAP[KeyCode.Home] = 'Home';
-        TO_STRING_MAP[KeyCode.LeftArrow] = 'LeftArrow';
-        TO_STRING_MAP[KeyCode.UpArrow] = 'UpArrow';
-        TO_STRING_MAP[KeyCode.RightArrow] = 'RightArrow';
-        TO_STRING_MAP[KeyCode.DownArrow] = 'DownArrow';
-        TO_STRING_MAP[KeyCode.Insert] = 'Insert';
-        TO_STRING_MAP[KeyCode.Delete] = 'Delete';
-        TO_STRING_MAP[KeyCode.KEY_0] = '0';
-        TO_STRING_MAP[KeyCode.KEY_1] = '1';
-        TO_STRING_MAP[KeyCode.KEY_2] = '2';
-        TO_STRING_MAP[KeyCode.KEY_3] = '3';
-        TO_STRING_MAP[KeyCode.KEY_4] = '4';
-        TO_STRING_MAP[KeyCode.KEY_5] = '5';
-        TO_STRING_MAP[KeyCode.KEY_6] = '6';
-        TO_STRING_MAP[KeyCode.KEY_7] = '7';
-        TO_STRING_MAP[KeyCode.KEY_8] = '8';
-        TO_STRING_MAP[KeyCode.KEY_9] = '9';
-        TO_STRING_MAP[KeyCode.KEY_A] = 'A';
-        TO_STRING_MAP[KeyCode.KEY_B] = 'B';
-        TO_STRING_MAP[KeyCode.KEY_C] = 'C';
-        TO_STRING_MAP[KeyCode.KEY_D] = 'D';
-        TO_STRING_MAP[KeyCode.KEY_E] = 'E';
-        TO_STRING_MAP[KeyCode.KEY_F] = 'F';
-        TO_STRING_MAP[KeyCode.KEY_G] = 'G';
-        TO_STRING_MAP[KeyCode.KEY_H] = 'H';
-        TO_STRING_MAP[KeyCode.KEY_I] = 'I';
-        TO_STRING_MAP[KeyCode.KEY_J] = 'J';
-        TO_STRING_MAP[KeyCode.KEY_K] = 'K';
-        TO_STRING_MAP[KeyCode.KEY_L] = 'L';
-        TO_STRING_MAP[KeyCode.KEY_M] = 'M';
-        TO_STRING_MAP[KeyCode.KEY_N] = 'N';
-        TO_STRING_MAP[KeyCode.KEY_O] = 'O';
-        TO_STRING_MAP[KeyCode.KEY_P] = 'P';
-        TO_STRING_MAP[KeyCode.KEY_Q] = 'Q';
-        TO_STRING_MAP[KeyCode.KEY_R] = 'R';
-        TO_STRING_MAP[KeyCode.KEY_S] = 'S';
-        TO_STRING_MAP[KeyCode.KEY_T] = 'T';
-        TO_STRING_MAP[KeyCode.KEY_U] = 'U';
-        TO_STRING_MAP[KeyCode.KEY_V] = 'V';
-        TO_STRING_MAP[KeyCode.KEY_W] = 'W';
-        TO_STRING_MAP[KeyCode.KEY_X] = 'X';
-        TO_STRING_MAP[KeyCode.KEY_Y] = 'Y';
-        TO_STRING_MAP[KeyCode.KEY_Z] = 'Z';
-        TO_STRING_MAP[KeyCode.ContextMenu] = 'ContextMenu';
-        TO_STRING_MAP[KeyCode.F1] = 'F1';
-        TO_STRING_MAP[KeyCode.F2] = 'F2';
-        TO_STRING_MAP[KeyCode.F3] = 'F3';
-        TO_STRING_MAP[KeyCode.F4] = 'F4';
-        TO_STRING_MAP[KeyCode.F5] = 'F5';
-        TO_STRING_MAP[KeyCode.F6] = 'F6';
-        TO_STRING_MAP[KeyCode.F7] = 'F7';
-        TO_STRING_MAP[KeyCode.F8] = 'F8';
-        TO_STRING_MAP[KeyCode.F9] = 'F9';
-        TO_STRING_MAP[KeyCode.F10] = 'F10';
-        TO_STRING_MAP[KeyCode.F11] = 'F11';
-        TO_STRING_MAP[KeyCode.F12] = 'F12';
-        TO_STRING_MAP[KeyCode.F13] = 'F13';
-        TO_STRING_MAP[KeyCode.F14] = 'F14';
-        TO_STRING_MAP[KeyCode.F15] = 'F15';
-        TO_STRING_MAP[KeyCode.F16] = 'F16';
-        TO_STRING_MAP[KeyCode.F17] = 'F17';
-        TO_STRING_MAP[KeyCode.F18] = 'F18';
-        TO_STRING_MAP[KeyCode.F19] = 'F19';
-        TO_STRING_MAP[KeyCode.NumLock] = 'NumLock';
-        TO_STRING_MAP[KeyCode.ScrollLock] = 'ScrollLock';
-        TO_STRING_MAP[KeyCode.US_SEMICOLON] = ';';
-        TO_STRING_MAP[KeyCode.US_EQUAL] = '=';
-        TO_STRING_MAP[KeyCode.US_COMMA] = ',';
-        TO_STRING_MAP[KeyCode.US_MINUS] = '-';
-        TO_STRING_MAP[KeyCode.US_DOT] = '.';
-        TO_STRING_MAP[KeyCode.US_SLASH] = '/';
-        TO_STRING_MAP[KeyCode.US_BACKTICK] = '`';
-        TO_STRING_MAP[KeyCode.US_OPEN_SQUARE_BRACKET] = '[';
-        TO_STRING_MAP[KeyCode.US_BACKSLASH] = '\\';
-        TO_STRING_MAP[KeyCode.US_CLOSE_SQUARE_BRACKET] = ']';
-        TO_STRING_MAP[KeyCode.US_QUOTE] = '\'';
-        TO_STRING_MAP[KeyCode.OEM_8] = 'OEM_8';
-        TO_STRING_MAP[KeyCode.OEM_102] = 'OEM_102';
-        TO_STRING_MAP[KeyCode.NUMPAD_0] = 'NumPad0';
-        TO_STRING_MAP[KeyCode.NUMPAD_1] = 'NumPad1';
-        TO_STRING_MAP[KeyCode.NUMPAD_2] = 'NumPad2';
-        TO_STRING_MAP[KeyCode.NUMPAD_3] = 'NumPad3';
-        TO_STRING_MAP[KeyCode.NUMPAD_4] = 'NumPad4';
-        TO_STRING_MAP[KeyCode.NUMPAD_5] = 'NumPad5';
-        TO_STRING_MAP[KeyCode.NUMPAD_6] = 'NumPad6';
-        TO_STRING_MAP[KeyCode.NUMPAD_7] = 'NumPad7';
-        TO_STRING_MAP[KeyCode.NUMPAD_8] = 'NumPad8';
-        TO_STRING_MAP[KeyCode.NUMPAD_9] = 'NumPad9';
-        TO_STRING_MAP[KeyCode.NUMPAD_MULTIPLY] = 'NumPad_Multiply';
-        TO_STRING_MAP[KeyCode.NUMPAD_ADD] = 'NumPad_Add';
-        TO_STRING_MAP[KeyCode.NUMPAD_SEPARATOR] = 'NumPad_Separator';
-        TO_STRING_MAP[KeyCode.NUMPAD_SUBTRACT] = 'NumPad_Subtract';
-        TO_STRING_MAP[KeyCode.NUMPAD_DECIMAL] = 'NumPad_Decimal';
-        TO_STRING_MAP[KeyCode.NUMPAD_DIVIDE] = 'NumPad_Divide';
-        // for (let i = 0; i < KeyCode.MAX_VALUE; i++) {
-        // 	if (!TO_STRING_MAP[i]) {
-        // 		console.warn('Missing string representation for ' + KeyCode[i]);
-        // 	}
-        // }
-    }, function (FROM_STRING_MAP) {
-        FROM_STRING_MAP['\r'] = KeyCode.Enter;
-    });
-    var USER_SETTINGS = createMapping(function (TO_USER_SETTINGS_MAP) {
-        for (var i = 0, len = STRING._fromKeyCode.length; i < len; i++) {
-            TO_USER_SETTINGS_MAP[i] = STRING._fromKeyCode[i];
-        }
-        TO_USER_SETTINGS_MAP[KeyCode.LeftArrow] = 'Left';
-        TO_USER_SETTINGS_MAP[KeyCode.UpArrow] = 'Up';
-        TO_USER_SETTINGS_MAP[KeyCode.RightArrow] = 'Right';
-        TO_USER_SETTINGS_MAP[KeyCode.DownArrow] = 'Down';
-    }, function (FROM_USER_SETTINGS_MAP) {
-        FROM_USER_SETTINGS_MAP['OEM_1'] = KeyCode.US_SEMICOLON;
-        FROM_USER_SETTINGS_MAP['OEM_PLUS'] = KeyCode.US_EQUAL;
-        FROM_USER_SETTINGS_MAP['OEM_COMMA'] = KeyCode.US_COMMA;
-        FROM_USER_SETTINGS_MAP['OEM_MINUS'] = KeyCode.US_MINUS;
-        FROM_USER_SETTINGS_MAP['OEM_PERIOD'] = KeyCode.US_DOT;
-        FROM_USER_SETTINGS_MAP['OEM_2'] = KeyCode.US_SLASH;
-        FROM_USER_SETTINGS_MAP['OEM_3'] = KeyCode.US_BACKTICK;
-        FROM_USER_SETTINGS_MAP['OEM_4'] = KeyCode.US_OPEN_SQUARE_BRACKET;
-        FROM_USER_SETTINGS_MAP['OEM_5'] = KeyCode.US_BACKSLASH;
-        FROM_USER_SETTINGS_MAP['OEM_6'] = KeyCode.US_CLOSE_SQUARE_BRACKET;
-        FROM_USER_SETTINGS_MAP['OEM_7'] = KeyCode.US_QUOTE;
-        FROM_USER_SETTINGS_MAP['OEM_8'] = KeyCode.OEM_8;
-        FROM_USER_SETTINGS_MAP['OEM_102'] = KeyCode.OEM_102;
-    });
-    var KeyCode;
-    (function (KeyCode) {
-        function toString(key) {
-            return STRING.fromKeyCode(key);
-        }
-        KeyCode.toString = toString;
-        function fromString(key) {
-            return STRING.toKeyCode(key);
-        }
-        KeyCode.fromString = fromString;
-    })(KeyCode = exports.KeyCode || (exports.KeyCode = {}));
-    // Binary encoding strategy:
-    // 15:  1 bit for ctrlCmd
-    // 14:  1 bit for shift
-    // 13:  1 bit for alt
-    // 12:  1 bit for winCtrl
-    //  0: 12 bits for keyCode (up to a maximum keyCode of 4096. Given we have 83 at this point thats good enough)
-    var BIN_CTRLCMD_MASK = 1 << 15;
-    var BIN_SHIFT_MASK = 1 << 14;
-    var BIN_ALT_MASK = 1 << 13;
-    var BIN_WINCTRL_MASK = 1 << 12;
-    var BIN_KEYCODE_MASK = 0x00000fff;
-    var BinaryKeybindings = (function () {
-        function BinaryKeybindings() {
-        }
-        BinaryKeybindings.extractFirstPart = function (keybinding) {
-            return keybinding & 0x0000ffff;
-        };
-        BinaryKeybindings.extractChordPart = function (keybinding) {
-            return (keybinding >> 16) & 0x0000ffff;
-        };
-        BinaryKeybindings.hasChord = function (keybinding) {
-            return (this.extractChordPart(keybinding) !== 0);
-        };
-        BinaryKeybindings.hasCtrlCmd = function (keybinding) {
-            return (keybinding & BIN_CTRLCMD_MASK ? true : false);
-        };
-        BinaryKeybindings.hasShift = function (keybinding) {
-            return (keybinding & BIN_SHIFT_MASK ? true : false);
-        };
-        BinaryKeybindings.hasAlt = function (keybinding) {
-            return (keybinding & BIN_ALT_MASK ? true : false);
-        };
-        BinaryKeybindings.hasWinCtrl = function (keybinding) {
-            return (keybinding & BIN_WINCTRL_MASK ? true : false);
-        };
-        BinaryKeybindings.extractKeyCode = function (keybinding) {
-            return (keybinding & BIN_KEYCODE_MASK);
-        };
-        return BinaryKeybindings;
-    }());
-    exports.BinaryKeybindings = BinaryKeybindings;
-    var KeyMod = (function () {
-        function KeyMod() {
-        }
-        KeyMod.chord = function (firstPart, secondPart) {
-            return firstPart | ((secondPart & 0x0000ffff) << 16);
-        };
-        KeyMod.CtrlCmd = BIN_CTRLCMD_MASK;
-        KeyMod.Shift = BIN_SHIFT_MASK;
-        KeyMod.Alt = BIN_ALT_MASK;
-        KeyMod.WinCtrl = BIN_WINCTRL_MASK;
-        return KeyMod;
-    }());
-    exports.KeyMod = KeyMod;
-    /**
-     * A set of usual keybindings that can be reused in code
-     */
-    var CommonKeybindings = (function () {
-        function CommonKeybindings() {
-        }
-        CommonKeybindings.ENTER = KeyCode.Enter;
-        CommonKeybindings.SHIFT_ENTER = KeyMod.Shift | KeyCode.Enter;
-        CommonKeybindings.CTRLCMD_ENTER = KeyMod.CtrlCmd | KeyCode.Enter;
-        CommonKeybindings.WINCTRL_ENTER = KeyMod.WinCtrl | KeyCode.Enter;
-        CommonKeybindings.TAB = KeyCode.Tab;
-        CommonKeybindings.SHIFT_TAB = KeyMod.Shift | KeyCode.Tab;
-        CommonKeybindings.ESCAPE = KeyCode.Escape;
-        CommonKeybindings.SPACE = KeyCode.Space;
-        CommonKeybindings.DELETE = KeyCode.Delete;
-        CommonKeybindings.SHIFT_DELETE = KeyMod.Shift | KeyCode.Delete;
-        CommonKeybindings.CTRLCMD_BACKSPACE = KeyMod.CtrlCmd | KeyCode.Backspace;
-        CommonKeybindings.UP_ARROW = KeyCode.UpArrow;
-        CommonKeybindings.WINCTRL_P = KeyMod.WinCtrl | KeyCode.KEY_P;
-        CommonKeybindings.SHIFT_UP_ARROW = KeyMod.Shift | KeyCode.UpArrow;
-        CommonKeybindings.CTRLCMD_UP_ARROW = KeyMod.CtrlCmd | KeyCode.UpArrow;
-        CommonKeybindings.DOWN_ARROW = KeyCode.DownArrow;
-        CommonKeybindings.WINCTRL_N = KeyMod.WinCtrl | KeyCode.KEY_N;
-        CommonKeybindings.SHIFT_DOWN_ARROW = KeyMod.Shift | KeyCode.DownArrow;
-        CommonKeybindings.CTRLCMD_DOWN_ARROW = KeyMod.CtrlCmd | KeyCode.DownArrow;
-        CommonKeybindings.LEFT_ARROW = KeyCode.LeftArrow;
-        CommonKeybindings.RIGHT_ARROW = KeyCode.RightArrow;
-        CommonKeybindings.HOME = KeyCode.Home;
-        CommonKeybindings.END = KeyCode.End;
-        CommonKeybindings.PAGE_UP = KeyCode.PageUp;
-        CommonKeybindings.SHIFT_PAGE_UP = KeyMod.Shift | KeyCode.PageUp;
-        CommonKeybindings.PAGE_DOWN = KeyCode.PageDown;
-        CommonKeybindings.SHIFT_PAGE_DOWN = KeyMod.Shift | KeyCode.PageDown;
-        CommonKeybindings.F2 = KeyCode.F2;
-        CommonKeybindings.CTRLCMD_S = KeyMod.CtrlCmd | KeyCode.KEY_S;
-        CommonKeybindings.CTRLCMD_C = KeyMod.CtrlCmd | KeyCode.KEY_C;
-        CommonKeybindings.CTRLCMD_V = KeyMod.CtrlCmd | KeyCode.KEY_V;
-        return CommonKeybindings;
-    }());
-    exports.CommonKeybindings = CommonKeybindings;
     var Keybinding = (function () {
         function Keybinding(keybinding) {
             this.value = keybinding;
@@ -8905,7 +9802,7 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
          * See https://github.com/electron/electron/blob/master/docs/api/accelerator.md
          */
         Keybinding._toElectronAccelerator = function (value, Platform) {
-            if (BinaryKeybindings.hasChord(value)) {
+            if (keyCodes_1.BinaryKeybindings.hasChord(value)) {
                 // Electron cannot handle chords
                 return null;
             }
@@ -9001,37 +9898,37 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
             else {
                 key = input;
             }
-            var keyCode = USER_SETTINGS.toKeyCode(key);
+            var keyCode = keyCodes_1.USER_SETTINGS.toKeyCode(key);
             var result = 0;
             if (ctrlCmd) {
-                result |= KeyMod.CtrlCmd;
+                result |= 32768 /* CtrlCmd */;
             }
             if (shift) {
-                result |= KeyMod.Shift;
+                result |= 16384 /* Shift */;
             }
             if (alt) {
-                result |= KeyMod.Alt;
+                result |= 8192 /* Alt */;
             }
             if (winCtrl) {
-                result |= KeyMod.WinCtrl;
+                result |= 4096 /* WinCtrl */;
             }
             result |= keyCode;
-            return KeyMod.chord(result, chord);
+            return keyCodes_1.KeyChord(result, chord);
         };
         Keybinding.prototype.hasCtrlCmd = function () {
-            return BinaryKeybindings.hasCtrlCmd(this.value);
+            return keyCodes_1.BinaryKeybindings.hasCtrlCmd(this.value);
         };
         Keybinding.prototype.hasShift = function () {
-            return BinaryKeybindings.hasShift(this.value);
+            return keyCodes_1.BinaryKeybindings.hasShift(this.value);
         };
         Keybinding.prototype.hasAlt = function () {
-            return BinaryKeybindings.hasAlt(this.value);
+            return keyCodes_1.BinaryKeybindings.hasAlt(this.value);
         };
         Keybinding.prototype.hasWinCtrl = function () {
-            return BinaryKeybindings.hasWinCtrl(this.value);
+            return keyCodes_1.BinaryKeybindings.hasWinCtrl(this.value);
         };
         Keybinding.prototype.extractKeyCode = function () {
-            return BinaryKeybindings.extractKeyCode(this.value);
+            return keyCodes_1.BinaryKeybindings.extractKeyCode(this.value);
         };
         /**
          * Format the binding to a format appropiate for rendering in the UI
@@ -9101,16 +9998,16 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
         }
         ElectronAcceleratorLabelProvider.prototype.getLabelForKey = function (keyCode) {
             switch (keyCode) {
-                case KeyCode.UpArrow:
+                case 16 /* UpArrow */:
                     return 'Up';
-                case KeyCode.DownArrow:
+                case 18 /* DownArrow */:
                     return 'Down';
-                case KeyCode.LeftArrow:
+                case 15 /* LeftArrow */:
                     return 'Left';
-                case KeyCode.RightArrow:
+                case 17 /* RightArrow */:
                     return 'Right';
             }
-            return KeyCode.toString(keyCode);
+            return keyCodes_1.KeyCodeUtils.toString(keyCode);
         };
         ElectronAcceleratorLabelProvider.INSTANCE = new ElectronAcceleratorLabelProvider();
         return ElectronAcceleratorLabelProvider;
@@ -9130,16 +10027,16 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
         }
         MacUIKeyLabelProvider.prototype.getLabelForKey = function (keyCode) {
             switch (keyCode) {
-                case KeyCode.LeftArrow:
+                case 15 /* LeftArrow */:
                     return MacUIKeyLabelProvider.leftArrowUnicodeLabel;
-                case KeyCode.UpArrow:
+                case 16 /* UpArrow */:
                     return MacUIKeyLabelProvider.upArrowUnicodeLabel;
-                case KeyCode.RightArrow:
+                case 17 /* RightArrow */:
                     return MacUIKeyLabelProvider.rightArrowUnicodeLabel;
-                case KeyCode.DownArrow:
+                case 18 /* DownArrow */:
                     return MacUIKeyLabelProvider.downArrowUnicodeLabel;
             }
-            return KeyCode.toString(keyCode);
+            return keyCodes_1.KeyCodeUtils.toString(keyCode);
         };
         MacUIKeyLabelProvider.INSTANCE = new MacUIKeyLabelProvider();
         MacUIKeyLabelProvider.leftArrowUnicodeLabel = String.fromCharCode(8592);
@@ -9162,7 +10059,7 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
             this.modifierSeparator = '+';
         }
         AriaKeyLabelProvider.prototype.getLabelForKey = function (keyCode) {
-            return KeyCode.toString(keyCode);
+            return keyCodes_1.KeyCodeUtils.toString(keyCode);
         };
         AriaKeyLabelProvider.INSTANCE = new MacUIKeyLabelProvider();
         return AriaKeyLabelProvider;
@@ -9181,7 +10078,7 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
             this.modifierSeparator = '+';
         }
         ClassicUIKeyLabelProvider.prototype.getLabelForKey = function (keyCode) {
-            return KeyCode.toString(keyCode);
+            return keyCodes_1.KeyCodeUtils.toString(keyCode);
         };
         ClassicUIKeyLabelProvider.INSTANCE = new ClassicUIKeyLabelProvider();
         return ClassicUIKeyLabelProvider;
@@ -9200,13 +10097,13 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
             this.modifierSeparator = '+';
         }
         UserSettingsKeyLabelProvider.prototype.getLabelForKey = function (keyCode) {
-            return USER_SETTINGS.fromKeyCode(keyCode);
+            return keyCodes_1.USER_SETTINGS.fromKeyCode(keyCode);
         };
         UserSettingsKeyLabelProvider.INSTANCE = new UserSettingsKeyLabelProvider();
         return UserSettingsKeyLabelProvider;
     }());
     function _asString(keybinding, labelProvider, Platform) {
-        var result = [], ctrlCmd = BinaryKeybindings.hasCtrlCmd(keybinding), shift = BinaryKeybindings.hasShift(keybinding), alt = BinaryKeybindings.hasAlt(keybinding), winCtrl = BinaryKeybindings.hasWinCtrl(keybinding), keyCode = BinaryKeybindings.extractKeyCode(keybinding);
+        var result = [], ctrlCmd = keyCodes_1.BinaryKeybindings.hasCtrlCmd(keybinding), shift = keyCodes_1.BinaryKeybindings.hasShift(keybinding), alt = keyCodes_1.BinaryKeybindings.hasAlt(keybinding), winCtrl = keyCodes_1.BinaryKeybindings.hasWinCtrl(keybinding), keyCode = keyCodes_1.BinaryKeybindings.extractKeyCode(keybinding);
         var keyLabel = labelProvider.getLabelForKey(keyCode);
         if (!keyLabel) {
             // cannot trigger this key code under this kb layout
@@ -9231,8 +10128,8 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
         // the actual key
         result.push(keyLabel);
         var actualResult = result.join(labelProvider.modifierSeparator);
-        if (BinaryKeybindings.hasChord(keybinding)) {
-            return actualResult + ' ' + _asString(BinaryKeybindings.extractChordPart(keybinding), labelProvider, Platform);
+        if (keyCodes_1.BinaryKeybindings.hasChord(keybinding)) {
+            return actualResult + ' ' + _asString(keyCodes_1.BinaryKeybindings.extractChordPart(keybinding), labelProvider, Platform);
         }
         return actualResult;
     }
@@ -9251,7 +10148,7 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
     }
     function _asHTML(keybinding, labelProvider, Platform, isChord) {
         if (isChord === void 0) { isChord = false; }
-        var result = [], ctrlCmd = BinaryKeybindings.hasCtrlCmd(keybinding), shift = BinaryKeybindings.hasShift(keybinding), alt = BinaryKeybindings.hasAlt(keybinding), winCtrl = BinaryKeybindings.hasWinCtrl(keybinding), keyCode = BinaryKeybindings.extractKeyCode(keybinding);
+        var result = [], ctrlCmd = keyCodes_1.BinaryKeybindings.hasCtrlCmd(keybinding), shift = keyCodes_1.BinaryKeybindings.hasShift(keybinding), alt = keyCodes_1.BinaryKeybindings.hasAlt(keybinding), winCtrl = keyCodes_1.BinaryKeybindings.hasWinCtrl(keybinding), keyCode = keyCodes_1.BinaryKeybindings.extractKeyCode(keybinding);
         var keyLabel = labelProvider.getLabelForKey(keyCode);
         if (!keyLabel) {
             // cannot trigger this key code under this kb layout
@@ -9276,8 +10173,8 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
         // the actual key
         _pushKey(result, keyLabel);
         var chordTo = null;
-        if (BinaryKeybindings.hasChord(keybinding)) {
-            chordTo = _asHTML(BinaryKeybindings.extractChordPart(keybinding), labelProvider, Platform, true);
+        if (keyCodes_1.BinaryKeybindings.hasChord(keybinding)) {
+            chordTo = _asHTML(keyCodes_1.BinaryKeybindings.extractChordPart(keybinding), labelProvider, Platform, true);
             result.push({
                 tagName: 'span',
                 text: ' '
@@ -9295,15 +10192,73 @@ define(__m[70], __M([0,1,69,3]), function (require, exports, nls, defaultPlatfor
     }
 });
 
+define(__m[57/*vs/nls!vs/base/common/severity*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/base/common/severity", data); });
+define(__m[58/*vs/base/common/severity*/], __M([1/*require*/,0/*exports*/,57/*vs/nls!vs/base/common/severity*/,26/*vs/base/common/strings*/]), function (require, exports, nls, strings) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var Severity;
+    (function (Severity) {
+        Severity[Severity["Ignore"] = 0] = "Ignore";
+        Severity[Severity["Info"] = 1] = "Info";
+        Severity[Severity["Warning"] = 2] = "Warning";
+        Severity[Severity["Error"] = 3] = "Error";
+    })(Severity || (Severity = {}));
+    var Severity;
+    (function (Severity) {
+        var _error = 'error', _warning = 'warning', _warn = 'warn', _info = 'info';
+        var _displayStrings = Object.create(null);
+        _displayStrings[Severity.Error] = nls.localize(0, null);
+        _displayStrings[Severity.Warning] = nls.localize(1, null);
+        _displayStrings[Severity.Info] = nls.localize(2, null);
+        /**
+         * Parses 'error', 'warning', 'warn', 'info' in call casings
+         * and falls back to ignore.
+         */
+        function fromValue(value) {
+            if (!value) {
+                return Severity.Ignore;
+            }
+            if (strings.equalsIgnoreCase(_error, value)) {
+                return Severity.Error;
+            }
+            if (strings.equalsIgnoreCase(_warning, value) || strings.equalsIgnoreCase(_warn, value)) {
+                return Severity.Warning;
+            }
+            if (strings.equalsIgnoreCase(_info, value)) {
+                return Severity.Info;
+            }
+            return Severity.Ignore;
+        }
+        Severity.fromValue = fromValue;
+        function toString(value) {
+            return _displayStrings[value] || strings.empty;
+        }
+        Severity.toString = toString;
+        function compare(a, b) {
+            return b - a;
+        }
+        Severity.compare = compare;
+    })(Severity || (Severity = {}));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Severity;
+});
 
-define(__m[42], __M([11,9]), function(nls, data) { return nls.create("vs/code/electron-main/menus", data); });
-define(__m[43], __M([11,9]), function(nls, data) { return nls.create("vs/code/electron-main/windows", data); });
-define(__m[44], __M([11,9]), function(nls, data) { return nls.create("vs/code/node/argv", data); });
+
+define(__m[59/*vs/nls!vs/code/electron-main/menus*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/code/electron-main/menus", data); });
+define(__m[60/*vs/nls!vs/code/electron-main/windows*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/code/electron-main/windows", data); });
+define(__m[61/*vs/nls!vs/platform/configuration/common/configurationRegistry*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/configuration/common/configurationRegistry", data); });
+define(__m[62/*vs/nls!vs/platform/environment/node/argv*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/environment/node/argv", data); });
+define(__m[63/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/extensionsRegistry", data); });
+define(__m[64/*vs/nls!vs/platform/request/common/request*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/request/common/request", data); });
+define(__m[65/*vs/nls!vs/workbench/parts/git/electron-main/askpassService*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/workbench/parts/git/electron-main/askpassService", data); });
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[72], __M([0,1,24,79,44]), function (require, exports, os, minimist, nls_1) {
+define(__m[37/*vs/platform/environment/node/argv*/], __M([1/*require*/,0/*exports*/,34/*os*/,105/*minimist*/,72/*assert*/,18/*vs/base/common/arrays*/,62/*vs/nls!vs/platform/environment/node/argv*/]), function (require, exports, os, minimist, assert, arrays_1, nls_1) {
     "use strict";
     var options = {
         string: [
@@ -9312,9 +10267,11 @@ define(__m[72], __M([0,1,24,79,44]), function (require, exports, os, minimist, n
             'extensionHomePath',
             'extensionDevelopmentPath',
             'extensionTestsPath',
-            'timestamp',
             'install-extension',
-            'uninstall-extension'
+            'uninstall-extension',
+            'debugBrkPluginHost',
+            'debugPluginHost',
+            'open-url'
         ],
         boolean: [
             'help',
@@ -9328,7 +10285,9 @@ define(__m[72], __M([0,1,24,79,44]), function (require, exports, os, minimist, n
             'verbose',
             'logExtensionHostCommunication',
             'disable-extensions',
-            'list-extensions'
+            'list-extensions',
+            'show-versions',
+            'nolazy'
         ],
         alias: {
             help: 'h',
@@ -9342,14 +10301,50 @@ define(__m[72], __M([0,1,24,79,44]), function (require, exports, os, minimist, n
             'disable-extensions': 'disableExtensions'
         }
     };
+    function validate(args) {
+        if (args.goto) {
+            args._.forEach(function (arg) { return assert(/^(\w:)?[^:]+(:\d*){0,2}$/.test(arg), nls_1.localize(0, null)); });
+        }
+        return args;
+    }
+    function stripAppPath(argv) {
+        var index = arrays_1.firstIndex(argv, function (a) { return !/^-/.test(a); });
+        if (index > -1) {
+            return argv.slice(0, index).concat(argv.slice(index + 1));
+        }
+    }
+    /**
+     * Use this to parse raw code process.argv such as: `Electron . --verbose --wait`
+     */
+    function parseMainProcessArgv(processArgv) {
+        var args = processArgv.slice(1);
+        // If dev, remove the first non-option argument: it's the app location
+        if (process.env['VSCODE_DEV']) {
+            args = stripAppPath(args);
+        }
+        return validate(parseArgs(args));
+    }
+    exports.parseMainProcessArgv = parseMainProcessArgv;
+    /**
+     * Use this to parse raw code CLI process.argv such as: `Electron cli.js . --verbose --wait`
+     */
+    function parseCLIProcessArgv(processArgv) {
+        var args = processArgv.slice(2);
+        if (process.env['VSCODE_DEV']) {
+            args = stripAppPath(args);
+        }
+        return validate(parseArgs(args));
+    }
+    exports.parseCLIProcessArgv = parseCLIProcessArgv;
+    /**
+     * Use this to parse code arguments such as `--verbose --wait`
+     */
     function parseArgs(args) {
         return minimist(args, options);
     }
     exports.parseArgs = parseArgs;
-    var executable = 'code' + (os.platform() === 'win32' ? '.exe' : '');
     exports.optionsHelp = {
-        '-d, --diff': nls_1.localize(0, null),
-        '--disable-extensions': nls_1.localize(1, null),
+        '-d, --diff': nls_1.localize(1, null),
         '-g, --goto': nls_1.localize(2, null),
         '--locale <locale>': nls_1.localize(3, null),
         '-n, --new-window': nls_1.localize(4, null),
@@ -9360,10 +10355,13 @@ define(__m[72], __M([0,1,24,79,44]), function (require, exports, os, minimist, n
         '-w, --wait': nls_1.localize(9, null),
         '--extensionHomePath': nls_1.localize(10, null),
         '--list-extensions': nls_1.localize(11, null),
-        '--install-extension <ext>': nls_1.localize(12, null),
-        '--uninstall-extension <ext>': nls_1.localize(13, null),
-        '-v, --version': nls_1.localize(14, null),
-        '-h, --help': nls_1.localize(15, null)
+        '--show-versions': nls_1.localize(12, null),
+        '--install-extension <ext>': nls_1.localize(13, null),
+        '--uninstall-extension <ext>': nls_1.localize(14, null),
+        '--disable-extensions': nls_1.localize(15, null),
+        '--disable-gpu': nls_1.localize(16, null),
+        '-v, --version': nls_1.localize(17, null),
+        '-h, --help': nls_1.localize(18, null)
     };
     function formatOptions(options, columns) {
         var keys = Object.keys(options);
@@ -9398,20 +10396,20 @@ define(__m[72], __M([0,1,24,79,44]), function (require, exports, os, minimist, n
         }
         return lines;
     }
-    function buildHelpMessage(version) {
+    function buildHelpMessage(fullName, name, version) {
         var columns = process.stdout.isTTY ? process.stdout.columns : 80;
-        return "Visual Studio Code v" + version + "\n\n\nUsage: " + executable + " [arguments] [paths...]\n\nOptions:\n" + formatOptions(exports.optionsHelp, columns);
+        var executable = "" + name + (os.platform() === 'win32' ? '.exe' : '');
+        return fullName + " " + version + "\n\n" + nls_1.localize(19, null) + ": " + executable + " [" + nls_1.localize(20, null) + "] [" + nls_1.localize(21, null) + "...]\n\n" + nls_1.localize(22, null) + ":\n" + formatOptions(exports.optionsHelp, columns);
     }
     exports.buildHelpMessage = buildHelpMessage;
 });
 
-define(__m[47], __M([11,9]), function(nls, data) { return nls.create("vs/workbench/parts/git/electron-main/askpassService", data); });
 
 
 
 
 
-define(__m[29], __M([0,1,14]), function (require, exports, errors_1) {
+define(__m[39/*vs/platform/instantiation/common/descriptors*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/errors*/]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9522,24 +10520,9 @@ define(__m[29], __M([0,1,14]), function (require, exports, errors_1) {
         return AsyncDescriptor;
     }(AbstractDescriptor));
     exports.AsyncDescriptor = AsyncDescriptor;
-    var _createAsyncDescriptor = function (moduleName, ctorName) {
-        var staticArguments = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            staticArguments[_i - 2] = arguments[_i];
-        }
-        return new (AsyncDescriptor.bind.apply(AsyncDescriptor, [void 0].concat([moduleName, ctorName], staticArguments)))();
-    };
-    exports.createAsyncDescriptor0 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor1 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor2 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor3 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor4 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor5 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor6 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor7 = _createAsyncDescriptor;
 });
 
-define(__m[5], __M([0,1]), function (require, exports) {
+define(__m[4/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9593,7 +10576,594 @@ define(__m[5], __M([0,1]), function (require, exports) {
     exports.optional = optional;
 });
 
-define(__m[31], __M([0,1,16]), function (require, exports, arrays_1) {
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+define(__m[71/*vs/code/common/windows*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    "use strict";
+    exports.IWindowEventService = instantiation_1.createDecorator('windowEventService');
+    var ActiveWindowManager = (function () {
+        function ActiveWindowManager(windowService) {
+            var _this = this;
+            this.windowService = windowService;
+            this.disposables = [];
+            this.disposables.push(this.windowService.onNewWindowOpen(function (windowId) { return _this.setActiveWindow(windowId); }));
+            this.disposables.push(this.windowService.onWindowFocus(function (windowId) { return _this.setActiveWindow(windowId); }));
+        }
+        ActiveWindowManager.prototype.setActiveWindow = function (windowId) {
+            this._activeWindowId = windowId;
+        };
+        Object.defineProperty(ActiveWindowManager.prototype, "activeClientId", {
+            get: function () {
+                return "window:" + this._activeWindowId;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ActiveWindowManager.prototype.dispose = function () {
+            for (var _i = 0, _a = this.disposables; _i < _a.length; _i++) {
+                var disposable = _a[_i];
+                disposable.dispose();
+            }
+        };
+        ActiveWindowManager = __decorate([
+            __param(0, exports.IWindowEventService)
+        ], ActiveWindowManager);
+        return ActiveWindowManager;
+    }());
+    exports.ActiveWindowManager = ActiveWindowManager;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[13/*vs/platform/configuration/common/configuration*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    "use strict";
+    exports.IConfigurationService = instantiation_1.createDecorator('configurationService');
+    /**
+     * A helper function to get the configuration value with a specific settings path (e.g. config.some.setting)
+     */
+    function getConfigurationValue(config, settingPath, defaultValue) {
+        function accessSetting(config, path) {
+            var current = config;
+            for (var i = 0; i < path.length; i++) {
+                current = current[path[i]];
+                if (!current) {
+                    return undefined;
+                }
+            }
+            return current;
+        }
+        var path = settingPath.split('.');
+        var result = accessSetting(config, path);
+        return typeof result === 'undefined' ? defaultValue : result;
+    }
+    exports.getConfigurationValue = getConfigurationValue;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[12/*vs/platform/environment/common/environment*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    "use strict";
+    exports.IEnvironmentService = instantiation_1.createDecorator('environmentService');
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+define(__m[20/*vs/code/electron-main/log*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/,12/*vs/platform/environment/common/environment*/]), function (require, exports, instantiation_1, environment_1) {
+    'use strict';
+    exports.ILogService = instantiation_1.createDecorator('logService');
+    var MainLogService = (function () {
+        function MainLogService(environmentService) {
+            this.environmentService = environmentService;
+        }
+        MainLogService.prototype.log = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            if (this.environmentService.verbose) {
+                console.log.apply(console, ["\u001B[93m[main " + new Date().toLocaleTimeString() + "]\u001B[0m"].concat(args));
+            }
+        };
+        MainLogService = __decorate([
+            __param(0, environment_1.IEnvironmentService)
+        ], MainLogService);
+        return MainLogService;
+    }());
+    exports.MainLogService = MainLogService;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+define(__m[23/*vs/code/electron-main/storage*/], __M([1/*require*/,0/*exports*/,7/*path*/,27/*original-fs*/,12/*vs/platform/environment/common/environment*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, path, fs, environment_1, instantiation_1) {
+    'use strict';
+    exports.IStorageService = instantiation_1.createDecorator('storageService');
+    var StorageService = (function () {
+        function StorageService(environmentService) {
+            this.environmentService = environmentService;
+            this.database = null;
+            this.dbPath = path.join(environmentService.userDataPath, 'storage.json');
+        }
+        StorageService.prototype.getItem = function (key, defaultValue) {
+            if (!this.database) {
+                this.database = this.load();
+            }
+            var res = this.database[key];
+            if (typeof res === 'undefined') {
+                return defaultValue;
+            }
+            return this.database[key];
+        };
+        StorageService.prototype.setItem = function (key, data) {
+            if (!this.database) {
+                this.database = this.load();
+            }
+            // Shortcut for primitives that did not change
+            if (typeof data === 'string' || typeof data === 'number' || typeof data === 'boolean') {
+                if (this.database[key] === data) {
+                    return;
+                }
+            }
+            this.database[key] = data;
+            this.save();
+        };
+        StorageService.prototype.removeItem = function (key) {
+            if (!this.database) {
+                this.database = this.load();
+            }
+            if (this.database[key]) {
+                delete this.database[key];
+                this.save();
+            }
+        };
+        StorageService.prototype.load = function () {
+            try {
+                return JSON.parse(fs.readFileSync(this.dbPath).toString()); // invalid JSON or permission issue can happen here
+            }
+            catch (error) {
+                if (this.environmentService.verbose) {
+                    console.error(error);
+                }
+                return {};
+            }
+        };
+        StorageService.prototype.save = function () {
+            try {
+                fs.writeFileSync(this.dbPath, JSON.stringify(this.database, null, 4)); // permission issue can happen here
+            }
+            catch (error) {
+                if (this.environmentService.verbose) {
+                    console.error(error);
+                }
+            }
+        };
+        StorageService = __decorate([
+            __param(0, environment_1.IEnvironmentService)
+        ], StorageService);
+        return StorageService;
+    }());
+    exports.StorageService = StorageService;
+});
+
+
+
+
+
+
+define(__m[76/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/,22/*vs/base/common/paths*/,49/*vs/base/common/events*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, paths, events, instantiation_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.IFileService = instantiation_1.createDecorator('fileService');
+    /**
+     * Possible changes that can occur to a file.
+     */
+    (function (FileChangeType) {
+        FileChangeType[FileChangeType["UPDATED"] = 0] = "UPDATED";
+        FileChangeType[FileChangeType["ADDED"] = 1] = "ADDED";
+        FileChangeType[FileChangeType["DELETED"] = 2] = "DELETED";
+    })(exports.FileChangeType || (exports.FileChangeType = {}));
+    var FileChangeType = exports.FileChangeType;
+    /**
+     * Possible events to subscribe to
+     */
+    exports.EventType = {
+        /**
+        * Send on file changes.
+        */
+        FILE_CHANGES: 'files:fileChanges'
+    };
+    var FileChangesEvent = (function (_super) {
+        __extends(FileChangesEvent, _super);
+        function FileChangesEvent(changes) {
+            _super.call(this);
+            this._changes = changes;
+        }
+        Object.defineProperty(FileChangesEvent.prototype, "changes", {
+            get: function () {
+                return this._changes;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Returns true if this change event contains the provided file with the given change type. In case of
+         * type DELETED, this method will also return true if a folder got deleted that is the parent of the
+         * provided file path.
+         */
+        FileChangesEvent.prototype.contains = function (resource, type) {
+            if (!resource) {
+                return false;
+            }
+            return this.containsAny([resource], type);
+        };
+        /**
+         * Returns true if this change event contains any of the provided files with the given change type. In case of
+         * type DELETED, this method will also return true if a folder got deleted that is the parent of any of the
+         * provided file paths.
+         */
+        FileChangesEvent.prototype.containsAny = function (resources, type) {
+            if (!resources || !resources.length) {
+                return false;
+            }
+            return this._changes.some(function (change) {
+                if (change.type !== type) {
+                    return false;
+                }
+                // For deleted also return true when deleted folder is parent of target path
+                if (type === FileChangeType.DELETED) {
+                    return resources.some(function (a) {
+                        if (!a) {
+                            return false;
+                        }
+                        return paths.isEqualOrParent(a.fsPath, change.resource.fsPath);
+                    });
+                }
+                return resources.some(function (a) {
+                    if (!a) {
+                        return false;
+                    }
+                    return a.fsPath === change.resource.fsPath;
+                });
+            });
+        };
+        /**
+         * Returns the changes that describe added files.
+         */
+        FileChangesEvent.prototype.getAdded = function () {
+            return this.getOfType(FileChangeType.ADDED);
+        };
+        /**
+         * Returns if this event contains added files.
+         */
+        FileChangesEvent.prototype.gotAdded = function () {
+            return this.hasType(FileChangeType.ADDED);
+        };
+        /**
+         * Returns the changes that describe deleted files.
+         */
+        FileChangesEvent.prototype.getDeleted = function () {
+            return this.getOfType(FileChangeType.DELETED);
+        };
+        /**
+         * Returns if this event contains deleted files.
+         */
+        FileChangesEvent.prototype.gotDeleted = function () {
+            return this.hasType(FileChangeType.DELETED);
+        };
+        /**
+         * Returns the changes that describe updated files.
+         */
+        FileChangesEvent.prototype.getUpdated = function () {
+            return this.getOfType(FileChangeType.UPDATED);
+        };
+        /**
+         * Returns if this event contains updated files.
+         */
+        FileChangesEvent.prototype.gotUpdated = function () {
+            return this.hasType(FileChangeType.UPDATED);
+        };
+        FileChangesEvent.prototype.getOfType = function (type) {
+            return this._changes.filter(function (change) { return change.type === type; });
+        };
+        FileChangesEvent.prototype.hasType = function (type) {
+            return this._changes.some(function (change) {
+                return change.type === type;
+            });
+        };
+        return FileChangesEvent;
+    }(events.Event));
+    exports.FileChangesEvent = FileChangesEvent;
+    (function (FileOperationResult) {
+        FileOperationResult[FileOperationResult["FILE_IS_BINARY"] = 0] = "FILE_IS_BINARY";
+        FileOperationResult[FileOperationResult["FILE_IS_DIRECTORY"] = 1] = "FILE_IS_DIRECTORY";
+        FileOperationResult[FileOperationResult["FILE_NOT_FOUND"] = 2] = "FILE_NOT_FOUND";
+        FileOperationResult[FileOperationResult["FILE_NOT_MODIFIED_SINCE"] = 3] = "FILE_NOT_MODIFIED_SINCE";
+        FileOperationResult[FileOperationResult["FILE_MODIFIED_SINCE"] = 4] = "FILE_MODIFIED_SINCE";
+        FileOperationResult[FileOperationResult["FILE_MOVE_CONFLICT"] = 5] = "FILE_MOVE_CONFLICT";
+        FileOperationResult[FileOperationResult["FILE_READ_ONLY"] = 6] = "FILE_READ_ONLY";
+        FileOperationResult[FileOperationResult["FILE_TOO_LARGE"] = 7] = "FILE_TOO_LARGE";
+        FileOperationResult[FileOperationResult["FILE_INVALID_PATH"] = 8] = "FILE_INVALID_PATH";
+    })(exports.FileOperationResult || (exports.FileOperationResult = {}));
+    var FileOperationResult = exports.FileOperationResult;
+    exports.MAX_FILE_SIZE = 50 * 1024 * 1024;
+    exports.AutoSaveConfiguration = {
+        OFF: 'off',
+        AFTER_DELAY: 'afterDelay',
+        ON_FOCUS_CHANGE: 'onFocusChange',
+        ON_WINDOW_CHANGE: 'onWindowChange'
+    };
+    exports.SUPPORTED_ENCODINGS = {
+        utf8: {
+            labelLong: 'UTF-8',
+            labelShort: 'UTF-8',
+            order: 1,
+            alias: 'utf8bom'
+        },
+        utf8bom: {
+            labelLong: 'UTF-8 with BOM',
+            labelShort: 'UTF-8 with BOM',
+            encodeOnly: true,
+            order: 2,
+            alias: 'utf8'
+        },
+        utf16le: {
+            labelLong: 'UTF-16 LE',
+            labelShort: 'UTF-16 LE',
+            order: 3
+        },
+        utf16be: {
+            labelLong: 'UTF-16 BE',
+            labelShort: 'UTF-16 BE',
+            order: 4
+        },
+        windows1252: {
+            labelLong: 'Western (Windows 1252)',
+            labelShort: 'Windows 1252',
+            order: 5
+        },
+        iso88591: {
+            labelLong: 'Western (ISO 8859-1)',
+            labelShort: 'ISO 8859-1',
+            order: 6
+        },
+        iso88593: {
+            labelLong: 'Western (ISO 8859-3)',
+            labelShort: 'ISO 8859-3',
+            order: 7
+        },
+        iso885915: {
+            labelLong: 'Western (ISO 8859-15)',
+            labelShort: 'ISO 8859-15',
+            order: 8
+        },
+        macroman: {
+            labelLong: 'Western (Mac Roman)',
+            labelShort: 'Mac Roman',
+            order: 9
+        },
+        cp437: {
+            labelLong: 'DOS (CP 437)',
+            labelShort: 'CP437',
+            order: 10
+        },
+        windows1256: {
+            labelLong: 'Arabic (Windows 1256)',
+            labelShort: 'Windows 1256',
+            order: 11
+        },
+        iso88596: {
+            labelLong: 'Arabic (ISO 8859-6)',
+            labelShort: 'ISO 8859-6',
+            order: 12
+        },
+        windows1257: {
+            labelLong: 'Baltic (Windows 1257)',
+            labelShort: 'Windows 1257',
+            order: 13
+        },
+        iso88594: {
+            labelLong: 'Baltic (ISO 8859-4)',
+            labelShort: 'ISO 8859-4',
+            order: 14
+        },
+        iso885914: {
+            labelLong: 'Celtic (ISO 8859-14)',
+            labelShort: 'ISO 8859-14',
+            order: 15
+        },
+        windows1250: {
+            labelLong: 'Central European (Windows 1250)',
+            labelShort: 'Windows 1250',
+            order: 16
+        },
+        iso88592: {
+            labelLong: 'Central European (ISO 8859-2)',
+            labelShort: 'ISO 8859-2',
+            order: 17
+        },
+        cp852: {
+            labelLong: 'Central European (CP 852)',
+            labelShort: 'CP 852',
+            order: 18
+        },
+        windows1251: {
+            labelLong: 'Cyrillic (Windows 1251)',
+            labelShort: 'Windows 1251',
+            order: 19
+        },
+        cp866: {
+            labelLong: 'Cyrillic (CP 866)',
+            labelShort: 'CP 866',
+            order: 20
+        },
+        iso88595: {
+            labelLong: 'Cyrillic (ISO 8859-5)',
+            labelShort: 'ISO 8859-5',
+            order: 21
+        },
+        koi8r: {
+            labelLong: 'Cyrillic (KOI8-R)',
+            labelShort: 'KOI8-R',
+            order: 22
+        },
+        koi8u: {
+            labelLong: 'Cyrillic (KOI8-U)',
+            labelShort: 'KOI8-U',
+            order: 23
+        },
+        iso885913: {
+            labelLong: 'Estonian (ISO 8859-13)',
+            labelShort: 'ISO 8859-13',
+            order: 24
+        },
+        windows1253: {
+            labelLong: 'Greek (Windows 1253)',
+            labelShort: 'Windows 1253',
+            order: 25
+        },
+        iso88597: {
+            labelLong: 'Greek (ISO 8859-7)',
+            labelShort: 'ISO 8859-7',
+            order: 26
+        },
+        windows1255: {
+            labelLong: 'Hebrew (Windows 1255)',
+            labelShort: 'Windows 1255',
+            order: 27
+        },
+        iso88598: {
+            labelLong: 'Hebrew (ISO 8859-8)',
+            labelShort: 'ISO 8859-8',
+            order: 28
+        },
+        iso885910: {
+            labelLong: 'Nordic (ISO 8859-10)',
+            labelShort: 'ISO 8859-10',
+            order: 29
+        },
+        iso885916: {
+            labelLong: 'Romanian (ISO 8859-16)',
+            labelShort: 'ISO 8859-16',
+            order: 30
+        },
+        windows1254: {
+            labelLong: 'Turkish (Windows 1254)',
+            labelShort: 'Windows 1254',
+            order: 31
+        },
+        iso88599: {
+            labelLong: 'Turkish (ISO 8859-9)',
+            labelShort: 'ISO 8859-9',
+            order: 32
+        },
+        windows1258: {
+            labelLong: 'Vietnamese (Windows 1258)',
+            labelShort: 'Windows 1258',
+            order: 33
+        },
+        gbk: {
+            labelLong: 'Chinese (GBK)',
+            labelShort: 'GBK',
+            order: 34
+        },
+        gb18030: {
+            labelLong: 'Chinese (GB18030)',
+            labelShort: 'GB18030',
+            order: 35
+        },
+        cp950: {
+            labelLong: 'Traditional Chinese (Big5)',
+            labelShort: 'Big5',
+            order: 36
+        },
+        big5hkscs: {
+            labelLong: 'Traditional Chinese (Big5-HKSCS)',
+            labelShort: 'Big5-HKSCS',
+            order: 37
+        },
+        shiftjis: {
+            labelLong: 'Japanese (Shift JIS)',
+            labelShort: 'Shift JIS',
+            order: 38
+        },
+        eucjp: {
+            labelLong: 'Japanese (EUC-JP)',
+            labelShort: 'EUC-JP',
+            order: 39
+        },
+        euckr: {
+            labelLong: 'Korean (EUC-KR)',
+            labelShort: 'EUC-KR',
+            order: 40
+        },
+        windows874: {
+            labelLong: 'Thai (Windows 874)',
+            labelShort: 'Windows 874',
+            order: 41
+        },
+        iso885911: {
+            labelLong: 'Latin/Thai (ISO 8859-11)',
+            labelShort: 'ISO 8859-11',
+            order: 42
+        },
+        'koi8-ru': {
+            labelLong: 'Cyrillic (KOI8-RU)',
+            labelShort: 'KOI8-RU',
+            order: 43
+        },
+        'koi8-t': {
+            labelLong: 'Tajik (KOI8-T)',
+            labelShort: 'KOI8-T',
+            order: 44
+        },
+        GB2312: {
+            labelLong: 'Simplified Chinese (GB 2312)',
+            labelShort: 'GB 2312',
+            order: 45
+        }
+    };
+});
+
+define(__m[48/*vs/platform/instantiation/common/serviceCollection*/], __M([1/*require*/,0/*exports*/,18/*vs/base/common/arrays*/]), function (require, exports, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9663,7 +11233,7 @@ define(__m[31], __M([0,1,16]), function (require, exports, arrays_1) {
     exports.ServiceCollection = ServiceCollection;
 });
 
-define(__m[51], __M([0,1,2,14,6,60,54,29,5,31]), function (require, exports, winjs_base_1, errors_1, types_1, assert, graph_1, descriptors_1, instantiation_1, serviceCollection_1) {
+define(__m[78/*vs/platform/instantiation/common/instantiationService*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,15/*vs/base/common/errors*/,3/*vs/base/common/types*/,42/*vs/base/common/assert*/,69/*vs/base/common/graph*/,39/*vs/platform/instantiation/common/descriptors*/,4/*vs/platform/instantiation/common/instantiation*/,48/*vs/platform/instantiation/common/serviceCollection*/]), function (require, exports, winjs_base_1, errors_1, types_1, assert, graph_1, descriptors_1, instantiation_1, serviceCollection_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9878,7 +11448,7 @@ define(__m[51], __M([0,1,2,14,6,60,54,29,5,31]), function (require, exports, win
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[23], __M([0,1,7,19]), function (require, exports, path, uri_1) {
+define(__m[79/*vs/platform/package*/], __M([1/*require*/,0/*exports*/,7/*path*/,16/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
     "use strict";
     var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
     var packageJsonPath = path.join(rootPath, 'package.json');
@@ -9886,11 +11456,672 @@ define(__m[23], __M([0,1,7,19]), function (require, exports, path, uri_1) {
     exports.default = require.__$__nodeRequire(packageJsonPath);
 });
 
+define(__m[19/*vs/platform/platform*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/,42/*vs/base/common/assert*/]), function (require, exports, Types, Assert) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var RegistryImpl = (function () {
+        function RegistryImpl() {
+            this.data = {};
+        }
+        RegistryImpl.prototype.add = function (id, data) {
+            Assert.ok(Types.isString(id));
+            Assert.ok(Types.isObject(data));
+            Assert.ok(!this.data.hasOwnProperty(id), 'There is already an extension with this id');
+            this.data[id] = data;
+        };
+        RegistryImpl.prototype.knows = function (id) {
+            return this.data.hasOwnProperty(id);
+        };
+        RegistryImpl.prototype.as = function (id) {
+            return this.data[id] || null;
+        };
+        return RegistryImpl;
+    }());
+    exports.Registry = new RegistryImpl();
+    /**
+     * A base class for registries that leverage the instantiation service to create instances.
+     */
+    var BaseRegistry = (function () {
+        function BaseRegistry() {
+            this.toBeInstantiated = [];
+            this.instances = [];
+        }
+        BaseRegistry.prototype.setInstantiationService = function (service) {
+            this.instantiationService = service;
+            while (this.toBeInstantiated.length > 0) {
+                var entry = this.toBeInstantiated.shift();
+                this.instantiate(entry);
+            }
+        };
+        BaseRegistry.prototype.instantiate = function (ctor) {
+            var instance = this.instantiationService.createInstance(ctor);
+            this.instances.push(instance);
+        };
+        BaseRegistry.prototype._register = function (ctor) {
+            if (this.instantiationService) {
+                this.instantiate(ctor);
+            }
+            else {
+                this.toBeInstantiated.push(ctor);
+            }
+        };
+        BaseRegistry.prototype._getInstances = function () {
+            return this.instances.slice(0);
+        };
+        BaseRegistry.prototype._setInstances = function (instances) {
+            this.instances = instances;
+        };
+        return BaseRegistry;
+    }());
+    exports.BaseRegistry = BaseRegistry;
+});
+
+define(__m[38/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([1/*require*/,0/*exports*/,19/*vs/platform/platform*/,67/*vs/base/common/eventEmitter*/]), function (require, exports, platform, eventEmitter_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.Extensions = {
+        JSONContribution: 'base.contributions.json'
+    };
+    function normalizeId(id) {
+        if (id.length > 0 && id.charAt(id.length - 1) === '#') {
+            return id.substring(0, id.length - 1);
+        }
+        return id;
+    }
+    var JSONContributionRegistry = (function () {
+        function JSONContributionRegistry() {
+            this.schemasById = {};
+            this.eventEmitter = new eventEmitter_1.EventEmitter();
+        }
+        JSONContributionRegistry.prototype.addRegistryChangedListener = function (callback) {
+            return this.eventEmitter.addListener2('registryChanged', callback);
+        };
+        JSONContributionRegistry.prototype.registerSchema = function (uri, unresolvedSchemaContent) {
+            this.schemasById[normalizeId(uri)] = unresolvedSchemaContent;
+            this.eventEmitter.emit('registryChanged', {});
+        };
+        JSONContributionRegistry.prototype.getSchemaContributions = function () {
+            return {
+                schemas: this.schemasById,
+            };
+        };
+        return JSONContributionRegistry;
+    }());
+    var jsonContributionRegistry = new JSONContributionRegistry();
+    platform.Registry.add(exports.Extensions.JSONContribution, jsonContributionRegistry);
+});
+
+define(__m[82/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*require*/,0/*exports*/,63/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/,15/*vs/base/common/errors*/,58/*vs/base/common/severity*/,38/*vs/platform/jsonschemas/common/jsonContributionRegistry*/,19/*vs/platform/platform*/,6/*vs/base/common/event*/]), function (require, exports, nls, errors_1, severity_1, jsonContributionRegistry_1, platform_1, event_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var hasOwnProperty = Object.hasOwnProperty;
+    var schemaRegistry = platform_1.Registry.as(jsonContributionRegistry_1.Extensions.JSONContribution);
+    exports.onWillActivate = new event_1.Emitter();
+    var ExtensionMessageCollector = (function () {
+        function ExtensionMessageCollector(messageHandler, source) {
+            this._messageHandler = messageHandler;
+            this._source = source;
+        }
+        ExtensionMessageCollector.prototype._msg = function (type, message) {
+            this._messageHandler({
+                type: type,
+                message: message,
+                source: this._source
+            });
+        };
+        ExtensionMessageCollector.prototype.error = function (message) {
+            this._msg(severity_1.default.Error, message);
+        };
+        ExtensionMessageCollector.prototype.warn = function (message) {
+            this._msg(severity_1.default.Warning, message);
+        };
+        ExtensionMessageCollector.prototype.info = function (message) {
+            this._msg(severity_1.default.Info, message);
+        };
+        return ExtensionMessageCollector;
+    }());
+    exports.ExtensionMessageCollector = ExtensionMessageCollector;
+    var ExtensionPoint = (function () {
+        function ExtensionPoint(name) {
+            this.name = name;
+            this._handler = null;
+            this._users = null;
+            this._done = false;
+        }
+        ExtensionPoint.prototype.setHandler = function (handler) {
+            if (this._handler !== null || this._done) {
+                throw new Error('Handler already set!');
+            }
+            this._handler = handler;
+            this._handle();
+        };
+        ExtensionPoint.prototype.acceptUsers = function (users) {
+            if (this._users !== null || this._done) {
+                throw new Error('Users already set!');
+            }
+            this._users = users;
+            this._handle();
+        };
+        ExtensionPoint.prototype._handle = function () {
+            if (this._handler === null || this._users === null) {
+                return;
+            }
+            this._done = true;
+            var handler = this._handler;
+            this._handler = null;
+            var users = this._users;
+            this._users = null;
+            try {
+                handler(users);
+            }
+            catch (err) {
+                errors_1.onUnexpectedError(err);
+            }
+        };
+        return ExtensionPoint;
+    }());
+    exports.ExtensionPoint = ExtensionPoint;
+    var schemaId = 'vscode://schemas/vscode-extensions';
+    var schema = {
+        default: {
+            'name': '{{name}}',
+            'description': '{{description}}',
+            'author': '{{author}}',
+            'version': '{{1.0.0}}',
+            'main': '{{pathToMain}}',
+            'dependencies': {}
+        },
+        properties: {
+            engines: {
+                properties: {
+                    'vscode': {
+                        type: 'string',
+                        description: nls.localize(0, null),
+                        default: '^0.10.0',
+                    }
+                }
+            },
+            publisher: {
+                description: nls.localize(1, null),
+                type: 'string'
+            },
+            displayName: {
+                description: nls.localize(2, null),
+                type: 'string'
+            },
+            categories: {
+                description: nls.localize(3, null),
+                type: 'array',
+                uniqueItems: true,
+                items: {
+                    type: 'string',
+                    enum: ['Languages', 'Snippets', 'Linters', 'Themes', 'Debuggers', 'Productivity', 'Other', 'Keymaps', 'Formatters']
+                }
+            },
+            galleryBanner: {
+                type: 'object',
+                description: nls.localize(4, null),
+                properties: {
+                    color: {
+                        description: nls.localize(5, null),
+                        type: 'string'
+                    },
+                    theme: {
+                        description: nls.localize(6, null),
+                        type: 'string',
+                        enum: ['dark', 'light']
+                    }
+                }
+            },
+            contributes: {
+                description: nls.localize(7, null),
+                type: 'object',
+                properties: {},
+                default: {}
+            },
+            preview: {
+                type: 'boolean',
+                description: nls.localize(8, null),
+            },
+            activationEvents: {
+                description: nls.localize(9, null),
+                type: 'array',
+                items: {
+                    type: 'string',
+                    defaultSnippets: [{ label: 'onLanguage', body: 'onLanguage:{{languageId}}' }, { label: 'onCommand', body: 'onCommand:{{commandId}}' }, { label: 'onDebug', body: 'onDebug:{{type}}' }, { label: 'workspaceContains', body: 'workspaceContains:{{fileName}}' }],
+                }
+            },
+            badges: {
+                type: 'array',
+                description: nls.localize(10, null),
+                items: {
+                    type: 'object',
+                    required: ['url', 'href', 'description'],
+                    properties: {
+                        url: {
+                            type: 'string',
+                            description: nls.localize(11, null)
+                        },
+                        href: {
+                            type: 'string',
+                            description: nls.localize(12, null)
+                        },
+                        description: {
+                            type: 'string',
+                            description: nls.localize(13, null)
+                        }
+                    }
+                }
+            },
+            extensionDependencies: {
+                description: nls.localize(14, null),
+                type: 'array',
+                uniqueItems: true,
+                items: {
+                    type: 'string'
+                }
+            },
+            scripts: {
+                type: 'object',
+                properties: {
+                    'vscode:prepublish': {
+                        description: nls.localize(15, null),
+                        type: 'string'
+                    }
+                }
+            },
+            icon: {
+                type: 'string',
+                description: nls.localize(16, null)
+            }
+        }
+    };
+    var ExtensionsRegistryImpl = (function () {
+        function ExtensionsRegistryImpl() {
+            this._extensionPoints = {};
+        }
+        ExtensionsRegistryImpl.prototype.registerExtensionPoint = function (extensionPoint, deps, jsonSchema) {
+            if (hasOwnProperty.call(this._extensionPoints, extensionPoint)) {
+                throw new Error('Duplicate extension point: ' + extensionPoint);
+            }
+            var result = new ExtensionPoint(extensionPoint);
+            this._extensionPoints[extensionPoint] = result;
+            schema.properties['contributes'].properties[extensionPoint] = jsonSchema;
+            schemaRegistry.registerSchema(schemaId, schema);
+            return result;
+        };
+        ExtensionsRegistryImpl.prototype.getExtensionPoints = function () {
+            var _this = this;
+            return Object.keys(this._extensionPoints).map(function (point) { return _this._extensionPoints[point]; });
+        };
+        return ExtensionsRegistryImpl;
+    }());
+    exports.ExtensionsRegistryImpl = ExtensionsRegistryImpl;
+    var PRExtensions = {
+        ExtensionsRegistry: 'ExtensionsRegistry'
+    };
+    platform_1.Registry.add(PRExtensions.ExtensionsRegistry, new ExtensionsRegistryImpl());
+    exports.ExtensionsRegistry = platform_1.Registry.as(PRExtensions.ExtensionsRegistry);
+    schemaRegistry.registerSchema(schemaId, schema);
+});
+
+define(__m[31/*vs/platform/configuration/common/configurationRegistry*/], __M([1/*require*/,0/*exports*/,61/*vs/nls!vs/platform/configuration/common/configurationRegistry*/,6/*vs/base/common/event*/,19/*vs/platform/platform*/,10/*vs/base/common/objects*/,82/*vs/platform/extensions/common/extensionsRegistry*/,38/*vs/platform/jsonschemas/common/jsonContributionRegistry*/]), function (require, exports, nls, event_1, platform_1, objects, extensionsRegistry_1, jsonContributionRegistry_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.Extensions = {
+        Configuration: 'base.contributions.configuration'
+    };
+    var schemaId = 'vscode://schemas/settings';
+    var contributionRegistry = platform_1.Registry.as(jsonContributionRegistry_1.Extensions.JSONContribution);
+    var ConfigurationRegistry = (function () {
+        function ConfigurationRegistry() {
+            this.configurationContributors = [];
+            this.configurationSchema = { allOf: [] };
+            this._onDidRegisterConfiguration = new event_1.Emitter();
+            contributionRegistry.registerSchema(schemaId, this.configurationSchema);
+        }
+        Object.defineProperty(ConfigurationRegistry.prototype, "onDidRegisterConfiguration", {
+            get: function () {
+                return this._onDidRegisterConfiguration.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ConfigurationRegistry.prototype.registerConfiguration = function (configuration) {
+            this.configurationContributors.push(configuration);
+            this.registerJSONConfiguration(configuration);
+            this._onDidRegisterConfiguration.fire(this);
+        };
+        ConfigurationRegistry.prototype.getConfigurations = function () {
+            return this.configurationContributors.slice(0);
+        };
+        ConfigurationRegistry.prototype.registerJSONConfiguration = function (configuration) {
+            var schema = objects.clone(configuration);
+            this.configurationSchema.allOf.push(schema);
+            contributionRegistry.registerSchema(schemaId, this.configurationSchema);
+        };
+        return ConfigurationRegistry;
+    }());
+    var configurationRegistry = new ConfigurationRegistry();
+    platform_1.Registry.add(exports.Extensions.Configuration, configurationRegistry);
+    var configurationExtPoint = extensionsRegistry_1.ExtensionsRegistry.registerExtensionPoint('configuration', [], {
+        description: nls.localize(0, null),
+        type: 'object',
+        defaultSnippets: [{ body: { title: '', properties: {} } }],
+        properties: {
+            title: {
+                description: nls.localize(1, null),
+                type: 'string'
+            },
+            properties: {
+                description: nls.localize(2, null),
+                type: 'object',
+                additionalProperties: {
+                    $ref: 'http://json-schema.org/draft-04/schema#'
+                }
+            }
+        }
+    });
+    configurationExtPoint.setHandler(function (extensions) {
+        for (var i = 0; i < extensions.length; i++) {
+            var configuration = extensions[i].value;
+            var collector = extensions[i].collector;
+            if (configuration.type && configuration.type !== 'object') {
+                collector.warn(nls.localize(3, null));
+            }
+            else {
+                configuration.type = 'object';
+            }
+            if (configuration.title && (typeof configuration.title !== 'string')) {
+                collector.error(nls.localize(4, null));
+            }
+            if (configuration.properties && (typeof configuration.properties !== 'object')) {
+                collector.error(nls.localize(5, null));
+                return;
+            }
+            var clonedConfiguration = objects.clone(configuration);
+            clonedConfiguration.id = extensions[i].description.id;
+            configurationRegistry.registerConfiguration(clonedConfiguration);
+        }
+    });
+});
+
+define(__m[84/*vs/platform/configuration/common/model*/], __M([1/*require*/,0/*exports*/,19/*vs/platform/platform*/,3/*vs/base/common/types*/,31/*vs/platform/configuration/common/configurationRegistry*/]), function (require, exports, platform_1, types, configurationRegistry_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    function setNode(root, key, value) {
+        var segments = key.split('.');
+        var last = segments.pop();
+        var curr = root;
+        segments.forEach(function (s) {
+            var obj = curr[s];
+            switch (typeof obj) {
+                case 'undefined':
+                    obj = curr[s] = Object.create(null);
+                    break;
+                case 'object':
+                    break;
+                default:
+                    console.error("Conflicting configuration setting: " + key + " at " + s + " with " + JSON.stringify(obj));
+            }
+            curr = obj;
+        });
+        if (typeof curr === 'object') {
+            curr[last] = value; // workaround https://github.com/Microsoft/vscode/issues/13606
+        }
+    }
+    exports.setNode = setNode;
+    function processDefaultValues(withConfig) {
+        var configurations = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurations();
+        var visit = function (config, level) {
+            var handled = withConfig(config, level === 0);
+            if (Array.isArray(config.allOf)) {
+                config.allOf.forEach(function (c) {
+                    // if the config node only contains an `allOf` we treat the `allOf` children as if they were at the top level
+                    visit(c, (!handled && level === 0) ? level : level + 1);
+                });
+            }
+        };
+        configurations.sort(function (c1, c2) {
+            if (typeof c1.order !== 'number') {
+                return 1;
+            }
+            if (typeof c2.order !== 'number') {
+                return -1;
+            }
+            if (c1.order === c2.order) {
+                var title1 = c1.title || '';
+                var title2 = c2.title || '';
+                return title1.localeCompare(title2);
+            }
+            return c1.order - c2.order;
+        }).forEach(function (config) {
+            visit(config, 0);
+        });
+    }
+    function getDefaultValues() {
+        var ret = Object.create(null);
+        var handleConfig = function (config, isTop) {
+            if (config.properties) {
+                Object.keys(config.properties).forEach(function (key) {
+                    var prop = config.properties[key];
+                    var value = prop.default;
+                    if (types.isUndefined(prop.default)) {
+                        value = getDefaultValue(prop.type);
+                    }
+                    setNode(ret, key, value);
+                });
+                return true;
+            }
+            return false;
+        };
+        processDefaultValues(handleConfig);
+        return ret;
+    }
+    exports.getDefaultValues = getDefaultValues;
+    function getDefaultValuesContent(indent) {
+        var lastEntry = -1;
+        var result = [];
+        result.push('{');
+        var handleConfig = function (config, isTop) {
+            var handled = false;
+            if (config.title) {
+                handled = true;
+                if (isTop) {
+                    result.push('');
+                    result.push('// ' + config.title);
+                }
+                else {
+                    result.push(indent + '// ' + config.title);
+                }
+                result.push('');
+            }
+            if (config.properties) {
+                handled = true;
+                Object.keys(config.properties).forEach(function (key) {
+                    var prop = config.properties[key];
+                    var defaultValue = prop.default;
+                    if (types.isUndefined(defaultValue)) {
+                        defaultValue = getDefaultValue(prop.type);
+                    }
+                    if (prop.description) {
+                        result.push(indent + '// ' + prop.description);
+                    }
+                    var valueString = JSON.stringify(defaultValue, null, indent);
+                    if (valueString && (typeof defaultValue === 'object')) {
+                        valueString = addIndent(valueString, indent);
+                    }
+                    if (lastEntry !== -1) {
+                        result[lastEntry] += ',';
+                    }
+                    lastEntry = result.length;
+                    result.push(indent + JSON.stringify(key) + ': ' + valueString);
+                    result.push('');
+                });
+            }
+            return handled;
+        };
+        processDefaultValues(handleConfig);
+        result.push('}');
+        return result.join('\n');
+    }
+    exports.getDefaultValuesContent = getDefaultValuesContent;
+    function addIndent(str, indent) {
+        return str.split('\n').join('\n' + indent);
+    }
+    function getDefaultValue(type) {
+        var t = Array.isArray(type) ? type[0] : type;
+        switch (t) {
+            case 'boolean':
+                return false;
+            case 'integer':
+            case 'number':
+                return 0;
+            case 'string':
+                return '';
+            case 'array':
+                return [];
+            case 'object':
+                return {};
+            default:
+                return null;
+        }
+    }
+    function flatten(contents) {
+        var root = Object.create(null);
+        for (var key in contents) {
+            setNode(root, key, contents[key]);
+        }
+        return root;
+    }
+    exports.flatten = flatten;
+    function getConfigurationKeys() {
+        var keys = [];
+        var configurations = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurations();
+        configurations.forEach(function (config) {
+            if (config.properties) {
+                keys.push.apply(keys, Object.keys(config.properties));
+            }
+        });
+        return keys;
+    }
+    exports.getConfigurationKeys = getConfigurationKeys;
+});
+
+
+
+
+
+
+
+
+
+
+define(__m[85/*vs/platform/configuration/node/configurationService*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,10/*vs/base/common/objects*/,84/*vs/platform/configuration/common/model*/,54/*vs/base/node/config*/,19/*vs/platform/platform*/,31/*vs/platform/configuration/common/configurationRegistry*/,17/*vs/base/common/lifecycle*/,13/*vs/platform/configuration/common/configuration*/,6/*vs/base/common/event*/,12/*vs/platform/environment/common/environment*/]), function (require, exports, winjs_base_1, objects, model_1, config_1, platform_1, configurationRegistry_1, lifecycle_1, configuration_1, event_1, environment_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var ConfigurationService = (function () {
+        function ConfigurationService(environmentService) {
+            var _this = this;
+            this.disposables = [];
+            this._onDidUpdateConfiguration = new event_1.Emitter();
+            this.disposables.push(this._onDidUpdateConfiguration);
+            this.rawConfig = new config_1.ConfigWatcher(environmentService.appSettingsPath, { changeBufferDelay: 300, defaultConfig: Object.create(null) });
+            this.disposables.push(lifecycle_1.toDisposable(function () { return _this.rawConfig.dispose(); }));
+            // Listeners
+            this.disposables.push(this.rawConfig.onDidUpdateConfiguration(function (event) {
+                _this.onConfigurationChange();
+                if (_this._telemetryService) {
+                    _this._telemetryService.publicLog('updateUserConfiguration', { userConfigurationKeys: Object.keys(event.config) });
+                }
+            }));
+            this.disposables.push(platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).onDidRegisterConfiguration(function () { return _this.onConfigurationChange(); }));
+        }
+        ConfigurationService.prototype.onConfigurationChange = function () {
+            this.cache = void 0; // reset our caches
+            this._onDidUpdateConfiguration.fire({ config: this.getConfiguration() });
+        };
+        Object.defineProperty(ConfigurationService.prototype, "onDidUpdateConfiguration", {
+            get: function () {
+                return this._onDidUpdateConfiguration.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ConfigurationService.prototype.reloadConfiguration = function (section) {
+            var _this = this;
+            return new winjs_base_1.TPromise(function (c) {
+                _this.rawConfig.reload(function () {
+                    _this.cache = void 0; // reset our caches
+                    c(_this.getConfiguration(section));
+                });
+            });
+        };
+        ConfigurationService.prototype.getConfiguration = function (section) {
+            var consolidatedConfig = this.cache;
+            if (!consolidatedConfig) {
+                consolidatedConfig = this.getConsolidatedConfig();
+                this.cache = consolidatedConfig;
+            }
+            return section ? consolidatedConfig[section] : consolidatedConfig;
+        };
+        ConfigurationService.prototype.lookup = function (key) {
+            // make sure to clone the configuration so that the receiver does not tamper with the values
+            return {
+                default: objects.clone(configuration_1.getConfigurationValue(model_1.getDefaultValues(), key)),
+                user: objects.clone(configuration_1.getConfigurationValue(model_1.flatten(this.rawConfig.getConfig()), key)),
+                value: objects.clone(configuration_1.getConfigurationValue(this.getConfiguration(), key))
+            };
+        };
+        ConfigurationService.prototype.getConsolidatedConfig = function () {
+            var defaults = model_1.getDefaultValues(); // defaults coming from contributions to registries
+            var user = model_1.flatten(this.rawConfig.getConfig()); // user configured settings
+            return objects.mixin(objects.clone(defaults), // target: default values (but dont modify!)
+            user, // source: user settings
+            true // overwrite
+            );
+        };
+        ConfigurationService.prototype.dispose = function () {
+            this.disposables = lifecycle_1.dispose(this.disposables);
+        };
+        Object.defineProperty(ConfigurationService.prototype, "telemetryService", {
+            set: function (value) {
+                this._telemetryService = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ConfigurationService = __decorate([
+            __param(0, environment_1.IEnvironmentService)
+        ], ConfigurationService);
+        return ConfigurationService;
+    }());
+    exports.ConfigurationService = ConfigurationService;
+});
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[33], __M([0,1,7,19]), function (require, exports, path, uri_1) {
+define(__m[11/*vs/platform/product*/], __M([1/*require*/,0/*exports*/,7/*path*/,16/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
     "use strict";
     var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
     var productJsonPath = path.join(rootPath, 'product.json');
@@ -9908,329 +12139,6 @@ define(__m[33], __M([0,1,7,19]), function (require, exports, path, uri_1) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[4], __M([0,1,52,21,7,24,8,35,16,25,26,2,3,19,6,5,33,72,23]), function (require, exports, crypto, fs, path, os, electron_1, pfs_1, arrays, strings, paths, winjs_base_1, platform, uri_1, types, instantiation_1, product_1, argv_1, package_1) {
-    'use strict';
-    exports.IEnvironmentService = instantiation_1.createDecorator('mainEnvironmentService');
-    function getNumericValue(value, defaultValue, fallback) {
-        if (fallback === void 0) { fallback = void 0; }
-        var numericValue = parseInt(value);
-        if (types.isNumber(numericValue)) {
-            return numericValue;
-        }
-        if (value) {
-            return defaultValue;
-        }
-        return fallback;
-    }
-    var EnvService = (function () {
-        function EnvService() {
-            this._appRoot = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
-            this._currentWorkingDirectory = process.env['VSCODE_CWD'] || process.cwd();
-            this._appHome = electron_1.app.getPath('userData');
-            this._appSettingsHome = path.join(this._appHome, 'User');
-            this._appSettingsPath = path.join(this._appSettingsHome, 'settings.json');
-            this._appKeybindingsPath = path.join(this._appSettingsHome, 'keybindings.json');
-            // Remove the Electron executable
-            var _a = process.argv, args = _a.slice(1);
-            // If dev, remove the first non-option argument: it's the app location
-            if (!this.isBuilt) {
-                var index = arrays.firstIndex(args, function (a) { return !/^-/.test(a); });
-                if (index > -1) {
-                    args.splice(index, 1);
-                }
-            }
-            // Finally, prepend any extra arguments from the 'argv' file
-            if (fs.existsSync(path.join(this._appRoot, 'argv'))) {
-                var extraargs = JSON.parse(fs.readFileSync(path.join(this._appRoot, 'argv'), 'utf8'));
-                args = extraargs.concat(args);
-            }
-            var argv = argv_1.parseArgs(args);
-            var debugBrkExtensionHostPort = getNumericValue(argv.debugBrkPluginHost, 5870);
-            var debugExtensionHostPort = getNumericValue(argv.debugPluginHost, 5870, this.isBuilt ? void 0 : 5870);
-            var pathArguments = parsePathArguments(this._currentWorkingDirectory, argv._, argv.goto);
-            var timestamp = parseInt(argv.timestamp);
-            var debugBrkFileWatcherPort = getNumericValue(argv.debugBrkFileWatcherPort, void 0);
-            this._cliArgs = Object.freeze({
-                pathArguments: pathArguments,
-                programStart: types.isNumber(timestamp) ? timestamp : 0,
-                enablePerformance: argv.performance,
-                verboseLogging: argv.verbose,
-                debugExtensionHostPort: debugBrkExtensionHostPort || debugExtensionHostPort,
-                debugBrkExtensionHost: !!debugBrkExtensionHostPort,
-                logExtensionHostCommunication: argv.logExtensionHostCommunication,
-                debugBrkFileWatcherPort: debugBrkFileWatcherPort,
-                openNewWindow: argv['new-window'],
-                openInSameWindow: argv['reuse-window'],
-                gotoLineMode: argv.goto,
-                diffMode: argv.diff && pathArguments.length === 2,
-                extensionsHomePath: normalizePath(argv.extensionHomePath),
-                extensionDevelopmentPath: normalizePath(argv.extensionDevelopmentPath),
-                extensionTestsPath: normalizePath(argv.extensionTestsPath),
-                disableExtensions: argv['disable-extensions'],
-                locale: argv.locale,
-                waitForWindowClose: argv.wait
-            });
-            this._isTestingFromCli = this.cliArgs.extensionTestsPath && !this.cliArgs.debugBrkExtensionHost;
-            this._userHome = path.join(os.homedir(), product_1.default.dataFolderName);
-            this._userExtensionsHome = this.cliArgs.extensionsHomePath || path.join(this._userHome, 'extensions');
-            var prefix = this.getIPCHandleBaseName();
-            var suffix = process.platform === 'win32' ? '-sock' : '.sock';
-            this._mainIPCHandle = prefix + "-" + package_1.default.version + suffix;
-            this._sharedIPCHandle = prefix + "-" + package_1.default.version + "-shared" + suffix;
-        }
-        Object.defineProperty(EnvService.prototype, "cliArgs", {
-            get: function () { return this._cliArgs; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "userExtensionsHome", {
-            get: function () { return this._userExtensionsHome; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "isTestingFromCli", {
-            get: function () { return this._isTestingFromCli; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "isBuilt", {
-            get: function () { return !process.env['VSCODE_DEV']; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "product", {
-            get: function () { return product_1.default; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "updateUrl", {
-            get: function () { return product_1.default.updateUrl; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "quality", {
-            get: function () { return product_1.default.quality; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "userHome", {
-            get: function () { return this._userHome; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "appRoot", {
-            get: function () { return this._appRoot; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "currentWorkingDirectory", {
-            get: function () { return this._currentWorkingDirectory; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "appHome", {
-            get: function () { return this._appHome; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "appSettingsHome", {
-            get: function () { return this._appSettingsHome; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "appSettingsPath", {
-            get: function () { return this._appSettingsPath; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "appKeybindingsPath", {
-            get: function () { return this._appKeybindingsPath; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "mainIPCHandle", {
-            get: function () { return this._mainIPCHandle; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvService.prototype, "sharedIPCHandle", {
-            get: function () { return this._sharedIPCHandle; },
-            enumerable: true,
-            configurable: true
-        });
-        EnvService.prototype.getIPCHandleBaseName = function () {
-            var name = package_1.default.name;
-            // Support to run VS Code multiple times as different user
-            // by making the socket unique over the logged in user
-            var userId = EnvService.getUniqueUserId();
-            if (userId) {
-                name += "-" + userId;
-            }
-            if (process.platform === 'win32') {
-                return "\\\\.\\pipe\\" + name;
-            }
-            return path.join(os.tmpdir(), name);
-        };
-        EnvService.getUniqueUserId = function () {
-            var username;
-            if (platform.isWindows) {
-                username = process.env.USERNAME;
-            }
-            else {
-                username = process.env.USER;
-            }
-            if (!username) {
-                return ''; // fail gracefully if there is no user name
-            }
-            // use sha256 to ensure the userid value can be used in filenames and are unique
-            return crypto.createHash('sha256').update(username).digest('hex').substr(0, 6);
-        };
-        EnvService.prototype.createPaths = function () {
-            var promises = [this.appSettingsHome, this.userHome, this.userExtensionsHome]
-                .map(function (p) { return pfs_1.mkdirp(p); });
-            return winjs_base_1.TPromise.join(promises);
-        };
-        return EnvService;
-    }());
-    exports.EnvService = EnvService;
-    function parsePathArguments(cwd, args, gotoLineMode) {
-        var result = args.map(function (arg) {
-            var pathCandidate = String(arg);
-            var parsedPath;
-            if (gotoLineMode) {
-                parsedPath = parseLineAndColumnAware(pathCandidate);
-                pathCandidate = parsedPath.path;
-            }
-            if (pathCandidate) {
-                pathCandidate = preparePath(cwd, pathCandidate);
-            }
-            var realPath;
-            try {
-                realPath = fs.realpathSync(pathCandidate);
-            }
-            catch (error) {
-                // in case of an error, assume the user wants to create this file
-                // if the path is relative, we join it to the cwd
-                realPath = path.normalize(path.isAbsolute(pathCandidate) ? pathCandidate : path.join(cwd, pathCandidate));
-            }
-            var basename = path.basename(realPath);
-            if (basename /* can be empty if code is opened on root */ && !paths.isValidBasename(basename)) {
-                return null; // do not allow invalid file names
-            }
-            if (gotoLineMode) {
-                parsedPath.path = realPath;
-                return toLineAndColumnPath(parsedPath);
-            }
-            return realPath;
-        });
-        var caseInsensitive = platform.isWindows || platform.isMacintosh;
-        var distinct = arrays.distinct(result, function (e) { return e && caseInsensitive ? e.toLowerCase() : e; });
-        return arrays.coalesce(distinct);
-    }
-    function preparePath(cwd, p) {
-        // Trim trailing quotes
-        if (platform.isWindows) {
-            p = strings.rtrim(p, '"'); // https://github.com/Microsoft/vscode/issues/1498
-        }
-        // Trim whitespaces
-        p = strings.trim(strings.trim(p, ' '), '\t');
-        if (platform.isWindows) {
-            // Resolve the path against cwd if it is relative
-            p = path.resolve(cwd, p);
-            // Trim trailing '.' chars on Windows to prevent invalid file names
-            p = strings.rtrim(p, '.');
-        }
-        return p;
-    }
-    function normalizePath(p) {
-        return p ? path.normalize(p) : p;
-    }
-    function getPlatformIdentifier() {
-        if (process.platform === 'linux') {
-            return "linux-" + process.arch;
-        }
-        return process.platform;
-    }
-    exports.getPlatformIdentifier = getPlatformIdentifier;
-    function parseLineAndColumnAware(rawPath) {
-        var segments = rawPath.split(':'); // C:\file.txt:<line>:<column>
-        var path;
-        var line = null;
-        var column = null;
-        segments.forEach(function (segment) {
-            var segmentAsNumber = Number(segment);
-            if (!types.isNumber(segmentAsNumber)) {
-                path = !!path ? [path, segment].join(':') : segment; // a colon can well be part of a path (e.g. C:\...)
-            }
-            else if (line === null) {
-                line = segmentAsNumber;
-            }
-            else if (column === null) {
-                column = segmentAsNumber;
-            }
-        });
-        return {
-            path: path,
-            line: line !== null ? line : void 0,
-            column: column !== null ? column : line !== null ? 1 : void 0 // if we have a line, make sure column is also set
-        };
-    }
-    exports.parseLineAndColumnAware = parseLineAndColumnAware;
-    function toLineAndColumnPath(parsedPath) {
-        var segments = [parsedPath.path];
-        if (types.isNumber(parsedPath.line)) {
-            segments.push(String(parsedPath.line));
-        }
-        if (types.isNumber(parsedPath.column)) {
-            segments.push(String(parsedPath.column));
-        }
-        return segments.join(':');
-    }
-    exports.toLineAndColumnPath = toLineAndColumnPath;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-define(__m[17], __M([0,1,5,4]), function (require, exports, instantiation_1, env_1) {
-    'use strict';
-    exports.ILogService = instantiation_1.createDecorator('logService');
-    var MainLogService = (function () {
-        function MainLogService(envService) {
-            this.envService = envService;
-        }
-        MainLogService.prototype.log = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            var verboseLogging = this.envService.cliArgs.verboseLogging;
-            if (verboseLogging) {
-                console.log.apply(console, ["(" + new Date().toLocaleTimeString() + ")"].concat(args));
-            }
-        };
-        MainLogService = __decorate([
-            __param(0, env_1.IEnvironmentService)
-        ], MainLogService);
-        return MainLogService;
-    }());
-    exports.MainLogService = MainLogService;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
 
 
 
@@ -10240,142 +12148,7 @@ define(__m[17], __M([0,1,5,4]), function (require, exports, instantiation_1, env
 
 
 
-
-
-
-
-
-define(__m[15], __M([0,1,8,5,66,4]), function (require, exports, electron_1, instantiation_1, userSettings_1, env_1) {
-    'use strict';
-    exports.ISettingsService = instantiation_1.createDecorator('settingsService');
-    var SettingsManager = (function (_super) {
-        __extends(SettingsManager, _super);
-        function SettingsManager(envService) {
-            var _this = this;
-            _super.call(this, envService.appSettingsPath, envService.appKeybindingsPath);
-            electron_1.app.on('will-quit', function () {
-                _this.dispose();
-            });
-        }
-        SettingsManager.prototype.loadSync = function () {
-            var settingsChanged = _super.prototype.loadSync.call(this);
-            // Store into global so that any renderer can access the value with remote.getGlobal()
-            if (settingsChanged) {
-                global.globalSettingsValue = JSON.stringify(this.globalSettings);
-            }
-            return settingsChanged;
-        };
-        SettingsManager = __decorate([
-            __param(0, env_1.IEnvironmentService)
-        ], SettingsManager);
-        return SettingsManager;
-    }(userSettings_1.UserSettings));
-    exports.SettingsManager = SettingsManager;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-define(__m[13], __M([0,1,7,21,12,4,5]), function (require, exports, path, fs, events_1, env_1, instantiation_1) {
-    'use strict';
-    var EventTypes = {
-        STORE: 'store'
-    };
-    exports.IStorageService = instantiation_1.createDecorator('storageService');
-    var StorageService = (function () {
-        function StorageService(envService) {
-            this.envService = envService;
-            this.database = null;
-            this.eventEmitter = new events_1.EventEmitter();
-            this.dbPath = path.join(envService.appHome, 'storage.json');
-        }
-        StorageService.prototype.onStore = function (clb) {
-            var _this = this;
-            this.eventEmitter.addListener(EventTypes.STORE, clb);
-            return function () { return _this.eventEmitter.removeListener(EventTypes.STORE, clb); };
-        };
-        StorageService.prototype.getItem = function (key, defaultValue) {
-            if (!this.database) {
-                this.database = this.load();
-            }
-            var res = this.database[key];
-            if (typeof res === 'undefined') {
-                return defaultValue;
-            }
-            return this.database[key];
-        };
-        StorageService.prototype.setItem = function (key, data) {
-            if (!this.database) {
-                this.database = this.load();
-            }
-            // Shortcut for primitives that did not change
-            if (typeof data === 'string' || typeof data === 'number' || typeof data === 'boolean') {
-                if (this.database[key] === data) {
-                    return;
-                }
-            }
-            var oldValue = this.database[key];
-            this.database[key] = data;
-            this.save();
-            this.eventEmitter.emit(EventTypes.STORE, key, oldValue, data);
-        };
-        StorageService.prototype.removeItem = function (key) {
-            if (!this.database) {
-                this.database = this.load();
-            }
-            if (this.database[key]) {
-                var oldValue = this.database[key];
-                delete this.database[key];
-                this.save();
-                this.eventEmitter.emit(EventTypes.STORE, key, oldValue, null);
-            }
-        };
-        StorageService.prototype.load = function () {
-            try {
-                return JSON.parse(fs.readFileSync(this.dbPath).toString());
-            }
-            catch (error) {
-                if (this.envService.cliArgs.verboseLogging) {
-                    console.error(error);
-                }
-                return {};
-            }
-        };
-        StorageService.prototype.save = function () {
-            fs.writeFileSync(this.dbPath, JSON.stringify(this.database, null, 4));
-        };
-        StorageService = __decorate([
-            __param(0, env_1.IEnvironmentService)
-        ], StorageService);
-        return StorageService;
-    }());
-    exports.StorageService = StorageService;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path, platform, objects, storage_1, electron_1, winjs_base_1, env_1, log_1) {
+define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7/*path*/,5/*vs/base/common/platform*/,10/*vs/base/common/objects*/,23/*vs/code/electron-main/storage*/,14/*electron*/,2/*vs/base/common/winjs.base*/,12/*vs/platform/environment/common/environment*/,20/*vs/code/electron-main/log*/,13/*vs/platform/configuration/common/configuration*/,37/*vs/platform/environment/node/argv*/,11/*vs/platform/product*/]), function (require, exports, path, platform, objects, storage_1, electron_1, winjs_base_1, environment_1, log_1, configuration_1, argv_1, product_1) {
     'use strict';
     (function (WindowMode) {
         WindowMode[WindowMode["Maximized"] = 0] = "Maximized";
@@ -10412,9 +12185,10 @@ define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path,
     })(exports.ReadyState || (exports.ReadyState = {}));
     var ReadyState = exports.ReadyState;
     var VSCodeWindow = (function () {
-        function VSCodeWindow(config, logService, envService, storageService) {
+        function VSCodeWindow(config, logService, environmentService, configurationService, storageService) {
             this.logService = logService;
-            this.envService = envService;
+            this.environmentService = environmentService;
+            this.configurationService = configurationService;
             this.storageService = storageService;
             this.options = config;
             this._lastFocusTime = -1;
@@ -10424,7 +12198,7 @@ define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path,
             // Load window state
             this.restoreWindowState(config.state);
             // For VS theme we can show directly because background is white
-            var usesLightTheme = /vs($| )/.test(this.storageService.getItem(VSCodeWindow.themeStorageKey));
+            var usesLightTheme = /vs($| )/.test(this.storageService.getItem(VSCodeWindow.colorThemeStorageKey));
             if (!global.windowShow) {
                 global.windowShow = Date.now();
             }
@@ -10435,17 +12209,17 @@ define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path,
                 height: this.windowState.height,
                 x: this.windowState.x,
                 y: this.windowState.y,
-                backgroundColor: usesLightTheme ? '#FFFFFF' : platform.isMacintosh ? '#131313' : '#1E1E1E',
+                backgroundColor: usesLightTheme ? '#FFFFFF' : platform.isMacintosh ? '#171717' : '#1E1E1E',
                 minWidth: VSCodeWindow.MIN_WIDTH,
                 minHeight: VSCodeWindow.MIN_HEIGHT,
                 show: !isFullscreenOrMaximized,
-                title: this.envService.product.nameLong,
+                title: product_1.default.nameLong,
                 webPreferences: {
                     'backgroundThrottling': false // by default if Code is in the background, intervals and timeouts get throttled
                 }
             };
             if (platform.isLinux) {
-                options.icon = path.join(this.envService.appRoot, 'resources/linux/code.png'); // Windows and Mac are better off using the embedded icon(s)
+                options.icon = path.join(this.environmentService.appRoot, 'resources/linux/code.png'); // Windows and Mac are better off using the embedded icon(s)
             }
             // Create the browser window.
             this._win = new electron_1.BrowserWindow(options);
@@ -10599,13 +12373,20 @@ define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path,
             this._win.on('focus', function () {
                 _this._lastFocusTime = Date.now();
             });
+            // Window Fullscreen
+            this._win.on('enter-full-screen', function () {
+                _this.sendWhenReady('vscode:enterFullScreen');
+            });
+            this._win.on('leave-full-screen', function () {
+                _this.sendWhenReady('vscode:leaveFullScreen');
+            });
             // Window Failed to load
             this._win.webContents.on('did-fail-load', function (event, errorCode, errorDescription) {
                 console.warn('[electron event]: fail to load, ', errorDescription);
             });
             // Prevent any kind of navigation triggered by the user!
             // But do not touch this in dev version because it will prevent "Reload" from dev tools
-            if (this.envService.isBuilt) {
+            if (this.environmentService.isBuilt) {
                 this._win.webContents.on('will-navigate', function (event) {
                     if (event) {
                         event.preventDefault();
@@ -10624,10 +12405,14 @@ define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path,
                 this.pendingLoadConfig = config;
                 this._readyState = ReadyState.NAVIGATING;
             }
+            // Make sure to clear any previous edited state
+            if (platform.isMacintosh && this._win.isDocumentEdited()) {
+                this._win.setDocumentEdited(false);
+            }
             // Load URL
             this._win.loadURL(this.getUrl(config));
             // Make window visible if it did not open in N seconds because this indicates an error
-            if (!config.isBuilt) {
+            if (!this.environmentService.isBuilt) {
                 this.showTimeoutHandle = setTimeout(function () {
                     if (_this._win && !_this._win.isVisible() && !_this._win.isMinimized()) {
                         _this._win.show();
@@ -10643,30 +12428,45 @@ define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path,
             delete configuration.filesToOpen;
             delete configuration.filesToCreate;
             delete configuration.filesToDiff;
-            delete configuration.extensionsToInstall;
             // Some configuration things get inherited if the window is being reloaded and we are
             // in plugin development mode. These options are all development related.
             if (this.isPluginDevelopmentHost && cli) {
-                configuration.verboseLogging = cli.verboseLogging;
-                configuration.logExtensionHostCommunication = cli.logExtensionHostCommunication;
-                configuration.debugBrkFileWatcherPort = cli.debugBrkFileWatcherPort;
-                configuration.debugExtensionHostPort = cli.debugExtensionHostPort;
-                configuration.debugBrkExtensionHost = cli.debugBrkExtensionHost;
-                configuration.extensionsHomePath = cli.extensionsHomePath;
+                configuration.verbose = cli.verbose;
+                configuration.debugPluginHost = cli.debugPluginHost;
+                configuration.debugBrkPluginHost = cli.debugBrkPluginHost;
+                configuration.extensionHomePath = cli.extensionHomePath;
             }
             // Load config
             this.load(configuration);
         };
-        VSCodeWindow.prototype.getUrl = function (config) {
-            var url = require.toUrl('vs/workbench/electron-browser/index.html');
-            // Config
+        VSCodeWindow.prototype.getUrl = function (windowConfiguration) {
+            var url = require.toUrl('vs/workbench/electron-browser/bootstrap/index.html');
+            // Set zoomlevel
+            var windowConfig = this.configurationService.getConfiguration('window');
+            var zoomLevel = windowConfig && windowConfig.zoomLevel;
+            if (typeof zoomLevel === 'number') {
+                windowConfiguration.zoomLevel = zoomLevel;
+            }
+            // Config (combination of process.argv and window configuration)
+            var environment = argv_1.parseArgs(process.argv);
+            var config = objects.assign(environment, windowConfiguration);
+            for (var key in config) {
+                if (!config[key]) {
+                    delete config[key]; // only send over properties that have a true value
+                }
+            }
             url += '?config=' + encodeURIComponent(JSON.stringify(config));
             return url;
         };
         VSCodeWindow.prototype.serializeWindowState = function () {
             if (this.win.isFullScreen()) {
                 return {
-                    mode: WindowMode.Fullscreen
+                    mode: WindowMode.Fullscreen,
+                    // still carry over window dimensions from previous sessions!
+                    width: this.windowState.width,
+                    height: this.windowState.height,
+                    x: this.windowState.x,
+                    y: this.windowState.y
                 };
             }
             var state = Object.create(null);
@@ -10722,7 +12522,7 @@ define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path,
                 if (this.options.allowFullscreen) {
                     return state;
                 }
-                return null;
+                state.mode = WindowMode.Normal; // if we do not allow fullscreen, treat this state as normal window state
             }
             if ([state.x, state.y, state.width, state.height].some(function (n) { return typeof n !== 'number'; })) {
                 return null;
@@ -10821,13 +12621,14 @@ define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path,
             this._win = null; // Important to dereference the window object to allow for GC
         };
         VSCodeWindow.menuBarHiddenKey = 'menuBarHidden';
-        VSCodeWindow.themeStorageKey = 'theme';
+        VSCodeWindow.colorThemeStorageKey = 'theme';
         VSCodeWindow.MIN_WIDTH = 200;
         VSCodeWindow.MIN_HEIGHT = 120;
         VSCodeWindow = __decorate([
             __param(1, log_1.ILogService),
-            __param(2, env_1.IEnvironmentService),
-            __param(3, storage_1.IStorageService)
+            __param(2, environment_1.IEnvironmentService),
+            __param(3, configuration_1.IConfigurationService),
+            __param(4, storage_1.IStorageService)
         ], VSCodeWindow);
         return VSCodeWindow;
     }());
@@ -10847,15 +12648,15 @@ define(__m[37], __M([0,1,7,3,10,13,8,2,4,17]), function (require, exports, path,
 
 
 
-define(__m[22], __M([0,1,12,8,2,37,4,5,17,13]), function (require, exports, events_1, electron_1, winjs_base_1, window_1, env_1, instantiation_1, log_1, storage_1) {
+define(__m[28/*vs/code/electron-main/lifecycle*/], __M([1/*require*/,0/*exports*/,29/*events*/,14/*electron*/,2/*vs/base/common/winjs.base*/,41/*vs/code/electron-main/window*/,12/*vs/platform/environment/common/environment*/,4/*vs/platform/instantiation/common/instantiation*/,20/*vs/code/electron-main/log*/,23/*vs/code/electron-main/storage*/]), function (require, exports, events_1, electron_1, winjs_base_1, window_1, environment_1, instantiation_1, log_1, storage_1) {
     'use strict';
     var EventTypes = {
         BEFORE_QUIT: 'before-quit'
     };
     exports.ILifecycleService = instantiation_1.createDecorator('lifecycleService');
     var LifecycleService = (function () {
-        function LifecycleService(envService, logService, storageService) {
-            this.envService = envService;
+        function LifecycleService(environmentService, logService, storageService) {
+            this.environmentService = environmentService;
             this.logService = logService;
             this.storageService = storageService;
             this.eventEmitter = new events_1.EventEmitter();
@@ -10907,7 +12708,7 @@ define(__m[22], __M([0,1,12,8,2,37,4,5,17,13]), function (require, exports, even
                 // Windows/Linux: we quit when all windows have closed
                 // Mac: we only quit when quit was requested
                 // --wait: we quit when all windows are closed
-                if (_this.quitRequested || process.platform !== 'darwin' || _this.envService.cliArgs.waitForWindowClose) {
+                if (_this.quitRequested || process.platform !== 'darwin' || _this.environmentService.wait) {
                     electron_1.app.quit();
                 }
             });
@@ -10992,7 +12793,7 @@ define(__m[22], __M([0,1,12,8,2,37,4,5,17,13]), function (require, exports, even
         };
         LifecycleService.QUIT_FROM_UPDATE_MARKER = 'quit.from.update'; // use a marker to find out if an update was applied in the previous session
         LifecycleService = __decorate([
-            __param(0, env_1.IEnvironmentService),
+            __param(0, environment_1.IEnvironmentService),
             __param(1, log_1.ILogService),
             __param(2, storage_1.IStorageService)
         ], LifecycleService);
@@ -11001,7 +12802,303 @@ define(__m[22], __M([0,1,12,8,2,37,4,5,17,13]), function (require, exports, even
     exports.LifecycleService = LifecycleService;
 });
 
-define(__m[63], __M([0,1,5]), function (require, exports, instantiation_1) {
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+define(__m[91/*vs/platform/environment/node/environmentService*/], __M([1/*require*/,0/*exports*/,68/*crypto*/,75/*vs/base/node/paths*/,34/*os*/,7/*path*/,16/*vs/base/common/uri*/,98/*vs/base/common/decorators*/,79/*vs/platform/package*/,11/*vs/platform/product*/]), function (require, exports, crypto, paths, os, path, uri_1, decorators_1, package_1, product_1) {
+    "use strict";
+    function getUniqueUserId() {
+        var username;
+        if (process.platform === 'win32') {
+            username = process.env.USERNAME;
+        }
+        else {
+            username = process.env.USER;
+        }
+        if (!username) {
+            return ''; // fail gracefully if there is no user name
+        }
+        // use sha256 to ensure the userid value can be used in filenames and are unique
+        return crypto.createHash('sha256').update(username).digest('hex').substr(0, 6);
+    }
+    function getIPCHandlePrefix() {
+        var name = package_1.default.name;
+        // Support to run VS Code multiple times as different user
+        // by making the socket unique over the logged in user
+        var userId = getUniqueUserId();
+        if (userId) {
+            name += "-" + userId;
+        }
+        if (process.platform === 'win32') {
+            return "\\\\.\\pipe\\" + name;
+        }
+        return path.join(os.tmpdir(), name);
+    }
+    function getIPCHandleSuffix() {
+        return process.platform === 'win32' ? '-sock' : '.sock';
+    }
+    var EnvironmentService = (function () {
+        function EnvironmentService(_args, _execPath) {
+            this._args = _args;
+            this._execPath = _execPath;
+        }
+        Object.defineProperty(EnvironmentService.prototype, "args", {
+            get: function () { return this._args; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appRoot", {
+            get: function () { return path.dirname(uri_1.default.parse(require.toUrl('')).fsPath); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "execPath", {
+            get: function () { return this._execPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "userHome", {
+            get: function () { return path.join(os.homedir(), product_1.default.dataFolderName); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "userDataPath", {
+            get: function () { return parseUserDataDir(this._args, process); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appSettingsHome", {
+            get: function () { return path.join(this.userDataPath, 'User'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appSettingsPath", {
+            get: function () { return path.join(this.appSettingsHome, 'settings.json'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appKeybindingsPath", {
+            get: function () { return path.join(this.appSettingsHome, 'keybindings.json'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "extensionsPath", {
+            get: function () { return path.normalize(this._args.extensionHomePath || path.join(this.userHome, 'extensions')); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "extensionDevelopmentPath", {
+            get: function () { return this._args.extensionDevelopmentPath ? path.normalize(this._args.extensionDevelopmentPath) : this._args.extensionDevelopmentPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "extensionTestsPath", {
+            get: function () { return this._args.extensionTestsPath ? path.normalize(this._args.extensionTestsPath) : this._args.extensionTestsPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "disableExtensions", {
+            get: function () { return this._args['disable-extensions']; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "debugExtensionHost", {
+            get: function () { return parseExtensionHostPort(this._args, this.isBuilt); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "isBuilt", {
+            get: function () { return !process.env['VSCODE_DEV']; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "verbose", {
+            get: function () { return this._args.verbose; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "wait", {
+            get: function () { return this._args.wait; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "performance", {
+            get: function () { return this._args.performance; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "logExtensionHostCommunication", {
+            get: function () { return this._args.logExtensionHostCommunication; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "mainIPCHandle", {
+            get: function () { return getIPCHandlePrefix() + "-" + package_1.default.version + getIPCHandleSuffix(); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "sharedIPCHandle", {
+            get: function () { return getIPCHandlePrefix() + "-" + package_1.default.version + "-shared" + getIPCHandleSuffix(); },
+            enumerable: true,
+            configurable: true
+        });
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appRoot", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "userHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "userDataPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appSettingsHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appSettingsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appKeybindingsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "extensionsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "extensionDevelopmentPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "extensionTestsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "debugExtensionHost", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "mainIPCHandle", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "sharedIPCHandle", null);
+        return EnvironmentService;
+    }());
+    exports.EnvironmentService = EnvironmentService;
+    function parseExtensionHostPort(args, isBuild) {
+        var portStr = args.debugBrkPluginHost || args.debugPluginHost;
+        var port = Number(portStr) || (!isBuild ? 5870 : null);
+        var brk = port ? Boolean(!!args.debugBrkPluginHost) : false;
+        return { port: port, break: brk };
+    }
+    exports.parseExtensionHostPort = parseExtensionHostPort;
+    function parseUserDataDir(args, process) {
+        var arg = args['user-data-dir'];
+        if (arg) {
+            // Determine if the arg is relative or absolute, if relative use the original CWD
+            // (VSCODE_CWD), not the potentially overridden one (process.cwd()).
+            var resolved = path.resolve(arg);
+            if (path.normalize(arg) === resolved) {
+                return resolved;
+            }
+            else {
+                return path.resolve(process.env['VSCODE_CWD'] || process.cwd(), arg);
+            }
+        }
+        return path.resolve(paths.getDefaultUserDataPath(process.platform));
+    }
+    exports.parseUserDataDir = parseUserDataDir;
+});
+
+define(__m[30/*vs/platform/request/common/request*/], __M([1/*require*/,0/*exports*/,64/*vs/nls!vs/platform/request/common/request*/,4/*vs/platform/instantiation/common/instantiation*/,31/*vs/platform/configuration/common/configurationRegistry*/,19/*vs/platform/platform*/]), function (require, exports, nls_1, instantiation_1, configurationRegistry_1, platform_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.IRequestService = instantiation_1.createDecorator('requestService2');
+    platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration)
+        .registerConfiguration({
+        id: 'http',
+        order: 15,
+        title: nls_1.localize(0, null),
+        type: 'object',
+        properties: {
+            'http.proxy': {
+                type: 'string',
+                pattern: '^https?://([^:]*(:[^@]*)?@)?([^:]+)(:\\d+)?/?$|^$',
+                description: nls_1.localize(1, null)
+            },
+            'http.proxyStrictSSL': {
+                type: 'boolean',
+                default: true,
+                description: nls_1.localize(2, null)
+            },
+            'http.proxyAuthorization': {
+                type: ['null', 'string'],
+                default: null,
+                description: nls_1.localize(3, null)
+            }
+        }
+    });
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[46/*vs/platform/url/common/url*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    'use strict';
+    exports.ID = 'urlService';
+    exports.IURLService = instantiation_1.createDecorator(exports.ID);
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[94/*vs/platform/url/electron-main/urlService*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/event*/,33/*vs/base/node/event*/,11/*vs/platform/product*/,14/*electron*/,16/*vs/base/common/uri*/]), function (require, exports, event_1, event_2, product_1, electron_1, uri_1) {
+    'use strict';
+    var URLService = (function () {
+        function URLService(initial) {
+            if (initial === void 0) { initial = []; }
+            this.openUrlEmitter = new event_1.Emitter();
+            var globalBuffer = (global.getOpenUrls() || []);
+            var initialBuffer = (typeof initial === 'string' ? [initial] : initial).concat(globalBuffer);
+            electron_1.app.setAsDefaultProtocolClient(product_1.default.urlProtocol, process.execPath, ['--open-url']);
+            var rawOnOpenUrl = event_2.fromEventEmitter(electron_1.app, 'open-url', function (event, url) { return ({ event: event, url: url }); });
+            // always prevent default and return the url as string
+            var preventedOnOpenUrl = event_1.mapEvent(rawOnOpenUrl, function (_a) {
+                var event = _a.event, url = _a.url;
+                event.preventDefault();
+                return url;
+            });
+            // buffer all `onOpenUrl` events until someone starts listening
+            var bufferedOnOpenUrl = event_1.buffer(preventedOnOpenUrl, true, initialBuffer);
+            this.onOpenURL = event_1.chain(event_1.any(bufferedOnOpenUrl, this.openUrlEmitter.event))
+                .map(function (url) {
+                try {
+                    return uri_1.default.parse(url);
+                }
+                catch (e) {
+                    return null;
+                }
+            })
+                .filter(function (uri) { return !!uri; })
+                .event;
+        }
+        URLService.prototype.open = function (url) {
+            this.openUrlEmitter.fire(url);
+        };
+        return URLService;
+    }());
+    exports.URLService = URLService;
+});
+
+define(__m[95/*vs/workbench/parts/git/common/git*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -11112,6 +13209,7 @@ define(__m[63], __M([0,1,5]), function (require, exports, instantiation_1) {
         CLEAN: 'clean',
         UNDO: 'undo',
         RESET: 'reset',
+        REVERT: 'revert',
         COMMIT: 'commit',
         COMMAND: 'command',
         BACKGROUND_FETCH: 'backgroundfetch',
@@ -11121,18 +13219,13 @@ define(__m[63], __M([0,1,5]), function (require, exports, instantiation_1) {
     };
     exports.GIT_SERVICE_ID = 'gitService';
     exports.IGitService = instantiation_1.createDecorator(exports.GIT_SERVICE_ID);
-    // Utils
-    function isValidBranchName(value) {
-        return !/^\.|\/\.|\.\.|~|\^|:|\/$|\.lock$|\.lock\/|\\|\*|\s|^\s*$/.test(value);
-    }
-    exports.isValidBranchName = isValidBranchName;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[64], __M([0,1,2,36,63]), function (require, exports, winjs_base_1, ipc_1, git_1) {
+define(__m[96/*vs/workbench/parts/git/common/gitIpc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,21/*vs/base/parts/ipc/common/ipc*/,95/*vs/workbench/parts/git/common/git*/]), function (require, exports, winjs_base_1, ipc_1, git_1) {
     'use strict';
     var RawFileStatusSerializer = {
         to: function (a) { return [a.x, a.y, a.path, a.mimetype, a.rename]; },
@@ -11191,11 +13284,12 @@ define(__m[64], __M([0,1,2,36,63]), function (require, exports, winjs_base_1, ip
                 case 'pull': return this.service.then(function (s) { return s.pull(args); }).then(RawStatusSerializer.to);
                 case 'push': return this.service.then(function (s) { return s.push(args[0], args[1], args[2]); }).then(RawStatusSerializer.to);
                 case 'sync': return this.service.then(function (s) { return s.sync(); }).then(RawStatusSerializer.to);
-                case 'commit': return this.service.then(function (s) { return s.commit(args[0], args[1], args[2]); }).then(RawStatusSerializer.to);
+                case 'commit': return this.service.then(function (s) { return s.commit(args[0], args[1], args[2], args[3]); }).then(RawStatusSerializer.to);
                 case 'detectMimetypes': return this.service.then(function (s) { return s.detectMimetypes(args[0], args[1]); });
                 case 'show': return this.service.then(function (s) { return s.show(args[0], args[1]); });
                 case 'onOutput': return this.service.then(function (s) { return ipc_1.eventToCall(s.onOutput); });
                 case 'getCommitTemplate': return this.service.then(function (s) { return s.getCommitTemplate(); });
+                case 'getCommit': return this.service.then(function (s) { return s.getCommit(args); });
             }
         };
         return GitChannel;
@@ -11274,8 +13368,8 @@ define(__m[64], __M([0,1,2,36,63]), function (require, exports, winjs_base_1, ip
         GitChannelClient.prototype.sync = function () {
             return this.channel.call('sync').then(RawStatusSerializer.from);
         };
-        GitChannelClient.prototype.commit = function (message, amend, stage) {
-            return this.channel.call('commit', [message, amend, stage]).then(RawStatusSerializer.from);
+        GitChannelClient.prototype.commit = function (message, amend, stage, signoff) {
+            return this.channel.call('commit', [message, amend, stage, signoff]).then(RawStatusSerializer.from);
         };
         GitChannelClient.prototype.detectMimetypes = function (path, treeish) {
             return this.channel.call('detectMimetypes', [path, treeish]);
@@ -11286,6 +13380,9 @@ define(__m[64], __M([0,1,2,36,63]), function (require, exports, winjs_base_1, ip
         GitChannelClient.prototype.getCommitTemplate = function () {
             return this.channel.call('getCommitTemplate');
         };
+        GitChannelClient.prototype.getCommit = function (ref) {
+            return this.channel.call('getCommit', ref);
+        };
         return GitChannelClient;
     }());
     exports.GitChannelClient = GitChannelClient;
@@ -11293,11 +13390,7 @@ define(__m[64], __M([0,1,2,36,63]), function (require, exports, winjs_base_1, ip
         function AskpassChannel(service) {
             this.service = service;
         }
-        AskpassChannel.prototype.call = function (command) {
-            var args = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                args[_i - 1] = arguments[_i];
-            }
+        AskpassChannel.prototype.call = function (command, args) {
             switch (command) {
                 case 'askpass': return this.service.askpass(args[0], args[1], args[2]);
             }
@@ -11310,7 +13403,7 @@ define(__m[64], __M([0,1,2,36,63]), function (require, exports, winjs_base_1, ip
             this.channel = channel;
         }
         AskpassChannelClient.prototype.askpass = function (id, host, command) {
-            return this.channel.call('askpass', id, host, command);
+            return this.channel.call('askpass', [id, host, command]);
         };
         return AskpassChannelClient;
     }());
@@ -11321,7 +13414,7 @@ define(__m[64], __M([0,1,2,36,63]), function (require, exports, winjs_base_1, ip
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[65], __M([0,1,47,8,3,2]), function (require, exports, nls, electron_1, platform, winjs_base_1) {
+define(__m[97/*vs/workbench/parts/git/electron-main/askpassService*/], __M([1/*require*/,0/*exports*/,65/*vs/nls!vs/workbench/parts/git/electron-main/askpassService*/,14/*electron*/,5/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/]), function (require, exports, nls, electron_1, platform, winjs_base_1) {
     "use strict";
     var GitAskpassService = (function () {
         function GitAskpassService() {
@@ -11372,12 +13465,13 @@ define(__m[65], __M([0,1,47,8,3,2]), function (require, exports, nls, electron_1
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[39], __M([0,1,2,6,73,74,45,20,10,75]), function (require, exports, winjs_base_1, types_1, https, http, url_1, fs_1, objects_1, zlib_1) {
+define(__m[35/*vs/base/node/request*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,3/*vs/base/common/types*/,104/*https*/,103/*http*/,81/*url*/,25/*fs*/,10/*vs/base/common/objects*/,102/*zlib*/]), function (require, exports, winjs_base_1, types_1, https, http, url_1, fs_1, objects_1, zlib_1) {
     'use strict';
     function request(options) {
         var req;
         return new winjs_base_1.TPromise(function (c, e) {
             var endpoint = url_1.parse(options.url);
+            var rawRequest = endpoint.protocol === 'https:' ? https.request : http.request;
             var opts = {
                 hostname: endpoint.hostname,
                 port: endpoint.port ? parseInt(endpoint.port) : (endpoint.protocol === 'https:' ? 443 : 80),
@@ -11390,13 +13484,13 @@ define(__m[39], __M([0,1,2,6,73,74,45,20,10,75]), function (require, exports, wi
             if (options.user && options.password) {
                 opts.auth = options.user + ':' + options.password;
             }
-            var protocol = endpoint.protocol === 'https:' ? https : http;
-            req = protocol.request(opts, function (res) {
-                if (res.statusCode >= 300 && res.statusCode < 400 && options.followRedirects && options.followRedirects > 0 && res.headers['location']) {
-                    c(request(objects_1.assign({}, options, {
+            req = rawRequest(opts, function (res) {
+                var followRedirects = types_1.isNumber(options.followRedirects) ? options.followRedirects : 3;
+                if (res.statusCode >= 300 && res.statusCode < 400 && followRedirects > 0 && res.headers['location']) {
+                    request(objects_1.assign({}, options, {
                         url: res.headers['location'],
-                        followRedirects: options.followRedirects - 1
-                    })));
+                        followRedirects: followRedirects - 1
+                    })).done(c, e);
                 }
                 else {
                     var stream = res;
@@ -11417,48 +13511,54 @@ define(__m[39], __M([0,1,2,6,73,74,45,20,10,75]), function (require, exports, wi
         }, function () { return req && req.abort(); });
     }
     exports.request = request;
-    function download(filePath, opts) {
-        return request(objects_1.assign(opts, { followRedirects: 3 })).then(function (pair) { return new winjs_base_1.TPromise(function (c, e) {
+    function isSuccess(context) {
+        return (context.res.statusCode >= 200 && context.res.statusCode < 300) || context.res.statusCode === 1223;
+    }
+    function hasNoContent(context) {
+        return context.res.statusCode === 204;
+    }
+    function download(filePath, context) {
+        return new winjs_base_1.TPromise(function (c, e) {
             var out = fs_1.createWriteStream(filePath);
             out.once('finish', function () { return c(null); });
-            pair.stream.once('error', e);
-            pair.stream.pipe(out);
-        }); });
+            context.stream.once('error', e);
+            context.stream.pipe(out);
+        });
     }
     exports.download = download;
-    function text(opts) {
-        return request(opts).then(function (pair) { return new winjs_base_1.Promise(function (c, e) {
-            if (!((pair.res.statusCode >= 200 && pair.res.statusCode < 300) || pair.res.statusCode === 1223)) {
-                return e('Server returned ' + pair.res.statusCode);
+    function asText(context) {
+        return new winjs_base_1.Promise(function (c, e) {
+            if (!isSuccess(context)) {
+                return e('Server returned ' + context.res.statusCode);
             }
-            if (pair.res.statusCode === 204) {
+            if (hasNoContent(context)) {
                 return c(null);
             }
             var buffer = [];
-            pair.stream.on('data', function (d) { return buffer.push(d); });
-            pair.stream.on('end', function () { return c(buffer.join('')); });
-            pair.stream.on('error', e);
-        }); });
+            context.stream.on('data', function (d) { return buffer.push(d); });
+            context.stream.on('end', function () { return c(buffer.join('')); });
+            context.stream.on('error', e);
+        });
     }
-    exports.text = text;
-    function json(opts) {
-        return request(opts).then(function (pair) { return new winjs_base_1.Promise(function (c, e) {
-            if (!((pair.res.statusCode >= 200 && pair.res.statusCode < 300) || pair.res.statusCode === 1223)) {
-                return e('Server returned ' + pair.res.statusCode);
+    exports.asText = asText;
+    function asJson(context) {
+        return new winjs_base_1.Promise(function (c, e) {
+            if (!isSuccess(context)) {
+                return e('Server returned ' + context.res.statusCode);
             }
-            if (pair.res.statusCode === 204) {
+            if (hasNoContent(context)) {
                 return c(null);
             }
-            if (!/application\/json/.test(pair.res.headers['content-type'])) {
+            if (!/application\/json/.test(context.res.headers['content-type'])) {
                 return e('Response doesn\'t appear to be JSON');
             }
             var buffer = [];
-            pair.stream.on('data', function (d) { return buffer.push(d); });
-            pair.stream.on('end', function () { return c(JSON.parse(buffer.join(''))); });
-            pair.stream.on('error', e);
-        }); });
+            context.stream.on('data', function (d) { return buffer.push(d); });
+            context.stream.on('end', function () { return c(JSON.parse(buffer.join(''))); });
+            context.stream.on('error', e);
+        });
     }
-    exports.json = json;
+    exports.asJson = asJson;
 });
 
 /*---------------------------------------------------------------------------------------------
@@ -11479,14 +13579,13 @@ define(__m[39], __M([0,1,2,6,73,74,45,20,10,75]), function (require, exports, wi
 
 
 
-define(__m[67], __M([0,1,12,6,39,40,15,4]), function (require, exports, events_1, types_1, request_1, proxy_1, settings_1, env_1) {
+define(__m[101/*vs/code/electron-main/auto-updater.linux*/], __M([1/*require*/,0/*exports*/,29/*events*/,3/*vs/base/common/types*/,35/*vs/base/node/request*/,30/*vs/platform/request/common/request*/,11/*vs/platform/product*/]), function (require, exports, events_1, types_1, request_1, request_2, product_1) {
     'use strict';
     var LinuxAutoUpdaterImpl = (function (_super) {
         __extends(LinuxAutoUpdaterImpl, _super);
-        function LinuxAutoUpdaterImpl(envService, settingsService) {
+        function LinuxAutoUpdaterImpl(requestService) {
             _super.call(this);
-            this.envService = envService;
-            this.settingsService = settingsService;
+            this.requestService = requestService;
             this.url = null;
             this.currentRequest = null;
         }
@@ -11502,16 +13601,14 @@ define(__m[67], __M([0,1,12,6,39,40,15,4]), function (require, exports, events_1
                 return;
             }
             this.emit('checking-for-update');
-            var proxyUrl = this.settingsService.getValue('http.proxy');
-            var strictSSL = this.settingsService.getValue('http.proxyStrictSSL', true);
-            var agent = proxy_1.getProxyAgent(this.url, { proxyUrl: proxyUrl, strictSSL: strictSSL });
-            this.currentRequest = request_1.json({ url: this.url, agent: agent })
+            this.currentRequest = this.requestService.request({ url: this.url })
+                .then(request_1.asJson)
                 .then(function (update) {
                 if (!update || !update.url || !update.version) {
                     _this.emit('update-not-available');
                 }
                 else {
-                    _this.emit('update-available', null, _this.envService.product.downloadUrl);
+                    _this.emit('update-available', null, product_1.default.downloadUrl, update.version);
                 }
             })
                 .then(null, function (e) {
@@ -11524,8 +13621,7 @@ define(__m[67], __M([0,1,12,6,39,40,15,4]), function (require, exports, events_1
                 .then(function () { return _this.currentRequest = null; });
         };
         LinuxAutoUpdaterImpl = __decorate([
-            __param(0, env_1.IEnvironmentService),
-            __param(1, settings_1.ISettingsService)
+            __param(0, request_2.IRequestService)
         ], LinuxAutoUpdaterImpl);
         return LinuxAutoUpdaterImpl;
     }(events_1.EventEmitter));
@@ -11550,15 +13646,14 @@ define(__m[67], __M([0,1,12,6,39,40,15,4]), function (require, exports, events_1
 
 
 
-define(__m[68], __M([0,1,7,35,50,12,24,30,38,6,2,39,40,15,22,4]), function (require, exports, path, pfs, crypto_1, events_1, os_1, child_process_1, extfs_1, types_1, winjs_base_1, request_1, proxy_1, settings_1, lifecycle_1, env_1) {
+define(__m[100/*vs/code/electron-main/auto-updater.win32*/], __M([1/*require*/,0/*exports*/,7/*path*/,40/*vs/base/node/pfs*/,66/*vs/base/node/crypto*/,29/*events*/,34/*os*/,47/*child_process*/,36/*vs/base/node/extfs*/,3/*vs/base/common/types*/,2/*vs/base/common/winjs.base*/,35/*vs/base/node/request*/,28/*vs/code/electron-main/lifecycle*/,30/*vs/platform/request/common/request*/,11/*vs/platform/product*/]), function (require, exports, path, pfs, crypto_1, events_1, os_1, child_process_1, extfs_1, types_1, winjs_base_1, request_1, lifecycle_1, request_2, product_1) {
     'use strict';
     var Win32AutoUpdaterImpl = (function (_super) {
         __extends(Win32AutoUpdaterImpl, _super);
-        function Win32AutoUpdaterImpl(lifecycleService, envService, settingsService) {
+        function Win32AutoUpdaterImpl(lifecycleService, requestService) {
             _super.call(this);
             this.lifecycleService = lifecycleService;
-            this.envService = envService;
-            this.settingsService = settingsService;
+            this.requestService = requestService;
             this.url = null;
             this.currentRequest = null;
         }
@@ -11582,10 +13677,8 @@ define(__m[68], __M([0,1,7,35,50,12,24,30,38,6,2,39,40,15,22,4]), function (requ
                 return;
             }
             this.emit('checking-for-update');
-            var proxyUrl = this.settingsService.getValue('http.proxy');
-            var strictSSL = this.settingsService.getValue('http.proxyStrictSSL', true);
-            var agent = proxy_1.getProxyAgent(this.url, { proxyUrl: proxyUrl, strictSSL: strictSSL });
-            this.currentRequest = request_1.json({ url: this.url, agent: agent })
+            this.currentRequest = this.requestService.request({ url: this.url })
+                .then(request_1.asJson)
                 .then(function (update) {
                 if (!update || !update.url || !update.version) {
                     _this.emit('update-not-available');
@@ -11601,14 +13694,14 @@ define(__m[68], __M([0,1,7,35,50,12,24,30,38,6,2,39,40,15,22,4]), function (requ
                             var url = update.url;
                             var hash = update.hash;
                             var downloadPath = updatePackagePath + ".tmp";
-                            var agent = proxy_1.getProxyAgent(url, { proxyUrl: proxyUrl, strictSSL: strictSSL });
-                            return request_1.download(downloadPath, { url: url, agent: agent, strictSSL: strictSSL })
+                            return _this.requestService.request({ url: url })
+                                .then(function (context) { return request_1.download(downloadPath, context); })
                                 .then(hash ? function () { return crypto_1.checksum(downloadPath, update.hash); } : function () { return null; })
                                 .then(function () { return pfs.rename(downloadPath, updatePackagePath); })
                                 .then(function () { return updatePackagePath; });
                         });
                     }).then(function (updatePackagePath) {
-                        _this.emit('update-downloaded', {}, update.releaseNotes, update.version, new Date(), _this.url, function () { return _this.quitAndUpdate(updatePackagePath); });
+                        _this.emit('update-downloaded', {}, update.releaseNotes, update.productVersion, new Date(), _this.url, function () { return _this.quitAndUpdate(updatePackagePath); });
                     });
                 });
             })
@@ -11622,8 +13715,7 @@ define(__m[68], __M([0,1,7,35,50,12,24,30,38,6,2,39,40,15,22,4]), function (requ
                 .then(function () { return _this.currentRequest = null; });
         };
         Win32AutoUpdaterImpl.prototype.getUpdatePackagePath = function (version) {
-            var _this = this;
-            return this.cachePath.then(function (cachePath) { return path.join(cachePath, "CodeSetup-" + _this.envService.quality + "-" + version + ".exe"); });
+            return this.cachePath.then(function (cachePath) { return path.join(cachePath, "CodeSetup-" + product_1.default.quality + "-" + version + ".exe"); });
         };
         Win32AutoUpdaterImpl.prototype.quitAndUpdate = function (updatePackagePath) {
             this.lifecycleService.quit().done(function (vetod) {
@@ -11637,9 +13729,8 @@ define(__m[68], __M([0,1,7,35,50,12,24,30,38,6,2,39,40,15,22,4]), function (requ
             });
         };
         Win32AutoUpdaterImpl.prototype.cleanup = function (exceptVersion) {
-            var _this = this;
             if (exceptVersion === void 0) { exceptVersion = null; }
-            var filter = exceptVersion ? function (one) { return !(new RegExp(_this.envService.quality + "-" + exceptVersion + "\\.exe$").test(one)); } : function () { return true; };
+            var filter = exceptVersion ? function (one) { return !(new RegExp(product_1.default.quality + "-" + exceptVersion + "\\.exe$").test(one)); } : function () { return true; };
             return this.cachePath
                 .then(function (cachePath) { return pfs.readdir(cachePath)
                 .then(function (all) { return winjs_base_1.Promise.join(all
@@ -11648,8 +13739,7 @@ define(__m[68], __M([0,1,7,35,50,12,24,30,38,6,2,39,40,15,22,4]), function (requ
         };
         Win32AutoUpdaterImpl = __decorate([
             __param(0, lifecycle_1.ILifecycleService),
-            __param(1, env_1.IEnvironmentService),
-            __param(2, settings_1.ISettingsService)
+            __param(1, request_2.IRequestService)
         ], Win32AutoUpdaterImpl);
         return Win32AutoUpdaterImpl;
     }(events_1.EventEmitter));
@@ -11674,7 +13764,7 @@ define(__m[68], __M([0,1,7,35,50,12,24,30,38,6,2,39,40,15,22,4]), function (requ
 
 
 
-define(__m[28], __M([0,1,21,7,8,3,12,4,15,68,67,22,5]), function (require, exports, fs, path, electron, platform, events_1, env_1, settings_1, auto_updater_win32_1, auto_updater_linux_1, lifecycle_1, instantiation_1) {
+define(__m[32/*vs/code/electron-main/update-manager*/], __M([1/*require*/,0/*exports*/,27/*original-fs*/,7/*path*/,14/*electron*/,29/*events*/,13/*vs/platform/configuration/common/configuration*/,100/*vs/code/electron-main/auto-updater.win32*/,101/*vs/code/electron-main/auto-updater.linux*/,28/*vs/code/electron-main/lifecycle*/,4/*vs/platform/instantiation/common/instantiation*/,30/*vs/platform/request/common/request*/,11/*vs/platform/product*/]), function (require, exports, fs, path, electron, events_1, configuration_1, auto_updater_win32_1, auto_updater_linux_1, lifecycle_1, instantiation_1, request_1, product_1) {
     'use strict';
     (function (State) {
         State[State["Uninitialized"] = 0] = "Uninitialized";
@@ -11692,24 +13782,23 @@ define(__m[28], __M([0,1,21,7,8,3,12,4,15,68,67,22,5]), function (require, expor
     exports.IUpdateService = instantiation_1.createDecorator('updateService');
     var UpdateManager = (function (_super) {
         __extends(UpdateManager, _super);
-        function UpdateManager(instantiationService, lifecycleService, envService, settingsService) {
+        function UpdateManager(instantiationService, lifecycleService, configurationService, requestService) {
             _super.call(this);
             this.lifecycleService = lifecycleService;
-            this.envService = envService;
-            this.settingsService = settingsService;
+            this.configurationService = configurationService;
             this._state = State.Uninitialized;
             this.explicitState = ExplicitState.Implicit;
             this._availableUpdate = null;
             this._lastCheckDate = null;
             this._feedUrl = null;
             this._channel = null;
-            if (platform.isWindows) {
+            if (process.platform === 'win32') {
                 this.raw = instantiationService.createInstance(auto_updater_win32_1.Win32AutoUpdaterImpl);
             }
-            else if (platform.isLinux) {
+            else if (process.platform === 'linux') {
                 this.raw = instantiationService.createInstance(auto_updater_linux_1.LinuxAutoUpdaterImpl);
             }
-            else if (platform.isMacintosh) {
+            else if (process.platform === 'darwin') {
                 this.raw = electron.autoUpdater;
             }
             if (this.raw) {
@@ -11726,8 +13815,8 @@ define(__m[28], __M([0,1,21,7,8,3,12,4,15,68,67,22,5]), function (require, expor
                 _this.emit('checking-for-update');
                 _this.setState(State.CheckingForUpdate);
             });
-            this.raw.on('update-available', function (event, url) {
-                _this.emit('update-available', url);
+            this.raw.on('update-available', function (event, url, version) {
+                _this.emit('update-available', url, version);
                 var data = null;
                 if (url) {
                     data = {
@@ -11762,7 +13851,7 @@ define(__m[28], __M([0,1,21,7,8,3,12,4,15,68,67,22,5]), function (require, expor
                 // for some reason updating on Mac causes the local storage not to be flushed.
                 // we workaround this issue by forcing an explicit flush of the storage data.
                 // see also https://github.com/Microsoft/vscode/issues/172
-                if (platform.isMacintosh) {
+                if (process.platform === 'darwin') {
                     electron.session.defaultSession.flushStorageData();
                 }
                 rawQuitAndUpdate();
@@ -11846,26 +13935,28 @@ define(__m[28], __M([0,1,21,7,8,3,12,4,15,68,67,22,5]), function (require, expor
             this.emit('change');
         };
         UpdateManager.prototype.getUpdateChannel = function () {
-            var channel = this.settingsService.getValue('update.channel') || 'default';
-            return channel === 'none' ? null : this.envService.quality;
+            var config = this.configurationService.getConfiguration('update');
+            var channel = config && config.channel;
+            return channel === 'none' ? null : product_1.default.quality;
         };
         UpdateManager.prototype.getUpdateFeedUrl = function (channel) {
             if (!channel) {
                 return null;
             }
-            if (platform.isWindows && !fs.existsSync(path.join(path.dirname(process.execPath), 'unins000.exe'))) {
+            if (process.platform === 'win32' && !fs.existsSync(path.join(path.dirname(process.execPath), 'unins000.exe'))) {
                 return null;
             }
-            if (!this.envService.updateUrl || !this.envService.product.commit) {
+            if (!product_1.default.updateUrl || !product_1.default.commit) {
                 return null;
             }
-            return this.envService.updateUrl + "/api/update/" + env_1.getPlatformIdentifier() + "/" + channel + "/" + this.envService.product.commit;
+            var platform = process.platform === 'linux' ? "linux-" + process.arch : process.platform;
+            return product_1.default.updateUrl + "/api/update/" + platform + "/" + channel + "/" + product_1.default.commit;
         };
         UpdateManager = __decorate([
             __param(0, instantiation_1.IInstantiationService),
             __param(1, lifecycle_1.ILifecycleService),
-            __param(2, env_1.IEnvironmentService),
-            __param(3, settings_1.ISettingsService)
+            __param(2, configuration_1.IConfigurationService),
+            __param(3, request_1.IRequestService)
         ], UpdateManager);
         return UpdateManager;
     }(events_1.EventEmitter));
@@ -11885,7 +13976,7 @@ define(__m[28], __M([0,1,21,7,8,3,12,4,15,68,67,22,5]), function (require, expor
 
 
 
-define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), function (require, exports, path, fs, platform, nls, paths, arrays, objects, package_1, events_1, storage_1, window_1, electron_1, env_1, lifecycle_1, settings_1, update_manager_1, log_1, instantiation_1) {
+define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,7/*path*/,34/*os*/,27/*original-fs*/,5/*vs/base/common/platform*/,60/*vs/nls!vs/code/electron-main/windows*/,22/*vs/base/common/paths*/,3/*vs/base/common/types*/,18/*vs/base/common/arrays*/,10/*vs/base/common/objects*/,29/*events*/,12/*vs/platform/environment/common/environment*/,23/*vs/code/electron-main/storage*/,41/*vs/code/electron-main/window*/,14/*electron*/,45/*vs/code/electron-main/paths*/,28/*vs/code/electron-main/lifecycle*/,13/*vs/platform/configuration/common/configuration*/,32/*vs/code/electron-main/update-manager*/,20/*vs/code/electron-main/log*/,4/*vs/platform/instantiation/common/instantiation*/,6/*vs/base/common/event*/,11/*vs/platform/product*/]), function (require, exports, path, os, fs, platform, nls, paths, types, arrays, objects_1, events_1, environment_1, storage_1, window_1, electron_1, paths_1, lifecycle_1, configuration_1, update_manager_1, log_1, instantiation_1, event_1, product_1) {
     'use strict';
     var EventTypes = {
         OPEN: 'open',
@@ -11903,16 +13994,44 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
         NONE: 'none'
     };
     exports.IWindowsService = instantiation_1.createDecorator('windowsService');
+    var WindowEventService = (function () {
+        function WindowEventService(windowsService) {
+            this.windowsService = windowsService;
+        }
+        Object.defineProperty(WindowEventService.prototype, "onWindowFocus", {
+            get: function () {
+                return this.windowsService.onWindowFocus;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WindowEventService.prototype, "onNewWindowOpen", {
+            get: function () {
+                return this.windowsService.onNewWindowOpen;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        WindowEventService = __decorate([
+            __param(0, exports.IWindowsService)
+        ], WindowEventService);
+        return WindowEventService;
+    }());
+    exports.WindowEventService = WindowEventService;
     var WindowsManager = (function () {
-        function WindowsManager(instantiationService, logService, storageService, envService, lifecycleService, updateService, settingsService) {
+        function WindowsManager(instantiationService, logService, storageService, environmentService, lifecycleService, updateService, configurationService) {
             this.instantiationService = instantiationService;
             this.logService = logService;
             this.storageService = storageService;
-            this.envService = envService;
+            this.environmentService = environmentService;
             this.lifecycleService = lifecycleService;
             this.updateService = updateService;
-            this.settingsService = settingsService;
+            this.configurationService = configurationService;
             this.eventEmitter = new events_1.EventEmitter();
+            this._onFocus = new event_1.Emitter();
+            this.onWindowFocus = this._onFocus.event;
+            this._onNewWindow = new event_1.Emitter();
+            this.onNewWindowOpen = this._onNewWindow.event;
         }
         WindowsManager.prototype.onOpen = function (clb) {
             var _this = this;
@@ -11957,14 +14076,11 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                 }
                 // Handle paths delayed in case more are coming!
                 runningTimeout = setTimeout(function () {
-                    _this.open({ cli: _this.envService.cliArgs, pathsToOpen: macOpenFiles, preferNewWindow: true /* dropping on the dock prefers to open in a new window */ });
+                    _this.open({ cli: _this.environmentService.args, pathsToOpen: macOpenFiles, preferNewWindow: true /* dropping on the dock prefers to open in a new window */ });
                     macOpenFiles = [];
                     runningTimeout = null;
                 }, 100);
             });
-            this.settingsService.onChange(function (newSettings) {
-                _this.sendToAll('vscode:optionsChange', JSON.stringify({ globalSettings: newSettings }));
-            }, this);
             electron_1.ipcMain.on('vscode:startCrashReporter', function (event, config) {
                 _this.logService.log('IPC#vscode:startCrashReporter');
                 electron_1.crashReporter.start(config);
@@ -11972,7 +14088,7 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             electron_1.ipcMain.on('vscode:windowOpen', function (event, paths, forceNewWindow) {
                 _this.logService.log('IPC#vscode-windowOpen: ', paths);
                 if (paths && paths.length) {
-                    _this.open({ cli: _this.envService.cliArgs, pathsToOpen: paths, forceNewWindow: forceNewWindow });
+                    _this.open({ cli: _this.environmentService.args, pathsToOpen: paths, forceNewWindow: forceNewWindow });
                 }
             });
             electron_1.ipcMain.on('vscode:workbenchLoaded', function (event, windowId) {
@@ -12000,7 +14116,7 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                 _this.logService.log('IPC#vscode-closeFolder');
                 var win = _this.getWindowById(windowId);
                 if (win) {
-                    _this.open({ cli: _this.envService.cliArgs, forceEmpty: true, windowToUse: win });
+                    _this.open({ cli: _this.environmentService.args, forceEmpty: true, windowToUse: win });
                 }
             });
             electron_1.ipcMain.on('vscode:openNewWindow', function () {
@@ -12064,11 +14180,26 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                     vscodeWindow.win.flashFrame(!vscodeWindow.win.isFocused());
                 }
             });
+            electron_1.ipcMain.on('vscode:openRecent', function (event, windowId) {
+                _this.logService.log('IPC#vscode:openRecent');
+                var vscodeWindow = _this.getWindowById(windowId);
+                if (vscodeWindow) {
+                    var recents = _this.getRecentPathsList(vscodeWindow.config.workspacePath, vscodeWindow.config.filesToOpen);
+                    vscodeWindow.send('vscode:openRecent', recents.files, recents.folders);
+                }
+            });
             electron_1.ipcMain.on('vscode:focusWindow', function (event, windowId) {
                 _this.logService.log('IPC#vscode:focusWindow');
                 var vscodeWindow = _this.getWindowById(windowId);
                 if (vscodeWindow) {
                     vscodeWindow.win.focus();
+                }
+            });
+            electron_1.ipcMain.on('vscode:showWindow', function (event, windowId) {
+                _this.logService.log('IPC#vscode:showWindow');
+                var vscodeWindow = _this.getWindowById(windowId);
+                if (vscodeWindow) {
+                    vscodeWindow.win.show();
                 }
             });
             electron_1.ipcMain.on('vscode:setDocumentEdited', function (event, windowId, edited) {
@@ -12094,8 +14225,18 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                     }
                 }
             });
+            electron_1.ipcMain.on('vscode:setHeaders', function (event, windowId, urls, headers) {
+                _this.logService.log('IPC#vscode:setHeaders');
+                var vscodeWindow = _this.getWindowById(windowId);
+                if (!vscodeWindow || !urls || !urls.length || !headers) {
+                    return;
+                }
+                vscodeWindow.win.webContents.session.webRequest.onBeforeSendHeaders({ urls: urls }, function (details, cb) {
+                    cb({ cancel: false, requestHeaders: objects_1.assign(details.requestHeaders, headers) });
+                });
+            });
             electron_1.ipcMain.on('vscode:broadcast', function (event, windowId, target, broadcast) {
-                if (broadcast.channel && broadcast.payload) {
+                if (broadcast.channel && !types.isUndefinedOrNull(broadcast.payload)) {
                     _this.logService.log('IPC#vscode:broadcast', target, broadcast.channel, broadcast.payload);
                     // Handle specific events on main side
                     _this.onBroadcast(broadcast.channel, broadcast.payload);
@@ -12132,6 +14273,21 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                     windowOnExtension.win.close();
                 }
             });
+            electron_1.ipcMain.on('vscode:switchWindow', function (event, windowId) {
+                var windows = _this.getWindows();
+                var window = _this.getWindowById(windowId);
+                window.send('vscode:switchWindow', windows.map(function (w) {
+                    return { path: w.openedWorkspacePath, title: w.win.getTitle(), id: w.id };
+                }));
+            });
+            electron_1.ipcMain.on('vscode:showItemInFolder', function (event, path) {
+                _this.logService.log('IPC#vscode-showItemInFolder');
+                electron_1.shell.showItemInFolder(path);
+            });
+            electron_1.ipcMain.on('vscode:openExternal', function (event, url) {
+                _this.logService.log('IPC#vscode-openExternal');
+                electron_1.shell.openExternal(url);
+            });
             this.updateService.on('update-downloaded', function (update) {
                 _this.sendToFocused('vscode:telemetry', { eventName: 'update:downloaded', data: { version: update.version } });
                 _this.sendToAll('vscode:update-downloaded', JSON.stringify({
@@ -12152,9 +14308,9 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                     _this.sendToFocused('vscode:update-not-available', '');
                 }
             });
-            this.updateService.on('update-available', function (url) {
+            this.updateService.on('update-available', function (url, version) {
                 if (url) {
-                    _this.sendToFocused('vscode:update-available', url);
+                    _this.sendToFocused('vscode:update-available', url, version);
                 }
             });
             this.lifecycleService.onBeforeQuit(function () {
@@ -12180,13 +14336,28 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                     return; // only for the first window
                 }
                 loggedStartupTimes = true;
-                window.send('vscode:telemetry', { eventName: 'startupTime', data: { ellapsed: Date.now() - global.vscodeStart } });
+                _this.logStartupTimes(window);
             });
+        };
+        WindowsManager.prototype.logStartupTimes = function (window) {
+            var totalmem;
+            var cpus;
+            try {
+                totalmem = os.totalmem();
+                var rawCpus = os.cpus();
+                if (rawCpus && rawCpus.length > 0) {
+                    cpus = { count: rawCpus.length, speed: rawCpus[0].speed, model: rawCpus[0].model };
+                }
+            }
+            catch (error) {
+                this.logService.log(error); // be on the safe side with these hardware method calls
+            }
+            window.send('vscode:telemetry', { eventName: 'startupTime', data: { ellapsed: Date.now() - global.vscodeStart, totalmem: totalmem, cpus: cpus } });
         };
         WindowsManager.prototype.onBroadcast = function (event, payload) {
             // Theme changes
-            if (event === 'vscode:changeTheme' && typeof payload === 'string') {
-                this.storageService.setItem(window_1.VSCodeWindow.themeStorageKey, payload);
+            if (event === 'vscode:changeColorTheme' && typeof payload === 'string') {
+                this.storageService.setItem(window_1.VSCodeWindow.colorThemeStorageKey, payload);
             }
         };
         WindowsManager.prototype.reload = function (win, cli) {
@@ -12204,11 +14375,11 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             // Find paths from provided paths if any
             if (openConfig.pathsToOpen && openConfig.pathsToOpen.length > 0) {
                 iPathsToOpen = openConfig.pathsToOpen.map(function (pathToOpen) {
-                    var iPath = _this.toIPath(pathToOpen, false, openConfig.cli && openConfig.cli.gotoLineMode);
+                    var iPath = _this.toIPath(pathToOpen, false, openConfig.cli && openConfig.cli.goto);
                     // Warn if the requested path to open does not exist
                     if (!iPath) {
                         var options = {
-                            title: _this.envService.product.nameLong,
+                            title: product_1.default.nameLong,
                             type: 'info',
                             buttons: [nls.localize(1, null)],
                             message: nls.localize(2, null),
@@ -12235,17 +14406,16 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                 iPathsToOpen = [Object.create(null)];
             }
             else {
-                var ignoreFileNotFound = openConfig.cli.pathArguments.length > 0; // we assume the user wants to create this file from command line
+                var ignoreFileNotFound = openConfig.cli._.length > 0; // we assume the user wants to create this file from command line
                 iPathsToOpen = this.cliToPaths(openConfig.cli, ignoreFileNotFound);
             }
             var filesToOpen = [];
             var filesToDiff = [];
-            var foldersToOpen = iPathsToOpen.filter(function (iPath) { return iPath.workspacePath && !iPath.filePath && !iPath.installExtensionPath; });
-            var emptyToOpen = iPathsToOpen.filter(function (iPath) { return !iPath.workspacePath && !iPath.filePath && !iPath.installExtensionPath; });
-            var extensionsToInstall = iPathsToOpen.filter(function (iPath) { return iPath.installExtensionPath; }).map(function (ipath) { return ipath.filePath; });
-            var filesToCreate = iPathsToOpen.filter(function (iPath) { return !!iPath.filePath && iPath.createFilePath && !iPath.installExtensionPath; });
+            var foldersToOpen = iPathsToOpen.filter(function (iPath) { return iPath.workspacePath && !iPath.filePath; });
+            var emptyToOpen = iPathsToOpen.filter(function (iPath) { return !iPath.workspacePath && !iPath.filePath; });
+            var filesToCreate = iPathsToOpen.filter(function (iPath) { return !!iPath.filePath && iPath.createFilePath; });
             // Diff mode needs special care
-            var candidates = iPathsToOpen.filter(function (iPath) { return !!iPath.filePath && !iPath.createFilePath && !iPath.installExtensionPath; });
+            var candidates = iPathsToOpen.filter(function (iPath) { return !!iPath.filePath && !iPath.createFilePath; });
             if (openConfig.diffMode) {
                 if (candidates.length === 2) {
                     filesToDiff = candidates;
@@ -12261,8 +14431,8 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             }
             var configuration;
             // Handle files to open/diff or to create when we dont open a folder
-            if (!foldersToOpen.length && (filesToOpen.length > 0 || filesToCreate.length > 0 || filesToDiff.length > 0 || extensionsToInstall.length > 0)) {
-                // Let the user settings override how files are open in a new window or same window unless we are forced
+            if (!foldersToOpen.length && (filesToOpen.length > 0 || filesToCreate.length > 0 || filesToDiff.length > 0)) {
+                // const the user settings override how files are open in a new window or same window unless we are forced
                 var openFilesInNewWindow = void 0;
                 if (openConfig.forceNewWindow) {
                     openFilesInNewWindow = true;
@@ -12270,7 +14440,10 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                 else {
                     openFilesInNewWindow = openConfig.preferNewWindow;
                     if (openFilesInNewWindow && !openConfig.cli.extensionDevelopmentPath) {
-                        openFilesInNewWindow = this.settingsService.getValue('window.openFilesInNewWindow', openFilesInNewWindow);
+                        var windowConfig = this.configurationService.getConfiguration('window');
+                        if (windowConfig && !windowConfig.openFilesInNewWindow) {
+                            openFilesInNewWindow = false; // do not open in new window if user configured this explicitly
+                        }
                     }
                 }
                 // Open Files in last instance if any and flag tells us so
@@ -12278,19 +14451,12 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                 if (!openFilesInNewWindow && lastActiveWindow) {
                     lastActiveWindow.focus();
                     lastActiveWindow.ready().then(function (readyWindow) {
-                        readyWindow.send('vscode:openFiles', {
-                            filesToOpen: filesToOpen,
-                            filesToCreate: filesToCreate,
-                            filesToDiff: filesToDiff
-                        });
-                        if (extensionsToInstall.length) {
-                            readyWindow.send('vscode:installExtensions', { extensionsToInstall: extensionsToInstall });
-                        }
+                        readyWindow.send('vscode:openFiles', { filesToOpen: filesToOpen, filesToCreate: filesToCreate, filesToDiff: filesToDiff });
                     });
                     usedWindows.push(lastActiveWindow);
                 }
                 else {
-                    configuration = this.toConfiguration(openConfig.userEnv || this.initialUserEnv, openConfig.cli, null, filesToOpen, filesToCreate, filesToDiff, extensionsToInstall);
+                    configuration = this.toConfiguration(this.getWindowUserEnv(openConfig), openConfig.cli, null, filesToOpen, filesToCreate, filesToDiff);
                     var browserWindow = this.openInBrowserWindow(configuration, true /* new window */);
                     usedWindows.push(browserWindow);
                     openConfig.forceNewWindow = true; // any other folders to open must open in new window then
@@ -12305,21 +14471,13 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                     var browserWindow = windowsOnWorkspacePath_1[0];
                     browserWindow.focus(); // just focus one of them
                     browserWindow.ready().then(function (readyWindow) {
-                        readyWindow.send('vscode:openFiles', {
-                            filesToOpen: filesToOpen,
-                            filesToCreate: filesToCreate,
-                            filesToDiff: filesToDiff
-                        });
-                        if (extensionsToInstall.length) {
-                            readyWindow.send('vscode:installExtensions', { extensionsToInstall: extensionsToInstall });
-                        }
+                        readyWindow.send('vscode:openFiles', { filesToOpen: filesToOpen, filesToCreate: filesToCreate, filesToDiff: filesToDiff });
                     });
                     usedWindows.push(browserWindow);
                     // Reset these because we handled them
                     filesToOpen = [];
                     filesToCreate = [];
                     filesToDiff = [];
-                    extensionsToInstall = [];
                     openInNewWindow = true; // any other folders to open must open in new window then
                 }
                 // Open remaining ones
@@ -12327,108 +14485,78 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                     if (windowsOnWorkspacePath_1.some(function (win) { return _this.isPathEqual(win.openedWorkspacePath, folderToOpen.workspacePath); })) {
                         return; // ignore folders that are already open
                     }
-                    configuration = _this.toConfiguration(openConfig.userEnv || _this.initialUserEnv, openConfig.cli, folderToOpen.workspacePath, filesToOpen, filesToCreate, filesToDiff, extensionsToInstall);
+                    configuration = _this.toConfiguration(_this.getWindowUserEnv(openConfig), openConfig.cli, folderToOpen.workspacePath, filesToOpen, filesToCreate, filesToDiff);
                     var browserWindow = _this.openInBrowserWindow(configuration, openInNewWindow, openInNewWindow ? void 0 : openConfig.windowToUse);
                     usedWindows.push(browserWindow);
                     // Reset these because we handled them
                     filesToOpen = [];
                     filesToCreate = [];
                     filesToDiff = [];
-                    extensionsToInstall = [];
                     openInNewWindow = true; // any other folders to open must open in new window then
                 });
             }
             // Handle empty
             if (emptyToOpen.length > 0) {
                 emptyToOpen.forEach(function () {
-                    var configuration = _this.toConfiguration(openConfig.userEnv || _this.initialUserEnv, openConfig.cli);
+                    var configuration = _this.toConfiguration(_this.getWindowUserEnv(openConfig), openConfig.cli);
                     var browserWindow = _this.openInBrowserWindow(configuration, openInNewWindow, openInNewWindow ? void 0 : openConfig.windowToUse);
                     usedWindows.push(browserWindow);
                     openInNewWindow = true; // any other folders to open must open in new window then
                 });
             }
-            // Remember in recent document list
-            iPathsToOpen.forEach(function (iPath) {
-                if (iPath.filePath || iPath.workspacePath) {
-                    electron_1.app.addRecentDocument(iPath.filePath || iPath.workspacePath);
-                }
-            });
+            // Remember in recent document list (unless this opens for extension development)
+            // Also do not add paths when files are opened for diffing, only if opened individually
+            if (!usedWindows.some(function (w) { return w.isPluginDevelopmentHost; }) && !openConfig.cli.diff) {
+                iPathsToOpen.forEach(function (iPath) {
+                    if (iPath.filePath || iPath.workspacePath) {
+                        electron_1.app.addRecentDocument(iPath.filePath || iPath.workspacePath);
+                        _this.addToRecentPathsList(iPath.filePath || iPath.workspacePath, !!iPath.filePath);
+                    }
+                });
+            }
             // Emit events
             iPathsToOpen.forEach(function (iPath) { return _this.eventEmitter.emit(EventTypes.OPEN, iPath); });
             return arrays.distinct(usedWindows);
         };
-        WindowsManager.prototype.openPluginDevelopmentHostWindow = function (openConfig) {
-            var _this = this;
-            // Reload an existing plugin development host window on the same path
-            // We currently do not allow more than one extension development window
-            // on the same plugin path.
-            var res = WindowsManager.WINDOWS.filter(function (w) { return w.config && _this.isPathEqual(w.config.extensionDevelopmentPath, openConfig.cli.extensionDevelopmentPath); });
-            if (res && res.length === 1) {
-                this.reload(res[0], openConfig.cli);
-                res[0].focus(); // make sure it gets focus and is restored
+        WindowsManager.prototype.addToRecentPathsList = function (path, isFile) {
+            if (!path) {
                 return;
             }
-            // Fill in previously opened workspace unless an explicit path is provided and we are not unit testing
-            if (openConfig.cli.pathArguments.length === 0 && !openConfig.cli.extensionTestsPath) {
-                var workspaceToOpen = this.windowsState.lastPluginDevelopmentHostWindow && this.windowsState.lastPluginDevelopmentHostWindow.workspacePath;
-                if (workspaceToOpen) {
-                    openConfig.cli.pathArguments = [workspaceToOpen];
-                }
+            var mru = this.getRecentPathsList();
+            if (isFile) {
+                mru.files.unshift(path);
+                mru.files = arrays.distinct(mru.files, function (f) { return platform.isLinux ? f : f.toLowerCase(); });
             }
-            // Make sure we are not asked to open a path that is already opened
-            if (openConfig.cli.pathArguments.length > 0) {
-                res = WindowsManager.WINDOWS.filter(function (w) { return w.openedWorkspacePath && openConfig.cli.pathArguments.indexOf(w.openedWorkspacePath) >= 0; });
-                if (res.length) {
-                    openConfig.cli.pathArguments = [];
-                }
+            else {
+                mru.folders.unshift(path);
+                mru.folders = arrays.distinct(mru.folders, function (f) { return platform.isLinux ? f : f.toLowerCase(); });
             }
-            // Open it
-            this.open({ cli: openConfig.cli, forceNewWindow: true, forceEmpty: openConfig.cli.pathArguments.length === 0 });
+            // Make sure its bounded
+            mru.folders = mru.folders.slice(0, WindowsManager.MAX_TOTAL_RECENT_ENTRIES);
+            mru.files = mru.files.slice(0, WindowsManager.MAX_TOTAL_RECENT_ENTRIES);
+            this.storageService.setItem(WindowsManager.recentPathsListStorageKey, mru);
         };
-        WindowsManager.prototype.toConfiguration = function (userEnv, cli, workspacePath, filesToOpen, filesToCreate, filesToDiff, extensionsToInstall) {
-            var configuration = objects.mixin({}, cli); // inherit all properties from CLI
-            configuration.execPath = process.execPath;
-            configuration.workspacePath = workspacePath;
-            configuration.filesToOpen = filesToOpen;
-            configuration.filesToCreate = filesToCreate;
-            configuration.filesToDiff = filesToDiff;
-            configuration.extensionsToInstall = extensionsToInstall;
-            configuration.appName = this.envService.product.nameLong;
-            configuration.applicationName = this.envService.product.applicationName;
-            configuration.darwinBundleIdentifier = this.envService.product.darwinBundleIdentifier;
-            configuration.appRoot = this.envService.appRoot;
-            configuration.version = package_1.default.version;
-            configuration.commitHash = this.envService.product.commit;
-            configuration.appSettingsHome = this.envService.appSettingsHome;
-            configuration.appSettingsPath = this.envService.appSettingsPath;
-            configuration.appKeybindingsPath = this.envService.appKeybindingsPath;
-            configuration.userExtensionsHome = this.envService.userExtensionsHome;
-            configuration.extensionTips = this.envService.product.extensionTips;
-            configuration.mainIPCHandle = this.envService.mainIPCHandle;
-            configuration.sharedIPCHandle = this.envService.sharedIPCHandle;
-            configuration.isBuilt = this.envService.isBuilt;
-            configuration.crashReporter = this.envService.product.crashReporter;
-            configuration.extensionsGallery = this.envService.product.extensionsGallery;
-            configuration.welcomePage = this.envService.product.welcomePage;
-            configuration.productDownloadUrl = this.envService.product.downloadUrl;
-            configuration.releaseNotesUrl = this.envService.product.releaseNotesUrl;
-            configuration.licenseUrl = this.envService.product.licenseUrl;
-            configuration.updateFeedUrl = this.updateService.feedUrl;
-            configuration.updateChannel = this.updateService.channel;
-            configuration.aiConfig = this.envService.product.aiConfig;
-            configuration.sendASmile = this.envService.product.sendASmile;
-            configuration.enableTelemetry = this.envService.product.enableTelemetry;
-            configuration.userEnv = userEnv;
-            var recents = this.getRecentlyOpenedPaths(workspacePath, filesToOpen);
-            configuration.recentFiles = recents.files;
-            configuration.recentFolders = recents.folders;
-            return configuration;
+        WindowsManager.prototype.removeFromRecentPathsList = function (path) {
+            var mru = this.getRecentPathsList();
+            var index = mru.files.indexOf(path);
+            if (index >= 0) {
+                mru.files.splice(index, 1);
+            }
+            index = mru.folders.indexOf(path);
+            if (index >= 0) {
+                mru.folders.splice(index, 1);
+            }
+            this.storageService.setItem(WindowsManager.recentPathsListStorageKey, mru);
         };
-        WindowsManager.prototype.getRecentlyOpenedPaths = function (workspacePath, filesToOpen) {
+        WindowsManager.prototype.clearRecentPathsList = function () {
+            this.storageService.setItem(WindowsManager.recentPathsListStorageKey, { folders: [], files: [] });
+            electron_1.app.clearRecentDocuments();
+        };
+        WindowsManager.prototype.getRecentPathsList = function (workspacePath, filesToOpen) {
             var files;
             var folders;
             // Get from storage
-            var storedRecents = this.storageService.getItem(WindowsManager.openedPathsListStorageKey);
+            var storedRecents = this.storageService.getItem(WindowsManager.recentPathsListStorageKey);
             if (storedRecents) {
                 files = storedRecents.files || [];
                 folders = storedRecents.folders || [];
@@ -12448,10 +14576,49 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             // Clear those dupes
             files = arrays.distinct(files);
             folders = arrays.distinct(folders);
-            // Make sure it is bounded
-            files = files.slice(0, 10);
-            folders = folders.slice(0, 10);
             return { files: files, folders: folders };
+        };
+        WindowsManager.prototype.getWindowUserEnv = function (openConfig) {
+            return objects_1.assign({}, this.initialUserEnv, openConfig.userEnv || {});
+        };
+        WindowsManager.prototype.openPluginDevelopmentHostWindow = function (openConfig) {
+            var _this = this;
+            // Reload an existing plugin development host window on the same path
+            // We currently do not allow more than one extension development window
+            // on the same plugin path.
+            var res = WindowsManager.WINDOWS.filter(function (w) { return w.config && _this.isPathEqual(w.config.extensionDevelopmentPath, openConfig.cli.extensionDevelopmentPath); });
+            if (res && res.length === 1) {
+                this.reload(res[0], openConfig.cli);
+                res[0].focus(); // make sure it gets focus and is restored
+                return;
+            }
+            // Fill in previously opened workspace unless an explicit path is provided and we are not unit testing
+            if (openConfig.cli._.length === 0 && !openConfig.cli.extensionTestsPath) {
+                var workspaceToOpen = this.windowsState.lastPluginDevelopmentHostWindow && this.windowsState.lastPluginDevelopmentHostWindow.workspacePath;
+                if (workspaceToOpen) {
+                    openConfig.cli._ = [workspaceToOpen];
+                }
+            }
+            // Make sure we are not asked to open a path that is already opened
+            if (openConfig.cli._.length > 0) {
+                res = WindowsManager.WINDOWS.filter(function (w) { return w.openedWorkspacePath && openConfig.cli._.indexOf(w.openedWorkspacePath) >= 0; });
+                if (res.length) {
+                    openConfig.cli._ = [];
+                }
+            }
+            // Open it
+            this.open({ cli: openConfig.cli, forceNewWindow: true, forceEmpty: openConfig.cli._.length === 0 });
+        };
+        WindowsManager.prototype.toConfiguration = function (userEnv, cli, workspacePath, filesToOpen, filesToCreate, filesToDiff) {
+            var configuration = objects_1.mixin({}, cli); // inherit all properties from CLI
+            configuration.appRoot = this.environmentService.appRoot;
+            configuration.execPath = process.execPath;
+            configuration.userEnv = userEnv;
+            configuration.workspacePath = workspacePath;
+            configuration.filesToOpen = filesToOpen;
+            configuration.filesToCreate = filesToCreate;
+            configuration.filesToDiff = filesToDiff;
+            return configuration;
         };
         WindowsManager.prototype.toIPath = function (anyPath, ignoreFileNotFound, gotoLineMode) {
             if (!anyPath) {
@@ -12459,7 +14626,7 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             }
             var parsedPath;
             if (gotoLineMode) {
-                parsedPath = env_1.parseLineAndColumnAware(anyPath);
+                parsedPath = paths_1.parseLineAndColumnAware(anyPath);
                 anyPath = parsedPath.path;
             }
             var candidate = path.normalize(anyPath);
@@ -12470,8 +14637,7 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                         {
                             filePath: candidate,
                             lineNumber: gotoLineMode ? parsedPath.line : void 0,
-                            columnNumber: gotoLineMode ? parsedPath.column : void 0,
-                            installExtensionPath: /\.vsix$/i.test(candidate)
+                            columnNumber: gotoLineMode ? parsedPath.column : void 0
                         } :
                         { workspacePath: candidate };
                 }
@@ -12487,8 +14653,8 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             var _this = this;
             // Check for pass in candidate or last opened path
             var candidates = [];
-            if (cli.pathArguments.length > 0) {
-                candidates = cli.pathArguments;
+            if (cli._.length > 0) {
+                candidates = cli._;
             }
             else {
                 var reopenFolders = void 0;
@@ -12496,7 +14662,8 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                     reopenFolders = ReopenFoldersSetting.ALL; // always reopen all folders when an update was applied
                 }
                 else {
-                    reopenFolders = this.settingsService.getValue('window.reopenFolders', ReopenFoldersSetting.ONE);
+                    var windowConfig = this.configurationService.getConfiguration('window');
+                    reopenFolders = (windowConfig && windowConfig.reopenFolders) || ReopenFoldersSetting.ONE;
                 }
                 var lastActiveFolder = this.windowsState.lastActiveWindow && this.windowsState.lastActiveWindow.workspacePath;
                 // Restore all
@@ -12513,7 +14680,7 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                     candidates.push(lastActiveFolder);
                 }
             }
-            var iPaths = candidates.map(function (candidate) { return _this.toIPath(candidate, ignoreFileNotFound, cli.gotoLineMode); }).filter(function (path) { return !!path; });
+            var iPaths = candidates.map(function (candidate) { return _this.toIPath(candidate, ignoreFileNotFound, cli.goto); }).filter(function (path) { return !!path; });
             if (iPaths.length > 0) {
                 return iPaths;
             }
@@ -12531,10 +14698,11 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             }
             // New window
             if (!vscodeWindow) {
+                var windowConfig = this.configurationService.getConfiguration('window');
                 vscodeWindow = this.instantiationService.createInstance(window_1.VSCodeWindow, {
                     state: this.getNewWindowState(configuration),
                     extensionDevelopmentPath: configuration.extensionDevelopmentPath,
-                    allowFullscreen: this.lifecycleService.wasUpdated || this.settingsService.getValue('window.restoreFullscreen', false)
+                    allowFullscreen: this.lifecycleService.wasUpdated || (windowConfig && windowConfig.restoreFullscreen)
                 });
                 WindowsManager.WINDOWS.push(vscodeWindow);
                 // Window Events
@@ -12544,6 +14712,8 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                 vscodeWindow.win.on('unresponsive', function () { return _this.onWindowError(vscodeWindow, WindowError.UNRESPONSIVE); });
                 vscodeWindow.win.on('close', function () { return _this.onBeforeWindowClose(vscodeWindow); });
                 vscodeWindow.win.on('closed', function () { return _this.onWindowClosed(vscodeWindow); });
+                vscodeWindow.win.on('focus', function () { return _this._onFocus.fire(vscodeWindow.id); });
+                this._onNewWindow.fire(vscodeWindow.id);
                 // Lifecycle
                 this.lifecycleService.registerWindow(vscodeWindow);
             }
@@ -12553,12 +14723,10 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
                 var currentWindowConfig = vscodeWindow.config;
                 if (!configuration.extensionDevelopmentPath && currentWindowConfig && !!currentWindowConfig.extensionDevelopmentPath) {
                     configuration.extensionDevelopmentPath = currentWindowConfig.extensionDevelopmentPath;
-                    configuration.verboseLogging = currentWindowConfig.verboseLogging;
-                    configuration.logExtensionHostCommunication = currentWindowConfig.logExtensionHostCommunication;
-                    configuration.debugBrkFileWatcherPort = currentWindowConfig.debugBrkFileWatcherPort;
-                    configuration.debugBrkExtensionHost = currentWindowConfig.debugBrkExtensionHost;
-                    configuration.debugExtensionHostPort = currentWindowConfig.debugExtensionHostPort;
-                    configuration.extensionsHomePath = currentWindowConfig.extensionsHomePath;
+                    configuration.verbose = currentWindowConfig.verbose;
+                    configuration.debugBrkPluginHost = currentWindowConfig.debugBrkPluginHost;
+                    configuration.debugPluginHost = currentWindowConfig.debugPluginHost;
+                    configuration.extensionHomePath = currentWindowConfig.extensionHomePath;
                 }
             }
             // Only load when the window has not vetoed this
@@ -12638,11 +14806,24 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
         WindowsManager.prototype.openFolderPicker = function (forceNewWindow) {
             this.doPickAndOpen({ pickFolders: true, forceNewWindow: forceNewWindow });
         };
+        WindowsManager.prototype.openAccessibilityOptions = function () {
+            var win = new electron_1.BrowserWindow({
+                alwaysOnTop: true,
+                skipTaskbar: true,
+                resizable: false,
+                width: 450,
+                height: 300,
+                show: true,
+                title: nls.localize(4, null)
+            });
+            win.setMenuBarVisibility(false);
+            win.loadURL('chrome://accessibility');
+        };
         WindowsManager.prototype.doPickAndOpen = function (options) {
             var _this = this;
             this.getFileOrFolderPaths(options, function (paths) {
                 if (paths && paths.length) {
-                    _this.open({ cli: _this.envService.cliArgs, pathsToOpen: paths, forceNewWindow: options.forceNewWindow });
+                    _this.open({ cli: _this.environmentService.args, pathsToOpen: paths, forceNewWindow: options.forceNewWindow });
                 }
             });
         };
@@ -12730,7 +14911,7 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             return null;
         };
         WindowsManager.prototype.openNewWindow = function () {
-            this.open({ cli: this.envService.cliArgs, forceNewWindow: true, forceEmpty: true });
+            this.open({ cli: this.environmentService.args, forceNewWindow: true, forceEmpty: true });
         };
         WindowsManager.prototype.sendToFocused = function (channel) {
             var args = [];
@@ -12776,11 +14957,11 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             // Unresponsive
             if (error === WindowError.UNRESPONSIVE) {
                 electron_1.dialog.showMessageBox(vscodeWindow.win, {
-                    title: this.envService.product.nameLong,
+                    title: product_1.default.nameLong,
                     type: 'warning',
-                    buttons: [nls.localize(4, null), nls.localize(5, null), nls.localize(6, null)],
-                    message: nls.localize(7, null),
-                    detail: nls.localize(8, null),
+                    buttons: [nls.localize(5, null), nls.localize(6, null), nls.localize(7, null)],
+                    message: nls.localize(8, null),
+                    detail: nls.localize(9, null),
                     noLink: true
                 }, function (result) {
                     if (result === 0) {
@@ -12794,11 +14975,11 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             }
             else {
                 electron_1.dialog.showMessageBox(vscodeWindow.win, {
-                    title: this.envService.product.nameLong,
+                    title: product_1.default.nameLong,
                     type: 'warning',
-                    buttons: [nls.localize(9, null), nls.localize(10, null)],
-                    message: nls.localize(11, null),
-                    detail: nls.localize(12, null),
+                    buttons: [nls.localize(10, null), nls.localize(11, null)],
+                    message: nls.localize(12, null),
+                    detail: nls.localize(13, null),
                     noLink: true
                 }, function (result) {
                     if (result === 0) {
@@ -12857,7 +15038,8 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             }
             return pathA === pathB;
         };
-        WindowsManager.openedPathsListStorageKey = 'openedPathsList';
+        WindowsManager.MAX_TOTAL_RECENT_ENTRIES = 100;
+        WindowsManager.recentPathsListStorageKey = 'openedPathsList';
         WindowsManager.workingDirPickerStorageKey = 'pickerWorkingDir';
         WindowsManager.windowsStateStorageKey = 'windowsState';
         WindowsManager.WINDOWS = [];
@@ -12865,10 +15047,10 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
             __param(0, instantiation_1.IInstantiationService),
             __param(1, log_1.ILogService),
             __param(2, storage_1.IStorageService),
-            __param(3, env_1.IEnvironmentService),
+            __param(3, environment_1.IEnvironmentService),
             __param(4, lifecycle_1.ILifecycleService),
             __param(5, update_manager_1.IUpdateService),
-            __param(6, settings_1.ISettingsService)
+            __param(6, configuration_1.IConfigurationService)
         ], WindowsManager);
         return WindowsManager;
     }());
@@ -12888,19 +15070,19 @@ define(__m[27], __M([0,1,7,21,3,43,26,16,10,23,12,13,37,8,4,22,15,28,17,5]), fun
 
 
 
-define(__m[71], __M([0,1,27,2,17]), function (require, exports, windows_1, winjs_base_1, log_1) {
+define(__m[90/*vs/code/electron-main/launch*/], __M([1/*require*/,0/*exports*/,24/*vs/code/electron-main/windows*/,2/*vs/base/common/winjs.base*/,20/*vs/code/electron-main/log*/,46/*vs/platform/url/common/url*/]), function (require, exports, windows_1, winjs_base_1, log_1, url_1) {
     'use strict';
     var LaunchChannel = (function () {
         function LaunchChannel(service) {
             this.service = service;
         }
-        LaunchChannel.prototype.call = function (command) {
-            var args = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                args[_i - 1] = arguments[_i];
-            }
+        LaunchChannel.prototype.call = function (command, arg) {
             switch (command) {
-                case 'start': return this.service.start(args[0], args[1]);
+                case 'start':
+                    var _a = arg, args = _a.args, userEnv = _a.userEnv;
+                    return this.service.start(args, userEnv);
+                case 'get-main-process-id':
+                    return this.service.getMainProcessId();
             }
         };
         return LaunchChannel;
@@ -12911,42 +15093,52 @@ define(__m[71], __M([0,1,27,2,17]), function (require, exports, windows_1, winjs
             this.channel = channel;
         }
         LaunchChannelClient.prototype.start = function (args, userEnv) {
-            return this.channel.call('start', args, userEnv);
+            return this.channel.call('start', { args: args, userEnv: userEnv });
+        };
+        LaunchChannelClient.prototype.getMainProcessId = function () {
+            return this.channel.call('get-main-process-id', null);
         };
         return LaunchChannelClient;
     }());
     exports.LaunchChannelClient = LaunchChannelClient;
     var LaunchService = (function () {
-        function LaunchService(logService, windowsService) {
+        function LaunchService(logService, windowsService, urlService) {
             this.logService = logService;
             this.windowsService = windowsService;
+            this.urlService = urlService;
         }
         LaunchService.prototype.start = function (args, userEnv) {
             var _this = this;
-            this.logService.log('Received data from other instance', args);
+            this.logService.log('Received data from other instance: ', args, userEnv);
+            var openUrlArg = args['open-url'] || [];
+            var openUrl = typeof openUrlArg === 'string' ? [openUrlArg] : openUrlArg;
+            if (openUrl.length > 0) {
+                openUrl.forEach(function (url) { return _this.urlService.open(url); });
+                return winjs_base_1.TPromise.as(null);
+            }
             // Otherwise handle in windows service
             var usedWindows;
             if (!!args.extensionDevelopmentPath) {
                 this.windowsService.openPluginDevelopmentHostWindow({ cli: args, userEnv: userEnv });
             }
-            else if (args.pathArguments.length === 0 && args.openNewWindow) {
+            else if (args._.length === 0 && args['new-window']) {
                 usedWindows = this.windowsService.open({ cli: args, userEnv: userEnv, forceNewWindow: true, forceEmpty: true });
             }
-            else if (args.pathArguments.length === 0) {
+            else if (args._.length === 0) {
                 usedWindows = [this.windowsService.focusLastActive(args)];
             }
             else {
                 usedWindows = this.windowsService.open({
                     cli: args,
                     userEnv: userEnv,
-                    forceNewWindow: args.waitForWindowClose || args.openNewWindow,
-                    preferNewWindow: !args.openInSameWindow,
-                    diffMode: args.diffMode
+                    forceNewWindow: args.wait || args['new-window'],
+                    preferNewWindow: !args['reuse-window'],
+                    diffMode: args.diff
                 });
             }
             // If the other instance is waiting to be killed, we hook up a window listener if one window
             // is being used and only then resolve the startup promise which will kill this second instance
-            if (args.waitForWindowClose && usedWindows && usedWindows.length === 1 && usedWindows[0]) {
+            if (args.wait && usedWindows && usedWindows.length === 1 && usedWindows[0]) {
                 var windowId_1 = usedWindows[0].id;
                 return new winjs_base_1.TPromise(function (c, e) {
                     var unbind = _this.windowsService.onClose(function (id) {
@@ -12959,9 +15151,14 @@ define(__m[71], __M([0,1,27,2,17]), function (require, exports, windows_1, winjs
             }
             return winjs_base_1.TPromise.as(null);
         };
+        LaunchService.prototype.getMainProcessId = function () {
+            this.logService.log('Received request for process ID from other instance.');
+            return winjs_base_1.TPromise.as(process.pid);
+        };
         LaunchService = __decorate([
             __param(0, log_1.ILogService),
-            __param(1, windows_1.IWindowsService)
+            __param(1, windows_1.IWindowsService),
+            __param(2, url_1.IURLService)
         ], LaunchService);
         return LaunchService;
     }());
@@ -12981,24 +15178,19 @@ define(__m[71], __M([0,1,27,2,17]), function (require, exports, windows_1, winjs
 
 
 
-define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, exports, nls, os, platform, arrays, env, electron_1, windows_1, storage_1, update_manager_1, keyCodes_1, product_1, package_1) {
+define(__m[86/*vs/code/electron-main/menus*/], __M([1/*require*/,0/*exports*/,59/*vs/nls!vs/code/electron-main/menus*/,5/*vs/base/common/platform*/,18/*vs/base/common/arrays*/,12/*vs/platform/environment/common/environment*/,14/*electron*/,24/*vs/code/electron-main/windows*/,13/*vs/platform/configuration/common/configuration*/,23/*vs/code/electron-main/storage*/,76/*vs/platform/files/common/files*/,32/*vs/code/electron-main/update-manager*/,56/*vs/base/common/keybinding*/,11/*vs/platform/product*/]), function (require, exports, nls, platform, arrays, environment_1, electron_1, windows_1, configuration_1, storage_1, files_1, update_manager_1, keybinding_1, product_1) {
     'use strict';
-    function generateNewIssueUrl(baseUrl, name, version, commit, date) {
-        var osVersion = os.type() + " " + os.arch() + " " + os.release();
-        var queryStringPrefix = baseUrl.indexOf('?') === -1 ? '?' : '&';
-        var body = encodeURIComponent("- VSCode Version: " + name + " " + version + " (" + (product_1.default.commit || 'Commit unknown') + ", " + (product_1.default.date || 'Date unknown') + ")\n- OS Version: " + osVersion + "\n\nSteps to Reproduce:\n\n1.\n2.");
-        return "" + baseUrl + queryStringPrefix + "body=" + body;
-    }
-    exports.generateNewIssueUrl = generateNewIssueUrl;
     var VSCodeMenu = (function () {
-        function VSCodeMenu(storageService, updateService, windowsService, envService) {
+        function VSCodeMenu(storageService, updateService, configurationService, windowsService, environmentService) {
             this.storageService = storageService;
             this.updateService = updateService;
+            this.configurationService = configurationService;
             this.windowsService = windowsService;
-            this.envService = envService;
+            this.environmentService = environmentService;
             this.actionIdKeybindingRequests = [];
             this.mapResolvedKeybindingToActionId = Object.create(null);
             this.mapLastKnownKeybindingToActionId = this.storageService.getItem(VSCodeMenu.lastKnownKeybindingsMapStorageKey) || Object.create(null);
+            this.onConfigurationUpdated(this.configurationService.getConfiguration());
         }
         VSCodeMenu.prototype.ready = function () {
             this.registerListeners();
@@ -13026,7 +15218,7 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                 // Fill hash map of resolved keybindings
                 var needsMenuUpdate = false;
                 keybindings.forEach(function (keybinding) {
-                    var accelerator = new keyCodes_1.Keybinding(keybinding.binding)._toElectronAccelerator();
+                    var accelerator = new keybinding_1.Keybinding(keybinding.binding)._toElectronAccelerator();
                     if (accelerator) {
                         _this.mapResolvedKeybindingToActionId[keybinding.id] = accelerator;
                         if (_this.mapLastKnownKeybindingToActionId[keybinding.id] !== accelerator) {
@@ -13044,8 +15236,36 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                     _this.updateMenu();
                 }
             });
+            // Update when auto save config changes
+            this.configurationService.onDidUpdateConfiguration(function (e) { return _this.onConfigurationUpdated(e.config, true /* update menu if changed */); });
             // Listen to update service
             this.updateService.on('change', function () { return _this.updateMenu(); });
+        };
+        VSCodeMenu.prototype.onConfigurationUpdated = function (config, handleMenu) {
+            var updateMenu = false;
+            var newAutoSaveSetting = config && config.files && config.files.autoSave;
+            if (newAutoSaveSetting !== this.currentAutoSaveSetting) {
+                this.currentAutoSaveSetting = newAutoSaveSetting;
+                updateMenu = true;
+            }
+            if (config && config.workbench) {
+                var newSidebarLocation = config.workbench.sideBar && config.workbench.sideBar.location || 'left';
+                if (newSidebarLocation !== this.currentSidebarLocation) {
+                    this.currentSidebarLocation = newSidebarLocation;
+                    updateMenu = true;
+                }
+                var newStatusbarVisible = config.workbench.statusBar && config.workbench.statusBar.visible;
+                if (typeof newStatusbarVisible !== 'boolean') {
+                    newStatusbarVisible = true;
+                }
+                if (newStatusbarVisible !== this.currentStatusbarVisible) {
+                    this.currentStatusbarVisible = newStatusbarVisible;
+                    updateMenu = true;
+                }
+            }
+            if (handleMenu && updateMenu) {
+                this.updateMenu();
+            }
         };
         VSCodeMenu.prototype.resolveKeybindings = function (win) {
             if (this.keybindingsResolved) {
@@ -13073,7 +15293,6 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
             }
         };
         VSCodeMenu.prototype.onOpen = function (path) {
-            this.addToOpenedPathsList(path.filePath || path.workspacePath, !!path.filePath);
             this.updateMenu();
         };
         VSCodeMenu.prototype.onClose = function (remainingWindowCount) {
@@ -13089,7 +15308,7 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
             var macApplicationMenuItem;
             if (platform.isMacintosh) {
                 var applicationMenu = new electron_1.Menu();
-                macApplicationMenuItem = new electron_1.MenuItem({ label: this.envService.product.nameShort, submenu: applicationMenu });
+                macApplicationMenuItem = new electron_1.MenuItem({ label: product_1.default.nameShort, submenu: applicationMenu });
                 this.setMacApplicationMenu(applicationMenu);
             }
             // File
@@ -13140,57 +15359,15 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                 electron_1.app.dock.setMenu(dockMenu);
             }
         };
-        VSCodeMenu.prototype.addToOpenedPathsList = function (path, isFile) {
-            if (!path) {
-                return;
-            }
-            var mru = this.getOpenedPathsList();
-            if (isFile) {
-                mru.files.unshift(path);
-                mru.files = arrays.distinct(mru.files, function (f) { return platform.isLinux ? f : f.toLowerCase(); });
-            }
-            else {
-                mru.folders.unshift(path);
-                mru.folders = arrays.distinct(mru.folders, function (f) { return platform.isLinux ? f : f.toLowerCase(); });
-            }
-            // Make sure its bounded
-            mru.folders = mru.folders.slice(0, VSCodeMenu.MAX_RECENT_ENTRIES);
-            mru.files = mru.files.slice(0, VSCodeMenu.MAX_RECENT_ENTRIES);
-            this.storageService.setItem(windows_1.WindowsManager.openedPathsListStorageKey, mru);
-        };
-        VSCodeMenu.prototype.removeFromOpenedPathsList = function (path) {
-            var mru = this.getOpenedPathsList();
-            var index = mru.files.indexOf(path);
-            if (index >= 0) {
-                mru.files.splice(index, 1);
-            }
-            index = mru.folders.indexOf(path);
-            if (index >= 0) {
-                mru.folders.splice(index, 1);
-            }
-            this.storageService.setItem(windows_1.WindowsManager.openedPathsListStorageKey, mru);
-        };
-        VSCodeMenu.prototype.clearOpenedPathsList = function () {
-            this.storageService.setItem(windows_1.WindowsManager.openedPathsListStorageKey, { folders: [], files: [] });
-            electron_1.app.clearRecentDocuments();
-            this.updateMenu();
-        };
-        VSCodeMenu.prototype.getOpenedPathsList = function () {
-            var mru = this.storageService.getItem(windows_1.WindowsManager.openedPathsListStorageKey);
-            if (!mru) {
-                mru = { folders: [], files: [] };
-            }
-            return mru;
-        };
         VSCodeMenu.prototype.setMacApplicationMenu = function (macApplicationMenu) {
             var _this = this;
-            var about = new electron_1.MenuItem({ label: nls.localize(7, null, this.envService.product.nameLong), role: 'about' });
+            var about = new electron_1.MenuItem({ label: nls.localize(7, null, product_1.default.nameLong), role: 'about' });
             var checkForUpdates = this.getUpdateMenuItems();
             var preferences = this.getPreferencesMenu();
-            var hide = new electron_1.MenuItem({ label: nls.localize(8, null, this.envService.product.nameLong), role: 'hide', accelerator: 'Command+H' });
+            var hide = new electron_1.MenuItem({ label: nls.localize(8, null, product_1.default.nameLong), role: 'hide', accelerator: 'Command+H' });
             var hideOthers = new electron_1.MenuItem({ label: nls.localize(9, null), role: 'hideothers', accelerator: 'Command+Alt+H' });
             var showAll = new electron_1.MenuItem({ label: nls.localize(10, null), role: 'unhide' });
-            var quit = new electron_1.MenuItem({ label: nls.localize(11, null, this.envService.product.nameLong), click: function () { return _this.quit(); }, accelerator: 'Command+Q' });
+            var quit = new electron_1.MenuItem({ label: nls.localize(11, null, product_1.default.nameLong), click: function () { return _this.quit(); }, accelerator: 'Command+Q' });
             var actions = [about];
             actions.push.apply(actions, checkForUpdates);
             actions.push.apply(actions, [
@@ -13230,13 +15407,15 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
             var saveFile = this.createMenuItem(nls.localize(19, null), 'workbench.action.files.save', this.windowsService.getWindowCount() > 0);
             var saveFileAs = this.createMenuItem(nls.localize(20, null), 'workbench.action.files.saveAs', this.windowsService.getWindowCount() > 0);
             var saveAllFiles = this.createMenuItem(nls.localize(21, null), 'workbench.action.files.saveAll', this.windowsService.getWindowCount() > 0);
+            var autoSaveEnabled = [files_1.AutoSaveConfiguration.AFTER_DELAY, files_1.AutoSaveConfiguration.ON_FOCUS_CHANGE, files_1.AutoSaveConfiguration.ON_WINDOW_CHANGE].some(function (s) { return _this.currentAutoSaveSetting === s; });
+            var autoSave = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(22, null)), type: 'checkbox', checked: autoSaveEnabled, enabled: this.windowsService.getWindowCount() > 0, click: function () { return _this.windowsService.sendToFocused('vscode.toggleAutoSave'); } });
             var preferences = this.getPreferencesMenu();
-            var newWindow = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(22, null)), accelerator: this.getAccelerator('workbench.action.newWindow'), click: function () { return _this.windowsService.openNewWindow(); } });
-            var revertFile = this.createMenuItem(nls.localize(23, null), 'workbench.action.files.revert', this.windowsService.getWindowCount() > 0);
-            var closeWindow = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(24, null)), accelerator: this.getAccelerator('workbench.action.closeWindow'), click: function () { return _this.windowsService.getLastActiveWindow().win.close(); }, enabled: this.windowsService.getWindowCount() > 0 });
-            var closeFolder = this.createMenuItem(nls.localize(25, null), 'workbench.action.closeFolder');
-            var closeEditor = this.createMenuItem(nls.localize(26, null), 'workbench.action.closeActiveEditor');
-            var exit = this.createMenuItem(nls.localize(27, null), function () { return _this.quit(); });
+            var newWindow = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(23, null)), accelerator: this.getAccelerator('workbench.action.newWindow'), click: function () { return _this.windowsService.openNewWindow(); } });
+            var revertFile = this.createMenuItem(nls.localize(24, null), 'workbench.action.files.revert', this.windowsService.getWindowCount() > 0);
+            var closeWindow = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(25, null)), accelerator: this.getAccelerator('workbench.action.closeWindow'), click: function () { return _this.windowsService.getLastActiveWindow().win.close(); }, enabled: this.windowsService.getWindowCount() > 0 });
+            var closeFolder = this.createMenuItem(nls.localize(26, null), 'workbench.action.closeFolder');
+            var closeEditor = this.createMenuItem(nls.localize(27, null), 'workbench.action.closeActiveEditor');
+            var exit = this.createMenuItem(nls.localize(28, null), function () { return _this.quit(); });
             arrays.coalesce([
                 newFile,
                 newWindow,
@@ -13250,6 +15429,8 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                 saveFileAs,
                 saveAllFiles,
                 __separator__(),
+                autoSave,
+                __separator__(),
                 !platform.isMacintosh ? preferences : null,
                 !platform.isMacintosh ? __separator__() : null,
                 revertFile,
@@ -13261,11 +15442,12 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
             ]).forEach(function (item) { return fileMenu.append(item); });
         };
         VSCodeMenu.prototype.getPreferencesMenu = function () {
-            var userSettings = this.createMenuItem(nls.localize(28, null), 'workbench.action.openGlobalSettings');
-            var workspaceSettings = this.createMenuItem(nls.localize(29, null), 'workbench.action.openWorkspaceSettings');
-            var kebindingSettings = this.createMenuItem(nls.localize(30, null), 'workbench.action.openGlobalKeybindings');
-            var snippetsSettings = this.createMenuItem(nls.localize(31, null), 'workbench.action.openSnippets');
-            var themeSelection = this.createMenuItem(nls.localize(32, null), 'workbench.action.selectTheme');
+            var userSettings = this.createMenuItem(nls.localize(29, null), 'workbench.action.openGlobalSettings');
+            var workspaceSettings = this.createMenuItem(nls.localize(30, null), 'workbench.action.openWorkspaceSettings');
+            var kebindingSettings = this.createMenuItem(nls.localize(31, null), 'workbench.action.openGlobalKeybindings');
+            var snippetsSettings = this.createMenuItem(nls.localize(32, null), 'workbench.action.openSnippets');
+            var colorThemeSelection = this.createMenuItem(nls.localize(33, null), 'workbench.action.selectTheme');
+            var iconThemeSelection = this.createMenuItem(nls.localize(34, null), 'workbench.action.selectIconTheme');
             var preferencesMenu = new electron_1.Menu();
             preferencesMenu.append(userSettings);
             preferencesMenu.append(workspaceSettings);
@@ -13274,8 +15456,9 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
             preferencesMenu.append(__separator__());
             preferencesMenu.append(snippetsSettings);
             preferencesMenu.append(__separator__());
-            preferencesMenu.append(themeSelection);
-            return new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(33, null)), submenu: preferencesMenu });
+            preferencesMenu.append(colorThemeSelection);
+            preferencesMenu.append(iconThemeSelection);
+            return new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(35, null)), submenu: preferencesMenu });
         };
         VSCodeMenu.prototype.quit = function () {
             var _this = this;
@@ -13294,39 +15477,35 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
         };
         VSCodeMenu.prototype.setOpenRecentMenu = function (openRecentMenu) {
             var _this = this;
-            openRecentMenu.append(this.createMenuItem(nls.localize(34, null), 'workbench.action.reopenClosedEditor'));
-            var recentList = this.getOpenedPathsList();
+            openRecentMenu.append(this.createMenuItem(nls.localize(36, null), 'workbench.action.reopenClosedEditor'));
+            var _a = this.windowsService.getRecentPathsList(), folders = _a.folders, files = _a.files;
             // Folders
-            if (recentList.folders.length > 0) {
+            if (folders.length > 0) {
                 openRecentMenu.append(__separator__());
-                recentList.folders.forEach(function (folder, index) {
-                    if (index < VSCodeMenu.MAX_RECENT_ENTRIES) {
-                        openRecentMenu.append(_this.createOpenRecentMenuItem(folder));
-                    }
-                });
+                for (var i = 0; i < VSCodeMenu.MAX_MENU_RECENT_ENTRIES && i < folders.length; i++) {
+                    openRecentMenu.append(this.createOpenRecentMenuItem(folders[i]));
+                }
             }
             // Files
-            var files = recentList.files;
             if (files.length > 0) {
                 openRecentMenu.append(__separator__());
-                files.forEach(function (file, index) {
-                    if (index < VSCodeMenu.MAX_RECENT_ENTRIES) {
-                        openRecentMenu.append(_this.createOpenRecentMenuItem(file));
-                    }
-                });
+                for (var i = 0; i < VSCodeMenu.MAX_MENU_RECENT_ENTRIES && i < files.length; i++) {
+                    openRecentMenu.append(this.createOpenRecentMenuItem(files[i]));
+                }
             }
-            if (recentList.folders.length || files.length) {
+            if (folders.length || files.length) {
                 openRecentMenu.append(__separator__());
-                openRecentMenu.append(new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(35, null)), click: function () { return _this.clearOpenedPathsList(); } }));
+                openRecentMenu.append(new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(37, null)), click: function () { _this.windowsService.clearRecentPathsList(); _this.updateMenu(); } }));
             }
         };
         VSCodeMenu.prototype.createOpenRecentMenuItem = function (path) {
             var _this = this;
             return new electron_1.MenuItem({
-                label: path, click: function () {
-                    var success = !!_this.windowsService.open({ cli: _this.envService.cliArgs, pathsToOpen: [path] });
+                label: unMnemonicLabel(path), click: function (menuItem, win, event) {
+                    var openInNewWindow = event && ((!platform.isMacintosh && event.ctrlKey) || (platform.isMacintosh && event.metaKey));
+                    var success = !!_this.windowsService.open({ cli: _this.environmentService.args, pathsToOpen: [path], forceNewWindow: openInNewWindow });
                     if (!success) {
-                        _this.removeFromOpenedPathsList(path);
+                        _this.windowsService.removeFromRecentPathsList(path);
                         _this.updateMenu();
                     }
                 }
@@ -13349,25 +15528,25 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
             var paste;
             var selectAll;
             if (platform.isMacintosh) {
-                undo = this.createDevToolsAwareMenuItem(nls.localize(36, null), 'undo', function (devTools) { return devTools.undo(); });
-                redo = this.createDevToolsAwareMenuItem(nls.localize(37, null), 'redo', function (devTools) { return devTools.redo(); });
-                cut = this.createRoleMenuItem(nls.localize(38, null), 'editor.action.clipboardCutAction', 'cut');
-                copy = this.createRoleMenuItem(nls.localize(39, null), 'editor.action.clipboardCopyAction', 'copy');
-                paste = this.createRoleMenuItem(nls.localize(40, null), 'editor.action.clipboardPasteAction', 'paste');
-                selectAll = this.createDevToolsAwareMenuItem(nls.localize(41, null), 'editor.action.selectAll', function (devTools) { return devTools.selectAll(); });
+                undo = this.createDevToolsAwareMenuItem(nls.localize(38, null), 'undo', function (devTools) { return devTools.undo(); });
+                redo = this.createDevToolsAwareMenuItem(nls.localize(39, null), 'redo', function (devTools) { return devTools.redo(); });
+                cut = this.createRoleMenuItem(nls.localize(40, null), 'editor.action.clipboardCutAction', 'cut');
+                copy = this.createRoleMenuItem(nls.localize(41, null), 'editor.action.clipboardCopyAction', 'copy');
+                paste = this.createRoleMenuItem(nls.localize(42, null), 'editor.action.clipboardPasteAction', 'paste');
+                selectAll = this.createDevToolsAwareMenuItem(nls.localize(43, null), 'editor.action.selectAll', function (devTools) { return devTools.selectAll(); });
             }
             else {
-                undo = this.createMenuItem(nls.localize(42, null), 'undo');
-                redo = this.createMenuItem(nls.localize(43, null), 'redo');
-                cut = this.createMenuItem(nls.localize(44, null), 'editor.action.clipboardCutAction');
-                copy = this.createMenuItem(nls.localize(45, null), 'editor.action.clipboardCopyAction');
-                paste = this.createMenuItem(nls.localize(46, null), 'editor.action.clipboardPasteAction');
-                selectAll = this.createMenuItem(nls.localize(47, null), 'editor.action.selectAll');
+                undo = this.createMenuItem(nls.localize(44, null), 'undo');
+                redo = this.createMenuItem(nls.localize(45, null), 'redo');
+                cut = this.createMenuItem(nls.localize(46, null), 'editor.action.clipboardCutAction');
+                copy = this.createMenuItem(nls.localize(47, null), 'editor.action.clipboardCopyAction');
+                paste = this.createMenuItem(nls.localize(48, null), 'editor.action.clipboardPasteAction');
+                selectAll = this.createMenuItem(nls.localize(49, null), 'editor.action.selectAll');
             }
-            var find = this.createMenuItem(nls.localize(48, null), 'actions.find');
-            var replace = this.createMenuItem(nls.localize(49, null), 'editor.action.startFindReplaceAction');
-            var findInFiles = this.createMenuItem(nls.localize(50, null), 'workbench.view.search');
-            var replaceInFiles = this.createMenuItem(nls.localize(51, null), 'workbench.action.replaceInFiles');
+            var find = this.createMenuItem(nls.localize(50, null), 'actions.find');
+            var replace = this.createMenuItem(nls.localize(51, null), 'editor.action.startFindReplaceAction');
+            var findInFiles = this.createMenuItem(nls.localize(52, null), 'workbench.action.findInFiles');
+            var replaceInFiles = this.createMenuItem(nls.localize(53, null), 'workbench.action.replaceInFiles');
             [
                 undo,
                 redo,
@@ -13386,30 +15565,47 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
         };
         VSCodeMenu.prototype.setViewMenu = function (viewMenu) {
             var _this = this;
-            var explorer = this.createMenuItem(nls.localize(52, null), 'workbench.view.explorer');
-            var search = this.createMenuItem(nls.localize(53, null), 'workbench.view.search');
-            var git = this.createMenuItem(nls.localize(54, null), 'workbench.view.git');
-            var debug = this.createMenuItem(nls.localize(55, null), 'workbench.view.debug');
-            var extensions = this.createMenuItem(nls.localize(56, null), 'workbench.view.extensions');
-            var output = this.createMenuItem(nls.localize(57, null), 'workbench.action.output.toggleOutput');
-            var debugConsole = this.createMenuItem(nls.localize(58, null), 'workbench.debug.action.toggleRepl');
-            var integratedTerminal = this.createMenuItem(nls.localize(59, null), 'workbench.action.terminal.toggleTerminal');
-            var problems = this.createMenuItem(nls.localize(60, null), 'workbench.actions.view.problems');
-            var commands = this.createMenuItem(nls.localize(61, null), 'workbench.action.showCommands');
-            var fullscreen = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(62, null)), accelerator: this.getAccelerator('workbench.action.toggleFullScreen'), click: function () { return _this.windowsService.getLastActiveWindow().toggleFullScreen(); }, enabled: this.windowsService.getWindowCount() > 0 });
-            var toggleMenuBar = this.createMenuItem(nls.localize(63, null), 'workbench.action.toggleMenuBar');
-            var splitEditor = this.createMenuItem(nls.localize(64, null), 'workbench.action.splitEditor');
-            var toggleSidebar = this.createMenuItem(nls.localize(65, null), 'workbench.action.toggleSidebarVisibility');
-            var moveSidebar = this.createMenuItem(nls.localize(66, null), 'workbench.action.toggleSidebarPosition');
-            var togglePanel = this.createMenuItem(nls.localize(67, null), 'workbench.action.togglePanel');
-            var toggleStatusbar = this.createMenuItem(nls.localize(68, null), 'workbench.action.toggleStatusbarVisibility');
-            var toggleWordWrap = this.createMenuItem(nls.localize(69, null), 'editor.action.toggleWordWrap');
-            var toggleRenderWhitespace = this.createMenuItem(nls.localize(70, null), 'editor.action.toggleRenderWhitespace');
-            var toggleRenderControlCharacters = this.createMenuItem(nls.localize(71, null), 'editor.action.toggleRenderControlCharacter');
-            var zoomIn = this.createMenuItem(nls.localize(72, null), 'workbench.action.zoomIn');
-            var zoomOut = this.createMenuItem(nls.localize(73, null), 'workbench.action.zoomOut');
-            var resetZoom = this.createMenuItem(nls.localize(74, null), 'workbench.action.zoomReset');
+            var explorer = this.createMenuItem(nls.localize(54, null), 'workbench.view.explorer');
+            var search = this.createMenuItem(nls.localize(55, null), 'workbench.view.search');
+            var git = this.createMenuItem(nls.localize(56, null), 'workbench.view.git');
+            var debug = this.createMenuItem(nls.localize(57, null), 'workbench.view.debug');
+            var extensions = this.createMenuItem(nls.localize(58, null), 'workbench.view.extensions');
+            var output = this.createMenuItem(nls.localize(59, null), 'workbench.action.output.toggleOutput');
+            var debugConsole = this.createMenuItem(nls.localize(60, null), 'workbench.debug.action.toggleRepl');
+            var integratedTerminal = this.createMenuItem(nls.localize(61, null), 'workbench.action.terminal.toggleTerminal');
+            var problems = this.createMenuItem(nls.localize(62, null), 'workbench.actions.view.problems');
+            var commands = this.createMenuItem(nls.localize(63, null), 'workbench.action.showCommands');
+            var fullscreen = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(64, null)), accelerator: this.getAccelerator('workbench.action.toggleFullScreen'), click: function () { return _this.windowsService.getLastActiveWindow().toggleFullScreen(); }, enabled: this.windowsService.getWindowCount() > 0 });
+            var toggleMenuBar = this.createMenuItem(nls.localize(65, null), 'workbench.action.toggleMenuBar');
+            var splitEditor = this.createMenuItem(nls.localize(66, null), 'workbench.action.splitEditor');
+            var toggleEditorLayout = this.createMenuItem(nls.localize(67, null), 'workbench.action.toggleEditorGroupLayout');
+            var toggleSidebar = this.createMenuItem(nls.localize(68, null), 'workbench.action.toggleSidebarVisibility');
+            var moveSideBarLabel;
+            if (this.currentSidebarLocation !== 'right') {
+                moveSideBarLabel = nls.localize(69, null);
+            }
+            else {
+                moveSideBarLabel = nls.localize(70, null);
+            }
+            var moveSidebar = this.createMenuItem(moveSideBarLabel, 'workbench.action.toggleSidebarPosition');
+            var togglePanel = this.createMenuItem(nls.localize(71, null), 'workbench.action.togglePanel');
+            var statusBarLabel;
+            if (this.currentStatusbarVisible) {
+                statusBarLabel = nls.localize(72, null);
+            }
+            else {
+                statusBarLabel = nls.localize(73, null);
+            }
+            var toggleStatusbar = this.createMenuItem(statusBarLabel, 'workbench.action.toggleStatusbarVisibility');
+            var toggleWordWrap = this.createMenuItem(nls.localize(74, null), 'editor.action.toggleWordWrap');
+            var toggleRenderWhitespace = this.createMenuItem(nls.localize(75, null), 'editor.action.toggleRenderWhitespace');
+            var toggleRenderControlCharacters = this.createMenuItem(nls.localize(76, null), 'editor.action.toggleRenderControlCharacter');
+            var zoomIn = this.createMenuItem(nls.localize(77, null), 'workbench.action.zoomIn');
+            var zoomOut = this.createMenuItem(nls.localize(78, null), 'workbench.action.zoomOut');
+            var resetZoom = this.createMenuItem(nls.localize(79, null), 'workbench.action.zoomReset');
             arrays.coalesce([
+                commands,
+                __separator__(),
                 explorer,
                 search,
                 git,
@@ -13421,12 +15617,11 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                 debugConsole,
                 integratedTerminal,
                 __separator__(),
-                commands,
-                __separator__(),
                 fullscreen,
                 platform.isWindows || platform.isLinux ? toggleMenuBar : void 0,
                 __separator__(),
                 splitEditor,
+                toggleEditorLayout,
                 moveSidebar,
                 toggleSidebar,
                 togglePanel,
@@ -13442,13 +15637,13 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
             ]).forEach(function (item) { return viewMenu.append(item); });
         };
         VSCodeMenu.prototype.setGotoMenu = function (gotoMenu) {
-            var back = this.createMenuItem(nls.localize(75, null), 'workbench.action.navigateBack');
-            var forward = this.createMenuItem(nls.localize(76, null), 'workbench.action.navigateForward');
+            var back = this.createMenuItem(nls.localize(80, null), 'workbench.action.navigateBack');
+            var forward = this.createMenuItem(nls.localize(81, null), 'workbench.action.navigateForward');
             var switchEditorMenu = new electron_1.Menu();
-            var nextEditor = this.createMenuItem(nls.localize(77, null), 'workbench.action.nextEditor');
-            var previousEditor = this.createMenuItem(nls.localize(78, null), 'workbench.action.previousEditor');
-            var nextEditorInGroup = this.createMenuItem(nls.localize(79, null), 'workbench.action.openNextRecentlyUsedEditorInGroup');
-            var previousEditorInGroup = this.createMenuItem(nls.localize(80, null), 'workbench.action.openPreviousRecentlyUsedEditorInGroup');
+            var nextEditor = this.createMenuItem(nls.localize(82, null), 'workbench.action.nextEditor');
+            var previousEditor = this.createMenuItem(nls.localize(83, null), 'workbench.action.previousEditor');
+            var nextEditorInGroup = this.createMenuItem(nls.localize(84, null), 'workbench.action.openNextRecentlyUsedEditorInGroup');
+            var previousEditorInGroup = this.createMenuItem(nls.localize(85, null), 'workbench.action.openPreviousRecentlyUsedEditorInGroup');
             [
                 nextEditor,
                 previousEditor,
@@ -13456,13 +15651,13 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                 nextEditorInGroup,
                 previousEditorInGroup
             ].forEach(function (item) { return switchEditorMenu.append(item); });
-            var switchEditor = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(81, null)), submenu: switchEditorMenu, enabled: true });
+            var switchEditor = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(86, null)), submenu: switchEditorMenu, enabled: true });
             var switchGroupMenu = new electron_1.Menu();
-            var focusFirstGroup = this.createMenuItem(nls.localize(82, null), 'workbench.action.focusFirstEditorGroup');
-            var focusSecondGroup = this.createMenuItem(nls.localize(83, null), 'workbench.action.focusSecondEditorGroup');
-            var focusThirdGroup = this.createMenuItem(nls.localize(84, null), 'workbench.action.focusThirdEditorGroup');
-            var nextGroup = this.createMenuItem(nls.localize(85, null), 'workbench.action.focusNextGroup');
-            var previousGroup = this.createMenuItem(nls.localize(86, null), 'workbench.action.focusPreviousGroup');
+            var focusFirstGroup = this.createMenuItem(nls.localize(87, null), 'workbench.action.focusFirstEditorGroup');
+            var focusSecondGroup = this.createMenuItem(nls.localize(88, null), 'workbench.action.focusSecondEditorGroup');
+            var focusThirdGroup = this.createMenuItem(nls.localize(89, null), 'workbench.action.focusThirdEditorGroup');
+            var nextGroup = this.createMenuItem(nls.localize(90, null), 'workbench.action.focusNextGroup');
+            var previousGroup = this.createMenuItem(nls.localize(91, null), 'workbench.action.focusPreviousGroup');
             [
                 focusFirstGroup,
                 focusSecondGroup,
@@ -13471,11 +15666,12 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                 nextGroup,
                 previousGroup
             ].forEach(function (item) { return switchGroupMenu.append(item); });
-            var switchGroup = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(87, null)), submenu: switchGroupMenu, enabled: true });
-            var gotoFile = this.createMenuItem(nls.localize(88, null), 'workbench.action.quickOpen');
-            var gotoSymbol = this.createMenuItem(nls.localize(89, null), 'workbench.action.gotoSymbol');
-            var gotoDefinition = this.createMenuItem(nls.localize(90, null), 'editor.action.goToDeclaration');
-            var gotoLine = this.createMenuItem(nls.localize(91, null), 'workbench.action.gotoLine');
+            var switchGroup = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(92, null)), submenu: switchGroupMenu, enabled: true });
+            var gotoFile = this.createMenuItem(nls.localize(93, null), 'workbench.action.quickOpen');
+            var gotoSymbolInFile = this.createMenuItem(nls.localize(94, null), 'workbench.action.gotoSymbol');
+            var gotoSymbolInWorkspace = this.createMenuItem(nls.localize(95, null), 'workbench.action.showAllSymbols');
+            var gotoDefinition = this.createMenuItem(nls.localize(96, null), 'editor.action.goToDeclaration');
+            var gotoLine = this.createMenuItem(nls.localize(97, null), 'workbench.action.gotoLine');
             [
                 back,
                 forward,
@@ -13484,15 +15680,16 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                 switchGroup,
                 __separator__(),
                 gotoFile,
-                gotoSymbol,
+                gotoSymbolInFile,
+                gotoSymbolInWorkspace,
                 gotoDefinition,
                 gotoLine
             ].forEach(function (item) { return gotoMenu.append(item); });
         };
         VSCodeMenu.prototype.setMacWindowMenu = function (macWindowMenu) {
-            var minimize = new electron_1.MenuItem({ label: nls.localize(92, null), role: 'minimize', accelerator: 'Command+M', enabled: this.windowsService.getWindowCount() > 0 });
-            var close = new electron_1.MenuItem({ label: nls.localize(93, null), role: 'close', accelerator: 'Command+W', enabled: this.windowsService.getWindowCount() > 0 });
-            var bringAllToFront = new electron_1.MenuItem({ label: nls.localize(94, null), role: 'front', enabled: this.windowsService.getWindowCount() > 0 });
+            var minimize = new electron_1.MenuItem({ label: nls.localize(98, null), role: 'minimize', accelerator: 'Command+M', enabled: this.windowsService.getWindowCount() > 0 });
+            var close = new electron_1.MenuItem({ label: nls.localize(99, null), role: 'close', accelerator: 'Command+W', enabled: this.windowsService.getWindowCount() > 0 });
+            var bringAllToFront = new electron_1.MenuItem({ label: nls.localize(100, null), role: 'front', enabled: this.windowsService.getWindowCount() > 0 });
             [
                 minimize,
                 close,
@@ -13509,44 +15706,65 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
         VSCodeMenu.prototype.setHelpMenu = function (helpMenu) {
             var _this = this;
             var toggleDevToolsItem = new electron_1.MenuItem({
-                label: mnemonicLabel(nls.localize(95, null)),
+                label: mnemonicLabel(nls.localize(101, null)),
                 accelerator: this.getAccelerator('workbench.action.toggleDevTools'),
                 click: function () { return _this.toggleDevTools(); },
                 enabled: (this.windowsService.getWindowCount() > 0)
             });
-            var issueUrl = generateNewIssueUrl(product_1.default.reportIssueUrl, package_1.default.name, package_1.default.version, product_1.default.commit, product_1.default.date);
+            var showAccessibilityOptions = new electron_1.MenuItem({
+                label: mnemonicLabel(nls.localize(102, null)),
+                accelerator: null,
+                click: function () {
+                    _this.windowsService.openAccessibilityOptions();
+                }
+            });
+            var reportIssuesItem = null;
+            if (product_1.default.reportIssueUrl) {
+                var label = nls.localize(103, null);
+                if (this.windowsService.getWindowCount() > 0) {
+                    reportIssuesItem = this.createMenuItem(label, 'workbench.action.reportIssues');
+                }
+                else {
+                    reportIssuesItem = new electron_1.MenuItem({ label: mnemonicLabel(label), click: function () { return _this.openUrl(product_1.default.reportIssueUrl, 'openReportIssues'); } });
+                }
+            }
+            var keyboardShortcutsUrl = platform.isLinux ? product_1.default.keyboardShortcutsUrlLinux : platform.isMacintosh ? product_1.default.keyboardShortcutsUrlMac : product_1.default.keyboardShortcutsUrlWin;
             arrays.coalesce([
-                this.envService.product.documentationUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(96, null)), click: function () { return _this.openUrl(_this.envService.product.documentationUrl, 'openDocumentationUrl'); } }) : null,
-                this.envService.product.releaseNotesUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(97, null)), click: function () { return _this.openUrl(_this.envService.product.releaseNotesUrl, 'openReleaseNotesUrl'); } }) : null,
-                (this.envService.product.documentationUrl || this.envService.product.releaseNotesUrl) ? __separator__() : null,
-                this.envService.product.twitterUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(98, null)), click: function () { return _this.openUrl(_this.envService.product.twitterUrl, 'openTwitterUrl'); } }) : null,
-                this.envService.product.requestFeatureUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(99, null)), click: function () { return _this.openUrl(_this.envService.product.requestFeatureUrl, 'openUserVoiceUrl'); } }) : null,
-                this.envService.product.reportIssueUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(100, null)), click: function () { return _this.openUrl(issueUrl, 'openReportIssues'); } }) : null,
-                (this.envService.product.twitterUrl || this.envService.product.requestFeatureUrl || this.envService.product.reportIssueUrl) ? __separator__() : null,
-                this.envService.product.licenseUrl ? new electron_1.MenuItem({
-                    label: mnemonicLabel(nls.localize(101, null)), click: function () {
+                product_1.default.documentationUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(104, null)), click: function () { return _this.openUrl(product_1.default.documentationUrl, 'openDocumentationUrl'); } }) : null,
+                product_1.default.releaseNotesUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(105, null)), click: function () { return _this.windowsService.sendToFocused('vscode:runAction', 'update.showCurrentReleaseNotes'); } }) : null,
+                (product_1.default.documentationUrl || product_1.default.releaseNotesUrl) ? __separator__() : null,
+                keyboardShortcutsUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(106, null)), click: function () { return _this.openUrl(keyboardShortcutsUrl, 'openKeyboardShortcutsUrl'); } }) : null,
+                product_1.default.introductoryVideosUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(107, null)), click: function () { return _this.openUrl(product_1.default.introductoryVideosUrl, 'openIntroductoryVideosUrl'); } }) : null,
+                (product_1.default.introductoryVideosUrl || keyboardShortcutsUrl) ? __separator__() : null,
+                product_1.default.twitterUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(108, null)), click: function () { return _this.openUrl(product_1.default.twitterUrl, 'openTwitterUrl'); } }) : null,
+                product_1.default.requestFeatureUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(109, null)), click: function () { return _this.openUrl(product_1.default.requestFeatureUrl, 'openUserVoiceUrl'); } }) : null,
+                reportIssuesItem,
+                (product_1.default.twitterUrl || product_1.default.requestFeatureUrl || product_1.default.reportIssueUrl) ? __separator__() : null,
+                product_1.default.licenseUrl ? new electron_1.MenuItem({
+                    label: mnemonicLabel(nls.localize(110, null)), click: function () {
                         if (platform.language) {
-                            var queryArgChar = _this.envService.product.licenseUrl.indexOf('?') > 0 ? '&' : '?';
-                            _this.openUrl("" + _this.envService.product.licenseUrl + queryArgChar + "lang=" + platform.language, 'openLicenseUrl');
+                            var queryArgChar = product_1.default.licenseUrl.indexOf('?') > 0 ? '&' : '?';
+                            _this.openUrl("" + product_1.default.licenseUrl + queryArgChar + "lang=" + platform.language, 'openLicenseUrl');
                         }
                         else {
-                            _this.openUrl(_this.envService.product.licenseUrl, 'openLicenseUrl');
+                            _this.openUrl(product_1.default.licenseUrl, 'openLicenseUrl');
                         }
                     }
                 }) : null,
-                this.envService.product.privacyStatementUrl ? new electron_1.MenuItem({
-                    label: mnemonicLabel(nls.localize(102, null)), click: function () {
+                product_1.default.privacyStatementUrl ? new electron_1.MenuItem({
+                    label: mnemonicLabel(nls.localize(111, null)), click: function () {
                         if (platform.language) {
-                            var queryArgChar = _this.envService.product.licenseUrl.indexOf('?') > 0 ? '&' : '?';
-                            _this.openUrl("" + _this.envService.product.privacyStatementUrl + queryArgChar + "lang=" + platform.language, 'openPrivacyStatement');
+                            var queryArgChar = product_1.default.licenseUrl.indexOf('?') > 0 ? '&' : '?';
+                            _this.openUrl("" + product_1.default.privacyStatementUrl + queryArgChar + "lang=" + platform.language, 'openPrivacyStatement');
                         }
                         else {
-                            _this.openUrl(_this.envService.product.privacyStatementUrl, 'openPrivacyStatement');
+                            _this.openUrl(product_1.default.privacyStatementUrl, 'openPrivacyStatement');
                         }
                     }
                 }) : null,
-                (this.envService.product.licenseUrl || this.envService.product.privacyStatementUrl) ? __separator__() : null,
+                (product_1.default.licenseUrl || product_1.default.privacyStatementUrl) ? __separator__() : null,
                 toggleDevToolsItem,
+                platform.isWindows && product_1.default.quality !== 'stable' ? showAccessibilityOptions : null
             ]).forEach(function (item) { return helpMenu.append(item); });
             if (!platform.isMacintosh) {
                 var updateMenuItems = this.getUpdateMenuItems();
@@ -13555,7 +15773,7 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                     updateMenuItems.forEach(function (i) { return helpMenu.append(i); });
                 }
                 helpMenu.append(__separator__());
-                helpMenu.append(new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(103, null)), click: function () { return _this.openAboutDialog(); } }));
+                helpMenu.append(new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(112, null)), click: function () { return _this.openAboutDialog(); } }));
             }
         };
         VSCodeMenu.prototype.getUpdateMenuItems = function () {
@@ -13566,29 +15784,29 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                 case update_manager_1.State.UpdateDownloaded:
                     var update_1 = this.updateService.availableUpdate;
                     return [new electron_1.MenuItem({
-                            label: nls.localize(104, null), click: function () {
+                            label: nls.localize(113, null), click: function () {
                                 _this.reportMenuActionTelemetry('RestartToUpdate');
                                 update_1.quitAndUpdate();
                             }
                         })];
                 case update_manager_1.State.CheckingForUpdate:
-                    return [new electron_1.MenuItem({ label: nls.localize(105, null), enabled: false })];
+                    return [new electron_1.MenuItem({ label: nls.localize(114, null), enabled: false })];
                 case update_manager_1.State.UpdateAvailable:
                     if (platform.isLinux) {
                         var update_2 = this.updateService.availableUpdate;
                         return [new electron_1.MenuItem({
-                                label: nls.localize(106, null), click: function () {
+                                label: nls.localize(115, null), click: function () {
                                     update_2.quitAndUpdate();
                                 }
                             })];
                     }
                     var updateAvailableLabel = platform.isWindows
-                        ? nls.localize(107, null)
-                        : nls.localize(108, null);
+                        ? nls.localize(116, null)
+                        : nls.localize(117, null);
                     return [new electron_1.MenuItem({ label: updateAvailableLabel, enabled: false })];
                 default:
                     var result = [new electron_1.MenuItem({
-                            label: nls.localize(109, null), click: function () { return setTimeout(function () {
+                            label: nls.localize(118, null), click: function () { return setTimeout(function () {
                                 _this.reportMenuActionTelemetry('CheckForUpdate');
                                 _this.updateService.checkForUpdates(true);
                             }, 0); }
@@ -13596,11 +15814,12 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                     return result;
             }
         };
-        VSCodeMenu.prototype.createMenuItem = function (arg1, arg2, arg3) {
+        VSCodeMenu.prototype.createMenuItem = function (arg1, arg2, arg3, arg4) {
             var _this = this;
             var label = mnemonicLabel(arg1);
             var click = (typeof arg2 === 'function') ? arg2 : function () { return _this.windowsService.sendToFocused('vscode:runAction', arg2); };
             var enabled = typeof arg3 === 'boolean' ? arg3 : this.windowsService.getWindowCount() > 0;
+            var checked = typeof arg4 === 'boolean' ? arg4 : false;
             var actionId;
             if (typeof arg2 === 'string') {
                 actionId = arg2;
@@ -13611,6 +15830,10 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
                 click: click,
                 enabled: enabled
             };
+            if (checked) {
+                options['type'] = 'checkbox';
+                options['checked'] = checked;
+            }
             return new electron_1.MenuItem(options);
         };
         VSCodeMenu.prototype.createDevToolsAwareMenuItem = function (label, actionId, devToolsFocusedFn) {
@@ -13650,11 +15873,11 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
         VSCodeMenu.prototype.openAboutDialog = function () {
             var lastActiveWindow = this.windowsService.getFocusedWindow() || this.windowsService.getLastActiveWindow();
             electron_1.dialog.showMessageBox(lastActiveWindow && lastActiveWindow.win, {
-                title: this.envService.product.nameLong,
+                title: product_1.default.nameLong,
                 type: 'info',
-                message: this.envService.product.nameLong,
-                detail: nls.localize(110, null, this.envService.product.kodeStudioVersion, this.envService.product.commit || 'Unknown', this.envService.product.date || 'Unknown', process.versions['electron'], process.versions['chrome'], process.versions['node']),
-                buttons: [nls.localize(111, null)],
+                message: product_1.default.nameLong,
+                detail: nls.localize(119, null, product_1.default.kodeStudioVersion, product_1.default.commit || 'Unknown', product_1.default.date || 'Unknown', process.versions['electron'], process.versions['chrome'], process.versions['node']),
+                buttons: [nls.localize(120, null)],
                 noLink: true
             }, function (result) { return null; });
             this.reportMenuActionTelemetry('showAboutDialog');
@@ -13667,12 +15890,13 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
             this.windowsService.sendToFocused('vscode:telemetry', { eventName: 'workbenchActionExecuted', data: { id: id, from: 'menu' } });
         };
         VSCodeMenu.lastKnownKeybindingsMapStorageKey = 'lastKnownKeybindings';
-        VSCodeMenu.MAX_RECENT_ENTRIES = 10;
+        VSCodeMenu.MAX_MENU_RECENT_ENTRIES = 10;
         VSCodeMenu = __decorate([
             __param(0, storage_1.IStorageService),
             __param(1, update_manager_1.IUpdateService),
-            __param(2, windows_1.IWindowsService),
-            __param(3, env.IEnvironmentService)
+            __param(2, configuration_1.IConfigurationService),
+            __param(3, windows_1.IWindowsService),
+            __param(4, environment_1.IEnvironmentService)
         ], VSCodeMenu);
         return VSCodeMenu;
     }());
@@ -13682,17 +15906,138 @@ define(__m[49], __M([0,1,42,24,3,16,4,8,27,13,28,70,33,23]), function (require, 
     }
     function mnemonicLabel(label) {
         if (platform.isMacintosh) {
-            return label.replace(/\(&&\w\)|&&/g, ''); // no mnemonic support on mac/linux
+            return label.replace(/\(&&\w\)|&&/g, ''); // no mnemonic support on mac
         }
         return label.replace(/&&/g, '&');
     }
+    function unMnemonicLabel(label) {
+        if (platform.isMacintosh) {
+            return label; // no mnemonic support on mac
+        }
+        return label.replace(/&/g, '&&');
+    }
+});
+
+
+
+
+
+
+
+
+
+
+define(__m[83/*vs/platform/request/node/requestService*/], __M([1/*require*/,0/*exports*/,10/*vs/base/common/objects*/,35/*vs/base/node/request*/,80/*vs/base/node/proxy*/,13/*vs/platform/configuration/common/configuration*/]), function (require, exports, objects_1, request_1, proxy_1, configuration_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    /**
+     * This service exposes the `request` API, while using the global
+     * or configured proxy settings.
+     */
+    var RequestService = (function () {
+        function RequestService(configurationService) {
+            this.disposables = [];
+            this.configure(configurationService.getConfiguration());
+            configurationService.onDidUpdateConfiguration(this.onDidUpdateConfiguration, this, this.disposables);
+        }
+        RequestService.prototype.onDidUpdateConfiguration = function (e) {
+            this.configure(e.config);
+        };
+        RequestService.prototype.configure = function (config) {
+            this.proxyUrl = config.http && config.http.proxy;
+            this.strictSSL = config.http && config.http.proxyStrictSSL;
+            this.authorization = config.http && config.http.proxyAuthorization;
+        };
+        RequestService.prototype.request = function (options) {
+            var _a = this, proxyUrl = _a.proxyUrl, strictSSL = _a.strictSSL;
+            options.agent = options.agent || proxy_1.getProxyAgent(options.url, { proxyUrl: proxyUrl, strictSSL: strictSSL });
+            options.strictSSL = strictSSL;
+            if (this.authorization) {
+                options.headers = objects_1.assign(options.headers || {}, { 'Proxy-Authorization': this.authorization });
+            }
+            return request_1.request(options);
+        };
+        RequestService = __decorate([
+            __param(0, configuration_1.IConfigurationService)
+        ], RequestService);
+        return RequestService;
+    }());
+    exports.RequestService = RequestService;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,29,17,13,30,32]), function (require, exports, nls, fs, electron_1, objects_1, platform, env_1, windows_1, lifecycle_1, menus_1, settings_1, update_manager_1, ipc_net_1, winjs_base_1, gitIpc_1, askpassService_1, sharedProcess_1, launch_1, instantiation_1, instantiationService_1, serviceCollection_1, descriptors_1, log_1, storage_1, cp, uuid_1) {
+
+
+
+
+
+
+
+
+
+define(__m[52/*vs/platform/url/common/urlIpc*/], __M([1/*require*/,0/*exports*/,21/*vs/base/parts/ipc/common/ipc*/,6/*vs/base/common/event*/,24/*vs/code/electron-main/windows*/,16/*vs/base/common/uri*/]), function (require, exports, ipc_1, event_1, windows_1, uri_1) {
+    'use strict';
+    var URISerializer = function (uri) { return uri.toJSON(); };
+    var URIDeserializer = function (raw) { return uri_1.default.revive(raw); };
+    var URLChannel = (function () {
+        function URLChannel(service, windowsService) {
+            this.service = service;
+            this.windowsService = windowsService;
+        }
+        URLChannel.prototype.call = function (command, arg) {
+            var _this = this;
+            switch (command) {
+                case 'event:onOpenURL': return ipc_1.eventToCall(event_1.filterEvent(this.service.onOpenURL, function () { return _this.isWindowFocused(arg); }), URISerializer);
+            }
+        };
+        /**
+         * We only want the focused window to get pinged with the onOpenUrl event.
+         * The idea here is to filter the onOpenUrl event with the knowledge of which
+         * was the last window to be focused. When first listening to the event,
+         * each client sends its window ID via the arguments to `call(...)`.
+         * When the event fires, the server has enough knowledge to filter the event
+         * and fire it only to the focused window.
+         */
+        URLChannel.prototype.isWindowFocused = function (windowID) {
+            var window = this.windowsService.getFocusedWindow() || this.windowsService.getLastActiveWindow();
+            return window ? window.id === windowID : false;
+        };
+        URLChannel = __decorate([
+            __param(1, windows_1.IWindowsService)
+        ], URLChannel);
+        return URLChannel;
+    }());
+    exports.URLChannel = URLChannel;
+    var URLChannelClient = (function () {
+        function URLChannelClient(channel, windowID) {
+            this.channel = channel;
+            this.windowID = windowID;
+            this._onOpenURL = ipc_1.eventFromCall(this.channel, 'event:onOpenURL', this.windowID, URIDeserializer);
+        }
+        Object.defineProperty(URLChannelClient.prototype, "onOpenURL", {
+            get: function () { return this._onOpenURL; },
+            enumerable: true,
+            configurable: true
+        });
+        URLChannelClient.prototype.open = function (url) {
+            return; // not implemented
+        };
+        return URLChannelClient;
+    }());
+    exports.URLChannelClient = URLChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[110/*vs/code/electron-main/main*/], __M([1/*require*/,0/*exports*/,8/*vs/nls!vs/code/electron-main/main*/,14/*electron*/,10/*vs/base/common/objects*/,5/*vs/base/common/platform*/,37/*vs/platform/environment/node/argv*/,40/*vs/base/node/pfs*/,45/*vs/code/electron-main/paths*/,24/*vs/code/electron-main/windows*/,71/*vs/code/common/windows*/,92/*vs/code/common/windowsIpc*/,28/*vs/code/electron-main/lifecycle*/,86/*vs/code/electron-main/menus*/,32/*vs/code/electron-main/update-manager*/,88/*vs/base/parts/ipc/common/ipc.electron*/,89/*vs/base/parts/ipc/node/ipc.net*/,2/*vs/base/common/winjs.base*/,96/*vs/workbench/parts/git/common/gitIpc*/,97/*vs/workbench/parts/git/electron-main/askpassService*/,99/*vs/code/node/sharedProcess*/,90/*vs/code/electron-main/launch*/,4/*vs/platform/instantiation/common/instantiation*/,78/*vs/platform/instantiation/common/instantiationService*/,48/*vs/platform/instantiation/common/serviceCollection*/,39/*vs/platform/instantiation/common/descriptors*/,20/*vs/code/electron-main/log*/,23/*vs/code/electron-main/storage*/,12/*vs/platform/environment/common/environment*/,91/*vs/platform/environment/node/environmentService*/,13/*vs/platform/configuration/common/configuration*/,85/*vs/platform/configuration/node/configurationService*/,30/*vs/platform/request/common/request*/,83/*vs/platform/request/node/requestService*/,44/*vs/base/common/uuid*/,73/*vs/base/common/labels*/,46/*vs/platform/url/common/url*/,52/*vs/platform/url/common/urlIpc*/,94/*vs/platform/url/electron-main/urlService*/,11/*vs/platform/product*/,27/*original-fs*/,47/*child_process*/,7/*path*/]), function (require, exports, nls, electron_1, objects_1, platform, argv_1, pfs_1, paths_1, windows_1, windows_2, windowsIpc_1, lifecycle_1, menus_1, update_manager_1, ipc_electron_1, ipc_net_1, winjs_base_1, gitIpc_1, askpassService_1, sharedProcess_1, launch_1, instantiation_1, instantiationService_1, serviceCollection_1, descriptors_1, log_1, storage_1, environment_1, environmentService_1, configuration_1, configurationService_1, request_1, requestService_1, uuid_1, labels_1, url_1, urlIpc_1, urlService_1, product_1, fs, cp, path) {
     'use strict';
     function quit(accessor, arg) {
         var logService = accessor.get(log_1.ILogService);
@@ -13711,14 +16056,16 @@ define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,2
         }
         process.exit(exitCode); // in main, process.exit === app.exit
     }
-    function main(accessor, ipcServer, userEnv) {
+    function main(accessor, mainIpcServer, userEnv) {
         var instantiationService = accessor.get(instantiation_1.IInstantiationService);
         var logService = accessor.get(log_1.ILogService);
-        var envService = accessor.get(env_1.IEnvironmentService);
+        var environmentService = accessor.get(environment_1.IEnvironmentService);
         var windowsService = accessor.get(windows_1.IWindowsService);
+        var windowEventService = accessor.get(windows_2.IWindowEventService);
         var lifecycleService = accessor.get(lifecycle_1.ILifecycleService);
         var updateService = accessor.get(update_manager_1.IUpdateService);
-        var settingsService = accessor.get(settings_1.ISettingsService);
+        var configurationService = accessor.get(configuration_1.IConfigurationService);
+        var windowEventChannel = new windowsIpc_1.WindowEventChannel(windowEventService);
         // We handle uncaught exceptions here to prevent electron from opening a dialog to the user
         process.on('uncaughtException', function (err) {
             if (err) {
@@ -13735,50 +16082,65 @@ define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,2
                 console.error(err.stack);
             }
         });
-        logService.log('### VSCode main.js ###');
-        logService.log(envService.appRoot, envService.cliArgs);
+        logService.log('Starting VS Code in verbose mode');
+        logService.log("from: " + environmentService.appRoot);
+        logService.log('args:', environmentService.args);
         // Setup Windows mutex
         var windowsMutex = null;
-        try {
-            var Mutex_1 = require.__$__nodeRequire('windows-mutex').Mutex;
-            windowsMutex = new Mutex_1(envService.product.win32MutexName);
+        if (platform.isWindows) {
+            try {
+                var Mutex_1 = require.__$__nodeRequire('windows-mutex').Mutex;
+                windowsMutex = new Mutex_1(product_1.default.win32MutexName);
+            }
+            catch (e) {
+            }
         }
-        catch (e) {
-        }
-        // Register IPC services
+        // Register Main IPC services
         var launchService = instantiationService.createInstance(launch_1.LaunchService);
         var launchChannel = new launch_1.LaunchChannel(launchService);
-        ipcServer.registerChannel('launch', launchChannel);
+        mainIpcServer.registerChannel('launch', launchChannel);
         var askpassService = new askpassService_1.GitAskpassService();
         var askpassChannel = new gitIpc_1.AskpassChannel(askpassService);
-        ipcServer.registerChannel('askpass', askpassChannel);
-        // Used by sub processes to communicate back to the main instance
-        process.env['VSCODE_PID'] = '' + process.pid;
-        process.env['VSCODE_IPC_HOOK'] = envService.mainIPCHandle;
-        process.env['VSCODE_SHARED_IPC_HOOK'] = envService.sharedIPCHandle;
+        mainIpcServer.registerChannel('askpass', askpassChannel);
+        // Create Electron IPC Server
+        var electronIpcServer = new ipc_electron_1.Server(electron_1.ipcMain);
+        // Register Electron IPC services
+        var urlService = accessor.get(url_1.IURLService);
+        var urlChannel = instantiationService.createInstance(urlIpc_1.URLChannel, urlService);
+        electronIpcServer.registerChannel('url', urlChannel);
         // Spawn shared process
-        var sharedProcess = sharedProcess_1.spawnSharedProcess({
-            allowOutput: !envService.isBuilt || envService.cliArgs.verboseLogging,
-            debugPort: envService.isBuilt ? null : 5871
+        var initData = { args: environmentService.args };
+        var options = {
+            allowOutput: !environmentService.isBuilt || environmentService.verbose,
+            debugPort: environmentService.isBuilt ? null : 5871
+        };
+        var sharedProcessDisposable;
+        sharedProcess_1.spawnSharedProcess(initData, options).done(function (disposable) {
+            sharedProcessDisposable = disposable;
+            var sharedProcessConnect = ipc_net_1.connect(environmentService.sharedIPCHandle, 'main');
+            sharedProcessConnect.done(function (client) {
+                client.registerChannel('windowEvent', windowEventChannel);
+            });
         });
         // Make sure we associate the program with the app user model id
         // This will help Windows to associate the running program with
         // any shortcut that is pinned to the taskbar and prevent showing
         // two icons in the taskbar for the same app.
-        if (platform.isWindows && envService.product.win32AppUserModelId) {
-            electron_1.app.setAppUserModelId(envService.product.win32AppUserModelId);
+        if (platform.isWindows && product_1.default.win32AppUserModelId) {
+            electron_1.app.setAppUserModelId(product_1.default.win32AppUserModelId);
         }
-        // Set programStart in the global scope
-        global.programStart = envService.cliArgs.programStart;
         function dispose() {
-            if (ipcServer) {
-                ipcServer.dispose();
-                ipcServer = null;
+            if (mainIpcServer) {
+                mainIpcServer.dispose();
+                mainIpcServer = null;
             }
-            sharedProcess.dispose();
+            if (sharedProcessDisposable) {
+                sharedProcessDisposable.dispose();
+            }
             if (windowsMutex) {
                 windowsMutex.release();
             }
+            configurationService.dispose();
         }
         // Dispose on app quit
         electron_1.app.on('will-quit', function () {
@@ -13793,43 +16155,93 @@ define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,2
         });
         // Lifecycle
         lifecycleService.ready();
-        // Load settings
-        settingsService.loadSync();
         // Propagate to clients
         windowsService.ready(userEnv);
         // Install Menu
         var menu = instantiationService.createInstance(menus_1.VSCodeMenu);
         menu.ready();
-        // Install Tasks
-        if (platform.isWindows && envService.isBuilt) {
-            electron_1.app.setUserTasks([
-                {
-                    title: nls.localize(0, null),
-                    program: process.execPath,
-                    arguments: '-n',
-                    iconPath: process.execPath,
-                    iconIndex: 0
-                }
-            ]);
+        // Install JumpList on Windows
+        if (platform.isWindows) {
+            var jumpList = [];
+            // Tasks
+            jumpList.push({
+                type: 'tasks',
+                items: [
+                    {
+                        type: 'task',
+                        title: nls.localize(0, null),
+                        description: nls.localize(1, null),
+                        program: process.execPath,
+                        args: '-n',
+                        iconPath: process.execPath,
+                        iconIndex: 0
+                    }
+                ]
+            });
+            // Recent Folders
+            var folders = windowsService.getRecentPathsList().folders;
+            if (folders.length > 0) {
+                jumpList.push({
+                    type: 'custom',
+                    name: 'Recent Folders',
+                    items: windowsService.getRecentPathsList().folders.slice(0, 7 /* limit number of entries here */).map(function (folder) {
+                        return {
+                            type: 'task',
+                            title: labels_1.getPathLabel(folder),
+                            description: nls.localize(2, null, path.basename(folder), labels_1.getPathLabel(path.dirname(folder))),
+                            program: process.execPath,
+                            args: folder,
+                            iconPath: 'explorer.exe',
+                            iconIndex: 0
+                        };
+                    })
+                });
+            }
+            // Recent
+            jumpList.push({
+                type: 'recent' // this enables to show files in the "recent" category
+            });
+            try {
+                electron_1.app.setJumpList(jumpList);
+            }
+            catch (error) {
+                logService.log('#setJumpList', error); // since setJumpList is relatively new API, make sure to guard for errors
+            }
         }
         // Setup auto update
         updateService.initialize();
         // Open our first window
-        if (envService.cliArgs.openNewWindow && envService.cliArgs.pathArguments.length === 0) {
-            windowsService.open({ cli: envService.cliArgs, forceNewWindow: true, forceEmpty: true }); // new window if "-n" was used without paths
+        if (environmentService.args['new-window'] && environmentService.args._.length === 0) {
+            windowsService.open({ cli: environmentService.args, forceNewWindow: true, forceEmpty: true }); // new window if "-n" was used without paths
         }
-        else if (global.macOpenFiles && global.macOpenFiles.length && (!envService.cliArgs.pathArguments || !envService.cliArgs.pathArguments.length)) {
-            windowsService.open({ cli: envService.cliArgs, pathsToOpen: global.macOpenFiles }); // mac: open-file event received on startup
+        else if (global.macOpenFiles && global.macOpenFiles.length && (!environmentService.args._ || !environmentService.args._.length)) {
+            windowsService.open({ cli: environmentService.args, pathsToOpen: global.macOpenFiles }); // mac: open-file event received on startup
         }
         else {
-            windowsService.open({ cli: envService.cliArgs, forceNewWindow: envService.cliArgs.openNewWindow, diffMode: envService.cliArgs.diffMode }); // default: read paths from cli
+            windowsService.open({ cli: environmentService.args, forceNewWindow: environmentService.args['new-window'], diffMode: environmentService.args.diff }); // default: read paths from cli
         }
     }
     function setupIPC(accessor) {
         var logService = accessor.get(log_1.ILogService);
-        var envService = accessor.get(env_1.IEnvironmentService);
+        var environmentService = accessor.get(environment_1.IEnvironmentService);
+        function allowSetForegroundWindow(service) {
+            var promise = winjs_base_1.TPromise.as(null);
+            if (platform.isWindows) {
+                promise = service.getMainProcessId()
+                    .then(function (processId) {
+                    logService.log('Sending some foreground love to the running instance:', processId);
+                    try {
+                        var allowSetForegroundWindow_1 = require.__$__nodeRequire('windows-foreground-love').allowSetForegroundWindow;
+                        allowSetForegroundWindow_1(processId);
+                    }
+                    catch (e) {
+                    }
+                });
+            }
+            return promise;
+        }
         function setup(retry) {
-            return ipc_net_1.serve(envService.mainIPCHandle).then(function (server) {
+            return ipc_net_1.serve(environmentService.mainIPCHandle).then(function (server) {
                 if (platform.isMacintosh) {
                     electron_1.app.dock.show(); // dock might be hidden at this case due to a retry
                 }
@@ -13843,9 +16255,9 @@ define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,2
                     electron_1.app.dock.hide();
                 }
                 // there's a running instance, let's connect to it
-                return ipc_net_1.connect(envService.mainIPCHandle).then(function (client) {
+                return ipc_net_1.connect(environmentService.mainIPCHandle, 'main').then(function (client) {
                     // Tests from CLI require to be the only instance currently (TODO@Ben support multiple instances and output)
-                    if (envService.isTestingFromCli) {
+                    if (environmentService.extensionTestsPath && !environmentService.debugExtensionHost.break) {
                         var msg = 'Running extension tests from the command line is currently only supported if no other instance of Code is running.';
                         console.error(msg);
                         client.dispose();
@@ -13854,7 +16266,8 @@ define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,2
                     logService.log('Sending env to running instance...');
                     var channel = client.getChannel('launch');
                     var service = new launch_1.LaunchChannelClient(channel);
-                    return service.start(envService.cliArgs, process.env)
+                    return allowSetForegroundWindow(service)
+                        .then(function () { return service.start(environmentService.args, process.env); })
                         .then(function () { return client.dispose(); })
                         .then(function () { return winjs_base_1.TPromise.wrapError('Sent env to running instance. Terminating...'); });
                 }, function (err) {
@@ -13865,7 +16278,7 @@ define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,2
                     // let's delete it, since we can't connect to it
                     // and the retry the whole thing
                     try {
-                        fs.unlinkSync(envService.mainIPCHandle);
+                        fs.unlinkSync(environmentService.mainIPCHandle);
                     }
                     catch (e) {
                         logService.log('Fatal error deleting obsolete instance handle', e);
@@ -13877,24 +16290,14 @@ define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,2
         }
         return setup(true);
     }
-    // TODO: isolate
-    var services = new serviceCollection_1.ServiceCollection();
-    services.set(env_1.IEnvironmentService, new descriptors_1.SyncDescriptor(env_1.EnvService));
-    services.set(log_1.ILogService, new descriptors_1.SyncDescriptor(log_1.MainLogService));
-    services.set(windows_1.IWindowsService, new descriptors_1.SyncDescriptor(windows_1.WindowsManager));
-    services.set(lifecycle_1.ILifecycleService, new descriptors_1.SyncDescriptor(lifecycle_1.LifecycleService));
-    services.set(storage_1.IStorageService, new descriptors_1.SyncDescriptor(storage_1.StorageService));
-    services.set(update_manager_1.IUpdateService, new descriptors_1.SyncDescriptor(update_manager_1.UpdateManager));
-    services.set(settings_1.ISettingsService, new descriptors_1.SyncDescriptor(settings_1.SettingsManager));
-    var instantiationService = new instantiationService_1.InstantiationService(services);
-    function getUnixUserEnvironment() {
+    function getUnixShellEnvironment() {
         var promise = new winjs_base_1.TPromise(function (c, e) {
-            var runAsNode = process.env['ATOM_SHELL_INTERNAL_RUN_AS_NODE'];
+            var runAsNode = process.env['ELECTRON_RUN_AS_NODE'];
             var noAttach = process.env['ELECTRON_NO_ATTACH_CONSOLE'];
             var mark = uuid_1.generateUuid().replace(/-/g, '').substr(0, 12);
             var regex = new RegExp(mark + '(.*)' + mark);
             var env = objects_1.assign({}, process.env, {
-                ATOM_SHELL_INTERNAL_RUN_AS_NODE: '1',
+                ELECTRON_RUN_AS_NODE: '1',
                 ELECTRON_NO_ATTACH_CONSOLE: '1'
             });
             var command = "'" + process.execPath + "' -p '\"" + mark + "\" + JSON.stringify(process.env) + \"" + mark + "\"'";
@@ -13914,20 +16317,20 @@ define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,2
                 var match = regex.exec(raw);
                 var rawStripped = match ? match[1] : '{}';
                 try {
-                    var env_2 = JSON.parse(rawStripped);
+                    var env_1 = JSON.parse(rawStripped);
                     if (runAsNode) {
-                        env_2['ATOM_SHELL_INTERNAL_RUN_AS_NODE'] = runAsNode;
+                        env_1['ELECTRON_RUN_AS_NODE'] = runAsNode;
                     }
                     else {
-                        delete env_2['ATOM_SHELL_INTERNAL_RUN_AS_NODE'];
+                        delete env_1['ELECTRON_RUN_AS_NODE'];
                     }
                     if (noAttach) {
-                        env_2['ELECTRON_NO_ATTACH_CONSOLE'] = noAttach;
+                        env_1['ELECTRON_NO_ATTACH_CONSOLE'] = noAttach;
                     }
                     else {
-                        delete env_2['ELECTRON_NO_ATTACH_CONSOLE'];
+                        delete env_1['ELECTRON_NO_ATTACH_CONSOLE'];
                     }
-                    c(env_2);
+                    c(env_1);
                 }
                 catch (err) {
                     e(err);
@@ -13937,24 +16340,72 @@ define(__m[81], __M([0,1,9,21,8,10,3,4,27,22,49,15,28,56,2,64,65,48,71,5,51,31,2
         // swallow errors
         return promise.then(null, function () { return ({}); });
     }
-    function getUserEnvironment() {
-        return platform.isWindows ? winjs_base_1.TPromise.as({}) : getUnixUserEnvironment();
-    }
-    // On some platforms we need to manually read from the global environment variables
-    // and assign them to the process environment (e.g. when doubleclick app on Mac)
-    getUserEnvironment()
-        .then(function (userEnv) {
-        if (process.env['VSCODE_CLI'] !== '1') {
-            objects_1.assign(process.env, userEnv);
+    /**
+     * We eed to get the environment from a user's shell.
+     * This should only be done when Code itself is not launched
+     * from within a shell.
+     */
+    function getShellEnvironment() {
+        if (process.env['VSCODE_CLI'] === '1') {
+            return winjs_base_1.TPromise.as({});
         }
-        // Make sure the NLS Config travels to the rendered process
-        // See also https://github.com/Microsoft/vscode/issues/4558
-        userEnv['VSCODE_NLS_CONFIG'] = process.env['VSCODE_NLS_CONFIG'];
-        return instantiationService.invokeFunction(function (a) { return a.get(env_1.IEnvironmentService).createPaths(); })
-            .then(function () { return instantiationService.invokeFunction(setupIPC); })
-            .then(function (ipcServer) { return instantiationService.invokeFunction(main, ipcServer, userEnv); });
-    })
-        .done(null, function (err) { return instantiationService.invokeFunction(quit, err); });
+        if (platform.isWindows) {
+            return winjs_base_1.TPromise.as({});
+        }
+        return getUnixShellEnvironment();
+    }
+    function createPaths(environmentService) {
+        var paths = [environmentService.appSettingsHome, environmentService.userHome, environmentService.extensionsPath];
+        return winjs_base_1.TPromise.join(paths.map(function (p) { return pfs_1.mkdirp(p); }));
+    }
+    function start() {
+        var args;
+        try {
+            args = argv_1.parseMainProcessArgv(process.argv);
+            args = paths_1.validatePaths(args);
+        }
+        catch (err) {
+            console.error(err.message);
+            process.exit(1);
+            return;
+        }
+        // TODO: isolate
+        var services = new serviceCollection_1.ServiceCollection();
+        services.set(environment_1.IEnvironmentService, new descriptors_1.SyncDescriptor(environmentService_1.EnvironmentService, args, process.execPath));
+        services.set(log_1.ILogService, new descriptors_1.SyncDescriptor(log_1.MainLogService));
+        services.set(windows_1.IWindowsService, new descriptors_1.SyncDescriptor(windows_1.WindowsManager));
+        services.set(windows_2.IWindowEventService, new descriptors_1.SyncDescriptor(windows_1.WindowEventService));
+        services.set(lifecycle_1.ILifecycleService, new descriptors_1.SyncDescriptor(lifecycle_1.LifecycleService));
+        services.set(storage_1.IStorageService, new descriptors_1.SyncDescriptor(storage_1.StorageService));
+        services.set(configuration_1.IConfigurationService, new descriptors_1.SyncDescriptor(configurationService_1.ConfigurationService));
+        services.set(request_1.IRequestService, new descriptors_1.SyncDescriptor(requestService_1.RequestService));
+        services.set(update_manager_1.IUpdateService, new descriptors_1.SyncDescriptor(update_manager_1.UpdateManager));
+        services.set(url_1.IURLService, new descriptors_1.SyncDescriptor(urlService_1.URLService, args['open-url']));
+        var instantiationService = new instantiationService_1.InstantiationService(services);
+        // On some platforms we need to manually read from the global environment variables
+        // and assign them to the process environment (e.g. when doubleclick app on Mac)
+        return getShellEnvironment().then(function (shellEnv) {
+            // Patch `process.env` with the user's shell environment
+            objects_1.assign(process.env, shellEnv);
+            return instantiationService.invokeFunction(function (accessor) {
+                var environmentService = accessor.get(environment_1.IEnvironmentService);
+                var instanceEnv = {
+                    VSCODE_PID: String(process.pid),
+                    VSCODE_IPC_HOOK: environmentService.mainIPCHandle,
+                    VSCODE_SHARED_IPC_HOOK: environmentService.sharedIPCHandle,
+                    VSCODE_NLS_CONFIG: process.env['VSCODE_NLS_CONFIG']
+                };
+                // Patch `process.env` with the instance's environment
+                objects_1.assign(process.env, instanceEnv);
+                // Collect all environment patches to send to other processes
+                var env = objects_1.assign({}, shellEnv, instanceEnv);
+                return instantiationService.invokeFunction(function (a) { return createPaths(a.get(environment_1.IEnvironmentService)); })
+                    .then(function () { return instantiationService.invokeFunction(setupIPC); })
+                    .then(function (mainIpcServer) { return instantiationService.invokeFunction(main, mainIpcServer, env); });
+            });
+        }).done(null, function (err) { return instantiationService.invokeFunction(quit, err); });
+    }
+    start();
 });
 
 }).call(this);

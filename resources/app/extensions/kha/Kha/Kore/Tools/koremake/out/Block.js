@@ -12,15 +12,15 @@ class Block {
         --this.indentation;
     }
     tag(name, value) {
-        this.p("<" + name + ">" + value + "</" + name + ">");
+        this.p('<' + name + '>' + value + '</' + name + '>');
     }
     tagStart(name) {
-        this.p("<" + name + ">");
+        this.p('<' + name + '>');
         this.indent();
     }
     tagEnd(name) {
         this.unindent();
-        this.p("</" + name + ">");
+        this.p('</' + name + '>');
     }
     p(line) {
         if (line === undefined)
@@ -32,5 +32,5 @@ class Block {
         fs.writeSync(this.out, data, 0, data.length, null);
     }
 }
-exports.Block = Block;
-//# sourceMappingURL=Block.js.map
+exports.Block = Block;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Kore/Tools/koremake/out/Block.js.map

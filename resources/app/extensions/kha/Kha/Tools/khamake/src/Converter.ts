@@ -1,5 +1,3 @@
-"use strict";
-
 import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as log from './log';
@@ -20,7 +18,7 @@ export function convert(inFilename: string, outFilename: string, encoder: string
 		let firstspace = encoder.indexOf(' ', dirend);
 		let exe = encoder.substr(0, firstspace);
 		let parts = encoder.substr(firstspace + 1).split(' ');
-		let options = [];
+		let options: string[] = [];
 		for (let i = 0; i < parts.length; ++i) {
 			let foundarg = false;
 			if (args !== null) {
@@ -40,8 +38,8 @@ export function convert(inFilename: string, outFilename: string, encoder: string
 		}
 
 		let process = child_process.spawn(exe, options);
-		process.on('close', (code) => {
+		process.on('close', (code: number) => {
 			resolve(code === 0);
 		});
-	})
+	});
 };

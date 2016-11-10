@@ -11,9 +11,9 @@
 	"Trova più cartelle di primo livello.",
 	"Cartella in base al nome (qualsiasi percorso)",
 	"Trova una cartella con un nome specifico in qualsiasi percorso.",
-	"True",
+	"true",
 	"Abilita il criterio.",
-	"False",
+	"false",
 	"Disabilita il criterio.",
 	"File con elementi di pari livello in base al nome",
 	"Trova file con elementi di pari livello e nome identico ma estensione diversa."

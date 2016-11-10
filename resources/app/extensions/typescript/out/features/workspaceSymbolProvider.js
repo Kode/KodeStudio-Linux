@@ -19,15 +19,24 @@ var TypeScriptWorkspaceSymbolProvider = (function () {
     TypeScriptWorkspaceSymbolProvider.prototype.provideWorkspaceSymbols = function (search, token) {
         var _this = this;
         // typescript wants to have a resource even when asking
-        // general questions so we check all open documents for
-        // one that is typescript'ish
+        // general questions so we check the active editor. If this
+        // doesn't match we take the first TS document.
         var uri;
-        var documents = vscode_1.workspace.textDocuments;
-        for (var _i = 0, documents_1 = documents; _i < documents_1.length; _i++) {
-            var document = documents_1[_i];
-            if (document.languageId === this.modeId) {
+        var editor = vscode_1.window.activeTextEditor;
+        if (editor) {
+            var document = editor.document;
+            if (document && document.languageId === this.modeId) {
                 uri = document.uri;
-                break;
+            }
+        }
+        if (!uri) {
+            var documents = vscode_1.workspace.textDocuments;
+            for (var _i = 0, documents_1 = documents; _i < documents_1.length; _i++) {
+                var document = documents_1[_i];
+                if (document.languageId === this.modeId) {
+                    uri = document.uri;
+                    break;
+                }
             }
         }
         if (!uri) {
@@ -54,7 +63,7 @@ var TypeScriptWorkspaceSymbolProvider = (function () {
                     if (item.kind === 'method' || item.kind === 'function') {
                         label += '()';
                     }
-                    result.push(new vscode_1.SymbolInformation(label, _kindMapping[item.kind], range, _this.client.asUrl(item.file), item.containerName));
+                    result.push(new vscode_1.SymbolInformation(label, _kindMapping[item.kind], item.containerName, new vscode_1.Location(_this.client.asUrl(item.file), range)));
                 }
                 return result;
             }
@@ -62,11 +71,12 @@ var TypeScriptWorkspaceSymbolProvider = (function () {
                 return [];
             }
         }, function (err) {
+            _this.client.error("'navto' request failed with error.", err);
             return [];
         });
     };
     return TypeScriptWorkspaceSymbolProvider;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = TypeScriptWorkspaceSymbolProvider;
-//# sourceMappingURL=workspaceSymbolProvider.js.map
+exports.default = TypeScriptWorkspaceSymbolProvider;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/typescript/out/features/workspaceSymbolProvider.js.map

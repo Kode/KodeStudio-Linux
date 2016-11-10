@@ -11,9 +11,9 @@
 	"Faites correspondre plusieurs dossiers de premier niveau.",
 	"Dossier par nom (tous les emplacements)",
 	"Faites correspondre un dossier portant un nom spécifique, indépendamment de son emplacement.",
-	"Vrai",
+	"true",
 	"Activez le modèle.",
-	"Faux",
+	"false",
 	"Désactivez le modèle.",
 	"Fichiers avec frères par nom",
 	"Faites correspondre les fichiers ayant des frères portant le même nom, mais avec une extension distincte."

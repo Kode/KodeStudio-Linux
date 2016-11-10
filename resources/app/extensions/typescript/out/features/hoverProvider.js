@@ -9,6 +9,7 @@ var TypeScriptHoverProvider = (function () {
         this.client = client;
     }
     TypeScriptHoverProvider.prototype.provideHover = function (document, position, token) {
+        var _this = this;
         var args = {
             file: this.client.asAbsolutePath(document.uri),
             line: position.line + 1,
@@ -20,14 +21,15 @@ var TypeScriptHoverProvider = (function () {
         return this.client.execute('quickinfo', args, token).then(function (response) {
             var data = response.body;
             if (data) {
-                return new vscode_1.Hover([data.documentation, { language: 'typescript', value: data.displayString }], new vscode_1.Range(data.start.line - 1, data.start.offset - 1, data.end.line - 1, data.end.offset - 1));
+                return new vscode_1.Hover([{ language: 'typescript', value: data.displayString }, data.documentation], new vscode_1.Range(data.start.line - 1, data.start.offset - 1, data.end.line - 1, data.end.offset - 1));
             }
         }, function (err) {
+            _this.client.error("'quickinfo' request failed with error.", err);
             return null;
         });
     };
     return TypeScriptHoverProvider;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = TypeScriptHoverProvider;
-//# sourceMappingURL=hoverProvider.js.map
+exports.default = TypeScriptHoverProvider;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/typescript/out/features/hoverProvider.js.map

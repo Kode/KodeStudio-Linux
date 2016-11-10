@@ -7,6 +7,8 @@ var path = require('path');
 var vscode_1 = require('vscode');
 var vscode_languageclient_1 = require('vscode-languageclient');
 var colorDecorators_1 = require('./colorDecorators');
+var nls = require('vscode-nls');
+var localize = nls.loadMessageBundle(__filename);
 var ColorSymbolRequest;
 (function (ColorSymbolRequest) {
     ColorSymbolRequest.type = { get method() { return 'css/colorSymbols'; } };
@@ -32,7 +34,7 @@ function activate(context) {
         initializationOptions: {}
     };
     // Create the language client and start the client.
-    var client = new vscode_languageclient_1.LanguageClient('css', serverOptions, clientOptions);
+    var client = new vscode_languageclient_1.LanguageClient('css', localize(0, null), serverOptions, clientOptions);
     var disposable = client.start();
     // Push the disposable to the context's subscriptions so that the
     // client can be deactivated on extension deactivation
@@ -71,5 +73,5 @@ function applyCodeAction(uri, documentVersion, edits) {
             }
         });
     }
-}
-//# sourceMappingURL=cssMain.js.map
+}
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/css/client/out/cssMain.js.map

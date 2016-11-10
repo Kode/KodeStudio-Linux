@@ -1,5 +1,3 @@
-"use strict";
-
 import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -20,7 +18,7 @@ export class Target {
 	}
 }
 
-function contains(main, sub) {
+function contains(main: string, sub: string) {
 	main = path.resolve(main);
 	sub = path.resolve(sub);
 	if (process.platform === 'win32') {
@@ -32,12 +30,13 @@ function contains(main, sub) {
 
 export class Project {
 	name: string;
-	sources: Array<string>;
-	defines: Array<string>;
-	parameters: Array<string>;
+	sources: string[];
+	defines: string[];
+	cdefines: string[];
+	parameters: string[];
 	scriptdir: string;
 	static scriptdir: string;
-	libraries: Array<Library>;
+	libraries: Library[];
 	localLibraryPath: string;
 	windowOptions: any;
 	targetOptions: any;
@@ -45,10 +44,11 @@ export class Project {
 	shaderMatchers: { match: string, options: any }[];
 	customTargets: Map<string, Target>;
 	
-	constructor(name) {
+	constructor(name: string) {
 		this.name = name;
 		this.sources = [];
 		this.defines = [];
+		this.cdefines = [];
 		this.parameters = [];
 		this.scriptdir = Project.scriptdir;
 		this.libraries = [];
@@ -57,14 +57,14 @@ export class Project {
 		this.shaderMatchers = [];
 		this.customTargets = new Map();
 
-		this.windowOptions = {}		
+		this.windowOptions = {};
 		this.targetOptions = {
 			html5: {},
 			flash: {},
 			android: {},
 			android_native: {},
 			ios: {}
-		}
+		};
 	}
 
 	/**
@@ -84,8 +84,8 @@ export class Project {
 		this.assetMatchers.push({ match: match, options: options });
 	}
 
-	addSources(source) {
-		this.sources.push(source);
+	addSources(source: string) {
+		this.sources.push(path.resolve(path.join(this.scriptdir, source)));
 	}
 
 	/**
@@ -104,11 +104,15 @@ export class Project {
 		this.shaderMatchers.push({ match: match, options: options });
 	}
 
-	addDefine(define) {
+	addDefine(define: string) {
 		this.defines.push(define);
 	}
+
+	addCDefine(define: string) {
+		this.cdefines.push(define);
+	}
 	
-	addParameter(parameter) {
+	addParameter(parameter: string) {
 		this.parameters.push(parameter);
 	}
 	
@@ -116,7 +120,7 @@ export class Project {
 		this.customTargets.set(name, new Target(baseTarget, backends));
 	}
 
-	addLibrary(library) {
+	addLibrary(library: string) {
 		this.addDefine(library);
 		let self = this;
 		function findLibraryDirectory(name: string) {

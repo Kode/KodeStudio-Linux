@@ -1,11 +1,17 @@
 #include "pch.h"
+
 #include "TextureImpl.h"
+#include "ogl.h"
+
 #include <Kore/Graphics/Graphics.h>
 #include <Kore/Graphics/Image.h>
 #include <Kore/Log.h>
-#include "ogl.h"
 
 using namespace Kore;
+
+#ifndef GL_TEXTURE_3D
+#define GL_TEXTURE_3D 0x806F
+#endif
 
 namespace {
 	int convertFormat(Image::Format format) {
@@ -14,11 +20,11 @@ namespace {
 		case Image::RGBA64:
 		case Image::RGBA128:
 		default:
-// #ifdef GL_BGRA
+			// #ifdef GL_BGRA
 			// return GL_BGRA;
-// #else
+			// #else
 			return GL_RGBA;
-// #endif
+		// #endif
 		case Image::RGB24:
 			return GL_RGB;
 		case Image::Grey8:
@@ -29,7 +35,34 @@ namespace {
 #endif
 		}
 	}
-	
+
+	int convertInternalFormat(Image::Format format) {
+		switch (format) {
+		case Image::RGBA128:
+#ifdef GL_ARB_texture_float
+			return GL_RGBA32F;
+#else
+			return GL_RGBA;
+#endif
+		case Image::RGBA32:
+		case Image::RGBA64:
+		default:
+			// #ifdef GL_BGRA
+			// return GL_BGRA;
+			// #else
+			return GL_RGBA;
+		// #endif
+		case Image::RGB24:
+			return GL_RGB;
+		case Image::Grey8:
+#ifdef OPENGLES
+			return GL_LUMINANCE;
+#else
+			return GL_RED;
+#endif
+		}
+	}
+
 	int convertType(Image::Format format) {
 		switch (format) {
 		case Image::RGBA128:
@@ -102,7 +135,7 @@ namespace {
 	}
 
 	int getPower2(int i) {
-		for (int power = 0; ; ++power)
+		for (int power = 0;; ++power)
 			if (pow(power) >= i) return pow(power);
 	}
 
@@ -154,9 +187,9 @@ Texture::Texture(const char* filename, bool readable) : Image(filename, readable
 		texHeight = getPower2(height);
 		toPow2 = !(texWidth == width && texHeight == height);
 	}
-	
+
 	u8* conversionBuffer = nullptr;
-	
+
 	if (compressed) {
 #if defined(SYS_IOS)
 		texWidth = Kore::max(texWidth, texHeight);
@@ -176,17 +209,17 @@ Texture::Texture(const char* filename, bool readable) : Image(filename, readable
 #ifdef SYS_ANDROID
 	external_oes = false;
 #endif
-	
+
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glCheckErrors();
 	glGenTextures(1, &texture);
 	glCheckErrors();
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glCheckErrors();
-	
+
 	int convertedType = convertType(format);
 	bool isHdr = convertedType == GL_FLOAT;
-	
+
 	if (compressed) {
 #if defined(SYS_IOS)
 		glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG, texWidth, texHeight, 0, texWidth * texHeight / 2, data);
@@ -209,12 +242,12 @@ Texture::Texture(const char* filename, bool readable) : Image(filename, readable
 	glCheckErrors();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glCheckErrors();
-	
+
 	if (toPow2) {
 		delete[] conversionBuffer;
 		conversionBuffer = nullptr;
 	}
-	
+
 	if (!readable) {
 		if (isHdr) {
 			delete[] hdrData;
@@ -225,7 +258,7 @@ Texture::Texture(const char* filename, bool readable) : Image(filename, readable
 			data = nullptr;
 		}
 	}
-	
+
 	if (readable && compressed) {
 		log(Kore::Warning, "Compressed images can not be readable.");
 	}
@@ -236,10 +269,16 @@ Texture::Texture(int width, int height, Image::Format format, bool readable) : I
 	texWidth = width;
 	texHeight = height;
 #else
-	texWidth = getPower2(width);
-	texHeight = getPower2(height);
+	if (Graphics::nonPow2TexturesSupported()) {
+		texWidth = width;
+		texHeight = height;
+	}
+	else {
+		texWidth = getPower2(width);
+		texHeight = getPower2(height);
+	}
 #endif
-	// conversionBuffer = new u8[texWidth * texHeight * 4];
+// conversionBuffer = new u8[texWidth * texHeight * 4];
 
 #ifdef SYS_ANDROID
 	external_oes = false;
@@ -255,9 +294,9 @@ Texture::Texture(int width, int height, Image::Format format, bool readable) : I
 	glCheckErrors();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glCheckErrors();
-	
+
 	if (convertType(format) == GL_FLOAT) {
-		glTexImage2D(GL_TEXTURE_2D, 0, convertFormat(format), texWidth, texHeight, 0, convertFormat(format), GL_FLOAT, hdrData);
+		glTexImage2D(GL_TEXTURE_2D, 0, convertInternalFormat(format), texWidth, texHeight, 0, convertFormat(format), GL_FLOAT, nullptr);
 	}
 	else {
 		glTexImage2D(GL_TEXTURE_2D, 0, convertFormat(format), texWidth, texHeight, 0, convertFormat(format), GL_UNSIGNED_BYTE, data);
@@ -265,9 +304,26 @@ Texture::Texture(int width, int height, Image::Format format, bool readable) : I
 	glCheckErrors();
 
 	/*if (!readable) {
-		delete[] data;
-		data = nullptr;
+	    delete[] data;
+	    data = nullptr;
 	}*/
+}
+
+Texture::Texture(int width, int height, int depth, Image::Format format, bool readable) : Image(width, height, depth, format, readable) {
+#ifndef OPENGLES
+	glGenTextures(1, &texture);
+	glCheckErrors();
+	glBindTexture(GL_TEXTURE_3D, texture);
+	glCheckErrors();
+
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glCheckErrors();
+	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glCheckErrors();
+
+	glTexImage3D(GL_TEXTURE_3D, 0, convertFormat(format), width, height, depth, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glCheckErrors();
+#endif
 }
 
 #ifdef SYS_ANDROID
@@ -285,6 +341,7 @@ TextureImpl::~TextureImpl() {
 }
 
 void Texture::_set(TextureUnit unit) {
+	GLenum target = depth > 1 ? GL_TEXTURE_3D : GL_TEXTURE_2D;
 	glActiveTexture(GL_TEXTURE0 + unit.unit);
 	glCheckErrors();
 #ifdef SYS_ANDROID
@@ -293,11 +350,11 @@ void Texture::_set(TextureUnit unit) {
 		glCheckErrors();
 	}
 	else {
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(target, texture);
 		glCheckErrors();
 	}
 #else
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(target, texture);
 	glCheckErrors();
 #endif
 }
@@ -311,30 +368,32 @@ u8* Texture::lock() {
 }
 
 /*void Texture::unlock() {
-	if (conversionBuffer != nullptr) {
-		convertImageToPow2(format, (u8*)data, width, height, conversionBuffer, texWidth, texHeight);
-		glBindTexture(GL_TEXTURE_2D, texture);
+    if (conversionBuffer != nullptr) {
+        convertImageToPow2(format, (u8*)data, width, height, conversionBuffer, texWidth, texHeight);
+        glBindTexture(GL_TEXTURE_2D, texture);
 #ifndef GL_LUMINANCE
 #define GL_LUMINANCE GL_RED
 #endif
-		glTexImage2D(GL_TEXTURE_2D, 0, (format == Image::RGBA32) ? GL_RGBA : GL_LUMINANCE, texWidth, texHeight, 0, (format == Image::RGBA32) ? GL_RGBA : GL_LUMINANCE, GL_UNSIGNED_BYTE, conversionBuffer);
-	}
+        glTexImage2D(GL_TEXTURE_2D, 0, (format == Image::RGBA32) ? GL_RGBA : GL_LUMINANCE, texWidth, texHeight, 0, (format == Image::RGBA32) ? GL_RGBA :
+GL_LUMINANCE, GL_UNSIGNED_BYTE, conversionBuffer);
+    }
 }*/
 
 void Texture::unlock() {
 	// if (conversionBuffer != nullptr) {
-		//convertImageToPow2(format, (u8*)data, width, height, conversionBuffer, texWidth, texHeight);
-		glBindTexture(GL_TEXTURE_2D, texture);
+	// convertImageToPow2(format, (u8*)data, width, height, conversionBuffer, texWidth, texHeight);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glCheckErrors();
+	// glTexImage2D(GL_TEXTURE_2D, 0, (format == Image::RGBA32) ? GL_RGBA : GL_LUMINANCE, texWidth, texHeight, 0, (format == Image::RGBA32) ? GL_RGBA :
+	// GL_LUMINANCE, GL_UNSIGNED_BYTE, conversionBuffer);
+	if (convertType(format) == GL_FLOAT) {
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texWidth, texHeight, convertFormat(format), GL_FLOAT, hdrData);
 		glCheckErrors();
-		//glTexImage2D(GL_TEXTURE_2D, 0, (format == Image::RGBA32) ? GL_RGBA : GL_LUMINANCE, texWidth, texHeight, 0, (format == Image::RGBA32) ? GL_RGBA : GL_LUMINANCE, GL_UNSIGNED_BYTE, conversionBuffer);
-		if (convertType(format) == GL_FLOAT) {
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texWidth, texHeight, convertFormat(format), GL_FLOAT, hdrData);
-			glCheckErrors();
-		}
-		else {
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texWidth, texHeight, convertFormat(format), GL_UNSIGNED_BYTE, data);
-			glCheckErrors();
-		}
+	}
+	else {
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texWidth, texHeight, convertFormat(format), GL_UNSIGNED_BYTE, data);
+		glCheckErrors();
+	}
 	// }
 }
 
@@ -348,18 +407,27 @@ void Texture::upload(u8* data) {
 #endif
 
 void Texture::generateMipmaps(int levels) {
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	GLenum target = depth > 1 ? GL_TEXTURE_3D : GL_TEXTURE_2D;
+	glBindTexture(target, texture);
+	glCheckErrors();
+	glGenerateMipmap(target);
+	glCheckErrors();
 }
 
 void Texture::setMipmap(Texture* mipmap, int level) {
 	int convertedType = convertType(mipmap->format);
 	bool isHdr = convertedType == GL_FLOAT;
-	glBindTexture(GL_TEXTURE_2D, texture);
+	GLenum target = depth > 1 ? GL_TEXTURE_3D : GL_TEXTURE_2D;
+	glBindTexture(target, texture);
+	glCheckErrors();
 	if (isHdr) {
-		glTexImage2D(GL_TEXTURE_2D, level, convertFormat(mipmap->format), mipmap->texWidth, mipmap->texHeight, 0, convertFormat(mipmap->format), convertedType, mipmap->hdrData);
+		glTexImage2D(target, level, convertFormat(mipmap->format), mipmap->texWidth, mipmap->texHeight, 0, convertFormat(mipmap->format), convertedType,
+		             mipmap->hdrData);
+		glCheckErrors();
 	}
 	else {
-		glTexImage2D(GL_TEXTURE_2D, level, convertFormat(mipmap->format), mipmap->texWidth, mipmap->texHeight, 0, convertFormat(mipmap->format), convertedType, mipmap->data);
+		glTexImage2D(target, level, convertFormat(mipmap->format), mipmap->texWidth, mipmap->texHeight, 0, convertFormat(mipmap->format), convertedType,
+		             mipmap->data);
+		glCheckErrors();
 	}
 }

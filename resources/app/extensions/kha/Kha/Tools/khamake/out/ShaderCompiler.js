@@ -8,15 +8,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const child_process = require('child_process');
-const fs = require('fs');
+const fs = require('fs-extra');
+const os = require('os');
 const path = require('path');
 const chokidar = require('chokidar');
 const GraphicsApi_1 = require('./GraphicsApi');
 const Platform_1 = require('./Platform');
 const AssetConverter_1 = require('./AssetConverter');
 const log = require('./log');
+class CompiledShader {
+    constructor() {
+        this.files = [];
+        this.inputs = [];
+        this.outputs = [];
+        this.uniforms = [];
+    }
+}
+exports.CompiledShader = CompiledShader;
 class ShaderCompiler {
-    constructor(exporter, platform, compiler, to, temp, options, shaderMatchers) {
+    constructor(exporter, platform, compiler, to, temp, builddir, options, shaderMatchers) {
         this.exporter = exporter;
         if (platform.endsWith('-native'))
             platform = platform.substr(0, platform.length - '-native'.length);
@@ -28,6 +38,7 @@ class ShaderCompiler {
         this.options = options;
         this.to = to;
         this.temp = temp;
+        this.builddir = builddir;
         this.shaderMatchers = shaderMatchers;
     }
     static findType(platform, options) {
@@ -49,23 +60,10 @@ class ShaderCompiler {
             case Platform_1.Platform.HTML5Worker:
             case Platform_1.Platform.Tizen:
             case Platform_1.Platform.Pi:
+                return 'essl';
             case Platform_1.Platform.tvOS:
             case Platform_1.Platform.iOS:
                 if (options.graphics === GraphicsApi_1.GraphicsApi.Metal) {
-                    /*let builddir = 'ios-build';
-                    if (platform === Platform.tvOS) {
-                        builddir = 'tvos-build';
-                    }
-                    if (!Files.isDirectory(to.resolve(Paths.get('..', builddir, 'Sources')))) {
-                        Files.createDirectories(to.resolve(Paths.get('..', builddir, 'Sources')));
-                    }
-                    let funcname = name;
-                    funcname = funcname.replace(/-/g, '_');
-                    funcname = funcname.replace(/\./g, '_');
-                    funcname += '_main';
-                    fs.writeFileSync(to.resolve(name + ".metal").toString(), funcname, { encoding: 'utf8' });
-                    compileShader2(compiler, "metal", shader.files[0], to.resolve(Paths.get('..', builddir, 'Sources', name + ".metal")), temp, platform);
-                    addShader(project, name, ".metal");*/
                     return 'metal';
                 }
                 else {
@@ -97,9 +95,21 @@ class ShaderCompiler {
                     return 'glsl';
                 }
             case Platform_1.Platform.OSX:
-                return 'glsl';
+                if (options.graphics === GraphicsApi_1.GraphicsApi.Metal) {
+                    return 'metal';
+                }
+                else {
+                    return 'glsl';
+                }
             case Platform_1.Platform.Unity:
                 return 'hlsl';
+            case Platform_1.Platform.Krom:
+                if (os.platform() === 'win32') {
+                    return 'd3d11';
+                }
+                else {
+                    return 'glsl';
+                }
             default:
                 for (let p in Platform_1.Platform) {
                     if (platform === p) {
@@ -118,6 +128,7 @@ class ShaderCompiler {
                 if (ready) {
                     switch (path.parse(file).ext) {
                         case '.glsl':
+                            log.info('Recompiling ' + path.parse(file).name);
                             this.compileShader(file, options);
                             break;
                     }
@@ -129,6 +140,7 @@ class ShaderCompiler {
             this.watcher.on('change', (file) => {
                 switch (path.parse(file).ext) {
                     case '.glsl':
+                        log.info('Recompiling ' + path.parse(file).name);
                         this.compileShader(file, options);
                         break;
                 }
@@ -137,27 +149,41 @@ class ShaderCompiler {
             });
             this.watcher.on('ready', () => __awaiter(this, void 0, void 0, function* () {
                 ready = true;
-                let parsedShaders = [];
+                let compiledShaders = [];
                 let index = 0;
                 for (let shader of shaders) {
                     let parsed = path.parse(shader);
                     log.info('Compiling shader ' + (index + 1) + ' of ' + shaders.length + ' (' + parsed.base + ').');
+                    let compiledShader = null;
                     try {
-                        yield this.compileShader(shader, options);
+                        compiledShader = yield this.compileShader(shader, options);
                     }
                     catch (error) {
                         reject(error);
                         return;
                     }
-                    parsedShaders.push({ files: [parsed.name + '.' + this.type], name: AssetConverter_1.AssetConverter.createName(parsed, false, options, this.exporter.options.from) });
+                    if (compiledShader === null) {
+                        compiledShader = new CompiledShader();
+                        // mark variables as invalid, so they are loaded from previous compilation
+                        compiledShader.inputs = null;
+                        compiledShader.outputs = null;
+                        compiledShader.uniforms = null;
+                    }
+                    if (compiledShader.files.length === 0) {
+                        // TODO: Remove when krafix has been recompiled everywhere
+                        compiledShader.files.push(parsed.name + '.' + this.type);
+                    }
+                    compiledShader.name = AssetConverter_1.AssetConverter.createExportInfo(parsed, false, options, this.exporter.options.from).name;
+                    compiledShaders.push(compiledShader);
                     ++index;
                 }
-                resolve(parsedShaders);
+                resolve(compiledShaders);
+                return;
             }));
         });
     }
     run(watch) {
-        return __awaiter(this, void 0, Promise, function* () {
+        return __awaiter(this, void 0, void 0, function* () {
             let shaders = [];
             for (let matcher of this.shaderMatchers) {
                 shaders = shaders.concat(yield this.watch(watch, matcher.match, matcher.options));
@@ -170,7 +196,7 @@ class ShaderCompiler {
             if (!this.compiler)
                 reject('No shader compiler found.');
             if (this.type === 'none') {
-                resolve();
+                resolve(new CompiledShader());
                 return;
             }
             let fileinfo = path.parse(file);
@@ -182,10 +208,24 @@ class ShaderCompiler {
                     if (fromErr || (!toErr && toStats.mtime.getTime() > fromStats.mtime.getTime())) {
                         if (fromErr)
                             log.error('Shader compiler error: ' + fromErr);
-                        resolve();
+                        resolve(null);
                     }
                     else {
+                        if (this.type === 'metal') {
+                            fs.ensureDirSync(path.join(this.builddir, 'Sources'));
+                            let funcname = fileinfo.name;
+                            funcname = funcname.replace(/-/g, '_');
+                            funcname = funcname.replace(/\./g, '_');
+                            funcname += '_main';
+                            fs.writeFileSync(to, funcname, 'utf8');
+                            to = path.join(this.builddir, 'Sources', fileinfo.name + '.' + this.type);
+                            temp = to + '.temp';
+                        }
                         let parameters = [this.type === 'hlsl' ? 'd3d9' : this.type, from, temp, this.temp, this.platform];
+                        if (this.platform === Platform_1.Platform.Krom && os.platform() === 'linux') {
+                            parameters.push('--version');
+                            parameters.push('110');
+                        }
                         if (this.options.glsl2) {
                             parameters.push('--glsl2');
                         }
@@ -198,13 +238,65 @@ class ShaderCompiler {
                         child.stdout.on('data', (data) => {
                             log.info(data.toString());
                         });
+                        let errorLine = '';
+                        let newErrorLine = true;
+                        let errorData = false;
+                        let compiledShader = new CompiledShader();
+                        function parseData(data) {
+                            let parts = data.split(':');
+                            if (parts.length >= 3) {
+                                if (parts[0] === 'uniform') {
+                                    compiledShader.uniforms.push({ name: parts[1], type: parts[2] });
+                                }
+                                else if (parts[0] === 'input') {
+                                    compiledShader.inputs.push({ name: parts[1], type: parts[2] });
+                                }
+                                else if (parts[0] === 'output') {
+                                    compiledShader.outputs.push({ name: parts[1], type: parts[2] });
+                                }
+                            }
+                            else if (parts.length >= 2) {
+                                if (parts[0] === 'file') {
+                                    compiledShader.files.push(path.parse(parts[1]).name);
+                                }
+                            }
+                        }
                         child.stderr.on('data', (data) => {
-                            log.info(data.toString());
+                            let str = data.toString();
+                            for (let char of str) {
+                                if (char === '\n') {
+                                    if (errorData) {
+                                        parseData(errorLine.trim());
+                                    }
+                                    else {
+                                        log.error(errorLine.trim());
+                                    }
+                                    errorLine = '';
+                                    newErrorLine = true;
+                                    errorData = false;
+                                }
+                                else if (newErrorLine && char === '#') {
+                                    errorData = true;
+                                    newErrorLine = false;
+                                }
+                                else {
+                                    errorLine += char;
+                                    newErrorLine = false;
+                                }
+                            }
                         });
                         child.on('close', (code) => {
+                            if (errorLine.trim().length > 0) {
+                                if (errorData) {
+                                    parseData(errorLine.trim());
+                                }
+                                else {
+                                    log.error(errorLine.trim());
+                                }
+                            }
                             if (code === 0) {
                                 fs.renameSync(temp, to);
-                                resolve();
+                                resolve(compiledShader);
                             }
                             else {
                                 process.exitCode = 1;
@@ -217,5 +309,5 @@ class ShaderCompiler {
         });
     }
 }
-exports.ShaderCompiler = ShaderCompiler;
-//# sourceMappingURL=ShaderCompiler.js.map
+exports.ShaderCompiler = ShaderCompiler;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/ShaderCompiler.js.map

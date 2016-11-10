@@ -6,12 +6,14 @@
 var vscode_languageserver_1 = require('vscode-languageserver');
 var vscode_css_languageservice_1 = require('vscode-css-languageservice');
 var languageModelCache_1 = require('./languageModelCache');
+var vscode_uri_1 = require('vscode-uri');
+var embeddedContentUri_1 = require('./embeddedContentUri');
 var ColorSymbolRequest;
 (function (ColorSymbolRequest) {
     ColorSymbolRequest.type = { get method() { return 'css/colorSymbols'; } };
 })(ColorSymbolRequest || (ColorSymbolRequest = {}));
 // Create a connection for the server.
-var connection = vscode_languageserver_1.createConnection(new vscode_languageserver_1.IPCMessageReader(process), new vscode_languageserver_1.IPCMessageWriter(process));
+var connection = vscode_languageserver_1.createConnection();
 console.log = connection.console.log.bind(connection.console);
 console.error = connection.console.error.bind(connection.console);
 // Create a simple text document manager. The text document manager
@@ -28,7 +30,7 @@ connection.onShutdown(function () {
     stylesheets.dispose();
 });
 // After the server has started the client sends an initilize request. The server receives
-// in the passed params the rootPath of the workspace plus the client capabilites.
+// in the passed params the rootPath of the workspace plus the client capabilities.
 connection.onInitialize(function (params) {
     return {
         capabilities: {
@@ -99,7 +101,9 @@ function validateTextDocument(textDocument) {
     var stylesheet = stylesheets.get(textDocument);
     var diagnostics = getLanguageService(textDocument).doValidation(textDocument, stylesheet);
     // Send the computed diagnostics to VSCode.
-    connection.sendDiagnostics({ uri: textDocument.uri, diagnostics: diagnostics });
+    var uri = vscode_uri_1.default.parse(textDocument.uri);
+    var diagnosticsTarget = embeddedContentUri_1.isEmbeddedContentUri(uri) ? embeddedContentUri_1.getHostDocumentUri(uri) : textDocument.uri;
+    connection.sendDiagnostics({ uri: diagnosticsTarget, diagnostics: diagnostics });
 }
 connection.onCompletion(function (textDocumentPosition) {
     var document = documents.get(textDocumentPosition.textDocument.uri);
@@ -138,8 +142,11 @@ connection.onCodeAction(function (codeActionParams) {
 });
 connection.onRequest(ColorSymbolRequest.type, function (uri) {
     var document = documents.get(uri);
-    var stylesheet = stylesheets.get(document);
-    return getLanguageService(document).findColorSymbols(document, stylesheet);
+    if (document) {
+        var stylesheet = stylesheets.get(document);
+        return getLanguageService(document).findColorSymbols(document, stylesheet);
+    }
+    return [];
 });
 connection.onRenameRequest(function (renameParameters) {
     var document = documents.get(renameParameters.textDocument.uri);
@@ -147,5 +154,5 @@ connection.onRenameRequest(function (renameParameters) {
     return getLanguageService(document).doRename(document, renameParameters.position, renameParameters.newName, stylesheet);
 });
 // Listen on the connection
-connection.listen();
-//# sourceMappingURL=cssServerMain.js.map
+connection.listen();
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/css/server/out/cssServerMain.js.map

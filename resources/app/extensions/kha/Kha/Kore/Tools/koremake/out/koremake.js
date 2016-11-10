@@ -5,10 +5,10 @@ const GraphicsApi_1 = require('./GraphicsApi');
 const VisualStudioVersion_1 = require('./VisualStudioVersion');
 const VrApi_1 = require('./VrApi');
 let defaultTarget;
-if (os.platform() === "linux") {
+if (os.platform() === 'linux') {
     defaultTarget = Platform_1.Platform.Linux;
 }
-else if (os.platform() === "win32") {
+else if (os.platform() === 'win32') {
     defaultTarget = Platform_1.Platform.Windows;
 }
 else {
@@ -90,6 +90,11 @@ let options = [
         full: 'debug',
         description: 'Compile in debug mode',
         value: false
+    },
+    {
+        full: 'noshaders',
+        description: 'Do not compile shaders',
+        value: false
     }
 ];
 let parsedOptions = {};
@@ -119,8 +124,8 @@ for (let o in options) {
 let args = process.argv;
 for (let i = 2; i < args.length; ++i) {
     let arg = args[i];
-    if (arg[0] == '-') {
-        if (arg[1] == '-') {
+    if (arg[0] === '-') {
+        if (arg[1] === '-') {
             if (arg.substr(2) === 'help') {
                 printHelp();
                 process.exit(0);
@@ -168,12 +173,12 @@ if (parsedOptions.run) {
     parsedOptions.compile = true;
 }
 if (parsedOptions.update) {
-    console.log("Updating everything...");
+    console.log('Updating everything...');
     require('child_process').spawnSync('git', ['submodule', 'foreach', '--recursive', 'git', 'pull', 'origin', 'master'], { stdio: 'inherit', stderr: 'inherit' });
     process.exit(0);
 }
 require('./main.js').run(parsedOptions, {
     info: console.log,
     error: console.log
-}, function () { });
-//# sourceMappingURL=koremake.js.map
+}, function () { });
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Kore/Tools/koremake/out/koremake.js.map

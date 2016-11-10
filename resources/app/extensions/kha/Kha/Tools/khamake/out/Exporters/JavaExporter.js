@@ -11,11 +11,11 @@ const fs = require('fs-extra');
 const path = require('path');
 const KhaExporter_1 = require('./KhaExporter');
 const ImageTool_1 = require('../ImageTool');
-const HaxeProject_1 = require('../HaxeProject');
-const HaxeProject_2 = require('../HaxeProject');
 class JavaExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
+        this.addSourceDirectory(path.join(this.options.kha, 'Backends', this.backend()));
+        fs.removeSync(path.join(this.options.to, this.sysdir(), 'Sources'));
     }
     sysdir() {
         return 'java';
@@ -41,15 +41,9 @@ class JavaExporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    exportSolution(name, targetOptions, haxeOptions) {
-        return __awaiter(this, void 0, Promise, function* () {
-            this.addSourceDirectory(path.join(this.options.kha, 'Backends', this.backend()));
+    export(name, targetOptions, haxeOptions) {
+        return __awaiter(this, void 0, void 0, function* () {
             fs.ensureDirSync(path.join(this.options.to, this.sysdir()));
-            HaxeProject_2.hxml(this.options.to, haxeOptions);
-            if (this.projectFiles) {
-                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
-            }
-            fs.removeSync(path.join(this.options.to, this.sysdir(), 'Sources'));
             this.exportEclipseProject();
         });
     }
@@ -58,31 +52,31 @@ class JavaExporter extends KhaExporter_1.KhaExporter {
     }
     exportEclipseProject() {
         this.writeFile(path.join(this.options.to, this.sysdir(), '.classpath'));
-        this.p("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        this.p("<classpath>");
-        this.p("\t<classpathentry kind=\"src\" path=\"Sources/src\"/>");
-        this.p("\t<classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER\"/>");
-        this.p("\t<classpathentry kind=\"output\" path=\"bin\"/>");
-        this.p("</classpath>");
+        this.p('<?xml version="1.0" encoding="UTF-8"?>');
+        this.p('<classpath>');
+        this.p('\t<classpathentry kind="src" path="Sources/src"/>');
+        this.p('\t<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>');
+        this.p('\t<classpathentry kind="output" path="bin"/>');
+        this.p('</classpath>');
         this.closeFile();
         this.writeFile(path.join(this.options.to, this.sysdir(), '.project'));
-        this.p("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        this.p("<projectDescription>");
-        this.p("\t<name>" + path.parse(this.options.to).name + "</name>");
-        this.p("\t<comment></comment>");
-        this.p("\t<projects>");
-        this.p("\t</projects>");
-        this.p("\t<buildSpec>");
-        this.p("\t\t<buildCommand>");
-        this.p("\t\t\t<name>org.eclipse.jdt.core.javabuilder</name>");
-        this.p("\t\t\t<arguments>");
-        this.p("\t\t\t</arguments>");
-        this.p("\t\t</buildCommand>");
-        this.p("\t</buildSpec>");
-        this.p("\t<natures>");
-        this.p("\t\t<nature>org.eclipse.jdt.core.javanature</nature>");
-        this.p("\t</natures>");
-        this.p("</projectDescription>");
+        this.p('<?xml version="1.0" encoding="UTF-8"?>');
+        this.p('<projectDescription>');
+        this.p('\t<name>' + path.parse(this.options.to).name + '</name>');
+        this.p('\t<comment></comment>');
+        this.p('\t<projects>');
+        this.p('\t</projects>');
+        this.p('\t<buildSpec>');
+        this.p('\t\t<buildCommand>');
+        this.p('\t\t\t<name>org.eclipse.jdt.core.javabuilder</name>');
+        this.p('\t\t\t<arguments>');
+        this.p('\t\t\t</arguments>');
+        this.p('\t\t</buildCommand>');
+        this.p('\t</buildSpec>');
+        this.p('\t<natures>');
+        this.p('\t\t<nature>org.eclipse.jdt.core.javanature</nature>');
+        this.p('\t</natures>');
+        this.p('</projectDescription>');
         this.closeFile();
     }
     /*copyMusic(platform, from, to, encoders) {
@@ -113,5 +107,5 @@ class JavaExporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.JavaExporter = JavaExporter;
-//# sourceMappingURL=JavaExporter.js.map
+exports.JavaExporter = JavaExporter;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/JavaExporter.js.map

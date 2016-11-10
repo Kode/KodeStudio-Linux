@@ -5,14 +5,13 @@ import {convert} from '../Converter';
 import {executeHaxe} from '../Haxe';
 import {Options} from '../Options';
 import {exportImage} from '../ImageTool';
-import {writeHaxeProject} from '../HaxeProject';
-import {hxml} from '../HaxeProject';
+import {Library} from '../Project';
 
 export class KromExporter extends KhaExporter {
 	parameters: Array<string>;
 	width: number;
 	height: number;
-	
+
 	constructor(options: Options) {
 		super(options);
 		this.addSourceDirectory(path.join(options.kha, 'Backends', 'Krom'));
@@ -21,7 +20,7 @@ export class KromExporter extends KhaExporter {
 	sysdir() {
 		return 'krom';
 	}
-	
+
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('js-classic');
 		defines.push('sys_g1');
@@ -29,8 +28,10 @@ export class KromExporter extends KhaExporter {
 		defines.push('sys_g3');
 		defines.push('sys_g4');
 		defines.push('sys_a1');
-		//defines.push('sys_a2');
+		// defines.push('sys_a2');
 
+		this.parameters.push('-debug');
+		
 		return {
 			from: this.options.from.toString(),
 			to: path.join(this.sysdir(), 'krom.js.temp'),
@@ -48,27 +49,20 @@ export class KromExporter extends KhaExporter {
 		};
 	}
 
-	async exportSolution(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
+	async export(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
 		fs.ensureDirSync(path.join(this.options.to, this.sysdir()));
-
-		hxml(this.options.to, haxeOptions);
-
-		if (this.projectFiles) {
-			writeHaxeProject(this.options.to, haxeOptions);
-		}
 	}
 
 	async copySound(platform: string, from: string, to: string) {
 		fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
 		let ogg = await convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
-		var files = [];
+		let files: string[] = [];
 		if (ogg) files.push(to + '.ogg');
 		return files;
 	}
 
 	async copyImage(platform: string, from: string, to: string, options: any) {
 		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, undefined, false);
-		console.log('Image format is ' + format);
 		return [to + '.' + format];
 	}
 
@@ -80,7 +74,7 @@ export class KromExporter extends KhaExporter {
 	async copyVideo(platform: string, from: string, to: string) {
 		fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
 		let webm = await convert(from, path.join(this.options.to, this.sysdir(), to + '.webm'), this.options.webm);
-		let files = [];
+		let files: string[] = [];
 		if (webm) files.push(to + '.webm');
 		return files;
 	}

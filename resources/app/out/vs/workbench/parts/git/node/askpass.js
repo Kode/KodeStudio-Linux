@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/common/types","vs/base/common/winjs.base","vs/base/common/errors","vs/base/common/event","vs/base/parts/ipc/common/ipc","vs/base/common/lifecycle","vs/base/common/objects","vs/nls!vs/base/common/errors","vs/workbench/parts/git/common/gitIpc","vs/workbench/parts/git/common/git","vs/base/common/map","vs/base/common/callbackList","vs/base/common/platform","vs/base/common/strings","vs/platform/instantiation/common/instantiation","vs/base/common/arrays","vs/base/parts/ipc/node/ipc.net","net","vs/base/common/winjs.base.raw","vs/nls!vs/workbench/parts/git/node/askpass","vs/nls","vs/workbench/parts/git/node/askpass","fs"];
+var __m = ["exports","require","vs/base/common/winjs.base","vs/base/common/event","vs/base/common/types","vs/base/common/errors","vs/base/common/lifecycle","vs/base/parts/ipc/common/ipc","vs/base/common/callbackList","vs/base/node/event","vs/base/common/platform","vs/base/parts/ipc/node/ipc.net","vs/platform/instantiation/common/instantiation","vs/workbench/parts/git/common/git","vs/workbench/parts/git/common/gitIpc","net","fs","vs/workbench/parts/git/node/askpass","vs/base/common/winjs.base.raw"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,500 +10,7 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[17], __M([1,0]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    /**
-     * Returns the last element of an array.
-     * @param array The array.
-     * @param n Which element from the end (default ist zero).
-     */
-    function tail(array, n) {
-        if (n === void 0) { n = 0; }
-        return array[array.length - (1 + n)];
-    }
-    exports.tail = tail;
-    /**
-     * Iterates the provided array and allows to remove
-     * elements while iterating.
-     */
-    function forEach(array, callback) {
-        for (var i = 0, len = array.length; i < len; i++) {
-            callback(array[i], function () {
-                array.splice(i, 1);
-                i--;
-                len--;
-            });
-        }
-    }
-    exports.forEach = forEach;
-    function equals(one, other, itemEquals) {
-        if (itemEquals === void 0) { itemEquals = function (a, b) { return a === b; }; }
-        if (one.length !== other.length) {
-            return false;
-        }
-        for (var i = 0, len = one.length; i < len; i++) {
-            if (!itemEquals(one[i], other[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
-    exports.equals = equals;
-    function binarySearch(array, key, comparator) {
-        var low = 0, high = array.length - 1;
-        while (low <= high) {
-            var mid = ((low + high) / 2) | 0;
-            var comp = comparator(array[mid], key);
-            if (comp < 0) {
-                low = mid + 1;
-            }
-            else if (comp > 0) {
-                high = mid - 1;
-            }
-            else {
-                return mid;
-            }
-        }
-        return -(low + 1);
-    }
-    exports.binarySearch = binarySearch;
-    /**
-     * Takes a sorted array and a function p. The array is sorted in such a way that all elements where p(x) is false
-     * are located before all elements where p(x) is true.
-     * @returns the least x for which p(x) is true or array.length if no element fullfills the given function.
-     */
-    function findFirst(array, p) {
-        var low = 0, high = array.length;
-        if (high === 0) {
-            return 0; // no children
-        }
-        while (low < high) {
-            var mid = Math.floor((low + high) / 2);
-            if (p(array[mid])) {
-                high = mid;
-            }
-            else {
-                low = mid + 1;
-            }
-        }
-        return low;
-    }
-    exports.findFirst = findFirst;
-    /**
-     * Returns the top N elements from the array.
-     *
-     * Faster than sorting the entire array when the array is a lot larger than N.
-     *
-     * @param array The unsorted array.
-     * @param compare A sort function for the elements.
-     * @param n The number of elements to return.
-     * @return The first n elemnts from array when sorted with compare.
-     */
-    function top(array, compare, n) {
-        var result = array.slice(0, n).sort(compare);
-        var _loop_1 = function(i, m) {
-            var element = array[i];
-            if (compare(element, result[n - 1]) < 0) {
-                result.pop();
-                var j = findFirst(result, function (e) { return compare(element, e) < 0; });
-                result.splice(j, 0, element);
-            }
-        };
-        for (var i = n, m = array.length; i < m; i++) {
-            _loop_1(i, m);
-        }
-        return result;
-    }
-    exports.top = top;
-    function merge(arrays, hashFn) {
-        var result = new Array();
-        if (!hashFn) {
-            for (var i = 0, len = arrays.length; i < len; i++) {
-                result.push.apply(result, arrays[i]);
-            }
-        }
-        else {
-            var map = {};
-            for (var i = 0; i < arrays.length; i++) {
-                for (var j = 0; j < arrays[i].length; j++) {
-                    var element = arrays[i][j], hash = hashFn(element);
-                    if (!map.hasOwnProperty(hash)) {
-                        map[hash] = true;
-                        result.push(element);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-    exports.merge = merge;
-    /**
-     * @returns a new array with all undefined or null values removed. The original array is not modified at all.
-     */
-    function coalesce(array) {
-        if (!array) {
-            return array;
-        }
-        return array.filter(function (e) { return !!e; });
-    }
-    exports.coalesce = coalesce;
-    /**
-     * @returns true if the given item is contained in the array.
-     */
-    function contains(array, item) {
-        return array.indexOf(item) >= 0;
-    }
-    exports.contains = contains;
-    /**
-     * Swaps the elements in the array for the provided positions.
-     */
-    function swap(array, pos1, pos2) {
-        var element1 = array[pos1];
-        var element2 = array[pos2];
-        array[pos1] = element2;
-        array[pos2] = element1;
-    }
-    exports.swap = swap;
-    /**
-     * Moves the element in the array for the provided positions.
-     */
-    function move(array, from, to) {
-        array.splice(to, 0, array.splice(from, 1)[0]);
-    }
-    exports.move = move;
-    /**
-     * @returns {{false}} if the provided object is an array
-     * 	and not empty.
-     */
-    function isFalsyOrEmpty(obj) {
-        return !Array.isArray(obj) || obj.length === 0;
-    }
-    exports.isFalsyOrEmpty = isFalsyOrEmpty;
-    /**
-     * Removes duplicates from the given array. The optional keyFn allows to specify
-     * how elements are checked for equalness by returning a unique string for each.
-     */
-    function distinct(array, keyFn) {
-        if (!keyFn) {
-            return array.filter(function (element, position) {
-                return array.indexOf(element) === position;
-            });
-        }
-        var seen = Object.create(null);
-        return array.filter(function (elem) {
-            var key = keyFn(elem);
-            if (seen[key]) {
-                return false;
-            }
-            seen[key] = true;
-            return true;
-        });
-    }
-    exports.distinct = distinct;
-    function uniqueFilter(keyFn) {
-        var seen = Object.create(null);
-        return function (element) {
-            var key = keyFn(element);
-            if (seen[key]) {
-                return false;
-            }
-            seen[key] = true;
-            return true;
-        };
-    }
-    exports.uniqueFilter = uniqueFilter;
-    function firstIndex(array, fn) {
-        for (var i = 0; i < array.length; i++) {
-            var element = array[i];
-            if (fn(element)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    exports.firstIndex = firstIndex;
-    function first(array, fn, notFoundValue) {
-        if (notFoundValue === void 0) { notFoundValue = null; }
-        var index = firstIndex(array, fn);
-        return index < 0 ? notFoundValue : array[index];
-    }
-    exports.first = first;
-    function commonPrefixLength(one, other, equals) {
-        if (equals === void 0) { equals = function (a, b) { return a === b; }; }
-        var result = 0;
-        for (var i = 0, len = Math.min(one.length, other.length); i < len && equals(one[i], other[i]); i++) {
-            result++;
-        }
-        return result;
-    }
-    exports.commonPrefixLength = commonPrefixLength;
-    function flatten(arr) {
-        return arr.reduce(function (r, v) { return r.concat(v); }, []);
-    }
-    exports.flatten = flatten;
-    function range(to, from) {
-        if (from === void 0) { from = 0; }
-        var result = [];
-        for (var i = from; i < to; i++) {
-            result.push(i);
-        }
-        return result;
-    }
-    exports.range = range;
-    function fill(num, valueFn, arr) {
-        if (arr === void 0) { arr = []; }
-        for (var i = 0; i < num; i++) {
-            arr[i] = valueFn();
-        }
-        return arr;
-    }
-    exports.fill = fill;
-    function index(array, indexer, merger) {
-        if (merger === void 0) { merger = function (t) { return t; }; }
-        return array.reduce(function (r, t) {
-            var key = indexer(t);
-            r[key] = merger(t, r[key]);
-            return r;
-        }, Object.create(null));
-    }
-    exports.index = index;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define(__m[12], __M([1,0]), function (require, exports) {
-    'use strict';
-    /**
-     * A simple map to store value by a key object. Key can be any object that has toString() function to get
-     * string value of the key.
-     */
-    var SimpleMap = (function () {
-        function SimpleMap() {
-            this.map = Object.create(null);
-            this._size = 0;
-        }
-        Object.defineProperty(SimpleMap.prototype, "size", {
-            get: function () {
-                return this._size;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SimpleMap.prototype.get = function (k) {
-            var value = this.peek(k);
-            return value ? value : null;
-        };
-        SimpleMap.prototype.keys = function () {
-            var keys = [];
-            for (var key in this.map) {
-                keys.push(this.map[key].key);
-            }
-            return keys;
-        };
-        SimpleMap.prototype.values = function () {
-            var values = [];
-            for (var key in this.map) {
-                values.push(this.map[key].value);
-            }
-            return values;
-        };
-        SimpleMap.prototype.entries = function () {
-            var entries = [];
-            for (var key in this.map) {
-                entries.push(this.map[key]);
-            }
-            return entries;
-        };
-        SimpleMap.prototype.set = function (k, t) {
-            if (this.get(k)) {
-                return false; // already present!
-            }
-            this.push(k, t);
-            return true;
-        };
-        SimpleMap.prototype.delete = function (k) {
-            var value = this.get(k);
-            if (value) {
-                this.pop(k);
-                return value;
-            }
-            return null;
-        };
-        SimpleMap.prototype.has = function (k) {
-            return !!this.get(k);
-        };
-        SimpleMap.prototype.clear = function () {
-            this.map = Object.create(null);
-            this._size = 0;
-        };
-        SimpleMap.prototype.push = function (key, value) {
-            var entry = { key: key, value: value };
-            this.map[key.toString()] = entry;
-            this._size++;
-        };
-        SimpleMap.prototype.pop = function (k) {
-            delete this.map[k.toString()];
-            this._size--;
-        };
-        SimpleMap.prototype.peek = function (k) {
-            var entry = this.map[k.toString()];
-            return entry ? entry.value : null;
-        };
-        return SimpleMap;
-    }());
-    exports.SimpleMap = SimpleMap;
-    /**
-     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
-     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
-     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
-     */
-    var LinkedMap = (function () {
-        function LinkedMap(limit, ratio) {
-            if (limit === void 0) { limit = Number.MAX_VALUE; }
-            if (ratio === void 0) { ratio = 1; }
-            this.limit = limit;
-            this.map = Object.create(null);
-            this._size = 0;
-            this.ratio = limit * ratio;
-        }
-        Object.defineProperty(LinkedMap.prototype, "size", {
-            get: function () {
-                return this._size;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        LinkedMap.prototype.set = function (key, value) {
-            if (this.map[key]) {
-                return false; // already present!
-            }
-            var entry = { key: key, value: value };
-            this.push(entry);
-            if (this._size > this.limit) {
-                this.trim();
-            }
-            return true;
-        };
-        LinkedMap.prototype.get = function (key) {
-            var entry = this.map[key];
-            return entry ? entry.value : null;
-        };
-        LinkedMap.prototype.delete = function (key) {
-            var entry = this.map[key];
-            if (entry) {
-                this.map[key] = void 0;
-                this._size--;
-                if (entry.next) {
-                    entry.next.prev = entry.prev; // [A]<-[x]<-[C] = [A]<-[C]
-                }
-                else {
-                    this.head = entry.prev; // [A]-[x] = [A]
-                }
-                if (entry.prev) {
-                    entry.prev.next = entry.next; // [A]->[x]->[C] = [A]->[C]
-                }
-                else {
-                    this.tail = entry.next; // [x]-[A] = [A]
-                }
-                return entry.value;
-            }
-            return null;
-        };
-        LinkedMap.prototype.has = function (key) {
-            return !!this.map[key];
-        };
-        LinkedMap.prototype.clear = function () {
-            this.map = Object.create(null);
-            this._size = 0;
-            this.head = null;
-            this.tail = null;
-        };
-        LinkedMap.prototype.push = function (entry) {
-            if (this.head) {
-                // [A]-[B] = [A]-[B]->[X]
-                entry.prev = this.head;
-                this.head.next = entry;
-            }
-            if (!this.tail) {
-                this.tail = entry;
-            }
-            this.head = entry;
-            this.map[entry.key] = entry;
-            this._size++;
-        };
-        LinkedMap.prototype.trim = function () {
-            if (this.tail) {
-                // Remove all elements until ratio is reached
-                if (this.ratio < this.limit) {
-                    var index = 0;
-                    var current = this.tail;
-                    while (current.next) {
-                        // Remove the entry
-                        this.map[current.key] = void 0;
-                        this._size--;
-                        // if we reached the element that overflows our ratio condition
-                        // make its next element the new tail of the Map and adjust the size
-                        if (index === this.ratio) {
-                            this.tail = current.next;
-                            this.tail.prev = null;
-                            break;
-                        }
-                        // Move on
-                        current = current.next;
-                        index++;
-                    }
-                }
-                else {
-                    this.map[this.tail.key] = void 0;
-                    this._size--;
-                    // [x]-[B] = [B]
-                    this.tail = this.tail.next;
-                    this.tail.prev = null;
-                }
-            }
-        };
-        return LinkedMap;
-    }());
-    exports.LinkedMap = LinkedMap;
-    /**
-     * A subclass of Map<T> that makes an entry the MRU entry as soon
-     * as it is being accessed. In combination with the limit for the
-     * maximum number of elements in the cache, it helps to remove those
-     * entries from the cache that are LRU.
-     */
-    var LRUCache = (function (_super) {
-        __extends(LRUCache, _super);
-        function LRUCache(limit) {
-            _super.call(this, limit);
-        }
-        LRUCache.prototype.get = function (key) {
-            // Upon access of an entry, make it the head of
-            // the linked map so that it is the MRU element
-            var entry = this.map[key];
-            if (entry) {
-                this.delete(key);
-                this.push(entry);
-                return entry.value;
-            }
-            return null;
-        };
-        return LRUCache;
-    }(LinkedMap));
-    exports.LRUCache = LRUCache;
-});
-
-define(__m[14], __M([1,0]), function (require, exports) {
+define(__m[10/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -526,10 +33,10 @@ define(__m[14], __M([1,0]), function (require, exports) {
         _isMacintosh = (process.platform === 'darwin');
         _isLinux = (process.platform === 'linux');
         _isRootUser = !_isWindows && (process.getuid() === 0);
-        var vscode_nls_config = process.env['VSCODE_NLS_CONFIG'];
-        if (vscode_nls_config) {
+        var rawNlsConfig = process.env['VSCODE_NLS_CONFIG'];
+        if (rawNlsConfig) {
             try {
-                var nlsConfig = JSON.parse(vscode_nls_config);
+                var nlsConfig = JSON.parse(rawNlsConfig);
                 var resolved = nlsConfig.availableLanguages['*'];
                 _locale = nlsConfig.locale;
                 // VSCode's default language is 'en'
@@ -601,541 +108,7 @@ define(__m[14], __M([1,0]), function (require, exports) {
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[15], __M([1,0,12]), function (require, exports, map_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    /**
-     * The empty string.
-     */
-    exports.empty = '';
-    /**
-     * @returns the provided number with the given number of preceding zeros.
-     */
-    function pad(n, l, char) {
-        if (char === void 0) { char = '0'; }
-        var str = '' + n;
-        var r = [str];
-        for (var i = str.length; i < l; i++) {
-            r.push(char);
-        }
-        return r.reverse().join('');
-    }
-    exports.pad = pad;
-    var _formatRegexp = /{(\d+)}/g;
-    /**
-     * Helper to produce a string with a variable number of arguments. Insert variable segments
-     * into the string using the {n} notation where N is the index of the argument following the string.
-     * @param value string to which formatting is applied
-     * @param args replacements for {n}-entries
-     */
-    function format(value) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        if (args.length === 0) {
-            return value;
-        }
-        return value.replace(_formatRegexp, function (match, group) {
-            var idx = parseInt(group, 10);
-            return isNaN(idx) || idx < 0 || idx >= args.length ?
-                match :
-                args[idx];
-        });
-    }
-    exports.format = format;
-    /**
-     * Converts HTML characters inside the string to use entities instead. Makes the string safe from
-     * being used e.g. in HTMLElement.innerHTML.
-     */
-    function escape(html) {
-        return html.replace(/[<|>|&]/g, function (match) {
-            switch (match) {
-                case '<': return '&lt;';
-                case '>': return '&gt;';
-                case '&': return '&amp;';
-                default: return match;
-            }
-        });
-    }
-    exports.escape = escape;
-    /**
-     * Escapes regular expression characters in a given string
-     */
-    function escapeRegExpCharacters(value) {
-        return value.replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&');
-    }
-    exports.escapeRegExpCharacters = escapeRegExpCharacters;
-    /**
-     * Removes all occurrences of needle from the beginning and end of haystack.
-     * @param haystack string to trim
-     * @param needle the thing to trim (default is a blank)
-     */
-    function trim(haystack, needle) {
-        if (needle === void 0) { needle = ' '; }
-        var trimmed = ltrim(haystack, needle);
-        return rtrim(trimmed, needle);
-    }
-    exports.trim = trim;
-    /**
-     * Removes all occurrences of needle from the beginning of haystack.
-     * @param haystack string to trim
-     * @param needle the thing to trim
-     */
-    function ltrim(haystack, needle) {
-        if (!haystack || !needle) {
-            return haystack;
-        }
-        var needleLen = needle.length;
-        if (needleLen === 0 || haystack.length === 0) {
-            return haystack;
-        }
-        var offset = 0, idx = -1;
-        while ((idx = haystack.indexOf(needle, offset)) === offset) {
-            offset = offset + needleLen;
-        }
-        return haystack.substring(offset);
-    }
-    exports.ltrim = ltrim;
-    /**
-     * Removes all occurrences of needle from the end of haystack.
-     * @param haystack string to trim
-     * @param needle the thing to trim
-     */
-    function rtrim(haystack, needle) {
-        if (!haystack || !needle) {
-            return haystack;
-        }
-        var needleLen = needle.length, haystackLen = haystack.length;
-        if (needleLen === 0 || haystackLen === 0) {
-            return haystack;
-        }
-        var offset = haystackLen, idx = -1;
-        while (true) {
-            idx = haystack.lastIndexOf(needle, offset - 1);
-            if (idx === -1 || idx + needleLen !== offset) {
-                break;
-            }
-            if (idx === 0) {
-                return '';
-            }
-            offset = idx;
-        }
-        return haystack.substring(0, offset);
-    }
-    exports.rtrim = rtrim;
-    function convertSimple2RegExpPattern(pattern) {
-        return pattern.replace(/[\-\\\{\}\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&').replace(/[\*]/g, '.*');
-    }
-    exports.convertSimple2RegExpPattern = convertSimple2RegExpPattern;
-    function stripWildcards(pattern) {
-        return pattern.replace(/\*/g, '');
-    }
-    exports.stripWildcards = stripWildcards;
-    /**
-     * Determines if haystack starts with needle.
-     */
-    function startsWith(haystack, needle) {
-        if (haystack.length < needle.length) {
-            return false;
-        }
-        for (var i = 0; i < needle.length; i++) {
-            if (haystack[i] !== needle[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    exports.startsWith = startsWith;
-    /**
-     * Determines if haystack ends with needle.
-     */
-    function endsWith(haystack, needle) {
-        var diff = haystack.length - needle.length;
-        if (diff > 0) {
-            return haystack.lastIndexOf(needle) === diff;
-        }
-        else if (diff === 0) {
-            return haystack === needle;
-        }
-        else {
-            return false;
-        }
-    }
-    exports.endsWith = endsWith;
-    function createRegExp(searchString, isRegex, matchCase, wholeWord, global) {
-        if (searchString === '') {
-            throw new Error('Cannot create regex from empty string');
-        }
-        if (!isRegex) {
-            searchString = searchString.replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&');
-        }
-        if (wholeWord) {
-            if (!/\B/.test(searchString.charAt(0))) {
-                searchString = '\\b' + searchString;
-            }
-            if (!/\B/.test(searchString.charAt(searchString.length - 1))) {
-                searchString = searchString + '\\b';
-            }
-        }
-        var modifiers = '';
-        if (global) {
-            modifiers += 'g';
-        }
-        if (!matchCase) {
-            modifiers += 'i';
-        }
-        return new RegExp(searchString, modifiers);
-    }
-    exports.createRegExp = createRegExp;
-    function regExpLeadsToEndlessLoop(regexp) {
-        // Exit early if it's one of these special cases which are meant to match
-        // against an empty string
-        if (regexp.source === '^' || regexp.source === '^$' || regexp.source === '$') {
-            return false;
-        }
-        // We check against an empty string. If the regular expression doesn't advance
-        // (e.g. ends in an endless loop) it will match an empty string.
-        var match = regexp.exec('');
-        return (match && regexp.lastIndex === 0);
-    }
-    exports.regExpLeadsToEndlessLoop = regExpLeadsToEndlessLoop;
-    /**
-     * The normalize() method returns the Unicode Normalization Form of a given string. The form will be
-     * the Normalization Form Canonical Composition.
-     *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize}
-     */
-    exports.canNormalize = typeof (''.normalize) === 'function';
-    var nonAsciiCharactersPattern = /[^\u0000-\u0080]/;
-    var normalizedCache = new map_1.LinkedMap(10000); // bounded to 10000 elements
-    function normalizeNFC(str) {
-        if (!exports.canNormalize || !str) {
-            return str;
-        }
-        var cached = normalizedCache.get(str);
-        if (cached) {
-            return cached;
-        }
-        var res;
-        if (nonAsciiCharactersPattern.test(str)) {
-            res = str.normalize('NFC');
-        }
-        else {
-            res = str;
-        }
-        // Use the cache for fast lookup
-        normalizedCache.set(str, res);
-        return res;
-    }
-    exports.normalizeNFC = normalizeNFC;
-    /**
-     * Returns first index of the string that is not whitespace.
-     * If string is empty or contains only whitespaces, returns -1
-     */
-    function firstNonWhitespaceIndex(str) {
-        for (var i = 0, len = str.length; i < len; i++) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
-                return i;
-            }
-        }
-        return -1;
-    }
-    exports.firstNonWhitespaceIndex = firstNonWhitespaceIndex;
-    /**
-     * Returns the leading whitespace of the string.
-     * If the string contains only whitespaces, returns entire string
-     */
-    function getLeadingWhitespace(str) {
-        for (var i = 0, len = str.length; i < len; i++) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
-                return str.substring(0, i);
-            }
-        }
-        return str;
-    }
-    exports.getLeadingWhitespace = getLeadingWhitespace;
-    /**
-     * Returns last index of the string that is not whitespace.
-     * If string is empty or contains only whitespaces, returns -1
-     */
-    function lastNonWhitespaceIndex(str, startIndex) {
-        if (startIndex === void 0) { startIndex = str.length - 1; }
-        for (var i = startIndex; i >= 0; i--) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
-                return i;
-            }
-        }
-        return -1;
-    }
-    exports.lastNonWhitespaceIndex = lastNonWhitespaceIndex;
-    function compare(a, b) {
-        if (a < b) {
-            return -1;
-        }
-        else if (a > b) {
-            return 1;
-        }
-        else {
-            return 0;
-        }
-    }
-    exports.compare = compare;
-    function isAsciiChar(code) {
-        return (code >= 97 && code <= 122) || (code >= 65 && code <= 90);
-    }
-    function equalsIgnoreCase(a, b) {
-        var len1 = a.length, len2 = b.length;
-        if (len1 !== len2) {
-            return false;
-        }
-        for (var i = 0; i < len1; i++) {
-            var codeA = a.charCodeAt(i), codeB = b.charCodeAt(i);
-            if (codeA === codeB) {
-                continue;
-            }
-            else if (isAsciiChar(codeA) && isAsciiChar(codeB)) {
-                var diff = Math.abs(codeA - codeB);
-                if (diff !== 0 && diff !== 32) {
-                    return false;
-                }
-            }
-            else {
-                if (String.fromCharCode(codeA).toLocaleLowerCase() !== String.fromCharCode(codeB).toLocaleLowerCase()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    exports.equalsIgnoreCase = equalsIgnoreCase;
-    /**
-     * @returns the length of the common prefix of the two strings.
-     */
-    function commonPrefixLength(a, b) {
-        var i, len = Math.min(a.length, b.length);
-        for (i = 0; i < len; i++) {
-            if (a.charCodeAt(i) !== b.charCodeAt(i)) {
-                return i;
-            }
-        }
-        return len;
-    }
-    exports.commonPrefixLength = commonPrefixLength;
-    /**
-     * @returns the length of the common suffix of the two strings.
-     */
-    function commonSuffixLength(a, b) {
-        var i, len = Math.min(a.length, b.length);
-        var aLastIndex = a.length - 1;
-        var bLastIndex = b.length - 1;
-        for (i = 0; i < len; i++) {
-            if (a.charCodeAt(aLastIndex - i) !== b.charCodeAt(bLastIndex - i)) {
-                return i;
-            }
-        }
-        return len;
-    }
-    exports.commonSuffixLength = commonSuffixLength;
-    // --- unicode
-    // http://en.wikipedia.org/wiki/Surrogate_pair
-    // Returns the code point starting at a specified index in a string
-    // Code points U+0000 to U+D7FF and U+E000 to U+FFFF are represented on a single character
-    // Code points U+10000 to U+10FFFF are represented on two consecutive characters
-    //export function getUnicodePoint(str:string, index:number, len:number):number {
-    //	let chrCode = str.charCodeAt(index);
-    //	if (0xD800 <= chrCode && chrCode <= 0xDBFF && index + 1 < len) {
-    //		let nextChrCode = str.charCodeAt(index + 1);
-    //		if (0xDC00 <= nextChrCode && nextChrCode <= 0xDFFF) {
-    //			return (chrCode - 0xD800) << 10 + (nextChrCode - 0xDC00) + 0x10000;
-    //		}
-    //	}
-    //	return chrCode;
-    //}
-    //export function isLeadSurrogate(chr:string) {
-    //	let chrCode = chr.charCodeAt(0);
-    //	return ;
-    //}
-    //
-    //export function isTrailSurrogate(chr:string) {
-    //	let chrCode = chr.charCodeAt(0);
-    //	return 0xDC00 <= chrCode && chrCode <= 0xDFFF;
-    //}
-    function isFullWidthCharacter(charCode) {
-        // Do a cheap trick to better support wrapping of wide characters, treat them as 2 columns
-        // http://jrgraphix.net/research/unicode_blocks.php
-        //          2E80 — 2EFF   CJK Radicals Supplement
-        //          2F00 — 2FDF   Kangxi Radicals
-        //          2FF0 — 2FFF   Ideographic Description Characters
-        //          3000 — 303F   CJK Symbols and Punctuation
-        //          3040 — 309F   Hiragana
-        //          30A0 — 30FF   Katakana
-        //          3100 — 312F   Bopomofo
-        //          3130 — 318F   Hangul Compatibility Jamo
-        //          3190 — 319F   Kanbun
-        //          31A0 — 31BF   Bopomofo Extended
-        //          31F0 — 31FF   Katakana Phonetic Extensions
-        //          3200 — 32FF   Enclosed CJK Letters and Months
-        //          3300 — 33FF   CJK Compatibility
-        //          3400 — 4DBF   CJK Unified Ideographs Extension A
-        //          4DC0 — 4DFF   Yijing Hexagram Symbols
-        //          4E00 — 9FFF   CJK Unified Ideographs
-        //          A000 — A48F   Yi Syllables
-        //          A490 — A4CF   Yi Radicals
-        //          AC00 — D7AF   Hangul Syllables
-        // [IGNORE] D800 — DB7F   High Surrogates
-        // [IGNORE] DB80 — DBFF   High Private Use Surrogates
-        // [IGNORE] DC00 — DFFF   Low Surrogates
-        // [IGNORE] E000 — F8FF   Private Use Area
-        //          F900 — FAFF   CJK Compatibility Ideographs
-        // [IGNORE] FB00 — FB4F   Alphabetic Presentation Forms
-        // [IGNORE] FB50 — FDFF   Arabic Presentation Forms-A
-        // [IGNORE] FE00 — FE0F   Variation Selectors
-        // [IGNORE] FE20 — FE2F   Combining Half Marks
-        // [IGNORE] FE30 — FE4F   CJK Compatibility Forms
-        // [IGNORE] FE50 — FE6F   Small Form Variants
-        // [IGNORE] FE70 — FEFF   Arabic Presentation Forms-B
-        //          FF00 — FFEF   Halfwidth and Fullwidth Forms
-        //               [https://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms]
-        //               of which FF01 - FF5E fullwidth ASCII of 21 to 7E
-        // [IGNORE]    and FF65 - FFDC halfwidth of Katakana and Hangul
-        // [IGNORE] FFF0 — FFFF   Specials
-        charCode = +charCode; // @perf
-        return ((charCode >= 0x2E80 && charCode <= 0xD7AF)
-            || (charCode >= 0xF900 && charCode <= 0xFAFF)
-            || (charCode >= 0xFF01 && charCode <= 0xFF5E));
-    }
-    exports.isFullWidthCharacter = isFullWidthCharacter;
-    /**
-     * Computes the difference score for two strings. More similar strings have a higher score.
-     * We use largest common subsequence dynamic programming approach but penalize in the end for length differences.
-     * Strings that have a large length difference will get a bad default score 0.
-     * Complexity - both time and space O(first.length * second.length)
-     * Dynamic programming LCS computation http://en.wikipedia.org/wiki/Longest_common_subsequence_problem
-     *
-     * @param first a string
-     * @param second a string
-     */
-    function difference(first, second, maxLenDelta) {
-        if (maxLenDelta === void 0) { maxLenDelta = 4; }
-        var lengthDifference = Math.abs(first.length - second.length);
-        // We only compute score if length of the currentWord and length of entry.name are similar.
-        if (lengthDifference > maxLenDelta) {
-            return 0;
-        }
-        // Initialize LCS (largest common subsequence) matrix.
-        var LCS = [];
-        var zeroArray = [];
-        var i, j;
-        for (i = 0; i < second.length + 1; ++i) {
-            zeroArray.push(0);
-        }
-        for (i = 0; i < first.length + 1; ++i) {
-            LCS.push(zeroArray);
-        }
-        for (i = 1; i < first.length + 1; ++i) {
-            for (j = 1; j < second.length + 1; ++j) {
-                if (first[i - 1] === second[j - 1]) {
-                    LCS[i][j] = LCS[i - 1][j - 1] + 1;
-                }
-                else {
-                    LCS[i][j] = Math.max(LCS[i - 1][j], LCS[i][j - 1]);
-                }
-            }
-        }
-        return LCS[first.length][second.length] - Math.sqrt(lengthDifference);
-    }
-    exports.difference = difference;
-    /**
-     * Returns an array in which every entry is the offset of a
-     * line. There is always one entry which is zero.
-     */
-    function computeLineStarts(text) {
-        var regexp = /\r\n|\r|\n/g, ret = [0], match;
-        while ((match = regexp.exec(text))) {
-            ret.push(regexp.lastIndex);
-        }
-        return ret;
-    }
-    exports.computeLineStarts = computeLineStarts;
-    /**
-     * Given a string and a max length returns a shorted version. Shorting
-     * happens at favorable positions - such as whitespace or punctuation characters.
-     */
-    function lcut(text, n) {
-        if (text.length < n) {
-            return text;
-        }
-        var segments = text.split(/\b/), count = 0;
-        for (var i = segments.length - 1; i >= 0; i--) {
-            count += segments[i].length;
-            if (count > n) {
-                segments.splice(0, i);
-                break;
-            }
-        }
-        return segments.join(exports.empty).replace(/^\s/, exports.empty);
-    }
-    exports.lcut = lcut;
-    // Escape codes
-    // http://en.wikipedia.org/wiki/ANSI_escape_code
-    var EL = /\x1B\x5B[12]?K/g; // Erase in line
-    var LF = /\xA/g; // line feed
-    var COLOR_START = /\x1b\[\d+m/g; // Color
-    var COLOR_END = /\x1b\[0?m/g; // Color
-    function removeAnsiEscapeCodes(str) {
-        if (str) {
-            str = str.replace(EL, '');
-            str = str.replace(LF, '\n');
-            str = str.replace(COLOR_START, '');
-            str = str.replace(COLOR_END, '');
-        }
-        return str;
-    }
-    exports.removeAnsiEscapeCodes = removeAnsiEscapeCodes;
-    // -- UTF-8 BOM
-    var __utf8_bom = 65279;
-    exports.UTF8_BOM_CHARACTER = String.fromCharCode(__utf8_bom);
-    function startsWithUTF8BOM(str) {
-        return (str && str.length > 0 && str.charCodeAt(0) === __utf8_bom);
-    }
-    exports.startsWithUTF8BOM = startsWithUTF8BOM;
-    /**
-     * Appends two strings. If the appended result is longer than maxLength,
-     * trims the start of the result and replaces it with '...'.
-     */
-    function appendWithLimit(first, second, maxLength) {
-        var newLength = first.length + second.length;
-        if (newLength > maxLength) {
-            first = '...' + first.substr(newLength - maxLength);
-        }
-        if (second.length > maxLength) {
-            first += second.substr(second.length - maxLength);
-        }
-        else {
-            first += second;
-        }
-        return first;
-    }
-    exports.appendWithLimit = appendWithLimit;
-    function safeBtoa(str) {
-        return btoa(encodeURIComponent(str)); // we use encodeURIComponent because btoa fails for non Latin 1 values
-    }
-    exports.safeBtoa = safeBtoa;
-    function repeat(s, count) {
-        var result = '';
-        for (var i = 0; i < count; i++) {
-            result += s;
-        }
-        return result;
-    }
-    exports.repeat = repeat;
-});
-
-define(__m[2], __M([1,0]), function (require, exports) {
+define(__m[4/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1184,6 +157,9 @@ define(__m[2], __M([1,0]), function (require, exports) {
      *	`null`, an `array`, a `regexp`, nor a `date`.
      */
     function isObject(obj) {
+        // The method can't do a type cast since there are type (like strings) which
+        // are subclasses of any put not positvely matched by the function. Hence type
+        // narrowing results in wrong results.
         return typeof obj === _typeof.object
             && obj !== null
             && !Array.isArray(obj)
@@ -1300,12 +276,249 @@ define(__m[2], __M([1,0]), function (require, exports) {
     exports.create = create;
 });
 
+define(__m[5/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,10/*vs/base/common/platform*/,4/*vs/base/common/types*/]), function (require, exports, platform, types) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
+    var ErrorHandler = (function () {
+        function ErrorHandler() {
+            this.listeners = [];
+            this.unexpectedErrorHandler = function (e) {
+                platform.setTimeout(function () {
+                    if (e.stack) {
+                        throw new Error(e.message + '\n\n' + e.stack);
+                    }
+                    throw e;
+                }, 0);
+            };
+        }
+        ErrorHandler.prototype.addListener = function (listener) {
+            var _this = this;
+            this.listeners.push(listener);
+            return function () {
+                _this._removeListener(listener);
+            };
+        };
+        ErrorHandler.prototype.emit = function (e) {
+            this.listeners.forEach(function (listener) {
+                listener(e);
+            });
+        };
+        ErrorHandler.prototype._removeListener = function (listener) {
+            this.listeners.splice(this.listeners.indexOf(listener), 1);
+        };
+        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
+            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
+            return this.unexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.onUnexpectedError = function (e) {
+            this.unexpectedErrorHandler(e);
+            this.emit(e);
+        };
+        return ErrorHandler;
+    }());
+    exports.ErrorHandler = ErrorHandler;
+    exports.errorHandler = new ErrorHandler();
+    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
+        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
+    }
+    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
+    function onUnexpectedError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedError(e);
+        }
+    }
+    exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedPromiseError(promise) {
+        return promise.then(null, onUnexpectedError);
+    }
+    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
+    function transformErrorForSerialization(error) {
+        if (error instanceof Error) {
+            var name_1 = error.name, message = error.message;
+            var stack = error.stacktrace || error.stack;
+            return {
+                $isError: true,
+                name: name_1,
+                message: message,
+                stack: stack
+            };
+        }
+        // return as is
+        return error;
+    }
+    exports.transformErrorForSerialization = transformErrorForSerialization;
+    var canceledName = 'Canceled';
+    /**
+     * Checks if the given error is a promise in canceled state
+     */
+    function isPromiseCanceledError(error) {
+        return error instanceof Error && error.name === canceledName && error.message === canceledName;
+    }
+    exports.isPromiseCanceledError = isPromiseCanceledError;
+    /**
+     * Returns an error that signals cancellation.
+     */
+    function canceled() {
+        var error = new Error(canceledName);
+        error.name = error.message;
+        return error;
+    }
+    exports.canceled = canceled;
+    /**
+     * Returns an error that signals something is not implemented.
+     */
+    function notImplemented() {
+        return new Error('Not Implemented');
+    }
+    exports.notImplemented = notImplemented;
+    function illegalArgument(name) {
+        if (name) {
+            return new Error("Illegal argument: " + name);
+        }
+        else {
+            return new Error('Illegal argument');
+        }
+    }
+    exports.illegalArgument = illegalArgument;
+    function illegalState(name) {
+        if (name) {
+            return new Error("Illegal state: " + name);
+        }
+        else {
+            return new Error('Illegal state');
+        }
+    }
+    exports.illegalState = illegalState;
+    function readonly(name) {
+        return name
+            ? new Error("readonly property '" + name + " cannot be changed'")
+            : new Error('readonly property cannot be changed');
+    }
+    exports.readonly = readonly;
+    function create(message, options) {
+        if (options === void 0) { options = {}; }
+        var result = new Error(message);
+        if (types.isNumber(options.severity)) {
+            result.severity = options.severity;
+        }
+        if (options.actions) {
+            result.actions = options.actions;
+        }
+        return result;
+    }
+    exports.create = create;
+    function getErrorMessage(err) {
+        if (!err) {
+            return 'Error';
+        }
+        if (err.message) {
+            return err.message;
+        }
+        if (err.stack) {
+            return err.stack.split('\n')[0];
+        }
+        return String(err);
+    }
+    exports.getErrorMessage = getErrorMessage;
+});
 
+define(__m[8/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var CallbackList = (function () {
+        function CallbackList() {
+        }
+        CallbackList.prototype.add = function (callback, context, bucket) {
+            var _this = this;
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                this._callbacks = [];
+                this._contexts = [];
+            }
+            this._callbacks.push(callback);
+            this._contexts.push(context);
+            if (Array.isArray(bucket)) {
+                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
+            }
+        };
+        CallbackList.prototype.remove = function (callback, context) {
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                return;
+            }
+            var foundCallbackWithDifferentContext = false;
+            for (var i = 0, len = this._callbacks.length; i < len; i++) {
+                if (this._callbacks[i] === callback) {
+                    if (this._contexts[i] === context) {
+                        // callback & context match => remove it
+                        this._callbacks.splice(i, 1);
+                        this._contexts.splice(i, 1);
+                        return;
+                    }
+                    else {
+                        foundCallbackWithDifferentContext = true;
+                    }
+                }
+            }
+            if (foundCallbackWithDifferentContext) {
+                throw new Error('When adding a listener with a context, you should remove it with the same context');
+            }
+        };
+        CallbackList.prototype.invoke = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            if (!this._callbacks) {
+                return;
+            }
+            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
+            for (var i = 0, len = callbacks.length; i < len; i++) {
+                try {
+                    ret.push(callbacks[i].apply(contexts[i], args));
+                }
+                catch (e) {
+                    errors_1.onUnexpectedError(e);
+                }
+            }
+            return ret;
+        };
+        CallbackList.prototype.isEmpty = function () {
+            return !this._callbacks || this._callbacks.length === 0;
+        };
+        CallbackList.prototype.entries = function () {
+            var _this = this;
+            if (!this._callbacks) {
+                return [];
+            }
+            return this._callbacks.map(function (fn, index) { return [fn, _this._contexts[index]]; });
+        };
+        CallbackList.prototype.dispose = function () {
+            this._callbacks = undefined;
+            this._contexts = undefined;
+        };
+        return CallbackList;
+    }());
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = CallbackList;
+});
 
-
-
-
-define(__m[7], __M([1,0,2]), function (require, exports, types_1) {
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+define(__m[6/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1374,295 +587,384 @@ define(__m[7], __M([1,0,2]), function (require, exports, types_1) {
     exports.Disposables = Disposables;
 });
 
-define(__m[8], __M([1,0,2]), function (require, exports, Types) {
+define(__m[3/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/lifecycle*/,8/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    function clone(obj) {
-        if (!obj || typeof obj !== 'object') {
-            return obj;
+    var Event;
+    (function (Event) {
+        var _disposable = { dispose: function () { } };
+        Event.None = function () { return _disposable; };
+    })(Event || (Event = {}));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Event;
+    /**
+     * The Emitter can be used to expose an Event to the public
+     * to fire it from the insides.
+     * Sample:
+        class Document {
+    
+            private _onDidChange = new Emitter<(value:string)=>any>();
+    
+            public onDidChange = this._onDidChange.event;
+    
+            // getter-style
+            // get onDidChange(): Event<(value:string)=>any> {
+            // 	return this._onDidChange.event;
+            // }
+    
+            private _doIt() {
+                //...
+                this._onDidChange.fire(value);
+            }
         }
-        if (obj instanceof RegExp) {
-            return obj;
+     */
+    var Emitter = (function () {
+        function Emitter(_options) {
+            this._options = _options;
         }
-        var result = (Array.isArray(obj)) ? [] : {};
-        Object.keys(obj).forEach(function (key) {
-            if (obj[key] && typeof obj[key] === 'object') {
-                result[key] = clone(obj[key]);
+        Object.defineProperty(Emitter.prototype, "event", {
+            /**
+             * For the public to allow to subscribe
+             * to events from this Emitter
+             */
+            get: function () {
+                var _this = this;
+                if (!this._event) {
+                    this._event = function (listener, thisArgs, disposables) {
+                        if (!_this._callbacks) {
+                            _this._callbacks = new callbackList_1.default();
+                        }
+                        var firstListener = _this._callbacks.isEmpty();
+                        if (firstListener && _this._options && _this._options.onFirstListenerAdd) {
+                            _this._options.onFirstListenerAdd(_this);
+                        }
+                        _this._callbacks.add(listener, thisArgs);
+                        if (firstListener && _this._options && _this._options.onFirstListenerDidAdd) {
+                            _this._options.onFirstListenerDidAdd(_this);
+                        }
+                        var result;
+                        result = {
+                            dispose: function () {
+                                result.dispose = Emitter._noop;
+                                if (!_this._disposed) {
+                                    _this._callbacks.remove(listener, thisArgs);
+                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
+                                        _this._options.onLastListenerRemove(_this);
+                                    }
+                                }
+                            }
+                        };
+                        if (Array.isArray(disposables)) {
+                            disposables.push(result);
+                        }
+                        return result;
+                    };
+                }
+                return this._event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * To be kept private to fire an event to
+         * subscribers
+         */
+        Emitter.prototype.fire = function (event) {
+            if (this._callbacks) {
+                this._callbacks.invoke.call(this._callbacks, event);
+            }
+        };
+        Emitter.prototype.dispose = function () {
+            if (this._callbacks) {
+                this._callbacks.dispose();
+                this._callbacks = undefined;
+                this._disposed = true;
+            }
+        };
+        Emitter._noop = function () { };
+        return Emitter;
+    }());
+    exports.Emitter = Emitter;
+    /**
+     * Creates an Event which is backed-up by the event emitter. This allows
+     * to use the existing eventing pattern and is likely using less memory.
+     * Sample:
+     *
+     * 	class Document {
+     *
+     *		private _eventbus = new EventEmitter();
+     *
+     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
+     *
+     *		// getter-style
+     *		// get onDidChange(): Event<(value:string)=>any> {
+     *		// 	cache fromEventEmitter result and return
+     *		// }
+     *
+     *		private _doIt() {
+     *			// ...
+     *			this._eventbus.emit('changed', value)
+     *		}
+     *	}
+     */
+    function fromEventEmitter(emitter, eventType) {
+        return function (listener, thisArgs, disposables) {
+            var result = emitter.addListener2(eventType, function () {
+                listener.apply(thisArgs, arguments);
+            });
+            if (Array.isArray(disposables)) {
+                disposables.push(result);
+            }
+            return result;
+        };
+    }
+    exports.fromEventEmitter = fromEventEmitter;
+    function fromPromise(promise) {
+        var emitter = new Emitter();
+        var shouldEmit = false;
+        promise
+            .then(null, function () { return null; })
+            .then(function () {
+            if (!shouldEmit) {
+                setTimeout(function () { return emitter.fire(); }, 0);
             }
             else {
-                result[key] = obj[key];
+                emitter.fire();
             }
         });
-        return result;
+        shouldEmit = true;
+        return emitter.event;
     }
-    exports.clone = clone;
-    function deepClone(obj) {
-        if (!obj || typeof obj !== 'object') {
-            return obj;
-        }
-        var result = (Array.isArray(obj)) ? [] : {};
-        Object.getOwnPropertyNames(obj).forEach(function (key) {
-            if (obj[key] && typeof obj[key] === 'object') {
-                result[key] = deepClone(obj[key]);
-            }
-            else {
-                result[key] = obj[key];
-            }
-        });
-        return result;
-    }
-    exports.deepClone = deepClone;
-    var hasOwnProperty = Object.prototype.hasOwnProperty;
-    function cloneAndChange(obj, changer) {
-        return _cloneAndChange(obj, changer, []);
-    }
-    exports.cloneAndChange = cloneAndChange;
-    function _cloneAndChange(obj, changer, encounteredObjects) {
-        if (Types.isUndefinedOrNull(obj)) {
-            return obj;
-        }
-        var changed = changer(obj);
-        if (typeof changed !== 'undefined') {
-            return changed;
-        }
-        if (Types.isArray(obj)) {
-            var r1 = [];
-            for (var i1 = 0; i1 < obj.length; i1++) {
-                r1.push(_cloneAndChange(obj[i1], changer, encounteredObjects));
-            }
-            return r1;
-        }
-        if (Types.isObject(obj)) {
-            if (encounteredObjects.indexOf(obj) >= 0) {
-                throw new Error('Cannot clone recursive data-structure');
-            }
-            encounteredObjects.push(obj);
-            var r2 = {};
-            for (var i2 in obj) {
-                if (hasOwnProperty.call(obj, i2)) {
-                    r2[i2] = _cloneAndChange(obj[i2], changer, encounteredObjects);
+    exports.fromPromise = fromPromise;
+    function delayed(promise) {
+        var toCancel = null;
+        var listener = null;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
+            },
+            onLastListenerRemove: function () {
+                if (toCancel) {
+                    toCancel.cancel();
+                    toCancel = null;
+                }
+                if (listener) {
+                    listener.dispose();
+                    listener = null;
                 }
             }
-            encounteredObjects.pop();
-            return r2;
-        }
-        return obj;
+        });
+        return emitter.event;
     }
-    // DON'T USE THESE FUNCTION UNLESS YOU KNOW HOW CHROME
-    // WORKS... WE HAVE SEEN VERY WEIRD BEHAVIOUR WITH CHROME >= 37
-    ///**
-    // * Recursively call Object.freeze on object and any properties that are objects.
-    // */
-    //export function deepFreeze(obj:any):void {
-    //	Object.freeze(obj);
-    //	Object.keys(obj).forEach((key) => {
-    //		if(!(typeof obj[key] === 'object') || Object.isFrozen(obj[key])) {
-    //			return;
-    //		}
-    //
-    //		deepFreeze(obj[key]);
-    //	});
-    //	if(!Object.isFrozen(obj)) {
-    //		console.log('too warm');
-    //	}
-    //}
-    //
-    //export function deepSeal(obj:any):void {
-    //	Object.seal(obj);
-    //	Object.keys(obj).forEach((key) => {
-    //		if(!(typeof obj[key] === 'object') || Object.isSealed(obj[key])) {
-    //			return;
-    //		}
-    //
-    //		deepSeal(obj[key]);
-    //	});
-    //	if(!Object.isSealed(obj)) {
-    //		console.log('NOT sealed');
-    //	}
-    //}
-    /**
-     * Copies all properties of source into destination. The optional parameter "overwrite" allows to control
-     * if existing properties on the destination should be overwritten or not. Defaults to true (overwrite).
-     */
-    function mixin(destination, source, overwrite) {
-        if (overwrite === void 0) { overwrite = true; }
-        if (!Types.isObject(destination)) {
-            return source;
+    exports.delayed = delayed;
+    function once(event) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            var result = event(function (e) {
+                result.dispose();
+                return listener.call(thisArgs, e);
+            }, null, disposables);
+            return result;
+        };
+    }
+    exports.once = once;
+    function any() {
+        var events = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            events[_i - 0] = arguments[_i];
         }
-        if (Types.isObject(source)) {
-            Object.keys(source).forEach(function (key) {
-                if (key in destination) {
-                    if (overwrite) {
-                        if (Types.isObject(destination[key]) && Types.isObject(source[key])) {
-                            mixin(destination[key], source[key], overwrite);
-                        }
-                        else {
-                            destination[key] = source[key];
-                        }
+        var listeners = [];
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                listeners = events.map(function (e) { return e(function (r) { return emitter.fire(r); }); });
+            },
+            onLastListenerRemove: function () {
+                listeners = lifecycle_1.dispose(listeners);
+            }
+        });
+        return emitter.event;
+    }
+    exports.any = any;
+    function debounceEvent(event, merger, delay) {
+        if (delay === void 0) { delay = 100; }
+        var subscription;
+        var output;
+        var handle;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                subscription = event(function (cur) {
+                    output = merger(output, cur);
+                    clearTimeout(handle);
+                    handle = setTimeout(function () {
+                        var _output = output;
+                        output = undefined;
+                        emitter.fire(_output);
+                    }, delay);
+                });
+            },
+            onLastListenerRemove: function () {
+                subscription.dispose();
+            }
+        });
+        return emitter.event;
+    }
+    exports.debounceEvent = debounceEvent;
+    /**
+     * The EventDelayer is useful in situations in which you want
+     * to delay firing your events during some code.
+     * You can wrap that code and be sure that the event will not
+     * be fired during that wrap.
+     *
+     * ```
+     * const emitter: Emitter;
+     * const delayer = new EventDelayer();
+     * const delayedEvent = delayer.wrapEvent(emitter.event);
+     *
+     * delayedEvent(console.log);
+     *
+     * delayer.bufferEvents(() => {
+     *   emitter.fire(); // event will not be fired yet
+     * });
+     *
+     * // event will only be fired at this point
+     * ```
+     */
+    var EventBufferer = (function () {
+        function EventBufferer() {
+            this.buffers = [];
+        }
+        EventBufferer.prototype.wrapEvent = function (event) {
+            var _this = this;
+            return function (listener, thisArgs, disposables) {
+                return event(function (i) {
+                    var buffer = _this.buffers[_this.buffers.length - 1];
+                    if (buffer) {
+                        buffer.push(function () { return listener.call(thisArgs, i); });
+                    }
+                    else {
+                        listener.call(thisArgs, i);
+                    }
+                }, void 0, disposables);
+            };
+        };
+        EventBufferer.prototype.bufferEvents = function (fn) {
+            var buffer = [];
+            this.buffers.push(buffer);
+            fn();
+            this.buffers.pop();
+            buffer.forEach(function (flush) { return flush(); });
+        };
+        return EventBufferer;
+    }());
+    exports.EventBufferer = EventBufferer;
+    function mapEvent(event, map) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
+        };
+    }
+    exports.mapEvent = mapEvent;
+    function filterEvent(event, filter) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
+        };
+    }
+    exports.filterEvent = filterEvent;
+    var ChainableEvent = (function () {
+        function ChainableEvent(_event) {
+            this._event = _event;
+        }
+        Object.defineProperty(ChainableEvent.prototype, "event", {
+            get: function () { return this._event; },
+            enumerable: true,
+            configurable: true
+        });
+        ChainableEvent.prototype.map = function (fn) {
+            return new ChainableEvent(mapEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.filter = function (fn) {
+            return new ChainableEvent(filterEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.on = function (listener, thisArgs, disposables) {
+            return this._event(listener, thisArgs, disposables);
+        };
+        return ChainableEvent;
+    }());
+    function chain(event) {
+        return new ChainableEvent(event);
+    }
+    exports.chain = chain;
+    function stopwatch(event) {
+        var start = new Date().getTime();
+        return mapEvent(once(event), function (_) { return new Date().getTime() - start; });
+    }
+    exports.stopwatch = stopwatch;
+    /**
+     * Buffers the provided event until a first listener comes
+     * along, at which point fire all the events at once and
+     * pipe the event from then on.
+     *
+     * ```typescript
+     * const emitter = new Emitter<number>();
+     * const event = emitter.event;
+     * const bufferedEvent = buffer(event);
+     *
+     * emitter.fire(1);
+     * emitter.fire(2);
+     * emitter.fire(3);
+     * // nothing...
+     *
+     * const listener = bufferedEvent(num => console.log(num));
+     * // 1, 2, 3
+     *
+     * emitter.fire(4);
+     * // 4
+     * ```
+     */
+    function buffer(event, nextTick, buffer) {
+        if (nextTick === void 0) { nextTick = false; }
+        if (buffer === void 0) { buffer = []; }
+        buffer = buffer.slice();
+        var listener = event(function (e) {
+            if (buffer) {
+                buffer.push(e);
+            }
+            else {
+                emitter.fire(e);
+            }
+        });
+        var flush = function () {
+            buffer.forEach(function (e) { return emitter.fire(e); });
+            buffer = null;
+        };
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                if (!listener) {
+                    listener = event(function (e) { return emitter.fire(e); });
+                }
+            },
+            onFirstListenerDidAdd: function () {
+                if (buffer) {
+                    if (nextTick) {
+                        setTimeout(flush);
+                    }
+                    else {
+                        flush();
                     }
                 }
-                else {
-                    destination[key] = source[key];
-                }
-            });
-        }
-        return destination;
-    }
-    exports.mixin = mixin;
-    function assign(destination) {
-        var sources = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            sources[_i - 1] = arguments[_i];
-        }
-        sources.forEach(function (source) { return Object.keys(source).forEach(function (key) { return destination[key] = source[key]; }); });
-        return destination;
-    }
-    exports.assign = assign;
-    function toObject(arr, keyMap, valueMap) {
-        if (valueMap === void 0) { valueMap = function (x) { return x; }; }
-        return arr.reduce(function (o, d) { return assign(o, (_a = {}, _a[keyMap(d)] = valueMap(d), _a)); var _a; }, Object.create(null));
-    }
-    exports.toObject = toObject;
-    function equals(one, other) {
-        if (one === other) {
-            return true;
-        }
-        if (one === null || one === undefined || other === null || other === undefined) {
-            return false;
-        }
-        if (typeof one !== typeof other) {
-            return false;
-        }
-        if (typeof one !== 'object') {
-            return false;
-        }
-        if ((Array.isArray(one)) !== (Array.isArray(other))) {
-            return false;
-        }
-        var i, key;
-        if (Array.isArray(one)) {
-            if (one.length !== other.length) {
-                return false;
+            },
+            onLastListenerRemove: function () {
+                listener.dispose();
+                listener = null;
             }
-            for (i = 0; i < one.length; i++) {
-                if (!equals(one[i], other[i])) {
-                    return false;
-                }
-            }
-        }
-        else {
-            var oneKeys = [];
-            for (key in one) {
-                oneKeys.push(key);
-            }
-            oneKeys.sort();
-            var otherKeys = [];
-            for (key in other) {
-                otherKeys.push(key);
-            }
-            otherKeys.sort();
-            if (!equals(oneKeys, otherKeys)) {
-                return false;
-            }
-            for (i = 0; i < oneKeys.length; i++) {
-                if (!equals(one[oneKeys[i]], other[oneKeys[i]])) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    exports.equals = equals;
-    function ensureProperty(obj, property, defaultValue) {
-        if (typeof obj[property] === 'undefined') {
-            obj[property] = defaultValue;
-        }
-    }
-    exports.ensureProperty = ensureProperty;
-    function arrayToHash(array) {
-        var result = {};
-        for (var i = 0; i < array.length; ++i) {
-            result[array[i]] = true;
-        }
-        return result;
-    }
-    exports.arrayToHash = arrayToHash;
-    /**
-     * Given an array of strings, returns a function which, given a string
-     * returns true or false whether the string is in that array.
-     */
-    function createKeywordMatcher(arr, caseInsensitive) {
-        if (caseInsensitive === void 0) { caseInsensitive = false; }
-        if (caseInsensitive) {
-            arr = arr.map(function (x) { return x.toLowerCase(); });
-        }
-        var hash = arrayToHash(arr);
-        if (caseInsensitive) {
-            return function (word) {
-                return hash[word.toLowerCase()] !== undefined && hash.hasOwnProperty(word.toLowerCase());
-            };
-        }
-        else {
-            return function (word) {
-                return hash[word] !== undefined && hash.hasOwnProperty(word);
-            };
-        }
-    }
-    exports.createKeywordMatcher = createKeywordMatcher;
-    /**
-     * Started from TypeScript's __extends function to make a type a subclass of a specific class.
-     * Modified to work with properties already defined on the derivedClass, since we can't get TS
-     * to call this method before the constructor definition.
-     */
-    function derive(baseClass, derivedClass) {
-        for (var prop in baseClass) {
-            if (baseClass.hasOwnProperty(prop)) {
-                derivedClass[prop] = baseClass[prop];
-            }
-        }
-        derivedClass = derivedClass || function () { };
-        var basePrototype = baseClass.prototype;
-        var derivedPrototype = derivedClass.prototype;
-        derivedClass.prototype = Object.create(basePrototype);
-        for (var prop in derivedPrototype) {
-            if (derivedPrototype.hasOwnProperty(prop)) {
-                // handle getters and setters properly
-                Object.defineProperty(derivedClass.prototype, prop, Object.getOwnPropertyDescriptor(derivedPrototype, prop));
-            }
-        }
-        // Cast to any due to Bug 16188:PropertyDescriptor set and get function should be optional.
-        Object.defineProperty(derivedClass.prototype, 'constructor', { value: derivedClass, writable: true, configurable: true, enumerable: true });
-    }
-    exports.derive = derive;
-    /**
-     * Calls JSON.Stringify with a replacer to break apart any circular references.
-     * This prevents JSON.stringify from throwing the exception
-     *  "Uncaught TypeError: Converting circular structure to JSON"
-     */
-    function safeStringify(obj) {
-        var seen = [];
-        return JSON.stringify(obj, function (key, value) {
-            if (Types.isObject(value) || Array.isArray(value)) {
-                if (seen.indexOf(value) !== -1) {
-                    return '[Circular]';
-                }
-                else {
-                    seen.push(value);
-                }
-            }
-            return value;
         });
+        return emitter.event;
     }
-    exports.safeStringify = safeStringify;
-    function getOrDefault(obj, fn, defaultValue) {
-        if (defaultValue === void 0) { defaultValue = null; }
-        var result = fn(obj);
-        return typeof result === 'undefined' ? defaultValue : result;
-    }
-    exports.getOrDefault = getOrDefault;
+    exports.buffer = buffer;
 });
 
 /**
@@ -3736,663 +3038,12 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
 }
 
 })();
-define(__m[9], __M([22,21]), function(nls, data) { return nls.create("vs/base/common/errors", data); });
-define(__m[4], __M([1,0,9,8,14,2,17,15]), function (require, exports, nls, objects, platform, types, arrays, strings) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
-    var ErrorHandler = (function () {
-        function ErrorHandler() {
-            this.listeners = [];
-            this.unexpectedErrorHandler = function (e) {
-                platform.setTimeout(function () {
-                    if (e.stack) {
-                        throw new Error(e.message + '\n\n' + e.stack);
-                    }
-                    throw e;
-                }, 0);
-            };
-        }
-        ErrorHandler.prototype.addListener = function (listener) {
-            var _this = this;
-            this.listeners.push(listener);
-            return function () {
-                _this._removeListener(listener);
-            };
-        };
-        ErrorHandler.prototype.emit = function (e) {
-            this.listeners.forEach(function (listener) {
-                listener(e);
-            });
-        };
-        ErrorHandler.prototype._removeListener = function (listener) {
-            this.listeners.splice(this.listeners.indexOf(listener), 1);
-        };
-        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
-            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
-            return this.unexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.onUnexpectedError = function (e) {
-            this.unexpectedErrorHandler(e);
-            this.emit(e);
-        };
-        return ErrorHandler;
-    }());
-    exports.ErrorHandler = ErrorHandler;
-    exports.errorHandler = new ErrorHandler();
-    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
-        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
-    }
-    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
-    function onUnexpectedError(e) {
-        // ignore errors from cancelled promises
-        if (!isPromiseCanceledError(e)) {
-            exports.errorHandler.onUnexpectedError(e);
-        }
-    }
-    exports.onUnexpectedError = onUnexpectedError;
-    function onUnexpectedPromiseError(promise) {
-        return promise.then(null, onUnexpectedError);
-    }
-    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
-    function transformErrorForSerialization(error) {
-        if (error instanceof Error) {
-            var name_1 = error.name, message = error.message;
-            var stack = error.stacktrace || error.stack;
-            return {
-                $isError: true,
-                name: name_1,
-                message: message,
-                stack: stack
-            };
-        }
-        // return as is
-        return error;
-    }
-    exports.transformErrorForSerialization = transformErrorForSerialization;
-    /**
-     * The base class for all connection errors originating from XHR requests.
-     */
-    var ConnectionError = (function () {
-        function ConnectionError(arg) {
-            this.status = arg.status;
-            this.statusText = arg.statusText;
-            this.name = 'ConnectionError';
-            try {
-                this.responseText = arg.responseText;
-            }
-            catch (e) {
-                this.responseText = '';
-            }
-            this.errorMessage = null;
-            this.errorCode = null;
-            this.errorObject = null;
-            if (this.responseText) {
-                try {
-                    var errorObj = JSON.parse(this.responseText);
-                    this.errorMessage = errorObj.message;
-                    this.errorCode = errorObj.code;
-                    this.errorObject = errorObj;
-                }
-                catch (error) {
-                }
-            }
-        }
-        Object.defineProperty(ConnectionError.prototype, "message", {
-            get: function () {
-                return this.connectionErrorToMessage(this, false);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ConnectionError.prototype, "verboseMessage", {
-            get: function () {
-                return this.connectionErrorToMessage(this, true);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ConnectionError.prototype.connectionErrorDetailsToMessage = function (error, verbose) {
-            var errorCode = error.errorCode;
-            var errorMessage = error.errorMessage;
-            if (errorCode !== null && errorMessage !== null) {
-                return nls.localize(0, null, strings.rtrim(errorMessage, '.'), errorCode);
-
-
-
-
-
-
-            }
-            if (errorMessage !== null) {
-                return errorMessage;
-            }
-            if (verbose && error.responseText !== null) {
-                return error.responseText;
-            }
-            return null;
-        };
-        ConnectionError.prototype.connectionErrorToMessage = function (error, verbose) {
-            var details = this.connectionErrorDetailsToMessage(error, verbose);
-            // Status Code based Error
-            if (error.status === 401) {
-                if (details !== null) {
-                    return nls.localize(1, null, details);
-
-
-
-
-
-                }
-                return nls.localize(2, null);
-            }
-            // Return error details if present
-            if (details) {
-                return details;
-            }
-            // Fallback to HTTP Status and Code
-            if (error.status > 0 && error.statusText !== null) {
-                if (verbose && error.responseText !== null && error.responseText.length > 0) {
-                    return nls.localize(3, null, error.statusText, error.status, error.responseText);
-                }
-                return nls.localize(4, null, error.statusText, error.status);
-            }
-            // Finally its an Unknown Connection Error
-            if (verbose && error.responseText !== null && error.responseText.length > 0) {
-                return nls.localize(5, null, error.responseText);
-            }
-            return nls.localize(6, null);
-        };
-        return ConnectionError;
-    }());
-    exports.ConnectionError = ConnectionError;
-    // Bug: Can not subclass a JS Type. Do it manually (as done in WinJS.Class.derive)
-    objects.derive(Error, ConnectionError);
-    function xhrToErrorMessage(xhr, verbose) {
-        var ce = new ConnectionError(xhr);
-        if (verbose) {
-            return ce.verboseMessage;
-        }
-        else {
-            return ce.message;
-        }
-    }
-    function exceptionToErrorMessage(exception, verbose) {
-        if (exception.message) {
-            if (verbose && (exception.stack || exception.stacktrace)) {
-                return nls.localize(7, null, detectSystemErrorMessage(exception), exception.stack || exception.stacktrace);
-            }
-            return detectSystemErrorMessage(exception);
-        }
-        return nls.localize(8, null);
-    }
-    function detectSystemErrorMessage(exception) {
-        // See https://nodejs.org/api/errors.html#errors_class_system_error
-        if (typeof exception.code === 'string' && typeof exception.errno === 'number' && typeof exception.syscall === 'string') {
-            return nls.localize(9, null, exception.message);
-        }
-        return exception.message;
-    }
-    /**
-     * Tries to generate a human readable error message out of the error. If the verbose parameter
-     * is set to true, the error message will include stacktrace details if provided.
-     * @returns A string containing the error message.
-     */
-    function toErrorMessage(error, verbose) {
-        if (error === void 0) { error = null; }
-        if (verbose === void 0) { verbose = false; }
-        if (!error) {
-            return nls.localize(10, null);
-        }
-        if (Array.isArray(error)) {
-            var errors = arrays.coalesce(error);
-            var msg = toErrorMessage(errors[0], verbose);
-            if (errors.length > 1) {
-                return nls.localize(11, null, msg, errors.length);
-            }
-            return msg;
-        }
-        if (types.isString(error)) {
-            return error;
-        }
-        if (!types.isUndefinedOrNull(error.status)) {
-            return xhrToErrorMessage(error, verbose);
-        }
-        if (error.detail) {
-            var detail = error.detail;
-            if (detail.error) {
-                if (detail.error && !types.isUndefinedOrNull(detail.error.status)) {
-                    return xhrToErrorMessage(detail.error, verbose);
-                }
-                if (types.isArray(detail.error)) {
-                    for (var i = 0; i < detail.error.length; i++) {
-                        if (detail.error[i] && !types.isUndefinedOrNull(detail.error[i].status)) {
-                            return xhrToErrorMessage(detail.error[i], verbose);
-                        }
-                    }
-                }
-                else {
-                    return exceptionToErrorMessage(detail.error, verbose);
-                }
-            }
-            if (detail.exception) {
-                if (!types.isUndefinedOrNull(detail.exception.status)) {
-                    return xhrToErrorMessage(detail.exception, verbose);
-                }
-                return exceptionToErrorMessage(detail.exception, verbose);
-            }
-        }
-        if (error.stack) {
-            return exceptionToErrorMessage(error, verbose);
-        }
-        if (error.message) {
-            return error.message;
-        }
-        return nls.localize(12, null);
-    }
-    exports.toErrorMessage = toErrorMessage;
-    var canceledName = 'Canceled';
-    /**
-     * Checks if the given error is a promise in canceled state
-     */
-    function isPromiseCanceledError(error) {
-        return error instanceof Error && error.name === canceledName && error.message === canceledName;
-    }
-    exports.isPromiseCanceledError = isPromiseCanceledError;
-    /**
-     * Returns an error that signals cancellation.
-     */
-    function canceled() {
-        var error = new Error(canceledName);
-        error.name = error.message;
-        return error;
-    }
-    exports.canceled = canceled;
-    /**
-     * Returns an error that signals something is not implemented.
-     */
-    function notImplemented() {
-        return new Error(nls.localize(13, null));
-    }
-    exports.notImplemented = notImplemented;
-    function illegalArgument(name) {
-        if (name) {
-            return new Error(nls.localize(14, null, name));
-        }
-        else {
-            return new Error(nls.localize(15, null));
-        }
-    }
-    exports.illegalArgument = illegalArgument;
-    function illegalState(name) {
-        if (name) {
-            return new Error(nls.localize(16, null, name));
-        }
-        else {
-            return new Error(nls.localize(17, null));
-        }
-    }
-    exports.illegalState = illegalState;
-    function readonly(name) {
-        return name
-            ? new Error("readonly property '" + name + " cannot be changed'")
-            : new Error('readonly property cannot be changed');
-    }
-    exports.readonly = readonly;
-    function loaderError(err) {
-        if (platform.isWeb) {
-            return new Error(nls.localize(18, null));
-        }
-        return new Error(nls.localize(19, null, JSON.stringify(err)));
-    }
-    exports.loaderError = loaderError;
-    function create(message, options) {
-        if (options === void 0) { options = {}; }
-        var result = new Error(message);
-        if (types.isNumber(options.severity)) {
-            result.severity = options.severity;
-        }
-        if (options.actions) {
-            result.actions = options.actions;
-        }
-        return result;
-    }
-    exports.create = create;
-});
-
-define(__m[13], __M([1,0,4]), function (require, exports, errors_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var CallbackList = (function () {
-        function CallbackList() {
-        }
-        CallbackList.prototype.add = function (callback, context, bucket) {
-            var _this = this;
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                this._callbacks = [];
-                this._contexts = [];
-            }
-            this._callbacks.push(callback);
-            this._contexts.push(context);
-            if (Array.isArray(bucket)) {
-                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
-            }
-        };
-        CallbackList.prototype.remove = function (callback, context) {
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                return;
-            }
-            var foundCallbackWithDifferentContext = false;
-            for (var i = 0, len = this._callbacks.length; i < len; i++) {
-                if (this._callbacks[i] === callback) {
-                    if (this._contexts[i] === context) {
-                        // callback & context match => remove it
-                        this._callbacks.splice(i, 1);
-                        this._contexts.splice(i, 1);
-                        return;
-                    }
-                    else {
-                        foundCallbackWithDifferentContext = true;
-                    }
-                }
-            }
-            if (foundCallbackWithDifferentContext) {
-                throw new Error('When adding a listener with a context, you should remove it with the same context');
-            }
-        };
-        CallbackList.prototype.invoke = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            if (!this._callbacks) {
-                return;
-            }
-            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
-            for (var i = 0, len = callbacks.length; i < len; i++) {
-                try {
-                    ret.push(callbacks[i].apply(contexts[i], args));
-                }
-                catch (e) {
-                    errors_1.onUnexpectedError(e);
-                }
-            }
-            return ret;
-        };
-        CallbackList.prototype.isEmpty = function () {
-            return !this._callbacks || this._callbacks.length === 0;
-        };
-        CallbackList.prototype.dispose = function () {
-            this._callbacks = undefined;
-            this._contexts = undefined;
-        };
-        return CallbackList;
-    }());
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = CallbackList;
-});
-
-define(__m[5], __M([1,0,13]), function (require, exports, callbackList_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var Event;
-    (function (Event) {
-        var _disposable = { dispose: function () { } };
-        Event.None = function () { return _disposable; };
-    })(Event || (Event = {}));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Event;
-    /**
-     * The Emitter can be used to expose an Event to the public
-     * to fire it from the insides.
-     * Sample:
-        class Document {
-    
-            private _onDidChange = new Emitter<(value:string)=>any>();
-    
-            public onDidChange = this._onDidChange.event;
-    
-            // getter-style
-            // get onDidChange(): Event<(value:string)=>any> {
-            // 	return this._onDidChange.event;
-            // }
-    
-            private _doIt() {
-                //...
-                this._onDidChange.fire(value);
-            }
-        }
-     */
-    var Emitter = (function () {
-        function Emitter(_options) {
-            this._options = _options;
-        }
-        Object.defineProperty(Emitter.prototype, "event", {
-            /**
-             * For the public to allow to subscribe
-             * to events from this Emitter
-             */
-            get: function () {
-                var _this = this;
-                if (!this._event) {
-                    this._event = function (listener, thisArgs, disposables) {
-                        if (!_this._callbacks) {
-                            _this._callbacks = new callbackList_1.default();
-                        }
-                        if (_this._options && _this._options.onFirstListenerAdd && _this._callbacks.isEmpty()) {
-                            _this._options.onFirstListenerAdd(_this);
-                        }
-                        _this._callbacks.add(listener, thisArgs);
-                        var result;
-                        result = {
-                            dispose: function () {
-                                result.dispose = Emitter._noop;
-                                if (!_this._disposed) {
-                                    _this._callbacks.remove(listener, thisArgs);
-                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
-                                        _this._options.onLastListenerRemove(_this);
-                                    }
-                                }
-                            }
-                        };
-                        if (Array.isArray(disposables)) {
-                            disposables.push(result);
-                        }
-                        return result;
-                    };
-                }
-                return this._event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * To be kept private to fire an event to
-         * subscribers
-         */
-        Emitter.prototype.fire = function (event) {
-            if (this._callbacks) {
-                this._callbacks.invoke.call(this._callbacks, event);
-            }
-        };
-        Emitter.prototype.dispose = function () {
-            if (this._callbacks) {
-                this._callbacks.dispose();
-                this._callbacks = undefined;
-                this._disposed = true;
-            }
-        };
-        Emitter._noop = function () { };
-        return Emitter;
-    }());
-    exports.Emitter = Emitter;
-    /**
-     * Creates an Event which is backed-up by the event emitter. This allows
-     * to use the existing eventing pattern and is likely using less memory.
-     * Sample:
-     *
-     * 	class Document {
-     *
-     *		private _eventbus = new EventEmitter();
-     *
-     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
-     *
-     *		// getter-style
-     *		// get onDidChange(): Event<(value:string)=>any> {
-     *		// 	cache fromEventEmitter result and return
-     *		// }
-     *
-     *		private _doIt() {
-     *			// ...
-     *			this._eventbus.emit('changed', value)
-     *		}
-     *	}
-     */
-    function fromEventEmitter(emitter, eventType) {
-        return function (listener, thisArgs, disposables) {
-            var result = emitter.addListener2(eventType, function () {
-                listener.apply(thisArgs, arguments);
-            });
-            if (Array.isArray(disposables)) {
-                disposables.push(result);
-            }
-            return result;
-        };
-    }
-    exports.fromEventEmitter = fromEventEmitter;
-    function fromPromise(promise) {
-        var toCancel = null;
-        var listener = null;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
-            },
-            onLastListenerRemove: function () {
-                if (toCancel) {
-                    toCancel.cancel();
-                    toCancel = null;
-                }
-                if (listener) {
-                    listener.dispose();
-                    listener = null;
-                }
-            }
-        });
-        return emitter.event;
-    }
-    exports.fromPromise = fromPromise;
-    function mapEvent(event, map) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
-        };
-    }
-    exports.mapEvent = mapEvent;
-    function filterEvent(event, filter) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
-        };
-    }
-    exports.filterEvent = filterEvent;
-    function debounceEvent(event, merger, delay) {
-        if (delay === void 0) { delay = 100; }
-        var subscription;
-        var output;
-        var handle;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                subscription = event(function (cur) {
-                    output = merger(output, cur);
-                    clearTimeout(handle);
-                    handle = setTimeout(function () {
-                        var _output = output;
-                        output = undefined;
-                        emitter.fire(_output);
-                    }, delay);
-                });
-            },
-            onLastListenerRemove: function () {
-                subscription.dispose();
-            }
-        });
-        return emitter.event;
-    }
-    exports.debounceEvent = debounceEvent;
-    var EventDelayerState;
-    (function (EventDelayerState) {
-        EventDelayerState[EventDelayerState["Idle"] = 0] = "Idle";
-        EventDelayerState[EventDelayerState["Running"] = 1] = "Running";
-    })(EventDelayerState || (EventDelayerState = {}));
-    /**
-     * The EventDelayer is useful in situations in which you want
-     * to delay firing your events during some code.
-     * You can wrap that code and be sure that the event will not
-     * be fired during that wrap.
-     *
-     * ```
-     * const emitter: Emitter;
-     * const delayer = new EventDelayer();
-     * const delayedEvent = delayer.delay(emitter.event);
-     *
-     * delayedEvent(console.log);
-     *
-     * delayer.wrap(() => {
-     *   emitter.fire(); // event will not be fired yet
-     * });
-     *
-     * // event will only be fired at this point
-     * ```
-     */
-    var EventBufferer = (function () {
-        function EventBufferer() {
-            this.buffers = [];
-        }
-        EventBufferer.prototype.wrapEvent = function (event) {
-            var _this = this;
-            return function (listener, thisArgs, disposables) {
-                return event(function (i) {
-                    var buffer = _this.buffers[_this.buffers.length - 1];
-                    if (buffer) {
-                        buffer.push(function () { return listener.call(thisArgs, i); });
-                    }
-                    else {
-                        listener.call(thisArgs, i);
-                    }
-                }, void 0, disposables);
-            };
-        };
-        EventBufferer.prototype.bufferEvents = function (fn) {
-            var buffer = [];
-            this.buffers.push(buffer);
-            fn();
-            this.buffers.pop();
-            buffer.forEach(function (flush) { return flush(); });
-        };
-        return EventBufferer;
-    }());
-    exports.EventBufferer = EventBufferer;
-});
-
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define(__m[3], __M([20,4]), function (winjs, __Errors__) {
+define(__m[2/*vs/base/common/winjs.base*/], __M([18/*vs/base/common/winjs.base.raw*/,5/*vs/base/common/errors*/]), function (winjs, __Errors__) {
 	'use strict';
 
 	var outstandingPromiseErrors = {};
@@ -4453,49 +3104,72 @@ define(__m[3], __M([20,4]), function (winjs, __Errors__) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[6], __M([1,0,3,7,5]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+define(__m[9/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
-    var RequestType;
-    (function (RequestType) {
-        RequestType[RequestType["Common"] = 0] = "Common";
-        RequestType[RequestType["Cancel"] = 1] = "Cancel";
-    })(RequestType || (RequestType = {}));
-    var ResponseType;
-    (function (ResponseType) {
-        ResponseType[ResponseType["Initialize"] = 0] = "Initialize";
-        ResponseType[ResponseType["Success"] = 1] = "Success";
-        ResponseType[ResponseType["Progress"] = 2] = "Progress";
-        ResponseType[ResponseType["Error"] = 3] = "Error";
-        ResponseType[ResponseType["ErrorObj"] = 4] = "ErrorObj";
-    })(ResponseType || (ResponseType = {}));
+    function fromEventEmitter(emitter, eventName, map) {
+        var fn = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            return result.fire(map.apply(void 0, args));
+        };
+        var onFirstListenerAdd = function () { return emitter.on(eventName, fn); };
+        var onLastListenerRemove = function () { return emitter.removeListener(eventName, fn); };
+        var result = new event_1.Emitter({ onFirstListenerAdd: onFirstListenerAdd, onLastListenerRemove: onLastListenerRemove });
+        return result.event;
+    }
+    exports.fromEventEmitter = fromEventEmitter;
+    ;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[7/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,6/*vs/base/common/lifecycle*/,3/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+    'use strict';
+    var MessageType;
+    (function (MessageType) {
+        MessageType[MessageType["RequestCommon"] = 0] = "RequestCommon";
+        MessageType[MessageType["RequestCancel"] = 1] = "RequestCancel";
+        MessageType[MessageType["ResponseInitialize"] = 2] = "ResponseInitialize";
+        MessageType[MessageType["ResponseSuccess"] = 3] = "ResponseSuccess";
+        MessageType[MessageType["ResponseProgress"] = 4] = "ResponseProgress";
+        MessageType[MessageType["ResponseError"] = 5] = "ResponseError";
+        MessageType[MessageType["ResponseErrorObj"] = 6] = "ResponseErrorObj";
+    })(MessageType || (MessageType = {}));
+    function isResponse(messageType) {
+        return messageType >= MessageType.ResponseInitialize;
+    }
     var State;
     (function (State) {
         State[State["Uninitialized"] = 0] = "Uninitialized";
         State[State["Idle"] = 1] = "Idle";
     })(State || (State = {}));
-    var Server = (function () {
-        function Server(protocol) {
+    var ChannelServer = (function () {
+        function ChannelServer(protocol) {
             var _this = this;
             this.protocol = protocol;
             this.channels = Object.create(null);
             this.activeRequests = Object.create(null);
-            this.protocol.onMessage(function (r) { return _this.onMessage(r); });
-            this.protocol.send({ type: ResponseType.Initialize });
+            this.protocolListener = this.protocol.onMessage(function (r) { return _this.onMessage(r); });
+            this.protocol.send({ type: MessageType.ResponseInitialize });
         }
-        Server.prototype.registerChannel = function (channelName, channel) {
+        ChannelServer.prototype.registerChannel = function (channelName, channel) {
             this.channels[channelName] = channel;
         };
-        Server.prototype.onMessage = function (request) {
+        ChannelServer.prototype.onMessage = function (request) {
             switch (request.type) {
-                case RequestType.Common:
+                case MessageType.RequestCommon:
                     this.onCommonRequest(request);
                     break;
-                case RequestType.Cancel:
+                case MessageType.RequestCancel:
                     this.onCancelRequest(request);
                     break;
             }
         };
-        Server.prototype.onCommonRequest = function (request) {
+        ChannelServer.prototype.onCommonRequest = function (request) {
             var _this = this;
             var channel = this.channels[request.channelName];
             var promise;
@@ -4507,102 +3181,112 @@ define(__m[6], __M([1,0,3,7,5]), function (require, exports, winjs_base_1, lifec
             }
             var id = request.id;
             var requestPromise = promise.then(function (data) {
-                _this.protocol.send({ id: id, data: data, type: ResponseType.Success });
+                _this.protocol.send({ id: id, data: data, type: MessageType.ResponseSuccess });
                 delete _this.activeRequests[request.id];
             }, function (data) {
                 if (data instanceof Error) {
-                    _this.protocol.send({ id: id, data: {
+                    _this.protocol.send({
+                        id: id, data: {
                             message: data.message,
                             name: data.name,
                             stack: data.stack ? data.stack.split('\n') : void 0
-                        }, type: ResponseType.Error });
+                        }, type: MessageType.ResponseError
+                    });
                 }
                 else {
-                    _this.protocol.send({ id: id, data: data, type: ResponseType.ErrorObj });
+                    _this.protocol.send({ id: id, data: data, type: MessageType.ResponseErrorObj });
                 }
                 delete _this.activeRequests[request.id];
             }, function (data) {
-                _this.protocol.send({ id: id, data: data, type: ResponseType.Progress });
+                _this.protocol.send({ id: id, data: data, type: MessageType.ResponseProgress });
             });
             this.activeRequests[request.id] = lifecycle_1.toDisposable(function () { return requestPromise.cancel(); });
         };
-        Server.prototype.onCancelRequest = function (request) {
+        ChannelServer.prototype.onCancelRequest = function (request) {
             var disposable = this.activeRequests[request.id];
             if (disposable) {
                 disposable.dispose();
                 delete this.activeRequests[request.id];
             }
         };
-        Server.prototype.dispose = function () {
+        ChannelServer.prototype.dispose = function () {
             var _this = this;
+            this.protocolListener.dispose();
+            this.protocolListener = null;
             Object.keys(this.activeRequests).forEach(function (id) {
                 _this.activeRequests[id].dispose();
             });
             this.activeRequests = null;
         };
-        return Server;
+        return ChannelServer;
     }());
-    exports.Server = Server;
-    var Client = (function () {
-        function Client(protocol) {
+    exports.ChannelServer = ChannelServer;
+    var ChannelClient = (function () {
+        function ChannelClient(protocol) {
             var _this = this;
             this.protocol = protocol;
             this.state = State.Uninitialized;
+            this.activeRequests = [];
             this.bufferedRequests = [];
             this.handlers = Object.create(null);
             this.lastRequestId = 0;
-            this.protocol.onMessage(function (r) { return _this.onMessage(r); });
+            this.protocolListener = this.protocol.onMessage(function (r) { return _this.onMessage(r); });
         }
-        Client.prototype.getChannel = function (channelName) {
+        ChannelClient.prototype.getChannel = function (channelName) {
             var _this = this;
             var call = function (command, arg) { return _this.request(channelName, command, arg); };
             return { call: call };
         };
-        Client.prototype.request = function (channelName, name, arg) {
+        ChannelClient.prototype.request = function (channelName, name, arg) {
+            var _this = this;
             var request = {
                 raw: {
                     id: this.lastRequestId++,
-                    type: RequestType.Common,
+                    type: MessageType.RequestCommon,
                     channelName: channelName,
                     name: name,
                     arg: arg
                 }
             };
-            if (this.state === State.Uninitialized) {
-                return this.bufferRequest(request);
-            }
-            return this.doRequest(request);
+            var activeRequest = this.state === State.Uninitialized
+                ? this.bufferRequest(request)
+                : this.doRequest(request);
+            this.activeRequests.push(activeRequest);
+            activeRequest
+                .then(null, function (_) { return null; })
+                .done(function () { return _this.activeRequests = _this.activeRequests.filter(function (i) { return i !== activeRequest; }); });
+            return activeRequest;
         };
-        Client.prototype.doRequest = function (request) {
+        ChannelClient.prototype.doRequest = function (request) {
             var _this = this;
             var id = request.raw.id;
             return new winjs_base_1.Promise(function (c, e, p) {
                 _this.handlers[id] = function (response) {
                     switch (response.type) {
-                        case ResponseType.Success:
+                        case MessageType.ResponseSuccess:
                             delete _this.handlers[id];
                             c(response.data);
                             break;
-                        case ResponseType.Error:
+                        case MessageType.ResponseError:
                             delete _this.handlers[id];
                             var error = new Error(response.data.message);
                             error.stack = response.data.stack;
                             error.name = response.data.name;
                             e(error);
                             break;
-                        case ResponseType.ErrorObj:
+                        case MessageType.ResponseErrorObj:
                             delete _this.handlers[id];
                             e(response.data);
                             break;
-                        case ResponseType.Progress:
+                        case MessageType.ResponseProgress:
                             p(response.data);
                             break;
                     }
                 };
                 _this.send(request.raw);
-            }, function () { return _this.send({ id: id, type: RequestType.Cancel }); });
+            }, function () { return _this.send({ id: id, type: MessageType.RequestCancel }); });
         };
-        Client.prototype.bufferRequest = function (request) {
+        ChannelClient.prototype.bufferRequest = function (request) {
             var _this = this;
             var flushedRequest = null;
             return new winjs_base_1.Promise(function (c, e, p) {
@@ -4627,8 +3311,11 @@ define(__m[6], __M([1,0,3,7,5]), function (require, exports, winjs_base_1, lifec
                 _this.bufferedRequests.splice(idx, 1);
             });
         };
-        Client.prototype.onMessage = function (response) {
-            if (this.state === State.Uninitialized && response.type === ResponseType.Initialize) {
+        ChannelClient.prototype.onMessage = function (response) {
+            if (!isResponse(response.type)) {
+                return;
+            }
+            if (this.state === State.Uninitialized && response.type === MessageType.ResponseInitialize) {
                 this.state = State.Idle;
                 this.bufferedRequests.forEach(function (r) { return r.flush && r.flush(); });
                 this.bufferedRequests = null;
@@ -4639,16 +3326,22 @@ define(__m[6], __M([1,0,3,7,5]), function (require, exports, winjs_base_1, lifec
                 handler(response);
             }
         };
-        Client.prototype.send = function (raw) {
+        ChannelClient.prototype.send = function (raw) {
             try {
                 this.protocol.send(raw);
             }
             catch (err) {
             }
         };
-        return Client;
+        ChannelClient.prototype.dispose = function () {
+            this.protocolListener.dispose();
+            this.protocolListener = null;
+            this.activeRequests.forEach(function (r) { return r.cancel(); });
+            this.activeRequests = [];
+        };
+        return ChannelClient;
     }());
-    exports.Client = Client;
+    exports.ChannelClient = ChannelClient;
     function getDelayedChannel(promise) {
         var call = function (command, arg) { return promise.then(function (c) { return c.call(command, arg); }); };
         return { call: call };
@@ -4667,16 +3360,20 @@ define(__m[6], __M([1,0,3,7,5]), function (require, exports, winjs_base_1, lifec
         return { call: call };
     }
     exports.getNextTickChannel = getNextTickChannel;
-    function eventToCall(event) {
+    function eventToCall(event, serializer) {
+        if (serializer === void 0) { serializer = function (t) { return t; }; }
         var disposable;
-        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(p); }, function () { return disposable.dispose(); });
+        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(function (t) { return p(serializer(t)); }); }, function () { return disposable.dispose(); });
     }
     exports.eventToCall = eventToCall;
-    function eventFromCall(channel, name) {
+    function eventFromCall(channel, name, arg, deserializer) {
+        if (arg === void 0) { arg = null; }
+        if (deserializer === void 0) { deserializer = function (t) { return t; }; }
         var promise;
         var emitter = new event_1.Emitter({
             onFirstListenerAdd: function () {
-                promise = channel.call(name, null).then(null, function (err) { return null; }, function (e) { return emitter.fire(e); });
+                promise = channel.call(name, arg)
+                    .then(null, function (err) { return null; }, function (e) { return emitter.fire(deserializer(e)); });
             },
             onLastListenerRemove: function () {
                 promise.cancel();
@@ -4692,7 +3389,7 @@ define(__m[6], __M([1,0,3,7,5]), function (require, exports, winjs_base_1, lifec
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[18], __M([1,0,19,3,5,6]), function (require, exports, net_1, winjs_base_1, event_1, ipc_1) {
+define(__m[11/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/,15/*net*/,2/*vs/base/common/winjs.base*/,3/*vs/base/common/event*/,9/*vs/base/node/event*/,7/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, net_1, winjs_base_1, event_1, event_2, ipc_1) {
     'use strict';
     function bufferIndexOf(buffer, value, start) {
         if (start === void 0) { start = 0; }
@@ -4704,8 +3401,40 @@ define(__m[18], __M([1,0,19,3,5,6]), function (require, exports, net_1, winjs_ba
     var Protocol = (function () {
         function Protocol(socket) {
             this.socket = socket;
-            this.buffer = null;
+            var buffer = null;
+            var emitter = new event_1.Emitter();
+            var onRawData = event_2.fromEventEmitter(socket, 'data', function (data) { return data; });
+            onRawData(function (data) {
+                var lastIndex = 0;
+                var index = 0;
+                while ((index = bufferIndexOf(data, 0, lastIndex)) < data.length) {
+                    var dataToParse = data.slice(lastIndex, index);
+                    if (buffer) {
+                        emitter.fire(JSON.parse(Buffer.concat([buffer, dataToParse]).toString('utf8')));
+                        buffer = null;
+                    }
+                    else {
+                        emitter.fire(JSON.parse(dataToParse.toString('utf8')));
+                    }
+                    lastIndex = index + 1;
+                }
+                if (index - lastIndex > 0) {
+                    var dataToBuffer = data.slice(lastIndex, index);
+                    if (buffer) {
+                        buffer = Buffer.concat([buffer, dataToBuffer]);
+                    }
+                    else {
+                        buffer = dataToBuffer;
+                    }
+                }
+            });
+            this._onMessage = emitter.event;
         }
+        Object.defineProperty(Protocol.prototype, "onMessage", {
+            get: function () { return this._onMessage; },
+            enumerable: true,
+            configurable: true
+        });
         Protocol.prototype.send = function (message) {
             try {
                 this.socket.write(JSON.stringify(message));
@@ -4714,52 +3443,91 @@ define(__m[18], __M([1,0,19,3,5,6]), function (require, exports, net_1, winjs_ba
             catch (e) {
             }
         };
-        Protocol.prototype.onMessage = function (callback) {
-            var _this = this;
-            this.socket.on('data', function (data) {
-                var lastIndex = 0;
-                var index = 0;
-                while ((index = bufferIndexOf(data, 0, lastIndex)) < data.length) {
-                    var dataToParse = data.slice(lastIndex, index);
-                    if (_this.buffer) {
-                        callback(JSON.parse(Buffer.concat([_this.buffer, dataToParse]).toString('utf8')));
-                        _this.buffer = null;
-                    }
-                    else {
-                        callback(JSON.parse(dataToParse.toString('utf8')));
-                    }
-                    lastIndex = index + 1;
-                }
-                if (index - lastIndex > 0) {
-                    var dataToBuffer = data.slice(lastIndex, index);
-                    if (_this.buffer) {
-                        _this.buffer = Buffer.concat([_this.buffer, dataToBuffer]);
-                    }
-                    else {
-                        _this.buffer = dataToBuffer;
-                    }
-                }
-            });
-        };
         Protocol.Boundary = new Buffer([0]);
         return Protocol;
     }());
+    var RoutingChannelClient = (function () {
+        function RoutingChannelClient() {
+            this.onClientAdded = new event_1.Emitter();
+            this.ipcClients = Object.create(null);
+        }
+        RoutingChannelClient.prototype.add = function (id, client) {
+            this.ipcClients[id] = client;
+            this.onClientAdded.fire();
+        };
+        RoutingChannelClient.prototype.remove = function (id) {
+            delete this.ipcClients[id];
+        };
+        RoutingChannelClient.prototype.getClient = function (clientId) {
+            var _this = this;
+            var getClientFn = function (clientId, c) {
+                var client = _this.ipcClients[clientId];
+                if (client) {
+                    c(client);
+                    return true;
+                }
+                return false;
+            };
+            return new winjs_base_1.TPromise(function (c, e) {
+                if (!getClientFn(clientId, c)) {
+                    var disposable_1 = _this.onClientAdded.event(function () {
+                        if (getClientFn(clientId, c)) {
+                            disposable_1.dispose();
+                        }
+                    });
+                }
+            });
+        };
+        RoutingChannelClient.prototype.getChannel = function (channelName, router) {
+            var _this = this;
+            var call = function (command, arg) {
+                var id = router.routeCall(command, arg);
+                if (!id) {
+                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
+                }
+                return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
+            };
+            return { call: call };
+        };
+        RoutingChannelClient.prototype.dispose = function () {
+            this.ipcClients = null;
+            this.onClientAdded.dispose();
+        };
+        return RoutingChannelClient;
+    }());
+    // TODO@joao: move multi channel implementation down to ipc
     var Server = (function () {
         function Server(server) {
             var _this = this;
             this.server = server;
             this.channels = Object.create(null);
+            this.router = new RoutingChannelClient();
             this.server.on('connection', function (socket) {
-                var ipcServer = new ipc_1.Server(new Protocol(socket));
-                Object.keys(_this.channels)
-                    .forEach(function (name) { return ipcServer.registerChannel(name, _this.channels[name]); });
-                socket.once('close', function () { return ipcServer.dispose(); });
+                var protocol = new Protocol(socket);
+                var onFirstMessage = event_1.once(protocol.onMessage);
+                onFirstMessage(function (id) {
+                    var channelServer = new ipc_1.ChannelServer(protocol);
+                    Object.keys(_this.channels)
+                        .forEach(function (name) { return channelServer.registerChannel(name, _this.channels[name]); });
+                    var channelClient = new ipc_1.ChannelClient(protocol);
+                    _this.router.add(id, channelClient);
+                    socket.once('close', function () {
+                        channelClient.dispose();
+                        _this.router.remove(id);
+                        channelServer.dispose();
+                    });
+                });
             });
         }
+        Server.prototype.getChannel = function (channelName, router) {
+            return this.router.getChannel(channelName, router);
+        };
         Server.prototype.registerChannel = function (channelName, channel) {
             this.channels[channelName] = channel;
         };
         Server.prototype.dispose = function () {
+            this.router.dispose();
+            this.router = null;
             this.channels = null;
             this.server.close();
             this.server = null;
@@ -4768,11 +3536,14 @@ define(__m[18], __M([1,0,19,3,5,6]), function (require, exports, net_1, winjs_ba
     }());
     exports.Server = Server;
     var Client = (function () {
-        function Client(socket) {
+        function Client(socket, id) {
             var _this = this;
             this.socket = socket;
             this._onClose = new event_1.Emitter();
-            this.ipcClient = new ipc_1.Client(new Protocol(socket));
+            var protocol = new Protocol(socket);
+            protocol.send(id);
+            this.channelClient = new ipc_1.ChannelClient(protocol);
+            this.channelServer = new ipc_1.ChannelServer(protocol);
             socket.once('close', function () { return _this._onClose.fire(); });
         }
         Object.defineProperty(Client.prototype, "onClose", {
@@ -4781,12 +3552,17 @@ define(__m[18], __M([1,0,19,3,5,6]), function (require, exports, net_1, winjs_ba
             configurable: true
         });
         Client.prototype.getChannel = function (channelName) {
-            return this.ipcClient.getChannel(channelName);
+            return this.channelClient.getChannel(channelName);
+        };
+        Client.prototype.registerChannel = function (channelName, channel) {
+            this.channelServer.registerChannel(channelName, channel);
         };
         Client.prototype.dispose = function () {
             this.socket.end();
             this.socket = null;
-            this.ipcClient = null;
+            this.channelClient = null;
+            this.channelServer.dispose();
+            this.channelServer = null;
         };
         return Client;
     }());
@@ -4802,11 +3578,11 @@ define(__m[18], __M([1,0,19,3,5,6]), function (require, exports, net_1, winjs_ba
         });
     }
     exports.serve = serve;
-    function connect(hook) {
+    function connect(hook, clientId) {
         return new winjs_base_1.TPromise(function (c, e) {
             var socket = net_1.createConnection(hook, function () {
                 socket.removeListener('error', e);
-                c(new Client(socket));
+                c(new Client(socket, clientId));
             });
             socket.once('error', e);
         });
@@ -4814,7 +3590,7 @@ define(__m[18], __M([1,0,19,3,5,6]), function (require, exports, net_1, winjs_ba
     exports.connect = connect;
 });
 
-define(__m[16], __M([1,0]), function (require, exports) {
+define(__m[12/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4868,7 +3644,7 @@ define(__m[16], __M([1,0]), function (require, exports) {
     exports.optional = optional;
 });
 
-define(__m[11], __M([1,0,16]), function (require, exports, instantiation_1) {
+define(__m[13/*vs/workbench/parts/git/common/git*/], __M([1/*require*/,0/*exports*/,12/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4979,6 +3755,7 @@ define(__m[11], __M([1,0,16]), function (require, exports, instantiation_1) {
         CLEAN: 'clean',
         UNDO: 'undo',
         RESET: 'reset',
+        REVERT: 'revert',
         COMMIT: 'commit',
         COMMAND: 'command',
         BACKGROUND_FETCH: 'backgroundfetch',
@@ -4988,18 +3765,13 @@ define(__m[11], __M([1,0,16]), function (require, exports, instantiation_1) {
     };
     exports.GIT_SERVICE_ID = 'gitService';
     exports.IGitService = instantiation_1.createDecorator(exports.GIT_SERVICE_ID);
-    // Utils
-    function isValidBranchName(value) {
-        return !/^\.|\/\.|\.\.|~|\^|:|\/$|\.lock$|\.lock\/|\\|\*|\s|^\s*$/.test(value);
-    }
-    exports.isValidBranchName = isValidBranchName;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[10], __M([1,0,3,6,11]), function (require, exports, winjs_base_1, ipc_1, git_1) {
+define(__m[14/*vs/workbench/parts/git/common/gitIpc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,7/*vs/base/parts/ipc/common/ipc*/,13/*vs/workbench/parts/git/common/git*/]), function (require, exports, winjs_base_1, ipc_1, git_1) {
     'use strict';
     var RawFileStatusSerializer = {
         to: function (a) { return [a.x, a.y, a.path, a.mimetype, a.rename]; },
@@ -5058,11 +3830,12 @@ define(__m[10], __M([1,0,3,6,11]), function (require, exports, winjs_base_1, ipc
                 case 'pull': return this.service.then(function (s) { return s.pull(args); }).then(RawStatusSerializer.to);
                 case 'push': return this.service.then(function (s) { return s.push(args[0], args[1], args[2]); }).then(RawStatusSerializer.to);
                 case 'sync': return this.service.then(function (s) { return s.sync(); }).then(RawStatusSerializer.to);
-                case 'commit': return this.service.then(function (s) { return s.commit(args[0], args[1], args[2]); }).then(RawStatusSerializer.to);
+                case 'commit': return this.service.then(function (s) { return s.commit(args[0], args[1], args[2], args[3]); }).then(RawStatusSerializer.to);
                 case 'detectMimetypes': return this.service.then(function (s) { return s.detectMimetypes(args[0], args[1]); });
                 case 'show': return this.service.then(function (s) { return s.show(args[0], args[1]); });
                 case 'onOutput': return this.service.then(function (s) { return ipc_1.eventToCall(s.onOutput); });
                 case 'getCommitTemplate': return this.service.then(function (s) { return s.getCommitTemplate(); });
+                case 'getCommit': return this.service.then(function (s) { return s.getCommit(args); });
             }
         };
         return GitChannel;
@@ -5141,8 +3914,8 @@ define(__m[10], __M([1,0,3,6,11]), function (require, exports, winjs_base_1, ipc
         GitChannelClient.prototype.sync = function () {
             return this.channel.call('sync').then(RawStatusSerializer.from);
         };
-        GitChannelClient.prototype.commit = function (message, amend, stage) {
-            return this.channel.call('commit', [message, amend, stage]).then(RawStatusSerializer.from);
+        GitChannelClient.prototype.commit = function (message, amend, stage, signoff) {
+            return this.channel.call('commit', [message, amend, stage, signoff]).then(RawStatusSerializer.from);
         };
         GitChannelClient.prototype.detectMimetypes = function (path, treeish) {
             return this.channel.call('detectMimetypes', [path, treeish]);
@@ -5153,6 +3926,9 @@ define(__m[10], __M([1,0,3,6,11]), function (require, exports, winjs_base_1, ipc
         GitChannelClient.prototype.getCommitTemplate = function () {
             return this.channel.call('getCommitTemplate');
         };
+        GitChannelClient.prototype.getCommit = function (ref) {
+            return this.channel.call('getCommit', ref);
+        };
         return GitChannelClient;
     }());
     exports.GitChannelClient = GitChannelClient;
@@ -5160,11 +3936,7 @@ define(__m[10], __M([1,0,3,6,11]), function (require, exports, winjs_base_1, ipc
         function AskpassChannel(service) {
             this.service = service;
         }
-        AskpassChannel.prototype.call = function (command) {
-            var args = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                args[_i - 1] = arguments[_i];
-            }
+        AskpassChannel.prototype.call = function (command, args) {
             switch (command) {
                 case 'askpass': return this.service.askpass(args[0], args[1], args[2]);
             }
@@ -5177,7 +3949,7 @@ define(__m[10], __M([1,0,3,6,11]), function (require, exports, winjs_base_1, ipc
             this.channel = channel;
         }
         AskpassChannelClient.prototype.askpass = function (id, host, command) {
-            return this.channel.call('askpass', id, host, command);
+            return this.channel.call('askpass', [id, host, command]);
         };
         return AskpassChannelClient;
     }());
@@ -5188,7 +3960,7 @@ define(__m[10], __M([1,0,3,6,11]), function (require, exports, winjs_base_1, ipc
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[23], __M([1,0,18,10,24]), function (require, exports, ipc_net_1, gitIpc_1, fs) {
+define(__m[17/*vs/workbench/parts/git/node/askpass*/], __M([1/*require*/,0/*exports*/,11/*vs/base/parts/ipc/node/ipc.net*/,14/*vs/workbench/parts/git/common/gitIpc*/,16/*fs*/]), function (require, exports, ipc_net_1, gitIpc_1, fs) {
     'use strict';
     function fatal(err) {
         console.error(err);
@@ -5211,7 +3983,7 @@ define(__m[23], __M([1,0,18,10,24]), function (require, exports, ipc_net_1, gitI
         var output = process.env['VSCODE_GIT_ASKPASS_PIPE'];
         var request = argv[2];
         var host = argv[4].substring(1, argv[4].length - 2);
-        ipc_net_1.connect(process.env['VSCODE_IPC_HOOK'])
+        ipc_net_1.connect(process.env['VSCODE_IPC_HOOK'], 'askpass')
             .then(function (client) {
             var channel = client.getChannel('askpass');
             var service = new gitIpc_1.AskpassChannelClient(channel);

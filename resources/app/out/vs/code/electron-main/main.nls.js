@@ -5,28 +5,6 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 define("vs/code/electron-main/main.nls", {
-	"vs/base/common/errors": [
-		"{0}. Error code: {1}",
-		"Permission Denied (HTTP {0})",
-		"Permission Denied",
-		"{0} (HTTP {1}: {2})",
-		"{0} (HTTP {1})",
-		"Unknown Connection Error ({0})",
-		"An unknown connection error occurred. Either you are no longer connected to the internet or the server you are connected to is offline.",
-		"{0}: {1}",
-		"An unknown error occurred. Please consult the log for more details.",
-		"A system error occured ({0})",
-		"An unknown error occurred. Please consult the log for more details.",
-		"{0} ({1} errors in total)",
-		"An unknown error occurred. Please consult the log for more details.",
-		"Not Implemented",
-		"Illegal argument: {0}",
-		"Illegal argument",
-		"Illegal state: {0}",
-		"Illegal state",
-		"Failed to load a required file. Either you are no longer connected to the internet or the server you are connected to is offline. Please refresh the browser to try again.",
-		"Failed to load a required file. Please restart the application to try again. Details: {0}"
-	],
 	"vs/base/common/json": [
 		"Invalid symbol",
 		"Invalid number format",
@@ -38,7 +16,7 @@ define("vs/code/electron-main/main.nls", {
 		"Closing bracket expected",
 		"End of file expected"
 	],
-	"vs/base/common/keyCodes": [
+	"vs/base/common/keybinding": [
 		"Windows",
 		"Control",
 		"Shift",
@@ -51,8 +29,15 @@ define("vs/code/electron-main/main.nls", {
 		"Command",
 		"Windows"
 	],
+	"vs/base/common/severity": [
+		"Error",
+		"Warning",
+		"Info"
+	],
 	"vs/code/electron-main/main": [
-		"New Window"
+		"New Window",
+		"Opens a new window",
+		"{0} {1}"
 	],
 	"vs/code/electron-main/menus": [
 		"&&File",
@@ -77,6 +62,7 @@ define("vs/code/electron-main/main.nls", {
 		"&&Save",
 		"Save &&As...",
 		"Save A&&ll",
+		"Auto Save",
 		"&&New Window",
 		"Revert F&&ile",
 		"Close &&Window",
@@ -88,6 +74,7 @@ define("vs/code/electron-main/main.nls", {
 		"&&Keyboard Shortcuts",
 		"User &&Snippets",
 		"&&Color Theme",
+		"File &&Icon Theme",
 		"&&Preferences",
 		"&&Reopen Closed Editor",
 		"&&Clear Items",
@@ -120,10 +107,13 @@ define("vs/code/electron-main/main.nls", {
 		"Toggle &&Full Screen",
 		"Toggle Menu &&Bar",
 		"Split &&Editor",
+		"Toggle Editor Group &&Layout",
 		"&&Toggle Side Bar",
-		"&&Move Side Bar",
+		"&&Move Side Bar Right",
+		"&&Move Side Bar Left",
 		"Toggle &&Panel",
-		"&&Toggle Status Bar",
+		"&&Hide Status Bar",
+		"&&Show Status Bar",
 		"Toggle &&Word Wrap",
 		"Toggle &&Render Whitespace",
 		"Toggle &&Control Characters",
@@ -137,26 +127,30 @@ define("vs/code/electron-main/main.nls", {
 		"&&Next Used Editor in Group",
 		"&&Previous Used Editor in Group",
 		"Switch &&Editor",
-		"&&Left Group",
-		"&&Side Group",
-		"&&Right Group",
+		"&&First Group",
+		"&&Second Group",
+		"&&Third Group",
 		"&&Next Group",
 		"&&Previous Group",
 		"Switch &&Group",
 		"Go to &&File...",
-		"Go to &&Symbol...",
+		"Go to &&Symbol in File...",
+		"Go to Symbol in &&Workspace...",
 		"Go to &&Definition",
 		"Go to &&Line...",
 		"Minimize",
 		"Close",
 		"Bring All to Front",
 		"&&Toggle Developer Tools",
+		"Accessibility &&Options",
+		"Report &&Issues",
 		"&&Documentation",
 		"&&Release Notes",
+		"&&Keyboard Shortcuts Reference",
+		"Introductory &&Videos",
 		"&&Join us on Twitter",
-		"&&Request Features",
-		"Report &&Issues",
-		"&&View License",
+		"&&Search Feature Requests",
+		"View &&License",
 		"&&Privacy Statement",
 		"&&About",
 		"Restart To Update...",
@@ -173,6 +167,7 @@ define("vs/code/electron-main/main.nls", {
 		"OK",
 		"Path does not exist",
 		"The path '{0}' does not seem to exist anymore on disk.",
+		"Accessibility Options",
 		"Reopen",
 		"Keep Waiting",
 		"Close",
@@ -183,9 +178,17 @@ define("vs/code/electron-main/main.nls", {
 		"The window has crashed",
 		"We are sorry for the inconvenience! You can reopen the window to continue where you left off."
 	],
-	"vs/code/node/argv": [
+	"vs/platform/configuration/common/configurationRegistry": [
+		"Contributes configuration settings.",
+		"A summary of the settings. This label will be used in the settings file as separating comment.",
+		"Description of the configuration properties.",
+		"if set, 'configuration.type' must be set to 'object",
+		"'configuration.title' must be a string",
+		"'configuration.properties' must be an object"
+	],
+	"vs/platform/environment/node/argv": [
+		"Arguments in `--goto` mode should be in the format of `FILE(:LINE(:COLUMN))`.",
 		"Open a diff editor. Requires to pass two file paths as arguments.",
-		"Disable all installed extensions.",
 		"Open the file at path at the line and column (add :line[:column] to path).",
 		"The locale to use (e.g. en-US or zh-TW).",
 		"Force a new instance of Code.",
@@ -196,10 +199,42 @@ define("vs/code/electron-main/main.nls", {
 		"Wait for the window to be closed before returning.",
 		"Set the root path for extensions.",
 		"List the installed extensions.",
+		"Show versions of installed extensions, when using --list-extension.",
 		"Installs an extension.",
 		"Uninstalls an extension.",
+		"Disable all installed extensions.",
+		"Disable GPU hardware acceleration.",
 		"Print version.",
-		"Print usage."
+		"Print usage.",
+		"Usage",
+		"options",
+		"paths",
+		"Options"
+	],
+	"vs/platform/extensions/common/extensionsRegistry": [
+		"For VS Code extensions, specifies the VS Code version that the extension is compatible with. Cannot be *. For example: ^0.10.5 indicates compatibility with a minimum VS Code version of 0.10.5.",
+		"The publisher of the VS Code extension.",
+		"The display name for the extension used in the VS Code gallery.",
+		"The categories used by the VS Code gallery to categorize the extension.",
+		"Banner used in the VS Code marketplace.",
+		"The banner color on the VS Code marketplace page header.",
+		"The color theme for the font used in the banner.",
+		"All contributions of the VS Code extension represented by this package.",
+		"Sets the extension to be flagged as a Preview in the Marketplace.",
+		"Activation events for the VS Code extension.",
+		"Array of badges to display in the sidebar of the Marketplace's extension page.",
+		"Badge image URL.",
+		"Badge link.",
+		"Badge description.",
+		"Dependencies to other extensions. The identifier of an extension is always ${publisher}.${name}. For example: vscode.csharp.",
+		"Script executed before the package is published as a VS Code extension.",
+		"The path to a 128x128 pixel icon."
+	],
+	"vs/platform/request/common/request": [
+		"HTTP",
+		"The proxy setting to use. If not set will be taken from the http_proxy and https_proxy environment variables",
+		"Whether the proxy server certificate should be verified against the list of supplied CAs.",
+		"The value to send as the 'Proxy-Authorization' header for every network request."
 	],
 	"vs/workbench/parts/git/electron-main/askpassService": [
 		"Git"

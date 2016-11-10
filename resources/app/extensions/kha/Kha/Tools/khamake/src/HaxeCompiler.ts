@@ -32,6 +32,7 @@ export class HaxeCompiler {
 	
 	async run(watch: boolean) {
 		if (watch) {
+			await this.compile();
 			this.watcher = chokidar.watch(this.sourceMatchers, { ignored: /[\/\\]\./, persistent: true, ignoreInitial: true });
 			this.watcher.on('add', (file: string) => {
 				this.scheduleCompile();
@@ -43,9 +44,6 @@ export class HaxeCompiler {
 				this.scheduleCompile();
 			});
 			this.startCompilationServer();
-			setTimeout(() => {
-				this.scheduleCompile();
-			}, 500);
 		}
 		else await this.compile();
 	}
@@ -74,20 +72,22 @@ export class HaxeCompiler {
 		
 		let haxe = child_process.spawn(exe, ['--wait', this.port], {env: env, cwd: path.normalize(this.from)});
 		
-		haxe.stdout.on('data', (data) => {
+		haxe.stdout.on('data', (data: any) => {
 			log.info(data.toString());
 		});
 
-		haxe.stderr.on('data', (data) => {
+		haxe.stderr.on('data', (data: any) => {
 			log.error(data.toString());
 		});
 		
-		haxe.on('close', (code) => {
+		haxe.on('close', (code: number) => {
 			log.error('Haxe compilation server stopped.');
 		});
 	}
 	
 	triggerCompilationServer() {
+		this.ready = false;
+		this.todo = false;
 		return new Promise((resolve, reject) => {
 			let exe = 'haxe';
 			let env = process.env;
@@ -100,29 +100,29 @@ export class HaxeCompiler {
 					env.HAXE_STD_PATH = stddir;
 				}
 			}
-			console.log('Haxe compile start.');
-			//haxe --connect 6000 --cwd myproject.hxml
+			log.info('Haxe compile start.');
+			// haxe --connect 6000 --cwd myproject.hxml
 			let haxe = child_process.spawn(exe, ['--connect', this.port, this.hxml], {env: env, cwd: path.normalize(this.from)});
 			
-			haxe.stdout.on('data', (data) => {
+			haxe.stdout.on('data', (data: any) => {
 				log.info(data.toString());
 			});
 
-			haxe.stderr.on('data', (data) => {
+			haxe.stderr.on('data', (data: any) => {
 				log.error(data.toString());
 			});
 			
-			haxe.on('close', (code) => {
+			haxe.on('close', (code: number) => {
 				if (this.to) {
-					fs.renameSync(path.join('build', this.temp), path.join('build', this.to));
+					fs.renameSync(path.join(this.from, this.temp), path.join(this.from, this.to));
 				}
 				this.ready = true;
+				log.info('Haxe compile end.');
+				if (code === 0) resolve();
+				else reject('Haxe compiler error.');
 				if (this.todo) {
 					this.scheduleCompile();
 				}
-				console.log('Haxe compile end.');
-				if (code === 0) resolve();
-				else reject('Haxe compiler error.')
 			});
 		});
 	}
@@ -143,18 +143,18 @@ export class HaxeCompiler {
 			log.info('Compiling code.');
 			let haxe = child_process.spawn(exe, [this.hxml], {env: env, cwd: path.normalize(this.from)});
 			
-			haxe.stdout.on('data', (data) => {
+			haxe.stdout.on('data', (data: any) => {
 				log.info(data.toString());
 			});
 
-			haxe.stderr.on('data', (data) => {
+			haxe.stderr.on('data', (data: any) => {
 				log.error(data.toString());
 			});
 			
-			haxe.on('close', (code) => {
+			haxe.on('close', (code: number) => {
 				if (code === 0) {
 					if (this.to) {
-						fs.renameSync(path.join('build', this.temp), path.join('build', this.to));
+						fs.renameSync(path.join(this.from, this.temp), path.join(this.from, this.to));
 					}
 					resolve();
 				}
@@ -167,7 +167,7 @@ export class HaxeCompiler {
 	}
 	
 	private static spinRename(from: string, to: string): void {
-		for (;;) {
+		for (; ; ) {
 			if (fs.existsSync(from)) {
 				fs.renameSync(from, to);
 				return;

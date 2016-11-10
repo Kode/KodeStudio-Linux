@@ -315,5 +315,5 @@ var URI = (function () {
     return URI;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = URI;
-//# sourceMappingURL=uri.js.map
+exports.default = URI;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/json/server/out/utils/uri.js.map

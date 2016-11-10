@@ -12,13 +12,12 @@ const path = require('path');
 const KhaExporter_1 = require('./KhaExporter');
 const Converter_1 = require('../Converter');
 const ImageTool_1 = require('../ImageTool');
-const HaxeProject_1 = require('../HaxeProject');
-const HaxeProject_2 = require('../HaxeProject');
 const uuid = require('uuid');
 class UnityExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
         this.addSourceDirectory(path.join(this.options.kha, 'Backends', 'Unity'));
+        fs.removeSync(path.join(this.options.to, this.sysdir(), 'Assets', 'Sources'));
     }
     sysdir() {
         return 'unity';
@@ -47,18 +46,13 @@ class UnityExporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    exportSolution(name, targetOptions, haxeOptions) {
-        return __awaiter(this, void 0, Promise, function* () {
-            HaxeProject_2.hxml(this.options.to, haxeOptions);
-            if (this.projectFiles) {
-                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
-            }
-            fs.removeSync(path.join(this.options.to, this.sysdir(), 'Assets', 'Sources'));
-            var copyDirectory = (from, to) => {
+    export(name, targetOptions, haxeOptions) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let copyDirectory = (from, to) => {
                 let files = fs.readdirSync(path.join(__dirname, '..', '..', 'Data', 'unity', from));
                 fs.ensureDirSync(path.join(this.options.to, this.sysdir(), to));
                 for (let file of files) {
-                    var text = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'unity', from, file), 'utf8');
+                    let text = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'unity', from, file), 'utf8');
                     fs.writeFileSync(path.join(this.options.to, this.sysdir(), to, file), text);
                 }
             };
@@ -94,5 +88,5 @@ class UnityExporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.UnityExporter = UnityExporter;
-//# sourceMappingURL=UnityExporter.js.map
+exports.UnityExporter = UnityExporter;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/UnityExporter.js.map

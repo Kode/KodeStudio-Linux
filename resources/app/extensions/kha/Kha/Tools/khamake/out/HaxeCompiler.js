@@ -31,6 +31,7 @@ class HaxeCompiler {
     run(watch) {
         return __awaiter(this, void 0, void 0, function* () {
             if (watch) {
+                yield this.compile();
                 this.watcher = chokidar.watch(this.sourceMatchers, { ignored: /[\/\\]\./, persistent: true, ignoreInitial: true });
                 this.watcher.on('add', (file) => {
                     this.scheduleCompile();
@@ -42,9 +43,6 @@ class HaxeCompiler {
                     this.scheduleCompile();
                 });
                 this.startCompilationServer();
-                setTimeout(() => {
-                    this.scheduleCompile();
-                }, 500);
             }
             else
                 yield this.compile();
@@ -84,6 +82,8 @@ class HaxeCompiler {
         });
     }
     triggerCompilationServer() {
+        this.ready = false;
+        this.todo = false;
         return new Promise((resolve, reject) => {
             let exe = 'haxe';
             let env = process.env;
@@ -98,8 +98,8 @@ class HaxeCompiler {
                     env.HAXE_STD_PATH = stddir;
                 }
             }
-            console.log('Haxe compile start.');
-            //haxe --connect 6000 --cwd myproject.hxml
+            log.info('Haxe compile start.');
+            // haxe --connect 6000 --cwd myproject.hxml
             let haxe = child_process.spawn(exe, ['--connect', this.port, this.hxml], { env: env, cwd: path.normalize(this.from) });
             haxe.stdout.on('data', (data) => {
                 log.info(data.toString());
@@ -109,17 +109,17 @@ class HaxeCompiler {
             });
             haxe.on('close', (code) => {
                 if (this.to) {
-                    fs.renameSync(path.join('build', this.temp), path.join('build', this.to));
+                    fs.renameSync(path.join(this.from, this.temp), path.join(this.from, this.to));
                 }
                 this.ready = true;
-                if (this.todo) {
-                    this.scheduleCompile();
-                }
-                console.log('Haxe compile end.');
+                log.info('Haxe compile end.');
                 if (code === 0)
                     resolve();
                 else
                     reject('Haxe compiler error.');
+                if (this.todo) {
+                    this.scheduleCompile();
+                }
             });
         });
     }
@@ -149,7 +149,7 @@ class HaxeCompiler {
             haxe.on('close', (code) => {
                 if (code === 0) {
                     if (this.to) {
-                        fs.renameSync(path.join('build', this.temp), path.join('build', this.to));
+                        fs.renameSync(path.join(this.from, this.temp), path.join(this.from, this.to));
                     }
                     resolve();
                 }
@@ -169,5 +169,5 @@ class HaxeCompiler {
         }
     }
 }
-exports.HaxeCompiler = HaxeCompiler;
-//# sourceMappingURL=HaxeCompiler.js.map
+exports.HaxeCompiler = HaxeCompiler;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/HaxeCompiler.js.map

@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 var vscode_1 = require('vscode');
+var markedTextUtil_1 = require('./markedTextUtil');
 var nls = require('vscode-nls');
 var localize = nls.loadMessageBundle(__filename);
 var BowerJSONContribution = (function () {
@@ -159,7 +160,7 @@ var BowerJSONContribution = (function () {
                 htmlContent_1.push(localize(4, null, pack));
                 return this.getInfo(pack).then(function (documentation) {
                     if (documentation) {
-                        htmlContent_1.push({ language: 'string', value: documentation });
+                        htmlContent_1.push(markedTextUtil_1.textToMarkedString(documentation));
                     }
                     return htmlContent_1;
                 });
@@ -169,5 +170,5 @@ var BowerJSONContribution = (function () {
     };
     return BowerJSONContribution;
 }());
-exports.BowerJSONContribution = BowerJSONContribution;
-//# sourceMappingURL=bowerJSONContribution.js.map
+exports.BowerJSONContribution = BowerJSONContribution;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/javascript/out/features/bowerJSONContribution.js.map

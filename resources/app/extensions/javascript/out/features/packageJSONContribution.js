@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 var vscode_1 = require('vscode');
+var markedTextUtil_1 = require('./markedTextUtil');
 var nls = require('vscode-nls');
 var localize = nls.loadMessageBundle(__filename);
 var LIMIT = 40;
@@ -110,27 +111,27 @@ var PackageJSONContribution = (function () {
         if ((location.matches(['dependencies', '*']) || location.matches(['devDependencies', '*']) || location.matches(['optionalDependencies', '*']) || location.matches(['peerDependencies', '*']))) {
             var currentKey = location.path[location.path.length - 1];
             if (typeof currentKey === 'string') {
-                var queryUrl = 'http://registry.npmjs.org/' + encodeURIComponent(currentKey) + '/latest';
+                var queryUrl = 'http://registry.npmjs.org/' + encodeURIComponent(currentKey).replace('%40', '@');
                 return this.xhr({
                     url: queryUrl
                 }).then(function (success) {
                     try {
                         var obj = JSON.parse(success.responseText);
-                        if (obj && obj.version) {
-                            var version = obj.version;
-                            var name = JSON.stringify(version);
+                        var latest = obj && obj['dist-tags'] && obj['dist-tags']['latest'];
+                        if (latest) {
+                            var name = JSON.stringify(latest);
                             var proposal = new vscode_1.CompletionItem(name);
                             proposal.kind = vscode_1.CompletionItemKind.Property;
                             proposal.insertText = name;
                             proposal.documentation = localize(3, null);
                             result.add(proposal);
-                            name = JSON.stringify('^' + version);
+                            name = JSON.stringify('^' + latest);
                             proposal = new vscode_1.CompletionItem(name);
                             proposal.kind = vscode_1.CompletionItemKind.Property;
                             proposal.insertText = name;
                             proposal.documentation = localize(4, null);
                             result.add(proposal);
-                            name = JSON.stringify('~' + version);
+                            name = JSON.stringify('~' + latest);
                             proposal = new vscode_1.CompletionItem(name);
                             proposal.kind = vscode_1.CompletionItemKind.Property;
                             proposal.insertText = name;
@@ -165,7 +166,7 @@ var PackageJSONContribution = (function () {
         return null;
     };
     PackageJSONContribution.prototype.getInfo = function (pack) {
-        var queryUrl = 'http://registry.npmjs.org/' + encodeURIComponent(pack) + '/latest';
+        var queryUrl = 'http://registry.npmjs.org/' + encodeURIComponent(pack).replace('%40', '@');
         return this.xhr({
             url: queryUrl
         }).then(function (success) {
@@ -176,8 +177,9 @@ var PackageJSONContribution = (function () {
                     if (obj.description) {
                         result.push(obj.description);
                     }
-                    if (obj.version) {
-                        result.push(localize(6, null, obj.version));
+                    var latest = obj && obj['dist-tags'] && obj['dist-tags']['latest'];
+                    if (latest) {
+                        result.push(localize(6, null, latest));
                     }
                     return result;
                 }
@@ -197,7 +199,7 @@ var PackageJSONContribution = (function () {
                 htmlContent_1.push(localize(7, null, pack));
                 return this.getInfo(pack).then(function (infos) {
                     infos.forEach(function (info) {
-                        htmlContent_1.push({ language: 'string', value: info });
+                        htmlContent_1.push(markedTextUtil_1.textToMarkedString(info));
                     });
                     return htmlContent_1;
                 });
@@ -207,5 +209,5 @@ var PackageJSONContribution = (function () {
     };
     return PackageJSONContribution;
 }());
-exports.PackageJSONContribution = PackageJSONContribution;
-//# sourceMappingURL=packageJSONContribution.js.map
+exports.PackageJSONContribution = PackageJSONContribution;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/javascript/out/features/packageJSONContribution.js.map

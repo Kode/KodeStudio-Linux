@@ -34,5 +34,5 @@ function executeHaxe(from, haxeDirectory, options) {
         });
     });
 }
-exports.executeHaxe = executeHaxe;
-//# sourceMappingURL=Haxe.js.map
+exports.executeHaxe = executeHaxe;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Haxe.js.map

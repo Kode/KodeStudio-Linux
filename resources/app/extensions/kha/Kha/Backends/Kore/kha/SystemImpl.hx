@@ -39,7 +39,7 @@ void post_kore_init();
 void run_kore();
 int init_window(Kore::WindowOptions windowOptions);
 ')
-
+@:keep
 class SystemImpl {
 	public static var needs3d: Bool = false;
 
@@ -665,5 +665,9 @@ class SystemImpl {
 
 	public static function setKeepScreenOn(on: Bool): Void {
 		untyped __cpp__("Kore::System::setKeepScreenOn(on)");
+	}
+	
+	public static function loadUrl(url: String): Void {
+		
 	}
 }

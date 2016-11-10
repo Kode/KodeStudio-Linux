@@ -43,5 +43,5 @@ exports.array = array;
 function stringArray(value) {
     return array(value) && value.every(function (elem) { return string(elem); });
 }
-exports.stringArray = stringArray;
-//# sourceMappingURL=is.js.map
+exports.stringArray = stringArray;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/typescript/out/utils/is.js.map

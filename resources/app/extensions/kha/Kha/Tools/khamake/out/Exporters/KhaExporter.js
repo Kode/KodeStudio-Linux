@@ -19,6 +19,7 @@ class KhaExporter extends Exporter_1.Exporter {
         this.libraries = [];
         this.addSourceDirectory(path.join(options.kha, 'Sources'));
         this.projectFiles = !options.noproject;
+        this.parameters = [];
     }
     setWidthAndHeight(width, height) {
         this.width = width;
@@ -44,31 +45,31 @@ class KhaExporter extends Exporter_1.Exporter {
             }
         }
     }
-    copyImage(platform, from, to, asset) {
-        return __awaiter(this, void 0, Promise, function* () {
+    copyImage(platform, from, to, options) {
+        return __awaiter(this, void 0, void 0, function* () {
             return [];
         });
     }
-    copySound(platform, from, to) {
-        return __awaiter(this, void 0, Promise, function* () {
+    copySound(platform, from, to, options) {
+        return __awaiter(this, void 0, void 0, function* () {
             return [];
         });
     }
-    copyVideo(platform, from, to) {
-        return __awaiter(this, void 0, Promise, function* () {
+    copyVideo(platform, from, to, options) {
+        return __awaiter(this, void 0, void 0, function* () {
             return [];
         });
     }
-    copyBlob(platform, from, to) {
-        return __awaiter(this, void 0, Promise, function* () {
+    copyBlob(platform, from, to, options) {
+        return __awaiter(this, void 0, void 0, function* () {
             return [];
         });
     }
-    copyFont(platform, from, to) {
-        return __awaiter(this, void 0, Promise, function* () {
-            return yield this.copyBlob(platform, from, to + '.ttf');
+    copyFont(platform, from, to, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.copyBlob(platform, from, to + '.ttf', options);
         });
     }
 }
-exports.KhaExporter = KhaExporter;
-//# sourceMappingURL=KhaExporter.js.map
+exports.KhaExporter = KhaExporter;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/KhaExporter.js.map

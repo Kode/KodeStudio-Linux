@@ -19,22 +19,27 @@ var TypeScriptReferenceSupport = (function () {
         if (!args.file) {
             return Promise.resolve([]);
         }
+        var apiVersion = this.client.apiVersion;
         return this.client.execute('references', args, token).then(function (msg) {
             var result = [];
             var refs = msg.body.refs;
             for (var i = 0; i < refs.length; i++) {
                 var ref = refs[i];
+                if (!options.includeDeclaration && apiVersion.has203Features() && ref.isDefinition) {
+                    continue;
+                }
                 var url = _this.client.asUrl(ref.file);
                 var location = new vscode_1.Location(url, new vscode_1.Range(ref.start.line - 1, ref.start.offset - 1, ref.end.line - 1, ref.end.offset - 1));
                 result.push(location);
             }
             return result;
-        }, function () {
+        }, function (err) {
+            _this.client.error("'references' request failed with error.", err);
             return [];
         });
     };
     return TypeScriptReferenceSupport;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = TypeScriptReferenceSupport;
-//# sourceMappingURL=referenceProvider.js.map
+exports.default = TypeScriptReferenceSupport;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/typescript/out/features/referenceProvider.js.map

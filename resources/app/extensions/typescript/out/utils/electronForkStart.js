@@ -25,7 +25,7 @@ var stdErrPipeName = process.env['STDERR_PIPE_NAME'];
 log('STDIN_PIPE_NAME: ' + stdInPipeName);
 log('STDOUT_PIPE_NAME: ' + stdOutPipeName);
 log('STDERR_PIPE_NAME: ' + stdErrPipeName);
-log('ATOM_SHELL_INTERNAL_RUN_AS_NODE: ' + process.env['ATOM_SHELL_INTERNAL_RUN_AS_NODE']);
+log('ELECTRON_RUN_AS_NODE: ' + process.env['ELECTRON_RUN_AS_NODE']);
 // stdout redirection to named pipe
 (function () {
     log('Beginning stdout redirection...');
@@ -117,7 +117,7 @@ log('ATOM_SHELL_INTERNAL_RUN_AS_NODE: ' + process.env['ATOM_SHELL_INTERNAL_RUN_A
         delete process.env['STDIN_PIPE_NAME'];
         delete process.env['STDOUT_PIPE_NAME'];
         delete process.env['STDERR_PIPE_NAME'];
-        delete process.env['ATOM_SHELL_INTERNAL_RUN_AS_NODE'];
+        delete process.env['ELECTRON_RUN_AS_NODE'];
         require(program);
         log('Finished loading program.');
         var stdinIsReferenced = true;
@@ -157,5 +157,5 @@ log('ATOM_SHELL_INTERNAL_RUN_AS_NODE: ' + process.env['ATOM_SHELL_INTERNAL_RUN_A
         // signal via stdout that the parent process can now begin writing to stdin pipe
         process.stdout.write('ready');
     });
-})();
-//# sourceMappingURL=electronForkStart.js.map
+})();
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/typescript/out/utils/electronForkStart.js.map

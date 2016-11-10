@@ -5,16 +5,16 @@ import {convert} from '../Converter';
 import {executeHaxe} from '../Haxe';
 import {Platform} from '../Platform';
 import {exportImage} from '../ImageTool';
-import {writeHaxeProject} from '../HaxeProject';
-import {hxml} from '../HaxeProject';
 import {Options} from '../Options';
+import {Library} from '../Project';
 
 export class KoreHLExporter extends KhaExporter {
 	parameters: Array<string>;
-	
+
 	constructor(options: Options) {
 		super(options);
 		this.addSourceDirectory(path.join(options.kha, 'Backends', 'KoreHL'));
+		// Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
 	}
 
 	sysdir() {
@@ -57,14 +57,8 @@ export class KoreHLExporter extends KhaExporter {
 		};
 	}
 
-	async exportSolution(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
-		hxml(this.options.to, haxeOptions);
+	async export(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
 
-		if (this.projectFiles) {
-			writeHaxeProject(this.options.to, haxeOptions);
-		}
-
-		//Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
 	}
 
 	/*copyMusic(platform, from, to, encoders, callback) {

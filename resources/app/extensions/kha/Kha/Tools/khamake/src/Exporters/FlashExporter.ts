@@ -5,8 +5,7 @@ import {convert} from '../Converter';
 import {executeHaxe} from '../Haxe';
 import {Options} from '../Options';
 import {exportImage} from '../ImageTool';
-import {writeHaxeProject} from '../HaxeProject';
-import {hxml} from '../HaxeProject';
+import {Library} from '../Project';
 
 function adjustFilename(filename: string): string {
 	filename = filename.replace(/\./g, '_');
@@ -20,7 +19,7 @@ export class FlashExporter extends KhaExporter {
 	sounds: Array<string>;
 	blobs: Array<string>;
 	parameters: Array<string>;
-	
+
 	constructor(options: Options) {
 		super(options);
 		this.images = [];
@@ -49,10 +48,10 @@ export class FlashExporter extends KhaExporter {
 			framerate : 60,
 			stageBackground : 'ffffff',
 			swfVersion : '16.0'
-		}
-		
+		};
+
 		let flashOptions = targetOptions ? (targetOptions.flash ? targetOptions.flash : defaultFlashOptions) : defaultFlashOptions;
-		
+
 		return {
 			from: this.options.from,
 			to: path.join(this.sysdir(), 'kha.swf'),
@@ -72,45 +71,39 @@ export class FlashExporter extends KhaExporter {
 		};
 	}
 
-	async exportSolution(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
-		hxml(this.options.to, haxeOptions);
-
-		if (this.projectFiles) {
-			writeHaxeProject(this.options.to, haxeOptions);
-		}
-
+	async export(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
 		if (this.options.embedflashassets) {
 			this.writeFile(path.join(this.options.to, '..', 'Sources', 'Assets.hx'));
 
-			this.p("package;");
+			this.p('package;');
 			this.p();
-			this.p("import flash.display.BitmapData;");
-			this.p("import flash.media.Sound;");
-			this.p("import flash.utils.ByteArray;");
+			this.p('import flash.display.BitmapData;');
+			this.p('import flash.media.Sound;');
+			this.p('import flash.utils.ByteArray;');
 			this.p();
 
 			for (let image of this.images) {
-				this.p("@:bitmap(\"flash/" + image + "\") class Assets_" + adjustFilename(image) + " extends BitmapData { }");
+				this.p('@:bitmap("flash/' + image + '") class Assets_' + adjustFilename(image) + ' extends BitmapData { }');
 			}
 
 			this.p();
 
 			for (let sound of this.sounds) {
-				this.p("@:file(\"flash/" + sound + "\") class Assets_" + adjustFilename(sound) + " extends ByteArray { }");
+				this.p('@:file("flash/' + sound + '") class Assets_' + adjustFilename(sound) + ' extends ByteArray { }');
 			}
 
 			this.p();
 
 			for (let blob of this.blobs) {
-				this.p("@:file(\"flash/" + blob + "\") class Assets_" + adjustFilename(blob) + " extends ByteArray { }");
+				this.p('@:file("flash/' + blob + '") class Assets_' + adjustFilename(blob) + ' extends ByteArray { }');
 			}
 
 			this.p();
-			this.p("class Assets {");
-			this.p("public static function visit(): Void {", 1);
-			this.p("", 2);
-			this.p("}", 1);
-			this.p("}");
+			this.p('class Assets {');
+			this.p('public static function visit(): Void {', 1);
+			this.p('', 2);
+			this.p('}', 1);
+			this.p('}');
 
 			this.closeFile();
 		}
@@ -118,9 +111,9 @@ export class FlashExporter extends KhaExporter {
 
 	async copySound(platform: string, from: string, to: string) {
 		fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
-		var ogg = await convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
-		var mp3 = await convert(from, path.join(this.options.to, this.sysdir(), to + '.mp3'), this.options.mp3);
-		var files = [];
+		let ogg = await convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
+		let mp3 = await convert(from, path.join(this.options.to, this.sysdir(), to + '.mp3'), this.options.mp3);
+		let files: string[] = [];
 		if (ogg) {
 			files.push(to + '.ogg');
 			if (this.options.embedflashassets) this.sounds.push(to + '.ogg');
@@ -133,7 +126,7 @@ export class FlashExporter extends KhaExporter {
 	}
 
 	async copyImage(platform: string, from: string, to: string, asset: any) {
-		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(),to), asset, undefined, false);
+		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false);
 		if (this.options.embedflashassets) this.images.push(to + '.' + format);
 		return [to + '.' + format];
 	}
@@ -150,7 +143,7 @@ export class FlashExporter extends KhaExporter {
 		return [to + '.mp4'];
 	}
 
-	addShader(shader) {
+	addShader(shader: string) {
 		if (this.options.embedflashassets) this.blobs.push(shader);
 	}
 }

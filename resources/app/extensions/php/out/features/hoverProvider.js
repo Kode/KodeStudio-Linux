@@ -5,6 +5,7 @@
 'use strict';
 var vscode_1 = require('vscode');
 var phpGlobals = require('./phpGlobals');
+var markedTextUtil_1 = require('./utils/markedTextUtil');
 var PHPHoverProvider = (function () {
     function PHPHoverProvider() {
     }
@@ -17,12 +18,12 @@ var PHPHoverProvider = (function () {
         var entry = phpGlobals.globalfunctions[name] || phpGlobals.compiletimeconstants[name] || phpGlobals.globalvariables[name] || phpGlobals.keywords[name];
         if (entry && entry.description) {
             var signature = name + (entry.signature || '');
-            var contents = [entry.description, { language: 'php', value: signature }];
+            var contents = [markedTextUtil_1.textToMarkedString(entry.description), { language: 'php', value: signature }];
             return new vscode_1.Hover(contents, wordRange);
         }
     };
     return PHPHoverProvider;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = PHPHoverProvider;
-//# sourceMappingURL=hoverProvider.js.map
+exports.default = PHPHoverProvider;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/php/out/features/hoverProvider.js.map

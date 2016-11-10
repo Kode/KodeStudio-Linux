@@ -1,5 +1,3 @@
-"use strict";
-
 import * as child_process from 'child_process';
 import * as fs from 'fs-extra';
 import * as os from 'os';
@@ -18,25 +16,24 @@ function getWidthAndHeight(kha: string, from: string, to: string, options: any, 
 		let process = child_process.spawn(path.join(kha, 'Kore', 'Tools', 'kraffiti', exe), params);
 		
 		let output = '';
-		process.stdout.on('data', (data) => {
+		process.stdout.on('data', (data: any) => {
 			output += data.toString();
 		});
 
-		process.stderr.on('data', (data) => {
+		process.stderr.on('data', (data: any) => {
 			
 		});
 
-		process.on('close', (code) => {
+		process.on('close', (code: number) => {
 			if (code !== 0) {
 				log.error('kraffiti process exited with code ' + code + ' when trying to get size of ' + path.parse(from).name);
 				resolve({w: 0, h: 0});
 				return;	
 			}
-			var lines = output.split('\n');
-			for (var l in lines) {
-				var line = lines[l];
+			const lines = output.split('\n');
+			for (let line of lines) {
 				if (line.startsWith('#')) {
-					var numbers = line.substring(1).split('x');
+					let numbers = line.substring(1).split('x');
 					resolve({w: parseInt(numbers[0]), h: parseInt(numbers[1])});
 					return;
 				}
@@ -51,15 +48,15 @@ function convertImage(from: string, temp: string, to: string, kha: string, exe: 
 		let process = child_process.spawn(path.join(kha, 'Kore', 'Tools', 'kraffiti', exe), params);
 		
 		let output = '';
-		process.stdout.on('data', (data) => {
+		process.stdout.on('data', (data: any) => {
 			output += data.toString();
 		});
 
-		process.stderr.on('data', (data) => {
+		process.stderr.on('data', (data: any) => {
 			
 		});
 
-		process.on('close', (code) => {
+		process.on('close', (code: number) => {
 			if (code !== 0) {
 				log.error('kraffiti process exited with code ' + code + ' when trying to convert ' + path.parse(from).name);
 				resolve();
@@ -71,7 +68,7 @@ function convertImage(from: string, temp: string, to: string, kha: string, exe: 
 			const lines = output.split('\n');
 			for (let line of lines) {
 				if (line.startsWith('#')) {
-					var numbers = line.substring(1).split('x');
+					let numbers = line.substring(1).split('x');
 					options.original_width = parseInt(numbers[0]);
 					options.original_height = parseInt(numbers[1]);
 					resolve();

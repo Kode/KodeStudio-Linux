@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/common/platform","vs/base/common/winjs.base","vs/base/common/types","vs/base/common/errors","vs/base/common/lifecycle","vs/base/common/objects","vs/base/common/strings","vs/base/common/event","vs/base/common/paths","vs/base/common/async","vs/platform/files/common/files","vs/workbench/services/files/node/watcher/unix/watcherIpc","vs/workbench/services/files/node/watcher/unix/chokidarWatcherService","vs/base/common/arrays","vs/base/common/callbackList","vs/base/common/events","vs/base/common/cancellation","vs/base/common/map","vs/workbench/services/files/node/watcher/common","vs/base/common/uri","vs/base/parts/ipc/common/ipc","vs/base/parts/ipc/node/ipc.cp","vs/nls!vs/base/common/errors","vs/platform/instantiation/common/instantiation","child_process","vs/base/common/winjs.base.raw","vs/nls!vs/workbench/services/files/node/watcher/unix/watcherApp","chokidar","fs","graceful-fs","vs/nls","vs/workbench/services/files/node/watcher/unix/watcherApp"];
+var __m = ["require","exports","vs/base/common/winjs.base","vs/base/common/platform","vs/base/common/event","vs/base/common/errors","vs/base/common/lifecycle","vs/base/common/types","vs/base/common/paths","vs/base/common/async","vs/platform/files/common/files","vs/base/common/events","vs/base/common/strings","vs/base/common/cancellation","vs/base/common/objects","vs/base/common/uri","vs/base/common/map","vs/workbench/services/files/node/watcher/unix/watcherIpc","vs/base/common/arrays","vs/base/node/event","vs/base/parts/ipc/common/ipc","vs/base/parts/ipc/node/ipc.cp","vs/workbench/services/files/node/watcher/unix/chokidarWatcherService","vs/platform/instantiation/common/instantiation","vs/base/common/callbackList","vs/workbench/services/files/node/watcher/common","child_process","chokidar","fs","graceful-fs","vs/base/common/winjs.base.raw","vs/workbench/services/files/node/watcher/unix/watcherApp"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,7 +10,7 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[15], __M([1,0]), function (require, exports) {
+define(__m[18/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -104,6 +104,9 @@ define(__m[15], __M([1,0]), function (require, exports) {
      * @return The first n elemnts from array when sorted with compare.
      */
     function top(array, compare, n) {
+        if (n === 0) {
+            return [];
+        }
         var result = array.slice(0, n).sort(compare);
         var _loop_1 = function(i, m) {
             var element = array[i];
@@ -271,6 +274,20 @@ define(__m[15], __M([1,0]), function (require, exports) {
         }, Object.create(null));
     }
     exports.index = index;
+    /**
+     * Inserts an element into an array. Returns a function which, when
+     * called, will remove that element from the array.
+     */
+    function insert(array, element) {
+        array.push(element);
+        return function () {
+            var index = array.indexOf(element);
+            if (index > -1) {
+                array.splice(index, 1);
+            }
+        };
+    }
+    exports.insert = insert;
 });
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -278,7 +295,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[17], __M([1,0]), function (require, exports) {
+define(__m[11/*vs/base/common/events*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -322,7 +339,6 @@ define(__m[17], __M([1,0]), function (require, exports) {
         EXPAND: 'expand',
         COLLAPSE: 'collapse',
         TOGGLE: 'toggle',
-        CONTENTS_CHANGED: 'contentsChanged',
         BEFORE_RUN: 'beforeRun',
         RUN: 'run',
         EDIT: 'edit',
@@ -342,100 +358,16 @@ define(__m[17], __M([1,0]), function (require, exports) {
 
 
 
-define(__m[19], __M([1,0]), function (require, exports) {
+define(__m[16/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     /**
      * A simple map to store value by a key object. Key can be any object that has toString() function to get
      * string value of the key.
      */
-    var SimpleMap = (function () {
-        function SimpleMap() {
-            this.map = Object.create(null);
-            this._size = 0;
-        }
-        Object.defineProperty(SimpleMap.prototype, "size", {
-            get: function () {
-                return this._size;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SimpleMap.prototype.get = function (k) {
-            var value = this.peek(k);
-            return value ? value : null;
-        };
-        SimpleMap.prototype.keys = function () {
-            var keys = [];
-            for (var key in this.map) {
-                keys.push(this.map[key].key);
-            }
-            return keys;
-        };
-        SimpleMap.prototype.values = function () {
-            var values = [];
-            for (var key in this.map) {
-                values.push(this.map[key].value);
-            }
-            return values;
-        };
-        SimpleMap.prototype.entries = function () {
-            var entries = [];
-            for (var key in this.map) {
-                entries.push(this.map[key]);
-            }
-            return entries;
-        };
-        SimpleMap.prototype.set = function (k, t) {
-            if (this.get(k)) {
-                return false; // already present!
-            }
-            this.push(k, t);
-            return true;
-        };
-        SimpleMap.prototype.delete = function (k) {
-            var value = this.get(k);
-            if (value) {
-                this.pop(k);
-                return value;
-            }
-            return null;
-        };
-        SimpleMap.prototype.has = function (k) {
-            return !!this.get(k);
-        };
-        SimpleMap.prototype.clear = function () {
-            this.map = Object.create(null);
-            this._size = 0;
-        };
-        SimpleMap.prototype.push = function (key, value) {
-            var entry = { key: key, value: value };
-            this.map[key.toString()] = entry;
-            this._size++;
-        };
-        SimpleMap.prototype.pop = function (k) {
-            delete this.map[k.toString()];
-            this._size--;
-        };
-        SimpleMap.prototype.peek = function (k) {
-            var entry = this.map[k.toString()];
-            return entry ? entry.value : null;
-        };
-        return SimpleMap;
-    }());
-    exports.SimpleMap = SimpleMap;
-    /**
-     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
-     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
-     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
-     */
     var LinkedMap = (function () {
-        function LinkedMap(limit, ratio) {
-            if (limit === void 0) { limit = Number.MAX_VALUE; }
-            if (ratio === void 0) { ratio = 1; }
-            this.limit = limit;
+        function LinkedMap() {
             this.map = Object.create(null);
             this._size = 0;
-            this.ratio = limit * ratio;
         }
         Object.defineProperty(LinkedMap.prototype, "size", {
             get: function () {
@@ -444,7 +376,99 @@ define(__m[19], __M([1,0]), function (require, exports) {
             enumerable: true,
             configurable: true
         });
-        LinkedMap.prototype.set = function (key, value) {
+        LinkedMap.prototype.get = function (k) {
+            var value = this.peek(k);
+            return value ? value : null;
+        };
+        LinkedMap.prototype.getOrSet = function (k, t) {
+            var res = this.get(k);
+            if (res) {
+                return res;
+            }
+            this.set(k, t);
+            return t;
+        };
+        LinkedMap.prototype.keys = function () {
+            var keys = [];
+            for (var key in this.map) {
+                keys.push(this.map[key].key);
+            }
+            return keys;
+        };
+        LinkedMap.prototype.values = function () {
+            var values = [];
+            for (var key in this.map) {
+                values.push(this.map[key].value);
+            }
+            return values;
+        };
+        LinkedMap.prototype.entries = function () {
+            var entries = [];
+            for (var key in this.map) {
+                entries.push(this.map[key]);
+            }
+            return entries;
+        };
+        LinkedMap.prototype.set = function (k, t) {
+            if (this.get(k)) {
+                return false; // already present!
+            }
+            this.push(k, t);
+            return true;
+        };
+        LinkedMap.prototype.delete = function (k) {
+            var value = this.get(k);
+            if (value) {
+                this.pop(k);
+                return value;
+            }
+            return null;
+        };
+        LinkedMap.prototype.has = function (k) {
+            return !!this.get(k);
+        };
+        LinkedMap.prototype.clear = function () {
+            this.map = Object.create(null);
+            this._size = 0;
+        };
+        LinkedMap.prototype.push = function (key, value) {
+            var entry = { key: key, value: value };
+            this.map[key.toString()] = entry;
+            this._size++;
+        };
+        LinkedMap.prototype.pop = function (k) {
+            delete this.map[k.toString()];
+            this._size--;
+        };
+        LinkedMap.prototype.peek = function (k) {
+            var entry = this.map[k.toString()];
+            return entry ? entry.value : null;
+        };
+        return LinkedMap;
+    }());
+    exports.LinkedMap = LinkedMap;
+    /**
+     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
+     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
+     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
+     */
+    var BoundedLinkedMap = (function () {
+        function BoundedLinkedMap(limit, ratio) {
+            if (limit === void 0) { limit = Number.MAX_VALUE; }
+            if (ratio === void 0) { ratio = 1; }
+            this.limit = limit;
+            this.map = Object.create(null);
+            this._size = 0;
+            this.ratio = limit * ratio;
+        }
+        Object.defineProperty(BoundedLinkedMap.prototype, "size", {
+            get: function () {
+                return this._size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        BoundedLinkedMap.prototype.set = function (key, value) {
             if (this.map[key]) {
                 return false; // already present!
             }
@@ -455,11 +479,19 @@ define(__m[19], __M([1,0]), function (require, exports) {
             }
             return true;
         };
-        LinkedMap.prototype.get = function (key) {
+        BoundedLinkedMap.prototype.get = function (key) {
             var entry = this.map[key];
             return entry ? entry.value : null;
         };
-        LinkedMap.prototype.delete = function (key) {
+        BoundedLinkedMap.prototype.getOrSet = function (k, t) {
+            var res = this.get(k);
+            if (res) {
+                return res;
+            }
+            this.set(k, t);
+            return t;
+        };
+        BoundedLinkedMap.prototype.delete = function (key) {
             var entry = this.map[key];
             if (entry) {
                 this.map[key] = void 0;
@@ -480,16 +512,16 @@ define(__m[19], __M([1,0]), function (require, exports) {
             }
             return null;
         };
-        LinkedMap.prototype.has = function (key) {
+        BoundedLinkedMap.prototype.has = function (key) {
             return !!this.map[key];
         };
-        LinkedMap.prototype.clear = function () {
+        BoundedLinkedMap.prototype.clear = function () {
             this.map = Object.create(null);
             this._size = 0;
             this.head = null;
             this.tail = null;
         };
-        LinkedMap.prototype.push = function (entry) {
+        BoundedLinkedMap.prototype.push = function (entry) {
             if (this.head) {
                 // [A]-[B] = [A]-[B]->[X]
                 entry.prev = this.head;
@@ -502,7 +534,7 @@ define(__m[19], __M([1,0]), function (require, exports) {
             this.map[entry.key] = entry;
             this._size++;
         };
-        LinkedMap.prototype.trim = function () {
+        BoundedLinkedMap.prototype.trim = function () {
             if (this.tail) {
                 // Remove all elements until ratio is reached
                 if (this.ratio < this.limit) {
@@ -533,9 +565,9 @@ define(__m[19], __M([1,0]), function (require, exports) {
                 }
             }
         };
-        return LinkedMap;
+        return BoundedLinkedMap;
     }());
-    exports.LinkedMap = LinkedMap;
+    exports.BoundedLinkedMap = BoundedLinkedMap;
     /**
      * A subclass of Map<T> that makes an entry the MRU entry as soon
      * as it is being accessed. In combination with the limit for the
@@ -559,11 +591,67 @@ define(__m[19], __M([1,0]), function (require, exports) {
             return null;
         };
         return LRUCache;
-    }(LinkedMap));
+    }(BoundedLinkedMap));
     exports.LRUCache = LRUCache;
+    /**
+     * A trie map that allows for fast look up when keys are substrings
+     * to the actual search keys (dir/subdir-problem).
+     */
+    var TrieMap = (function () {
+        function TrieMap(splitter) {
+            this._root = { children: Object.create(null) };
+            this._splitter = splitter;
+        }
+        TrieMap.prototype.insert = function (path, element) {
+            var parts = this._splitter(path);
+            var i = 0;
+            // find insertion node
+            var node = this._root;
+            for (; i < parts.length; i++) {
+                var child = node.children[parts[i]];
+                if (child) {
+                    node = child;
+                    continue;
+                }
+                break;
+            }
+            // create new nodes
+            var newNode;
+            for (; i < parts.length; i++) {
+                newNode = { children: Object.create(null) };
+                node.children[parts[i]] = newNode;
+                node = newNode;
+            }
+            node.element = element;
+        };
+        TrieMap.prototype.findSubstr = function (path) {
+            var parts = this._splitter(path);
+            var lastNode;
+            var children = this._root.children;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                var node = children[part];
+                if (!node) {
+                    break;
+                }
+                if (node.element) {
+                    lastNode = node;
+                }
+                children = node.children;
+            }
+            // return the last matching node
+            // that had an element
+            if (lastNode) {
+                return lastNode.element;
+            }
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/); };
+        return TrieMap;
+    }());
+    exports.TrieMap = TrieMap;
 });
 
-define(__m[2], __M([1,0]), function (require, exports) {
+define(__m[3/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -586,10 +674,10 @@ define(__m[2], __M([1,0]), function (require, exports) {
         _isMacintosh = (process.platform === 'darwin');
         _isLinux = (process.platform === 'linux');
         _isRootUser = !_isWindows && (process.getuid() === 0);
-        var vscode_nls_config = process.env['VSCODE_NLS_CONFIG'];
-        if (vscode_nls_config) {
+        var rawNlsConfig = process.env['VSCODE_NLS_CONFIG'];
+        if (rawNlsConfig) {
             try {
-                var nlsConfig = JSON.parse(vscode_nls_config);
+                var nlsConfig = JSON.parse(rawNlsConfig);
                 var resolved = nlsConfig.availableLanguages['*'];
                 _locale = nlsConfig.locale;
                 // VSCode's default language is 'en'
@@ -661,7 +749,7 @@ define(__m[2], __M([1,0]), function (require, exports) {
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
+define(__m[8/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/platform*/,18/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -676,22 +764,22 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
      */
     exports.nativeSep = platform_1.isWindows ? '\\' : '/';
     function relative(from, to) {
-        from = normalize(from);
-        to = normalize(to);
-        var fromParts = from.split(exports.sep), toParts = to.split(exports.sep);
-        while (fromParts.length > 0 && toParts.length > 0) {
-            if (fromParts[0] === toParts[0]) {
-                fromParts.shift();
-                toParts.shift();
-            }
-            else {
+        var originalNormalizedFrom = normalize(from);
+        var originalNormalizedTo = normalize(to);
+        // we're assuming here that any non=linux OS is case insensitive
+        // so we must compare each part in its lowercase form
+        var normalizedFrom = platform_1.isLinux ? originalNormalizedFrom : originalNormalizedFrom.toLowerCase();
+        var normalizedTo = platform_1.isLinux ? originalNormalizedTo : originalNormalizedTo.toLowerCase();
+        var fromParts = normalizedFrom.split(exports.sep);
+        var toParts = normalizedTo.split(exports.sep);
+        var i = 0, max = Math.min(fromParts.length, toParts.length);
+        for (; i < max; i++) {
+            if (fromParts[i] !== toParts[i]) {
                 break;
             }
         }
-        for (var i = 0, len = fromParts.length; i < len; i++) {
-            toParts.unshift('..');
-        }
-        return toParts.join(exports.sep);
+        var result = arrays_1.fill(fromParts.length - i, function () { return '..'; }).concat(originalNormalizedTo.split(exports.sep).slice(i));
+        return result.join(exports.sep);
     }
     exports.relative = relative;
     /**
@@ -762,7 +850,7 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
         var res = '';
         for (var end = root.length; end <= len; end++) {
             // either at the end or at a path-separator character
-            if (end === len || path.charCodeAt(end) === _slash || path.charCodeAt(end) === _backslash) {
+            if (end === len || path.charCodeAt(end) === 47 /* Slash */ || path.charCodeAt(end) === 92 /* Backslash */) {
                 if (streql(path, start, end, '..')) {
                     // skip current and remove parent (if there is already something)
                     var prev_start = res.lastIndexOf(sep);
@@ -805,27 +893,27 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
         }
         var len = path.length;
         var code = path.charCodeAt(0);
-        if (code === _slash || code === _backslash) {
+        if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
             code = path.charCodeAt(1);
-            if (code === _slash || code === _backslash) {
+            if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                 // UNC candidate \\localhost\shares\ddd
                 //               ^^^^^^^^^^^^^^^^^^^
                 code = path.charCodeAt(2);
-                if (code !== _slash && code !== _backslash) {
+                if (code !== 47 /* Slash */ && code !== 92 /* Backslash */) {
                     var pos_1 = 3;
                     var start = pos_1;
                     for (; pos_1 < len; pos_1++) {
                         code = path.charCodeAt(pos_1);
-                        if (code === _slash || code === _backslash) {
+                        if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                             break;
                         }
                     }
                     code = path.charCodeAt(pos_1 + 1);
-                    if (start !== pos_1 && code !== _slash && code !== _backslash) {
+                    if (start !== pos_1 && code !== 47 /* Slash */ && code !== 92 /* Backslash */) {
                         pos_1 += 1;
                         for (; pos_1 < len; pos_1++) {
                             code = path.charCodeAt(pos_1);
-                            if (code === _slash || code === _backslash) {
+                            if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                                 return path.slice(0, pos_1 + 1) // consume this separator
                                     .replace(/[\\/]/g, sep);
                             }
@@ -837,11 +925,11 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
             // ^
             return sep;
         }
-        else if ((code >= _A && code <= _Z) || (code >= _a && code <= _z)) {
+        else if ((code >= 65 /* A */ && code <= 90 /* Z */) || (code >= 97 /* a */ && code <= 122 /* z */)) {
             // check for windows drive letter c:\ or c:
-            if (path.charCodeAt(1) === _colon) {
+            if (path.charCodeAt(1) === 58 /* Colon */) {
                 code = path.charCodeAt(2);
-                if (code === _slash || code === _backslash) {
+                if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                     // C:\fff
                     // ^^^
                     return path.slice(0, 2) + sep;
@@ -861,7 +949,7 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
             pos += 3; // 3 -> "://".length
             for (; pos < len; pos++) {
                 code = path.charCodeAt(pos);
-                if (code === _slash || code === _backslash) {
+                if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                     return path.slice(0, pos + 1); // consume this separator
                 }
             }
@@ -880,9 +968,9 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
                 // add the separater between two parts unless
                 // there already is one
                 var last = value.charCodeAt(value.length - 1);
-                if (last !== _slash && last !== _backslash) {
+                if (last !== 47 /* Slash */ && last !== 92 /* Backslash */) {
                     var next = part.charCodeAt(0);
-                    if (next !== _slash && next !== _backslash) {
+                    if (next !== 47 /* Slash */ && next !== 92 /* Backslash */) {
                         value += exports.sep;
                     }
                 }
@@ -908,18 +996,18 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
             return false;
         }
         var code = path.charCodeAt(0);
-        if (code !== _backslash) {
+        if (code !== 92 /* Backslash */) {
             return false;
         }
         code = path.charCodeAt(1);
-        if (code !== _backslash) {
+        if (code !== 92 /* Backslash */) {
             return false;
         }
         var pos = 2;
         var start = pos;
         for (; pos < path.length; pos++) {
             code = path.charCodeAt(pos);
-            if (code === _backslash) {
+            if (code === 92 /* Backslash */) {
                 break;
             }
         }
@@ -927,7 +1015,7 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
             return false;
         }
         code = path.charCodeAt(pos + 1);
-        if (isNaN(code) || code === _backslash) {
+        if (isNaN(code) || code === 92 /* Backslash */) {
             return false;
         }
         return true;
@@ -940,13 +1028,6 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
         return isPosixAbsolute(normalize(path)) ? path : exports.sep + path;
     }
     exports.makePosixAbsolute = makePosixAbsolute;
-    var _slash = '/'.charCodeAt(0);
-    var _backslash = '\\'.charCodeAt(0);
-    var _colon = ':'.charCodeAt(0);
-    var _a = 'a'.charCodeAt(0);
-    var _A = 'A'.charCodeAt(0);
-    var _z = 'z'.charCodeAt(0);
-    var _Z = 'Z'.charCodeAt(0);
     function isEqualOrParent(path, candidate) {
         if (path === candidate) {
             return true;
@@ -955,7 +1036,7 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
         candidate = normalize(candidate);
         var candidateLen = candidate.length;
         var lastCandidateChar = candidate.charCodeAt(candidateLen - 1);
-        if (lastCandidateChar === _slash) {
+        if (lastCandidateChar === 47 /* Slash */) {
             candidate = candidate.substring(0, candidateLen - 1);
             candidateLen -= 1;
         }
@@ -974,7 +1055,7 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
             return false;
         }
         var char = path.charCodeAt(candidateLen);
-        return char === _slash;
+        return char === 47 /* Slash */;
     }
     exports.isEqualOrParent = isEqualOrParent;
     // Reference: https://en.wikipedia.org/wiki/Filename
@@ -1014,7 +1095,7 @@ define(__m[10], __M([1,0,2]), function (require, exports, platform_1) {
     exports.isAbsolute = isAbsolute;
 });
 
-define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
+define(__m[12/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,16/*vs/base/common/map*/]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1024,6 +1105,13 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
      * The empty string.
      */
     exports.empty = '';
+    function isFalsyOrWhitespace(str) {
+        if (!str || typeof str !== 'string') {
+            return true;
+        }
+        return str.trim().length === 0;
+    }
+    exports.isFalsyOrWhitespace = isFalsyOrWhitespace;
     /**
      * @returns the provided number with the given number of preceding zeros.
      */
@@ -1169,7 +1257,7 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
     function endsWith(haystack, needle) {
         var diff = haystack.length - needle.length;
         if (diff > 0) {
-            return haystack.lastIndexOf(needle) === diff;
+            return haystack.indexOf(needle, diff) === diff;
         }
         else if (diff === 0) {
             return haystack === needle;
@@ -1179,14 +1267,28 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
         }
     }
     exports.endsWith = endsWith;
-    function createRegExp(searchString, isRegex, matchCase, wholeWord, global) {
+    function indexOfIgnoreCase(haystack, needle, position) {
+        if (position === void 0) { position = 0; }
+        var index = haystack.indexOf(needle, position);
+        if (index < 0) {
+            if (position > 0) {
+                haystack = haystack.substr(position);
+            }
+            needle = escapeRegExpCharacters(needle);
+            index = haystack.search(new RegExp(needle, 'i'));
+        }
+        return index;
+    }
+    exports.indexOfIgnoreCase = indexOfIgnoreCase;
+    function createRegExp(searchString, isRegex, options) {
+        if (options === void 0) { options = {}; }
         if (searchString === '') {
             throw new Error('Cannot create regex from empty string');
         }
         if (!isRegex) {
             searchString = searchString.replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&');
         }
-        if (wholeWord) {
+        if (options.wholeWord) {
             if (!/\B/.test(searchString.charAt(0))) {
                 searchString = '\\b' + searchString;
             }
@@ -1195,11 +1297,14 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
             }
         }
         var modifiers = '';
-        if (global) {
+        if (options.global) {
             modifiers += 'g';
         }
-        if (!matchCase) {
+        if (!options.matchCase) {
             modifiers += 'i';
+        }
+        if (options.multiline) {
+            modifiers += 'm';
         }
         return new RegExp(searchString, modifiers);
     }
@@ -1224,7 +1329,7 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
      */
     exports.canNormalize = typeof (''.normalize) === 'function';
     var nonAsciiCharactersPattern = /[^\u0000-\u0080]/;
-    var normalizedCache = new map_1.LinkedMap(10000); // bounded to 10000 elements
+    var normalizedCache = new map_1.BoundedLinkedMap(10000); // bounded to 10000 elements
     function normalizeNFC(str) {
         if (!exports.canNormalize || !str) {
             return str;
@@ -1251,7 +1356,8 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
      */
     function firstNonWhitespaceIndex(str) {
         for (var i = 0, len = str.length; i < len; i++) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
                 return i;
             }
         }
@@ -1264,7 +1370,8 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
      */
     function getLeadingWhitespace(str) {
         for (var i = 0, len = str.length; i < len; i++) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
                 return str.substring(0, i);
             }
         }
@@ -1278,7 +1385,8 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
     function lastNonWhitespaceIndex(str, startIndex) {
         if (startIndex === void 0) { startIndex = str.length - 1; }
         for (var i = startIndex; i >= 0; i--) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
                 return i;
             }
         }
@@ -1298,7 +1406,7 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
     }
     exports.compare = compare;
     function isAsciiChar(code) {
-        return (code >= 97 && code <= 122) || (code >= 65 && code <= 90);
+        return (code >= 97 /* a */ && code <= 122 /* z */) || (code >= 65 /* A */ && code <= 90 /* Z */);
     }
     function equalsIgnoreCase(a, b) {
         var len1 = a.length, len2 = b.length;
@@ -1368,15 +1476,25 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
     //	}
     //	return chrCode;
     //}
-    //export function isLeadSurrogate(chr:string) {
-    //	let chrCode = chr.charCodeAt(0);
-    //	return ;
-    //}
-    //
-    //export function isTrailSurrogate(chr:string) {
-    //	let chrCode = chr.charCodeAt(0);
-    //	return 0xDC00 <= chrCode && chrCode <= 0xDFFF;
-    //}
+    function isHighSurrogate(charCode) {
+        return (0xD800 <= charCode && charCode <= 0xDBFF);
+    }
+    exports.isHighSurrogate = isHighSurrogate;
+    function isLowSurrogate(charCode) {
+        return (0xDC00 <= charCode && charCode <= 0xDFFF);
+    }
+    exports.isLowSurrogate = isLowSurrogate;
+    /**
+     * Generated using https://github.com/alexandrudima/unicode-utils/blob/master/generate-rtl-test.js
+     */
+    var CONTAINS_RTL = /(?:[\u05BE\u05C0\u05C3\u05C6\u05D0-\u05F4\u0608\u060B\u060D\u061B-\u064A\u066D-\u066F\u0671-\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u0710\u0712-\u072F\u074D-\u07A5\u07B1-\u07EA\u07F4\u07F5\u07FA-\u0815\u081A\u0824\u0828\u0830-\u0858\u085E-\u08BD\u200F\uFB1D\uFB1F-\uFB28\uFB2A-\uFD3D\uFD50-\uFDFC\uFE70-\uFEFC]|\uD802[\uDC00-\uDD1B\uDD20-\uDE00\uDE10-\uDE33\uDE40-\uDEE4\uDEEB-\uDF35\uDF40-\uDFFF]|\uD803[\uDC00-\uDCFF]|\uD83A[\uDC00-\uDCCF\uDD00-\uDD43\uDD50-\uDFFF]|\uD83B[\uDC00-\uDEBB])/;
+    /**
+     * Returns true if `str` contains any Unicode character that is classified as "R" or "AL".
+     */
+    function containsRTL(str) {
+        return CONTAINS_RTL.test(str);
+    }
+    exports.containsRTL = containsRTL;
     function isFullWidthCharacter(charCode) {
         // Do a cheap trick to better support wrapping of wide characters, treat them as 2 columns
         // http://jrgraphix.net/research/unicode_blocks.php
@@ -1496,13 +1614,11 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
     // Escape codes
     // http://en.wikipedia.org/wiki/ANSI_escape_code
     var EL = /\x1B\x5B[12]?K/g; // Erase in line
-    var LF = /\xA/g; // line feed
     var COLOR_START = /\x1b\[\d+m/g; // Color
     var COLOR_END = /\x1b\[0?m/g; // Color
     function removeAnsiEscapeCodes(str) {
         if (str) {
             str = str.replace(EL, '');
-            str = str.replace(LF, '\n');
             str = str.replace(COLOR_START, '');
             str = str.replace(COLOR_END, '');
         }
@@ -1510,10 +1626,9 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
     }
     exports.removeAnsiEscapeCodes = removeAnsiEscapeCodes;
     // -- UTF-8 BOM
-    var __utf8_bom = 65279;
-    exports.UTF8_BOM_CHARACTER = String.fromCharCode(__utf8_bom);
+    exports.UTF8_BOM_CHARACTER = String.fromCharCode(65279 /* UTF8_BOM */);
     function startsWithUTF8BOM(str) {
-        return (str && str.length > 0 && str.charCodeAt(0) === __utf8_bom);
+        return (str && str.length > 0 && str.charCodeAt(0) === 65279 /* UTF8_BOM */);
     }
     exports.startsWithUTF8BOM = startsWithUTF8BOM;
     /**
@@ -1548,7 +1663,7 @@ define(__m[8], __M([1,0,19]), function (require, exports, map_1) {
     exports.repeat = repeat;
 });
 
-define(__m[4], __M([1,0]), function (require, exports) {
+define(__m[7/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1597,6 +1712,9 @@ define(__m[4], __M([1,0]), function (require, exports) {
      *	`null`, an `array`, a `regexp`, nor a `date`.
      */
     function isObject(obj) {
+        // The method can't do a type cast since there are type (like strings) which
+        // are subclasses of any put not positvely matched by the function. Hence type
+        // narrowing results in wrong results.
         return typeof obj === _typeof.object
             && obj !== null
             && !Array.isArray(obj)
@@ -1713,12 +1831,249 @@ define(__m[4], __M([1,0]), function (require, exports) {
     exports.create = create;
 });
 
+define(__m[5/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/platform*/,7/*vs/base/common/types*/]), function (require, exports, platform, types) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
+    var ErrorHandler = (function () {
+        function ErrorHandler() {
+            this.listeners = [];
+            this.unexpectedErrorHandler = function (e) {
+                platform.setTimeout(function () {
+                    if (e.stack) {
+                        throw new Error(e.message + '\n\n' + e.stack);
+                    }
+                    throw e;
+                }, 0);
+            };
+        }
+        ErrorHandler.prototype.addListener = function (listener) {
+            var _this = this;
+            this.listeners.push(listener);
+            return function () {
+                _this._removeListener(listener);
+            };
+        };
+        ErrorHandler.prototype.emit = function (e) {
+            this.listeners.forEach(function (listener) {
+                listener(e);
+            });
+        };
+        ErrorHandler.prototype._removeListener = function (listener) {
+            this.listeners.splice(this.listeners.indexOf(listener), 1);
+        };
+        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
+            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
+            return this.unexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.onUnexpectedError = function (e) {
+            this.unexpectedErrorHandler(e);
+            this.emit(e);
+        };
+        return ErrorHandler;
+    }());
+    exports.ErrorHandler = ErrorHandler;
+    exports.errorHandler = new ErrorHandler();
+    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
+        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
+    }
+    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
+    function onUnexpectedError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedError(e);
+        }
+    }
+    exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedPromiseError(promise) {
+        return promise.then(null, onUnexpectedError);
+    }
+    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
+    function transformErrorForSerialization(error) {
+        if (error instanceof Error) {
+            var name_1 = error.name, message = error.message;
+            var stack = error.stacktrace || error.stack;
+            return {
+                $isError: true,
+                name: name_1,
+                message: message,
+                stack: stack
+            };
+        }
+        // return as is
+        return error;
+    }
+    exports.transformErrorForSerialization = transformErrorForSerialization;
+    var canceledName = 'Canceled';
+    /**
+     * Checks if the given error is a promise in canceled state
+     */
+    function isPromiseCanceledError(error) {
+        return error instanceof Error && error.name === canceledName && error.message === canceledName;
+    }
+    exports.isPromiseCanceledError = isPromiseCanceledError;
+    /**
+     * Returns an error that signals cancellation.
+     */
+    function canceled() {
+        var error = new Error(canceledName);
+        error.name = error.message;
+        return error;
+    }
+    exports.canceled = canceled;
+    /**
+     * Returns an error that signals something is not implemented.
+     */
+    function notImplemented() {
+        return new Error('Not Implemented');
+    }
+    exports.notImplemented = notImplemented;
+    function illegalArgument(name) {
+        if (name) {
+            return new Error("Illegal argument: " + name);
+        }
+        else {
+            return new Error('Illegal argument');
+        }
+    }
+    exports.illegalArgument = illegalArgument;
+    function illegalState(name) {
+        if (name) {
+            return new Error("Illegal state: " + name);
+        }
+        else {
+            return new Error('Illegal state');
+        }
+    }
+    exports.illegalState = illegalState;
+    function readonly(name) {
+        return name
+            ? new Error("readonly property '" + name + " cannot be changed'")
+            : new Error('readonly property cannot be changed');
+    }
+    exports.readonly = readonly;
+    function create(message, options) {
+        if (options === void 0) { options = {}; }
+        var result = new Error(message);
+        if (types.isNumber(options.severity)) {
+            result.severity = options.severity;
+        }
+        if (options.actions) {
+            result.actions = options.actions;
+        }
+        return result;
+    }
+    exports.create = create;
+    function getErrorMessage(err) {
+        if (!err) {
+            return 'Error';
+        }
+        if (err.message) {
+            return err.message;
+        }
+        if (err.stack) {
+            return err.stack.split('\n')[0];
+        }
+        return String(err);
+    }
+    exports.getErrorMessage = getErrorMessage;
+});
+
+define(__m[24/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var CallbackList = (function () {
+        function CallbackList() {
+        }
+        CallbackList.prototype.add = function (callback, context, bucket) {
+            var _this = this;
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                this._callbacks = [];
+                this._contexts = [];
+            }
+            this._callbacks.push(callback);
+            this._contexts.push(context);
+            if (Array.isArray(bucket)) {
+                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
+            }
+        };
+        CallbackList.prototype.remove = function (callback, context) {
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                return;
+            }
+            var foundCallbackWithDifferentContext = false;
+            for (var i = 0, len = this._callbacks.length; i < len; i++) {
+                if (this._callbacks[i] === callback) {
+                    if (this._contexts[i] === context) {
+                        // callback & context match => remove it
+                        this._callbacks.splice(i, 1);
+                        this._contexts.splice(i, 1);
+                        return;
+                    }
+                    else {
+                        foundCallbackWithDifferentContext = true;
+                    }
+                }
+            }
+            if (foundCallbackWithDifferentContext) {
+                throw new Error('When adding a listener with a context, you should remove it with the same context');
+            }
+        };
+        CallbackList.prototype.invoke = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            if (!this._callbacks) {
+                return;
+            }
+            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
+            for (var i = 0, len = callbacks.length; i < len; i++) {
+                try {
+                    ret.push(callbacks[i].apply(contexts[i], args));
+                }
+                catch (e) {
+                    errors_1.onUnexpectedError(e);
+                }
+            }
+            return ret;
+        };
+        CallbackList.prototype.isEmpty = function () {
+            return !this._callbacks || this._callbacks.length === 0;
+        };
+        CallbackList.prototype.entries = function () {
+            var _this = this;
+            if (!this._callbacks) {
+                return [];
+            }
+            return this._callbacks.map(function (fn, index) { return [fn, _this._contexts[index]]; });
+        };
+        CallbackList.prototype.dispose = function () {
+            this._callbacks = undefined;
+            this._contexts = undefined;
+        };
+        return CallbackList;
+    }());
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = CallbackList;
+});
 
 
 
 
 
-define(__m[6], __M([1,0,4]), function (require, exports, types_1) {
+
+define(__m[6/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1787,7 +2142,477 @@ define(__m[6], __M([1,0,4]), function (require, exports, types_1) {
     exports.Disposables = Disposables;
 });
 
-define(__m[7], __M([1,0,4]), function (require, exports, Types) {
+define(__m[4/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/lifecycle*/,24/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var Event;
+    (function (Event) {
+        var _disposable = { dispose: function () { } };
+        Event.None = function () { return _disposable; };
+    })(Event || (Event = {}));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Event;
+    /**
+     * The Emitter can be used to expose an Event to the public
+     * to fire it from the insides.
+     * Sample:
+        class Document {
+    
+            private _onDidChange = new Emitter<(value:string)=>any>();
+    
+            public onDidChange = this._onDidChange.event;
+    
+            // getter-style
+            // get onDidChange(): Event<(value:string)=>any> {
+            // 	return this._onDidChange.event;
+            // }
+    
+            private _doIt() {
+                //...
+                this._onDidChange.fire(value);
+            }
+        }
+     */
+    var Emitter = (function () {
+        function Emitter(_options) {
+            this._options = _options;
+        }
+        Object.defineProperty(Emitter.prototype, "event", {
+            /**
+             * For the public to allow to subscribe
+             * to events from this Emitter
+             */
+            get: function () {
+                var _this = this;
+                if (!this._event) {
+                    this._event = function (listener, thisArgs, disposables) {
+                        if (!_this._callbacks) {
+                            _this._callbacks = new callbackList_1.default();
+                        }
+                        var firstListener = _this._callbacks.isEmpty();
+                        if (firstListener && _this._options && _this._options.onFirstListenerAdd) {
+                            _this._options.onFirstListenerAdd(_this);
+                        }
+                        _this._callbacks.add(listener, thisArgs);
+                        if (firstListener && _this._options && _this._options.onFirstListenerDidAdd) {
+                            _this._options.onFirstListenerDidAdd(_this);
+                        }
+                        var result;
+                        result = {
+                            dispose: function () {
+                                result.dispose = Emitter._noop;
+                                if (!_this._disposed) {
+                                    _this._callbacks.remove(listener, thisArgs);
+                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
+                                        _this._options.onLastListenerRemove(_this);
+                                    }
+                                }
+                            }
+                        };
+                        if (Array.isArray(disposables)) {
+                            disposables.push(result);
+                        }
+                        return result;
+                    };
+                }
+                return this._event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * To be kept private to fire an event to
+         * subscribers
+         */
+        Emitter.prototype.fire = function (event) {
+            if (this._callbacks) {
+                this._callbacks.invoke.call(this._callbacks, event);
+            }
+        };
+        Emitter.prototype.dispose = function () {
+            if (this._callbacks) {
+                this._callbacks.dispose();
+                this._callbacks = undefined;
+                this._disposed = true;
+            }
+        };
+        Emitter._noop = function () { };
+        return Emitter;
+    }());
+    exports.Emitter = Emitter;
+    /**
+     * Creates an Event which is backed-up by the event emitter. This allows
+     * to use the existing eventing pattern and is likely using less memory.
+     * Sample:
+     *
+     * 	class Document {
+     *
+     *		private _eventbus = new EventEmitter();
+     *
+     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
+     *
+     *		// getter-style
+     *		// get onDidChange(): Event<(value:string)=>any> {
+     *		// 	cache fromEventEmitter result and return
+     *		// }
+     *
+     *		private _doIt() {
+     *			// ...
+     *			this._eventbus.emit('changed', value)
+     *		}
+     *	}
+     */
+    function fromEventEmitter(emitter, eventType) {
+        return function (listener, thisArgs, disposables) {
+            var result = emitter.addListener2(eventType, function () {
+                listener.apply(thisArgs, arguments);
+            });
+            if (Array.isArray(disposables)) {
+                disposables.push(result);
+            }
+            return result;
+        };
+    }
+    exports.fromEventEmitter = fromEventEmitter;
+    function fromPromise(promise) {
+        var emitter = new Emitter();
+        var shouldEmit = false;
+        promise
+            .then(null, function () { return null; })
+            .then(function () {
+            if (!shouldEmit) {
+                setTimeout(function () { return emitter.fire(); }, 0);
+            }
+            else {
+                emitter.fire();
+            }
+        });
+        shouldEmit = true;
+        return emitter.event;
+    }
+    exports.fromPromise = fromPromise;
+    function delayed(promise) {
+        var toCancel = null;
+        var listener = null;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
+            },
+            onLastListenerRemove: function () {
+                if (toCancel) {
+                    toCancel.cancel();
+                    toCancel = null;
+                }
+                if (listener) {
+                    listener.dispose();
+                    listener = null;
+                }
+            }
+        });
+        return emitter.event;
+    }
+    exports.delayed = delayed;
+    function once(event) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            var result = event(function (e) {
+                result.dispose();
+                return listener.call(thisArgs, e);
+            }, null, disposables);
+            return result;
+        };
+    }
+    exports.once = once;
+    function any() {
+        var events = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            events[_i - 0] = arguments[_i];
+        }
+        var listeners = [];
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                listeners = events.map(function (e) { return e(function (r) { return emitter.fire(r); }); });
+            },
+            onLastListenerRemove: function () {
+                listeners = lifecycle_1.dispose(listeners);
+            }
+        });
+        return emitter.event;
+    }
+    exports.any = any;
+    function debounceEvent(event, merger, delay) {
+        if (delay === void 0) { delay = 100; }
+        var subscription;
+        var output;
+        var handle;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                subscription = event(function (cur) {
+                    output = merger(output, cur);
+                    clearTimeout(handle);
+                    handle = setTimeout(function () {
+                        var _output = output;
+                        output = undefined;
+                        emitter.fire(_output);
+                    }, delay);
+                });
+            },
+            onLastListenerRemove: function () {
+                subscription.dispose();
+            }
+        });
+        return emitter.event;
+    }
+    exports.debounceEvent = debounceEvent;
+    /**
+     * The EventDelayer is useful in situations in which you want
+     * to delay firing your events during some code.
+     * You can wrap that code and be sure that the event will not
+     * be fired during that wrap.
+     *
+     * ```
+     * const emitter: Emitter;
+     * const delayer = new EventDelayer();
+     * const delayedEvent = delayer.wrapEvent(emitter.event);
+     *
+     * delayedEvent(console.log);
+     *
+     * delayer.bufferEvents(() => {
+     *   emitter.fire(); // event will not be fired yet
+     * });
+     *
+     * // event will only be fired at this point
+     * ```
+     */
+    var EventBufferer = (function () {
+        function EventBufferer() {
+            this.buffers = [];
+        }
+        EventBufferer.prototype.wrapEvent = function (event) {
+            var _this = this;
+            return function (listener, thisArgs, disposables) {
+                return event(function (i) {
+                    var buffer = _this.buffers[_this.buffers.length - 1];
+                    if (buffer) {
+                        buffer.push(function () { return listener.call(thisArgs, i); });
+                    }
+                    else {
+                        listener.call(thisArgs, i);
+                    }
+                }, void 0, disposables);
+            };
+        };
+        EventBufferer.prototype.bufferEvents = function (fn) {
+            var buffer = [];
+            this.buffers.push(buffer);
+            fn();
+            this.buffers.pop();
+            buffer.forEach(function (flush) { return flush(); });
+        };
+        return EventBufferer;
+    }());
+    exports.EventBufferer = EventBufferer;
+    function mapEvent(event, map) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
+        };
+    }
+    exports.mapEvent = mapEvent;
+    function filterEvent(event, filter) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
+        };
+    }
+    exports.filterEvent = filterEvent;
+    var ChainableEvent = (function () {
+        function ChainableEvent(_event) {
+            this._event = _event;
+        }
+        Object.defineProperty(ChainableEvent.prototype, "event", {
+            get: function () { return this._event; },
+            enumerable: true,
+            configurable: true
+        });
+        ChainableEvent.prototype.map = function (fn) {
+            return new ChainableEvent(mapEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.filter = function (fn) {
+            return new ChainableEvent(filterEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.on = function (listener, thisArgs, disposables) {
+            return this._event(listener, thisArgs, disposables);
+        };
+        return ChainableEvent;
+    }());
+    function chain(event) {
+        return new ChainableEvent(event);
+    }
+    exports.chain = chain;
+    function stopwatch(event) {
+        var start = new Date().getTime();
+        return mapEvent(once(event), function (_) { return new Date().getTime() - start; });
+    }
+    exports.stopwatch = stopwatch;
+    /**
+     * Buffers the provided event until a first listener comes
+     * along, at which point fire all the events at once and
+     * pipe the event from then on.
+     *
+     * ```typescript
+     * const emitter = new Emitter<number>();
+     * const event = emitter.event;
+     * const bufferedEvent = buffer(event);
+     *
+     * emitter.fire(1);
+     * emitter.fire(2);
+     * emitter.fire(3);
+     * // nothing...
+     *
+     * const listener = bufferedEvent(num => console.log(num));
+     * // 1, 2, 3
+     *
+     * emitter.fire(4);
+     * // 4
+     * ```
+     */
+    function buffer(event, nextTick, buffer) {
+        if (nextTick === void 0) { nextTick = false; }
+        if (buffer === void 0) { buffer = []; }
+        buffer = buffer.slice();
+        var listener = event(function (e) {
+            if (buffer) {
+                buffer.push(e);
+            }
+            else {
+                emitter.fire(e);
+            }
+        });
+        var flush = function () {
+            buffer.forEach(function (e) { return emitter.fire(e); });
+            buffer = null;
+        };
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                if (!listener) {
+                    listener = event(function (e) { return emitter.fire(e); });
+                }
+            },
+            onFirstListenerDidAdd: function () {
+                if (buffer) {
+                    if (nextTick) {
+                        setTimeout(flush);
+                    }
+                    else {
+                        flush();
+                    }
+                }
+            },
+            onLastListenerRemove: function () {
+                listener.dispose();
+                listener = null;
+            }
+        });
+        return emitter.event;
+    }
+    exports.buffer = buffer;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[13/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/event*/]), function (require, exports, event_1) {
+    'use strict';
+    var shortcutEvent = Object.freeze(function (callback, context) {
+        var handle = setTimeout(callback.bind(context), 0);
+        return { dispose: function () { clearTimeout(handle); } };
+    });
+    var CancellationToken;
+    (function (CancellationToken) {
+        CancellationToken.None = Object.freeze({
+            isCancellationRequested: false,
+            onCancellationRequested: event_1.default.None
+        });
+        CancellationToken.Cancelled = Object.freeze({
+            isCancellationRequested: true,
+            onCancellationRequested: shortcutEvent
+        });
+    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
+    var MutableToken = (function () {
+        function MutableToken() {
+            this._isCancelled = false;
+        }
+        MutableToken.prototype.cancel = function () {
+            if (!this._isCancelled) {
+                this._isCancelled = true;
+                if (this._emitter) {
+                    this._emitter.fire(undefined);
+                    this._emitter = undefined;
+                }
+            }
+        };
+        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
+            get: function () {
+                return this._isCancelled;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
+            get: function () {
+                if (this._isCancelled) {
+                    return shortcutEvent;
+                }
+                if (!this._emitter) {
+                    this._emitter = new event_1.Emitter();
+                }
+                return this._emitter.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return MutableToken;
+    }());
+    var CancellationTokenSource = (function () {
+        function CancellationTokenSource() {
+        }
+        Object.defineProperty(CancellationTokenSource.prototype, "token", {
+            get: function () {
+                if (!this._token) {
+                    // be lazy and create the token only when
+                    // actually needed
+                    this._token = new MutableToken();
+                }
+                return this._token;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CancellationTokenSource.prototype.cancel = function () {
+            if (!this._token) {
+                // save an object by returning the default
+                // cancelled token when cancellation happens
+                // before someone asks for the token
+                this._token = CancellationToken.Cancelled;
+            }
+            else {
+                this._token.cancel();
+            }
+        };
+        CancellationTokenSource.prototype.dispose = function () {
+            this.cancel();
+        };
+        return CancellationTokenSource;
+    }());
+    exports.CancellationTokenSource = CancellationTokenSource;
+});
+
+define(__m[14/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/types*/]), function (require, exports, Types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1798,6 +2623,7 @@ define(__m[7], __M([1,0,4]), function (require, exports, Types) {
             return obj;
         }
         if (obj instanceof RegExp) {
+            // See https://github.com/Microsoft/TypeScript/issues/10990
             return obj;
         }
         var result = (Array.isArray(obj)) ? [] : {};
@@ -2078,7 +2904,7 @@ define(__m[7], __M([1,0,4]), function (require, exports, Types) {
     exports.getOrDefault = getOrDefault;
 });
 
-define(__m[21], __M([1,0,2]), function (require, exports, platform) {
+define(__m[15/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/platform*/]), function (require, exports, platform) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2120,6 +2946,19 @@ define(__m[21], __M([1,0,2]), function (require, exports, platform) {
             this._formatted = null;
             this._fsPath = null;
         }
+        URI.isUri = function (thing) {
+            if (thing instanceof URI) {
+                return true;
+            }
+            if (!thing) {
+                return false;
+            }
+            return typeof thing.authority === 'string'
+                && typeof thing.fragment === 'string'
+                && typeof thing.path === 'string'
+                && typeof thing.query === 'string'
+                && typeof thing.scheme === 'string';
+        };
         Object.defineProperty(URI.prototype, "scheme", {
             /**
              * scheme is the 'http' part of 'http://www.msft.com/some/path?query#fragment'.
@@ -2183,7 +3022,7 @@ define(__m[21], __M([1,0,2]), function (require, exports, platform) {
             get: function () {
                 if (!this._fsPath) {
                     var value;
-                    if (this._authority && this.scheme === 'file') {
+                    if (this._authority && this._path && this.scheme === 'file') {
                         // unc path: file://shares/c$/far/boo
                         value = "//" + this._authority + this._path;
                     }
@@ -4526,753 +5365,12 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
 }
 
 })();
-define(__m[24], __M([32,28]), function(nls, data) { return nls.create("vs/base/common/errors", data); });
-define(__m[5], __M([1,0,24,7,2,4,15,8]), function (require, exports, nls, objects, platform, types, arrays, strings) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
-    var ErrorHandler = (function () {
-        function ErrorHandler() {
-            this.listeners = [];
-            this.unexpectedErrorHandler = function (e) {
-                platform.setTimeout(function () {
-                    if (e.stack) {
-                        throw new Error(e.message + '\n\n' + e.stack);
-                    }
-                    throw e;
-                }, 0);
-            };
-        }
-        ErrorHandler.prototype.addListener = function (listener) {
-            var _this = this;
-            this.listeners.push(listener);
-            return function () {
-                _this._removeListener(listener);
-            };
-        };
-        ErrorHandler.prototype.emit = function (e) {
-            this.listeners.forEach(function (listener) {
-                listener(e);
-            });
-        };
-        ErrorHandler.prototype._removeListener = function (listener) {
-            this.listeners.splice(this.listeners.indexOf(listener), 1);
-        };
-        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
-            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
-            return this.unexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.onUnexpectedError = function (e) {
-            this.unexpectedErrorHandler(e);
-            this.emit(e);
-        };
-        return ErrorHandler;
-    }());
-    exports.ErrorHandler = ErrorHandler;
-    exports.errorHandler = new ErrorHandler();
-    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
-        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
-    }
-    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
-    function onUnexpectedError(e) {
-        // ignore errors from cancelled promises
-        if (!isPromiseCanceledError(e)) {
-            exports.errorHandler.onUnexpectedError(e);
-        }
-    }
-    exports.onUnexpectedError = onUnexpectedError;
-    function onUnexpectedPromiseError(promise) {
-        return promise.then(null, onUnexpectedError);
-    }
-    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
-    function transformErrorForSerialization(error) {
-        if (error instanceof Error) {
-            var name_1 = error.name, message = error.message;
-            var stack = error.stacktrace || error.stack;
-            return {
-                $isError: true,
-                name: name_1,
-                message: message,
-                stack: stack
-            };
-        }
-        // return as is
-        return error;
-    }
-    exports.transformErrorForSerialization = transformErrorForSerialization;
-    /**
-     * The base class for all connection errors originating from XHR requests.
-     */
-    var ConnectionError = (function () {
-        function ConnectionError(arg) {
-            this.status = arg.status;
-            this.statusText = arg.statusText;
-            this.name = 'ConnectionError';
-            try {
-                this.responseText = arg.responseText;
-            }
-            catch (e) {
-                this.responseText = '';
-            }
-            this.errorMessage = null;
-            this.errorCode = null;
-            this.errorObject = null;
-            if (this.responseText) {
-                try {
-                    var errorObj = JSON.parse(this.responseText);
-                    this.errorMessage = errorObj.message;
-                    this.errorCode = errorObj.code;
-                    this.errorObject = errorObj;
-                }
-                catch (error) {
-                }
-            }
-        }
-        Object.defineProperty(ConnectionError.prototype, "message", {
-            get: function () {
-                return this.connectionErrorToMessage(this, false);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ConnectionError.prototype, "verboseMessage", {
-            get: function () {
-                return this.connectionErrorToMessage(this, true);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ConnectionError.prototype.connectionErrorDetailsToMessage = function (error, verbose) {
-            var errorCode = error.errorCode;
-            var errorMessage = error.errorMessage;
-            if (errorCode !== null && errorMessage !== null) {
-                return nls.localize(0, null, strings.rtrim(errorMessage, '.'), errorCode);
-
-
-
-
-
-
-            }
-            if (errorMessage !== null) {
-                return errorMessage;
-            }
-            if (verbose && error.responseText !== null) {
-                return error.responseText;
-            }
-            return null;
-        };
-        ConnectionError.prototype.connectionErrorToMessage = function (error, verbose) {
-            var details = this.connectionErrorDetailsToMessage(error, verbose);
-            // Status Code based Error
-            if (error.status === 401) {
-                if (details !== null) {
-                    return nls.localize(1, null, details);
-
-
-
-
-
-                }
-                return nls.localize(2, null);
-            }
-            // Return error details if present
-            if (details) {
-                return details;
-            }
-            // Fallback to HTTP Status and Code
-            if (error.status > 0 && error.statusText !== null) {
-                if (verbose && error.responseText !== null && error.responseText.length > 0) {
-                    return nls.localize(3, null, error.statusText, error.status, error.responseText);
-                }
-                return nls.localize(4, null, error.statusText, error.status);
-            }
-            // Finally its an Unknown Connection Error
-            if (verbose && error.responseText !== null && error.responseText.length > 0) {
-                return nls.localize(5, null, error.responseText);
-            }
-            return nls.localize(6, null);
-        };
-        return ConnectionError;
-    }());
-    exports.ConnectionError = ConnectionError;
-    // Bug: Can not subclass a JS Type. Do it manually (as done in WinJS.Class.derive)
-    objects.derive(Error, ConnectionError);
-    function xhrToErrorMessage(xhr, verbose) {
-        var ce = new ConnectionError(xhr);
-        if (verbose) {
-            return ce.verboseMessage;
-        }
-        else {
-            return ce.message;
-        }
-    }
-    function exceptionToErrorMessage(exception, verbose) {
-        if (exception.message) {
-            if (verbose && (exception.stack || exception.stacktrace)) {
-                return nls.localize(7, null, detectSystemErrorMessage(exception), exception.stack || exception.stacktrace);
-            }
-            return detectSystemErrorMessage(exception);
-        }
-        return nls.localize(8, null);
-    }
-    function detectSystemErrorMessage(exception) {
-        // See https://nodejs.org/api/errors.html#errors_class_system_error
-        if (typeof exception.code === 'string' && typeof exception.errno === 'number' && typeof exception.syscall === 'string') {
-            return nls.localize(9, null, exception.message);
-        }
-        return exception.message;
-    }
-    /**
-     * Tries to generate a human readable error message out of the error. If the verbose parameter
-     * is set to true, the error message will include stacktrace details if provided.
-     * @returns A string containing the error message.
-     */
-    function toErrorMessage(error, verbose) {
-        if (error === void 0) { error = null; }
-        if (verbose === void 0) { verbose = false; }
-        if (!error) {
-            return nls.localize(10, null);
-        }
-        if (Array.isArray(error)) {
-            var errors = arrays.coalesce(error);
-            var msg = toErrorMessage(errors[0], verbose);
-            if (errors.length > 1) {
-                return nls.localize(11, null, msg, errors.length);
-            }
-            return msg;
-        }
-        if (types.isString(error)) {
-            return error;
-        }
-        if (!types.isUndefinedOrNull(error.status)) {
-            return xhrToErrorMessage(error, verbose);
-        }
-        if (error.detail) {
-            var detail = error.detail;
-            if (detail.error) {
-                if (detail.error && !types.isUndefinedOrNull(detail.error.status)) {
-                    return xhrToErrorMessage(detail.error, verbose);
-                }
-                if (types.isArray(detail.error)) {
-                    for (var i = 0; i < detail.error.length; i++) {
-                        if (detail.error[i] && !types.isUndefinedOrNull(detail.error[i].status)) {
-                            return xhrToErrorMessage(detail.error[i], verbose);
-                        }
-                    }
-                }
-                else {
-                    return exceptionToErrorMessage(detail.error, verbose);
-                }
-            }
-            if (detail.exception) {
-                if (!types.isUndefinedOrNull(detail.exception.status)) {
-                    return xhrToErrorMessage(detail.exception, verbose);
-                }
-                return exceptionToErrorMessage(detail.exception, verbose);
-            }
-        }
-        if (error.stack) {
-            return exceptionToErrorMessage(error, verbose);
-        }
-        if (error.message) {
-            return error.message;
-        }
-        return nls.localize(12, null);
-    }
-    exports.toErrorMessage = toErrorMessage;
-    var canceledName = 'Canceled';
-    /**
-     * Checks if the given error is a promise in canceled state
-     */
-    function isPromiseCanceledError(error) {
-        return error instanceof Error && error.name === canceledName && error.message === canceledName;
-    }
-    exports.isPromiseCanceledError = isPromiseCanceledError;
-    /**
-     * Returns an error that signals cancellation.
-     */
-    function canceled() {
-        var error = new Error(canceledName);
-        error.name = error.message;
-        return error;
-    }
-    exports.canceled = canceled;
-    /**
-     * Returns an error that signals something is not implemented.
-     */
-    function notImplemented() {
-        return new Error(nls.localize(13, null));
-    }
-    exports.notImplemented = notImplemented;
-    function illegalArgument(name) {
-        if (name) {
-            return new Error(nls.localize(14, null, name));
-        }
-        else {
-            return new Error(nls.localize(15, null));
-        }
-    }
-    exports.illegalArgument = illegalArgument;
-    function illegalState(name) {
-        if (name) {
-            return new Error(nls.localize(16, null, name));
-        }
-        else {
-            return new Error(nls.localize(17, null));
-        }
-    }
-    exports.illegalState = illegalState;
-    function readonly(name) {
-        return name
-            ? new Error("readonly property '" + name + " cannot be changed'")
-            : new Error('readonly property cannot be changed');
-    }
-    exports.readonly = readonly;
-    function loaderError(err) {
-        if (platform.isWeb) {
-            return new Error(nls.localize(18, null));
-        }
-        return new Error(nls.localize(19, null, JSON.stringify(err)));
-    }
-    exports.loaderError = loaderError;
-    function create(message, options) {
-        if (options === void 0) { options = {}; }
-        var result = new Error(message);
-        if (types.isNumber(options.severity)) {
-            result.severity = options.severity;
-        }
-        if (options.actions) {
-            result.actions = options.actions;
-        }
-        return result;
-    }
-    exports.create = create;
-});
-
-define(__m[16], __M([1,0,5]), function (require, exports, errors_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var CallbackList = (function () {
-        function CallbackList() {
-        }
-        CallbackList.prototype.add = function (callback, context, bucket) {
-            var _this = this;
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                this._callbacks = [];
-                this._contexts = [];
-            }
-            this._callbacks.push(callback);
-            this._contexts.push(context);
-            if (Array.isArray(bucket)) {
-                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
-            }
-        };
-        CallbackList.prototype.remove = function (callback, context) {
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                return;
-            }
-            var foundCallbackWithDifferentContext = false;
-            for (var i = 0, len = this._callbacks.length; i < len; i++) {
-                if (this._callbacks[i] === callback) {
-                    if (this._contexts[i] === context) {
-                        // callback & context match => remove it
-                        this._callbacks.splice(i, 1);
-                        this._contexts.splice(i, 1);
-                        return;
-                    }
-                    else {
-                        foundCallbackWithDifferentContext = true;
-                    }
-                }
-            }
-            if (foundCallbackWithDifferentContext) {
-                throw new Error('When adding a listener with a context, you should remove it with the same context');
-            }
-        };
-        CallbackList.prototype.invoke = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            if (!this._callbacks) {
-                return;
-            }
-            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
-            for (var i = 0, len = callbacks.length; i < len; i++) {
-                try {
-                    ret.push(callbacks[i].apply(contexts[i], args));
-                }
-                catch (e) {
-                    errors_1.onUnexpectedError(e);
-                }
-            }
-            return ret;
-        };
-        CallbackList.prototype.isEmpty = function () {
-            return !this._callbacks || this._callbacks.length === 0;
-        };
-        CallbackList.prototype.dispose = function () {
-            this._callbacks = undefined;
-            this._contexts = undefined;
-        };
-        return CallbackList;
-    }());
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = CallbackList;
-});
-
-define(__m[9], __M([1,0,16]), function (require, exports, callbackList_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var Event;
-    (function (Event) {
-        var _disposable = { dispose: function () { } };
-        Event.None = function () { return _disposable; };
-    })(Event || (Event = {}));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Event;
-    /**
-     * The Emitter can be used to expose an Event to the public
-     * to fire it from the insides.
-     * Sample:
-        class Document {
-    
-            private _onDidChange = new Emitter<(value:string)=>any>();
-    
-            public onDidChange = this._onDidChange.event;
-    
-            // getter-style
-            // get onDidChange(): Event<(value:string)=>any> {
-            // 	return this._onDidChange.event;
-            // }
-    
-            private _doIt() {
-                //...
-                this._onDidChange.fire(value);
-            }
-        }
-     */
-    var Emitter = (function () {
-        function Emitter(_options) {
-            this._options = _options;
-        }
-        Object.defineProperty(Emitter.prototype, "event", {
-            /**
-             * For the public to allow to subscribe
-             * to events from this Emitter
-             */
-            get: function () {
-                var _this = this;
-                if (!this._event) {
-                    this._event = function (listener, thisArgs, disposables) {
-                        if (!_this._callbacks) {
-                            _this._callbacks = new callbackList_1.default();
-                        }
-                        if (_this._options && _this._options.onFirstListenerAdd && _this._callbacks.isEmpty()) {
-                            _this._options.onFirstListenerAdd(_this);
-                        }
-                        _this._callbacks.add(listener, thisArgs);
-                        var result;
-                        result = {
-                            dispose: function () {
-                                result.dispose = Emitter._noop;
-                                if (!_this._disposed) {
-                                    _this._callbacks.remove(listener, thisArgs);
-                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
-                                        _this._options.onLastListenerRemove(_this);
-                                    }
-                                }
-                            }
-                        };
-                        if (Array.isArray(disposables)) {
-                            disposables.push(result);
-                        }
-                        return result;
-                    };
-                }
-                return this._event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * To be kept private to fire an event to
-         * subscribers
-         */
-        Emitter.prototype.fire = function (event) {
-            if (this._callbacks) {
-                this._callbacks.invoke.call(this._callbacks, event);
-            }
-        };
-        Emitter.prototype.dispose = function () {
-            if (this._callbacks) {
-                this._callbacks.dispose();
-                this._callbacks = undefined;
-                this._disposed = true;
-            }
-        };
-        Emitter._noop = function () { };
-        return Emitter;
-    }());
-    exports.Emitter = Emitter;
-    /**
-     * Creates an Event which is backed-up by the event emitter. This allows
-     * to use the existing eventing pattern and is likely using less memory.
-     * Sample:
-     *
-     * 	class Document {
-     *
-     *		private _eventbus = new EventEmitter();
-     *
-     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
-     *
-     *		// getter-style
-     *		// get onDidChange(): Event<(value:string)=>any> {
-     *		// 	cache fromEventEmitter result and return
-     *		// }
-     *
-     *		private _doIt() {
-     *			// ...
-     *			this._eventbus.emit('changed', value)
-     *		}
-     *	}
-     */
-    function fromEventEmitter(emitter, eventType) {
-        return function (listener, thisArgs, disposables) {
-            var result = emitter.addListener2(eventType, function () {
-                listener.apply(thisArgs, arguments);
-            });
-            if (Array.isArray(disposables)) {
-                disposables.push(result);
-            }
-            return result;
-        };
-    }
-    exports.fromEventEmitter = fromEventEmitter;
-    function fromPromise(promise) {
-        var toCancel = null;
-        var listener = null;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
-            },
-            onLastListenerRemove: function () {
-                if (toCancel) {
-                    toCancel.cancel();
-                    toCancel = null;
-                }
-                if (listener) {
-                    listener.dispose();
-                    listener = null;
-                }
-            }
-        });
-        return emitter.event;
-    }
-    exports.fromPromise = fromPromise;
-    function mapEvent(event, map) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
-        };
-    }
-    exports.mapEvent = mapEvent;
-    function filterEvent(event, filter) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
-        };
-    }
-    exports.filterEvent = filterEvent;
-    function debounceEvent(event, merger, delay) {
-        if (delay === void 0) { delay = 100; }
-        var subscription;
-        var output;
-        var handle;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                subscription = event(function (cur) {
-                    output = merger(output, cur);
-                    clearTimeout(handle);
-                    handle = setTimeout(function () {
-                        var _output = output;
-                        output = undefined;
-                        emitter.fire(_output);
-                    }, delay);
-                });
-            },
-            onLastListenerRemove: function () {
-                subscription.dispose();
-            }
-        });
-        return emitter.event;
-    }
-    exports.debounceEvent = debounceEvent;
-    var EventDelayerState;
-    (function (EventDelayerState) {
-        EventDelayerState[EventDelayerState["Idle"] = 0] = "Idle";
-        EventDelayerState[EventDelayerState["Running"] = 1] = "Running";
-    })(EventDelayerState || (EventDelayerState = {}));
-    /**
-     * The EventDelayer is useful in situations in which you want
-     * to delay firing your events during some code.
-     * You can wrap that code and be sure that the event will not
-     * be fired during that wrap.
-     *
-     * ```
-     * const emitter: Emitter;
-     * const delayer = new EventDelayer();
-     * const delayedEvent = delayer.delay(emitter.event);
-     *
-     * delayedEvent(console.log);
-     *
-     * delayer.wrap(() => {
-     *   emitter.fire(); // event will not be fired yet
-     * });
-     *
-     * // event will only be fired at this point
-     * ```
-     */
-    var EventBufferer = (function () {
-        function EventBufferer() {
-            this.buffers = [];
-        }
-        EventBufferer.prototype.wrapEvent = function (event) {
-            var _this = this;
-            return function (listener, thisArgs, disposables) {
-                return event(function (i) {
-                    var buffer = _this.buffers[_this.buffers.length - 1];
-                    if (buffer) {
-                        buffer.push(function () { return listener.call(thisArgs, i); });
-                    }
-                    else {
-                        listener.call(thisArgs, i);
-                    }
-                }, void 0, disposables);
-            };
-        };
-        EventBufferer.prototype.bufferEvents = function (fn) {
-            var buffer = [];
-            this.buffers.push(buffer);
-            fn();
-            this.buffers.pop();
-            buffer.forEach(function (flush) { return flush(); });
-        };
-        return EventBufferer;
-    }());
-    exports.EventBufferer = EventBufferer;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[18], __M([1,0,9]), function (require, exports, event_1) {
-    'use strict';
-    var CancellationToken;
-    (function (CancellationToken) {
-        CancellationToken.None = Object.freeze({
-            isCancellationRequested: false,
-            onCancellationRequested: event_1.default.None
-        });
-        CancellationToken.Cancelled = Object.freeze({
-            isCancellationRequested: true,
-            onCancellationRequested: event_1.default.None
-        });
-    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
-    var shortcutEvent = Object.freeze(function (callback, context) {
-        var handle = setTimeout(callback.bind(context), 0);
-        return { dispose: function () { clearTimeout(handle); } };
-    });
-    var MutableToken = (function () {
-        function MutableToken() {
-            this._isCancelled = false;
-        }
-        MutableToken.prototype.cancel = function () {
-            if (!this._isCancelled) {
-                this._isCancelled = true;
-                if (this._emitter) {
-                    this._emitter.fire(undefined);
-                    this._emitter = undefined;
-                }
-            }
-        };
-        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
-            get: function () {
-                return this._isCancelled;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
-            get: function () {
-                if (this._isCancelled) {
-                    return shortcutEvent;
-                }
-                if (!this._emitter) {
-                    this._emitter = new event_1.Emitter();
-                }
-                return this._emitter.event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return MutableToken;
-    }());
-    var CancellationTokenSource = (function () {
-        function CancellationTokenSource() {
-        }
-        Object.defineProperty(CancellationTokenSource.prototype, "token", {
-            get: function () {
-                if (!this._token) {
-                    // be lazy and create the token only when
-                    // actually needed
-                    this._token = new MutableToken();
-                }
-                return this._token;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        CancellationTokenSource.prototype.cancel = function () {
-            if (!this._token) {
-                // save an object by returning the default
-                // cancelled token when cancellation happens
-                // before someone asks for the token
-                this._token = CancellationToken.Cancelled;
-            }
-            else {
-                this._token.cancel();
-            }
-        };
-        CancellationTokenSource.prototype.dispose = function () {
-            this.cancel();
-        };
-        return CancellationTokenSource;
-    }());
-    exports.CancellationTokenSource = CancellationTokenSource;
-});
-
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define(__m[3], __M([27,5]), function (winjs, __Errors__) {
+define(__m[2/*vs/base/common/winjs.base*/], __M([30/*vs/base/common/winjs.base.raw*/,5/*vs/base/common/errors*/]), function (winjs, __Errors__) {
 	'use strict';
 
 	var outstandingPromiseErrors = {};
@@ -5338,7 +5436,7 @@ define(__m[3], __M([27,5]), function (winjs, __Errors__) {
 
 
 
-define(__m[11], __M([1,0,5,2,3,18,6]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
+define(__m[9/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/errors*/,3/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,13/*vs/base/common/cancellation*/,6/*vs/base/common/lifecycle*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -5354,9 +5452,12 @@ define(__m[11], __M([1,0,5,2,3,18,6]), function (require, exports, errors, platf
     exports.toThenable = toThenable;
     function asWinJsPromise(callback) {
         var source = new cancellation_1.CancellationTokenSource();
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new winjs_base_1.TPromise(function (resolve, reject, progress) {
             var item = callback(source.token);
-            if (isThenable(item)) {
+            if (item instanceof winjs_base_1.TPromise) {
+                item.then(resolve, reject, progress);
+            }
+            else if (isThenable(item)) {
                 item.then(resolve, reject);
             }
             else {
@@ -5370,9 +5471,16 @@ define(__m[11], __M([1,0,5,2,3,18,6]), function (require, exports, errors, platf
     /**
      * Hook a cancellation token to a WinJS Promise
      */
-    function wireCancellationToken(token, promise) {
-        token.onCancellationRequested(function () { return promise.cancel(); });
-        return promise;
+    function wireCancellationToken(token, promise, resolveAsUndefinedWhenCancelled) {
+        var subscription = token.onCancellationRequested(function () { return promise.cancel(); });
+        if (resolveAsUndefinedWhenCancelled) {
+            promise = promise.then(undefined, function (err) {
+                if (!errors.isPromiseCanceledError(err)) {
+                    return winjs_base_1.TPromise.wrapError(err);
+                }
+            });
+        }
+        return always(promise, function () { return subscription.dispose(); });
     }
     exports.wireCancellationToken = wireCancellationToken;
     /**
@@ -5667,7 +5775,7 @@ define(__m[11], __M([1,0,5,2,3,18,6]), function (require, exports, errors, platf
             return null;
         }
         function thenHandler(result) {
-            if (result) {
+            if (result !== undefined && result !== null) {
                 results.push(result);
             }
             var n = next();
@@ -5732,6 +5840,17 @@ define(__m[11], __M([1,0,5,2,3,18,6]), function (require, exports, errors, platf
         return Limiter;
     }());
     exports.Limiter = Limiter;
+    /**
+     * A queue is handles one promise at a time and guarantees that at any time only one promise is executing.
+     */
+    var Queue = (function (_super) {
+        __extends(Queue, _super);
+        function Queue() {
+            _super.call(this, 1);
+        }
+        return Queue;
+    }(Limiter));
+    exports.Queue = Queue;
     var TimeoutTimer = (function (_super) {
         __extends(TimeoutTimer, _super);
         function TimeoutTimer() {
@@ -5869,49 +5988,72 @@ define(__m[11], __M([1,0,5,2,3,18,6]), function (require, exports, errors, platf
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[22], __M([1,0,3,6,9]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+define(__m[19/*vs/base/node/event*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
-    var RequestType;
-    (function (RequestType) {
-        RequestType[RequestType["Common"] = 0] = "Common";
-        RequestType[RequestType["Cancel"] = 1] = "Cancel";
-    })(RequestType || (RequestType = {}));
-    var ResponseType;
-    (function (ResponseType) {
-        ResponseType[ResponseType["Initialize"] = 0] = "Initialize";
-        ResponseType[ResponseType["Success"] = 1] = "Success";
-        ResponseType[ResponseType["Progress"] = 2] = "Progress";
-        ResponseType[ResponseType["Error"] = 3] = "Error";
-        ResponseType[ResponseType["ErrorObj"] = 4] = "ErrorObj";
-    })(ResponseType || (ResponseType = {}));
+    function fromEventEmitter(emitter, eventName, map) {
+        var fn = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            return result.fire(map.apply(void 0, args));
+        };
+        var onFirstListenerAdd = function () { return emitter.on(eventName, fn); };
+        var onLastListenerRemove = function () { return emitter.removeListener(eventName, fn); };
+        var result = new event_1.Emitter({ onFirstListenerAdd: onFirstListenerAdd, onLastListenerRemove: onLastListenerRemove });
+        return result.event;
+    }
+    exports.fromEventEmitter = fromEventEmitter;
+    ;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,6/*vs/base/common/lifecycle*/,4/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+    'use strict';
+    var MessageType;
+    (function (MessageType) {
+        MessageType[MessageType["RequestCommon"] = 0] = "RequestCommon";
+        MessageType[MessageType["RequestCancel"] = 1] = "RequestCancel";
+        MessageType[MessageType["ResponseInitialize"] = 2] = "ResponseInitialize";
+        MessageType[MessageType["ResponseSuccess"] = 3] = "ResponseSuccess";
+        MessageType[MessageType["ResponseProgress"] = 4] = "ResponseProgress";
+        MessageType[MessageType["ResponseError"] = 5] = "ResponseError";
+        MessageType[MessageType["ResponseErrorObj"] = 6] = "ResponseErrorObj";
+    })(MessageType || (MessageType = {}));
+    function isResponse(messageType) {
+        return messageType >= MessageType.ResponseInitialize;
+    }
     var State;
     (function (State) {
         State[State["Uninitialized"] = 0] = "Uninitialized";
         State[State["Idle"] = 1] = "Idle";
     })(State || (State = {}));
-    var Server = (function () {
-        function Server(protocol) {
+    var ChannelServer = (function () {
+        function ChannelServer(protocol) {
             var _this = this;
             this.protocol = protocol;
             this.channels = Object.create(null);
             this.activeRequests = Object.create(null);
-            this.protocol.onMessage(function (r) { return _this.onMessage(r); });
-            this.protocol.send({ type: ResponseType.Initialize });
+            this.protocolListener = this.protocol.onMessage(function (r) { return _this.onMessage(r); });
+            this.protocol.send({ type: MessageType.ResponseInitialize });
         }
-        Server.prototype.registerChannel = function (channelName, channel) {
+        ChannelServer.prototype.registerChannel = function (channelName, channel) {
             this.channels[channelName] = channel;
         };
-        Server.prototype.onMessage = function (request) {
+        ChannelServer.prototype.onMessage = function (request) {
             switch (request.type) {
-                case RequestType.Common:
+                case MessageType.RequestCommon:
                     this.onCommonRequest(request);
                     break;
-                case RequestType.Cancel:
+                case MessageType.RequestCancel:
                     this.onCancelRequest(request);
                     break;
             }
         };
-        Server.prototype.onCommonRequest = function (request) {
+        ChannelServer.prototype.onCommonRequest = function (request) {
             var _this = this;
             var channel = this.channels[request.channelName];
             var promise;
@@ -5923,102 +6065,112 @@ define(__m[22], __M([1,0,3,6,9]), function (require, exports, winjs_base_1, life
             }
             var id = request.id;
             var requestPromise = promise.then(function (data) {
-                _this.protocol.send({ id: id, data: data, type: ResponseType.Success });
+                _this.protocol.send({ id: id, data: data, type: MessageType.ResponseSuccess });
                 delete _this.activeRequests[request.id];
             }, function (data) {
                 if (data instanceof Error) {
-                    _this.protocol.send({ id: id, data: {
+                    _this.protocol.send({
+                        id: id, data: {
                             message: data.message,
                             name: data.name,
                             stack: data.stack ? data.stack.split('\n') : void 0
-                        }, type: ResponseType.Error });
+                        }, type: MessageType.ResponseError
+                    });
                 }
                 else {
-                    _this.protocol.send({ id: id, data: data, type: ResponseType.ErrorObj });
+                    _this.protocol.send({ id: id, data: data, type: MessageType.ResponseErrorObj });
                 }
                 delete _this.activeRequests[request.id];
             }, function (data) {
-                _this.protocol.send({ id: id, data: data, type: ResponseType.Progress });
+                _this.protocol.send({ id: id, data: data, type: MessageType.ResponseProgress });
             });
             this.activeRequests[request.id] = lifecycle_1.toDisposable(function () { return requestPromise.cancel(); });
         };
-        Server.prototype.onCancelRequest = function (request) {
+        ChannelServer.prototype.onCancelRequest = function (request) {
             var disposable = this.activeRequests[request.id];
             if (disposable) {
                 disposable.dispose();
                 delete this.activeRequests[request.id];
             }
         };
-        Server.prototype.dispose = function () {
+        ChannelServer.prototype.dispose = function () {
             var _this = this;
+            this.protocolListener.dispose();
+            this.protocolListener = null;
             Object.keys(this.activeRequests).forEach(function (id) {
                 _this.activeRequests[id].dispose();
             });
             this.activeRequests = null;
         };
-        return Server;
+        return ChannelServer;
     }());
-    exports.Server = Server;
-    var Client = (function () {
-        function Client(protocol) {
+    exports.ChannelServer = ChannelServer;
+    var ChannelClient = (function () {
+        function ChannelClient(protocol) {
             var _this = this;
             this.protocol = protocol;
             this.state = State.Uninitialized;
+            this.activeRequests = [];
             this.bufferedRequests = [];
             this.handlers = Object.create(null);
             this.lastRequestId = 0;
-            this.protocol.onMessage(function (r) { return _this.onMessage(r); });
+            this.protocolListener = this.protocol.onMessage(function (r) { return _this.onMessage(r); });
         }
-        Client.prototype.getChannel = function (channelName) {
+        ChannelClient.prototype.getChannel = function (channelName) {
             var _this = this;
             var call = function (command, arg) { return _this.request(channelName, command, arg); };
             return { call: call };
         };
-        Client.prototype.request = function (channelName, name, arg) {
+        ChannelClient.prototype.request = function (channelName, name, arg) {
+            var _this = this;
             var request = {
                 raw: {
                     id: this.lastRequestId++,
-                    type: RequestType.Common,
+                    type: MessageType.RequestCommon,
                     channelName: channelName,
                     name: name,
                     arg: arg
                 }
             };
-            if (this.state === State.Uninitialized) {
-                return this.bufferRequest(request);
-            }
-            return this.doRequest(request);
+            var activeRequest = this.state === State.Uninitialized
+                ? this.bufferRequest(request)
+                : this.doRequest(request);
+            this.activeRequests.push(activeRequest);
+            activeRequest
+                .then(null, function (_) { return null; })
+                .done(function () { return _this.activeRequests = _this.activeRequests.filter(function (i) { return i !== activeRequest; }); });
+            return activeRequest;
         };
-        Client.prototype.doRequest = function (request) {
+        ChannelClient.prototype.doRequest = function (request) {
             var _this = this;
             var id = request.raw.id;
             return new winjs_base_1.Promise(function (c, e, p) {
                 _this.handlers[id] = function (response) {
                     switch (response.type) {
-                        case ResponseType.Success:
+                        case MessageType.ResponseSuccess:
                             delete _this.handlers[id];
                             c(response.data);
                             break;
-                        case ResponseType.Error:
+                        case MessageType.ResponseError:
                             delete _this.handlers[id];
                             var error = new Error(response.data.message);
                             error.stack = response.data.stack;
                             error.name = response.data.name;
                             e(error);
                             break;
-                        case ResponseType.ErrorObj:
+                        case MessageType.ResponseErrorObj:
                             delete _this.handlers[id];
                             e(response.data);
                             break;
-                        case ResponseType.Progress:
+                        case MessageType.ResponseProgress:
                             p(response.data);
                             break;
                     }
                 };
                 _this.send(request.raw);
-            }, function () { return _this.send({ id: id, type: RequestType.Cancel }); });
+            }, function () { return _this.send({ id: id, type: MessageType.RequestCancel }); });
         };
-        Client.prototype.bufferRequest = function (request) {
+        ChannelClient.prototype.bufferRequest = function (request) {
             var _this = this;
             var flushedRequest = null;
             return new winjs_base_1.Promise(function (c, e, p) {
@@ -6043,8 +6195,11 @@ define(__m[22], __M([1,0,3,6,9]), function (require, exports, winjs_base_1, life
                 _this.bufferedRequests.splice(idx, 1);
             });
         };
-        Client.prototype.onMessage = function (response) {
-            if (this.state === State.Uninitialized && response.type === ResponseType.Initialize) {
+        ChannelClient.prototype.onMessage = function (response) {
+            if (!isResponse(response.type)) {
+                return;
+            }
+            if (this.state === State.Uninitialized && response.type === MessageType.ResponseInitialize) {
                 this.state = State.Idle;
                 this.bufferedRequests.forEach(function (r) { return r.flush && r.flush(); });
                 this.bufferedRequests = null;
@@ -6055,16 +6210,22 @@ define(__m[22], __M([1,0,3,6,9]), function (require, exports, winjs_base_1, life
                 handler(response);
             }
         };
-        Client.prototype.send = function (raw) {
+        ChannelClient.prototype.send = function (raw) {
             try {
                 this.protocol.send(raw);
             }
             catch (err) {
             }
         };
-        return Client;
+        ChannelClient.prototype.dispose = function () {
+            this.protocolListener.dispose();
+            this.protocolListener = null;
+            this.activeRequests.forEach(function (r) { return r.cancel(); });
+            this.activeRequests = [];
+        };
+        return ChannelClient;
     }());
-    exports.Client = Client;
+    exports.ChannelClient = ChannelClient;
     function getDelayedChannel(promise) {
         var call = function (command, arg) { return promise.then(function (c) { return c.call(command, arg); }); };
         return { call: call };
@@ -6083,16 +6244,20 @@ define(__m[22], __M([1,0,3,6,9]), function (require, exports, winjs_base_1, life
         return { call: call };
     }
     exports.getNextTickChannel = getNextTickChannel;
-    function eventToCall(event) {
+    function eventToCall(event, serializer) {
+        if (serializer === void 0) { serializer = function (t) { return t; }; }
         var disposable;
-        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(p); }, function () { return disposable.dispose(); });
+        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(function (t) { return p(serializer(t)); }); }, function () { return disposable.dispose(); });
     }
     exports.eventToCall = eventToCall;
-    function eventFromCall(channel, name) {
+    function eventFromCall(channel, name, arg, deserializer) {
+        if (arg === void 0) { arg = null; }
+        if (deserializer === void 0) { deserializer = function (t) { return t; }; }
         var promise;
         var emitter = new event_1.Emitter({
             onFirstListenerAdd: function () {
-                promise = channel.call(name, null).then(null, function (err) { return null; }, function (e) { return emitter.fire(e); });
+                promise = channel.call(name, arg)
+                    .then(null, function (err) { return null; }, function (e) { return emitter.fire(deserializer(e)); });
             },
             onLastListenerRemove: function () {
                 promise.cancel();
@@ -6113,7 +6278,7 @@ define(__m[22], __M([1,0,3,6,9]), function (require, exports, winjs_base_1, life
 
 
 
-define(__m[23], __M([1,0,26,3,11,7,22]), function (require, exports, child_process_1, winjs_base_1, async_1, objects_1, ipc_1) {
+define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([0/*require*/,1/*exports*/,26/*child_process*/,2/*vs/base/common/winjs.base*/,9/*vs/base/common/async*/,14/*vs/base/common/objects*/,4/*vs/base/common/event*/,19/*vs/base/node/event*/,20/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, child_process_1, winjs_base_1, async_1, objects_1, event_1, event_2, ipc_1) {
     "use strict";
     var Server = (function (_super) {
         __extends(Server, _super);
@@ -6124,12 +6289,12 @@ define(__m[23], __M([1,0,26,3,11,7,22]), function (require, exports, child_proce
                     process.send(r);
                 }
                 catch (e) { } },
-                onMessage: function (cb) { return process.on('message', cb); }
+                onMessage: event_2.fromEventEmitter(process, 'message', function (msg) { return msg; })
             });
             process.once('disconnect', function () { return _this.dispose(); });
         }
         return Server;
-    }(ipc_1.Server));
+    }(ipc_1.ChannelServer));
     exports.Server = Server;
     var Client = (function () {
         function Client(modulePath, options) {
@@ -6184,28 +6349,30 @@ define(__m[23], __M([1,0,26,3,11,7,22]), function (require, exports, child_proce
                         forkOpts.execArgv = ['--nolazy', '--debug-brk=' + this.options.debugBrk];
                     }
                     this.child = child_process_1.fork(this.modulePath, args, forkOpts);
-                    this._client = new ipc_1.Client({
-                        send: function (r) { return _this.child && _this.child.connected && _this.child.send(r); },
-                        onMessage: function (cb) {
-                            _this.child.on('message', function (msg) {
-                                // Handle console logs specially
-                                if (msg && msg.type === '__$console') {
-                                    var args_1 = ['%c[IPC Library: ' + _this.options.serverName + ']', 'color: darkgreen'];
-                                    try {
-                                        var parsed_1 = JSON.parse(msg.arguments);
-                                        args_1 = args_1.concat(Object.getOwnPropertyNames(parsed_1).map(function (o) { return parsed_1[o]; }));
-                                    }
-                                    catch (error) {
-                                        args_1.push(msg.arguments);
-                                    }
-                                    console[msg.severity].apply(console, args_1);
-                                }
-                                else {
-                                    cb(msg);
-                                }
-                            });
+                    var onMessageEmitter_1 = new event_1.Emitter();
+                    var onRawMessage = event_2.fromEventEmitter(this.child, 'message', function (msg) { return msg; });
+                    onRawMessage(function (msg) {
+                        // Handle console logs specially
+                        if (msg && msg.type === '__$console') {
+                            var args_1 = ['%c[IPC Library: ' + _this.options.serverName + ']', 'color: darkgreen'];
+                            try {
+                                var parsed_1 = JSON.parse(msg.arguments);
+                                args_1 = args_1.concat(Object.getOwnPropertyNames(parsed_1).map(function (o) { return parsed_1[o]; }));
+                            }
+                            catch (error) {
+                                args_1.push(msg.arguments);
+                            }
+                            console[msg.severity].apply(console, args_1);
+                            return null;
+                        }
+                        else {
+                            onMessageEmitter_1.fire(msg);
                         }
                     });
+                    var send = function (r) { return _this.child && _this.child.connected && _this.child.send(r); };
+                    var onMessage = onMessageEmitter_1.event;
+                    var protocol = { send: send, onMessage: onMessage };
+                    this._client = new ipc_1.ChannelClient(protocol);
                     var onExit_1 = function () { return _this.disposeClient(); };
                     process.once('exit', onExit_1);
                     this.child.on('error', function (err) { return console.warn('IPC "' + _this.options.serverName + '" errored with ' + err); });
@@ -6246,7 +6413,7 @@ define(__m[23], __M([1,0,26,3,11,7,22]), function (require, exports, child_proce
     exports.Client = Client;
 });
 
-define(__m[25], __M([1,0]), function (require, exports) {
+define(__m[23/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6305,7 +6472,7 @@ define(__m[25], __M([1,0]), function (require, exports) {
 
 
 
-define(__m[12], __M([1,0,10,17,25]), function (require, exports, paths, events, instantiation_1) {
+define(__m[10/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/paths*/,11/*vs/base/common/events*/,23/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, paths, events, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6440,13 +6607,15 @@ define(__m[12], __M([1,0,10,17,25]), function (require, exports, paths, events, 
         FileOperationResult[FileOperationResult["FILE_MOVE_CONFLICT"] = 5] = "FILE_MOVE_CONFLICT";
         FileOperationResult[FileOperationResult["FILE_READ_ONLY"] = 6] = "FILE_READ_ONLY";
         FileOperationResult[FileOperationResult["FILE_TOO_LARGE"] = 7] = "FILE_TOO_LARGE";
+        FileOperationResult[FileOperationResult["FILE_INVALID_PATH"] = 8] = "FILE_INVALID_PATH";
     })(exports.FileOperationResult || (exports.FileOperationResult = {}));
     var FileOperationResult = exports.FileOperationResult;
     exports.MAX_FILE_SIZE = 50 * 1024 * 1024;
     exports.AutoSaveConfiguration = {
         OFF: 'off',
         AFTER_DELAY: 'afterDelay',
-        ON_FOCUS_CHANGE: 'onFocusChange'
+        ON_FOCUS_CHANGE: 'onFocusChange',
+        ON_WINDOW_CHANGE: 'onWindowChange'
     };
     exports.SUPPORTED_ENCODINGS = {
         utf8: {
@@ -6537,140 +6706,145 @@ define(__m[12], __M([1,0,10,17,25]), function (require, exports, paths, events, 
             labelShort: 'ISO 8859-2',
             order: 17
         },
+        cp852: {
+            labelLong: 'Central European (CP 852)',
+            labelShort: 'CP 852',
+            order: 18
+        },
         windows1251: {
             labelLong: 'Cyrillic (Windows 1251)',
             labelShort: 'Windows 1251',
-            order: 18
+            order: 19
         },
         cp866: {
             labelLong: 'Cyrillic (CP 866)',
             labelShort: 'CP 866',
-            order: 19
+            order: 20
         },
         iso88595: {
             labelLong: 'Cyrillic (ISO 8859-5)',
             labelShort: 'ISO 8859-5',
-            order: 20
+            order: 21
         },
         koi8r: {
             labelLong: 'Cyrillic (KOI8-R)',
             labelShort: 'KOI8-R',
-            order: 21
+            order: 22
         },
         koi8u: {
             labelLong: 'Cyrillic (KOI8-U)',
             labelShort: 'KOI8-U',
-            order: 22
+            order: 23
         },
         iso885913: {
             labelLong: 'Estonian (ISO 8859-13)',
             labelShort: 'ISO 8859-13',
-            order: 23
+            order: 24
         },
         windows1253: {
             labelLong: 'Greek (Windows 1253)',
             labelShort: 'Windows 1253',
-            order: 24
+            order: 25
         },
         iso88597: {
             labelLong: 'Greek (ISO 8859-7)',
             labelShort: 'ISO 8859-7',
-            order: 25
+            order: 26
         },
         windows1255: {
             labelLong: 'Hebrew (Windows 1255)',
             labelShort: 'Windows 1255',
-            order: 26
+            order: 27
         },
         iso88598: {
             labelLong: 'Hebrew (ISO 8859-8)',
             labelShort: 'ISO 8859-8',
-            order: 27
+            order: 28
         },
         iso885910: {
             labelLong: 'Nordic (ISO 8859-10)',
             labelShort: 'ISO 8859-10',
-            order: 28
+            order: 29
         },
         iso885916: {
             labelLong: 'Romanian (ISO 8859-16)',
             labelShort: 'ISO 8859-16',
-            order: 29
+            order: 30
         },
         windows1254: {
             labelLong: 'Turkish (Windows 1254)',
             labelShort: 'Windows 1254',
-            order: 30
+            order: 31
         },
         iso88599: {
             labelLong: 'Turkish (ISO 8859-9)',
             labelShort: 'ISO 8859-9',
-            order: 31
+            order: 32
         },
         windows1258: {
             labelLong: 'Vietnamese (Windows 1258)',
             labelShort: 'Windows 1258',
-            order: 32
+            order: 33
         },
         gbk: {
             labelLong: 'Chinese (GBK)',
             labelShort: 'GBK',
-            order: 33
+            order: 34
         },
         gb18030: {
             labelLong: 'Chinese (GB18030)',
             labelShort: 'GB18030',
-            order: 34
+            order: 35
         },
         cp950: {
             labelLong: 'Traditional Chinese (Big5)',
             labelShort: 'Big5',
-            order: 35
+            order: 36
         },
         big5hkscs: {
             labelLong: 'Traditional Chinese (Big5-HKSCS)',
             labelShort: 'Big5-HKSCS',
-            order: 36
+            order: 37
         },
         shiftjis: {
             labelLong: 'Japanese (Shift JIS)',
             labelShort: 'Shift JIS',
-            order: 37
+            order: 38
         },
         eucjp: {
             labelLong: 'Japanese (EUC-JP)',
             labelShort: 'EUC-JP',
-            order: 38
+            order: 39
         },
         euckr: {
             labelLong: 'Korean (EUC-KR)',
             labelShort: 'EUC-KR',
-            order: 39
+            order: 40
         },
         windows874: {
             labelLong: 'Thai (Windows 874)',
             labelShort: 'Windows 874',
-            order: 40
+            order: 41
         },
         iso885911: {
             labelLong: 'Latin/Thai (ISO 8859-11)',
             labelShort: 'ISO 8859-11',
-            order: 41
+            order: 42
         },
         'koi8-ru': {
             labelLong: 'Cyrillic (KOI8-RU)',
             labelShort: 'KOI8-RU',
-            order: 42
+            order: 43
         },
         'koi8-t': {
             labelLong: 'Tajik (KOI8-T)',
             labelShort: 'KOI8-T',
-            order: 43
+            order: 44
         },
         GB2312: {
             labelLong: 'Simplified Chinese (GB 2312)',
             labelShort: 'GB 2312',
-            order: 44
+            order: 45
         }
     };
 });
@@ -6679,7 +6853,7 @@ define(__m[12], __M([1,0,10,17,25]), function (require, exports, paths, events, 
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[20], __M([1,0,21,10,12]), function (require, exports, uri_1, paths, files_1) {
+define(__m[25/*vs/workbench/services/files/node/watcher/common*/], __M([0/*require*/,1/*exports*/,15/*vs/base/common/uri*/,8/*vs/base/common/paths*/,10/*vs/platform/files/common/files*/]), function (require, exports, uri_1, paths, files_1) {
     'use strict';
     function toFileChangesEvent(changes) {
         // map to file changes event that talks about URIs
@@ -6773,7 +6947,7 @@ define(__m[20], __M([1,0,21,10,12]), function (require, exports, uri_1, paths, f
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[14], __M([1,0,29,30,31,3,12,11,8,20]), function (require, exports, chokidar, fs, gracefulFs, winjs_base_1, files_1, async_1, strings, watcher) {
+define(__m[22/*vs/workbench/services/files/node/watcher/unix/chokidarWatcherService*/], __M([0/*require*/,1/*exports*/,27/*chokidar*/,28/*fs*/,29/*graceful-fs*/,2/*vs/base/common/winjs.base*/,10/*vs/platform/files/common/files*/,9/*vs/base/common/async*/,12/*vs/base/common/strings*/,25/*vs/workbench/services/files/node/watcher/common*/]), function (require, exports, chokidar, fs, gracefulFs, winjs_base_1, files_1, async_1, strings, watcher) {
     'use strict';
     gracefulFs.gracefulify(fs);
     var ChokidarWatcherService = (function () {
@@ -6876,7 +7050,7 @@ define(__m[14], __M([1,0,29,30,31,3,12,11,8,20]), function (require, exports, ch
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[13], __M([1,0]), function (require, exports) {
+define(__m[17/*vs/workbench/services/files/node/watcher/unix/watcherIpc*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     var WatcherChannel = (function () {
         function WatcherChannel(service) {
@@ -6902,7 +7076,7 @@ define(__m[13], __M([1,0]), function (require, exports) {
     exports.WatcherChannelClient = WatcherChannelClient;
 });
 
-define(__m[33], __M([1,0,23,13,14]), function (require, exports, ipc_cp_1, watcherIpc_1, chokidarWatcherService_1) {
+define(__m[31/*vs/workbench/services/files/node/watcher/unix/watcherApp*/], __M([0/*require*/,1/*exports*/,21/*vs/base/parts/ipc/node/ipc.cp*/,17/*vs/workbench/services/files/node/watcher/unix/watcherIpc*/,22/*vs/workbench/services/files/node/watcher/unix/chokidarWatcherService*/]), function (require, exports, ipc_cp_1, watcherIpc_1, chokidarWatcherService_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.

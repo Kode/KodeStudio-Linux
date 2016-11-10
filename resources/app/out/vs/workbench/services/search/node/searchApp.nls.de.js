@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 define("vs/workbench/services/search/node/searchApp.nls.de", {
-	"vs/base/common/errors": [
+	"vs/base/common/errorMessage": [
 		"{0}. Fehlercode: {1}",
 		"Berechtigung verweigert (HTTP {0})",
 		"Berechtigung verweigert",
@@ -16,12 +16,5 @@ define("vs/workbench/services/search/node/searchApp.nls.de", {
 		"Ein unbekannter Fehler ist aufgetreten. Weitere Details dazu finden Sie im Protokoll.",
 		"{0} ({1} Fehler gesamt)",
 		"Ein unbekannter Fehler ist aufgetreten. Weitere Details dazu finden Sie im Protokoll.",
-		"Nicht implementiert",
-		"ungültiges Argument: {0}",
-		"ungültiges Argument",
-		"ungültiger Status: {0}",
-		"ungültiger Status",
-		"Eine erforderliche Datei konnte nicht geladen werden. Entweder sind Sie nicht mehr mit dem Internet verbunden oder der verbundene Server ist offline. Aktualisieren Sie den Browser, und wiederholen Sie den Vorgang.",
-		"Fehler beim Laden einer erforderlichen Datei. Bitte starten Sie die Anwendung neu, und versuchen Sie es dann erneut. Details: {0}",
 	]
 });

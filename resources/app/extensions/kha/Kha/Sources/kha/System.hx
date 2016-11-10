@@ -37,12 +37,16 @@ class System {
 		renderListeners[id].push(listener);
 	}
 
+	public static function removeRenderListener(listener: Framebuffer -> Void, id: Int = 0): Void {
+		renderListeners[id].remove(listener);
+	}
+
 	public static function notifyOnApplicationState(foregroundListener: Void -> Void, resumeListener: Void -> Void,	pauseListener: Void -> Void, backgroundListener: Void-> Void, shutdownListener: Void -> Void): Void {
-		foregroundListeners.push(foregroundListener);
-		resumeListeners.push(resumeListener);
-		pauseListeners.push(pauseListener);
-		backgroundListeners.push(backgroundListener);
-		shutdownListeners.push(shutdownListener);
+		if (foregroundListener != null) foregroundListeners.push(foregroundListener);
+		if (resumeListener != null) resumeListeners.push(resumeListener);
+		if (pauseListener != null) pauseListeners.push(pauseListener);
+		if (backgroundListener != null) backgroundListeners.push(backgroundListener);
+		if (shutdownListener != null) shutdownListeners.push(shutdownListener);
 	}
 
 	private static function render(id: Int, framebuffer: Framebuffer): Void {
@@ -137,6 +141,6 @@ class System {
 	}
 
 	public static function loadUrl(url: String): Void {
-
+		SystemImpl.loadUrl(url);
 	}
 }

@@ -1,4 +1,4 @@
-var project = new Project('Kore');
+var project = new Project('Kore', __dirname);
 
 project.addFile('Sources/**');
 project.addIncludeDir('Sources');
@@ -67,6 +67,7 @@ else if (platform === Platform.OSX) {
 		addBackend('Metal');
 		project.addDefine('SYS_METAL');
 		project.addLib('Metal');
+		project.addLib('MetalKit');
 	}
 	else {
 		addBackend('OpenGL2');
@@ -119,6 +120,12 @@ else if (platform === Platform.Android) {
 	project.addDefine('SYS_ANDROID_API=15');
 	project.addDefine('HXCPP_ANDROID_PLATFORM=23');
 	project.addDefine('SYS_UNIXOID');
+	project.addLib('log');
+	project.addLib('android');
+	project.addLib('EGL');
+	project.addLib('GLESv2');
+	project.addLib('OpenSLES');
+	project.addLib('OpenMAXAL');
 }
 else if (platform === Platform.HTML5) {
 	addBackend('HTML5');
@@ -171,4 +178,4 @@ else if (platform === Platform.Tizen) {
 	project.addDefine('SYS_UNIXOID');
 }
 
-return project;
+resolve(project);

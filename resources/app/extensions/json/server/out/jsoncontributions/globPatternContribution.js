@@ -3,22 +3,21 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
-var vscode_languageserver_1 = require('vscode-languageserver');
 var Strings = require('../utils/strings');
 var nls = require('vscode-nls');
 var localize = nls.loadMessageBundle(__filename);
 var globProperties = [
-    { kind: vscode_languageserver_1.CompletionItemKind.Value, label: localize(0, null), insertText: '"**/*.{{extension}}": true', documentation: localize(1, null) },
-    { kind: vscode_languageserver_1.CompletionItemKind.Value, label: localize(2, null), insertText: '"**/*.{ext1,ext2,ext3}": true', documentation: localize(3, null) },
-    { kind: vscode_languageserver_1.CompletionItemKind.Value, label: localize(4, null), insertText: '"**/*.{{source-extension}}": { "when": "$(basename).{{target-extension}}" }', documentation: localize(5, null) },
-    { kind: vscode_languageserver_1.CompletionItemKind.Value, label: localize(6, null), insertText: '"{{name}}": true', documentation: localize(7, null) },
-    { kind: vscode_languageserver_1.CompletionItemKind.Value, label: localize(8, null), insertText: '"{folder1,folder2,folder3}": true', documentation: localize(9, null) },
-    { kind: vscode_languageserver_1.CompletionItemKind.Value, label: localize(10, null), insertText: '"**/{{name}}": true', documentation: localize(11, null) },
+    { kind: 12 /* Value */, label: localize(0, null), insertText: '"**/*.{{extension}}": true', documentation: localize(1, null) },
+    { kind: 12 /* Value */, label: localize(2, null), insertText: '"**/*.{ext1,ext2,ext3}": true', documentation: localize(3, null) },
+    { kind: 12 /* Value */, label: localize(4, null), insertText: '"**/*.{{source-extension}}": { "when": "$(basename).{{target-extension}}" }', documentation: localize(5, null) },
+    { kind: 12 /* Value */, label: localize(6, null), insertText: '"{{name}}": true', documentation: localize(7, null) },
+    { kind: 12 /* Value */, label: localize(8, null), insertText: '"{folder1,folder2,folder3}": true', documentation: localize(9, null) },
+    { kind: 12 /* Value */, label: localize(10, null), insertText: '"**/{{name}}": true', documentation: localize(11, null) },
 ];
 var globValues = [
-    { kind: vscode_languageserver_1.CompletionItemKind.Value, label: localize(12, null), insertText: 'true', documentation: localize(13, null) },
-    { kind: vscode_languageserver_1.CompletionItemKind.Value, label: localize(14, null), insertText: 'false', documentation: localize(15, null) },
-    { kind: vscode_languageserver_1.CompletionItemKind.Value, label: localize(16, null), insertText: '{ "when": "$(basename).{{extension}}" }', documentation: localize(17, null) }
+    { kind: 12 /* Value */, label: localize(12, null), insertText: 'true', documentation: localize(13, null) },
+    { kind: 12 /* Value */, label: localize(14, null), insertText: 'false', documentation: localize(15, null) },
+    { kind: 12 /* Value */, label: localize(16, null), insertText: '{ "when": "$(basename).{{extension}}" }', documentation: localize(17, null) }
 ];
 var GlobPatternContribution = (function () {
     function GlobPatternContribution() {
@@ -31,13 +30,19 @@ var GlobPatternContribution = (function () {
     };
     GlobPatternContribution.prototype.collectPropertyCompletions = function (resource, location, currentWord, addValue, isLast, result) {
         if (this.isSettingsFile(resource) && location.length === 1 && ((location[0] === 'files.exclude') || (location[0] === 'search.exclude'))) {
-            globProperties.forEach(function (e) { return result.add(e); });
+            globProperties.forEach(function (e) {
+                e.filterText = e.insertText;
+                result.add(e);
+            });
         }
         return null;
     };
     GlobPatternContribution.prototype.collectValueCompletions = function (resource, location, currentKey, result) {
         if (this.isSettingsFile(resource) && location.length === 1 && ((location[0] === 'files.exclude') || (location[0] === 'search.exclude'))) {
-            globValues.forEach(function (e) { return result.add(e); });
+            globValues.forEach(function (e) {
+                e.filterText = e.insertText;
+                result.add(e);
+            });
         }
         return null;
     };
@@ -46,5 +51,5 @@ var GlobPatternContribution = (function () {
     };
     return GlobPatternContribution;
 }());
-exports.GlobPatternContribution = GlobPatternContribution;
-//# sourceMappingURL=globPatternContribution.js.map
+exports.GlobPatternContribution = GlobPatternContribution;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/json/server/out/jsoncontributions/globPatternContribution.js.map

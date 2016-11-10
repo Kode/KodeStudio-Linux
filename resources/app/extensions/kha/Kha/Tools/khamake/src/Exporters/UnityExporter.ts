@@ -5,16 +5,16 @@ import {convert} from '../Converter';
 import {executeHaxe} from '../Haxe';
 import {Options} from '../Options';
 import {exportImage} from '../ImageTool';
-import {writeHaxeProject} from '../HaxeProject';
-import {hxml} from '../HaxeProject';
+import {Library} from '../Project';
 const uuid = require('uuid');
 
 export class UnityExporter extends KhaExporter {
 	parameters: Array<string>;
-	
+
 	constructor(options: Options) {
 		super(options);
 		this.addSourceDirectory(path.join(this.options.kha, 'Backends', 'Unity'));
+		fs.removeSync(path.join(this.options.to, this.sysdir(), 'Assets', 'Sources'));
 	}
 
 	sysdir() {
@@ -47,20 +47,12 @@ export class UnityExporter extends KhaExporter {
 		};
 	}
 
-	async exportSolution(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
-		hxml(this.options.to, haxeOptions);
-
-		if (this.projectFiles) {
-			writeHaxeProject(this.options.to, haxeOptions);
-		}
-		
-		fs.removeSync(path.join(this.options.to, this.sysdir(), 'Assets', 'Sources'));
-
-		var copyDirectory = (from, to) => {
+	async export(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
+		let copyDirectory = (from: string, to: string) => {
 			let files = fs.readdirSync(path.join(__dirname, '..', '..', 'Data', 'unity', from));
 			fs.ensureDirSync(path.join(this.options.to, this.sysdir(), to));
 			for (let file of files) {
-				var text = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'unity', from, file), 'utf8');
+				let text = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'unity', from, file), 'utf8');
 				fs.writeFileSync(path.join(this.options.to, this.sysdir(), to, file), text);
 			}
 		};

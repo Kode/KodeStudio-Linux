@@ -1,5 +1,6 @@
 import * as child_process from 'child_process';
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
+import * as os from 'os';
 import * as path from 'path';
 import * as chokidar from 'chokidar';
 import {KhaExporter} from './Exporters/KhaExporter';
@@ -9,6 +10,26 @@ import {Platform} from './Platform';
 import {AssetConverter} from './AssetConverter';
 import * as log from './log';
 
+export interface Variable {
+	name: string;
+	type: string;
+}
+
+export class CompiledShader {
+	name: string;
+	files: string[];
+	inputs: Variable[];
+	outputs: Variable[];
+	uniforms: Variable[];
+
+	constructor() {
+		this.files = [];
+		this.inputs = [];
+		this.outputs = [];
+		this.uniforms = [];
+	}
+}
+
 export class ShaderCompiler {
 	exporter: KhaExporter;
 	platform: string;
@@ -16,11 +37,12 @@ export class ShaderCompiler {
 	type: string;
 	to: string;
 	temp: string;
+	builddir: string;
 	options: Options;
 	shaderMatchers: Array<{ match: string, options: any }>;
 	watcher: fs.FSWatcher;
-	
-	constructor(exporter: KhaExporter, platform: string, compiler: string, to: string, temp: string, options: Options, shaderMatchers: Array<{ match: string, options: any }>) {
+
+	constructor(exporter: KhaExporter, platform: string, compiler: string, to: string, temp: string, builddir: string, options: Options, shaderMatchers: Array<{ match: string, options: any }>) {
 		this.exporter = exporter;
 		if (platform.endsWith('-native')) platform = platform.substr(0, platform.length - '-native'.length);
 		if (platform.endsWith('-hl')) platform = platform.substr(0, platform.length - '-hl'.length);
@@ -30,13 +52,14 @@ export class ShaderCompiler {
 		this.options = options;
 		this.to = to;
 		this.temp = temp;
+		this.builddir = builddir;
 		this.shaderMatchers = shaderMatchers;
 	}
 
 	static findType(platform: string, options: Options): string {
 		switch (platform) {
 		case Platform.Empty:
-		case Platform.Node: 
+		case Platform.Node:
 			return 'glsl';
 		case Platform.Flash:
 			return 'agal';
@@ -52,23 +75,10 @@ export class ShaderCompiler {
 		case Platform.HTML5Worker:
 		case Platform.Tizen:
 		case Platform.Pi:
+			return 'essl';
 		case Platform.tvOS:
 		case Platform.iOS:
 			if (options.graphics === GraphicsApi.Metal) {
-				/*let builddir = 'ios-build';
-				if (platform === Platform.tvOS) {
-					builddir = 'tvos-build';
-				}
-				if (!Files.isDirectory(to.resolve(Paths.get('..', builddir, 'Sources')))) {
-					Files.createDirectories(to.resolve(Paths.get('..', builddir, 'Sources')));
-				}
-				let funcname = name;
-				funcname = funcname.replace(/-/g, '_');
-				funcname = funcname.replace(/\./g, '_');
-				funcname += '_main';
-				fs.writeFileSync(to.resolve(name + ".metal").toString(), funcname, { encoding: 'utf8' });
-				compileShader2(compiler, "metal", shader.files[0], to.resolve(Paths.get('..', builddir, 'Sources', name + ".metal")), temp, platform);
-				addShader(project, name, ".metal");*/
 				return 'metal';
 			}
 			else {
@@ -100,9 +110,21 @@ export class ShaderCompiler {
 				return 'glsl';
 			}
 		case Platform.OSX:
-			return 'glsl';
+			if (options.graphics === GraphicsApi.Metal) {
+				return 'metal';
+			}
+			else {
+				return 'glsl';
+			}
 		case Platform.Unity:
 			return 'hlsl';
+		case Platform.Krom:
+			if (os.platform() === 'win32') {
+				return 'd3d11';
+			}
+			else {
+				return 'glsl';
+			}
 		default:
 			for (let p in Platform) {
 				if (platform === p) {
@@ -114,7 +136,7 @@ export class ShaderCompiler {
 	}
 
 	watch(watch: boolean, match: string, options: any) {
-		return new Promise<Array<{ files: Array<string>, name: string }>>((resolve, reject) => {
+		return new Promise<CompiledShader[]>((resolve, reject) => {
 			let shaders: string[] = [];
 			let ready = false;
 			this.watcher = chokidar.watch(match, { ignored: /[\/\\]\./, persistent: watch });
@@ -122,6 +144,7 @@ export class ShaderCompiler {
 				if (ready) {
 					switch (path.parse(file).ext) {
 						case '.glsl':
+							log.info('Recompiling ' + path.parse(file).name);
 							this.compileShader(file, options);
 							break;
 					}
@@ -133,49 +156,64 @@ export class ShaderCompiler {
 			this.watcher.on('change', (file: string) => {
 				switch (path.parse(file).ext) {
 					case '.glsl':
+						log.info('Recompiling ' + path.parse(file).name);
 						this.compileShader(file, options);
 						break;
-				}  
+				}
 			});
 			this.watcher.on('unlink', (file: string) => {
-				
+
 			});
 			this.watcher.on('ready', async () => {
 				ready = true;
-				let parsedShaders: { files: string[], name: string }[] = [];
+				let compiledShaders: CompiledShader[] = [];
 				let index = 0;
 				for (let shader of shaders) {
 					let parsed = path.parse(shader);
 					log.info('Compiling shader ' + (index + 1) + ' of ' + shaders.length + ' (' + parsed.base + ').');
+					let compiledShader: CompiledShader = null;
 					try {
-						await this.compileShader(shader, options);
+						compiledShader = await this.compileShader(shader, options);
 					}
 					catch (error) {
 						reject(error);
 						return;
 					}
-					parsedShaders.push({ files: [parsed.name + '.' + this.type], name: AssetConverter.createName(parsed, false, options, this.exporter.options.from)});
+					if (compiledShader === null) {
+						compiledShader = new CompiledShader();
+						// mark variables as invalid, so they are loaded from previous compilation
+						compiledShader.inputs = null;
+						compiledShader.outputs = null;
+						compiledShader.uniforms = null;
+					}
+					if (compiledShader.files.length === 0) {
+						// TODO: Remove when krafix has been recompiled everywhere
+						compiledShader.files.push(parsed.name + '.' + this.type);
+					}
+					compiledShader.name = AssetConverter.createExportInfo(parsed, false, options, this.exporter.options.from).name;
+					compiledShaders.push(compiledShader);
 					++index;
 				}
-				resolve(parsedShaders);
+				resolve(compiledShaders);
+				return;
 			});
 		});
 	}
-	
-	async run(watch: boolean): Promise<Array<{ files: Array<string>, name: string }>> {
-		let shaders: Array<{ files: Array<string>, name: string }> = [];
+
+	async run(watch: boolean): Promise<CompiledShader[]> {
+		let shaders: CompiledShader[] = [];
 		for (let matcher of this.shaderMatchers) {
 			shaders = shaders.concat(await this.watch(watch, matcher.match, matcher.options));
 		}
 		return shaders;
 	}
-	
-	compileShader(file: string, options: any): Promise<void> {
-		return new Promise<void>((resolve, reject) => {
+
+	compileShader(file: string, options: any): Promise<CompiledShader> {
+		return new Promise<CompiledShader>((resolve, reject) => {
 			if (!this.compiler) reject('No shader compiler found.');
 
 			if (this.type === 'none') {
-				resolve();
+				resolve(new CompiledShader());
 				return;
 			}
 
@@ -183,15 +221,31 @@ export class ShaderCompiler {
 			let from = file;
 			let to = path.join(this.to, fileinfo.name + '.' + this.type);
 			let temp = to + '.temp';
-			
+
 			fs.stat(from, (fromErr: NodeJS.ErrnoException, fromStats: fs.Stats) => {
 				fs.stat(to, (toErr: NodeJS.ErrnoException, toStats: fs.Stats) => {
 					if (fromErr || (!toErr && toStats.mtime.getTime() > fromStats.mtime.getTime())) {
 						if (fromErr) log.error('Shader compiler error: ' + fromErr);
-						resolve();
+						resolve(null);
 					}
 					else {
+						if (this.type === 'metal') {
+							fs.ensureDirSync(path.join(this.builddir, 'Sources'));
+							let funcname = fileinfo.name;
+							funcname = funcname.replace(/-/g, '_');
+							funcname = funcname.replace(/\./g, '_');
+							funcname += '_main';
+
+							fs.writeFileSync(to, funcname, 'utf8');
+
+							to = path.join(this.builddir, 'Sources', fileinfo.name + '.' + this.type);
+							temp = to + '.temp';
+						}
 						let parameters = [this.type === 'hlsl' ? 'd3d9' : this.type, from, temp, this.temp, this.platform];
+						if (this.platform === Platform.Krom && os.platform() === 'linux') {
+							parameters.push('--version');
+							parameters.push('110');
+						}
 						if (this.options.glsl2) {
 							parameters.push('--glsl2');
 						}
@@ -201,19 +255,75 @@ export class ShaderCompiler {
 							}
 						}
 						let child = child_process.spawn(this.compiler, parameters);
-						
-						child.stdout.on('data', (data) => {
+
+						child.stdout.on('data', (data: any) => {
 							log.info(data.toString());
 						});
 
-						child.stderr.on('data', (data) => {
-							log.info(data.toString());
+						let errorLine = '';
+						let newErrorLine = true;
+						let errorData = false;
+
+						let compiledShader = new CompiledShader();
+
+						function parseData(data: string) {
+							let parts = data.split(':');
+							if (parts.length >= 3) {
+								if (parts[0] === 'uniform') {
+									compiledShader.uniforms.push({name: parts[1], type: parts[2]});
+								}
+								else if (parts[0] === 'input') {
+									compiledShader.inputs.push({name: parts[1], type: parts[2]});
+								}
+								else if (parts[0] === 'output') {
+									compiledShader.outputs.push({name: parts[1], type: parts[2]});
+								}
+							}
+							else if (parts.length >= 2) {
+								if (parts[0] === 'file') {
+									compiledShader.files.push(path.parse(parts[1]).name);
+								}
+							}
+						}
+
+						child.stderr.on('data', (data: any) => {
+							let str: string = data.toString();
+							for (let char of str) {
+								if (char === '\n') {
+									if (errorData) {
+										parseData(errorLine.trim());
+									}
+									else {
+										log.error(errorLine.trim());
+									}
+									errorLine = '';
+									newErrorLine = true;
+									errorData = false;
+								}
+								else if (newErrorLine && char === '#') {
+									errorData = true;
+									newErrorLine = false;
+								}
+								else {
+									errorLine += char;
+									newErrorLine = false;
+								}
+							}
 						});
 
-						child.on('close', (code) => {
+						child.on('close', (code: number) => {
+							if (errorLine.trim().length > 0) {
+								if (errorData) {
+									parseData(errorLine.trim());
+								}
+								else {
+									log.error(errorLine.trim());
+								}
+							}
+
 							if (code === 0) {
 								fs.renameSync(temp, to);
-								resolve();
+								resolve(compiledShader);
 							}
 							else {
 								process.exitCode = 1;

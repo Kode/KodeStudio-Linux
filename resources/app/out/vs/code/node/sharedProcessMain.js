@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["require","exports","vs/base/common/winjs.base","vs/nls!vs/code/node/sharedProcessMain","vs/nls","vs/base/common/types","vs/base/common/platform","path","vs/base/common/errors","vs/base/common/objects","vs/base/common/event","vs/platform/instantiation/common/instantiation","fs","vs/base/common/lifecycle","vs/platform/platform","vs/base/common/async","vs/base/node/pfs","vs/base/common/json","vs/base/common/uri","vs/base/common/strings","os","vs/platform/environment/common/environment","vs/platform/package","vs/base/common/arrays","vs/base/common/collections","vs/base/common/jsonFormatter","vs/base/common/eventEmitter","vs/platform/product","vs/platform/instantiation/common/descriptors","vs/base/common/paths","vs/platform/configuration/common/configuration","vs/base/common/assert","vs/platform/instantiation/common/serviceCollection","vs/base/common/uuid","vs/base/parts/ipc/common/ipc","vs/platform/jsonschemas/common/jsonContributionRegistry","vs/platform/extensions/common/extensionsRegistry","vs/base/common/timer","vs/base/node/proxy","url","vs/base/parts/ipc/node/ipc.net","vs/platform/telemetry/node/appInsightsAppender","vs/nls!vs/base/common/json","vs/base/node/request","vs/base/node/zip","vs/base/common/jsonEdit","vs/base/node/userSettings","vs/nls!vs/base/common/errors","vs/base/common/severity","vs/nls!vs/base/node/zip","vs/nls!vs/code/node/argv","vs/code/node/argv","vs/base/common/map","vs/platform/telemetry/common/telemetryService","vs/nls!vs/platform/configuration/common/configurationRegistry","vs/nls!vs/platform/extensionManagement/common/extensionManagement","vs/nls!vs/platform/extensionManagement/node/extensionManagementService","vs/nls!vs/platform/extensions/common/extensionsRegistry","vs/nls!vs/platform/extensions/node/extensionValidator","vs/nls!vs/platform/telemetry/common/telemetryService","vs/platform/event/common/eventService","vs/platform/extensionManagement/common/extensionManagementIpc","vs/base/common/graph","vs/base/node/flow","vs/base/common/callbackList","vs/platform/extensionManagement/node/extensionManagementService","vs/platform/configuration/node/nodeConfigurationService","vs/platform/event/common/event","vs/platform/extensionManagement/common/extensionManagement","vs/base/common/cancellation","vs/platform/instantiation/common/instantiationService","vs/base/node/extfs","vs/base/common/stopwatch","vs/nls!vs/base/common/severity","vs/platform/telemetry/node/commonProperties","vs/platform/configuration/common/configurationRegistry","vs/platform/extensions/node/extensionValidator","semver","vs/base/node/paths","vs/platform/environment/node/environmentService","vs/platform/telemetry/common/telemetry","vs/platform/telemetry/common/telemetryIpc","http-proxy-agent","minimist","applicationinsights","vs/base/common/winjs.base.raw","https-proxy-agent","yauzl","net","https","http","zlib","assert","vs/code/node/sharedProcessMain"];
+var __m = ["exports","require","vs/base/common/winjs.base","vs/base/common/event","vs/nls!vs/code/node/sharedProcessMain","vs/nls","vs/base/common/types","vs/base/common/errors","vs/platform/instantiation/common/instantiation","vs/base/common/objects","path","vs/platform/platform","vs/base/common/lifecycle","vs/base/common/platform","vs/base/common/uri","fs","vs/platform/configuration/common/configuration","vs/platform/configuration/common/configurationRegistry","vs/base/common/arrays","vs/base/common/strings","vs/platform/extensionManagement/common/extensionManagement","vs/platform/product","vs/platform/environment/common/environment","vs/base/parts/ipc/common/ipc","vs/platform/telemetry/common/telemetry","vs/base/common/uuid","vs/base/common/eventEmitter","vs/base/common/async","vs/platform/package","vs/base/common/decorators","vs/platform/instantiation/common/descriptors","url","vs/base/node/request","vs/platform/instantiation/common/serviceCollection","vs/platform/message/common/message","vs/base/common/paths","vs/base/common/severity","vs/platform/jsonschemas/common/jsonContributionRegistry","vs/base/common/collections","vs/base/common/assert","os","vs/platform/request/common/request","vs/base/node/pfs","vs/base/parts/ipc/node/ipc.net","vs/platform/telemetry/node/commonProperties","vs/code/common/windowsIpc","vs/nls!vs/base/common/json","vs/platform/request/node/requestService","vs/base/common/actions","vs/base/common/json","vs/base/node/config","vs/nls!vs/base/common/severity","vs/base/common/map","vs/base/node/event","vs/nls!vs/platform/configuration/common/configurationRegistry","vs/nls!vs/platform/extensionManagement/common/extensionManagement","vs/nls!vs/platform/extensionManagement/node/extensionGalleryService","vs/nls!vs/platform/extensionManagement/node/extensionManagementService","vs/nls!vs/platform/extensions/common/extensionsRegistry","vs/nls!vs/platform/extensions/node/extensionValidator","vs/nls!vs/platform/message/common/message","vs/nls!vs/platform/request/common/request","vs/nls!vs/platform/telemetry/common/telemetryService","vs/platform/event/common/eventService","vs/platform/extensionManagement/common/extensionManagementIpc","vs/platform/extensionManagement/common/extensionNls","vs/platform/extensionManagement/common/extensionTelemetry","vs/platform/extensions/node/extensionValidator","semver","vs/base/node/flow","vs/platform/extensionManagement/node/extensionGalleryService","vs/code/common/windows","vs/base/node/extfs","vs/nls!vs/base/node/zip","vs/platform/event/common/event","vs/base/common/cancellation","vs/base/node/id","vs/platform/instantiation/common/instantiationService","vs/base/common/events","vs/platform/message/common/messageIpc","crypto","vs/base/node/paths","vs/base/common/callbackList","vs/platform/extensions/common/extensionsRegistry","vs/base/node/proxy","vs/platform/configuration/common/model","vs/platform/configuration/node/configurationService","vs/base/common/set","vs/platform/environment/node/environmentService","vs/platform/extensionManagement/node/extensionManagementService","vs/base/node/zip","vs/base/common/graph","vs/platform/telemetry/common/telemetryIpc","vs/platform/telemetry/common/telemetryService","vs/platform/telemetry/node/appInsightsAppender","https","applicationinsights","https-proxy-agent","yauzl","http-proxy-agent","getmac","net","http","zlib","assert","vs/base/common/winjs.base.raw","vs/code/node/sharedProcessMain"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,7 +10,7 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[23], __M([0,1]), function (require, exports) {
+define(__m[18/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -104,6 +104,9 @@ define(__m[23], __M([0,1]), function (require, exports) {
      * @return The first n elemnts from array when sorted with compare.
      */
     function top(array, compare, n) {
+        if (n === 0) {
+            return [];
+        }
         var result = array.slice(0, n).sort(compare);
         var _loop_1 = function(i, m) {
             var element = array[i];
@@ -271,9 +274,23 @@ define(__m[23], __M([0,1]), function (require, exports) {
         }, Object.create(null));
     }
     exports.index = index;
+    /**
+     * Inserts an element into an array. Returns a function which, when
+     * called, will remove that element from the array.
+     */
+    function insert(array, element) {
+        array.push(element);
+        return function () {
+            var index = array.indexOf(element);
+            if (index > -1) {
+                array.splice(index, 1);
+            }
+        };
+    }
+    exports.insert = insert;
 });
 
-define(__m[31], __M([0,1]), function (require, exports) {
+define(__m[39/*vs/base/common/assert*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -290,7 +307,7 @@ define(__m[31], __M([0,1]), function (require, exports) {
     exports.ok = ok;
 });
 
-define(__m[24], __M([0,1]), function (require, exports) {
+define(__m[38/*vs/base/common/collections*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -383,105 +400,120 @@ define(__m[24], __M([0,1]), function (require, exports) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+define(__m[29/*vs/base/common/decorators*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    'use strict';
+    function memoize(target, key, descriptor) {
+        var fnKey = null;
+        var fn = null;
+        if (typeof descriptor.value === 'function') {
+            fnKey = 'value';
+            fn = descriptor.value;
+        }
+        else if (typeof descriptor.get === 'function') {
+            fnKey = 'get';
+            fn = descriptor.get;
+        }
+        if (!fn) {
+            throw new Error('not supported');
+        }
+        var memoizeKey = "$memoize$" + key;
+        descriptor[fnKey] = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            if (!this.hasOwnProperty(memoizeKey)) {
+                Object.defineProperty(this, memoizeKey, {
+                    configurable: false,
+                    enumerable: false,
+                    writable: false,
+                    value: fn.apply(this, args)
+                });
+            }
+            return this[memoizeKey];
+        };
+    }
+    exports.memoize = memoize;
+});
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[52], __M([0,1]), function (require, exports) {
+define(__m[78/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var Event = (function () {
+        function Event(originalEvent) {
+            this.time = (new Date()).getTime();
+            this.originalEvent = originalEvent;
+            this.source = null;
+        }
+        return Event;
+    }());
+    exports.Event = Event;
+    var PropertyChangeEvent = (function (_super) {
+        __extends(PropertyChangeEvent, _super);
+        function PropertyChangeEvent(key, oldValue, newValue, originalEvent) {
+            _super.call(this, originalEvent);
+            this.key = key;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
+        return PropertyChangeEvent;
+    }(Event));
+    exports.PropertyChangeEvent = PropertyChangeEvent;
+    var ViewerEvent = (function (_super) {
+        __extends(ViewerEvent, _super);
+        function ViewerEvent(element, originalEvent) {
+            _super.call(this, originalEvent);
+            this.element = element;
+        }
+        return ViewerEvent;
+    }(Event));
+    exports.ViewerEvent = ViewerEvent;
+    exports.EventType = {
+        PROPERTY_CHANGED: 'propertyChanged',
+        SELECTION: 'selection',
+        FOCUS: 'focus',
+        BLUR: 'blur',
+        HIGHLIGHT: 'highlight',
+        EXPAND: 'expand',
+        COLLAPSE: 'collapse',
+        TOGGLE: 'toggle',
+        BEFORE_RUN: 'beforeRun',
+        RUN: 'run',
+        EDIT: 'edit',
+        SAVE: 'save',
+        CANCEL: 'cancel',
+        CHANGE: 'change',
+        DISPOSE: 'dispose',
+    };
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+define(__m[52/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     'use strict';
     /**
      * A simple map to store value by a key object. Key can be any object that has toString() function to get
      * string value of the key.
      */
-    var SimpleMap = (function () {
-        function SimpleMap() {
-            this.map = Object.create(null);
-            this._size = 0;
-        }
-        Object.defineProperty(SimpleMap.prototype, "size", {
-            get: function () {
-                return this._size;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SimpleMap.prototype.get = function (k) {
-            var value = this.peek(k);
-            return value ? value : null;
-        };
-        SimpleMap.prototype.keys = function () {
-            var keys = [];
-            for (var key in this.map) {
-                keys.push(this.map[key].key);
-            }
-            return keys;
-        };
-        SimpleMap.prototype.values = function () {
-            var values = [];
-            for (var key in this.map) {
-                values.push(this.map[key].value);
-            }
-            return values;
-        };
-        SimpleMap.prototype.entries = function () {
-            var entries = [];
-            for (var key in this.map) {
-                entries.push(this.map[key]);
-            }
-            return entries;
-        };
-        SimpleMap.prototype.set = function (k, t) {
-            if (this.get(k)) {
-                return false; // already present!
-            }
-            this.push(k, t);
-            return true;
-        };
-        SimpleMap.prototype.delete = function (k) {
-            var value = this.get(k);
-            if (value) {
-                this.pop(k);
-                return value;
-            }
-            return null;
-        };
-        SimpleMap.prototype.has = function (k) {
-            return !!this.get(k);
-        };
-        SimpleMap.prototype.clear = function () {
-            this.map = Object.create(null);
-            this._size = 0;
-        };
-        SimpleMap.prototype.push = function (key, value) {
-            var entry = { key: key, value: value };
-            this.map[key.toString()] = entry;
-            this._size++;
-        };
-        SimpleMap.prototype.pop = function (k) {
-            delete this.map[k.toString()];
-            this._size--;
-        };
-        SimpleMap.prototype.peek = function (k) {
-            var entry = this.map[k.toString()];
-            return entry ? entry.value : null;
-        };
-        return SimpleMap;
-    }());
-    exports.SimpleMap = SimpleMap;
-    /**
-     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
-     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
-     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
-     */
     var LinkedMap = (function () {
-        function LinkedMap(limit, ratio) {
-            if (limit === void 0) { limit = Number.MAX_VALUE; }
-            if (ratio === void 0) { ratio = 1; }
-            this.limit = limit;
+        function LinkedMap() {
             this.map = Object.create(null);
             this._size = 0;
-            this.ratio = limit * ratio;
         }
         Object.defineProperty(LinkedMap.prototype, "size", {
             get: function () {
@@ -490,7 +522,99 @@ define(__m[52], __M([0,1]), function (require, exports) {
             enumerable: true,
             configurable: true
         });
-        LinkedMap.prototype.set = function (key, value) {
+        LinkedMap.prototype.get = function (k) {
+            var value = this.peek(k);
+            return value ? value : null;
+        };
+        LinkedMap.prototype.getOrSet = function (k, t) {
+            var res = this.get(k);
+            if (res) {
+                return res;
+            }
+            this.set(k, t);
+            return t;
+        };
+        LinkedMap.prototype.keys = function () {
+            var keys = [];
+            for (var key in this.map) {
+                keys.push(this.map[key].key);
+            }
+            return keys;
+        };
+        LinkedMap.prototype.values = function () {
+            var values = [];
+            for (var key in this.map) {
+                values.push(this.map[key].value);
+            }
+            return values;
+        };
+        LinkedMap.prototype.entries = function () {
+            var entries = [];
+            for (var key in this.map) {
+                entries.push(this.map[key]);
+            }
+            return entries;
+        };
+        LinkedMap.prototype.set = function (k, t) {
+            if (this.get(k)) {
+                return false; // already present!
+            }
+            this.push(k, t);
+            return true;
+        };
+        LinkedMap.prototype.delete = function (k) {
+            var value = this.get(k);
+            if (value) {
+                this.pop(k);
+                return value;
+            }
+            return null;
+        };
+        LinkedMap.prototype.has = function (k) {
+            return !!this.get(k);
+        };
+        LinkedMap.prototype.clear = function () {
+            this.map = Object.create(null);
+            this._size = 0;
+        };
+        LinkedMap.prototype.push = function (key, value) {
+            var entry = { key: key, value: value };
+            this.map[key.toString()] = entry;
+            this._size++;
+        };
+        LinkedMap.prototype.pop = function (k) {
+            delete this.map[k.toString()];
+            this._size--;
+        };
+        LinkedMap.prototype.peek = function (k) {
+            var entry = this.map[k.toString()];
+            return entry ? entry.value : null;
+        };
+        return LinkedMap;
+    }());
+    exports.LinkedMap = LinkedMap;
+    /**
+     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
+     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
+     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
+     */
+    var BoundedLinkedMap = (function () {
+        function BoundedLinkedMap(limit, ratio) {
+            if (limit === void 0) { limit = Number.MAX_VALUE; }
+            if (ratio === void 0) { ratio = 1; }
+            this.limit = limit;
+            this.map = Object.create(null);
+            this._size = 0;
+            this.ratio = limit * ratio;
+        }
+        Object.defineProperty(BoundedLinkedMap.prototype, "size", {
+            get: function () {
+                return this._size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        BoundedLinkedMap.prototype.set = function (key, value) {
             if (this.map[key]) {
                 return false; // already present!
             }
@@ -501,11 +625,19 @@ define(__m[52], __M([0,1]), function (require, exports) {
             }
             return true;
         };
-        LinkedMap.prototype.get = function (key) {
+        BoundedLinkedMap.prototype.get = function (key) {
             var entry = this.map[key];
             return entry ? entry.value : null;
         };
-        LinkedMap.prototype.delete = function (key) {
+        BoundedLinkedMap.prototype.getOrSet = function (k, t) {
+            var res = this.get(k);
+            if (res) {
+                return res;
+            }
+            this.set(k, t);
+            return t;
+        };
+        BoundedLinkedMap.prototype.delete = function (key) {
             var entry = this.map[key];
             if (entry) {
                 this.map[key] = void 0;
@@ -526,16 +658,16 @@ define(__m[52], __M([0,1]), function (require, exports) {
             }
             return null;
         };
-        LinkedMap.prototype.has = function (key) {
+        BoundedLinkedMap.prototype.has = function (key) {
             return !!this.map[key];
         };
-        LinkedMap.prototype.clear = function () {
+        BoundedLinkedMap.prototype.clear = function () {
             this.map = Object.create(null);
             this._size = 0;
             this.head = null;
             this.tail = null;
         };
-        LinkedMap.prototype.push = function (entry) {
+        BoundedLinkedMap.prototype.push = function (entry) {
             if (this.head) {
                 // [A]-[B] = [A]-[B]->[X]
                 entry.prev = this.head;
@@ -548,7 +680,7 @@ define(__m[52], __M([0,1]), function (require, exports) {
             this.map[entry.key] = entry;
             this._size++;
         };
-        LinkedMap.prototype.trim = function () {
+        BoundedLinkedMap.prototype.trim = function () {
             if (this.tail) {
                 // Remove all elements until ratio is reached
                 if (this.ratio < this.limit) {
@@ -579,9 +711,9 @@ define(__m[52], __M([0,1]), function (require, exports) {
                 }
             }
         };
-        return LinkedMap;
+        return BoundedLinkedMap;
     }());
-    exports.LinkedMap = LinkedMap;
+    exports.BoundedLinkedMap = BoundedLinkedMap;
     /**
      * A subclass of Map<T> that makes an entry the MRU entry as soon
      * as it is being accessed. In combination with the limit for the
@@ -605,11 +737,67 @@ define(__m[52], __M([0,1]), function (require, exports) {
             return null;
         };
         return LRUCache;
-    }(LinkedMap));
+    }(BoundedLinkedMap));
     exports.LRUCache = LRUCache;
+    /**
+     * A trie map that allows for fast look up when keys are substrings
+     * to the actual search keys (dir/subdir-problem).
+     */
+    var TrieMap = (function () {
+        function TrieMap(splitter) {
+            this._root = { children: Object.create(null) };
+            this._splitter = splitter;
+        }
+        TrieMap.prototype.insert = function (path, element) {
+            var parts = this._splitter(path);
+            var i = 0;
+            // find insertion node
+            var node = this._root;
+            for (; i < parts.length; i++) {
+                var child = node.children[parts[i]];
+                if (child) {
+                    node = child;
+                    continue;
+                }
+                break;
+            }
+            // create new nodes
+            var newNode;
+            for (; i < parts.length; i++) {
+                newNode = { children: Object.create(null) };
+                node.children[parts[i]] = newNode;
+                node = newNode;
+            }
+            node.element = element;
+        };
+        TrieMap.prototype.findSubstr = function (path) {
+            var parts = this._splitter(path);
+            var lastNode;
+            var children = this._root.children;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                var node = children[part];
+                if (!node) {
+                    break;
+                }
+                if (node.element) {
+                    lastNode = node;
+                }
+                children = node.children;
+            }
+            // return the last matching node
+            // that had an element
+            if (lastNode) {
+                return lastNode.element;
+            }
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/); };
+        return TrieMap;
+    }());
+    exports.TrieMap = TrieMap;
 });
 
-define(__m[6], __M([0,1]), function (require, exports) {
+define(__m[13/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -632,10 +820,10 @@ define(__m[6], __M([0,1]), function (require, exports) {
         _isMacintosh = (process.platform === 'darwin');
         _isLinux = (process.platform === 'linux');
         _isRootUser = !_isWindows && (process.getuid() === 0);
-        var vscode_nls_config = process.env['VSCODE_NLS_CONFIG'];
-        if (vscode_nls_config) {
+        var rawNlsConfig = process.env['VSCODE_NLS_CONFIG'];
+        if (rawNlsConfig) {
             try {
-                var nlsConfig = JSON.parse(vscode_nls_config);
+                var nlsConfig = JSON.parse(rawNlsConfig);
                 var resolved = nlsConfig.availableLanguages['*'];
                 _locale = nlsConfig.locale;
                 // VSCode's default language is 'en'
@@ -707,7 +895,7 @@ define(__m[6], __M([0,1]), function (require, exports) {
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
+define(__m[35/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,13/*vs/base/common/platform*/,18/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -722,22 +910,22 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
      */
     exports.nativeSep = platform_1.isWindows ? '\\' : '/';
     function relative(from, to) {
-        from = normalize(from);
-        to = normalize(to);
-        var fromParts = from.split(exports.sep), toParts = to.split(exports.sep);
-        while (fromParts.length > 0 && toParts.length > 0) {
-            if (fromParts[0] === toParts[0]) {
-                fromParts.shift();
-                toParts.shift();
-            }
-            else {
+        var originalNormalizedFrom = normalize(from);
+        var originalNormalizedTo = normalize(to);
+        // we're assuming here that any non=linux OS is case insensitive
+        // so we must compare each part in its lowercase form
+        var normalizedFrom = platform_1.isLinux ? originalNormalizedFrom : originalNormalizedFrom.toLowerCase();
+        var normalizedTo = platform_1.isLinux ? originalNormalizedTo : originalNormalizedTo.toLowerCase();
+        var fromParts = normalizedFrom.split(exports.sep);
+        var toParts = normalizedTo.split(exports.sep);
+        var i = 0, max = Math.min(fromParts.length, toParts.length);
+        for (; i < max; i++) {
+            if (fromParts[i] !== toParts[i]) {
                 break;
             }
         }
-        for (var i = 0, len = fromParts.length; i < len; i++) {
-            toParts.unshift('..');
-        }
-        return toParts.join(exports.sep);
+        var result = arrays_1.fill(fromParts.length - i, function () { return '..'; }).concat(originalNormalizedTo.split(exports.sep).slice(i));
+        return result.join(exports.sep);
     }
     exports.relative = relative;
     /**
@@ -808,7 +996,7 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
         var res = '';
         for (var end = root.length; end <= len; end++) {
             // either at the end or at a path-separator character
-            if (end === len || path.charCodeAt(end) === _slash || path.charCodeAt(end) === _backslash) {
+            if (end === len || path.charCodeAt(end) === 47 /* Slash */ || path.charCodeAt(end) === 92 /* Backslash */) {
                 if (streql(path, start, end, '..')) {
                     // skip current and remove parent (if there is already something)
                     var prev_start = res.lastIndexOf(sep);
@@ -851,27 +1039,27 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
         }
         var len = path.length;
         var code = path.charCodeAt(0);
-        if (code === _slash || code === _backslash) {
+        if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
             code = path.charCodeAt(1);
-            if (code === _slash || code === _backslash) {
+            if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                 // UNC candidate \\localhost\shares\ddd
                 //               ^^^^^^^^^^^^^^^^^^^
                 code = path.charCodeAt(2);
-                if (code !== _slash && code !== _backslash) {
+                if (code !== 47 /* Slash */ && code !== 92 /* Backslash */) {
                     var pos_1 = 3;
                     var start = pos_1;
                     for (; pos_1 < len; pos_1++) {
                         code = path.charCodeAt(pos_1);
-                        if (code === _slash || code === _backslash) {
+                        if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                             break;
                         }
                     }
                     code = path.charCodeAt(pos_1 + 1);
-                    if (start !== pos_1 && code !== _slash && code !== _backslash) {
+                    if (start !== pos_1 && code !== 47 /* Slash */ && code !== 92 /* Backslash */) {
                         pos_1 += 1;
                         for (; pos_1 < len; pos_1++) {
                             code = path.charCodeAt(pos_1);
-                            if (code === _slash || code === _backslash) {
+                            if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                                 return path.slice(0, pos_1 + 1) // consume this separator
                                     .replace(/[\\/]/g, sep);
                             }
@@ -883,11 +1071,11 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
             // ^
             return sep;
         }
-        else if ((code >= _A && code <= _Z) || (code >= _a && code <= _z)) {
+        else if ((code >= 65 /* A */ && code <= 90 /* Z */) || (code >= 97 /* a */ && code <= 122 /* z */)) {
             // check for windows drive letter c:\ or c:
-            if (path.charCodeAt(1) === _colon) {
+            if (path.charCodeAt(1) === 58 /* Colon */) {
                 code = path.charCodeAt(2);
-                if (code === _slash || code === _backslash) {
+                if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                     // C:\fff
                     // ^^^
                     return path.slice(0, 2) + sep;
@@ -907,7 +1095,7 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
             pos += 3; // 3 -> "://".length
             for (; pos < len; pos++) {
                 code = path.charCodeAt(pos);
-                if (code === _slash || code === _backslash) {
+                if (code === 47 /* Slash */ || code === 92 /* Backslash */) {
                     return path.slice(0, pos + 1); // consume this separator
                 }
             }
@@ -926,9 +1114,9 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
                 // add the separater between two parts unless
                 // there already is one
                 var last = value.charCodeAt(value.length - 1);
-                if (last !== _slash && last !== _backslash) {
+                if (last !== 47 /* Slash */ && last !== 92 /* Backslash */) {
                     var next = part.charCodeAt(0);
-                    if (next !== _slash && next !== _backslash) {
+                    if (next !== 47 /* Slash */ && next !== 92 /* Backslash */) {
                         value += exports.sep;
                     }
                 }
@@ -954,18 +1142,18 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
             return false;
         }
         var code = path.charCodeAt(0);
-        if (code !== _backslash) {
+        if (code !== 92 /* Backslash */) {
             return false;
         }
         code = path.charCodeAt(1);
-        if (code !== _backslash) {
+        if (code !== 92 /* Backslash */) {
             return false;
         }
         var pos = 2;
         var start = pos;
         for (; pos < path.length; pos++) {
             code = path.charCodeAt(pos);
-            if (code === _backslash) {
+            if (code === 92 /* Backslash */) {
                 break;
             }
         }
@@ -973,7 +1161,7 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
             return false;
         }
         code = path.charCodeAt(pos + 1);
-        if (isNaN(code) || code === _backslash) {
+        if (isNaN(code) || code === 92 /* Backslash */) {
             return false;
         }
         return true;
@@ -986,13 +1174,6 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
         return isPosixAbsolute(normalize(path)) ? path : exports.sep + path;
     }
     exports.makePosixAbsolute = makePosixAbsolute;
-    var _slash = '/'.charCodeAt(0);
-    var _backslash = '\\'.charCodeAt(0);
-    var _colon = ':'.charCodeAt(0);
-    var _a = 'a'.charCodeAt(0);
-    var _A = 'A'.charCodeAt(0);
-    var _z = 'z'.charCodeAt(0);
-    var _Z = 'Z'.charCodeAt(0);
     function isEqualOrParent(path, candidate) {
         if (path === candidate) {
             return true;
@@ -1001,7 +1182,7 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
         candidate = normalize(candidate);
         var candidateLen = candidate.length;
         var lastCandidateChar = candidate.charCodeAt(candidateLen - 1);
-        if (lastCandidateChar === _slash) {
+        if (lastCandidateChar === 47 /* Slash */) {
             candidate = candidate.substring(0, candidateLen - 1);
             candidateLen -= 1;
         }
@@ -1020,7 +1201,7 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
             return false;
         }
         var char = path.charCodeAt(candidateLen);
-        return char === _slash;
+        return char === 47 /* Slash */;
     }
     exports.isEqualOrParent = isEqualOrParent;
     // Reference: https://en.wikipedia.org/wiki/Filename
@@ -1060,41 +1241,50 @@ define(__m[29], __M([0,1,6]), function (require, exports, platform_1) {
     exports.isAbsolute = isAbsolute;
 });
 
-define(__m[72], __M([0,1,6]), function (require, exports, platform_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var hasPerformanceNow = (platform_1.globals.performance && typeof platform_1.globals.performance.now === 'function');
-    var StopWatch = (function () {
-        function StopWatch(highResolution) {
-            this._highResolution = hasPerformanceNow && highResolution;
-            this._startTime = this._now();
-            this._stopTime = -1;
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[87/*vs/base/common/set*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    "use strict";
+    var ArraySet = (function () {
+        function ArraySet(elements) {
+            if (elements === void 0) { elements = []; }
+            this._elements = elements.slice();
         }
-        StopWatch.create = function (highResolution) {
-            if (highResolution === void 0) { highResolution = true; }
-            return new StopWatch(highResolution);
+        Object.defineProperty(ArraySet.prototype, "size", {
+            get: function () {
+                return this._elements.length;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ArraySet.prototype.set = function (element) {
+            this.unset(element);
+            this._elements.push(element);
         };
-        StopWatch.prototype.stop = function () {
-            this._stopTime = this._now();
+        ArraySet.prototype.contains = function (element) {
+            return this._elements.indexOf(element) > -1;
         };
-        StopWatch.prototype.elapsed = function () {
-            if (this._stopTime !== -1) {
-                return this._stopTime - this._startTime;
+        ArraySet.prototype.unset = function (element) {
+            var index = this._elements.indexOf(element);
+            if (index > -1) {
+                this._elements.splice(index, 1);
             }
-            return this._now() - this._startTime;
         };
-        StopWatch.prototype._now = function () {
-            return this._highResolution ? platform_1.globals.performance.now() : new Date().getTime();
-        };
-        return StopWatch;
+        Object.defineProperty(ArraySet.prototype, "elements", {
+            get: function () {
+                return this._elements.slice();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return ArraySet;
     }());
-    exports.StopWatch = StopWatch;
+    exports.ArraySet = ArraySet;
 });
 
-define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
+define(__m[19/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/,52/*vs/base/common/map*/]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1104,6 +1294,13 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
      * The empty string.
      */
     exports.empty = '';
+    function isFalsyOrWhitespace(str) {
+        if (!str || typeof str !== 'string') {
+            return true;
+        }
+        return str.trim().length === 0;
+    }
+    exports.isFalsyOrWhitespace = isFalsyOrWhitespace;
     /**
      * @returns the provided number with the given number of preceding zeros.
      */
@@ -1249,7 +1446,7 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
     function endsWith(haystack, needle) {
         var diff = haystack.length - needle.length;
         if (diff > 0) {
-            return haystack.lastIndexOf(needle) === diff;
+            return haystack.indexOf(needle, diff) === diff;
         }
         else if (diff === 0) {
             return haystack === needle;
@@ -1259,14 +1456,28 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
         }
     }
     exports.endsWith = endsWith;
-    function createRegExp(searchString, isRegex, matchCase, wholeWord, global) {
+    function indexOfIgnoreCase(haystack, needle, position) {
+        if (position === void 0) { position = 0; }
+        var index = haystack.indexOf(needle, position);
+        if (index < 0) {
+            if (position > 0) {
+                haystack = haystack.substr(position);
+            }
+            needle = escapeRegExpCharacters(needle);
+            index = haystack.search(new RegExp(needle, 'i'));
+        }
+        return index;
+    }
+    exports.indexOfIgnoreCase = indexOfIgnoreCase;
+    function createRegExp(searchString, isRegex, options) {
+        if (options === void 0) { options = {}; }
         if (searchString === '') {
             throw new Error('Cannot create regex from empty string');
         }
         if (!isRegex) {
             searchString = searchString.replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&');
         }
-        if (wholeWord) {
+        if (options.wholeWord) {
             if (!/\B/.test(searchString.charAt(0))) {
                 searchString = '\\b' + searchString;
             }
@@ -1275,11 +1486,14 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
             }
         }
         var modifiers = '';
-        if (global) {
+        if (options.global) {
             modifiers += 'g';
         }
-        if (!matchCase) {
+        if (!options.matchCase) {
             modifiers += 'i';
+        }
+        if (options.multiline) {
+            modifiers += 'm';
         }
         return new RegExp(searchString, modifiers);
     }
@@ -1304,7 +1518,7 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
      */
     exports.canNormalize = typeof (''.normalize) === 'function';
     var nonAsciiCharactersPattern = /[^\u0000-\u0080]/;
-    var normalizedCache = new map_1.LinkedMap(10000); // bounded to 10000 elements
+    var normalizedCache = new map_1.BoundedLinkedMap(10000); // bounded to 10000 elements
     function normalizeNFC(str) {
         if (!exports.canNormalize || !str) {
             return str;
@@ -1331,7 +1545,8 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
      */
     function firstNonWhitespaceIndex(str) {
         for (var i = 0, len = str.length; i < len; i++) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
                 return i;
             }
         }
@@ -1344,7 +1559,8 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
      */
     function getLeadingWhitespace(str) {
         for (var i = 0, len = str.length; i < len; i++) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
                 return str.substring(0, i);
             }
         }
@@ -1358,7 +1574,8 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
     function lastNonWhitespaceIndex(str, startIndex) {
         if (startIndex === void 0) { startIndex = str.length - 1; }
         for (var i = startIndex; i >= 0; i--) {
-            if (str.charAt(i) !== ' ' && str.charAt(i) !== '\t') {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
                 return i;
             }
         }
@@ -1378,7 +1595,7 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
     }
     exports.compare = compare;
     function isAsciiChar(code) {
-        return (code >= 97 && code <= 122) || (code >= 65 && code <= 90);
+        return (code >= 97 /* a */ && code <= 122 /* z */) || (code >= 65 /* A */ && code <= 90 /* Z */);
     }
     function equalsIgnoreCase(a, b) {
         var len1 = a.length, len2 = b.length;
@@ -1448,15 +1665,25 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
     //	}
     //	return chrCode;
     //}
-    //export function isLeadSurrogate(chr:string) {
-    //	let chrCode = chr.charCodeAt(0);
-    //	return ;
-    //}
-    //
-    //export function isTrailSurrogate(chr:string) {
-    //	let chrCode = chr.charCodeAt(0);
-    //	return 0xDC00 <= chrCode && chrCode <= 0xDFFF;
-    //}
+    function isHighSurrogate(charCode) {
+        return (0xD800 <= charCode && charCode <= 0xDBFF);
+    }
+    exports.isHighSurrogate = isHighSurrogate;
+    function isLowSurrogate(charCode) {
+        return (0xDC00 <= charCode && charCode <= 0xDFFF);
+    }
+    exports.isLowSurrogate = isLowSurrogate;
+    /**
+     * Generated using https://github.com/alexandrudima/unicode-utils/blob/master/generate-rtl-test.js
+     */
+    var CONTAINS_RTL = /(?:[\u05BE\u05C0\u05C3\u05C6\u05D0-\u05F4\u0608\u060B\u060D\u061B-\u064A\u066D-\u066F\u0671-\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u0710\u0712-\u072F\u074D-\u07A5\u07B1-\u07EA\u07F4\u07F5\u07FA-\u0815\u081A\u0824\u0828\u0830-\u0858\u085E-\u08BD\u200F\uFB1D\uFB1F-\uFB28\uFB2A-\uFD3D\uFD50-\uFDFC\uFE70-\uFEFC]|\uD802[\uDC00-\uDD1B\uDD20-\uDE00\uDE10-\uDE33\uDE40-\uDEE4\uDEEB-\uDF35\uDF40-\uDFFF]|\uD803[\uDC00-\uDCFF]|\uD83A[\uDC00-\uDCCF\uDD00-\uDD43\uDD50-\uDFFF]|\uD83B[\uDC00-\uDEBB])/;
+    /**
+     * Returns true if `str` contains any Unicode character that is classified as "R" or "AL".
+     */
+    function containsRTL(str) {
+        return CONTAINS_RTL.test(str);
+    }
+    exports.containsRTL = containsRTL;
     function isFullWidthCharacter(charCode) {
         // Do a cheap trick to better support wrapping of wide characters, treat them as 2 columns
         // http://jrgraphix.net/research/unicode_blocks.php
@@ -1576,13 +1803,11 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
     // Escape codes
     // http://en.wikipedia.org/wiki/ANSI_escape_code
     var EL = /\x1B\x5B[12]?K/g; // Erase in line
-    var LF = /\xA/g; // line feed
     var COLOR_START = /\x1b\[\d+m/g; // Color
     var COLOR_END = /\x1b\[0?m/g; // Color
     function removeAnsiEscapeCodes(str) {
         if (str) {
             str = str.replace(EL, '');
-            str = str.replace(LF, '\n');
             str = str.replace(COLOR_START, '');
             str = str.replace(COLOR_END, '');
         }
@@ -1590,10 +1815,9 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
     }
     exports.removeAnsiEscapeCodes = removeAnsiEscapeCodes;
     // -- UTF-8 BOM
-    var __utf8_bom = 65279;
-    exports.UTF8_BOM_CHARACTER = String.fromCharCode(__utf8_bom);
+    exports.UTF8_BOM_CHARACTER = String.fromCharCode(65279 /* UTF8_BOM */);
     function startsWithUTF8BOM(str) {
-        return (str && str.length > 0 && str.charCodeAt(0) === __utf8_bom);
+        return (str && str.length > 0 && str.charCodeAt(0) === 65279 /* UTF8_BOM */);
     }
     exports.startsWithUTF8BOM = startsWithUTF8BOM;
     /**
@@ -1628,7 +1852,7 @@ define(__m[19], __M([0,1,52]), function (require, exports, map_1) {
     exports.repeat = repeat;
 });
 
-define(__m[5], __M([0,1]), function (require, exports) {
+define(__m[6/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1677,6 +1901,9 @@ define(__m[5], __M([0,1]), function (require, exports) {
      *	`null`, an `array`, a `regexp`, nor a `date`.
      */
     function isObject(obj) {
+        // The method can't do a type cast since there are type (like strings) which
+        // are subclasses of any put not positvely matched by the function. Hence type
+        // narrowing results in wrong results.
         return typeof obj === _typeof.object
             && obj !== null
             && !Array.isArray(obj)
@@ -1793,7 +2020,499 @@ define(__m[5], __M([0,1]), function (require, exports) {
     exports.create = create;
 });
 
-define(__m[62], __M([0,1,5,24]), function (require, exports, types_1, collections_1) {
+define(__m[7/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,13/*vs/base/common/platform*/,6/*vs/base/common/types*/]), function (require, exports, platform, types) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
+    var ErrorHandler = (function () {
+        function ErrorHandler() {
+            this.listeners = [];
+            this.unexpectedErrorHandler = function (e) {
+                platform.setTimeout(function () {
+                    if (e.stack) {
+                        throw new Error(e.message + '\n\n' + e.stack);
+                    }
+                    throw e;
+                }, 0);
+            };
+        }
+        ErrorHandler.prototype.addListener = function (listener) {
+            var _this = this;
+            this.listeners.push(listener);
+            return function () {
+                _this._removeListener(listener);
+            };
+        };
+        ErrorHandler.prototype.emit = function (e) {
+            this.listeners.forEach(function (listener) {
+                listener(e);
+            });
+        };
+        ErrorHandler.prototype._removeListener = function (listener) {
+            this.listeners.splice(this.listeners.indexOf(listener), 1);
+        };
+        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
+            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
+            return this.unexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.onUnexpectedError = function (e) {
+            this.unexpectedErrorHandler(e);
+            this.emit(e);
+        };
+        return ErrorHandler;
+    }());
+    exports.ErrorHandler = ErrorHandler;
+    exports.errorHandler = new ErrorHandler();
+    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
+        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
+    }
+    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
+    function onUnexpectedError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedError(e);
+        }
+    }
+    exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedPromiseError(promise) {
+        return promise.then(null, onUnexpectedError);
+    }
+    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
+    function transformErrorForSerialization(error) {
+        if (error instanceof Error) {
+            var name_1 = error.name, message = error.message;
+            var stack = error.stacktrace || error.stack;
+            return {
+                $isError: true,
+                name: name_1,
+                message: message,
+                stack: stack
+            };
+        }
+        // return as is
+        return error;
+    }
+    exports.transformErrorForSerialization = transformErrorForSerialization;
+    var canceledName = 'Canceled';
+    /**
+     * Checks if the given error is a promise in canceled state
+     */
+    function isPromiseCanceledError(error) {
+        return error instanceof Error && error.name === canceledName && error.message === canceledName;
+    }
+    exports.isPromiseCanceledError = isPromiseCanceledError;
+    /**
+     * Returns an error that signals cancellation.
+     */
+    function canceled() {
+        var error = new Error(canceledName);
+        error.name = error.message;
+        return error;
+    }
+    exports.canceled = canceled;
+    /**
+     * Returns an error that signals something is not implemented.
+     */
+    function notImplemented() {
+        return new Error('Not Implemented');
+    }
+    exports.notImplemented = notImplemented;
+    function illegalArgument(name) {
+        if (name) {
+            return new Error("Illegal argument: " + name);
+        }
+        else {
+            return new Error('Illegal argument');
+        }
+    }
+    exports.illegalArgument = illegalArgument;
+    function illegalState(name) {
+        if (name) {
+            return new Error("Illegal state: " + name);
+        }
+        else {
+            return new Error('Illegal state');
+        }
+    }
+    exports.illegalState = illegalState;
+    function readonly(name) {
+        return name
+            ? new Error("readonly property '" + name + " cannot be changed'")
+            : new Error('readonly property cannot be changed');
+    }
+    exports.readonly = readonly;
+    function create(message, options) {
+        if (options === void 0) { options = {}; }
+        var result = new Error(message);
+        if (types.isNumber(options.severity)) {
+            result.severity = options.severity;
+        }
+        if (options.actions) {
+            result.actions = options.actions;
+        }
+        return result;
+    }
+    exports.create = create;
+    function getErrorMessage(err) {
+        if (!err) {
+            return 'Error';
+        }
+        if (err.message) {
+            return err.message;
+        }
+        if (err.stack) {
+            return err.stack.split('\n')[0];
+        }
+        return String(err);
+    }
+    exports.getErrorMessage = getErrorMessage;
+});
+
+define(__m[82/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var CallbackList = (function () {
+        function CallbackList() {
+        }
+        CallbackList.prototype.add = function (callback, context, bucket) {
+            var _this = this;
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                this._callbacks = [];
+                this._contexts = [];
+            }
+            this._callbacks.push(callback);
+            this._contexts.push(context);
+            if (Array.isArray(bucket)) {
+                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
+            }
+        };
+        CallbackList.prototype.remove = function (callback, context) {
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                return;
+            }
+            var foundCallbackWithDifferentContext = false;
+            for (var i = 0, len = this._callbacks.length; i < len; i++) {
+                if (this._callbacks[i] === callback) {
+                    if (this._contexts[i] === context) {
+                        // callback & context match => remove it
+                        this._callbacks.splice(i, 1);
+                        this._contexts.splice(i, 1);
+                        return;
+                    }
+                    else {
+                        foundCallbackWithDifferentContext = true;
+                    }
+                }
+            }
+            if (foundCallbackWithDifferentContext) {
+                throw new Error('When adding a listener with a context, you should remove it with the same context');
+            }
+        };
+        CallbackList.prototype.invoke = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            if (!this._callbacks) {
+                return;
+            }
+            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
+            for (var i = 0, len = callbacks.length; i < len; i++) {
+                try {
+                    ret.push(callbacks[i].apply(contexts[i], args));
+                }
+                catch (e) {
+                    errors_1.onUnexpectedError(e);
+                }
+            }
+            return ret;
+        };
+        CallbackList.prototype.isEmpty = function () {
+            return !this._callbacks || this._callbacks.length === 0;
+        };
+        CallbackList.prototype.entries = function () {
+            var _this = this;
+            if (!this._callbacks) {
+                return [];
+            }
+            return this._callbacks.map(function (fn, index) { return [fn, _this._contexts[index]]; });
+        };
+        CallbackList.prototype.dispose = function () {
+            this._callbacks = undefined;
+            this._contexts = undefined;
+        };
+        return CallbackList;
+    }());
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = CallbackList;
+});
+
+
+
+
+
+
+define(__m[26/*vs/base/common/eventEmitter*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/errors*/]), function (require, exports, Errors) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var EmitterEvent = (function () {
+        function EmitterEvent(eventType, data) {
+            if (eventType === void 0) { eventType = null; }
+            if (data === void 0) { data = null; }
+            this._type = eventType;
+            this._data = data;
+        }
+        EmitterEvent.prototype.getType = function () {
+            return this._type;
+        };
+        EmitterEvent.prototype.getData = function () {
+            return this._data;
+        };
+        return EmitterEvent;
+    }());
+    exports.EmitterEvent = EmitterEvent;
+    var EventEmitter = (function () {
+        function EventEmitter(allowedEventTypes) {
+            if (allowedEventTypes === void 0) { allowedEventTypes = null; }
+            this._listeners = {};
+            this._bulkListeners = [];
+            this._collectedEvents = [];
+            this._deferredCnt = 0;
+            if (allowedEventTypes) {
+                this._allowedEventTypes = {};
+                for (var i = 0; i < allowedEventTypes.length; i++) {
+                    this._allowedEventTypes[allowedEventTypes[i]] = true;
+                }
+            }
+            else {
+                this._allowedEventTypes = null;
+            }
+        }
+        EventEmitter.prototype.dispose = function () {
+            this._listeners = {};
+            this._bulkListeners = [];
+            this._collectedEvents = [];
+            this._deferredCnt = 0;
+            this._allowedEventTypes = null;
+        };
+        EventEmitter.prototype.addListener = function (eventType, listener) {
+            if (eventType === '*') {
+                throw new Error('Use addBulkListener(listener) to register your listener!');
+            }
+            if (this._allowedEventTypes && !this._allowedEventTypes.hasOwnProperty(eventType)) {
+                throw new Error('This object will never emit this event type!');
+            }
+            if (this._listeners.hasOwnProperty(eventType)) {
+                this._listeners[eventType].push(listener);
+            }
+            else {
+                this._listeners[eventType] = [listener];
+            }
+            var bound = this;
+            return {
+                dispose: function () {
+                    if (!bound) {
+                        // Already called
+                        return;
+                    }
+                    bound._removeListener(eventType, listener);
+                    // Prevent leakers from holding on to the event emitter
+                    bound = null;
+                    listener = null;
+                }
+            };
+        };
+        EventEmitter.prototype.addListener2 = function (eventType, listener) {
+            return this.addListener(eventType, listener);
+        };
+        EventEmitter.prototype.addOneTimeDisposableListener = function (eventType, listener) {
+            var disposable = this.addListener(eventType, function (value) {
+                disposable.dispose();
+                listener(value);
+            });
+            return disposable;
+        };
+        EventEmitter.prototype.addBulkListener = function (listener) {
+            var _this = this;
+            this._bulkListeners.push(listener);
+            return {
+                dispose: function () {
+                    _this._removeBulkListener(listener);
+                }
+            };
+        };
+        EventEmitter.prototype.addBulkListener2 = function (listener) {
+            return this.addBulkListener(listener);
+        };
+        EventEmitter.prototype.addEmitter = function (eventEmitter) {
+            var _this = this;
+            return eventEmitter.addBulkListener2(function (events) {
+                var newEvents = events;
+                if (_this._deferredCnt === 0) {
+                    _this._emitEvents(newEvents);
+                }
+                else {
+                    // Collect for later
+                    _this._collectedEvents.push.apply(_this._collectedEvents, newEvents);
+                }
+            });
+        };
+        EventEmitter.prototype.addEmitter2 = function (eventEmitter) {
+            return this.addEmitter(eventEmitter);
+        };
+        EventEmitter.prototype._removeListener = function (eventType, listener) {
+            if (this._listeners.hasOwnProperty(eventType)) {
+                var listeners = this._listeners[eventType];
+                for (var i = 0, len = listeners.length; i < len; i++) {
+                    if (listeners[i] === listener) {
+                        listeners.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+        };
+        EventEmitter.prototype._removeBulkListener = function (listener) {
+            for (var i = 0, len = this._bulkListeners.length; i < len; i++) {
+                if (this._bulkListeners[i] === listener) {
+                    this._bulkListeners.splice(i, 1);
+                    break;
+                }
+            }
+        };
+        EventEmitter.prototype._emitToSpecificTypeListeners = function (eventType, data) {
+            if (this._listeners.hasOwnProperty(eventType)) {
+                var listeners = this._listeners[eventType].slice(0);
+                for (var i = 0, len = listeners.length; i < len; i++) {
+                    safeInvoke1Arg(listeners[i], data);
+                }
+            }
+        };
+        EventEmitter.prototype._emitToBulkListeners = function (events) {
+            var bulkListeners = this._bulkListeners.slice(0);
+            for (var i = 0, len = bulkListeners.length; i < len; i++) {
+                safeInvoke1Arg(bulkListeners[i], events);
+            }
+        };
+        EventEmitter.prototype._emitEvents = function (events) {
+            if (this._bulkListeners.length > 0) {
+                this._emitToBulkListeners(events);
+            }
+            for (var i = 0, len = events.length; i < len; i++) {
+                var e = events[i];
+                this._emitToSpecificTypeListeners(e.getType(), e.getData());
+            }
+        };
+        EventEmitter.prototype.emit = function (eventType, data) {
+            if (data === void 0) { data = {}; }
+            if (this._allowedEventTypes && !this._allowedEventTypes.hasOwnProperty(eventType)) {
+                throw new Error('Cannot emit this event type because it wasn\'t white-listed!');
+            }
+            // Early return if no listeners would get this
+            if (!this._listeners.hasOwnProperty(eventType) && this._bulkListeners.length === 0) {
+                return;
+            }
+            var emitterEvent = new EmitterEvent(eventType, data);
+            if (this._deferredCnt === 0) {
+                this._emitEvents([emitterEvent]);
+            }
+            else {
+                // Collect for later
+                this._collectedEvents.push(emitterEvent);
+            }
+        };
+        EventEmitter.prototype.deferredEmit = function (callback) {
+            this._deferredCnt = this._deferredCnt + 1;
+            var result = safeInvokeNoArg(callback);
+            this._deferredCnt = this._deferredCnt - 1;
+            if (this._deferredCnt === 0) {
+                this._emitCollected();
+            }
+            return result;
+        };
+        EventEmitter.prototype._emitCollected = function () {
+            // Flush collected events
+            var events = this._collectedEvents;
+            this._collectedEvents = [];
+            if (events.length > 0) {
+                this._emitEvents(events);
+            }
+        };
+        return EventEmitter;
+    }());
+    exports.EventEmitter = EventEmitter;
+    var EmitQueueElement = (function () {
+        function EmitQueueElement(target, arg) {
+            this.target = target;
+            this.arg = arg;
+        }
+        return EmitQueueElement;
+    }());
+    /**
+     * Same as EventEmitter, but guarantees events are delivered in order to each listener
+     */
+    var OrderGuaranteeEventEmitter = (function (_super) {
+        __extends(OrderGuaranteeEventEmitter, _super);
+        function OrderGuaranteeEventEmitter(allowedEventTypes) {
+            if (allowedEventTypes === void 0) { allowedEventTypes = null; }
+            _super.call(this, allowedEventTypes);
+            this._emitQueue = [];
+        }
+        OrderGuaranteeEventEmitter.prototype._emitToSpecificTypeListeners = function (eventType, data) {
+            if (this._listeners.hasOwnProperty(eventType)) {
+                var listeners = this._listeners[eventType];
+                for (var i = 0, len = listeners.length; i < len; i++) {
+                    this._emitQueue.push(new EmitQueueElement(listeners[i], data));
+                }
+            }
+        };
+        OrderGuaranteeEventEmitter.prototype._emitToBulkListeners = function (events) {
+            var bulkListeners = this._bulkListeners;
+            for (var i = 0, len = bulkListeners.length; i < len; i++) {
+                this._emitQueue.push(new EmitQueueElement(bulkListeners[i], events));
+            }
+        };
+        OrderGuaranteeEventEmitter.prototype._emitEvents = function (events) {
+            _super.prototype._emitEvents.call(this, events);
+            while (this._emitQueue.length > 0) {
+                var queueElement = this._emitQueue.shift();
+                safeInvoke1Arg(queueElement.target, queueElement.arg);
+            }
+        };
+        return OrderGuaranteeEventEmitter;
+    }(EventEmitter));
+    exports.OrderGuaranteeEventEmitter = OrderGuaranteeEventEmitter;
+    function safeInvokeNoArg(func) {
+        try {
+            return func();
+        }
+        catch (e) {
+            Errors.onUnexpectedError(e);
+        }
+    }
+    function safeInvoke1Arg(func, arg1) {
+        try {
+            return func(arg1);
+        }
+        catch (e) {
+            Errors.onUnexpectedError(e);
+        }
+    }
+});
+
+define(__m[91/*vs/base/common/graph*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/types*/,38/*vs/base/common/collections*/]), function (require, exports, types_1, collections_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1887,7 +2606,7 @@ define(__m[62], __M([0,1,5,24]), function (require, exports, types_1, collection
 
 
 
-define(__m[13], __M([0,1,5]), function (require, exports, types_1) {
+define(__m[12/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1956,7 +2675,477 @@ define(__m[13], __M([0,1,5]), function (require, exports, types_1) {
     exports.Disposables = Disposables;
 });
 
-define(__m[9], __M([0,1,5]), function (require, exports, Types) {
+define(__m[3/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,12/*vs/base/common/lifecycle*/,82/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var Event;
+    (function (Event) {
+        var _disposable = { dispose: function () { } };
+        Event.None = function () { return _disposable; };
+    })(Event || (Event = {}));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Event;
+    /**
+     * The Emitter can be used to expose an Event to the public
+     * to fire it from the insides.
+     * Sample:
+        class Document {
+    
+            private _onDidChange = new Emitter<(value:string)=>any>();
+    
+            public onDidChange = this._onDidChange.event;
+    
+            // getter-style
+            // get onDidChange(): Event<(value:string)=>any> {
+            // 	return this._onDidChange.event;
+            // }
+    
+            private _doIt() {
+                //...
+                this._onDidChange.fire(value);
+            }
+        }
+     */
+    var Emitter = (function () {
+        function Emitter(_options) {
+            this._options = _options;
+        }
+        Object.defineProperty(Emitter.prototype, "event", {
+            /**
+             * For the public to allow to subscribe
+             * to events from this Emitter
+             */
+            get: function () {
+                var _this = this;
+                if (!this._event) {
+                    this._event = function (listener, thisArgs, disposables) {
+                        if (!_this._callbacks) {
+                            _this._callbacks = new callbackList_1.default();
+                        }
+                        var firstListener = _this._callbacks.isEmpty();
+                        if (firstListener && _this._options && _this._options.onFirstListenerAdd) {
+                            _this._options.onFirstListenerAdd(_this);
+                        }
+                        _this._callbacks.add(listener, thisArgs);
+                        if (firstListener && _this._options && _this._options.onFirstListenerDidAdd) {
+                            _this._options.onFirstListenerDidAdd(_this);
+                        }
+                        var result;
+                        result = {
+                            dispose: function () {
+                                result.dispose = Emitter._noop;
+                                if (!_this._disposed) {
+                                    _this._callbacks.remove(listener, thisArgs);
+                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
+                                        _this._options.onLastListenerRemove(_this);
+                                    }
+                                }
+                            }
+                        };
+                        if (Array.isArray(disposables)) {
+                            disposables.push(result);
+                        }
+                        return result;
+                    };
+                }
+                return this._event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * To be kept private to fire an event to
+         * subscribers
+         */
+        Emitter.prototype.fire = function (event) {
+            if (this._callbacks) {
+                this._callbacks.invoke.call(this._callbacks, event);
+            }
+        };
+        Emitter.prototype.dispose = function () {
+            if (this._callbacks) {
+                this._callbacks.dispose();
+                this._callbacks = undefined;
+                this._disposed = true;
+            }
+        };
+        Emitter._noop = function () { };
+        return Emitter;
+    }());
+    exports.Emitter = Emitter;
+    /**
+     * Creates an Event which is backed-up by the event emitter. This allows
+     * to use the existing eventing pattern and is likely using less memory.
+     * Sample:
+     *
+     * 	class Document {
+     *
+     *		private _eventbus = new EventEmitter();
+     *
+     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
+     *
+     *		// getter-style
+     *		// get onDidChange(): Event<(value:string)=>any> {
+     *		// 	cache fromEventEmitter result and return
+     *		// }
+     *
+     *		private _doIt() {
+     *			// ...
+     *			this._eventbus.emit('changed', value)
+     *		}
+     *	}
+     */
+    function fromEventEmitter(emitter, eventType) {
+        return function (listener, thisArgs, disposables) {
+            var result = emitter.addListener2(eventType, function () {
+                listener.apply(thisArgs, arguments);
+            });
+            if (Array.isArray(disposables)) {
+                disposables.push(result);
+            }
+            return result;
+        };
+    }
+    exports.fromEventEmitter = fromEventEmitter;
+    function fromPromise(promise) {
+        var emitter = new Emitter();
+        var shouldEmit = false;
+        promise
+            .then(null, function () { return null; })
+            .then(function () {
+            if (!shouldEmit) {
+                setTimeout(function () { return emitter.fire(); }, 0);
+            }
+            else {
+                emitter.fire();
+            }
+        });
+        shouldEmit = true;
+        return emitter.event;
+    }
+    exports.fromPromise = fromPromise;
+    function delayed(promise) {
+        var toCancel = null;
+        var listener = null;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
+            },
+            onLastListenerRemove: function () {
+                if (toCancel) {
+                    toCancel.cancel();
+                    toCancel = null;
+                }
+                if (listener) {
+                    listener.dispose();
+                    listener = null;
+                }
+            }
+        });
+        return emitter.event;
+    }
+    exports.delayed = delayed;
+    function once(event) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            var result = event(function (e) {
+                result.dispose();
+                return listener.call(thisArgs, e);
+            }, null, disposables);
+            return result;
+        };
+    }
+    exports.once = once;
+    function any() {
+        var events = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            events[_i - 0] = arguments[_i];
+        }
+        var listeners = [];
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                listeners = events.map(function (e) { return e(function (r) { return emitter.fire(r); }); });
+            },
+            onLastListenerRemove: function () {
+                listeners = lifecycle_1.dispose(listeners);
+            }
+        });
+        return emitter.event;
+    }
+    exports.any = any;
+    function debounceEvent(event, merger, delay) {
+        if (delay === void 0) { delay = 100; }
+        var subscription;
+        var output;
+        var handle;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                subscription = event(function (cur) {
+                    output = merger(output, cur);
+                    clearTimeout(handle);
+                    handle = setTimeout(function () {
+                        var _output = output;
+                        output = undefined;
+                        emitter.fire(_output);
+                    }, delay);
+                });
+            },
+            onLastListenerRemove: function () {
+                subscription.dispose();
+            }
+        });
+        return emitter.event;
+    }
+    exports.debounceEvent = debounceEvent;
+    /**
+     * The EventDelayer is useful in situations in which you want
+     * to delay firing your events during some code.
+     * You can wrap that code and be sure that the event will not
+     * be fired during that wrap.
+     *
+     * ```
+     * const emitter: Emitter;
+     * const delayer = new EventDelayer();
+     * const delayedEvent = delayer.wrapEvent(emitter.event);
+     *
+     * delayedEvent(console.log);
+     *
+     * delayer.bufferEvents(() => {
+     *   emitter.fire(); // event will not be fired yet
+     * });
+     *
+     * // event will only be fired at this point
+     * ```
+     */
+    var EventBufferer = (function () {
+        function EventBufferer() {
+            this.buffers = [];
+        }
+        EventBufferer.prototype.wrapEvent = function (event) {
+            var _this = this;
+            return function (listener, thisArgs, disposables) {
+                return event(function (i) {
+                    var buffer = _this.buffers[_this.buffers.length - 1];
+                    if (buffer) {
+                        buffer.push(function () { return listener.call(thisArgs, i); });
+                    }
+                    else {
+                        listener.call(thisArgs, i);
+                    }
+                }, void 0, disposables);
+            };
+        };
+        EventBufferer.prototype.bufferEvents = function (fn) {
+            var buffer = [];
+            this.buffers.push(buffer);
+            fn();
+            this.buffers.pop();
+            buffer.forEach(function (flush) { return flush(); });
+        };
+        return EventBufferer;
+    }());
+    exports.EventBufferer = EventBufferer;
+    function mapEvent(event, map) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
+        };
+    }
+    exports.mapEvent = mapEvent;
+    function filterEvent(event, filter) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
+        };
+    }
+    exports.filterEvent = filterEvent;
+    var ChainableEvent = (function () {
+        function ChainableEvent(_event) {
+            this._event = _event;
+        }
+        Object.defineProperty(ChainableEvent.prototype, "event", {
+            get: function () { return this._event; },
+            enumerable: true,
+            configurable: true
+        });
+        ChainableEvent.prototype.map = function (fn) {
+            return new ChainableEvent(mapEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.filter = function (fn) {
+            return new ChainableEvent(filterEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.on = function (listener, thisArgs, disposables) {
+            return this._event(listener, thisArgs, disposables);
+        };
+        return ChainableEvent;
+    }());
+    function chain(event) {
+        return new ChainableEvent(event);
+    }
+    exports.chain = chain;
+    function stopwatch(event) {
+        var start = new Date().getTime();
+        return mapEvent(once(event), function (_) { return new Date().getTime() - start; });
+    }
+    exports.stopwatch = stopwatch;
+    /**
+     * Buffers the provided event until a first listener comes
+     * along, at which point fire all the events at once and
+     * pipe the event from then on.
+     *
+     * ```typescript
+     * const emitter = new Emitter<number>();
+     * const event = emitter.event;
+     * const bufferedEvent = buffer(event);
+     *
+     * emitter.fire(1);
+     * emitter.fire(2);
+     * emitter.fire(3);
+     * // nothing...
+     *
+     * const listener = bufferedEvent(num => console.log(num));
+     * // 1, 2, 3
+     *
+     * emitter.fire(4);
+     * // 4
+     * ```
+     */
+    function buffer(event, nextTick, buffer) {
+        if (nextTick === void 0) { nextTick = false; }
+        if (buffer === void 0) { buffer = []; }
+        buffer = buffer.slice();
+        var listener = event(function (e) {
+            if (buffer) {
+                buffer.push(e);
+            }
+            else {
+                emitter.fire(e);
+            }
+        });
+        var flush = function () {
+            buffer.forEach(function (e) { return emitter.fire(e); });
+            buffer = null;
+        };
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                if (!listener) {
+                    listener = event(function (e) { return emitter.fire(e); });
+                }
+            },
+            onFirstListenerDidAdd: function () {
+                if (buffer) {
+                    if (nextTick) {
+                        setTimeout(flush);
+                    }
+                    else {
+                        flush();
+                    }
+                }
+            },
+            onLastListenerRemove: function () {
+                listener.dispose();
+                listener = null;
+            }
+        });
+        return emitter.event;
+    }
+    exports.buffer = buffer;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[75/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/event*/]), function (require, exports, event_1) {
+    'use strict';
+    var shortcutEvent = Object.freeze(function (callback, context) {
+        var handle = setTimeout(callback.bind(context), 0);
+        return { dispose: function () { clearTimeout(handle); } };
+    });
+    var CancellationToken;
+    (function (CancellationToken) {
+        CancellationToken.None = Object.freeze({
+            isCancellationRequested: false,
+            onCancellationRequested: event_1.default.None
+        });
+        CancellationToken.Cancelled = Object.freeze({
+            isCancellationRequested: true,
+            onCancellationRequested: shortcutEvent
+        });
+    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
+    var MutableToken = (function () {
+        function MutableToken() {
+            this._isCancelled = false;
+        }
+        MutableToken.prototype.cancel = function () {
+            if (!this._isCancelled) {
+                this._isCancelled = true;
+                if (this._emitter) {
+                    this._emitter.fire(undefined);
+                    this._emitter = undefined;
+                }
+            }
+        };
+        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
+            get: function () {
+                return this._isCancelled;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
+            get: function () {
+                if (this._isCancelled) {
+                    return shortcutEvent;
+                }
+                if (!this._emitter) {
+                    this._emitter = new event_1.Emitter();
+                }
+                return this._emitter.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return MutableToken;
+    }());
+    var CancellationTokenSource = (function () {
+        function CancellationTokenSource() {
+        }
+        Object.defineProperty(CancellationTokenSource.prototype, "token", {
+            get: function () {
+                if (!this._token) {
+                    // be lazy and create the token only when
+                    // actually needed
+                    this._token = new MutableToken();
+                }
+                return this._token;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CancellationTokenSource.prototype.cancel = function () {
+            if (!this._token) {
+                // save an object by returning the default
+                // cancelled token when cancellation happens
+                // before someone asks for the token
+                this._token = CancellationToken.Cancelled;
+            }
+            else {
+                this._token.cancel();
+            }
+        };
+        CancellationTokenSource.prototype.dispose = function () {
+            this.cancel();
+        };
+        return CancellationTokenSource;
+    }());
+    exports.CancellationTokenSource = CancellationTokenSource;
+});
+
+define(__m[9/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/types*/]), function (require, exports, Types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1967,6 +3156,7 @@ define(__m[9], __M([0,1,5]), function (require, exports, Types) {
             return obj;
         }
         if (obj instanceof RegExp) {
+            // See https://github.com/Microsoft/TypeScript/issues/10990
             return obj;
         }
         var result = (Array.isArray(obj)) ? [] : {};
@@ -2247,7 +3437,7 @@ define(__m[9], __M([0,1,5]), function (require, exports, Types) {
     exports.getOrDefault = getOrDefault;
 });
 
-define(__m[18], __M([0,1,6]), function (require, exports, platform) {
+define(__m[14/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,13/*vs/base/common/platform*/]), function (require, exports, platform) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2289,6 +3479,19 @@ define(__m[18], __M([0,1,6]), function (require, exports, platform) {
             this._formatted = null;
             this._fsPath = null;
         }
+        URI.isUri = function (thing) {
+            if (thing instanceof URI) {
+                return true;
+            }
+            if (!thing) {
+                return false;
+            }
+            return typeof thing.authority === 'string'
+                && typeof thing.fragment === 'string'
+                && typeof thing.path === 'string'
+                && typeof thing.query === 'string'
+                && typeof thing.scheme === 'string';
+        };
         Object.defineProperty(URI.prototype, "scheme", {
             /**
              * scheme is the 'http' part of 'http://www.msft.com/some/path?query#fragment'.
@@ -2352,7 +3555,7 @@ define(__m[18], __M([0,1,6]), function (require, exports, platform) {
             get: function () {
                 if (!this._fsPath) {
                     var value;
-                    if (this._authority && this.scheme === 'file') {
+                    if (this._authority && this._path && this.scheme === 'file') {
                         // unc path: file://shares/c$/far/boo
                         value = "//" + this._authority + this._path;
                     }
@@ -2629,7 +3832,7 @@ define(__m[18], __M([0,1,6]), function (require, exports, platform) {
 
 
 
-define(__m[33], __M([0,1]), function (require, exports) {
+define(__m[25/*vs/base/common/uuid*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2691,8 +3894,7 @@ define(__m[33], __M([0,1]), function (require, exports) {
             ].join(''));
         }
         V4UUID._oneOf = function (array) {
-            var idx = Math.floor(array.length * Math.random());
-            return array[idx];
+            return array[Math.floor(array.length * Math.random())];
         };
         V4UUID._randomHex = function () {
             return V4UUID._oneOf(V4UUID._chars);
@@ -2709,13 +3911,17 @@ define(__m[33], __M([0,1]), function (require, exports) {
         return new V4UUID();
     }
     exports.v4 = v4;
-    var _UUIDPattern = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/;
+    var _UUIDPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    function isUUID(value) {
+        return _UUIDPattern.test(value);
+    }
+    exports.isUUID = isUUID;
     /**
      * Parses a UUID that is of the format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
      * @param value A uuid string.
      */
     function parse(value) {
-        if (!_UUIDPattern.test(value)) {
+        if (!isUUID(value)) {
             throw new Error('invalid uuid');
         }
         return new ValueUUID(value);
@@ -4802,1699 +6008,8 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[63], __M([0,1,92]), function (require, exports, assert) {
-    'use strict';
-    /**
-     * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
-     * array to the callback (callback). The resulting errors and results are evaluated by calling the provided callback function.
-     */
-    function parallel(list, fn, callback) {
-        var results = new Array(list.length);
-        var errors = new Array(list.length);
-        var didErrorOccur = false;
-        var doneCount = 0;
-        if (list.length === 0) {
-            return callback(null, []);
-        }
-        list.forEach(function (item, index) {
-            fn(item, function (error, result) {
-                if (error) {
-                    didErrorOccur = true;
-                    results[index] = null;
-                    errors[index] = error;
-                }
-                else {
-                    results[index] = result;
-                    errors[index] = null;
-                }
-                if (++doneCount === list.length) {
-                    return callback(didErrorOccur ? errors : null, results);
-                }
-            });
-        });
-    }
-    exports.parallel = parallel;
-    function loop(param, fn, callback) {
-        // Assert
-        assert.ok(param, 'Missing first parameter');
-        assert.ok(typeof (fn) === 'function', 'Second parameter must be a function that is called for each element');
-        assert.ok(typeof (callback) === 'function', 'Third parameter must be a function that is called on error and success');
-        // Param is function, execute to retrieve array
-        if (typeof (param) === 'function') {
-            try {
-                param(function (error, result) {
-                    if (error) {
-                        callback(error, null);
-                    }
-                    else {
-                        loop(result, fn, callback);
-                    }
-                });
-            }
-            catch (error) {
-                callback(error, null);
-            }
-        }
-        else {
-            var results_1 = [];
-            var looper_1 = function (i) {
-                // Still work to do
-                if (i < param.length) {
-                    // Execute function on array element
-                    try {
-                        fn(param[i], function (error, result) {
-                            // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
-                            if (error === true || error === false) {
-                                result = error;
-                                error = null;
-                            }
-                            // Quit looping on error
-                            if (error) {
-                                callback(error, null);
-                            }
-                            else {
-                                if (result) {
-                                    results_1.push(result);
-                                }
-                                process.nextTick(function () {
-                                    looper_1(i + 1);
-                                });
-                            }
-                        }, i, param.length);
-                    }
-                    catch (error) {
-                        callback(error, null);
-                    }
-                }
-                else {
-                    callback(null, results_1);
-                }
-            };
-            // Start looping with first element in array
-            looper_1(0);
-        }
-    }
-    exports.loop = loop;
-    function Sequence(sequences) {
-        // Assert
-        assert.ok(sequences.length > 1, 'Need at least one error handler and one function to process sequence');
-        sequences.forEach(function (sequence) {
-            assert.ok(typeof (sequence) === 'function');
-        });
-        // Execute in Loop
-        var errorHandler = sequences.splice(0, 1)[0]; //Remove error handler
-        var sequenceResult = null;
-        loop(sequences, function (sequence, clb) {
-            var sequenceFunction = function (error, result) {
-                // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
-                if (error === true || error === false) {
-                    result = error;
-                    error = null;
-                }
-                // Handle Error and Result
-                if (error) {
-                    clb(error, null);
-                }
-                else {
-                    sequenceResult = result; //Remember result of sequence
-                    clb(null, null); //Don't pass on result to Looper as we are not aggregating it
-                }
-            };
-            // We call the sequence function setting "this" to be the callback we define here
-            // and we pass in the "sequenceResult" as first argument. Doing all this avoids having
-            // to pass in a callback to the sequence because the callback is already "this".
-            try {
-                sequence.call(sequenceFunction, sequenceResult);
-            }
-            catch (error) {
-                clb(error, null);
-            }
-        }, function (error, result) {
-            if (error) {
-                errorHandler(error);
-            }
-        });
-    }
-    function sequence(sequences) {
-        Sequence((Array.isArray(sequences)) ? sequences : Array.prototype.slice.call(arguments));
-    }
-    exports.sequence = sequence;
-});
 
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[71], __M([0,1,33,19,6,63,12,7]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
-    'use strict';
-    var loop = flow.loop;
-    function readdir(path, callback) {
-        // Mac: uses NFD unicode form on disk, but we want NFC
-        // See also https://github.com/nodejs/node/issues/2165
-        if (platform.isMacintosh) {
-            return readdirNormalize(path, function (error, children) {
-                if (error) {
-                    return callback(error, null);
-                }
-                return callback(null, children.map(function (c) { return strings.normalizeNFC(c); }));
-            });
-        }
-        return readdirNormalize(path, callback);
-    }
-    exports.readdir = readdir;
-    function readdirNormalize(path, callback) {
-        fs.readdir(path, function (error, children) {
-            if (error) {
-                return callback(error, null);
-            }
-            // Bug in node: In some environments we get "." and ".." as entries from the call to readdir().
-            // For example Sharepoint via WebDav on Windows includes them. We never want those
-            // entries in the result set though because they are not valid children of the folder
-            // for our concerns.
-            // See https://github.com/nodejs/node/issues/4002
-            return callback(null, children.filter(function (c) { return c !== '.' && c !== '..'; }));
-        });
-    }
-    function mkdirp(path, mode, callback) {
-        fs.exists(path, function (exists) {
-            if (exists) {
-                return isDirectory(path, function (err, itIs) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    if (!itIs) {
-                        return callback(new Error('"' + path + '" is not a directory.'));
-                    }
-                    callback(null);
-                });
-            }
-            mkdirp(paths.dirname(path), mode, function (err) {
-                if (err) {
-                    callback(err);
-                    return;
-                }
-                if (mode) {
-                    fs.mkdir(path, mode, function (error) {
-                        if (error) {
-                            return callback(error);
-                        }
-                        fs.chmod(path, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
-                    });
-                }
-                else {
-                    fs.mkdir(path, null, callback);
-                }
-            });
-        });
-    }
-    exports.mkdirp = mkdirp;
-    function isDirectory(path, callback) {
-        fs.stat(path, function (error, stat) {
-            if (error) {
-                return callback(error);
-            }
-            callback(null, stat.isDirectory());
-        });
-    }
-    function copy(source, target, callback, copiedSources) {
-        if (!copiedSources) {
-            copiedSources = Object.create(null);
-        }
-        fs.stat(source, function (error, stat) {
-            if (error) {
-                return callback(error);
-            }
-            if (!stat.isDirectory()) {
-                return pipeFs(source, target, stat.mode & 511, callback);
-            }
-            if (copiedSources[source]) {
-                return callback(null); // escape when there are cycles (can happen with symlinks)
-            }
-            else {
-                copiedSources[source] = true; // remember as copied
-            }
-            mkdirp(target, stat.mode & 511, function (err) {
-                readdir(source, function (err, files) {
-                    loop(files, function (file, clb) {
-                        copy(paths.join(source, file), paths.join(target, file), clb, copiedSources);
-                    }, callback);
-                });
-            });
-        });
-    }
-    exports.copy = copy;
-    function pipeFs(source, target, mode, callback) {
-        var callbackHandled = false;
-        var readStream = fs.createReadStream(source);
-        var writeStream = fs.createWriteStream(target, { mode: mode });
-        var onError = function (error) {
-            if (!callbackHandled) {
-                callbackHandled = true;
-                callback(error);
-            }
-        };
-        readStream.on('error', onError);
-        writeStream.on('error', onError);
-        readStream.on('end', function () {
-            writeStream.end(function () {
-                if (!callbackHandled) {
-                    callbackHandled = true;
-                    fs.chmod(target, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
-                }
-            });
-        });
-        // In node 0.8 there is no easy way to find out when the pipe operation has finished. As such, we use the end property = false
-        // so that we are in charge of calling end() on the write stream and we will be notified when the write stream is really done.
-        // We can do this because file streams have an end() method that allows to pass in a callback.
-        // In node 0.10 there is an event 'finish' emitted from the write stream that can be used. See
-        // https://groups.google.com/forum/?fromgroups=#!topic/nodejs/YWQ1sRoXOdI
-        readStream.pipe(writeStream, { end: false });
-    }
-    // Deletes the given path by first moving it out of the workspace. This has two benefits. For one, the operation can return fast because
-    // after the rename, the contents are out of the workspace although not yet deleted. The greater benefit however is that this operation
-    // will fail in case any file is used by another process. fs.unlink() in node will not bail if a file unlinked is used by another process.
-    // However, the consequences are bad as outlined in all the related bugs from https://github.com/joyent/node/issues/7164
-    function del(path, tmpFolder, callback, done) {
-        fs.exists(path, function (exists) {
-            if (!exists) {
-                return callback(null);
-            }
-            fs.stat(path, function (err, stat) {
-                if (err || !stat) {
-                    return callback(err);
-                }
-                // Special windows workaround: A file or folder that ends with a "." cannot be moved to another place
-                // because it is not a valid file name. In this case, we really have to do the deletion without prior move.
-                if (path[path.length - 1] === '.' || strings.endsWith(path, './') || strings.endsWith(path, '.\\')) {
-                    return rmRecursive(path, callback);
-                }
-                var pathInTemp = paths.join(tmpFolder, uuid.generateUuid());
-                fs.rename(path, pathInTemp, function (error) {
-                    if (error) {
-                        return rmRecursive(path, callback); // if rename fails, delete without tmp dir
-                    }
-                    // Return early since the move succeeded
-                    callback(null);
-                    // do the heavy deletion outside the callers callback
-                    rmRecursive(pathInTemp, function (error) {
-                        if (error) {
-                            console.error(error);
-                        }
-                        if (done) {
-                            done(error);
-                        }
-                    });
-                });
-            });
-        });
-    }
-    exports.del = del;
-    function rmRecursive(path, callback) {
-        if (path === '\\' || path === '/') {
-            return callback(new Error('Will not delete root!'));
-        }
-        fs.exists(path, function (exists) {
-            if (!exists) {
-                callback(null);
-            }
-            else {
-                fs.lstat(path, function (err, stat) {
-                    if (err || !stat) {
-                        callback(err);
-                    }
-                    else if (!stat.isDirectory() || stat.isSymbolicLink() /* !!! never recurse into links when deleting !!! */) {
-                        var mode = stat.mode;
-                        if (!(mode & 128)) {
-                            fs.chmod(path, mode | 128, function (err) {
-                                if (err) {
-                                    callback(err);
-                                }
-                                else {
-                                    fs.unlink(path, callback);
-                                }
-                            });
-                        }
-                        else {
-                            fs.unlink(path, callback);
-                        }
-                    }
-                    else {
-                        readdir(path, function (err, children) {
-                            if (err || !children) {
-                                callback(err);
-                            }
-                            else if (children.length === 0) {
-                                fs.rmdir(path, callback);
-                            }
-                            else {
-                                var firstError_1 = null;
-                                var childrenLeft_1 = children.length;
-                                children.forEach(function (child) {
-                                    rmRecursive(paths.join(path, child), function (err) {
-                                        childrenLeft_1--;
-                                        if (err) {
-                                            firstError_1 = firstError_1 || err;
-                                        }
-                                        if (childrenLeft_1 === 0) {
-                                            if (firstError_1) {
-                                                callback(firstError_1);
-                                            }
-                                            else {
-                                                fs.rmdir(path, callback);
-                                            }
-                                        }
-                                    });
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-    function mv(source, target, callback) {
-        if (source === target) {
-            return callback(null);
-        }
-        function updateMtime(err) {
-            if (err) {
-                return callback(err);
-            }
-            fs.stat(target, function (error, stat) {
-                if (error) {
-                    return callback(error);
-                }
-                if (stat.isDirectory()) {
-                    return callback(null);
-                }
-                fs.open(target, 'a', null, function (err, fd) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    fs.futimes(fd, stat.atime, new Date(), function (err) {
-                        if (err) {
-                            return callback(err);
-                        }
-                        fs.close(fd, callback);
-                    });
-                });
-            });
-        }
-        // Try native rename()
-        fs.rename(source, target, function (err) {
-            if (!err) {
-                return updateMtime(null);
-            }
-            // In two cases we fallback to classic copy and delete:
-            //
-            // 1.) The EXDEV error indicates that source and target are on different devices
-            // In this case, fallback to using a copy() operation as there is no way to
-            // rename() between different devices.
-            //
-            // 2.) The user tries to rename a file/folder that ends with a dot. This is not
-            // really possible to move then, at least on UNC devices.
-            if (err && source.toLowerCase() !== target.toLowerCase() && (err.code === 'EXDEV') || strings.endsWith(source, '.')) {
-                return copy(source, target, function (err) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    rmRecursive(source, updateMtime);
-                });
-            }
-            return callback(err);
-        });
-    }
-    exports.mv = mv;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[78], __M([0,1,18]), function (require, exports, uri_1) {
-    "use strict";
-    var pathsPath = uri_1.default.parse(require.toUrl('paths')).fsPath;
-    var paths = require.__$__nodeRequire(pathsPath);
-    exports.getAppDataPath = paths.getAppDataPath;
-    exports.getUserDataPath = paths.getUserDataPath;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[38], __M([0,1,39,5,82,86]), function (require, exports, url_1, types_1, HttpProxyAgent, HttpsProxyAgent) {
-    'use strict';
-    function getSystemProxyURI(requestURL) {
-        if (requestURL.protocol === 'http:') {
-            return process.env.HTTP_PROXY || process.env.http_proxy || null;
-        }
-        else if (requestURL.protocol === 'https:') {
-            return process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy || null;
-        }
-        return null;
-    }
-    function getProxyAgent(rawRequestURL, options) {
-        if (options === void 0) { options = {}; }
-        var requestURL = url_1.parse(rawRequestURL);
-        var proxyURL = options.proxyUrl || getSystemProxyURI(requestURL);
-        if (!proxyURL) {
-            return null;
-        }
-        var proxyEndpoint = url_1.parse(proxyURL);
-        if (!/^https?:$/.test(proxyEndpoint.protocol)) {
-            return null;
-        }
-        var opts = {
-            host: proxyEndpoint.hostname,
-            port: Number(proxyEndpoint.port),
-            auth: proxyEndpoint.auth,
-            rejectUnauthorized: types_1.isBoolean(options.strictSSL) ? options.strictSSL : true
-        };
-        return requestURL.protocol === 'http:' ? new HttpProxyAgent(opts) : new HttpsProxyAgent(opts);
-    }
-    exports.getProxyAgent = getProxyAgent;
-});
-
-define(__m[47], __M([4,3]), function(nls, data) { return nls.create("vs/base/common/errors", data); });
-define(__m[8], __M([0,1,47,9,6,5,23,19]), function (require, exports, nls, objects, platform, types, arrays, strings) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
-    var ErrorHandler = (function () {
-        function ErrorHandler() {
-            this.listeners = [];
-            this.unexpectedErrorHandler = function (e) {
-                platform.setTimeout(function () {
-                    if (e.stack) {
-                        throw new Error(e.message + '\n\n' + e.stack);
-                    }
-                    throw e;
-                }, 0);
-            };
-        }
-        ErrorHandler.prototype.addListener = function (listener) {
-            var _this = this;
-            this.listeners.push(listener);
-            return function () {
-                _this._removeListener(listener);
-            };
-        };
-        ErrorHandler.prototype.emit = function (e) {
-            this.listeners.forEach(function (listener) {
-                listener(e);
-            });
-        };
-        ErrorHandler.prototype._removeListener = function (listener) {
-            this.listeners.splice(this.listeners.indexOf(listener), 1);
-        };
-        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
-            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
-            return this.unexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.onUnexpectedError = function (e) {
-            this.unexpectedErrorHandler(e);
-            this.emit(e);
-        };
-        return ErrorHandler;
-    }());
-    exports.ErrorHandler = ErrorHandler;
-    exports.errorHandler = new ErrorHandler();
-    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
-        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
-    }
-    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
-    function onUnexpectedError(e) {
-        // ignore errors from cancelled promises
-        if (!isPromiseCanceledError(e)) {
-            exports.errorHandler.onUnexpectedError(e);
-        }
-    }
-    exports.onUnexpectedError = onUnexpectedError;
-    function onUnexpectedPromiseError(promise) {
-        return promise.then(null, onUnexpectedError);
-    }
-    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
-    function transformErrorForSerialization(error) {
-        if (error instanceof Error) {
-            var name_1 = error.name, message = error.message;
-            var stack = error.stacktrace || error.stack;
-            return {
-                $isError: true,
-                name: name_1,
-                message: message,
-                stack: stack
-            };
-        }
-        // return as is
-        return error;
-    }
-    exports.transformErrorForSerialization = transformErrorForSerialization;
-    /**
-     * The base class for all connection errors originating from XHR requests.
-     */
-    var ConnectionError = (function () {
-        function ConnectionError(arg) {
-            this.status = arg.status;
-            this.statusText = arg.statusText;
-            this.name = 'ConnectionError';
-            try {
-                this.responseText = arg.responseText;
-            }
-            catch (e) {
-                this.responseText = '';
-            }
-            this.errorMessage = null;
-            this.errorCode = null;
-            this.errorObject = null;
-            if (this.responseText) {
-                try {
-                    var errorObj = JSON.parse(this.responseText);
-                    this.errorMessage = errorObj.message;
-                    this.errorCode = errorObj.code;
-                    this.errorObject = errorObj;
-                }
-                catch (error) {
-                }
-            }
-        }
-        Object.defineProperty(ConnectionError.prototype, "message", {
-            get: function () {
-                return this.connectionErrorToMessage(this, false);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ConnectionError.prototype, "verboseMessage", {
-            get: function () {
-                return this.connectionErrorToMessage(this, true);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ConnectionError.prototype.connectionErrorDetailsToMessage = function (error, verbose) {
-            var errorCode = error.errorCode;
-            var errorMessage = error.errorMessage;
-            if (errorCode !== null && errorMessage !== null) {
-                return nls.localize(0, null, strings.rtrim(errorMessage, '.'), errorCode);
-
-
-
-
-
-
-            }
-            if (errorMessage !== null) {
-                return errorMessage;
-            }
-            if (verbose && error.responseText !== null) {
-                return error.responseText;
-            }
-            return null;
-        };
-        ConnectionError.prototype.connectionErrorToMessage = function (error, verbose) {
-            var details = this.connectionErrorDetailsToMessage(error, verbose);
-            // Status Code based Error
-            if (error.status === 401) {
-                if (details !== null) {
-                    return nls.localize(1, null, details);
-
-
-
-
-
-                }
-                return nls.localize(2, null);
-            }
-            // Return error details if present
-            if (details) {
-                return details;
-            }
-            // Fallback to HTTP Status and Code
-            if (error.status > 0 && error.statusText !== null) {
-                if (verbose && error.responseText !== null && error.responseText.length > 0) {
-                    return nls.localize(3, null, error.statusText, error.status, error.responseText);
-                }
-                return nls.localize(4, null, error.statusText, error.status);
-            }
-            // Finally its an Unknown Connection Error
-            if (verbose && error.responseText !== null && error.responseText.length > 0) {
-                return nls.localize(5, null, error.responseText);
-            }
-            return nls.localize(6, null);
-        };
-        return ConnectionError;
-    }());
-    exports.ConnectionError = ConnectionError;
-    // Bug: Can not subclass a JS Type. Do it manually (as done in WinJS.Class.derive)
-    objects.derive(Error, ConnectionError);
-    function xhrToErrorMessage(xhr, verbose) {
-        var ce = new ConnectionError(xhr);
-        if (verbose) {
-            return ce.verboseMessage;
-        }
-        else {
-            return ce.message;
-        }
-    }
-    function exceptionToErrorMessage(exception, verbose) {
-        if (exception.message) {
-            if (verbose && (exception.stack || exception.stacktrace)) {
-                return nls.localize(7, null, detectSystemErrorMessage(exception), exception.stack || exception.stacktrace);
-            }
-            return detectSystemErrorMessage(exception);
-        }
-        return nls.localize(8, null);
-    }
-    function detectSystemErrorMessage(exception) {
-        // See https://nodejs.org/api/errors.html#errors_class_system_error
-        if (typeof exception.code === 'string' && typeof exception.errno === 'number' && typeof exception.syscall === 'string') {
-            return nls.localize(9, null, exception.message);
-        }
-        return exception.message;
-    }
-    /**
-     * Tries to generate a human readable error message out of the error. If the verbose parameter
-     * is set to true, the error message will include stacktrace details if provided.
-     * @returns A string containing the error message.
-     */
-    function toErrorMessage(error, verbose) {
-        if (error === void 0) { error = null; }
-        if (verbose === void 0) { verbose = false; }
-        if (!error) {
-            return nls.localize(10, null);
-        }
-        if (Array.isArray(error)) {
-            var errors = arrays.coalesce(error);
-            var msg = toErrorMessage(errors[0], verbose);
-            if (errors.length > 1) {
-                return nls.localize(11, null, msg, errors.length);
-            }
-            return msg;
-        }
-        if (types.isString(error)) {
-            return error;
-        }
-        if (!types.isUndefinedOrNull(error.status)) {
-            return xhrToErrorMessage(error, verbose);
-        }
-        if (error.detail) {
-            var detail = error.detail;
-            if (detail.error) {
-                if (detail.error && !types.isUndefinedOrNull(detail.error.status)) {
-                    return xhrToErrorMessage(detail.error, verbose);
-                }
-                if (types.isArray(detail.error)) {
-                    for (var i = 0; i < detail.error.length; i++) {
-                        if (detail.error[i] && !types.isUndefinedOrNull(detail.error[i].status)) {
-                            return xhrToErrorMessage(detail.error[i], verbose);
-                        }
-                    }
-                }
-                else {
-                    return exceptionToErrorMessage(detail.error, verbose);
-                }
-            }
-            if (detail.exception) {
-                if (!types.isUndefinedOrNull(detail.exception.status)) {
-                    return xhrToErrorMessage(detail.exception, verbose);
-                }
-                return exceptionToErrorMessage(detail.exception, verbose);
-            }
-        }
-        if (error.stack) {
-            return exceptionToErrorMessage(error, verbose);
-        }
-        if (error.message) {
-            return error.message;
-        }
-        return nls.localize(12, null);
-    }
-    exports.toErrorMessage = toErrorMessage;
-    var canceledName = 'Canceled';
-    /**
-     * Checks if the given error is a promise in canceled state
-     */
-    function isPromiseCanceledError(error) {
-        return error instanceof Error && error.name === canceledName && error.message === canceledName;
-    }
-    exports.isPromiseCanceledError = isPromiseCanceledError;
-    /**
-     * Returns an error that signals cancellation.
-     */
-    function canceled() {
-        var error = new Error(canceledName);
-        error.name = error.message;
-        return error;
-    }
-    exports.canceled = canceled;
-    /**
-     * Returns an error that signals something is not implemented.
-     */
-    function notImplemented() {
-        return new Error(nls.localize(13, null));
-    }
-    exports.notImplemented = notImplemented;
-    function illegalArgument(name) {
-        if (name) {
-            return new Error(nls.localize(14, null, name));
-        }
-        else {
-            return new Error(nls.localize(15, null));
-        }
-    }
-    exports.illegalArgument = illegalArgument;
-    function illegalState(name) {
-        if (name) {
-            return new Error(nls.localize(16, null, name));
-        }
-        else {
-            return new Error(nls.localize(17, null));
-        }
-    }
-    exports.illegalState = illegalState;
-    function readonly(name) {
-        return name
-            ? new Error("readonly property '" + name + " cannot be changed'")
-            : new Error('readonly property cannot be changed');
-    }
-    exports.readonly = readonly;
-    function loaderError(err) {
-        if (platform.isWeb) {
-            return new Error(nls.localize(18, null));
-        }
-        return new Error(nls.localize(19, null, JSON.stringify(err)));
-    }
-    exports.loaderError = loaderError;
-    function create(message, options) {
-        if (options === void 0) { options = {}; }
-        var result = new Error(message);
-        if (types.isNumber(options.severity)) {
-            result.severity = options.severity;
-        }
-        if (options.actions) {
-            result.actions = options.actions;
-        }
-        return result;
-    }
-    exports.create = create;
-});
-
-define(__m[64], __M([0,1,8]), function (require, exports, errors_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var CallbackList = (function () {
-        function CallbackList() {
-        }
-        CallbackList.prototype.add = function (callback, context, bucket) {
-            var _this = this;
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                this._callbacks = [];
-                this._contexts = [];
-            }
-            this._callbacks.push(callback);
-            this._contexts.push(context);
-            if (Array.isArray(bucket)) {
-                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
-            }
-        };
-        CallbackList.prototype.remove = function (callback, context) {
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                return;
-            }
-            var foundCallbackWithDifferentContext = false;
-            for (var i = 0, len = this._callbacks.length; i < len; i++) {
-                if (this._callbacks[i] === callback) {
-                    if (this._contexts[i] === context) {
-                        // callback & context match => remove it
-                        this._callbacks.splice(i, 1);
-                        this._contexts.splice(i, 1);
-                        return;
-                    }
-                    else {
-                        foundCallbackWithDifferentContext = true;
-                    }
-                }
-            }
-            if (foundCallbackWithDifferentContext) {
-                throw new Error('When adding a listener with a context, you should remove it with the same context');
-            }
-        };
-        CallbackList.prototype.invoke = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            if (!this._callbacks) {
-                return;
-            }
-            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
-            for (var i = 0, len = callbacks.length; i < len; i++) {
-                try {
-                    ret.push(callbacks[i].apply(contexts[i], args));
-                }
-                catch (e) {
-                    errors_1.onUnexpectedError(e);
-                }
-            }
-            return ret;
-        };
-        CallbackList.prototype.isEmpty = function () {
-            return !this._callbacks || this._callbacks.length === 0;
-        };
-        CallbackList.prototype.dispose = function () {
-            this._callbacks = undefined;
-            this._contexts = undefined;
-        };
-        return CallbackList;
-    }());
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = CallbackList;
-});
-
-define(__m[10], __M([0,1,64]), function (require, exports, callbackList_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var Event;
-    (function (Event) {
-        var _disposable = { dispose: function () { } };
-        Event.None = function () { return _disposable; };
-    })(Event || (Event = {}));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Event;
-    /**
-     * The Emitter can be used to expose an Event to the public
-     * to fire it from the insides.
-     * Sample:
-        class Document {
-    
-            private _onDidChange = new Emitter<(value:string)=>any>();
-    
-            public onDidChange = this._onDidChange.event;
-    
-            // getter-style
-            // get onDidChange(): Event<(value:string)=>any> {
-            // 	return this._onDidChange.event;
-            // }
-    
-            private _doIt() {
-                //...
-                this._onDidChange.fire(value);
-            }
-        }
-     */
-    var Emitter = (function () {
-        function Emitter(_options) {
-            this._options = _options;
-        }
-        Object.defineProperty(Emitter.prototype, "event", {
-            /**
-             * For the public to allow to subscribe
-             * to events from this Emitter
-             */
-            get: function () {
-                var _this = this;
-                if (!this._event) {
-                    this._event = function (listener, thisArgs, disposables) {
-                        if (!_this._callbacks) {
-                            _this._callbacks = new callbackList_1.default();
-                        }
-                        if (_this._options && _this._options.onFirstListenerAdd && _this._callbacks.isEmpty()) {
-                            _this._options.onFirstListenerAdd(_this);
-                        }
-                        _this._callbacks.add(listener, thisArgs);
-                        var result;
-                        result = {
-                            dispose: function () {
-                                result.dispose = Emitter._noop;
-                                if (!_this._disposed) {
-                                    _this._callbacks.remove(listener, thisArgs);
-                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
-                                        _this._options.onLastListenerRemove(_this);
-                                    }
-                                }
-                            }
-                        };
-                        if (Array.isArray(disposables)) {
-                            disposables.push(result);
-                        }
-                        return result;
-                    };
-                }
-                return this._event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * To be kept private to fire an event to
-         * subscribers
-         */
-        Emitter.prototype.fire = function (event) {
-            if (this._callbacks) {
-                this._callbacks.invoke.call(this._callbacks, event);
-            }
-        };
-        Emitter.prototype.dispose = function () {
-            if (this._callbacks) {
-                this._callbacks.dispose();
-                this._callbacks = undefined;
-                this._disposed = true;
-            }
-        };
-        Emitter._noop = function () { };
-        return Emitter;
-    }());
-    exports.Emitter = Emitter;
-    /**
-     * Creates an Event which is backed-up by the event emitter. This allows
-     * to use the existing eventing pattern and is likely using less memory.
-     * Sample:
-     *
-     * 	class Document {
-     *
-     *		private _eventbus = new EventEmitter();
-     *
-     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
-     *
-     *		// getter-style
-     *		// get onDidChange(): Event<(value:string)=>any> {
-     *		// 	cache fromEventEmitter result and return
-     *		// }
-     *
-     *		private _doIt() {
-     *			// ...
-     *			this._eventbus.emit('changed', value)
-     *		}
-     *	}
-     */
-    function fromEventEmitter(emitter, eventType) {
-        return function (listener, thisArgs, disposables) {
-            var result = emitter.addListener2(eventType, function () {
-                listener.apply(thisArgs, arguments);
-            });
-            if (Array.isArray(disposables)) {
-                disposables.push(result);
-            }
-            return result;
-        };
-    }
-    exports.fromEventEmitter = fromEventEmitter;
-    function fromPromise(promise) {
-        var toCancel = null;
-        var listener = null;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
-            },
-            onLastListenerRemove: function () {
-                if (toCancel) {
-                    toCancel.cancel();
-                    toCancel = null;
-                }
-                if (listener) {
-                    listener.dispose();
-                    listener = null;
-                }
-            }
-        });
-        return emitter.event;
-    }
-    exports.fromPromise = fromPromise;
-    function mapEvent(event, map) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
-        };
-    }
-    exports.mapEvent = mapEvent;
-    function filterEvent(event, filter) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
-        };
-    }
-    exports.filterEvent = filterEvent;
-    function debounceEvent(event, merger, delay) {
-        if (delay === void 0) { delay = 100; }
-        var subscription;
-        var output;
-        var handle;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                subscription = event(function (cur) {
-                    output = merger(output, cur);
-                    clearTimeout(handle);
-                    handle = setTimeout(function () {
-                        var _output = output;
-                        output = undefined;
-                        emitter.fire(_output);
-                    }, delay);
-                });
-            },
-            onLastListenerRemove: function () {
-                subscription.dispose();
-            }
-        });
-        return emitter.event;
-    }
-    exports.debounceEvent = debounceEvent;
-    var EventDelayerState;
-    (function (EventDelayerState) {
-        EventDelayerState[EventDelayerState["Idle"] = 0] = "Idle";
-        EventDelayerState[EventDelayerState["Running"] = 1] = "Running";
-    })(EventDelayerState || (EventDelayerState = {}));
-    /**
-     * The EventDelayer is useful in situations in which you want
-     * to delay firing your events during some code.
-     * You can wrap that code and be sure that the event will not
-     * be fired during that wrap.
-     *
-     * ```
-     * const emitter: Emitter;
-     * const delayer = new EventDelayer();
-     * const delayedEvent = delayer.delay(emitter.event);
-     *
-     * delayedEvent(console.log);
-     *
-     * delayer.wrap(() => {
-     *   emitter.fire(); // event will not be fired yet
-     * });
-     *
-     * // event will only be fired at this point
-     * ```
-     */
-    var EventBufferer = (function () {
-        function EventBufferer() {
-            this.buffers = [];
-        }
-        EventBufferer.prototype.wrapEvent = function (event) {
-            var _this = this;
-            return function (listener, thisArgs, disposables) {
-                return event(function (i) {
-                    var buffer = _this.buffers[_this.buffers.length - 1];
-                    if (buffer) {
-                        buffer.push(function () { return listener.call(thisArgs, i); });
-                    }
-                    else {
-                        listener.call(thisArgs, i);
-                    }
-                }, void 0, disposables);
-            };
-        };
-        EventBufferer.prototype.bufferEvents = function (fn) {
-            var buffer = [];
-            this.buffers.push(buffer);
-            fn();
-            this.buffers.pop();
-            buffer.forEach(function (flush) { return flush(); });
-        };
-        return EventBufferer;
-    }());
-    exports.EventBufferer = EventBufferer;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[69], __M([0,1,10]), function (require, exports, event_1) {
-    'use strict';
-    var CancellationToken;
-    (function (CancellationToken) {
-        CancellationToken.None = Object.freeze({
-            isCancellationRequested: false,
-            onCancellationRequested: event_1.default.None
-        });
-        CancellationToken.Cancelled = Object.freeze({
-            isCancellationRequested: true,
-            onCancellationRequested: event_1.default.None
-        });
-    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
-    var shortcutEvent = Object.freeze(function (callback, context) {
-        var handle = setTimeout(callback.bind(context), 0);
-        return { dispose: function () { clearTimeout(handle); } };
-    });
-    var MutableToken = (function () {
-        function MutableToken() {
-            this._isCancelled = false;
-        }
-        MutableToken.prototype.cancel = function () {
-            if (!this._isCancelled) {
-                this._isCancelled = true;
-                if (this._emitter) {
-                    this._emitter.fire(undefined);
-                    this._emitter = undefined;
-                }
-            }
-        };
-        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
-            get: function () {
-                return this._isCancelled;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
-            get: function () {
-                if (this._isCancelled) {
-                    return shortcutEvent;
-                }
-                if (!this._emitter) {
-                    this._emitter = new event_1.Emitter();
-                }
-                return this._emitter.event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return MutableToken;
-    }());
-    var CancellationTokenSource = (function () {
-        function CancellationTokenSource() {
-        }
-        Object.defineProperty(CancellationTokenSource.prototype, "token", {
-            get: function () {
-                if (!this._token) {
-                    // be lazy and create the token only when
-                    // actually needed
-                    this._token = new MutableToken();
-                }
-                return this._token;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        CancellationTokenSource.prototype.cancel = function () {
-            if (!this._token) {
-                // save an object by returning the default
-                // cancelled token when cancellation happens
-                // before someone asks for the token
-                this._token = CancellationToken.Cancelled;
-            }
-            else {
-                this._token.cancel();
-            }
-        };
-        CancellationTokenSource.prototype.dispose = function () {
-            this.cancel();
-        };
-        return CancellationTokenSource;
-    }());
-    exports.CancellationTokenSource = CancellationTokenSource;
-});
-
-
-
-
-
-
-define(__m[26], __M([0,1,8]), function (require, exports, Errors) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var EmitterEvent = (function () {
-        function EmitterEvent(eventType, data) {
-            if (eventType === void 0) { eventType = null; }
-            if (data === void 0) { data = null; }
-            this._type = eventType;
-            this._data = data;
-        }
-        EmitterEvent.prototype.getType = function () {
-            return this._type;
-        };
-        EmitterEvent.prototype.getData = function () {
-            return this._data;
-        };
-        return EmitterEvent;
-    }());
-    exports.EmitterEvent = EmitterEvent;
-    var EventEmitter = (function () {
-        function EventEmitter(allowedEventTypes) {
-            if (allowedEventTypes === void 0) { allowedEventTypes = null; }
-            this._listeners = {};
-            this._bulkListeners = [];
-            this._collectedEvents = [];
-            this._deferredCnt = 0;
-            if (allowedEventTypes) {
-                this._allowedEventTypes = {};
-                for (var i = 0; i < allowedEventTypes.length; i++) {
-                    this._allowedEventTypes[allowedEventTypes[i]] = true;
-                }
-            }
-            else {
-                this._allowedEventTypes = null;
-            }
-        }
-        EventEmitter.prototype.dispose = function () {
-            this._listeners = {};
-            this._bulkListeners = [];
-            this._collectedEvents = [];
-            this._deferredCnt = 0;
-            this._allowedEventTypes = null;
-        };
-        EventEmitter.prototype.addListener = function (eventType, listener) {
-            if (eventType === '*') {
-                throw new Error('Use addBulkListener(listener) to register your listener!');
-            }
-            if (this._allowedEventTypes && !this._allowedEventTypes.hasOwnProperty(eventType)) {
-                throw new Error('This object will never emit this event type!');
-            }
-            if (this._listeners.hasOwnProperty(eventType)) {
-                this._listeners[eventType].push(listener);
-            }
-            else {
-                this._listeners[eventType] = [listener];
-            }
-            var bound = this;
-            return {
-                dispose: function () {
-                    if (!bound) {
-                        // Already called
-                        return;
-                    }
-                    bound._removeListener(eventType, listener);
-                    // Prevent leakers from holding on to the event emitter
-                    bound = null;
-                    listener = null;
-                }
-            };
-        };
-        EventEmitter.prototype.addListener2 = function (eventType, listener) {
-            return this.addListener(eventType, listener);
-        };
-        EventEmitter.prototype.addOneTimeDisposableListener = function (eventType, listener) {
-            var disposable = this.addListener(eventType, function (value) {
-                disposable.dispose();
-                listener(value);
-            });
-            return disposable;
-        };
-        EventEmitter.prototype.addBulkListener = function (listener) {
-            var _this = this;
-            this._bulkListeners.push(listener);
-            return {
-                dispose: function () {
-                    _this._removeBulkListener(listener);
-                }
-            };
-        };
-        EventEmitter.prototype.addBulkListener2 = function (listener) {
-            return this.addBulkListener(listener);
-        };
-        EventEmitter.prototype.addEmitter = function (eventEmitter) {
-            var _this = this;
-            return eventEmitter.addBulkListener2(function (events) {
-                var newEvents = events;
-                if (_this._deferredCnt === 0) {
-                    _this._emitEvents(newEvents);
-                }
-                else {
-                    // Collect for later
-                    _this._collectedEvents.push.apply(_this._collectedEvents, newEvents);
-                }
-            });
-        };
-        EventEmitter.prototype.addEmitter2 = function (eventEmitter) {
-            return this.addEmitter(eventEmitter);
-        };
-        EventEmitter.prototype._removeListener = function (eventType, listener) {
-            if (this._listeners.hasOwnProperty(eventType)) {
-                var listeners = this._listeners[eventType];
-                for (var i = 0, len = listeners.length; i < len; i++) {
-                    if (listeners[i] === listener) {
-                        listeners.splice(i, 1);
-                        break;
-                    }
-                }
-            }
-        };
-        EventEmitter.prototype._removeBulkListener = function (listener) {
-            for (var i = 0, len = this._bulkListeners.length; i < len; i++) {
-                if (this._bulkListeners[i] === listener) {
-                    this._bulkListeners.splice(i, 1);
-                    break;
-                }
-            }
-        };
-        EventEmitter.prototype._emitToSpecificTypeListeners = function (eventType, data) {
-            if (this._listeners.hasOwnProperty(eventType)) {
-                var listeners = this._listeners[eventType].slice(0);
-                for (var i = 0, len = listeners.length; i < len; i++) {
-                    safeInvoke1Arg(listeners[i], data);
-                }
-            }
-        };
-        EventEmitter.prototype._emitToBulkListeners = function (events) {
-            var bulkListeners = this._bulkListeners.slice(0);
-            for (var i = 0, len = bulkListeners.length; i < len; i++) {
-                safeInvoke1Arg(bulkListeners[i], events);
-            }
-        };
-        EventEmitter.prototype._emitEvents = function (events) {
-            if (this._bulkListeners.length > 0) {
-                this._emitToBulkListeners(events);
-            }
-            for (var i = 0, len = events.length; i < len; i++) {
-                var e = events[i];
-                this._emitToSpecificTypeListeners(e.getType(), e.getData());
-            }
-        };
-        EventEmitter.prototype.emit = function (eventType, data) {
-            if (data === void 0) { data = {}; }
-            if (this._allowedEventTypes && !this._allowedEventTypes.hasOwnProperty(eventType)) {
-                throw new Error('Cannot emit this event type because it wasn\'t white-listed!');
-            }
-            // Early return if no listeners would get this
-            if (!this._listeners.hasOwnProperty(eventType) && this._bulkListeners.length === 0) {
-                return;
-            }
-            var emitterEvent = new EmitterEvent(eventType, data);
-            if (this._deferredCnt === 0) {
-                this._emitEvents([emitterEvent]);
-            }
-            else {
-                // Collect for later
-                this._collectedEvents.push(emitterEvent);
-            }
-        };
-        EventEmitter.prototype.deferredEmit = function (callback) {
-            this._deferredCnt = this._deferredCnt + 1;
-            var result = safeInvokeNoArg(callback);
-            this._deferredCnt = this._deferredCnt - 1;
-            if (this._deferredCnt === 0) {
-                this._emitCollected();
-            }
-            return result;
-        };
-        EventEmitter.prototype._emitCollected = function () {
-            // Flush collected events
-            var events = this._collectedEvents;
-            this._collectedEvents = [];
-            if (events.length > 0) {
-                this._emitEvents(events);
-            }
-        };
-        return EventEmitter;
-    }());
-    exports.EventEmitter = EventEmitter;
-    var EmitQueueElement = (function () {
-        function EmitQueueElement(target, arg) {
-            this.target = target;
-            this.arg = arg;
-        }
-        return EmitQueueElement;
-    }());
-    /**
-     * Same as EventEmitter, but guarantees events are delivered in order to each listener
-     */
-    var OrderGuaranteeEventEmitter = (function (_super) {
-        __extends(OrderGuaranteeEventEmitter, _super);
-        function OrderGuaranteeEventEmitter(allowedEventTypes) {
-            if (allowedEventTypes === void 0) { allowedEventTypes = null; }
-            _super.call(this, allowedEventTypes);
-            this._emitQueue = [];
-        }
-        OrderGuaranteeEventEmitter.prototype._emitToSpecificTypeListeners = function (eventType, data) {
-            if (this._listeners.hasOwnProperty(eventType)) {
-                var listeners = this._listeners[eventType];
-                for (var i = 0, len = listeners.length; i < len; i++) {
-                    this._emitQueue.push(new EmitQueueElement(listeners[i], data));
-                }
-            }
-        };
-        OrderGuaranteeEventEmitter.prototype._emitToBulkListeners = function (events) {
-            var bulkListeners = this._bulkListeners;
-            for (var i = 0, len = bulkListeners.length; i < len; i++) {
-                this._emitQueue.push(new EmitQueueElement(bulkListeners[i], events));
-            }
-        };
-        OrderGuaranteeEventEmitter.prototype._emitEvents = function (events) {
-            _super.prototype._emitEvents.call(this, events);
-            while (this._emitQueue.length > 0) {
-                var queueElement = this._emitQueue.shift();
-                safeInvoke1Arg(queueElement.target, queueElement.arg);
-            }
-        };
-        return OrderGuaranteeEventEmitter;
-    }(EventEmitter));
-    exports.OrderGuaranteeEventEmitter = OrderGuaranteeEventEmitter;
-    function safeInvokeNoArg(func) {
-        try {
-            return func();
-        }
-        catch (e) {
-            Errors.onUnexpectedError(e);
-        }
-    }
-    function safeInvoke1Arg(func, arg1) {
-        try {
-            return func(arg1);
-        }
-        catch (e) {
-            Errors.onUnexpectedError(e);
-        }
-    }
-});
-
-define(__m[37], __M([0,1,6,8,72]), function (require, exports, Platform, errors, precision) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    exports.ENABLE_TIMER = false;
-    var msWriteProfilerMark = Platform.globals['msWriteProfilerMark'];
-    (function (Topic) {
-        Topic[Topic["EDITOR"] = 0] = "EDITOR";
-        Topic[Topic["LANGUAGES"] = 1] = "LANGUAGES";
-        Topic[Topic["WORKER"] = 2] = "WORKER";
-        Topic[Topic["WORKBENCH"] = 3] = "WORKBENCH";
-        Topic[Topic["STARTUP"] = 4] = "STARTUP";
-    })(exports.Topic || (exports.Topic = {}));
-    var Topic = exports.Topic;
-    var NullTimerEvent = (function () {
-        function NullTimerEvent() {
-        }
-        NullTimerEvent.prototype.stop = function () {
-            return;
-        };
-        NullTimerEvent.prototype.timeTaken = function () {
-            return -1;
-        };
-        return NullTimerEvent;
-    }());
-    var TimerEvent = (function () {
-        function TimerEvent(timeKeeper, name, topic, startTime, description) {
-            this.timeKeeper = timeKeeper;
-            this.name = name;
-            this.description = description;
-            this.topic = topic;
-            this.stopTime = null;
-            if (startTime) {
-                this.startTime = startTime;
-                return;
-            }
-            this.startTime = new Date();
-            this.sw = precision.StopWatch.create();
-            if (msWriteProfilerMark) {
-                var profilerName = ['Monaco', this.topic, this.name, 'start'];
-                msWriteProfilerMark(profilerName.join('|'));
-            }
-        }
-        TimerEvent.prototype.stop = function (stopTime) {
-            // already stopped
-            if (this.stopTime !== null) {
-                return;
-            }
-            if (stopTime) {
-                this.stopTime = stopTime;
-                this.sw = null;
-                this.timeKeeper._onEventStopped(this);
-                return;
-            }
-            this.stopTime = new Date();
-            if (this.sw) {
-                this.sw.stop();
-            }
-            this.timeKeeper._onEventStopped(this);
-            if (msWriteProfilerMark) {
-                var profilerName = ['Monaco', this.topic, this.name, 'stop'];
-                msWriteProfilerMark(profilerName.join('|'));
-            }
-        };
-        TimerEvent.prototype.timeTaken = function () {
-            if (this.sw) {
-                return this.sw.elapsed();
-            }
-            if (this.stopTime) {
-                return this.stopTime.getTime() - this.startTime.getTime();
-            }
-            return -1;
-        };
-        return TimerEvent;
-    }());
-    var TimeKeeper = (function () {
-        function TimeKeeper() {
-            this.cleaningIntervalId = -1;
-            this.collectedEvents = [];
-            this.listeners = [];
-        }
-        TimeKeeper.prototype.isEnabled = function () {
-            return exports.ENABLE_TIMER;
-        };
-        TimeKeeper.prototype.start = function (topic, name, start, description) {
-            if (!this.isEnabled()) {
-                return exports.nullEvent;
-            }
-            var strTopic;
-            if (typeof topic === 'string') {
-                strTopic = topic;
-            }
-            else if (topic === Topic.EDITOR) {
-                strTopic = 'Editor';
-            }
-            else if (topic === Topic.LANGUAGES) {
-                strTopic = 'Languages';
-            }
-            else if (topic === Topic.WORKER) {
-                strTopic = 'Worker';
-            }
-            else if (topic === Topic.WORKBENCH) {
-                strTopic = 'Workbench';
-            }
-            else if (topic === Topic.STARTUP) {
-                strTopic = 'Startup';
-            }
-            this.initAutoCleaning();
-            var event = new TimerEvent(this, name, strTopic, start, description);
-            this.addEvent(event);
-            return event;
-        };
-        TimeKeeper.prototype.dispose = function () {
-            if (this.cleaningIntervalId !== -1) {
-                Platform.clearInterval(this.cleaningIntervalId);
-                this.cleaningIntervalId = -1;
-            }
-        };
-        TimeKeeper.prototype.addListener = function (listener) {
-            var _this = this;
-            this.listeners.push(listener);
-            return {
-                dispose: function () {
-                    for (var i = 0; i < _this.listeners.length; i++) {
-                        if (_this.listeners[i] === listener) {
-                            _this.listeners.splice(i, 1);
-                            return;
-                        }
-                    }
-                }
-            };
-        };
-        TimeKeeper.prototype.addEvent = function (event) {
-            event.id = TimeKeeper.EVENT_ID;
-            TimeKeeper.EVENT_ID++;
-            this.collectedEvents.push(event);
-            // expire items from the front of the cache
-            if (this.collectedEvents.length > TimeKeeper._EVENT_CACHE_LIMIT) {
-                this.collectedEvents.shift();
-            }
-        };
-        TimeKeeper.prototype.initAutoCleaning = function () {
-            var _this = this;
-            if (this.cleaningIntervalId === -1) {
-                this.cleaningIntervalId = Platform.setInterval(function () {
-                    var now = Date.now();
-                    _this.collectedEvents.forEach(function (event) {
-                        if (!event.stopTime && (now - event.startTime.getTime()) >= TimeKeeper._MAX_TIMER_LENGTH) {
-                            event.stop();
-                        }
-                    });
-                }, TimeKeeper._CLEAN_UP_INTERVAL);
-            }
-        };
-        TimeKeeper.prototype.getCollectedEvents = function () {
-            return this.collectedEvents.slice(0);
-        };
-        TimeKeeper.prototype.clearCollectedEvents = function () {
-            this.collectedEvents = [];
-        };
-        TimeKeeper.prototype._onEventStopped = function (event) {
-            var emitEvents = [event];
-            var listeners = this.listeners.slice(0);
-            for (var i = 0; i < listeners.length; i++) {
-                try {
-                    listeners[i](emitEvents);
-                }
-                catch (e) {
-                    errors.onUnexpectedError(e);
-                }
-            }
-        };
-        TimeKeeper.prototype.setInitialCollectedEvents = function (events, startTime) {
-            var _this = this;
-            if (!this.isEnabled()) {
-                return;
-            }
-            if (startTime) {
-                TimeKeeper.PARSE_TIME = startTime;
-            }
-            events.forEach(function (event) {
-                var e = new TimerEvent(_this, event.name, event.topic, event.startTime, event.description);
-                e.stop(event.stopTime);
-                _this.addEvent(e);
-            });
-        };
-        /**
-         * After being started for 1 minute, all timers are automatically stopped.
-         */
-        TimeKeeper._MAX_TIMER_LENGTH = 60000; // 1 minute
-        /**
-         * Every 2 minutes, a sweep of current started timers is done.
-         */
-        TimeKeeper._CLEAN_UP_INTERVAL = 120000; // 2 minutes
-        /**
-         * Collect at most 1000 events.
-         */
-        TimeKeeper._EVENT_CACHE_LIMIT = 1000;
-        TimeKeeper.EVENT_ID = 1;
-        TimeKeeper.PARSE_TIME = new Date();
-        return TimeKeeper;
-    }());
-    exports.TimeKeeper = TimeKeeper;
-    var timeKeeper = new TimeKeeper();
-    exports.nullEvent = new NullTimerEvent();
-    function start(topic, name, start, description) {
-        return timeKeeper.start(topic, name, start, description);
-    }
-    exports.start = start;
-    function getTimeKeeper() {
-        return timeKeeper;
-    }
-    exports.getTimeKeeper = getTimeKeeper;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-define(__m[2], __M([85,8]), function (winjs, __Errors__) {
+define(__m[2/*vs/base/common/winjs.base*/], __M([105/*vs/base/common/winjs.base.raw*/,7/*vs/base/common/errors*/]), function (winjs, __Errors__) {
 	'use strict';
 
 	var outstandingPromiseErrors = {};
@@ -6551,6 +6066,202 @@ define(__m[2], __M([85,8]), function (winjs, __Errors__) {
 		PPromise: winjs.Promise
 	};
 });
+
+
+
+
+
+define(__m[48/*vs/base/common/actions*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,26/*vs/base/common/eventEmitter*/,78/*vs/base/common/events*/,3/*vs/base/common/event*/]), function (require, exports, winjs_base_1, eventEmitter_1, Events, event_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    /**
+     * Checks if the provided object is compatible
+     * with the IAction interface.
+     * @param thing an object
+     */
+    function isAction(thing) {
+        if (!thing) {
+            return false;
+        }
+        else if (thing instanceof Action) {
+            return true;
+        }
+        else if (typeof thing.id !== 'string') {
+            return false;
+        }
+        else if (typeof thing.label !== 'string') {
+            return false;
+        }
+        else if (typeof thing.class !== 'string') {
+            return false;
+        }
+        else if (typeof thing.enabled !== 'boolean') {
+            return false;
+        }
+        else if (typeof thing.checked !== 'boolean') {
+            return false;
+        }
+        else if (typeof thing.run !== 'function') {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    exports.isAction = isAction;
+    var Action = (function () {
+        function Action(id, label, cssClass, enabled, actionCallback) {
+            if (label === void 0) { label = ''; }
+            if (cssClass === void 0) { cssClass = ''; }
+            if (enabled === void 0) { enabled = true; }
+            this._onDidChange = new event_1.Emitter();
+            this._id = id;
+            this._label = label;
+            this._cssClass = cssClass;
+            this._enabled = enabled;
+            this._actionCallback = actionCallback;
+        }
+        Action.prototype.dispose = function () {
+            this._onDidChange.dispose();
+        };
+        Object.defineProperty(Action.prototype, "onDidChange", {
+            get: function () {
+                return this._onDidChange.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Action.prototype, "id", {
+            get: function () {
+                return this._id;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Action.prototype, "label", {
+            get: function () {
+                return this._label;
+            },
+            set: function (value) {
+                this._setLabel(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Action.prototype._setLabel = function (value) {
+            if (this._label !== value) {
+                this._label = value;
+                this._onDidChange.fire({ label: value });
+            }
+        };
+        Object.defineProperty(Action.prototype, "tooltip", {
+            get: function () {
+                return this._tooltip;
+            },
+            set: function (value) {
+                this._setTooltip(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Action.prototype._setTooltip = function (value) {
+            if (this._tooltip !== value) {
+                this._tooltip = value;
+                this._onDidChange.fire({ tooltip: value });
+            }
+        };
+        Object.defineProperty(Action.prototype, "class", {
+            get: function () {
+                return this._cssClass;
+            },
+            set: function (value) {
+                this._setClass(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Action.prototype._setClass = function (value) {
+            if (this._cssClass !== value) {
+                this._cssClass = value;
+                this._onDidChange.fire({ class: value });
+            }
+        };
+        Object.defineProperty(Action.prototype, "enabled", {
+            get: function () {
+                return this._enabled;
+            },
+            set: function (value) {
+                this._setEnabled(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Action.prototype._setEnabled = function (value) {
+            if (this._enabled !== value) {
+                this._enabled = value;
+                this._onDidChange.fire({ enabled: value });
+            }
+        };
+        Object.defineProperty(Action.prototype, "checked", {
+            get: function () {
+                return this._checked;
+            },
+            set: function (value) {
+                this._setChecked(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Action.prototype._setChecked = function (value) {
+            if (this._checked !== value) {
+                this._checked = value;
+                this._onDidChange.fire({ checked: value });
+            }
+        };
+        Object.defineProperty(Action.prototype, "order", {
+            get: function () {
+                return this._order;
+            },
+            set: function (value) {
+                this._order = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Action.prototype.run = function (event) {
+            if (this._actionCallback !== void 0) {
+                return this._actionCallback(event);
+            }
+            return winjs_base_1.TPromise.as(true);
+        };
+        return Action;
+    }());
+    exports.Action = Action;
+    var ActionRunner = (function (_super) {
+        __extends(ActionRunner, _super);
+        function ActionRunner() {
+            _super.apply(this, arguments);
+        }
+        ActionRunner.prototype.run = function (action, context) {
+            var _this = this;
+            if (!action.enabled) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            this.emit(Events.EventType.BEFORE_RUN, { action: action });
+            return winjs_base_1.TPromise.as(action.run(context)).then(function (result) {
+                _this.emit(Events.EventType.RUN, { action: action, result: result });
+            }, function (error) {
+                _this.emit(Events.EventType.RUN, { action: action, error: error });
+            });
+        };
+        return ActionRunner;
+    }(eventEmitter_1.EventEmitter));
+    exports.ActionRunner = ActionRunner;
+});
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6560,7 +6271,7 @@ define(__m[2], __M([85,8]), function (winjs, __Errors__) {
 
 
 
-define(__m[15], __M([0,1,8,6,2,69,13]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
+define(__m[27/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/errors*/,13/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,75/*vs/base/common/cancellation*/,12/*vs/base/common/lifecycle*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -6576,9 +6287,12 @@ define(__m[15], __M([0,1,8,6,2,69,13]), function (require, exports, errors, plat
     exports.toThenable = toThenable;
     function asWinJsPromise(callback) {
         var source = new cancellation_1.CancellationTokenSource();
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new winjs_base_1.TPromise(function (resolve, reject, progress) {
             var item = callback(source.token);
-            if (isThenable(item)) {
+            if (item instanceof winjs_base_1.TPromise) {
+                item.then(resolve, reject, progress);
+            }
+            else if (isThenable(item)) {
                 item.then(resolve, reject);
             }
             else {
@@ -6592,9 +6306,16 @@ define(__m[15], __M([0,1,8,6,2,69,13]), function (require, exports, errors, plat
     /**
      * Hook a cancellation token to a WinJS Promise
      */
-    function wireCancellationToken(token, promise) {
-        token.onCancellationRequested(function () { return promise.cancel(); });
-        return promise;
+    function wireCancellationToken(token, promise, resolveAsUndefinedWhenCancelled) {
+        var subscription = token.onCancellationRequested(function () { return promise.cancel(); });
+        if (resolveAsUndefinedWhenCancelled) {
+            promise = promise.then(undefined, function (err) {
+                if (!errors.isPromiseCanceledError(err)) {
+                    return winjs_base_1.TPromise.wrapError(err);
+                }
+            });
+        }
+        return always(promise, function () { return subscription.dispose(); });
     }
     exports.wireCancellationToken = wireCancellationToken;
     /**
@@ -6889,7 +6610,7 @@ define(__m[15], __M([0,1,8,6,2,69,13]), function (require, exports, errors, plat
             return null;
         }
         function thenHandler(result) {
-            if (result) {
+            if (result !== undefined && result !== null) {
                 results.push(result);
             }
             var n = next();
@@ -6954,6 +6675,17 @@ define(__m[15], __M([0,1,8,6,2,69,13]), function (require, exports, errors, plat
         return Limiter;
     }());
     exports.Limiter = Limiter;
+    /**
+     * A queue is handles one promise at a time and guarantees that at any time only one promise is executing.
+     */
+    var Queue = (function (_super) {
+        __extends(Queue, _super);
+        function Queue() {
+            _super.call(this, 1);
+        }
+        return Queue;
+    }(Limiter));
+    exports.Queue = Queue;
     var TimeoutTimer = (function (_super) {
         __extends(TimeoutTimer, _super);
         function TimeoutTimer() {
@@ -7091,12 +6823,535 @@ define(__m[15], __M([0,1,8,6,2,69,13]), function (require, exports, errors, plat
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[16], __M([0,1,2,71,29,7,15,12]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs) {
+define(__m[53/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
-    function isRoot(path) {
-        return path === path_1.dirname(path);
+    function fromEventEmitter(emitter, eventName, map) {
+        var fn = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            return result.fire(map.apply(void 0, args));
+        };
+        var onFirstListenerAdd = function () { return emitter.on(eventName, fn); };
+        var onLastListenerRemove = function () { return emitter.removeListener(eventName, fn); };
+        var result = new event_1.Emitter({ onFirstListenerAdd: onFirstListenerAdd, onLastListenerRemove: onLastListenerRemove });
+        return result.event;
     }
-    exports.isRoot = isRoot;
+    exports.fromEventEmitter = fromEventEmitter;
+    ;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[69/*vs/base/node/flow*/], __M([1/*require*/,0/*exports*/,104/*assert*/]), function (require, exports, assert) {
+    'use strict';
+    /**
+     * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
+     * array to the callback (callback). The resulting errors and results are evaluated by calling the provided callback function.
+     */
+    function parallel(list, fn, callback) {
+        var results = new Array(list.length);
+        var errors = new Array(list.length);
+        var didErrorOccur = false;
+        var doneCount = 0;
+        if (list.length === 0) {
+            return callback(null, []);
+        }
+        list.forEach(function (item, index) {
+            fn(item, function (error, result) {
+                if (error) {
+                    didErrorOccur = true;
+                    results[index] = null;
+                    errors[index] = error;
+                }
+                else {
+                    results[index] = result;
+                    errors[index] = null;
+                }
+                if (++doneCount === list.length) {
+                    return callback(didErrorOccur ? errors : null, results);
+                }
+            });
+        });
+    }
+    exports.parallel = parallel;
+    function loop(param, fn, callback) {
+        // Assert
+        assert.ok(param, 'Missing first parameter');
+        assert.ok(typeof (fn) === 'function', 'Second parameter must be a function that is called for each element');
+        assert.ok(typeof (callback) === 'function', 'Third parameter must be a function that is called on error and success');
+        // Param is function, execute to retrieve array
+        if (typeof (param) === 'function') {
+            try {
+                param(function (error, result) {
+                    if (error) {
+                        callback(error, null);
+                    }
+                    else {
+                        loop(result, fn, callback);
+                    }
+                });
+            }
+            catch (error) {
+                callback(error, null);
+            }
+        }
+        else {
+            var results_1 = [];
+            var looper_1 = function (i) {
+                // Still work to do
+                if (i < param.length) {
+                    // Execute function on array element
+                    try {
+                        fn(param[i], function (error, result) {
+                            // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
+                            if (error === true || error === false) {
+                                result = error;
+                                error = null;
+                            }
+                            // Quit looping on error
+                            if (error) {
+                                callback(error, null);
+                            }
+                            else {
+                                if (result) {
+                                    results_1.push(result);
+                                }
+                                process.nextTick(function () {
+                                    looper_1(i + 1);
+                                });
+                            }
+                        }, i, param.length);
+                    }
+                    catch (error) {
+                        callback(error, null);
+                    }
+                }
+                else {
+                    callback(null, results_1);
+                }
+            };
+            // Start looping with first element in array
+            looper_1(0);
+        }
+    }
+    exports.loop = loop;
+    function Sequence(sequences) {
+        // Assert
+        assert.ok(sequences.length > 1, 'Need at least one error handler and one function to process sequence');
+        sequences.forEach(function (sequence) {
+            assert.ok(typeof (sequence) === 'function');
+        });
+        // Execute in Loop
+        var errorHandler = sequences.splice(0, 1)[0]; //Remove error handler
+        var sequenceResult = null;
+        loop(sequences, function (sequence, clb) {
+            var sequenceFunction = function (error, result) {
+                // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
+                if (error === true || error === false) {
+                    result = error;
+                    error = null;
+                }
+                // Handle Error and Result
+                if (error) {
+                    clb(error, null);
+                }
+                else {
+                    sequenceResult = result; //Remember result of sequence
+                    clb(null, null); //Don't pass on result to Looper as we are not aggregating it
+                }
+            };
+            // We call the sequence function setting "this" to be the callback we define here
+            // and we pass in the "sequenceResult" as first argument. Doing all this avoids having
+            // to pass in a callback to the sequence because the callback is already "this".
+            try {
+                sequence.call(sequenceFunction, sequenceResult);
+            }
+            catch (error) {
+                clb(error, null);
+            }
+        }, function (error, result) {
+            if (error) {
+                errorHandler(error);
+            }
+        });
+    }
+    function sequence(sequences) {
+        Sequence((Array.isArray(sequences)) ? sequences : Array.prototype.slice.call(arguments));
+    }
+    exports.sequence = sequence;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[72/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,25/*vs/base/common/uuid*/,19/*vs/base/common/strings*/,13/*vs/base/common/platform*/,69/*vs/base/node/flow*/,15/*fs*/,10/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
+    'use strict';
+    var loop = flow.loop;
+    function readdirSync(path) {
+        // Mac: uses NFD unicode form on disk, but we want NFC
+        // See also https://github.com/nodejs/node/issues/2165
+        if (platform.isMacintosh) {
+            return fs.readdirSync(path).map(function (c) { return strings.normalizeNFC(c); });
+        }
+        return fs.readdirSync(path);
+    }
+    exports.readdirSync = readdirSync;
+    function readdir(path, callback) {
+        // Mac: uses NFD unicode form on disk, but we want NFC
+        // See also https://github.com/nodejs/node/issues/2165
+        if (platform.isMacintosh) {
+            return fs.readdir(path, function (error, children) {
+                if (error) {
+                    return callback(error, null);
+                }
+                return callback(null, children.map(function (c) { return strings.normalizeNFC(c); }));
+            });
+        }
+        return fs.readdir(path, callback);
+    }
+    exports.readdir = readdir;
+    function mkdirp(path, mode, callback) {
+        fs.exists(path, function (exists) {
+            if (exists) {
+                return isDirectory(path, function (err, itIs) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    if (!itIs) {
+                        return callback(new Error('"' + path + '" is not a directory.'));
+                    }
+                    callback(null);
+                });
+            }
+            mkdirp(paths.dirname(path), mode, function (err) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                if (mode) {
+                    fs.mkdir(path, mode, function (error) {
+                        if (error) {
+                            return callback(error);
+                        }
+                        fs.chmod(path, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
+                    });
+                }
+                else {
+                    fs.mkdir(path, null, callback);
+                }
+            });
+        });
+    }
+    exports.mkdirp = mkdirp;
+    function isDirectory(path, callback) {
+        fs.stat(path, function (error, stat) {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, stat.isDirectory());
+        });
+    }
+    function copy(source, target, callback, copiedSources) {
+        if (!copiedSources) {
+            copiedSources = Object.create(null);
+        }
+        fs.stat(source, function (error, stat) {
+            if (error) {
+                return callback(error);
+            }
+            if (!stat.isDirectory()) {
+                return pipeFs(source, target, stat.mode & 511, callback);
+            }
+            if (copiedSources[source]) {
+                return callback(null); // escape when there are cycles (can happen with symlinks)
+            }
+            else {
+                copiedSources[source] = true; // remember as copied
+            }
+            mkdirp(target, stat.mode & 511, function (err) {
+                readdir(source, function (err, files) {
+                    loop(files, function (file, clb) {
+                        copy(paths.join(source, file), paths.join(target, file), clb, copiedSources);
+                    }, callback);
+                });
+            });
+        });
+    }
+    exports.copy = copy;
+    function pipeFs(source, target, mode, callback) {
+        var callbackHandled = false;
+        var readStream = fs.createReadStream(source);
+        var writeStream = fs.createWriteStream(target, { mode: mode });
+        var onError = function (error) {
+            if (!callbackHandled) {
+                callbackHandled = true;
+                callback(error);
+            }
+        };
+        readStream.on('error', onError);
+        writeStream.on('error', onError);
+        readStream.on('end', function () {
+            writeStream.end(function () {
+                if (!callbackHandled) {
+                    callbackHandled = true;
+                    fs.chmod(target, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
+                }
+            });
+        });
+        // In node 0.8 there is no easy way to find out when the pipe operation has finished. As such, we use the end property = false
+        // so that we are in charge of calling end() on the write stream and we will be notified when the write stream is really done.
+        // We can do this because file streams have an end() method that allows to pass in a callback.
+        // In node 0.10 there is an event 'finish' emitted from the write stream that can be used. See
+        // https://groups.google.com/forum/?fromgroups=#!topic/nodejs/YWQ1sRoXOdI
+        readStream.pipe(writeStream, { end: false });
+    }
+    // Deletes the given path by first moving it out of the workspace. This has two benefits. For one, the operation can return fast because
+    // after the rename, the contents are out of the workspace although not yet deleted. The greater benefit however is that this operation
+    // will fail in case any file is used by another process. fs.unlink() in node will not bail if a file unlinked is used by another process.
+    // However, the consequences are bad as outlined in all the related bugs from https://github.com/joyent/node/issues/7164
+    function del(path, tmpFolder, callback, done) {
+        fs.exists(path, function (exists) {
+            if (!exists) {
+                return callback(null);
+            }
+            fs.stat(path, function (err, stat) {
+                if (err || !stat) {
+                    return callback(err);
+                }
+                // Special windows workaround: A file or folder that ends with a "." cannot be moved to another place
+                // because it is not a valid file name. In this case, we really have to do the deletion without prior move.
+                if (path[path.length - 1] === '.' || strings.endsWith(path, './') || strings.endsWith(path, '.\\')) {
+                    return rmRecursive(path, callback);
+                }
+                var pathInTemp = paths.join(tmpFolder, uuid.generateUuid());
+                fs.rename(path, pathInTemp, function (error) {
+                    if (error) {
+                        return rmRecursive(path, callback); // if rename fails, delete without tmp dir
+                    }
+                    // Return early since the move succeeded
+                    callback(null);
+                    // do the heavy deletion outside the callers callback
+                    rmRecursive(pathInTemp, function (error) {
+                        if (error) {
+                            console.error(error);
+                        }
+                        if (done) {
+                            done(error);
+                        }
+                    });
+                });
+            });
+        });
+    }
+    exports.del = del;
+    function rmRecursive(path, callback) {
+        if (path === '\\' || path === '/') {
+            return callback(new Error('Will not delete root!'));
+        }
+        fs.exists(path, function (exists) {
+            if (!exists) {
+                callback(null);
+            }
+            else {
+                fs.lstat(path, function (err, stat) {
+                    if (err || !stat) {
+                        callback(err);
+                    }
+                    else if (!stat.isDirectory() || stat.isSymbolicLink() /* !!! never recurse into links when deleting !!! */) {
+                        var mode = stat.mode;
+                        if (!(mode & 128)) {
+                            fs.chmod(path, mode | 128, function (err) {
+                                if (err) {
+                                    callback(err);
+                                }
+                                else {
+                                    fs.unlink(path, callback);
+                                }
+                            });
+                        }
+                        else {
+                            fs.unlink(path, callback);
+                        }
+                    }
+                    else {
+                        readdir(path, function (err, children) {
+                            if (err || !children) {
+                                callback(err);
+                            }
+                            else if (children.length === 0) {
+                                fs.rmdir(path, callback);
+                            }
+                            else {
+                                var firstError_1 = null;
+                                var childrenLeft_1 = children.length;
+                                children.forEach(function (child) {
+                                    rmRecursive(paths.join(path, child), function (err) {
+                                        childrenLeft_1--;
+                                        if (err) {
+                                            firstError_1 = firstError_1 || err;
+                                        }
+                                        if (childrenLeft_1 === 0) {
+                                            if (firstError_1) {
+                                                callback(firstError_1);
+                                            }
+                                            else {
+                                                fs.rmdir(path, callback);
+                                            }
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    function mv(source, target, callback) {
+        if (source === target) {
+            return callback(null);
+        }
+        function updateMtime(err) {
+            if (err) {
+                return callback(err);
+            }
+            fs.stat(target, function (error, stat) {
+                if (error) {
+                    return callback(error);
+                }
+                if (stat.isDirectory()) {
+                    return callback(null);
+                }
+                fs.open(target, 'a', null, function (err, fd) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    fs.futimes(fd, stat.atime, new Date(), function (err) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        fs.close(fd, callback);
+                    });
+                });
+            });
+        }
+        // Try native rename()
+        fs.rename(source, target, function (err) {
+            if (!err) {
+                return updateMtime(null);
+            }
+            // In two cases we fallback to classic copy and delete:
+            //
+            // 1.) The EXDEV error indicates that source and target are on different devices
+            // In this case, fallback to using a copy() operation as there is no way to
+            // rename() between different devices.
+            //
+            // 2.) The user tries to rename a file/folder that ends with a dot. This is not
+            // really possible to move then, at least on UNC devices.
+            if (err && source.toLowerCase() !== target.toLowerCase() && (err.code === 'EXDEV') || strings.endsWith(source, '.')) {
+                return copy(source, target, function (err) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    rmRecursive(source, updateMtime);
+                });
+            }
+            return callback(err);
+        });
+    }
+    exports.mv = mv;
+    // Calls fs.writeFile() followed by a fs.sync() call to flush the changes to disk
+    // We do this in cases where we want to make sure the data is really on disk and
+    // not in some cache.
+    //
+    // See https://github.com/nodejs/node/blob/v5.10.0/lib/fs.js#L1194
+    var canFlush = true;
+    function writeFileAndFlush(path, data, options, callback) {
+        if (!canFlush) {
+            return fs.writeFile(path, data, options, callback);
+        }
+        if (!options) {
+            options = { encoding: 'utf8', mode: 438, flag: 'w' };
+        }
+        else if (typeof options === 'string') {
+            options = { encoding: options, mode: 438, flag: 'w' };
+        }
+        // Open the file with same flags and mode as fs.writeFile()
+        fs.open(path, options.flag, options.mode, function (openError, fd) {
+            if (openError) {
+                return callback(openError);
+            }
+            // It is valid to pass a fd handle to fs.writeFile() and this will keep the handle open!
+            fs.writeFile(fd, data, options.encoding, function (writeError) {
+                if (writeError) {
+                    return fs.close(fd, function () { return callback(writeError); }); // still need to close the handle on error!
+                }
+                // Flush contents (not metadata) of the file to disk
+                fs.fdatasync(fd, function (syncError) {
+                    // In some exotic setups it is well possible that node fails to sync
+                    // In that case we disable flushing and warn to the console
+                    if (syncError) {
+                        console.warn('[node.js fs] fdatasync is now disabled for this session because it failed: ', syncError);
+                        canFlush = false;
+                    }
+                    return fs.close(fd, function (closeError) { return callback(closeError); });
+                });
+            });
+        });
+    }
+    exports.writeFileAndFlush = writeFileAndFlush;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[76/*vs/base/node/id*/], __M([1/*require*/,0/*exports*/,100/*getmac*/,80/*crypto*/,2/*vs/base/common/winjs.base*/,7/*vs/base/common/errors*/,25/*vs/base/common/uuid*/]), function (require, exports, getmac, crypto, winjs_base_1, errors, uuid) {
+    "use strict";
+    function getMachineId() {
+        return new winjs_base_1.TPromise(function (resolve) {
+            try {
+                getmac.getMac(function (error, macAddress) {
+                    if (!error) {
+                        resolve(crypto.createHash('sha256').update(macAddress, 'utf8').digest('hex'));
+                    }
+                    else {
+                        resolve(uuid.generateUuid()); // fallback, generate a UUID
+                    }
+                });
+            }
+            catch (err) {
+                errors.onUnexpectedError(err);
+                resolve(uuid.generateUuid()); // fallback, generate a UUID
+            }
+        });
+    }
+    exports.getMachineId = getMachineId;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[81/*vs/base/node/paths*/], __M([1/*require*/,0/*exports*/,14/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+    "use strict";
+    var pathsPath = uri_1.default.parse(require.toUrl('paths')).fsPath;
+    var paths = require.__$__nodeRequire(pathsPath);
+    exports.getAppDataPath = paths.getAppDataPath;
+    exports.getDefaultUserDataPath = paths.getDefaultUserDataPath;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[42/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,72/*vs/base/node/extfs*/,35/*vs/base/common/paths*/,10/*path*/,27/*vs/base/common/async*/,15/*fs*/]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs) {
+    'use strict';
     function readdir(path) {
         return async_1.nfcall(extfs.readdir, path);
     }
@@ -7120,7 +7375,8 @@ define(__m[16], __M([0,1,2,71,29,7,15,12]), function (require, exports, winjs_ba
             }
             return winjs_base_1.TPromise.wrapError(err);
         }); };
-        if (isRoot(path)) {
+        // is root?
+        if (path === path_1.dirname(path)) {
             return winjs_base_1.TPromise.as(true);
         }
         return mkdir().then(null, function (err) {
@@ -7161,10 +7417,6 @@ define(__m[16], __M([0,1,2,71,29,7,15,12]), function (require, exports, winjs_ba
         return async_1.nfcall(fs.lstat, path);
     }
     exports.lstat = lstat;
-    function mstat(paths) {
-        return doStatMultiple(paths.slice(0));
-    }
-    exports.mstat = mstat;
     function rename(oldPath, newPath) {
         return async_1.nfcall(fs.rename, oldPath, newPath);
     }
@@ -7185,20 +7437,10 @@ define(__m[16], __M([0,1,2,71,29,7,15,12]), function (require, exports, winjs_ba
         return async_1.nfcall(fs.readlink, path);
     }
     exports.readlink = readlink;
-    function doStatMultiple(paths) {
-        var path = paths.shift();
-        return stat(path).then(function (value) {
-            return {
-                path: path,
-                stats: value
-            };
-        }, function (err) {
-            if (paths.length === 0) {
-                return err;
-            }
-            return mstat(paths);
-        });
+    function utimes(path, atime, mtime) {
+        return async_1.nfcall(fs.utimes, path, atime, mtime);
     }
+    exports.utimes = utimes;
     function readFile(path, encoding) {
         return async_1.nfcall(fs.readFile, path, encoding);
     }
@@ -7208,22 +7450,22 @@ define(__m[16], __M([0,1,2,71,29,7,15,12]), function (require, exports, winjs_ba
         return async_1.nfcall(fs.writeFile, path, data, encoding);
     }
     exports.writeFile = writeFile;
+    function writeFileAndFlush(path, data, encoding) {
+        if (encoding === void 0) { encoding = 'utf8'; }
+        return async_1.nfcall(extfs.writeFileAndFlush, path, data, encoding);
+    }
+    exports.writeFileAndFlush = writeFileAndFlush;
     /**
     * Read a dir and return only subfolders
     */
     function readDirsInDir(dirPath) {
         return readdir(dirPath).then(function (children) {
-            return winjs_base_1.TPromise.join(children.map(function (child) { return dirExistsWithResult(paths.join(dirPath, child), child); })).then(function (subdirs) {
-                return removeNull(subdirs);
+            return winjs_base_1.TPromise.join(children.map(function (c) { return dirExists(paths.join(dirPath, c)); })).then(function (exists) {
+                return children.filter(function (_, i) { return exists[i]; });
             });
         });
     }
     exports.readDirsInDir = readDirsInDir;
-    function dirExistsWithResult(path, successResult) {
-        return dirExists(path).then(function (exists) {
-            return exists ? successResult : null;
-        });
-    }
     /**
     * `path` exists and is a directory
     */
@@ -7238,83 +7480,92 @@ define(__m[16], __M([0,1,2,71,29,7,15,12]), function (require, exports, winjs_ba
         return stat(path).then(function (stat) { return stat.isFile(); }, function () { return false; });
     }
     exports.fileExists = fileExists;
-    /**
-    * Read dir at `path` and return only files matching `pattern`
-    */
-    function readFiles(path, pattern) {
-        return readdir(path).then(function (children) {
-            children = children.filter(function (child) {
-                return pattern.test(child);
-            });
-            var fileChildren = children.map(function (child) {
-                return fileExistsWithResult(paths.join(path, child), child);
-            });
-            return winjs_base_1.TPromise.join(fileChildren).then(function (subdirs) {
-                return removeNull(subdirs);
-            });
-        });
-    }
-    exports.readFiles = readFiles;
-    function fileExistsWithResult(path, successResult) {
-        return fileExists(path).then(function (exists) {
-            return exists ? successResult : null;
-        }, function (err) {
-            return winjs_base_1.TPromise.wrapError(err);
-        });
-    }
-    exports.fileExistsWithResult = fileExistsWithResult;
-    function removeNull(arr) {
-        return arr.filter(function (item) { return (item !== null); });
-    }
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[34], __M([0,1,2,13,10]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+define(__m[84/*vs/base/node/proxy*/], __M([1/*require*/,0/*exports*/,31/*url*/,6/*vs/base/common/types*/,99/*http-proxy-agent*/,97/*https-proxy-agent*/]), function (require, exports, url_1, types_1, HttpProxyAgent, HttpsProxyAgent) {
     'use strict';
-    var RequestType;
-    (function (RequestType) {
-        RequestType[RequestType["Common"] = 0] = "Common";
-        RequestType[RequestType["Cancel"] = 1] = "Cancel";
-    })(RequestType || (RequestType = {}));
-    var ResponseType;
-    (function (ResponseType) {
-        ResponseType[ResponseType["Initialize"] = 0] = "Initialize";
-        ResponseType[ResponseType["Success"] = 1] = "Success";
-        ResponseType[ResponseType["Progress"] = 2] = "Progress";
-        ResponseType[ResponseType["Error"] = 3] = "Error";
-        ResponseType[ResponseType["ErrorObj"] = 4] = "ErrorObj";
-    })(ResponseType || (ResponseType = {}));
+    function getSystemProxyURI(requestURL) {
+        if (requestURL.protocol === 'http:') {
+            return process.env.HTTP_PROXY || process.env.http_proxy || null;
+        }
+        else if (requestURL.protocol === 'https:') {
+            return process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy || null;
+        }
+        return null;
+    }
+    function getProxyAgent(rawRequestURL, options) {
+        if (options === void 0) { options = {}; }
+        var requestURL = url_1.parse(rawRequestURL);
+        var proxyURL = options.proxyUrl || getSystemProxyURI(requestURL);
+        if (!proxyURL) {
+            return null;
+        }
+        var proxyEndpoint = url_1.parse(proxyURL);
+        if (!/^https?:$/.test(proxyEndpoint.protocol)) {
+            return null;
+        }
+        var opts = {
+            host: proxyEndpoint.hostname,
+            port: Number(proxyEndpoint.port),
+            auth: proxyEndpoint.auth,
+            rejectUnauthorized: types_1.isBoolean(options.strictSSL) ? options.strictSSL : true
+        };
+        return requestURL.protocol === 'http:' ? new HttpProxyAgent(opts) : new HttpsProxyAgent(opts);
+    }
+    exports.getProxyAgent = getProxyAgent;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[23/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,12/*vs/base/common/lifecycle*/,3/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+    'use strict';
+    var MessageType;
+    (function (MessageType) {
+        MessageType[MessageType["RequestCommon"] = 0] = "RequestCommon";
+        MessageType[MessageType["RequestCancel"] = 1] = "RequestCancel";
+        MessageType[MessageType["ResponseInitialize"] = 2] = "ResponseInitialize";
+        MessageType[MessageType["ResponseSuccess"] = 3] = "ResponseSuccess";
+        MessageType[MessageType["ResponseProgress"] = 4] = "ResponseProgress";
+        MessageType[MessageType["ResponseError"] = 5] = "ResponseError";
+        MessageType[MessageType["ResponseErrorObj"] = 6] = "ResponseErrorObj";
+    })(MessageType || (MessageType = {}));
+    function isResponse(messageType) {
+        return messageType >= MessageType.ResponseInitialize;
+    }
     var State;
     (function (State) {
         State[State["Uninitialized"] = 0] = "Uninitialized";
         State[State["Idle"] = 1] = "Idle";
     })(State || (State = {}));
-    var Server = (function () {
-        function Server(protocol) {
+    var ChannelServer = (function () {
+        function ChannelServer(protocol) {
             var _this = this;
             this.protocol = protocol;
             this.channels = Object.create(null);
             this.activeRequests = Object.create(null);
-            this.protocol.onMessage(function (r) { return _this.onMessage(r); });
-            this.protocol.send({ type: ResponseType.Initialize });
+            this.protocolListener = this.protocol.onMessage(function (r) { return _this.onMessage(r); });
+            this.protocol.send({ type: MessageType.ResponseInitialize });
         }
-        Server.prototype.registerChannel = function (channelName, channel) {
+        ChannelServer.prototype.registerChannel = function (channelName, channel) {
             this.channels[channelName] = channel;
         };
-        Server.prototype.onMessage = function (request) {
+        ChannelServer.prototype.onMessage = function (request) {
             switch (request.type) {
-                case RequestType.Common:
+                case MessageType.RequestCommon:
                     this.onCommonRequest(request);
                     break;
-                case RequestType.Cancel:
+                case MessageType.RequestCancel:
                     this.onCancelRequest(request);
                     break;
             }
         };
-        Server.prototype.onCommonRequest = function (request) {
+        ChannelServer.prototype.onCommonRequest = function (request) {
             var _this = this;
             var channel = this.channels[request.channelName];
             var promise;
@@ -7326,102 +7577,112 @@ define(__m[34], __M([0,1,2,13,10]), function (require, exports, winjs_base_1, li
             }
             var id = request.id;
             var requestPromise = promise.then(function (data) {
-                _this.protocol.send({ id: id, data: data, type: ResponseType.Success });
+                _this.protocol.send({ id: id, data: data, type: MessageType.ResponseSuccess });
                 delete _this.activeRequests[request.id];
             }, function (data) {
                 if (data instanceof Error) {
-                    _this.protocol.send({ id: id, data: {
+                    _this.protocol.send({
+                        id: id, data: {
                             message: data.message,
                             name: data.name,
                             stack: data.stack ? data.stack.split('\n') : void 0
-                        }, type: ResponseType.Error });
+                        }, type: MessageType.ResponseError
+                    });
                 }
                 else {
-                    _this.protocol.send({ id: id, data: data, type: ResponseType.ErrorObj });
+                    _this.protocol.send({ id: id, data: data, type: MessageType.ResponseErrorObj });
                 }
                 delete _this.activeRequests[request.id];
             }, function (data) {
-                _this.protocol.send({ id: id, data: data, type: ResponseType.Progress });
+                _this.protocol.send({ id: id, data: data, type: MessageType.ResponseProgress });
             });
             this.activeRequests[request.id] = lifecycle_1.toDisposable(function () { return requestPromise.cancel(); });
         };
-        Server.prototype.onCancelRequest = function (request) {
+        ChannelServer.prototype.onCancelRequest = function (request) {
             var disposable = this.activeRequests[request.id];
             if (disposable) {
                 disposable.dispose();
                 delete this.activeRequests[request.id];
             }
         };
-        Server.prototype.dispose = function () {
+        ChannelServer.prototype.dispose = function () {
             var _this = this;
+            this.protocolListener.dispose();
+            this.protocolListener = null;
             Object.keys(this.activeRequests).forEach(function (id) {
                 _this.activeRequests[id].dispose();
             });
             this.activeRequests = null;
         };
-        return Server;
+        return ChannelServer;
     }());
-    exports.Server = Server;
-    var Client = (function () {
-        function Client(protocol) {
+    exports.ChannelServer = ChannelServer;
+    var ChannelClient = (function () {
+        function ChannelClient(protocol) {
             var _this = this;
             this.protocol = protocol;
             this.state = State.Uninitialized;
+            this.activeRequests = [];
             this.bufferedRequests = [];
             this.handlers = Object.create(null);
             this.lastRequestId = 0;
-            this.protocol.onMessage(function (r) { return _this.onMessage(r); });
+            this.protocolListener = this.protocol.onMessage(function (r) { return _this.onMessage(r); });
         }
-        Client.prototype.getChannel = function (channelName) {
+        ChannelClient.prototype.getChannel = function (channelName) {
             var _this = this;
             var call = function (command, arg) { return _this.request(channelName, command, arg); };
             return { call: call };
         };
-        Client.prototype.request = function (channelName, name, arg) {
+        ChannelClient.prototype.request = function (channelName, name, arg) {
+            var _this = this;
             var request = {
                 raw: {
                     id: this.lastRequestId++,
-                    type: RequestType.Common,
+                    type: MessageType.RequestCommon,
                     channelName: channelName,
                     name: name,
                     arg: arg
                 }
             };
-            if (this.state === State.Uninitialized) {
-                return this.bufferRequest(request);
-            }
-            return this.doRequest(request);
+            var activeRequest = this.state === State.Uninitialized
+                ? this.bufferRequest(request)
+                : this.doRequest(request);
+            this.activeRequests.push(activeRequest);
+            activeRequest
+                .then(null, function (_) { return null; })
+                .done(function () { return _this.activeRequests = _this.activeRequests.filter(function (i) { return i !== activeRequest; }); });
+            return activeRequest;
         };
-        Client.prototype.doRequest = function (request) {
+        ChannelClient.prototype.doRequest = function (request) {
             var _this = this;
             var id = request.raw.id;
             return new winjs_base_1.Promise(function (c, e, p) {
                 _this.handlers[id] = function (response) {
                     switch (response.type) {
-                        case ResponseType.Success:
+                        case MessageType.ResponseSuccess:
                             delete _this.handlers[id];
                             c(response.data);
                             break;
-                        case ResponseType.Error:
+                        case MessageType.ResponseError:
                             delete _this.handlers[id];
                             var error = new Error(response.data.message);
                             error.stack = response.data.stack;
                             error.name = response.data.name;
                             e(error);
                             break;
-                        case ResponseType.ErrorObj:
+                        case MessageType.ResponseErrorObj:
                             delete _this.handlers[id];
                             e(response.data);
                             break;
-                        case ResponseType.Progress:
+                        case MessageType.ResponseProgress:
                             p(response.data);
                             break;
                     }
                 };
                 _this.send(request.raw);
-            }, function () { return _this.send({ id: id, type: RequestType.Cancel }); });
+            }, function () { return _this.send({ id: id, type: MessageType.RequestCancel }); });
         };
-        Client.prototype.bufferRequest = function (request) {
+        ChannelClient.prototype.bufferRequest = function (request) {
             var _this = this;
             var flushedRequest = null;
             return new winjs_base_1.Promise(function (c, e, p) {
@@ -7446,8 +7707,11 @@ define(__m[34], __M([0,1,2,13,10]), function (require, exports, winjs_base_1, li
                 _this.bufferedRequests.splice(idx, 1);
             });
         };
-        Client.prototype.onMessage = function (response) {
-            if (this.state === State.Uninitialized && response.type === ResponseType.Initialize) {
+        ChannelClient.prototype.onMessage = function (response) {
+            if (!isResponse(response.type)) {
+                return;
+            }
+            if (this.state === State.Uninitialized && response.type === MessageType.ResponseInitialize) {
                 this.state = State.Idle;
                 this.bufferedRequests.forEach(function (r) { return r.flush && r.flush(); });
                 this.bufferedRequests = null;
@@ -7458,16 +7722,22 @@ define(__m[34], __M([0,1,2,13,10]), function (require, exports, winjs_base_1, li
                 handler(response);
             }
         };
-        Client.prototype.send = function (raw) {
+        ChannelClient.prototype.send = function (raw) {
             try {
                 this.protocol.send(raw);
             }
             catch (err) {
             }
         };
-        return Client;
+        ChannelClient.prototype.dispose = function () {
+            this.protocolListener.dispose();
+            this.protocolListener = null;
+            this.activeRequests.forEach(function (r) { return r.cancel(); });
+            this.activeRequests = [];
+        };
+        return ChannelClient;
     }());
-    exports.Client = Client;
+    exports.ChannelClient = ChannelClient;
     function getDelayedChannel(promise) {
         var call = function (command, arg) { return promise.then(function (c) { return c.call(command, arg); }); };
         return { call: call };
@@ -7486,16 +7756,20 @@ define(__m[34], __M([0,1,2,13,10]), function (require, exports, winjs_base_1, li
         return { call: call };
     }
     exports.getNextTickChannel = getNextTickChannel;
-    function eventToCall(event) {
+    function eventToCall(event, serializer) {
+        if (serializer === void 0) { serializer = function (t) { return t; }; }
         var disposable;
-        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(p); }, function () { return disposable.dispose(); });
+        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(function (t) { return p(serializer(t)); }); }, function () { return disposable.dispose(); });
     }
     exports.eventToCall = eventToCall;
-    function eventFromCall(channel, name) {
+    function eventFromCall(channel, name, arg, deserializer) {
+        if (arg === void 0) { arg = null; }
+        if (deserializer === void 0) { deserializer = function (t) { return t; }; }
         var promise;
         var emitter = new event_1.Emitter({
             onFirstListenerAdd: function () {
-                promise = channel.call(name, null).then(null, function (err) { return null; }, function (e) { return emitter.fire(e); });
+                promise = channel.call(name, arg)
+                    .then(null, function (err) { return null; }, function (e) { return emitter.fire(deserializer(e)); });
             },
             onLastListenerRemove: function () {
                 promise.cancel();
@@ -7511,7 +7785,7 @@ define(__m[34], __M([0,1,2,13,10]), function (require, exports, winjs_base_1, li
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[40], __M([0,1,88,2,10,34]), function (require, exports, net_1, winjs_base_1, event_1, ipc_1) {
+define(__m[43/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/,101/*net*/,2/*vs/base/common/winjs.base*/,3/*vs/base/common/event*/,53/*vs/base/node/event*/,23/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, net_1, winjs_base_1, event_1, event_2, ipc_1) {
     'use strict';
     function bufferIndexOf(buffer, value, start) {
         if (start === void 0) { start = 0; }
@@ -7523,8 +7797,40 @@ define(__m[40], __M([0,1,88,2,10,34]), function (require, exports, net_1, winjs_
     var Protocol = (function () {
         function Protocol(socket) {
             this.socket = socket;
-            this.buffer = null;
+            var buffer = null;
+            var emitter = new event_1.Emitter();
+            var onRawData = event_2.fromEventEmitter(socket, 'data', function (data) { return data; });
+            onRawData(function (data) {
+                var lastIndex = 0;
+                var index = 0;
+                while ((index = bufferIndexOf(data, 0, lastIndex)) < data.length) {
+                    var dataToParse = data.slice(lastIndex, index);
+                    if (buffer) {
+                        emitter.fire(JSON.parse(Buffer.concat([buffer, dataToParse]).toString('utf8')));
+                        buffer = null;
+                    }
+                    else {
+                        emitter.fire(JSON.parse(dataToParse.toString('utf8')));
+                    }
+                    lastIndex = index + 1;
+                }
+                if (index - lastIndex > 0) {
+                    var dataToBuffer = data.slice(lastIndex, index);
+                    if (buffer) {
+                        buffer = Buffer.concat([buffer, dataToBuffer]);
+                    }
+                    else {
+                        buffer = dataToBuffer;
+                    }
+                }
+            });
+            this._onMessage = emitter.event;
         }
+        Object.defineProperty(Protocol.prototype, "onMessage", {
+            get: function () { return this._onMessage; },
+            enumerable: true,
+            configurable: true
+        });
         Protocol.prototype.send = function (message) {
             try {
                 this.socket.write(JSON.stringify(message));
@@ -7533,52 +7839,91 @@ define(__m[40], __M([0,1,88,2,10,34]), function (require, exports, net_1, winjs_
             catch (e) {
             }
         };
-        Protocol.prototype.onMessage = function (callback) {
-            var _this = this;
-            this.socket.on('data', function (data) {
-                var lastIndex = 0;
-                var index = 0;
-                while ((index = bufferIndexOf(data, 0, lastIndex)) < data.length) {
-                    var dataToParse = data.slice(lastIndex, index);
-                    if (_this.buffer) {
-                        callback(JSON.parse(Buffer.concat([_this.buffer, dataToParse]).toString('utf8')));
-                        _this.buffer = null;
-                    }
-                    else {
-                        callback(JSON.parse(dataToParse.toString('utf8')));
-                    }
-                    lastIndex = index + 1;
-                }
-                if (index - lastIndex > 0) {
-                    var dataToBuffer = data.slice(lastIndex, index);
-                    if (_this.buffer) {
-                        _this.buffer = Buffer.concat([_this.buffer, dataToBuffer]);
-                    }
-                    else {
-                        _this.buffer = dataToBuffer;
-                    }
-                }
-            });
-        };
         Protocol.Boundary = new Buffer([0]);
         return Protocol;
     }());
+    var RoutingChannelClient = (function () {
+        function RoutingChannelClient() {
+            this.onClientAdded = new event_1.Emitter();
+            this.ipcClients = Object.create(null);
+        }
+        RoutingChannelClient.prototype.add = function (id, client) {
+            this.ipcClients[id] = client;
+            this.onClientAdded.fire();
+        };
+        RoutingChannelClient.prototype.remove = function (id) {
+            delete this.ipcClients[id];
+        };
+        RoutingChannelClient.prototype.getClient = function (clientId) {
+            var _this = this;
+            var getClientFn = function (clientId, c) {
+                var client = _this.ipcClients[clientId];
+                if (client) {
+                    c(client);
+                    return true;
+                }
+                return false;
+            };
+            return new winjs_base_1.TPromise(function (c, e) {
+                if (!getClientFn(clientId, c)) {
+                    var disposable_1 = _this.onClientAdded.event(function () {
+                        if (getClientFn(clientId, c)) {
+                            disposable_1.dispose();
+                        }
+                    });
+                }
+            });
+        };
+        RoutingChannelClient.prototype.getChannel = function (channelName, router) {
+            var _this = this;
+            var call = function (command, arg) {
+                var id = router.routeCall(command, arg);
+                if (!id) {
+                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
+                }
+                return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
+            };
+            return { call: call };
+        };
+        RoutingChannelClient.prototype.dispose = function () {
+            this.ipcClients = null;
+            this.onClientAdded.dispose();
+        };
+        return RoutingChannelClient;
+    }());
+    // TODO@joao: move multi channel implementation down to ipc
     var Server = (function () {
         function Server(server) {
             var _this = this;
             this.server = server;
             this.channels = Object.create(null);
+            this.router = new RoutingChannelClient();
             this.server.on('connection', function (socket) {
-                var ipcServer = new ipc_1.Server(new Protocol(socket));
-                Object.keys(_this.channels)
-                    .forEach(function (name) { return ipcServer.registerChannel(name, _this.channels[name]); });
-                socket.once('close', function () { return ipcServer.dispose(); });
+                var protocol = new Protocol(socket);
+                var onFirstMessage = event_1.once(protocol.onMessage);
+                onFirstMessage(function (id) {
+                    var channelServer = new ipc_1.ChannelServer(protocol);
+                    Object.keys(_this.channels)
+                        .forEach(function (name) { return channelServer.registerChannel(name, _this.channels[name]); });
+                    var channelClient = new ipc_1.ChannelClient(protocol);
+                    _this.router.add(id, channelClient);
+                    socket.once('close', function () {
+                        channelClient.dispose();
+                        _this.router.remove(id);
+                        channelServer.dispose();
+                    });
+                });
             });
         }
+        Server.prototype.getChannel = function (channelName, router) {
+            return this.router.getChannel(channelName, router);
+        };
         Server.prototype.registerChannel = function (channelName, channel) {
             this.channels[channelName] = channel;
         };
         Server.prototype.dispose = function () {
+            this.router.dispose();
+            this.router = null;
             this.channels = null;
             this.server.close();
             this.server = null;
@@ -7587,11 +7932,14 @@ define(__m[40], __M([0,1,88,2,10,34]), function (require, exports, net_1, winjs_
     }());
     exports.Server = Server;
     var Client = (function () {
-        function Client(socket) {
+        function Client(socket, id) {
             var _this = this;
             this.socket = socket;
             this._onClose = new event_1.Emitter();
-            this.ipcClient = new ipc_1.Client(new Protocol(socket));
+            var protocol = new Protocol(socket);
+            protocol.send(id);
+            this.channelClient = new ipc_1.ChannelClient(protocol);
+            this.channelServer = new ipc_1.ChannelServer(protocol);
             socket.once('close', function () { return _this._onClose.fire(); });
         }
         Object.defineProperty(Client.prototype, "onClose", {
@@ -7600,12 +7948,17 @@ define(__m[40], __M([0,1,88,2,10,34]), function (require, exports, net_1, winjs_
             configurable: true
         });
         Client.prototype.getChannel = function (channelName) {
-            return this.ipcClient.getChannel(channelName);
+            return this.channelClient.getChannel(channelName);
+        };
+        Client.prototype.registerChannel = function (channelName, channel) {
+            this.channelServer.registerChannel(channelName, channel);
         };
         Client.prototype.dispose = function () {
             this.socket.end();
             this.socket = null;
-            this.ipcClient = null;
+            this.channelClient = null;
+            this.channelServer.dispose();
+            this.channelServer = null;
         };
         return Client;
     }());
@@ -7621,11 +7974,11 @@ define(__m[40], __M([0,1,88,2,10,34]), function (require, exports, net_1, winjs_
         });
     }
     exports.serve = serve;
-    function connect(hook) {
+    function connect(hook, clientId) {
         return new winjs_base_1.TPromise(function (c, e) {
             var socket = net_1.createConnection(hook, function () {
                 socket.removeListener('error', e);
-                c(new Client(socket));
+                c(new Client(socket, clientId));
             });
             socket.once('error', e);
         });
@@ -7633,8 +7986,57 @@ define(__m[40], __M([0,1,88,2,10,34]), function (require, exports, net_1, winjs_
     exports.connect = connect;
 });
 
-define(__m[42], __M([4,3]), function(nls, data) { return nls.create("vs/base/common/json", data); });
-define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[45/*vs/code/common/windowsIpc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,23/*vs/base/parts/ipc/common/ipc*/,3/*vs/base/common/event*/]), function (require, exports, winjs_base_1, ipc_1, event_1) {
+    'use strict';
+    var WindowEventChannel = (function () {
+        function WindowEventChannel(service) {
+            this.service = service;
+            this.onNewWindowOpen = event_1.buffer(service.onNewWindowOpen, true);
+            this.onWindowFocus = event_1.buffer(service.onWindowFocus, true);
+        }
+        WindowEventChannel.prototype.call = function (command, args) {
+            switch (command) {
+                case 'event:onNewWindowOpen':
+                    return ipc_1.eventToCall(this.onNewWindowOpen);
+                case 'event:onWindowFocus':
+                    return ipc_1.eventToCall(this.onWindowFocus);
+            }
+            return winjs_base_1.TPromise.wrapError('invalid command');
+        };
+        return WindowEventChannel;
+    }());
+    exports.WindowEventChannel = WindowEventChannel;
+    var WindowEventChannelClient = (function () {
+        function WindowEventChannelClient(channel) {
+            this.channel = channel;
+            this._onNewWindowOpen = ipc_1.eventFromCall(this.channel, 'event:onNewWindowOpen');
+            this._onWindowFocus = ipc_1.eventFromCall(this.channel, 'event:onWindowFocus');
+        }
+        Object.defineProperty(WindowEventChannelClient.prototype, "onNewWindowOpen", {
+            get: function () {
+                return this._onNewWindowOpen;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WindowEventChannelClient.prototype, "onWindowFocus", {
+            get: function () {
+                return this._onWindowFocus;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return WindowEventChannelClient;
+    }());
+    exports.WindowEventChannelClient = WindowEventChannelClient;
+});
+
+define(__m[46/*vs/nls!vs/base/common/json*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/base/common/json", data); });
+define(__m[49/*vs/base/common/json*/], __M([1/*require*/,0/*exports*/,46/*vs/nls!vs/base/common/json*/]), function (require, exports, nls_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7681,14 +8083,14 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
             var value = 0;
             while (digits < count || !exact) {
                 var ch = text.charCodeAt(pos);
-                if (ch >= CharacterCodes._0 && ch <= CharacterCodes._9) {
-                    value = value * 16 + ch - CharacterCodes._0;
+                if (ch >= 48 /* _0 */ && ch <= 57 /* _9 */) {
+                    value = value * 16 + ch - 48 /* _0 */;
                 }
-                else if (ch >= CharacterCodes.A && ch <= CharacterCodes.F) {
-                    value = value * 16 + ch - CharacterCodes.A + 10;
+                else if (ch >= 65 /* A */ && ch <= 70 /* F */) {
+                    value = value * 16 + ch - 65 /* A */ + 10;
                 }
-                else if (ch >= CharacterCodes.a && ch <= CharacterCodes.f) {
-                    value = value * 16 + ch - CharacterCodes.a + 10;
+                else if (ch >= 97 /* a */ && ch <= 102 /* f */) {
+                    value = value * 16 + ch - 97 /* a */ + 10;
                 }
                 else {
                     break;
@@ -7710,7 +8112,7 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
         }
         function scanNumber() {
             var start = pos;
-            if (text.charCodeAt(pos) === CharacterCodes._0) {
+            if (text.charCodeAt(pos) === 48 /* _0 */) {
                 pos++;
             }
             else {
@@ -7719,7 +8121,7 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
                     pos++;
                 }
             }
-            if (pos < text.length && text.charCodeAt(pos) === CharacterCodes.dot) {
+            if (pos < text.length && text.charCodeAt(pos) === 46 /* dot */) {
                 pos++;
                 if (pos < text.length && isDigit(text.charCodeAt(pos))) {
                     pos++;
@@ -7733,9 +8135,9 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
                 }
             }
             var end = pos;
-            if (pos < text.length && (text.charCodeAt(pos) === CharacterCodes.E || text.charCodeAt(pos) === CharacterCodes.e)) {
+            if (pos < text.length && (text.charCodeAt(pos) === 69 /* E */ || text.charCodeAt(pos) === 101 /* e */)) {
                 pos++;
-                if (pos < text.length && text.charCodeAt(pos) === CharacterCodes.plus || text.charCodeAt(pos) === CharacterCodes.minus) {
+                if (pos < text.length && text.charCodeAt(pos) === 43 /* plus */ || text.charCodeAt(pos) === 45 /* minus */) {
                     pos++;
                 }
                 if (pos < text.length && isDigit(text.charCodeAt(pos))) {
@@ -7760,12 +8162,12 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
                     break;
                 }
                 var ch = text.charCodeAt(pos);
-                if (ch === CharacterCodes.doubleQuote) {
+                if (ch === 34 /* doubleQuote */) {
                     result += text.substring(start, pos);
                     pos++;
                     break;
                 }
-                if (ch === CharacterCodes.backslash) {
+                if (ch === 92 /* backslash */) {
                     result += text.substring(start, pos);
                     pos++;
                     if (pos >= len) {
@@ -7774,31 +8176,31 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
                     }
                     ch = text.charCodeAt(pos++);
                     switch (ch) {
-                        case CharacterCodes.doubleQuote:
+                        case 34 /* doubleQuote */:
                             result += '\"';
                             break;
-                        case CharacterCodes.backslash:
+                        case 92 /* backslash */:
                             result += '\\';
                             break;
-                        case CharacterCodes.slash:
+                        case 47 /* slash */:
                             result += '/';
                             break;
-                        case CharacterCodes.b:
+                        case 98 /* b */:
                             result += '\b';
                             break;
-                        case CharacterCodes.f:
+                        case 102 /* f */:
                             result += '\f';
                             break;
-                        case CharacterCodes.n:
+                        case 110 /* n */:
                             result += '\n';
                             break;
-                        case CharacterCodes.r:
+                        case 114 /* r */:
                             result += '\r';
                             break;
-                        case CharacterCodes.t:
+                        case 116 /* t */:
                             result += '\t';
                             break;
-                        case CharacterCodes.u:
+                        case 117 /* u */:
                             var ch_1 = scanHexDigits(4, true);
                             if (ch_1 >= 0) {
                                 result += String.fromCharCode(ch_1);
@@ -7845,7 +8247,7 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
             if (isLineBreak(code)) {
                 pos++;
                 value += String.fromCharCode(code);
-                if (code === CharacterCodes.carriageReturn && text.charCodeAt(pos) === CharacterCodes.lineFeed) {
+                if (code === 13 /* carriageReturn */ && text.charCodeAt(pos) === 10 /* lineFeed */) {
                     pos++;
                     value += '\n';
                 }
@@ -7853,34 +8255,34 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
             }
             switch (code) {
                 // tokens: []{}:,
-                case CharacterCodes.openBrace:
+                case 123 /* openBrace */:
                     pos++;
                     return token = SyntaxKind.OpenBraceToken;
-                case CharacterCodes.closeBrace:
+                case 125 /* closeBrace */:
                     pos++;
                     return token = SyntaxKind.CloseBraceToken;
-                case CharacterCodes.openBracket:
+                case 91 /* openBracket */:
                     pos++;
                     return token = SyntaxKind.OpenBracketToken;
-                case CharacterCodes.closeBracket:
+                case 93 /* closeBracket */:
                     pos++;
                     return token = SyntaxKind.CloseBracketToken;
-                case CharacterCodes.colon:
+                case 58 /* colon */:
                     pos++;
                     return token = SyntaxKind.ColonToken;
-                case CharacterCodes.comma:
+                case 44 /* comma */:
                     pos++;
                     return token = SyntaxKind.CommaToken;
                 // strings
-                case CharacterCodes.doubleQuote:
+                case 34 /* doubleQuote */:
                     pos++;
                     value = scanString();
                     return token = SyntaxKind.StringLiteral;
                 // comments
-                case CharacterCodes.slash:
+                case 47 /* slash */:
                     var start = pos - 1;
                     // Single-line comment
-                    if (text.charCodeAt(pos + 1) === CharacterCodes.slash) {
+                    if (text.charCodeAt(pos + 1) === 47 /* slash */) {
                         pos += 2;
                         while (pos < len) {
                             if (isLineBreak(text.charCodeAt(pos))) {
@@ -7892,13 +8294,13 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
                         return token = SyntaxKind.LineCommentTrivia;
                     }
                     // Multi-line comment
-                    if (text.charCodeAt(pos + 1) === CharacterCodes.asterisk) {
+                    if (text.charCodeAt(pos + 1) === 42 /* asterisk */) {
                         pos += 2;
                         var safeLength = len - 1; // For lookahead.
                         var commentClosed = false;
                         while (pos < safeLength) {
                             var ch = text.charCodeAt(pos);
-                            if (ch === CharacterCodes.asterisk && text.charCodeAt(pos + 1) === CharacterCodes.slash) {
+                            if (ch === 42 /* asterisk */ && text.charCodeAt(pos + 1) === 47 /* slash */) {
                                 pos += 2;
                                 commentClosed = true;
                                 break;
@@ -7917,7 +8319,7 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
                     pos++;
                     return token = SyntaxKind.Unknown;
                 // numbers
-                case CharacterCodes.minus:
+                case 45 /* minus */:
                     value += String.fromCharCode(code);
                     pos++;
                     if (pos === len || !isDigit(text.charCodeAt(pos))) {
@@ -7926,16 +8328,16 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
                 // found a minus, followed by a number so
                 // we fall through to proceed with scanning
                 // numbers
-                case CharacterCodes._0:
-                case CharacterCodes._1:
-                case CharacterCodes._2:
-                case CharacterCodes._3:
-                case CharacterCodes._4:
-                case CharacterCodes._5:
-                case CharacterCodes._6:
-                case CharacterCodes._7:
-                case CharacterCodes._8:
-                case CharacterCodes._9:
+                case 48 /* _0 */:
+                case 49 /* _1 */:
+                case 50 /* _2 */:
+                case 51 /* _3 */:
+                case 52 /* _4 */:
+                case 53 /* _5 */:
+                case 54 /* _6 */:
+                case 55 /* _7 */:
+                case 56 /* _8 */:
+                case 57 /* _9 */:
                     value += scanNumber();
                     return token = SyntaxKind.NumericLiteral;
                 // literals and unknown symbols
@@ -7966,13 +8368,13 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
                 return false;
             }
             switch (code) {
-                case CharacterCodes.closeBrace:
-                case CharacterCodes.closeBracket:
-                case CharacterCodes.openBrace:
-                case CharacterCodes.openBracket:
-                case CharacterCodes.doubleQuote:
-                case CharacterCodes.colon:
-                case CharacterCodes.comma:
+                case 125 /* closeBrace */:
+                case 93 /* closeBracket */:
+                case 123 /* openBrace */:
+                case 91 /* openBracket */:
+                case 34 /* doubleQuote */:
+                case 58 /* colon */:
+                case 44 /* comma */:
                     return false;
             }
             return true;
@@ -7997,15 +8399,15 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
     }
     exports.createScanner = createScanner;
     function isWhiteSpace(ch) {
-        return ch === CharacterCodes.space || ch === CharacterCodes.tab || ch === CharacterCodes.verticalTab || ch === CharacterCodes.formFeed ||
-            ch === CharacterCodes.nonBreakingSpace || ch === CharacterCodes.ogham || ch >= CharacterCodes.enQuad && ch <= CharacterCodes.zeroWidthSpace ||
-            ch === CharacterCodes.narrowNoBreakSpace || ch === CharacterCodes.mathematicalSpace || ch === CharacterCodes.ideographicSpace || ch === CharacterCodes.byteOrderMark;
+        return ch === 32 /* space */ || ch === 9 /* tab */ || ch === 11 /* verticalTab */ || ch === 12 /* formFeed */ ||
+            ch === 160 /* nonBreakingSpace */ || ch === 5760 /* ogham */ || ch >= 8192 /* enQuad */ && ch <= 8203 /* zeroWidthSpace */ ||
+            ch === 8239 /* narrowNoBreakSpace */ || ch === 8287 /* mathematicalSpace */ || ch === 12288 /* ideographicSpace */ || ch === 65279 /* byteOrderMark */;
     }
     function isLineBreak(ch) {
-        return ch === CharacterCodes.lineFeed || ch === CharacterCodes.carriageReturn || ch === CharacterCodes.lineSeparator || ch === CharacterCodes.paragraphSeparator;
+        return ch === 10 /* lineFeed */ || ch === 13 /* carriageReturn */ || ch === 8232 /* lineSeparator */ || ch === 8233 /* paragraphSeparator */;
     }
     function isDigit(ch) {
-        return ch >= CharacterCodes._0 && ch <= CharacterCodes._9;
+        return ch >= 48 /* _0 */ && ch <= 57 /* _9 */;
     }
     var CharacterCodes;
     (function (CharacterCodes) {
@@ -8679,469 +9081,182 @@ define(__m[17], __M([0,1,42]), function (require, exports, nls_1) {
     exports.visit = visit;
 });
 
-define(__m[25], __M([0,1,17]), function (require, exports, Json) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    function applyEdit(text, edit) {
-        return text.substring(0, edit.offset) + edit.content + text.substring(edit.offset + edit.length);
-    }
-    exports.applyEdit = applyEdit;
-    function applyEdits(text, edits) {
-        for (var i = edits.length - 1; i >= 0; i--) {
-            text = applyEdit(text, edits[i]);
-        }
-        return text;
-    }
-    exports.applyEdits = applyEdits;
-    function format(documentText, range, options) {
-        var initialIndentLevel;
-        var value;
-        var rangeStart;
-        var rangeEnd;
-        if (range) {
-            rangeStart = range.offset;
-            rangeEnd = rangeStart + range.length;
-            while (rangeStart > 0 && !isEOL(documentText, rangeStart - 1)) {
-                rangeStart--;
-            }
-            var scanner_1 = Json.createScanner(documentText, true);
-            scanner_1.setPosition(rangeEnd);
-            scanner_1.scan();
-            rangeEnd = scanner_1.getPosition();
-            value = documentText.substring(rangeStart, rangeEnd);
-            initialIndentLevel = computeIndentLevel(value, 0, options);
-        }
-        else {
-            value = documentText;
-            rangeStart = 0;
-            rangeEnd = documentText.length;
-            initialIndentLevel = 0;
-        }
-        var eol = getEOL(options, documentText);
-        var lineBreak = false;
-        var indentLevel = 0;
-        var indentValue;
-        if (options.insertSpaces) {
-            indentValue = repeat(' ', options.tabSize);
-        }
-        else {
-            indentValue = '\t';
-        }
-        var scanner = Json.createScanner(value, false);
-        function newLineAndIndent() {
-            return eol + repeat(indentValue, initialIndentLevel + indentLevel);
-        }
-        function scanNext() {
-            var token = scanner.scan();
-            lineBreak = false;
-            while (token === Json.SyntaxKind.Trivia || token === Json.SyntaxKind.LineBreakTrivia) {
-                lineBreak = lineBreak || (token === Json.SyntaxKind.LineBreakTrivia);
-                token = scanner.scan();
-            }
-            return token;
-        }
-        var editOperations = [];
-        function addEdit(text, startOffset, endOffset) {
-            if (documentText.substring(startOffset, endOffset) !== text) {
-                editOperations.push({ offset: startOffset, length: endOffset - startOffset, content: text });
-            }
-        }
-        var firstToken = scanNext();
-        if (firstToken !== Json.SyntaxKind.EOF) {
-            var firstTokenStart = scanner.getTokenOffset() + rangeStart;
-            var initialIndent = repeat(indentValue, initialIndentLevel);
-            addEdit(initialIndent, rangeStart, firstTokenStart);
-        }
-        while (firstToken !== Json.SyntaxKind.EOF) {
-            var firstTokenEnd = scanner.getTokenOffset() + scanner.getTokenLength() + rangeStart;
-            var secondToken = scanNext();
-            var replaceContent = '';
-            while (!lineBreak && (secondToken === Json.SyntaxKind.LineCommentTrivia || secondToken === Json.SyntaxKind.BlockCommentTrivia)) {
-                // comments on the same line: keep them on the same line, but ignore them otherwise
-                var commentTokenStart = scanner.getTokenOffset() + rangeStart;
-                addEdit(' ', firstTokenEnd, commentTokenStart);
-                firstTokenEnd = scanner.getTokenOffset() + scanner.getTokenLength() + rangeStart;
-                replaceContent = secondToken === Json.SyntaxKind.LineCommentTrivia ? newLineAndIndent() : '';
-                secondToken = scanNext();
-            }
-            if (secondToken === Json.SyntaxKind.CloseBraceToken) {
-                if (firstToken !== Json.SyntaxKind.OpenBraceToken) {
-                    indentLevel--;
-                    replaceContent = newLineAndIndent();
-                }
-            }
-            else if (secondToken === Json.SyntaxKind.CloseBracketToken) {
-                if (firstToken !== Json.SyntaxKind.OpenBracketToken) {
-                    indentLevel--;
-                    replaceContent = newLineAndIndent();
-                }
-            }
-            else if (secondToken !== Json.SyntaxKind.EOF) {
-                switch (firstToken) {
-                    case Json.SyntaxKind.OpenBracketToken:
-                    case Json.SyntaxKind.OpenBraceToken:
-                        indentLevel++;
-                        replaceContent = newLineAndIndent();
-                        break;
-                    case Json.SyntaxKind.CommaToken:
-                    case Json.SyntaxKind.LineCommentTrivia:
-                        replaceContent = newLineAndIndent();
-                        break;
-                    case Json.SyntaxKind.BlockCommentTrivia:
-                        if (lineBreak) {
-                            replaceContent = newLineAndIndent();
-                        }
-                        else {
-                            // symbol following comment on the same line: keep on same line, separate with ' '
-                            replaceContent = ' ';
-                        }
-                        break;
-                    case Json.SyntaxKind.ColonToken:
-                        replaceContent = ' ';
-                        break;
-                    case Json.SyntaxKind.NullKeyword:
-                    case Json.SyntaxKind.TrueKeyword:
-                    case Json.SyntaxKind.FalseKeyword:
-                    case Json.SyntaxKind.NumericLiteral:
-                        if (secondToken === Json.SyntaxKind.NullKeyword || secondToken === Json.SyntaxKind.FalseKeyword || secondToken === Json.SyntaxKind.NumericLiteral) {
-                            replaceContent = ' ';
-                        }
-                        break;
-                }
-                if (lineBreak && (secondToken === Json.SyntaxKind.LineCommentTrivia || secondToken === Json.SyntaxKind.BlockCommentTrivia)) {
-                    replaceContent = newLineAndIndent();
-                }
-            }
-            var secondTokenStart = scanner.getTokenOffset() + rangeStart;
-            addEdit(replaceContent, firstTokenEnd, secondTokenStart);
-            firstToken = secondToken;
-        }
-        return editOperations;
-    }
-    exports.format = format;
-    function repeat(s, count) {
-        var result = '';
-        for (var i = 0; i < count; i++) {
-            result += s;
-        }
-        return result;
-    }
-    function computeIndentLevel(content, offset, options) {
-        var i = 0;
-        var nChars = 0;
-        var tabSize = options.tabSize || 4;
-        while (i < content.length) {
-            var ch = content.charAt(i);
-            if (ch === ' ') {
-                nChars++;
-            }
-            else if (ch === '\t') {
-                nChars += tabSize;
-            }
-            else {
-                break;
-            }
-            i++;
-        }
-        return Math.floor(nChars / tabSize);
-    }
-    function getEOL(options, text) {
-        for (var i = 0; i < text.length; i++) {
-            var ch = text.charAt(i);
-            if (ch === '\r') {
-                if (i + 1 < text.length && text.charAt(i + 1) === '\n') {
-                    return '\r\n';
-                }
-                return '\r';
-            }
-            else if (ch === '\n') {
-                return '\n';
-            }
-        }
-        return (options && options.eol) || '\n';
-    }
-    function isEOL(text, offset) {
-        return '\r\n'.indexOf(text.charAt(offset)) !== -1;
-    }
-});
-
-define(__m[45], __M([0,1,17,25]), function (require, exports, json_1, jsonFormatter_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    function removeProperty(text, path, formattingOptions) {
-        return setProperty(text, path, void 0, formattingOptions);
-    }
-    exports.removeProperty = removeProperty;
-    function setProperty(text, path, value, formattingOptions, getInsertionIndex) {
-        var errors = [];
-        var root = json_1.parseTree(text, errors);
-        var parent = void 0;
-        var lastSegment = void 0;
-        while (path.length > 0) {
-            lastSegment = path.pop();
-            parent = json_1.findNodeAtLocation(root, path);
-            if (parent === void 0 && value !== void 0) {
-                if (typeof lastSegment === 'string') {
-                    value = (_a = {}, _a[lastSegment] = value, _a);
-                }
-                else {
-                    value = [value];
-                }
-            }
-            else {
-                break;
-            }
-        }
-        if (!parent) {
-            // empty document
-            if (value === void 0) {
-                throw new Error('Can not delete in empty document');
-            }
-            return withFormatting(text, { offset: root ? root.offset : 0, length: root ? root.length : 0, content: JSON.stringify(value) }, formattingOptions);
-        }
-        else if (parent.type === 'object' && typeof lastSegment === 'string') {
-            var existing = json_1.findNodeAtLocation(parent, [lastSegment]);
-            if (existing !== void 0) {
-                if (value === void 0) {
-                    var propertyIndex = parent.children.indexOf(existing.parent);
-                    var removeBegin = void 0;
-                    var removeEnd = existing.parent.offset + existing.parent.length;
-                    if (propertyIndex > 0) {
-                        // remove the comma of the previous node
-                        var previous = parent.children[propertyIndex - 1];
-                        removeBegin = previous.offset + previous.length;
-                    }
-                    else {
-                        removeBegin = parent.offset + 1;
-                        if (parent.children.length > 1) {
-                            // remove the comma of the next node
-                            var next = parent.children[1];
-                            removeEnd = next.offset;
-                        }
-                    }
-                    return withFormatting(text, { offset: removeBegin, length: removeEnd - removeBegin, content: '' }, formattingOptions);
-                }
-                else {
-                    // set value of existing property
-                    return [{ offset: existing.offset, length: existing.length, content: JSON.stringify(value) }];
-                }
-            }
-            else {
-                if (value === void 0) {
-                    throw new Error("Property " + lastSegment + " does not exist.");
-                }
-                var newProperty = JSON.stringify(lastSegment) + ": " + JSON.stringify(value);
-                var index = getInsertionIndex ? getInsertionIndex(parent.children.map(function (p) { return p.children[0].value; })) : parent.children.length;
-                var edit = void 0;
-                if (index > 0) {
-                    var previous = parent.children[index - 1];
-                    edit = { offset: previous.offset + previous.length, length: 0, content: ',' + newProperty };
-                }
-                else if (parent.children.length === 0) {
-                    edit = { offset: parent.offset + 1, length: 0, content: newProperty };
-                }
-                else {
-                    edit = { offset: parent.offset + 1, length: 0, content: newProperty + ',' };
-                }
-                return withFormatting(text, edit, formattingOptions);
-            }
-        }
-        else if (parent.type === 'array' && typeof lastSegment === 'number') {
-            throw new Error('Array modification not supported yet');
-        }
-        else {
-            throw new Error("Can not add " + (typeof lastSegment !== 'number' ? 'index' : 'property') + " to parent of type " + parent.type);
-        }
-        var _a;
-    }
-    exports.setProperty = setProperty;
-    function withFormatting(text, edit, formattingOptions) {
-        // apply the edit
-        var newText = jsonFormatter_1.applyEdit(text, edit);
-        // format the new text
-        var begin = edit.offset;
-        var end = edit.offset + edit.content.length;
-        var edits = jsonFormatter_1.format(newText, { offset: begin, length: end - begin }, formattingOptions);
-        // apply the formatting edits and track the begin and end offsets of the changes
-        for (var i = edits.length - 1; i >= 0; i--) {
-            var edit_1 = edits[i];
-            newText = jsonFormatter_1.applyEdit(newText, edit_1);
-            begin = Math.min(begin, edit_1.offset);
-            end = Math.max(end, edit_1.offset + edit_1.length);
-            end += edit_1.content.length - edit_1.length;
-        }
-        // create a single edit with all changes
-        var editLength = text.length - (newText.length - end) - begin;
-        return [{ offset: begin, length: editLength, content: newText.substring(begin, end) }];
-    }
-});
-
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[46], __M([0,1,12,7,17,9,2,10]), function (require, exports, fs, path, json, objects, winjs_base_1, event_1) {
+define(__m[50/*vs/base/node/config*/], __M([1/*require*/,0/*exports*/,15/*fs*/,10/*path*/,9/*vs/base/common/objects*/,12/*vs/base/common/lifecycle*/,3/*vs/base/common/event*/,49/*vs/base/common/json*/]), function (require, exports, fs, path, objects, lifecycle_1, event_1, json) {
     'use strict';
-    var UserSettings = (function () {
-        function UserSettings(appSettingsPath, appKeybindingsPath) {
-            this.appSettingsPath = appSettingsPath;
-            this.appKeybindingsPath = appKeybindingsPath;
-            this._onChange = new event_1.Emitter();
-            this.registerWatchers();
+    /**
+     * A simple helper to watch a configured file for changes and process its contents as JSON object.
+     * Supports:
+     * - comments in JSON files and errors
+     * - symlinks for the config file itself
+     * - delayed processing of changes to accomodate for lots of changes
+     * - configurable defaults
+     */
+    var ConfigWatcher = (function () {
+        function ConfigWatcher(_path, options) {
+            if (options === void 0) { options = { changeBufferDelay: 0, defaultConfig: Object.create(null) }; }
+            this._path = _path;
+            this.options = options;
+            this.disposables = [];
+            this._onDidUpdateConfiguration = new event_1.Emitter();
+            this.disposables.push(this._onDidUpdateConfiguration);
+            this.registerWatcher();
+            this.initAsync();
         }
-        UserSettings.getValue = function (userDataPath, key, fallback) {
-            // TODO@joao cleanup!
-            var appSettingsPath = path.join(userDataPath, 'User', 'settings.json');
-            return new winjs_base_1.TPromise(function (c, e) {
-                fs.readFile(appSettingsPath, function (error /* ignore */, fileContents) {
-                    var root = Object.create(null);
-                    var content = fileContents ? fileContents.toString() : '{}';
-                    var contents = Object.create(null);
-                    try {
-                        contents = json.parse(content);
-                    }
-                    catch (error) {
-                    }
-                    for (var key_1 in contents) {
-                        UserSettings.setNode(root, key_1, contents[key_1]);
-                    }
-                    return c(UserSettings.doGetValue(root, key, fallback));
-                });
-            });
-        };
-        Object.defineProperty(UserSettings.prototype, "onChange", {
+        Object.defineProperty(ConfigWatcher.prototype, "path", {
             get: function () {
-                return this._onChange.event;
+                return this._path;
             },
             enumerable: true,
             configurable: true
         });
-        UserSettings.prototype.getValue = function (key, fallback) {
-            return UserSettings.doGetValue(this.globalSettings.settings, key, fallback);
-        };
-        UserSettings.doGetValue = function (globalSettings, key, fallback) {
-            if (!key) {
-                return fallback;
-            }
-            var value = globalSettings;
-            var parts = key.split('\.');
-            while (parts.length && value) {
-                var part = parts.shift();
-                value = value[part];
-            }
-            return typeof value !== 'undefined' ? value : fallback;
-        };
-        UserSettings.prototype.registerWatchers = function () {
+        Object.defineProperty(ConfigWatcher.prototype, "hasParseErrors", {
+            get: function () {
+                return this.parseErrors && this.parseErrors.length > 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ConfigWatcher.prototype, "onDidUpdateConfiguration", {
+            get: function () {
+                return this._onDidUpdateConfiguration.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ConfigWatcher.prototype.initAsync = function () {
             var _this = this;
-            this.watcher = fs.watch(path.dirname(this.appSettingsPath));
-            this.watcher.on('change', function (eventType, fileName) { return _this.onSettingsFileChange(eventType, fileName); });
+            this.loadAsync(function (config) {
+                if (!_this.loaded) {
+                    _this.updateCache(config); // prevent race condition if config was loaded sync already
+                }
+            });
         };
-        UserSettings.prototype.onSettingsFileChange = function (eventType, fileName) {
+        ConfigWatcher.prototype.updateCache = function (value) {
+            this.cache = value;
+            this.loaded = true;
+        };
+        ConfigWatcher.prototype.loadSync = function () {
+            try {
+                return this.parse(fs.readFileSync(this._path).toString());
+            }
+            catch (error) {
+                return this.options.defaultConfig;
+            }
+        };
+        ConfigWatcher.prototype.loadAsync = function (callback) {
             var _this = this;
-            // we can get multiple change events for one change, so we buffer through a timeout
+            fs.readFile(this._path, function (error, raw) {
+                if (error) {
+                    return callback(_this.options.defaultConfig);
+                }
+                return callback(_this.parse(raw.toString()));
+            });
+        };
+        ConfigWatcher.prototype.parse = function (raw) {
+            var res;
+            try {
+                this.parseErrors = [];
+                res = json.parse(raw, this.parseErrors);
+            }
+            catch (error) {
+            }
+            return res || this.options.defaultConfig;
+        };
+        ConfigWatcher.prototype.registerWatcher = function () {
+            var _this = this;
+            // Watch the parent of the path so that we detect ADD and DELETES
+            var parentFolder = path.dirname(this._path);
+            this.watch(parentFolder);
+            // Check if the path is a symlink and watch its target if so
+            fs.lstat(this._path, function (err, stat) {
+                if (err || stat.isDirectory()) {
+                    return; // path is not a valid file
+                }
+                // We found a symlink
+                if (stat.isSymbolicLink()) {
+                    fs.readlink(_this._path, function (err, realPath) {
+                        if (err) {
+                            return; // path is not a valid symlink
+                        }
+                        _this.watch(realPath);
+                    });
+                }
+            });
+        };
+        ConfigWatcher.prototype.watch = function (path) {
+            var _this = this;
+            if (this.disposed) {
+                return; // avoid watchers that will never get disposed by checking for being disposed
+            }
+            try {
+                var watcher_1 = fs.watch(path);
+                watcher_1.on('change', function () { return _this.onConfigFileChange(); });
+                this.disposables.push(lifecycle_1.toDisposable(function () {
+                    watcher_1.removeAllListeners();
+                    watcher_1.close();
+                }));
+            }
+            catch (error) {
+                fs.exists(path, function (exists) {
+                    if (exists) {
+                        console.warn("Failed to watch " + path + " for configuration changes (" + error.toString() + ")");
+                    }
+                });
+            }
+        };
+        ConfigWatcher.prototype.onConfigFileChange = function () {
+            var _this = this;
             if (this.timeoutHandle) {
                 global.clearTimeout(this.timeoutHandle);
                 this.timeoutHandle = null;
             }
-            this.timeoutHandle = global.setTimeout(function () {
-                // Reload
-                var didChange = _this.loadSync();
-                // Emit event
-                if (didChange) {
-                    _this._onChange.fire(_this.globalSettings);
+            // we can get multiple change events for one change, so we buffer through a timeout
+            this.timeoutHandle = global.setTimeout(function () { return _this.reload(); }, this.options.changeBufferDelay);
+        };
+        ConfigWatcher.prototype.reload = function (callback) {
+            var _this = this;
+            this.loadAsync(function (currentConfig) {
+                if (!objects.equals(currentConfig, _this.cache)) {
+                    _this.updateCache(currentConfig);
+                    _this._onDidUpdateConfiguration.fire({ config: _this.cache });
                 }
-            }, UserSettings.CHANGE_BUFFER_DELAY);
-        };
-        UserSettings.prototype.loadSync = function () {
-            var loadedSettings = this.doLoadSync();
-            if (!objects.equals(loadedSettings, this.globalSettings)) {
-                // Keep in class
-                this.globalSettings = loadedSettings;
-                return true; // changed value
-            }
-            return false; // no changed value
-        };
-        UserSettings.prototype.doLoadSync = function () {
-            var settings = this.doLoadSettingsSync();
-            return {
-                settings: settings.contents,
-                settingsParseErrors: settings.parseErrors,
-                keybindings: this.doLoadKeybindingsSync()
-            };
-        };
-        UserSettings.prototype.doLoadSettingsSync = function () {
-            var root = Object.create(null);
-            var content = '{}';
-            try {
-                content = fs.readFileSync(this.appSettingsPath).toString();
-            }
-            catch (error) {
-            }
-            var contents = Object.create(null);
-            try {
-                contents = json.parse(content);
-            }
-            catch (error) {
-                // parse problem
-                return {
-                    contents: Object.create(null),
-                    parseErrors: [this.appSettingsPath]
-                };
-            }
-            for (var key in contents) {
-                UserSettings.setNode(root, key, contents[key]);
-            }
-            return {
-                contents: root
-            };
-        };
-        UserSettings.setNode = function (root, key, value) {
-            var segments = key.split('.');
-            var last = segments.pop();
-            var curr = root;
-            segments.forEach(function (s) {
-                var obj = curr[s];
-                switch (typeof obj) {
-                    case 'undefined':
-                        obj = curr[s] = {};
-                        break;
-                    case 'object':
-                        break;
-                    default:
-                        console.log('Conflicting user settings: ' + key + ' at ' + s + ' with ' + JSON.stringify(obj));
+                if (callback) {
+                    return callback(currentConfig);
                 }
-                curr = obj;
             });
-            curr[last] = value;
         };
-        UserSettings.prototype.doLoadKeybindingsSync = function () {
-            try {
-                return json.parse(fs.readFileSync(this.appKeybindingsPath).toString());
-            }
-            catch (error) {
-            }
-            return [];
+        ConfigWatcher.prototype.getConfig = function () {
+            this.ensureLoaded();
+            return this.cache;
         };
-        UserSettings.prototype.dispose = function () {
-            if (this.watcher) {
-                this.watcher.close();
-                this.watcher = null;
+        ConfigWatcher.prototype.getValue = function (key, fallback) {
+            this.ensureLoaded();
+            if (!key) {
+                return fallback;
+            }
+            var value = this.cache ? this.cache[key] : void 0;
+            return typeof value !== 'undefined' ? value : fallback;
+        };
+        ConfigWatcher.prototype.ensureLoaded = function () {
+            if (!this.loaded) {
+                this.updateCache(this.loadSync());
             }
         };
-        UserSettings.CHANGE_BUFFER_DELAY = 300;
-        return UserSettings;
+        ConfigWatcher.prototype.dispose = function () {
+            this.disposed = true;
+            this.disposables = lifecycle_1.dispose(this.disposables);
+        };
+        return ConfigWatcher;
     }());
-    exports.UserSettings = UserSettings;
+    exports.ConfigWatcher = ConfigWatcher;
 });
 
-define(__m[73], __M([4,3]), function(nls, data) { return nls.create("vs/base/common/severity", data); });
-define(__m[48], __M([0,1,73,19]), function (require, exports, nls, strings) {
+define(__m[51/*vs/nls!vs/base/common/severity*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/base/common/severity", data); });
+define(__m[36/*vs/base/common/severity*/], __M([1/*require*/,0/*exports*/,51/*vs/nls!vs/base/common/severity*/,19/*vs/base/common/strings*/]), function (require, exports, nls, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9194,126 +9309,22 @@ define(__m[48], __M([0,1,73,19]), function (require, exports, nls, strings) {
     exports.default = Severity;
 });
 
-define(__m[49], __M([4,3]), function(nls, data) { return nls.create("vs/base/node/zip", data); });
-define(__m[50], __M([4,3]), function(nls, data) { return nls.create("vs/code/node/argv", data); });
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[51], __M([0,1,20,83,50]), function (require, exports, os, minimist, nls_1) {
-    "use strict";
-    var options = {
-        string: [
-            'locale',
-            'user-data-dir',
-            'extensionHomePath',
-            'extensionDevelopmentPath',
-            'extensionTestsPath',
-            'timestamp',
-            'install-extension',
-            'uninstall-extension'
-        ],
-        boolean: [
-            'help',
-            'version',
-            'wait',
-            'diff',
-            'goto',
-            'new-window',
-            'reuse-window',
-            'performance',
-            'verbose',
-            'logExtensionHostCommunication',
-            'disable-extensions',
-            'list-extensions'
-        ],
-        alias: {
-            help: 'h',
-            version: 'v',
-            wait: 'w',
-            diff: 'd',
-            goto: 'g',
-            'new-window': 'n',
-            'reuse-window': 'r',
-            performance: 'p',
-            'disable-extensions': 'disableExtensions'
-        }
-    };
-    function parseArgs(args) {
-        return minimist(args, options);
-    }
-    exports.parseArgs = parseArgs;
-    var executable = 'code' + (os.platform() === 'win32' ? '.exe' : '');
-    exports.optionsHelp = {
-        '-d, --diff': nls_1.localize(0, null),
-        '--disable-extensions': nls_1.localize(1, null),
-        '-g, --goto': nls_1.localize(2, null),
-        '--locale <locale>': nls_1.localize(3, null),
-        '-n, --new-window': nls_1.localize(4, null),
-        '-p, --performance': nls_1.localize(5, null),
-        '-r, --reuse-window': nls_1.localize(6, null),
-        '--user-data-dir <dir>': nls_1.localize(7, null),
-        '--verbose': nls_1.localize(8, null),
-        '-w, --wait': nls_1.localize(9, null),
-        '--extensionHomePath': nls_1.localize(10, null),
-        '--list-extensions': nls_1.localize(11, null),
-        '--install-extension <ext>': nls_1.localize(12, null),
-        '--uninstall-extension <ext>': nls_1.localize(13, null),
-        '-v, --version': nls_1.localize(14, null),
-        '-h, --help': nls_1.localize(15, null)
-    };
-    function formatOptions(options, columns) {
-        var keys = Object.keys(options);
-        var argLength = Math.max.apply(null, keys.map(function (k) { return k.length; })) + 2 /*left padding*/ + 1;
-        if (columns - argLength < 25) {
-            // Use a condensed version on narrow terminals
-            return keys.reduce(function (r, key) { return r.concat([("  " + key), ("      " + options[key])]); }, []).join('\n');
-        }
-        var descriptionColumns = columns - argLength - 1;
-        var result = '';
-        keys.forEach(function (k) {
-            var wrappedDescription = wrapText(options[k], descriptionColumns);
-            var keyPadding = ' '.repeat(argLength - k.length - 2 /*left padding*/);
-            if (result.length > 0) {
-                result += '\n';
-            }
-            result += '  ' + k + keyPadding + wrappedDescription[0];
-            for (var i = 1; i < wrappedDescription.length; i++) {
-                result += '\n' + ' '.repeat(argLength) + wrappedDescription[i];
-            }
-        });
-        return result;
-    }
-    exports.formatOptions = formatOptions;
-    function wrapText(text, columns) {
-        var lines = [];
-        while (text.length) {
-            var index = text.length < columns ? text.length : text.lastIndexOf(' ', columns);
-            var line = text.slice(0, index).trim();
-            text = text.slice(index);
-            lines.push(line);
-        }
-        return lines;
-    }
-    function buildHelpMessage(version) {
-        var columns = process.stdout.isTTY ? process.stdout.columns : 80;
-        return "Visual Studio Code v" + version + "\n\n\nUsage: " + executable + " [arguments] [paths...]\n\nOptions:\n" + formatOptions(exports.optionsHelp, columns);
-    }
-    exports.buildHelpMessage = buildHelpMessage;
-});
-
-define(__m[54], __M([4,3]), function(nls, data) { return nls.create("vs/platform/configuration/common/configurationRegistry", data); });
-define(__m[55], __M([4,3]), function(nls, data) { return nls.create("vs/platform/extensionManagement/common/extensionManagement", data); });
-define(__m[56], __M([4,3]), function(nls, data) { return nls.create("vs/platform/extensionManagement/node/extensionManagementService", data); });
-define(__m[57], __M([4,3]), function(nls, data) { return nls.create("vs/platform/extensions/common/extensionsRegistry", data); });
-define(__m[58], __M([4,3]), function(nls, data) { return nls.create("vs/platform/extensions/node/extensionValidator", data); });
-define(__m[59], __M([4,3]), function(nls, data) { return nls.create("vs/platform/telemetry/common/telemetryService", data); });
+define(__m[73/*vs/nls!vs/base/node/zip*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/base/node/zip", data); });
+define(__m[54/*vs/nls!vs/platform/configuration/common/configurationRegistry*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/platform/configuration/common/configurationRegistry", data); });
+define(__m[55/*vs/nls!vs/platform/extensionManagement/common/extensionManagement*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensionManagement/common/extensionManagement", data); });
+define(__m[56/*vs/nls!vs/platform/extensionManagement/node/extensionGalleryService*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensionManagement/node/extensionGalleryService", data); });
+define(__m[57/*vs/nls!vs/platform/extensionManagement/node/extensionManagementService*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensionManagement/node/extensionManagementService", data); });
+define(__m[58/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/extensionsRegistry", data); });
+define(__m[59/*vs/nls!vs/platform/extensions/node/extensionValidator*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensions/node/extensionValidator", data); });
+define(__m[60/*vs/nls!vs/platform/message/common/message*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/platform/message/common/message", data); });
+define(__m[61/*vs/nls!vs/platform/request/common/request*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/platform/request/common/request", data); });
+define(__m[62/*vs/nls!vs/platform/telemetry/common/telemetryService*/], __M([5/*vs/nls*/,4/*vs/nls!vs/code/node/sharedProcessMain*/]), function(nls, data) { return nls.create("vs/platform/telemetry/common/telemetryService", data); });
 
 
 
 
 
-define(__m[60], __M([0,1,26]), function (require, exports, eventEmitter_1) {
+define(__m[63/*vs/platform/event/common/eventService*/], __M([1/*require*/,0/*exports*/,26/*vs/base/common/eventEmitter*/]), function (require, exports, eventEmitter_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9334,19 +9345,24 @@ define(__m[60], __M([0,1,26]), function (require, exports, eventEmitter_1) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[61], __M([0,1,34]), function (require, exports, ipc_1) {
+define(__m[64/*vs/platform/extensionManagement/common/extensionManagementIpc*/], __M([1/*require*/,0/*exports*/,23/*vs/base/parts/ipc/common/ipc*/,3/*vs/base/common/event*/]), function (require, exports, ipc_1, event_1) {
     'use strict';
     var ExtensionManagementChannel = (function () {
         function ExtensionManagementChannel(service) {
             this.service = service;
+            this.onInstallExtension = event_1.buffer(service.onInstallExtension, true);
+            this.onDidInstallExtension = event_1.buffer(service.onDidInstallExtension, true);
+            this.onUninstallExtension = event_1.buffer(service.onUninstallExtension, true);
+            this.onDidUninstallExtension = event_1.buffer(service.onDidUninstallExtension, true);
         }
         ExtensionManagementChannel.prototype.call = function (command, arg) {
             switch (command) {
-                case 'event:onInstallExtension': return ipc_1.eventToCall(this.service.onInstallExtension);
-                case 'event:onDidInstallExtension': return ipc_1.eventToCall(this.service.onDidInstallExtension);
-                case 'event:onUninstallExtension': return ipc_1.eventToCall(this.service.onUninstallExtension);
-                case 'event:onDidUninstallExtension': return ipc_1.eventToCall(this.service.onDidUninstallExtension);
+                case 'event:onInstallExtension': return ipc_1.eventToCall(this.onInstallExtension);
+                case 'event:onDidInstallExtension': return ipc_1.eventToCall(this.onDidInstallExtension);
+                case 'event:onUninstallExtension': return ipc_1.eventToCall(this.onUninstallExtension);
+                case 'event:onDidUninstallExtension': return ipc_1.eventToCall(this.onDidUninstallExtension);
                 case 'install': return this.service.install(arg);
+                case 'installFromGallery': return this.service.installFromGallery(arg[0], arg[1]);
                 case 'uninstall': return this.service.uninstall(arg);
                 case 'getInstalled': return this.service.getInstalled(arg);
             }
@@ -9382,18 +9398,332 @@ define(__m[61], __M([0,1,34]), function (require, exports, ipc_1) {
             enumerable: true,
             configurable: true
         });
-        ExtensionManagementChannelClient.prototype.install = function (arg) {
-            return this.channel.call('install', arg);
+        ExtensionManagementChannelClient.prototype.install = function (zipPath) {
+            return this.channel.call('install', zipPath);
+        };
+        ExtensionManagementChannelClient.prototype.installFromGallery = function (extension, promptToInstallDependencies) {
+            if (promptToInstallDependencies === void 0) { promptToInstallDependencies = true; }
+            return this.channel.call('installFromGallery', [extension, promptToInstallDependencies]);
         };
         ExtensionManagementChannelClient.prototype.uninstall = function (extension) {
             return this.channel.call('uninstall', extension);
         };
-        ExtensionManagementChannelClient.prototype.getInstalled = function (includeDuplicateVersions) {
-            return this.channel.call('getInstalled', includeDuplicateVersions);
+        ExtensionManagementChannelClient.prototype.getInstalled = function (type) {
+            if (type === void 0) { type = null; }
+            return this.channel.call('getInstalled', type);
         };
         return ExtensionManagementChannelClient;
     }());
     exports.ExtensionManagementChannelClient = ExtensionManagementChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[65/*vs/platform/extensionManagement/common/extensionNls*/], __M([1/*require*/,0/*exports*/,9/*vs/base/common/objects*/]), function (require, exports, objects_1) {
+    'use strict';
+    var nlsRegex = /^%([\w\d.]+)%$/i;
+    function localizeManifest(manifest, translations) {
+        var patcher = function (value) {
+            if (typeof value !== 'string') {
+                return;
+            }
+            var match = nlsRegex.exec(value);
+            if (!match) {
+                return;
+            }
+            return translations[match[1]] || value;
+        };
+        return objects_1.cloneAndChange(manifest, patcher);
+    }
+    exports.localizeManifest = localizeManifest;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[66/*vs/platform/extensionManagement/common/extensionTelemetry*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    'use strict';
+    function getLocalExtensionTelemetryData(extension) {
+        return {
+            id: extension.manifest.publisher + "." + extension.manifest.name,
+            name: extension.manifest.name,
+            galleryId: extension.metadata ? extension.metadata.id : null,
+            publisherId: extension.metadata ? extension.metadata.publisherId : null,
+            publisherName: extension.manifest.publisher,
+            publisherDisplayName: extension.metadata ? extension.metadata.publisherDisplayName : null,
+            dependencies: extension.manifest.extensionDependencies && extension.manifest.extensionDependencies.length > 0
+        };
+    }
+    exports.getLocalExtensionTelemetryData = getLocalExtensionTelemetryData;
+    function getGalleryExtensionTelemetryData(extension) {
+        return {
+            id: extension.publisher + "." + extension.name,
+            name: extension.name,
+            galleryId: extension.id,
+            publisherId: extension.publisherId,
+            publisherName: extension.publisher,
+            publisherDisplayName: extension.publisherDisplayName,
+            dependencies: extension.properties.dependencies.length > 0
+        };
+    }
+    exports.getGalleryExtensionTelemetryData = getGalleryExtensionTelemetryData;
+});
+
+define(__m[67/*vs/platform/extensions/node/extensionValidator*/], __M([1/*require*/,0/*exports*/,59/*vs/nls!vs/platform/extensions/node/extensionValidator*/,68/*semver*/,35/*vs/base/common/paths*/]), function (require, exports, nls, semver_1, paths) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var VERSION_REGEXP = /^(\^)?((\d+)|x)\.((\d+)|x)\.((\d+)|x)(\-.*)?$/;
+    function isValidVersionStr(version) {
+        version = version.trim();
+        return (version === '*' || VERSION_REGEXP.test(version));
+    }
+    exports.isValidVersionStr = isValidVersionStr;
+    function parseVersion(version) {
+        if (!isValidVersionStr(version)) {
+            return null;
+        }
+        version = version.trim();
+        if (version === '*') {
+            return {
+                hasCaret: false,
+                majorBase: 0,
+                majorMustEqual: false,
+                minorBase: 0,
+                minorMustEqual: false,
+                patchBase: 0,
+                patchMustEqual: false,
+                preRelease: null
+            };
+        }
+        var m = version.match(VERSION_REGEXP);
+        return {
+            hasCaret: !!m[1],
+            majorBase: m[2] === 'x' ? 0 : parseInt(m[2], 10),
+            majorMustEqual: (m[2] === 'x' ? false : true),
+            minorBase: m[4] === 'x' ? 0 : parseInt(m[4], 10),
+            minorMustEqual: (m[4] === 'x' ? false : true),
+            patchBase: m[6] === 'x' ? 0 : parseInt(m[6], 10),
+            patchMustEqual: (m[6] === 'x' ? false : true),
+            preRelease: m[8] || null
+        };
+    }
+    exports.parseVersion = parseVersion;
+    function normalizeVersion(version) {
+        if (!version) {
+            return null;
+        }
+        var majorBase = version.majorBase, majorMustEqual = version.majorMustEqual, minorBase = version.minorBase, minorMustEqual = version.minorMustEqual, patchBase = version.patchBase, patchMustEqual = version.patchMustEqual;
+        if (version.hasCaret) {
+            if (majorBase === 0) {
+                patchMustEqual = false;
+            }
+            else {
+                minorMustEqual = false;
+                patchMustEqual = false;
+            }
+        }
+        return {
+            majorBase: majorBase,
+            majorMustEqual: majorMustEqual,
+            minorBase: minorBase,
+            minorMustEqual: minorMustEqual,
+            patchBase: patchBase,
+            patchMustEqual: patchMustEqual
+        };
+    }
+    exports.normalizeVersion = normalizeVersion;
+    function isValidVersion(_version, _desiredVersion) {
+        var version;
+        if (typeof _version === 'string') {
+            version = normalizeVersion(parseVersion(_version));
+        }
+        else {
+            version = _version;
+        }
+        var desiredVersion;
+        if (typeof _desiredVersion === 'string') {
+            desiredVersion = normalizeVersion(parseVersion(_desiredVersion));
+        }
+        else {
+            desiredVersion = _desiredVersion;
+        }
+        if (!version || !desiredVersion) {
+            return false;
+        }
+        var majorBase = version.majorBase;
+        var minorBase = version.minorBase;
+        var patchBase = version.patchBase;
+        var desiredMajorBase = desiredVersion.majorBase;
+        var desiredMinorBase = desiredVersion.minorBase;
+        var desiredPatchBase = desiredVersion.patchBase;
+        var majorMustEqual = desiredVersion.majorMustEqual;
+        var minorMustEqual = desiredVersion.minorMustEqual;
+        var patchMustEqual = desiredVersion.patchMustEqual;
+        // Anything < 1.0.0 is compatible with >= 1.0.0, except exact matches
+        if (majorBase === 1 && desiredMajorBase === 0 && (!majorMustEqual || !minorMustEqual || !patchMustEqual)) {
+            desiredMajorBase = 1;
+            desiredMinorBase = 0;
+            desiredPatchBase = 0;
+            majorMustEqual = true;
+            minorMustEqual = false;
+            patchMustEqual = false;
+        }
+        if (majorBase < desiredMajorBase) {
+            // smaller major version
+            return false;
+        }
+        if (majorBase > desiredMajorBase) {
+            // higher major version
+            return (!majorMustEqual);
+        }
+        // at this point, majorBase are equal
+        if (minorBase < desiredMinorBase) {
+            // smaller minor version
+            return false;
+        }
+        if (minorBase > desiredMinorBase) {
+            // higher minor version
+            return (!minorMustEqual);
+        }
+        // at this point, minorBase are equal
+        if (patchBase < desiredPatchBase) {
+            // smaller patch version
+            return false;
+        }
+        if (patchBase > desiredPatchBase) {
+            // higher patch version
+            return (!patchMustEqual);
+        }
+        // at this point, patchBase are equal
+        return true;
+    }
+    exports.isValidVersion = isValidVersion;
+    function isValidExtensionVersion(version, extensionDesc, notices) {
+        if (extensionDesc.isBuiltin || typeof extensionDesc.main === 'undefined') {
+            // No version check for builtin or declarative extensions
+            return true;
+        }
+        return isVersionValid(version, extensionDesc.engines.vscode, notices);
+    }
+    exports.isValidExtensionVersion = isValidExtensionVersion;
+    function isVersionValid(currentVersion, requestedVersion, notices) {
+        if (notices === void 0) { notices = []; }
+        var desiredVersion = normalizeVersion(parseVersion(requestedVersion));
+        if (!desiredVersion) {
+            notices.push(nls.localize(0, null, requestedVersion));
+            return false;
+        }
+        // enforce that a breaking API version is specified.
+        // for 0.X.Y, that means up to 0.X must be specified
+        // otherwise for Z.X.Y, that means Z must be specified
+        if (desiredVersion.majorBase === 0) {
+            // force that major and minor must be specific
+            if (!desiredVersion.majorMustEqual || !desiredVersion.minorMustEqual) {
+                notices.push(nls.localize(1, null, requestedVersion));
+                return false;
+            }
+        }
+        else {
+            // force that major must be specific
+            if (!desiredVersion.majorMustEqual) {
+                notices.push(nls.localize(2, null, requestedVersion));
+                return false;
+            }
+        }
+        if (!isValidVersion(currentVersion, desiredVersion)) {
+            notices.push(nls.localize(3, null, currentVersion, requestedVersion));
+            return false;
+        }
+        return true;
+    }
+    exports.isVersionValid = isVersionValid;
+    function _isStringArray(arr) {
+        if (!Array.isArray(arr)) {
+            return false;
+        }
+        for (var i = 0, len = arr.length; i < len; i++) {
+            if (typeof arr[i] !== 'string') {
+                return false;
+            }
+        }
+        return true;
+    }
+    function baseIsValidExtensionDescription(extensionFolderPath, extensionDescription, notices) {
+        if (!extensionDescription) {
+            notices.push(nls.localize(4, null));
+            return false;
+        }
+        if (typeof extensionDescription.publisher !== 'string') {
+            notices.push(nls.localize(5, null, 'publisher'));
+            return false;
+        }
+        if (typeof extensionDescription.name !== 'string') {
+            notices.push(nls.localize(6, null, 'name'));
+            return false;
+        }
+        if (typeof extensionDescription.version !== 'string') {
+            notices.push(nls.localize(7, null, 'version'));
+            return false;
+        }
+        if (!extensionDescription.engines) {
+            notices.push(nls.localize(8, null, 'engines'));
+            return false;
+        }
+        if (typeof extensionDescription.engines.vscode !== 'string') {
+            notices.push(nls.localize(9, null, 'engines.vscode'));
+            return false;
+        }
+        if (typeof extensionDescription.extensionDependencies !== 'undefined') {
+            if (!_isStringArray(extensionDescription.extensionDependencies)) {
+                notices.push(nls.localize(10, null, 'extensionDependencies'));
+                return false;
+            }
+        }
+        if (typeof extensionDescription.activationEvents !== 'undefined') {
+            if (!_isStringArray(extensionDescription.activationEvents)) {
+                notices.push(nls.localize(11, null, 'activationEvents'));
+                return false;
+            }
+            if (typeof extensionDescription.main === 'undefined') {
+                notices.push(nls.localize(12, null, 'activationEvents', 'main'));
+                return false;
+            }
+        }
+        if (typeof extensionDescription.main !== 'undefined') {
+            if (typeof extensionDescription.main !== 'string') {
+                notices.push(nls.localize(13, null, 'main'));
+                return false;
+            }
+            else {
+                var normalizedAbsolutePath = paths.normalize(paths.join(extensionFolderPath, extensionDescription.main));
+                if (normalizedAbsolutePath.indexOf(extensionFolderPath)) {
+                    notices.push(nls.localize(14, null, normalizedAbsolutePath, extensionFolderPath));
+                }
+            }
+            if (typeof extensionDescription.activationEvents === 'undefined') {
+                notices.push(nls.localize(15, null, 'activationEvents', 'main'));
+                return false;
+            }
+        }
+        return true;
+    }
+    function isValidExtensionDescription(version, extensionFolderPath, extensionDescription, notices) {
+        if (!baseIsValidExtensionDescription(extensionFolderPath, extensionDescription, notices)) {
+            return false;
+        }
+        if (!semver_1.valid(extensionDescription.version)) {
+            notices.push(nls.localize(16, null));
+            return false;
+        }
+        return isValidExtensionVersion(version, extensionDescription, notices);
+    }
+    exports.isValidExtensionDescription = isValidExtensionDescription;
 });
 
 
@@ -9401,7 +9731,7 @@ define(__m[61], __M([0,1,34]), function (require, exports, ipc_1) {
 
 
 
-define(__m[28], __M([0,1,8]), function (require, exports, errors_1) {
+define(__m[30/*vs/platform/instantiation/common/descriptors*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/errors*/]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9512,24 +9842,9 @@ define(__m[28], __M([0,1,8]), function (require, exports, errors_1) {
         return AsyncDescriptor;
     }(AbstractDescriptor));
     exports.AsyncDescriptor = AsyncDescriptor;
-    var _createAsyncDescriptor = function (moduleName, ctorName) {
-        var staticArguments = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            staticArguments[_i - 2] = arguments[_i];
-        }
-        return new (AsyncDescriptor.bind.apply(AsyncDescriptor, [void 0].concat([moduleName, ctorName], staticArguments)))();
-    };
-    exports.createAsyncDescriptor0 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor1 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor2 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor3 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor4 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor5 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor6 = _createAsyncDescriptor;
-    exports.createAsyncDescriptor7 = _createAsyncDescriptor;
 });
 
-define(__m[11], __M([0,1]), function (require, exports) {
+define(__m[8/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9587,9 +9902,60 @@ define(__m[11], __M([0,1]), function (require, exports) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[30], __M([0,1,11]), function (require, exports, instantiation_1) {
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+define(__m[71/*vs/code/common/windows*/], __M([1/*require*/,0/*exports*/,8/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    "use strict";
+    exports.IWindowEventService = instantiation_1.createDecorator('windowEventService');
+    var ActiveWindowManager = (function () {
+        function ActiveWindowManager(windowService) {
+            var _this = this;
+            this.windowService = windowService;
+            this.disposables = [];
+            this.disposables.push(this.windowService.onNewWindowOpen(function (windowId) { return _this.setActiveWindow(windowId); }));
+            this.disposables.push(this.windowService.onWindowFocus(function (windowId) { return _this.setActiveWindow(windowId); }));
+        }
+        ActiveWindowManager.prototype.setActiveWindow = function (windowId) {
+            this._activeWindowId = windowId;
+        };
+        Object.defineProperty(ActiveWindowManager.prototype, "activeClientId", {
+            get: function () {
+                return "window:" + this._activeWindowId;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ActiveWindowManager.prototype.dispose = function () {
+            for (var _i = 0, _a = this.disposables; _i < _a.length; _i++) {
+                var disposable = _a[_i];
+                disposable.dispose();
+            }
+        };
+        ActiveWindowManager = __decorate([
+            __param(0, exports.IWindowEventService)
+        ], ActiveWindowManager);
+        return ActiveWindowManager;
+    }());
+    exports.ActiveWindowManager = ActiveWindowManager;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[16/*vs/platform/configuration/common/configuration*/], __M([1/*require*/,0/*exports*/,8/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     "use strict";
     exports.IConfigurationService = instantiation_1.createDecorator('configurationService');
+    /**
+     * A helper function to get the configuration value with a specific settings path (e.g. config.some.setting)
+     */
     function getConfigurationValue(config, settingPath, defaultValue) {
         function accessSetting(config, path) {
             var current = config;
@@ -9603,9 +9969,7 @@ define(__m[30], __M([0,1,11]), function (require, exports, instantiation_1) {
         }
         var path = settingPath.split('.');
         var result = accessSetting(config, path);
-        return typeof result === 'undefined'
-            ? defaultValue
-            : result;
+        return typeof result === 'undefined' ? defaultValue : result;
     }
     exports.getConfigurationValue = getConfigurationValue;
 });
@@ -9614,119 +9978,12 @@ define(__m[30], __M([0,1,11]), function (require, exports, instantiation_1) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[21], __M([0,1,11]), function (require, exports, instantiation_1) {
+define(__m[22/*vs/platform/environment/common/environment*/], __M([1/*require*/,0/*exports*/,8/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     "use strict";
     exports.IEnvironmentService = instantiation_1.createDecorator('environmentService');
 });
 
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-define(__m[66], __M([0,1,16,12,7,2,15,17,25,45,13,10,21]), function (require, exports, pfs_1, fs_1, path, winjs_base_1, async_1, json_1, jsonFormatter_1, jsonEdit_1, lifecycle_1, event_1, environment_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    /**
-     * Configuration service to be used in the node side.
-     * TODO@Joao:
-     * 	- defaults handling
-     *  - async reading
-     *
-     * At some point, an async get() on the configuration service would be
-     * much easier to implement and reason about. IConfigurationService2?
-     */
-    var NodeConfigurationService = (function () {
-        function NodeConfigurationService(environmentService) {
-            var _this = this;
-            this._onDidUpdateConfiguration = new event_1.Emitter();
-            this.cache = {};
-            this.disposables = [];
-            this.delayer = new async_1.Delayer(300);
-            // TODO@joao cleanup!
-            this.configurationPath = path.join(environmentService.userDataPath, 'User', 'settings.json');
-            // TODO@joao sync?
-            this.load();
-            this.watcher = fs_1.watch(path.dirname(this.configurationPath));
-            this.disposables.push(lifecycle_1.toDisposable(function () {
-                _this.watcher.removeAllListeners();
-                _this.watcher.close();
-            }));
-            this.watcher.on('change', function () { return _this.delayer.trigger(function () { return _this.load(); }); });
-        }
-        Object.defineProperty(NodeConfigurationService.prototype, "onDidUpdateConfiguration", {
-            get: function () { return this._onDidUpdateConfiguration.event; },
-            enumerable: true,
-            configurable: true
-        });
-        NodeConfigurationService.prototype.getConfiguration = function (section) {
-            return this._getConfiguration(section);
-        };
-        NodeConfigurationService.prototype.setUserConfiguration = function (key, value) {
-            var _this = this;
-            return pfs_1.readFile(this.configurationPath, 'utf8').then(function (content) {
-                // todo: revisit when defaults are read as well
-                var config = _this.getConfiguration('editor');
-                var tabSize = typeof config.tabSize === 'number' ? config.tabSize : 4;
-                var insertSpaces = typeof config.insertSpaces === 'boolean' ? config.insertSpaces : false;
-                var path = typeof key === 'string' ? key.split('.') : key;
-                var edits = jsonEdit_1.setProperty(content, path, value, { insertSpaces: insertSpaces, tabSize: tabSize, eol: '\n' });
-                content = jsonFormatter_1.applyEdits(content, edits);
-                return pfs_1.writeFile(_this.configurationPath, content, 'utf8');
-            });
-        };
-        NodeConfigurationService.prototype.loadConfiguration = function (section) {
-            return winjs_base_1.TPromise.wrapError(new Error('not implemented'));
-        };
-        NodeConfigurationService.prototype._getConfiguration = function (section) {
-            if (section === void 0) { section = ''; }
-            var value = this.cache;
-            var parts = section
-                .split('.')
-                .filter(function (p) { return !!p; });
-            while (parts.length && value) {
-                var part = parts.shift();
-                value = value[part];
-            }
-            return value;
-        };
-        NodeConfigurationService.prototype.load = function () {
-            var content = '{}';
-            try {
-                // TODO@Joao: is sync really the way to go?
-                content = fs_1.readFileSync(this.configurationPath, 'utf8');
-            }
-            catch (error) {
-                content = '{}';
-            }
-            try {
-                this.cache = json_1.parse(content) || {};
-            }
-            catch (error) {
-            }
-        };
-        NodeConfigurationService.prototype.hasWorkspaceConfiguration = function () {
-            return false;
-        };
-        NodeConfigurationService.prototype.dispose = function () {
-            this.disposables = lifecycle_1.dispose(this.disposables);
-        };
-        NodeConfigurationService = __decorate([
-            __param(0, environment_1.IEnvironmentService)
-        ], NodeConfigurationService);
-        return NodeConfigurationService;
-    }());
-    exports.NodeConfigurationService = NodeConfigurationService;
-});
-
-define(__m[67], __M([0,1,11]), function (require, exports, instantiation_1) {
+define(__m[74/*vs/platform/event/common/event*/], __M([1/*require*/,0/*exports*/,8/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9739,8 +9996,15 @@ define(__m[67], __M([0,1,11]), function (require, exports, instantiation_1) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[68], __M([0,1,55,11]), function (require, exports, nls, instantiation_1) {
+define(__m[20/*vs/platform/extensionManagement/common/extensionManagement*/], __M([1/*require*/,0/*exports*/,55/*vs/nls!vs/platform/extensionManagement/common/extensionManagement*/,8/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, nls, instantiation_1) {
     'use strict';
+    exports.EXTENSION_IDENTIFIER_PATTERN = '^[a-z0-9A-Z][a-z0-9\-A-Z]*\\.[a-z0-9A-Z][a-z0-9\-A-Z]*$';
+    exports.EXTENSION_IDENTIFIER_REGEX = new RegExp(exports.EXTENSION_IDENTIFIER_PATTERN);
+    (function (LocalExtensionType) {
+        LocalExtensionType[LocalExtensionType["System"] = 0] = "System";
+        LocalExtensionType[LocalExtensionType["User"] = 1] = "User";
+    })(exports.LocalExtensionType || (exports.LocalExtensionType = {}));
+    var LocalExtensionType = exports.LocalExtensionType;
     exports.IExtensionManagementService = instantiation_1.createDecorator('extensionManagementService');
     exports.IExtensionGalleryService = instantiation_1.createDecorator('extensionGalleryService');
     (function (SortBy) {
@@ -9764,7 +10028,7 @@ define(__m[68], __M([0,1,55,11]), function (require, exports, nls, instantiation
     exports.ExtensionsChannelId = 'extensions';
 });
 
-define(__m[32], __M([0,1,23]), function (require, exports, arrays_1) {
+define(__m[33/*vs/platform/instantiation/common/serviceCollection*/], __M([1/*require*/,0/*exports*/,18/*vs/base/common/arrays*/]), function (require, exports, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9834,7 +10098,7 @@ define(__m[32], __M([0,1,23]), function (require, exports, arrays_1) {
     exports.ServiceCollection = ServiceCollection;
 });
 
-define(__m[70], __M([0,1,2,8,5,31,62,28,11,32]), function (require, exports, winjs_base_1, errors_1, types_1, assert, graph_1, descriptors_1, instantiation_1, serviceCollection_1) {
+define(__m[77/*vs/platform/instantiation/common/instantiationService*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,7/*vs/base/common/errors*/,6/*vs/base/common/types*/,39/*vs/base/common/assert*/,91/*vs/base/common/graph*/,30/*vs/platform/instantiation/common/descriptors*/,8/*vs/platform/instantiation/common/instantiation*/,33/*vs/platform/instantiation/common/serviceCollection*/]), function (require, exports, winjs_base_1, errors_1, types_1, assert, graph_1, descriptors_1, instantiation_1, serviceCollection_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10045,11 +10309,56 @@ define(__m[70], __M([0,1,2,8,5,31,62,28,11,32]), function (require, exports, win
     exports.InstantiationService = InstantiationService;
 });
 
+define(__m[34/*vs/platform/message/common/message*/], __M([1/*require*/,0/*exports*/,60/*vs/nls!vs/platform/message/common/message*/,2/*vs/base/common/winjs.base*/,36/*vs/base/common/severity*/,8/*vs/platform/instantiation/common/instantiation*/,48/*vs/base/common/actions*/]), function (require, exports, nls, winjs_base_1, severity_1, instantiation_1, actions_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.CloseAction = new actions_1.Action('close.message', nls.localize(0, null), null, true, function () { return winjs_base_1.TPromise.as(true); });
+    exports.LaterAction = new actions_1.Action('later.message', nls.localize(1, null), null, true, function () { return winjs_base_1.TPromise.as(true); });
+    exports.CancelAction = new actions_1.Action('cancel.message', nls.localize(2, null), null, true, function () { return winjs_base_1.TPromise.as(true); });
+    exports.IMessageService = instantiation_1.createDecorator('messageService');
+    exports.IChoiceService = instantiation_1.createDecorator('choiceService');
+    exports.Severity = severity_1.default;
+});
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[22], __M([0,1,7,18]), function (require, exports, path, uri_1) {
+define(__m[79/*vs/platform/message/common/messageIpc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/]), function (require, exports, winjs_base_1) {
+    'use strict';
+    var ChoiceChannel = (function () {
+        function ChoiceChannel(service) {
+            this.service = service;
+        }
+        ChoiceChannel.prototype.call = function (command, args) {
+            switch (command) {
+                case 'choose': return this.service.choose(args[0], args[1], args[2]);
+            }
+            return winjs_base_1.TPromise.wrapError('invalid command');
+        };
+        return ChoiceChannel;
+    }());
+    exports.ChoiceChannel = ChoiceChannel;
+    var ChoiceChannelClient = (function () {
+        function ChoiceChannelClient(channel) {
+            this.channel = channel;
+        }
+        ChoiceChannelClient.prototype.choose = function (severity, message, options) {
+            return this.channel.call('choose', [severity, message, options]);
+        };
+        return ChoiceChannelClient;
+    }());
+    exports.ChoiceChannelClient = ChoiceChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[28/*vs/platform/package*/], __M([1/*require*/,0/*exports*/,10/*path*/,14/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
     "use strict";
     var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
     var packageJsonPath = path.join(rootPath, 'package.json');
@@ -10057,7 +10366,7 @@ define(__m[22], __M([0,1,7,18]), function (require, exports, path, uri_1) {
     exports.default = require.__$__nodeRequire(packageJsonPath);
 });
 
-define(__m[14], __M([0,1,5,31]), function (require, exports, Types, Assert) {
+define(__m[11/*vs/platform/platform*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/types*/,39/*vs/base/common/assert*/]), function (require, exports, Types, Assert) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10120,7 +10429,7 @@ define(__m[14], __M([0,1,5,31]), function (require, exports, Types, Assert) {
     exports.BaseRegistry = BaseRegistry;
 });
 
-define(__m[35], __M([0,1,14,26]), function (require, exports, platform, eventEmitter_1) {
+define(__m[37/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([1/*require*/,0/*exports*/,11/*vs/platform/platform*/,26/*vs/base/common/eventEmitter*/]), function (require, exports, platform, eventEmitter_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10158,12 +10467,15 @@ define(__m[35], __M([0,1,14,26]), function (require, exports, platform, eventEmi
     platform.Registry.add(exports.Extensions.JSONContribution, jsonContributionRegistry);
 });
 
-define(__m[36], __M([0,1,57,8,29,48,35,14]), function (require, exports, nls, errors_1, paths, severity_1, jsonContributionRegistry_1, platform_1) {
+define(__m[83/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*require*/,0/*exports*/,58/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/,7/*vs/base/common/errors*/,36/*vs/base/common/severity*/,37/*vs/platform/jsonschemas/common/jsonContributionRegistry*/,11/*vs/platform/platform*/,3/*vs/base/common/event*/]), function (require, exports, nls, errors_1, severity_1, jsonContributionRegistry_1, platform_1, event_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    var hasOwnProperty = Object.hasOwnProperty;
+    var schemaRegistry = platform_1.Registry.as(jsonContributionRegistry_1.Extensions.JSONContribution);
+    exports.onWillActivate = new event_1.Emitter();
     var ExtensionMessageCollector = (function () {
         function ExtensionMessageCollector(messageHandler, source) {
             this._messageHandler = messageHandler;
@@ -10187,104 +10499,47 @@ define(__m[36], __M([0,1,57,8,29,48,35,14]), function (require, exports, nls, er
         };
         return ExtensionMessageCollector;
     }());
-    function isValidExtensionDescription(extensionFolderPath, extensionDescription, notices) {
-        if (!extensionDescription) {
-            notices.push(nls.localize(0, null));
-            return false;
-        }
-        if (typeof extensionDescription.publisher !== 'string') {
-            notices.push(nls.localize(1, null, 'publisher'));
-            return false;
-        }
-        if (typeof extensionDescription.name !== 'string') {
-            notices.push(nls.localize(2, null, 'name'));
-            return false;
-        }
-        if (typeof extensionDescription.version !== 'string') {
-            notices.push(nls.localize(3, null, 'version'));
-            return false;
-        }
-        if (!extensionDescription.engines) {
-            notices.push(nls.localize(4, null, 'engines'));
-            return false;
-        }
-        if (typeof extensionDescription.engines.vscode !== 'string') {
-            notices.push(nls.localize(5, null, 'engines.vscode'));
-            return false;
-        }
-        if (typeof extensionDescription.extensionDependencies !== 'undefined') {
-            if (!_isStringArray(extensionDescription.extensionDependencies)) {
-                notices.push(nls.localize(6, null, 'extensionDependencies'));
-                return false;
-            }
-        }
-        if (typeof extensionDescription.activationEvents !== 'undefined') {
-            if (!_isStringArray(extensionDescription.activationEvents)) {
-                notices.push(nls.localize(7, null, 'activationEvents'));
-                return false;
-            }
-            if (typeof extensionDescription.main === 'undefined') {
-                notices.push(nls.localize(8, null, 'activationEvents', 'main'));
-                return false;
-            }
-        }
-        if (typeof extensionDescription.main !== 'undefined') {
-            if (typeof extensionDescription.main !== 'string') {
-                notices.push(nls.localize(9, null, 'main'));
-                return false;
-            }
-            else {
-                var normalizedAbsolutePath = paths.normalize(paths.join(extensionFolderPath, extensionDescription.main));
-                if (normalizedAbsolutePath.indexOf(extensionFolderPath)) {
-                    notices.push(nls.localize(10, null, normalizedAbsolutePath, extensionFolderPath));
-                }
-            }
-            if (typeof extensionDescription.activationEvents === 'undefined') {
-                notices.push(nls.localize(11, null, 'activationEvents', 'main'));
-                return false;
-            }
-        }
-        return true;
-    }
-    exports.isValidExtensionDescription = isValidExtensionDescription;
-    var hasOwnProperty = Object.hasOwnProperty;
-    var schemaRegistry = platform_1.Registry.as(jsonContributionRegistry_1.Extensions.JSONContribution);
+    exports.ExtensionMessageCollector = ExtensionMessageCollector;
     var ExtensionPoint = (function () {
-        function ExtensionPoint(name, registry) {
+        function ExtensionPoint(name) {
             this.name = name;
-            this._registry = registry;
             this._handler = null;
-            this._messageHandler = null;
+            this._users = null;
+            this._done = false;
         }
         ExtensionPoint.prototype.setHandler = function (handler) {
-            if (this._handler) {
+            if (this._handler !== null || this._done) {
                 throw new Error('Handler already set!');
             }
             this._handler = handler;
             this._handle();
         };
-        ExtensionPoint.prototype.handle = function (messageHandler) {
-            this._messageHandler = messageHandler;
+        ExtensionPoint.prototype.acceptUsers = function (users) {
+            if (this._users !== null || this._done) {
+                throw new Error('Users already set!');
+            }
+            this._users = users;
             this._handle();
         };
         ExtensionPoint.prototype._handle = function () {
-            var _this = this;
-            if (!this._handler || !this._messageHandler) {
+            if (this._handler === null || this._users === null) {
                 return;
             }
-            this._registry.registerPointListener(this.name, function (descriptions) {
-                var users = descriptions.map(function (desc) {
-                    return {
-                        description: desc,
-                        value: desc.contributes[_this.name],
-                        collector: new ExtensionMessageCollector(_this._messageHandler, desc.extensionFolderPath)
-                    };
-                });
-                _this._handler(users);
-            });
+            this._done = true;
+            var handler = this._handler;
+            this._handler = null;
+            var users = this._users;
+            this._users = null;
+            try {
+                handler(users);
+            }
+            catch (err) {
+                errors_1.onUnexpectedError(err);
+            }
         };
         return ExtensionPoint;
     }());
+    exports.ExtensionPoint = ExtensionPoint;
     var schemaId = 'vscode://schemas/vscode-extensions';
     var schema = {
         default: {
@@ -10296,57 +10551,91 @@ define(__m[36], __M([0,1,57,8,29,48,35,14]), function (require, exports, nls, er
             'dependencies': {}
         },
         properties: {
-            // engines: {
-            // 	required: [ 'vscode' ],
-            // 	properties: {
-            // 		'vscode': {
-            // 			type: 'string',
-            // 			description: nls.localize('vscode.extension.engines.vscode', 'Specifies that this package only runs inside VSCode of the given version.'),
-            // 		}
-            // 	}
-            // },
+            engines: {
+                properties: {
+                    'vscode': {
+                        type: 'string',
+                        description: nls.localize(0, null),
+                        default: '^0.10.0',
+                    }
+                }
+            },
+            publisher: {
+                description: nls.localize(1, null),
+                type: 'string'
+            },
             displayName: {
-                description: nls.localize(12, null),
+                description: nls.localize(2, null),
                 type: 'string'
             },
             categories: {
-                description: nls.localize(13, null),
+                description: nls.localize(3, null),
                 type: 'array',
+                uniqueItems: true,
                 items: {
                     type: 'string',
-                    enum: ['Languages', 'Snippets', 'Linters', 'Themes', 'Debuggers', 'Productivity', 'Other']
+                    enum: ['Languages', 'Snippets', 'Linters', 'Themes', 'Debuggers', 'Productivity', 'Other', 'Keymaps', 'Formatters']
                 }
             },
             galleryBanner: {
                 type: 'object',
-                description: nls.localize(14, null),
+                description: nls.localize(4, null),
                 properties: {
                     color: {
-                        description: nls.localize(15, null),
+                        description: nls.localize(5, null),
                         type: 'string'
                     },
                     theme: {
-                        description: nls.localize(16, null),
+                        description: nls.localize(6, null),
                         type: 'string',
                         enum: ['dark', 'light']
                     }
                 }
             },
-            publisher: {
-                description: nls.localize(17, null),
-                type: 'string'
+            contributes: {
+                description: nls.localize(7, null),
+                type: 'object',
+                properties: {},
+                default: {}
+            },
+            preview: {
+                type: 'boolean',
+                description: nls.localize(8, null),
             },
             activationEvents: {
-                description: nls.localize(18, null),
+                description: nls.localize(9, null),
                 type: 'array',
                 items: {
                     type: 'string',
                     defaultSnippets: [{ label: 'onLanguage', body: 'onLanguage:{{languageId}}' }, { label: 'onCommand', body: 'onCommand:{{commandId}}' }, { label: 'onDebug', body: 'onDebug:{{type}}' }, { label: 'workspaceContains', body: 'workspaceContains:{{fileName}}' }],
                 }
             },
-            extensionDependencies: {
-                description: nls.localize(19, null),
+            badges: {
                 type: 'array',
+                description: nls.localize(10, null),
+                items: {
+                    type: 'object',
+                    required: ['url', 'href', 'description'],
+                    properties: {
+                        url: {
+                            type: 'string',
+                            description: nls.localize(11, null)
+                        },
+                        href: {
+                            type: 'string',
+                            description: nls.localize(12, null)
+                        },
+                        description: {
+                            type: 'string',
+                            description: nls.localize(13, null)
+                        }
+                    }
+                }
+            },
+            extensionDependencies: {
+                description: nls.localize(14, null),
+                type: 'array',
+                uniqueItems: true,
                 items: {
                     type: 'string'
                 }
@@ -10355,142 +10644,38 @@ define(__m[36], __M([0,1,57,8,29,48,35,14]), function (require, exports, nls, er
                 type: 'object',
                 properties: {
                     'vscode:prepublish': {
-                        description: nls.localize(20, null),
+                        description: nls.localize(15, null),
                         type: 'string'
                     }
                 }
             },
-            contributes: {
-                description: nls.localize(21, null),
-                type: 'object',
-                properties: {},
-                default: {}
+            icon: {
+                type: 'string',
+                description: nls.localize(16, null)
             }
         }
     };
     var ExtensionsRegistryImpl = (function () {
         function ExtensionsRegistryImpl() {
-            this._extensionsMap = {};
-            this._extensionsArr = [];
-            this._activationMap = {};
-            this._pointListeners = [];
             this._extensionPoints = {};
-            this._oneTimeActivationEventListeners = {};
         }
-        ExtensionsRegistryImpl.prototype.registerPointListener = function (point, handler) {
-            var entry = {
-                extensionPoint: point,
-                listener: handler
-            };
-            this._pointListeners.push(entry);
-            this._triggerPointListener(entry, ExtensionsRegistryImpl._filterWithExtPoint(this.getAllExtensionDescriptions(), point));
-        };
-        ExtensionsRegistryImpl.prototype.registerExtensionPoint = function (extensionPoint, jsonSchema) {
+        ExtensionsRegistryImpl.prototype.registerExtensionPoint = function (extensionPoint, deps, jsonSchema) {
             if (hasOwnProperty.call(this._extensionPoints, extensionPoint)) {
                 throw new Error('Duplicate extension point: ' + extensionPoint);
             }
-            var result = new ExtensionPoint(extensionPoint, this);
+            var result = new ExtensionPoint(extensionPoint);
             this._extensionPoints[extensionPoint] = result;
             schema.properties['contributes'].properties[extensionPoint] = jsonSchema;
             schemaRegistry.registerSchema(schemaId, schema);
             return result;
         };
-        ExtensionsRegistryImpl.prototype.handleExtensionPoints = function (messageHandler) {
+        ExtensionsRegistryImpl.prototype.getExtensionPoints = function () {
             var _this = this;
-            Object.keys(this._extensionPoints).forEach(function (extensionPointName) {
-                _this._extensionPoints[extensionPointName].handle(messageHandler);
-            });
-        };
-        ExtensionsRegistryImpl.prototype._triggerPointListener = function (handler, desc) {
-            // console.log('_triggerPointListeners: ' + desc.length + ' OF ' + handler.extensionPoint);
-            if (!desc || desc.length === 0) {
-                return;
-            }
-            try {
-                handler.listener(desc);
-            }
-            catch (e) {
-                errors_1.onUnexpectedError(e);
-            }
-        };
-        ExtensionsRegistryImpl.prototype.registerExtensions = function (extensionDescriptions) {
-            for (var i = 0, len = extensionDescriptions.length; i < len; i++) {
-                var extensionDescription = extensionDescriptions[i];
-                if (hasOwnProperty.call(this._extensionsMap, extensionDescription.id)) {
-                    // No overwriting allowed!
-                    console.error('Extension `' + extensionDescription.id + '` is already registered');
-                    continue;
-                }
-                this._extensionsMap[extensionDescription.id] = extensionDescription;
-                this._extensionsArr.push(extensionDescription);
-                if (Array.isArray(extensionDescription.activationEvents)) {
-                    for (var j = 0, lenJ = extensionDescription.activationEvents.length; j < lenJ; j++) {
-                        var activationEvent = extensionDescription.activationEvents[j];
-                        this._activationMap[activationEvent] = this._activationMap[activationEvent] || [];
-                        this._activationMap[activationEvent].push(extensionDescription);
-                    }
-                }
-            }
-            for (var i = 0, len = this._pointListeners.length; i < len; i++) {
-                var listenerEntry = this._pointListeners[i];
-                var descriptions = ExtensionsRegistryImpl._filterWithExtPoint(extensionDescriptions, listenerEntry.extensionPoint);
-                this._triggerPointListener(listenerEntry, descriptions);
-            }
-        };
-        ExtensionsRegistryImpl._filterWithExtPoint = function (input, point) {
-            return input.filter(function (desc) {
-                return (desc.contributes && hasOwnProperty.call(desc.contributes, point));
-            });
-        };
-        ExtensionsRegistryImpl.prototype.getExtensionDescriptionsForActivationEvent = function (activationEvent) {
-            if (!hasOwnProperty.call(this._activationMap, activationEvent)) {
-                return [];
-            }
-            return this._activationMap[activationEvent].slice(0);
-        };
-        ExtensionsRegistryImpl.prototype.getAllExtensionDescriptions = function () {
-            return this._extensionsArr.slice(0);
-        };
-        ExtensionsRegistryImpl.prototype.getExtensionDescription = function (extensionId) {
-            if (!hasOwnProperty.call(this._extensionsMap, extensionId)) {
-                return null;
-            }
-            return this._extensionsMap[extensionId];
-        };
-        ExtensionsRegistryImpl.prototype.registerOneTimeActivationEventListener = function (activationEvent, listener) {
-            if (!hasOwnProperty.call(this._oneTimeActivationEventListeners, activationEvent)) {
-                this._oneTimeActivationEventListeners[activationEvent] = [];
-            }
-            this._oneTimeActivationEventListeners[activationEvent].push(listener);
-        };
-        ExtensionsRegistryImpl.prototype.triggerActivationEventListeners = function (activationEvent) {
-            if (hasOwnProperty.call(this._oneTimeActivationEventListeners, activationEvent)) {
-                var listeners = this._oneTimeActivationEventListeners[activationEvent];
-                delete this._oneTimeActivationEventListeners[activationEvent];
-                for (var i = 0, len = listeners.length; i < len; i++) {
-                    var listener = listeners[i];
-                    try {
-                        listener();
-                    }
-                    catch (e) {
-                        errors_1.onUnexpectedError(e);
-                    }
-                }
-            }
+            return Object.keys(this._extensionPoints).map(function (point) { return _this._extensionPoints[point]; });
         };
         return ExtensionsRegistryImpl;
     }());
-    function _isStringArray(arr) {
-        if (!Array.isArray(arr)) {
-            return false;
-        }
-        for (var i = 0, len = arr.length; i < len; i++) {
-            if (typeof arr[i] !== 'string') {
-                return false;
-            }
-        }
-        return true;
-    }
+    exports.ExtensionsRegistryImpl = ExtensionsRegistryImpl;
     var PRExtensions = {
         ExtensionsRegistry: 'ExtensionsRegistry'
     };
@@ -10499,7 +10684,7 @@ define(__m[36], __M([0,1,57,8,29,48,35,14]), function (require, exports, nls, er
     schemaRegistry.registerSchema(schemaId, schema);
 });
 
-define(__m[75], __M([0,1,54,10,14,9,36,35]), function (require, exports, nls, event_1, platform, objects, extensionsRegistry_1, JSONContributionRegistry) {
+define(__m[17/*vs/platform/configuration/common/configurationRegistry*/], __M([1/*require*/,0/*exports*/,54/*vs/nls!vs/platform/configuration/common/configurationRegistry*/,3/*vs/base/common/event*/,11/*vs/platform/platform*/,9/*vs/base/common/objects*/,83/*vs/platform/extensions/common/extensionsRegistry*/,37/*vs/platform/jsonschemas/common/jsonContributionRegistry*/]), function (require, exports, nls, event_1, platform_1, objects, extensionsRegistry_1, jsonContributionRegistry_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10509,7 +10694,7 @@ define(__m[75], __M([0,1,54,10,14,9,36,35]), function (require, exports, nls, ev
         Configuration: 'base.contributions.configuration'
     };
     var schemaId = 'vscode://schemas/settings';
-    var contributionRegistry = platform.Registry.as(JSONContributionRegistry.Extensions.JSONContribution);
+    var contributionRegistry = platform_1.Registry.as(jsonContributionRegistry_1.Extensions.JSONContribution);
     var ConfigurationRegistry = (function () {
         function ConfigurationRegistry() {
             this.configurationContributors = [];
@@ -10540,8 +10725,8 @@ define(__m[75], __M([0,1,54,10,14,9,36,35]), function (require, exports, nls, ev
         return ConfigurationRegistry;
     }());
     var configurationRegistry = new ConfigurationRegistry();
-    platform.Registry.add(exports.Extensions.Configuration, configurationRegistry);
-    var configurationExtPoint = extensionsRegistry_1.ExtensionsRegistry.registerExtensionPoint('configuration', {
+    platform_1.Registry.add(exports.Extensions.Configuration, configurationRegistry);
+    var configurationExtPoint = extensionsRegistry_1.ExtensionsRegistry.registerExtensionPoint('configuration', [], {
         description: nls.localize(0, null),
         type: 'object',
         defaultSnippets: [{ body: { title: '', properties: {} } }],
@@ -10583,190 +10768,270 @@ define(__m[75], __M([0,1,54,10,14,9,36,35]), function (require, exports, nls, ev
     });
 });
 
-define(__m[76], __M([0,1,58,36,77]), function (require, exports, nls, extensionsRegistry_1, semver_1) {
+define(__m[85/*vs/platform/configuration/common/model*/], __M([1/*require*/,0/*exports*/,11/*vs/platform/platform*/,6/*vs/base/common/types*/,17/*vs/platform/configuration/common/configurationRegistry*/]), function (require, exports, platform_1, types, configurationRegistry_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    var VERSION_REGEXP = /^(\^)?((\d+)|x)\.((\d+)|x)\.((\d+)|x)(\-.*)?$/;
-    function isValidVersionStr(version) {
-        version = version.trim();
-        return (version === '*' || VERSION_REGEXP.test(version));
-    }
-    exports.isValidVersionStr = isValidVersionStr;
-    function parseVersion(version) {
-        if (!isValidVersionStr(version)) {
-            return null;
+    function setNode(root, key, value) {
+        var segments = key.split('.');
+        var last = segments.pop();
+        var curr = root;
+        segments.forEach(function (s) {
+            var obj = curr[s];
+            switch (typeof obj) {
+                case 'undefined':
+                    obj = curr[s] = Object.create(null);
+                    break;
+                case 'object':
+                    break;
+                default:
+                    console.error("Conflicting configuration setting: " + key + " at " + s + " with " + JSON.stringify(obj));
+            }
+            curr = obj;
+        });
+        if (typeof curr === 'object') {
+            curr[last] = value; // workaround https://github.com/Microsoft/vscode/issues/13606
         }
-        version = version.trim();
-        if (version === '*') {
+    }
+    exports.setNode = setNode;
+    function processDefaultValues(withConfig) {
+        var configurations = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurations();
+        var visit = function (config, level) {
+            var handled = withConfig(config, level === 0);
+            if (Array.isArray(config.allOf)) {
+                config.allOf.forEach(function (c) {
+                    // if the config node only contains an `allOf` we treat the `allOf` children as if they were at the top level
+                    visit(c, (!handled && level === 0) ? level : level + 1);
+                });
+            }
+        };
+        configurations.sort(function (c1, c2) {
+            if (typeof c1.order !== 'number') {
+                return 1;
+            }
+            if (typeof c2.order !== 'number') {
+                return -1;
+            }
+            if (c1.order === c2.order) {
+                var title1 = c1.title || '';
+                var title2 = c2.title || '';
+                return title1.localeCompare(title2);
+            }
+            return c1.order - c2.order;
+        }).forEach(function (config) {
+            visit(config, 0);
+        });
+    }
+    function getDefaultValues() {
+        var ret = Object.create(null);
+        var handleConfig = function (config, isTop) {
+            if (config.properties) {
+                Object.keys(config.properties).forEach(function (key) {
+                    var prop = config.properties[key];
+                    var value = prop.default;
+                    if (types.isUndefined(prop.default)) {
+                        value = getDefaultValue(prop.type);
+                    }
+                    setNode(ret, key, value);
+                });
+                return true;
+            }
+            return false;
+        };
+        processDefaultValues(handleConfig);
+        return ret;
+    }
+    exports.getDefaultValues = getDefaultValues;
+    function getDefaultValuesContent(indent) {
+        var lastEntry = -1;
+        var result = [];
+        result.push('{');
+        var handleConfig = function (config, isTop) {
+            var handled = false;
+            if (config.title) {
+                handled = true;
+                if (isTop) {
+                    result.push('');
+                    result.push('// ' + config.title);
+                }
+                else {
+                    result.push(indent + '// ' + config.title);
+                }
+                result.push('');
+            }
+            if (config.properties) {
+                handled = true;
+                Object.keys(config.properties).forEach(function (key) {
+                    var prop = config.properties[key];
+                    var defaultValue = prop.default;
+                    if (types.isUndefined(defaultValue)) {
+                        defaultValue = getDefaultValue(prop.type);
+                    }
+                    if (prop.description) {
+                        result.push(indent + '// ' + prop.description);
+                    }
+                    var valueString = JSON.stringify(defaultValue, null, indent);
+                    if (valueString && (typeof defaultValue === 'object')) {
+                        valueString = addIndent(valueString, indent);
+                    }
+                    if (lastEntry !== -1) {
+                        result[lastEntry] += ',';
+                    }
+                    lastEntry = result.length;
+                    result.push(indent + JSON.stringify(key) + ': ' + valueString);
+                    result.push('');
+                });
+            }
+            return handled;
+        };
+        processDefaultValues(handleConfig);
+        result.push('}');
+        return result.join('\n');
+    }
+    exports.getDefaultValuesContent = getDefaultValuesContent;
+    function addIndent(str, indent) {
+        return str.split('\n').join('\n' + indent);
+    }
+    function getDefaultValue(type) {
+        var t = Array.isArray(type) ? type[0] : type;
+        switch (t) {
+            case 'boolean':
+                return false;
+            case 'integer':
+            case 'number':
+                return 0;
+            case 'string':
+                return '';
+            case 'array':
+                return [];
+            case 'object':
+                return {};
+            default:
+                return null;
+        }
+    }
+    function flatten(contents) {
+        var root = Object.create(null);
+        for (var key in contents) {
+            setNode(root, key, contents[key]);
+        }
+        return root;
+    }
+    exports.flatten = flatten;
+    function getConfigurationKeys() {
+        var keys = [];
+        var configurations = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurations();
+        configurations.forEach(function (config) {
+            if (config.properties) {
+                keys.push.apply(keys, Object.keys(config.properties));
+            }
+        });
+        return keys;
+    }
+    exports.getConfigurationKeys = getConfigurationKeys;
+});
+
+
+
+
+
+
+
+
+
+
+define(__m[86/*vs/platform/configuration/node/configurationService*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,9/*vs/base/common/objects*/,85/*vs/platform/configuration/common/model*/,50/*vs/base/node/config*/,11/*vs/platform/platform*/,17/*vs/platform/configuration/common/configurationRegistry*/,12/*vs/base/common/lifecycle*/,16/*vs/platform/configuration/common/configuration*/,3/*vs/base/common/event*/,22/*vs/platform/environment/common/environment*/]), function (require, exports, winjs_base_1, objects, model_1, config_1, platform_1, configurationRegistry_1, lifecycle_1, configuration_1, event_1, environment_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var ConfigurationService = (function () {
+        function ConfigurationService(environmentService) {
+            var _this = this;
+            this.disposables = [];
+            this._onDidUpdateConfiguration = new event_1.Emitter();
+            this.disposables.push(this._onDidUpdateConfiguration);
+            this.rawConfig = new config_1.ConfigWatcher(environmentService.appSettingsPath, { changeBufferDelay: 300, defaultConfig: Object.create(null) });
+            this.disposables.push(lifecycle_1.toDisposable(function () { return _this.rawConfig.dispose(); }));
+            // Listeners
+            this.disposables.push(this.rawConfig.onDidUpdateConfiguration(function (event) {
+                _this.onConfigurationChange();
+                if (_this._telemetryService) {
+                    _this._telemetryService.publicLog('updateUserConfiguration', { userConfigurationKeys: Object.keys(event.config) });
+                }
+            }));
+            this.disposables.push(platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).onDidRegisterConfiguration(function () { return _this.onConfigurationChange(); }));
+        }
+        ConfigurationService.prototype.onConfigurationChange = function () {
+            this.cache = void 0; // reset our caches
+            this._onDidUpdateConfiguration.fire({ config: this.getConfiguration() });
+        };
+        Object.defineProperty(ConfigurationService.prototype, "onDidUpdateConfiguration", {
+            get: function () {
+                return this._onDidUpdateConfiguration.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ConfigurationService.prototype.reloadConfiguration = function (section) {
+            var _this = this;
+            return new winjs_base_1.TPromise(function (c) {
+                _this.rawConfig.reload(function () {
+                    _this.cache = void 0; // reset our caches
+                    c(_this.getConfiguration(section));
+                });
+            });
+        };
+        ConfigurationService.prototype.getConfiguration = function (section) {
+            var consolidatedConfig = this.cache;
+            if (!consolidatedConfig) {
+                consolidatedConfig = this.getConsolidatedConfig();
+                this.cache = consolidatedConfig;
+            }
+            return section ? consolidatedConfig[section] : consolidatedConfig;
+        };
+        ConfigurationService.prototype.lookup = function (key) {
+            // make sure to clone the configuration so that the receiver does not tamper with the values
             return {
-                hasCaret: false,
-                majorBase: 0,
-                majorMustEqual: false,
-                minorBase: 0,
-                minorMustEqual: false,
-                patchBase: 0,
-                patchMustEqual: false,
-                preRelease: null
+                default: objects.clone(configuration_1.getConfigurationValue(model_1.getDefaultValues(), key)),
+                user: objects.clone(configuration_1.getConfigurationValue(model_1.flatten(this.rawConfig.getConfig()), key)),
+                value: objects.clone(configuration_1.getConfigurationValue(this.getConfiguration(), key))
             };
-        }
-        var m = version.match(VERSION_REGEXP);
-        return {
-            hasCaret: !!m[1],
-            majorBase: m[2] === 'x' ? 0 : parseInt(m[2], 10),
-            majorMustEqual: (m[2] === 'x' ? false : true),
-            minorBase: m[4] === 'x' ? 0 : parseInt(m[4], 10),
-            minorMustEqual: (m[4] === 'x' ? false : true),
-            patchBase: m[6] === 'x' ? 0 : parseInt(m[6], 10),
-            patchMustEqual: (m[6] === 'x' ? false : true),
-            preRelease: m[8] || null
         };
-    }
-    exports.parseVersion = parseVersion;
-    function normalizeVersion(version) {
-        if (!version) {
-            return null;
-        }
-        var majorBase = version.majorBase, majorMustEqual = version.majorMustEqual, minorBase = version.minorBase, minorMustEqual = version.minorMustEqual, patchBase = version.patchBase, patchMustEqual = version.patchMustEqual;
-        if (version.hasCaret) {
-            if (majorBase === 0) {
-                patchMustEqual = false;
-            }
-            else {
-                minorMustEqual = false;
-                patchMustEqual = false;
-            }
-        }
-        return {
-            majorBase: majorBase,
-            majorMustEqual: majorMustEqual,
-            minorBase: minorBase,
-            minorMustEqual: minorMustEqual,
-            patchBase: patchBase,
-            patchMustEqual: patchMustEqual
+        ConfigurationService.prototype.getConsolidatedConfig = function () {
+            var defaults = model_1.getDefaultValues(); // defaults coming from contributions to registries
+            var user = model_1.flatten(this.rawConfig.getConfig()); // user configured settings
+            return objects.mixin(objects.clone(defaults), // target: default values (but dont modify!)
+            user, // source: user settings
+            true // overwrite
+            );
         };
-    }
-    exports.normalizeVersion = normalizeVersion;
-    function isValidVersion(_version, _desiredVersion) {
-        var version;
-        if (typeof _version === 'string') {
-            version = normalizeVersion(parseVersion(_version));
-        }
-        else {
-            version = _version;
-        }
-        var desiredVersion;
-        if (typeof _desiredVersion === 'string') {
-            desiredVersion = normalizeVersion(parseVersion(_desiredVersion));
-        }
-        else {
-            desiredVersion = _desiredVersion;
-        }
-        if (!version || !desiredVersion) {
-            return false;
-        }
-        var majorBase = version.majorBase;
-        var minorBase = version.minorBase;
-        var patchBase = version.patchBase;
-        var desiredMajorBase = desiredVersion.majorBase;
-        var desiredMinorBase = desiredVersion.minorBase;
-        var desiredPatchBase = desiredVersion.patchBase;
-        var majorMustEqual = desiredVersion.majorMustEqual;
-        var minorMustEqual = desiredVersion.minorMustEqual;
-        var patchMustEqual = desiredVersion.patchMustEqual;
-        // Anything < 1.0.0 is compatible with >= 1.0.0, except exact matches
-        if (majorBase === 1 && desiredMajorBase === 0 && (!majorMustEqual || !minorMustEqual || !patchMustEqual)) {
-            desiredMajorBase = 1;
-            desiredMinorBase = 0;
-            desiredPatchBase = 0;
-            majorMustEqual = true;
-            minorMustEqual = false;
-            patchMustEqual = false;
-        }
-        if (majorBase < desiredMajorBase) {
-            // smaller major version
-            return false;
-        }
-        if (majorBase > desiredMajorBase) {
-            // higher major version
-            return (!majorMustEqual);
-        }
-        // at this point, majorBase are equal
-        if (minorBase < desiredMinorBase) {
-            // smaller minor version
-            return false;
-        }
-        if (minorBase > desiredMinorBase) {
-            // higher minor version
-            return (!minorMustEqual);
-        }
-        // at this point, minorBase are equal
-        if (patchBase < desiredPatchBase) {
-            // smaller patch version
-            return false;
-        }
-        if (patchBase > desiredPatchBase) {
-            // higher patch version
-            return (!patchMustEqual);
-        }
-        // at this point, patchBase are equal
-        return true;
-    }
-    exports.isValidVersion = isValidVersion;
-    function isValidExtensionVersion(version, extensionDesc, notices) {
-        if (extensionDesc.isBuiltin || typeof extensionDesc.main === 'undefined') {
-            // No version check for builtin or declarative extensions
-            return true;
-        }
-        var desiredVersion = normalizeVersion(parseVersion(extensionDesc.engines.vscode));
-        if (!desiredVersion) {
-            notices.push(nls.localize(0, null, extensionDesc.engines.vscode));
-            return false;
-        }
-        // enforce that a breaking API version is specified.
-        // for 0.X.Y, that means up to 0.X must be specified
-        // otherwise for Z.X.Y, that means Z must be specified
-        if (desiredVersion.majorBase === 0) {
-            // force that major and minor must be specific
-            if (!desiredVersion.majorMustEqual || !desiredVersion.minorMustEqual) {
-                notices.push(nls.localize(1, null, extensionDesc.engines.vscode));
-                return false;
-            }
-        }
-        else {
-            // force that major must be specific
-            if (!desiredVersion.majorMustEqual) {
-                notices.push(nls.localize(2, null, extensionDesc.engines.vscode));
-                return false;
-            }
-        }
-        if (!isValidVersion(version, desiredVersion)) {
-            notices.push(nls.localize(3, null, version, extensionDesc.engines.vscode));
-            return false;
-        }
-        return true;
-    }
-    exports.isValidExtensionVersion = isValidExtensionVersion;
-    function isValidExtensionDescription(version, extensionFolderPath, extensionDescription, notices) {
-        if (!extensionsRegistry_1.isValidExtensionDescription(extensionFolderPath, extensionDescription, notices)) {
-            return false;
-        }
-        if (!semver_1.valid(extensionDescription.version)) {
-            notices.push(nls.localize(4, null));
-            return false;
-        }
-        return isValidExtensionVersion(version, extensionDescription, notices);
-    }
-    exports.isValidExtensionDescription = isValidExtensionDescription;
+        ConfigurationService.prototype.dispose = function () {
+            this.disposables = lifecycle_1.dispose(this.disposables);
+        };
+        Object.defineProperty(ConfigurationService.prototype, "telemetryService", {
+            set: function (value) {
+                this._telemetryService = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ConfigurationService = __decorate([
+            __param(0, environment_1.IEnvironmentService)
+        ], ConfigurationService);
+        return ConfigurationService;
+    }());
+    exports.ConfigurationService = ConfigurationService;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[27], __M([0,1,7,18]), function (require, exports, path, uri_1) {
+define(__m[21/*vs/platform/product*/], __M([1/*require*/,0/*exports*/,10/*path*/,14/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
     "use strict";
     var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
     var productJsonPath = path.join(rootPath, 'product.json');
@@ -10784,40 +11049,111 @@ define(__m[27], __M([0,1,7,18]), function (require, exports, path, uri_1) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[79], __M([0,1,78,27,22,20,7,16,51,18,2]), function (require, exports, paths, product_1, package_1, os, path, pfs_1, argv_1, uri_1, winjs_base_1) {
+
+
+
+
+
+
+define(__m[88/*vs/platform/environment/node/environmentService*/], __M([1/*require*/,0/*exports*/,80/*crypto*/,81/*vs/base/node/paths*/,40/*os*/,10/*path*/,14/*vs/base/common/uri*/,29/*vs/base/common/decorators*/,28/*vs/platform/package*/,21/*vs/platform/product*/]), function (require, exports, crypto, paths, os, path, uri_1, decorators_1, package_1, product_1) {
     "use strict";
-    var EnvironmentService = (function () {
-        function EnvironmentService() {
-            var argv = argv_1.parseArgs(process.argv);
-            this._appRoot = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
-            this._userDataPath = paths.getUserDataPath(process.platform, package_1.default.name, process.argv);
-            this._userHome = path.join(os.homedir(), product_1.default.dataFolderName);
-            this._extensionsPath = argv.extensionHomePath || path.join(this._userHome, 'extensions');
-            this._extensionsPath = path.normalize(this._extensionsPath);
-            this._extensionDevelopmentPath = argv.extensionDevelopmentPath;
+    function getUniqueUserId() {
+        var username;
+        if (process.platform === 'win32') {
+            username = process.env.USERNAME;
         }
+        else {
+            username = process.env.USER;
+        }
+        if (!username) {
+            return ''; // fail gracefully if there is no user name
+        }
+        // use sha256 to ensure the userid value can be used in filenames and are unique
+        return crypto.createHash('sha256').update(username).digest('hex').substr(0, 6);
+    }
+    function getIPCHandlePrefix() {
+        var name = package_1.default.name;
+        // Support to run VS Code multiple times as different user
+        // by making the socket unique over the logged in user
+        var userId = getUniqueUserId();
+        if (userId) {
+            name += "-" + userId;
+        }
+        if (process.platform === 'win32') {
+            return "\\\\.\\pipe\\" + name;
+        }
+        return path.join(os.tmpdir(), name);
+    }
+    function getIPCHandleSuffix() {
+        return process.platform === 'win32' ? '-sock' : '.sock';
+    }
+    var EnvironmentService = (function () {
+        function EnvironmentService(_args, _execPath) {
+            this._args = _args;
+            this._execPath = _execPath;
+        }
+        Object.defineProperty(EnvironmentService.prototype, "args", {
+            get: function () { return this._args; },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(EnvironmentService.prototype, "appRoot", {
-            get: function () { return this._appRoot; },
+            get: function () { return path.dirname(uri_1.default.parse(require.toUrl('')).fsPath); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "execPath", {
+            get: function () { return this._execPath; },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(EnvironmentService.prototype, "userHome", {
-            get: function () { return this._userHome; },
+            get: function () { return path.join(os.homedir(), product_1.default.dataFolderName); },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(EnvironmentService.prototype, "userDataPath", {
-            get: function () { return this._userDataPath; },
+            get: function () { return parseUserDataDir(this._args, process); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appSettingsHome", {
+            get: function () { return path.join(this.userDataPath, 'User'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appSettingsPath", {
+            get: function () { return path.join(this.appSettingsHome, 'settings.json'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appKeybindingsPath", {
+            get: function () { return path.join(this.appSettingsHome, 'keybindings.json'); },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(EnvironmentService.prototype, "extensionsPath", {
-            get: function () { return this._extensionsPath; },
+            get: function () { return path.normalize(this._args.extensionHomePath || path.join(this.userHome, 'extensions')); },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(EnvironmentService.prototype, "extensionDevelopmentPath", {
-            get: function () { return this._extensionDevelopmentPath; },
+            get: function () { return this._args.extensionDevelopmentPath ? path.normalize(this._args.extensionDevelopmentPath) : this._args.extensionDevelopmentPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "extensionTestsPath", {
+            get: function () { return this._args.extensionTestsPath ? path.normalize(this._args.extensionTestsPath) : this._args.extensionTestsPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "disableExtensions", {
+            get: function () { return this._args['disable-extensions']; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "debugExtensionHost", {
+            get: function () { return parseExtensionHostPort(this._args, this.isBuilt); },
             enumerable: true,
             configurable: true
         });
@@ -10826,28 +11162,148 @@ define(__m[79], __M([0,1,78,27,22,20,7,16,51,18,2]), function (require, exports,
             enumerable: true,
             configurable: true
         });
-        EnvironmentService.prototype.createPaths = function () {
-            var promises = [this.userHome, this.extensionsPath]
-                .map(function (p) { return pfs_1.mkdirp(p); });
-            return winjs_base_1.TPromise.join(promises);
-        };
+        Object.defineProperty(EnvironmentService.prototype, "verbose", {
+            get: function () { return this._args.verbose; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "wait", {
+            get: function () { return this._args.wait; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "performance", {
+            get: function () { return this._args.performance; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "logExtensionHostCommunication", {
+            get: function () { return this._args.logExtensionHostCommunication; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "mainIPCHandle", {
+            get: function () { return getIPCHandlePrefix() + "-" + package_1.default.version + getIPCHandleSuffix(); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "sharedIPCHandle", {
+            get: function () { return getIPCHandlePrefix() + "-" + package_1.default.version + "-shared" + getIPCHandleSuffix(); },
+            enumerable: true,
+            configurable: true
+        });
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appRoot", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "userHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "userDataPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appSettingsHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appSettingsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appKeybindingsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "extensionsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "extensionDevelopmentPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "extensionTestsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "debugExtensionHost", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "mainIPCHandle", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "sharedIPCHandle", null);
         return EnvironmentService;
     }());
     exports.EnvironmentService = EnvironmentService;
+    function parseExtensionHostPort(args, isBuild) {
+        var portStr = args.debugBrkPluginHost || args.debugPluginHost;
+        var port = Number(portStr) || (!isBuild ? 5870 : null);
+        var brk = port ? Boolean(!!args.debugBrkPluginHost) : false;
+        return { port: port, break: brk };
+    }
+    exports.parseExtensionHostPort = parseExtensionHostPort;
+    function parseUserDataDir(args, process) {
+        var arg = args['user-data-dir'];
+        if (arg) {
+            // Determine if the arg is relative or absolute, if relative use the original CWD
+            // (VSCODE_CWD), not the potentially overridden one (process.cwd()).
+            var resolved = path.resolve(arg);
+            if (path.normalize(arg) === resolved) {
+                return resolved;
+            }
+            else {
+                return path.resolve(process.env['VSCODE_CWD'] || process.cwd(), arg);
+            }
+        }
+        return path.resolve(paths.getDefaultUserDataPath(process.platform));
+    }
+    exports.parseUserDataDir = parseUserDataDir;
 });
 
-define(__m[80], __M([0,1,2,37,11]), function (require, exports, winjs_base_1, timer_1, instantiation_1) {
+define(__m[41/*vs/platform/request/common/request*/], __M([1/*require*/,0/*exports*/,61/*vs/nls!vs/platform/request/common/request*/,8/*vs/platform/instantiation/common/instantiation*/,17/*vs/platform/configuration/common/configurationRegistry*/,11/*vs/platform/platform*/]), function (require, exports, nls_1, instantiation_1, configurationRegistry_1, platform_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.IRequestService = instantiation_1.createDecorator('requestService2');
+    platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration)
+        .registerConfiguration({
+        id: 'http',
+        order: 15,
+        title: nls_1.localize(0, null),
+        type: 'object',
+        properties: {
+            'http.proxy': {
+                type: 'string',
+                pattern: '^https?://([^:]*(:[^@]*)?@)?([^:]+)(:\\d+)?/?$|^$',
+                description: nls_1.localize(1, null)
+            },
+            'http.proxyStrictSSL': {
+                type: 'boolean',
+                default: true,
+                description: nls_1.localize(2, null)
+            },
+            'http.proxyAuthorization': {
+                type: ['null', 'string'],
+                default: null,
+                description: nls_1.localize(3, null)
+            }
+        }
+    });
+});
+
+define(__m[24/*vs/platform/telemetry/common/telemetry*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,8/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, winjs_base_1, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
     exports.ITelemetryService = instantiation_1.createDecorator('telemetryService');
+    exports.defaultExperiments = {
+        showDefaultViewlet: false,
+        showCommandsWatermark: false,
+        openUntitledFile: true
+    };
     exports.NullTelemetryService = {
         _serviceBrand: undefined,
-        timedPublicLog: function (name, data) {
-            return timer_1.nullEvent;
-        },
+        _experiments: exports.defaultExperiments,
         publicLog: function (eventName, data) {
             return winjs_base_1.TPromise.as(null);
         },
@@ -10858,8 +11314,52 @@ define(__m[80], __M([0,1,2,37,11]), function (require, exports, winjs_base_1, ti
                 sessionId: 'someValue.sessionId',
                 machineId: 'someValue.machineId'
             });
+        },
+        getExperiments: function () {
+            return this._experiments;
         }
     };
+    function loadExperiments(storageService, configurationService) {
+        var key = 'experiments.randomness';
+        var valueString = storageService.get(key);
+        if (!valueString) {
+            valueString = Math.random().toString();
+            storageService.store(key, valueString);
+        }
+        var random0 = parseFloat(valueString);
+        var _a = splitRandom(random0), random1 = _a[0], showDefaultViewlet = _a[1];
+        var _b = splitRandom(random1), random2 = _b[0], showCommandsWatermark = _b[1];
+        var _c = splitRandom(random2), openUntitledFile = _c[1];
+        // is the user a first time user?
+        var isNewSession = storageService.get('telemetry.lastSessionDate') ? false : true;
+        if (!isNewSession) {
+            // for returning users we fall back to the default configuration for the sidebar and the initially opened, empty editor
+            showDefaultViewlet = exports.defaultExperiments.showDefaultViewlet;
+            openUntitledFile = exports.defaultExperiments.openUntitledFile;
+        }
+        return applyOverrides(configurationService, {
+            showDefaultViewlet: showDefaultViewlet,
+            showCommandsWatermark: showCommandsWatermark,
+            openUntitledFile: openUntitledFile
+        });
+    }
+    exports.loadExperiments = loadExperiments;
+    function applyOverrides(configurationService, experiments) {
+        var config = configurationService.getConfiguration('telemetry');
+        var experimentsConfig = config && config.experiments || {};
+        Object.keys(experiments).forEach(function (key) {
+            if (key in experimentsConfig) {
+                experiments[key] = experimentsConfig[key];
+            }
+        });
+        return experiments;
+    }
+    exports.applyOverrides = applyOverrides;
+    function splitRandom(random) {
+        var scaled = random * 2;
+        var i = Math.floor(scaled);
+        return [scaled - i, i === 1];
+    }
     function combinedAppender() {
         var appenders = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -10900,7 +11400,7 @@ define(__m[80], __M([0,1,2,37,11]), function (require, exports, winjs_base_1, ti
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[81], __M([0,1,2]), function (require, exports, winjs_base_1) {
+define(__m[92/*vs/platform/telemetry/common/telemetryIpc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/]), function (require, exports, winjs_base_1) {
     'use strict';
     var TelemetryAppenderChannel = (function () {
         function TelemetryAppenderChannel(appender) {
@@ -10942,11 +11442,10 @@ define(__m[81], __M([0,1,2]), function (require, exports, winjs_base_1) {
 
 
 
-define(__m[53], __M([0,1,59,19,11,30,75,2,13,37,9,14]), function (require, exports, nls_1, strings_1, instantiation_1, configuration_1, configurationRegistry_1, winjs_base_1, lifecycle_1, timer_1, objects_1, platform_1) {
+define(__m[93/*vs/platform/telemetry/common/telemetryService*/], __M([1/*require*/,0/*exports*/,62/*vs/nls!vs/platform/telemetry/common/telemetryService*/,19/*vs/base/common/strings*/,24/*vs/platform/telemetry/common/telemetry*/,8/*vs/platform/instantiation/common/instantiation*/,16/*vs/platform/configuration/common/configuration*/,17/*vs/platform/configuration/common/configurationRegistry*/,2/*vs/base/common/winjs.base*/,12/*vs/base/common/lifecycle*/,9/*vs/base/common/objects*/,11/*vs/platform/platform*/]), function (require, exports, nls_1, strings_1, telemetry_1, instantiation_1, configuration_1, configurationRegistry_1, winjs_base_1, lifecycle_1, objects_1, platform_1) {
     'use strict';
     var TelemetryService = (function () {
         function TelemetryService(config, _configurationService) {
-            var _this = this;
             this._configurationService = _configurationService;
             this._disposables = [];
             this._cleanupPatterns = [];
@@ -10954,6 +11453,7 @@ define(__m[53], __M([0,1,59,19,11,30,75,2,13,37,9,14]), function (require, expor
             this._commonProperties = config.commonProperties || winjs_base_1.TPromise.as({});
             this._piiPaths = config.piiPaths || [];
             this._userOptIn = typeof config.userOptIn === 'undefined' ? true : config.userOptIn;
+            this._experiments = config.experiments || telemetry_1.defaultExperiments;
             // static cleanup patterns for:
             // #1 `file:///DANGEROUS/PATH/resources/app/Useful/Information`
             // #2 // Any other file path that doesn't match the approved form above should be cleaned.
@@ -10963,9 +11463,6 @@ define(__m[53], __M([0,1,59,19,11,30,75,2,13,37,9,14]), function (require, expor
                 this._cleanupPatterns.push([new RegExp(strings_1.escapeRegExpCharacters(piiPath), 'gi'), '']);
             }
             this._cleanupPatterns.push([/file:\/\/\/.*?\/resources\/app\//gi, ''], [/file:\/\/\/.*/gi, ''], [/ENOENT: no such file or directory.*?\'([^\']+)\'/gi, 'ENOENT: no such file or directory']);
-            this._timeKeeper = new timer_1.TimeKeeper();
-            this._disposables.push(this._timeKeeper);
-            this._disposables.push(this._timeKeeper.addListener(function (events) { return _this._onTelemetryTimerEventStop(events); }));
             if (this._configurationService) {
                 this._updateUserOptIn();
                 this._configurationService.onDidUpdateConfiguration(this._updateUserOptIn, this, this._disposables);
@@ -10976,14 +11473,6 @@ define(__m[53], __M([0,1,59,19,11,30,75,2,13,37,9,14]), function (require, expor
             var config = this._configurationService.getConfiguration(TELEMETRY_SECTION_ID);
             this._userOptIn = config ? config.enableTelemetry : this._userOptIn;
         };
-        TelemetryService.prototype._onTelemetryTimerEventStop = function (events) {
-            for (var i = 0; i < events.length; i++) {
-                var event_1 = events[i];
-                var data = event_1.data || {};
-                data.duration = event_1.timeTaken();
-                this.publicLog(event_1.name, data);
-            }
-        };
         Object.defineProperty(TelemetryService.prototype, "isOptedIn", {
             get: function () {
                 return this._userOptIn;
@@ -10991,6 +11480,9 @@ define(__m[53], __M([0,1,59,19,11,30,75,2,13,37,9,14]), function (require, expor
             enumerable: true,
             configurable: true
         });
+        TelemetryService.prototype.getExperiments = function () {
+            return this._experiments;
+        };
         TelemetryService.prototype.getTelemetryInfo = function () {
             return this._commonProperties.then(function (values) {
                 // well known properties
@@ -11002,14 +11494,6 @@ define(__m[53], __M([0,1,59,19,11,30,75,2,13,37,9,14]), function (require, expor
         };
         TelemetryService.prototype.dispose = function () {
             this._disposables = lifecycle_1.dispose(this._disposables);
-        };
-        TelemetryService.prototype.timedPublicLog = function (name, data) {
-            var topic = 'public';
-            var event = this._timeKeeper.start(topic, name);
-            if (data) {
-                event.data = data;
-            }
-            return event;
         };
         TelemetryService.prototype.publicLog = function (eventName, data) {
             var _this = this;
@@ -11065,7 +11549,7 @@ define(__m[53], __M([0,1,59,19,11,30,75,2,13,37,9,14]), function (require, expor
     });
 });
 
-define(__m[41], __M([0,1,84,5,9,2]), function (require, exports, appInsights, types_1, objects_1, winjs_base_1) {
+define(__m[94/*vs/platform/telemetry/node/appInsightsAppender*/], __M([1/*require*/,0/*exports*/,96/*applicationinsights*/,6/*vs/base/common/types*/,9/*vs/base/common/objects*/,2/*vs/base/common/winjs.base*/]), function (require, exports, appInsights, types_1, objects_1, winjs_base_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -11194,7 +11678,7 @@ define(__m[41], __M([0,1,84,5,9,2]), function (require, exports, appInsights, ty
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[74], __M([0,1,6,20,2,33]), function (require, exports, Platform, os, winjs_base_1, uuid) {
+define(__m[44/*vs/platform/telemetry/node/commonProperties*/], __M([1/*require*/,0/*exports*/,13/*vs/base/common/platform*/,40/*os*/,2/*vs/base/common/winjs.base*/,25/*vs/base/common/uuid*/]), function (require, exports, Platform, os, winjs_base_1, uuid) {
     "use strict";
     function resolveCommonProperties(commit, version) {
         var result = Object.create(null);
@@ -11229,7 +11713,7 @@ define(__m[74], __M([0,1,6,20,2,33]), function (require, exports, Platform, os, 
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[44], __M([0,1,49,7,12,15,16,2,87]), function (require, exports, nls, path, fs_1, async_1, pfs_1, winjs_base_1, yauzl_1) {
+define(__m[90/*vs/base/node/zip*/], __M([1/*require*/,0/*exports*/,73/*vs/nls!vs/base/node/zip*/,10/*path*/,15/*fs*/,27/*vs/base/common/async*/,42/*vs/base/node/pfs*/,2/*vs/base/common/winjs.base*/,98/*yauzl*/]), function (require, exports, nls, path, fs_1, async_1, pfs_1, winjs_base_1, yauzl_1) {
     "use strict";
     function modeFromEntry(entry) {
         var attr = entry.externalFileAttributes >> 16 || 33188;
@@ -11311,110 +11795,18 @@ define(__m[44], __M([0,1,49,7,12,15,16,2,87]), function (require, exports, nls, 
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[43], __M([0,1,2,5,89,90,39,12,9,91]), function (require, exports, winjs_base_1, types_1, https, http, url_1, fs_1, objects_1, zlib_1) {
+
+
+
+
+
+
+
+
+
+define(__m[89/*vs/platform/extensionManagement/node/extensionManagementService*/], __M([1/*require*/,0/*exports*/,57/*vs/nls!vs/platform/extensionManagement/node/extensionManagementService*/,10/*path*/,42/*vs/base/node/pfs*/,7/*vs/base/common/errors*/,9/*vs/base/common/objects*/,12/*vs/base/common/lifecycle*/,18/*vs/base/common/arrays*/,90/*vs/base/node/zip*/,2/*vs/base/common/winjs.base*/,20/*vs/platform/extensionManagement/common/extensionManagement*/,65/*vs/platform/extensionManagement/common/extensionNls*/,22/*vs/platform/environment/common/environment*/,27/*vs/base/common/async*/,3/*vs/base/common/event*/,68/*semver*/,38/*vs/base/common/collections*/,14/*vs/base/common/uri*/,34/*vs/platform/message/common/message*/]), function (require, exports, nls, path, pfs, errors, objects_1, lifecycle_1, arrays_1, zip_1, winjs_base_1, extensionManagement_1, extensionNls_1, environment_1, async_1, event_1, semver, collections_1, uri_1, message_1) {
     'use strict';
-    function request(options) {
-        var req;
-        return new winjs_base_1.TPromise(function (c, e) {
-            var endpoint = url_1.parse(options.url);
-            var opts = {
-                hostname: endpoint.hostname,
-                port: endpoint.port ? parseInt(endpoint.port) : (endpoint.protocol === 'https:' ? 443 : 80),
-                path: endpoint.path,
-                method: options.type || 'GET',
-                headers: options.headers,
-                agent: options.agent,
-                rejectUnauthorized: types_1.isBoolean(options.strictSSL) ? options.strictSSL : true
-            };
-            if (options.user && options.password) {
-                opts.auth = options.user + ':' + options.password;
-            }
-            var protocol = endpoint.protocol === 'https:' ? https : http;
-            req = protocol.request(opts, function (res) {
-                if (res.statusCode >= 300 && res.statusCode < 400 && options.followRedirects && options.followRedirects > 0 && res.headers['location']) {
-                    c(request(objects_1.assign({}, options, {
-                        url: res.headers['location'],
-                        followRedirects: options.followRedirects - 1
-                    })));
-                }
-                else {
-                    var stream = res;
-                    if (res.headers['content-encoding'] === 'gzip') {
-                        stream = stream.pipe(zlib_1.createGunzip());
-                    }
-                    c({ req: req, res: res, stream: stream });
-                }
-            });
-            req.on('error', e);
-            if (options.timeout) {
-                req.setTimeout(options.timeout);
-            }
-            if (options.data) {
-                req.write(options.data);
-            }
-            req.end();
-        }, function () { return req && req.abort(); });
-    }
-    exports.request = request;
-    function download(filePath, opts) {
-        return request(objects_1.assign(opts, { followRedirects: 3 })).then(function (pair) { return new winjs_base_1.TPromise(function (c, e) {
-            var out = fs_1.createWriteStream(filePath);
-            out.once('finish', function () { return c(null); });
-            pair.stream.once('error', e);
-            pair.stream.pipe(out);
-        }); });
-    }
-    exports.download = download;
-    function text(opts) {
-        return request(opts).then(function (pair) { return new winjs_base_1.Promise(function (c, e) {
-            if (!((pair.res.statusCode >= 200 && pair.res.statusCode < 300) || pair.res.statusCode === 1223)) {
-                return e('Server returned ' + pair.res.statusCode);
-            }
-            if (pair.res.statusCode === 204) {
-                return c(null);
-            }
-            var buffer = [];
-            pair.stream.on('data', function (d) { return buffer.push(d); });
-            pair.stream.on('end', function () { return c(buffer.join('')); });
-            pair.stream.on('error', e);
-        }); });
-    }
-    exports.text = text;
-    function json(opts) {
-        return request(opts).then(function (pair) { return new winjs_base_1.Promise(function (c, e) {
-            if (!((pair.res.statusCode >= 200 && pair.res.statusCode < 300) || pair.res.statusCode === 1223)) {
-                return e('Server returned ' + pair.res.statusCode);
-            }
-            if (pair.res.statusCode === 204) {
-                return c(null);
-            }
-            if (!/application\/json/.test(pair.res.headers['content-type'])) {
-                return e('Response doesn\'t appear to be JSON');
-            }
-            var buffer = [];
-            pair.stream.on('data', function (d) { return buffer.push(d); });
-            pair.stream.on('end', function () { return c(JSON.parse(buffer.join(''))); });
-            pair.stream.on('error', e);
-        }); });
-    }
-    exports.json = json;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-define(__m[65], __M([0,1,56,20,7,5,16,9,13,23,44,2,43,38,21,15,10,46,77,24,76,22]), function (require, exports, nls, os_1, path, types, pfs, objects_1, lifecycle_1, arrays_1, zip_1, winjs_base_1, request_1, proxy_1, environment_1, async_1, event_1, userSettings_1, semver, collections_1, extensionValidator_1, package_1) {
-    'use strict';
+    var SystemExtensionsRoot = path.normalize(path.join(uri_1.default.parse(require.toUrl('')).fsPath, '..', 'extensions'));
     function parseManifest(raw) {
         return new winjs_base_1.Promise(function (c, e) {
             try {
@@ -11447,12 +11839,31 @@ define(__m[65], __M([0,1,56,20,7,5,16,9,13,23,44,2,43,38,21,15,10,46,77,24,76,22
             return winjs_base_1.TPromise.as(manifest);
         });
     }
+    function readManifest(extensionPath) {
+        var promises = [
+            pfs.readFile(path.join(extensionPath, 'package.json'), 'utf8')
+                .then(function (raw) { return parseManifest(raw); }),
+            pfs.readFile(path.join(extensionPath, 'package.nls.json'), 'utf8')
+                .then(null, function (err) { return err.code !== 'ENOENT' ? winjs_base_1.TPromise.wrapError(err) : '{}'; })
+                .then(function (raw) { return JSON.parse(raw); })
+        ];
+        return winjs_base_1.TPromise.join(promises).then(function (_a) {
+            var _b = _a[0], manifest = _b.manifest, metadata = _b.metadata, translations = _a[1];
+            return {
+                manifest: extensionNls_1.localizeManifest(manifest, translations),
+                metadata: metadata
+            };
+        });
+    }
     function getExtensionId(extension, version) {
         return extension.publisher + "." + extension.name + "-" + version;
     }
     var ExtensionManagementService = (function () {
-        function ExtensionManagementService(environmentService) {
+        function ExtensionManagementService(environmentService, choiceService, galleryService) {
             this.environmentService = environmentService;
+            this.choiceService = choiceService;
+            this.galleryService = galleryService;
+            this.disposables = [];
             this._onInstallExtension = new event_1.Emitter();
             this.onInstallExtension = this._onInstallExtension.event;
             this._onDidInstallExtension = new event_1.Emitter();
@@ -11465,164 +11876,428 @@ define(__m[65], __M([0,1,56,20,7,5,16,9,13,23,44,2,43,38,21,15,10,46,77,24,76,22
             this.obsoletePath = path.join(this.extensionsPath, '.obsolete');
             this.obsoleteFileLimiter = new async_1.Limiter(1);
         }
-        ExtensionManagementService.prototype.install = function (arg) {
+        ExtensionManagementService.prototype.install = function (zipPath) {
             var _this = this;
-            var id;
-            var result;
-            if (types.isString(arg)) {
-                var zipPath_1 = arg;
-                result = validate(zipPath_1).then(function (manifest) {
-                    id = getExtensionId(manifest, manifest.version);
-                    _this._onInstallExtension.fire({ id: id });
-                    return _this.installValidExtension(zipPath_1, id);
-                });
-            }
-            else {
-                var extension_1 = arg;
-                id = getExtensionId(extension_1, extension_1.versions[0].version);
-                this._onInstallExtension.fire({ id: id, gallery: extension_1 });
-                result = this.isObsolete(id).then(function (obsolete) {
-                    if (obsolete) {
-                        return winjs_base_1.TPromise.wrapError(new Error(nls.localize(4, null, extension_1.displayName || extension_1.name)));
+            zipPath = path.resolve(zipPath);
+            return validate(zipPath).then(function (manifest) {
+                var id = getExtensionId(manifest, manifest.version);
+                return _this.isObsolete(id).then(function (isObsolete) {
+                    if (isObsolete) {
+                        return winjs_base_1.TPromise.wrapError(new Error(nls.localize(4, null, manifest.displayName || manifest.name)));
                     }
-                    return _this.installFromGallery(arg);
+                    _this._onInstallExtension.fire({ id: id, zipPath: zipPath });
+                    return _this.installExtension(zipPath, id)
+                        .then(function (local) { return _this._onDidInstallExtension.fire({ id: id, zipPath: zipPath, local: local }); }, function (error) { _this._onDidInstallExtension.fire({ id: id, zipPath: zipPath, error: error }); return winjs_base_1.TPromise.wrapError(error); });
                 });
-            }
-            return result.then(function (local) { return _this._onDidInstallExtension.fire({ id: id, local: local }); }, function (error) { _this._onDidInstallExtension.fire({ id: id, error: error }); return winjs_base_1.TPromise.wrapError(error); });
-        };
-        ExtensionManagementService.prototype.installFromGallery = function (extension) {
-            var _this = this;
-            return this.getLastValidExtensionVersion(extension).then(function (versionInfo) {
-                var version = versionInfo.version;
-                var url = versionInfo.downloadUrl;
-                var headers = versionInfo.downloadHeaders;
-                var zipPath = path.join(os_1.tmpdir(), extension.id);
-                var id = getExtensionId(extension, version);
-                var metadata = {
-                    id: extension.id,
-                    publisherId: extension.publisherId,
-                    publisherDisplayName: extension.publisherDisplayName
-                };
-                return _this.request(url)
-                    .then(function (opts) { return objects_1.assign(opts, { headers: headers }); })
-                    .then(function (opts) { return request_1.download(zipPath, opts); })
-                    .then(function () { return validate(zipPath, extension, version); })
-                    .then(function () { return _this.installValidExtension(zipPath, id, metadata); });
             });
         };
-        ExtensionManagementService.prototype.getLastValidExtensionVersion = function (extension) {
-            return this._getLastValidExtensionVersion(extension, extension.versions);
-        };
-        ExtensionManagementService.prototype._getLastValidExtensionVersion = function (extension, versions) {
+        ExtensionManagementService.prototype.installFromGallery = function (extension, promptToInstallDependencies) {
             var _this = this;
-            if (!versions.length) {
-                return winjs_base_1.TPromise.wrapError(new Error(nls.localize(5, null, extension.displayName || extension.name)));
-            }
-            var headers = { 'accept-encoding': 'gzip' };
-            var version = versions[0];
-            return this.request(version.manifestUrl)
-                .then(function (opts) { return objects_1.assign(opts, { headers: headers }); })
-                .then(function (opts) { return request_1.json(opts); })
-                .then(function (manifest) {
-                var desc = {
-                    isBuiltin: false,
-                    engines: { vscode: manifest.engines.vscode },
-                    main: manifest.main
-                };
-                if (!extensionValidator_1.isValidExtensionVersion(package_1.default.version, desc, [])) {
-                    return _this._getLastValidExtensionVersion(extension, versions.slice(1));
+            if (promptToInstallDependencies === void 0) { promptToInstallDependencies = true; }
+            var id = getExtensionId(extension, extension.version);
+            return this.isObsolete(id).then(function (isObsolete) {
+                if (isObsolete) {
+                    return winjs_base_1.TPromise.wrapError(new Error(nls.localize(5, null, extension.displayName || extension.name)));
                 }
-                return version;
+                _this._onInstallExtension.fire({ id: id, gallery: extension });
+                return _this.installCompatibleVersion(extension, true, promptToInstallDependencies)
+                    .then(function (local) { return _this._onDidInstallExtension.fire({ id: id, local: local, gallery: extension }); }, function (error) {
+                    _this._onDidInstallExtension.fire({ id: id, gallery: extension, error: error });
+                    return winjs_base_1.TPromise.wrapError(error);
+                });
             });
         };
-        ExtensionManagementService.prototype.installValidExtension = function (zipPath, id, metadata) {
+        ExtensionManagementService.prototype.installCompatibleVersion = function (extension, installDependencies, promptToInstallDependencies) {
+            var _this = this;
+            return this.galleryService.loadCompatibleVersion(extension)
+                .then(function (compatibleVersion) { return _this.getDependenciesToInstall(extension, installDependencies)
+                .then(function (dependencies) {
+                if (!dependencies.length) {
+                    return _this.downloadAndInstall(compatibleVersion);
+                }
+                if (promptToInstallDependencies) {
+                    var message = nls.localize(6, null, extension.displayName);
+                    var options = [
+                        nls.localize(7, null),
+                        nls.localize(8, null)
+                    ];
+                    return _this.choiceService.choose(message_1.Severity.Info, message, options)
+                        .then(function (value) {
+                        if (value === 0) {
+                            return _this.installWithDependencies(compatibleVersion);
+                        }
+                        return winjs_base_1.TPromise.wrapError(errors.canceled());
+                    }, function (error) { return winjs_base_1.TPromise.wrapError(errors.canceled()); });
+                }
+                else {
+                    return _this.installWithDependencies(compatibleVersion);
+                }
+            }); });
+        };
+        ExtensionManagementService.prototype.getDependenciesToInstall = function (extension, checkDependecies) {
+            if (!checkDependecies) {
+                return winjs_base_1.TPromise.wrap([]);
+            }
+            // Filter out self
+            var extensionName = extension.publisher + "." + extension.name;
+            var dependencies = extension.properties.dependencies ? extension.properties.dependencies.filter(function (name) { return name !== extensionName; }) : [];
+            if (!dependencies.length) {
+                return winjs_base_1.TPromise.wrap([]);
+            }
+            // Filter out installed dependencies
+            return this.getInstalled().then(function (installed) {
+                return dependencies.filter(function (dep) { return installed.every(function (i) { return i.manifest.publisher + "." + i.manifest.name !== dep; }); });
+            });
+        };
+        ExtensionManagementService.prototype.installWithDependencies = function (extension) {
+            var _this = this;
+            return this.galleryService.getAllDependencies(extension)
+                .then(function (allDependencies) { return _this.filterDependenciesToInstall(extension, allDependencies); })
+                .then(function (toInstall) { return _this.filterObsolete.apply(_this, toInstall.map(function (i) { return getExtensionId(i, i.version); }))
+                .then(function (obsolete) {
+                if (obsolete.length) {
+                    return winjs_base_1.TPromise.wrapError(new Error(nls.localize(9, null, extension.displayName || extension.name)));
+                }
+                return _this.bulkInstallWithDependencies(extension, toInstall);
+            }); });
+        };
+        ExtensionManagementService.prototype.bulkInstallWithDependencies = function (extension, dependecies) {
+            var _this = this;
+            for (var _i = 0, dependecies_1 = dependecies; _i < dependecies_1.length; _i++) {
+                var dependency = dependecies_1[_i];
+                var id = getExtensionId(dependency, dependency.version);
+                this._onInstallExtension.fire({ id: id, gallery: dependency });
+            }
+            return this.downloadAndInstall(extension)
+                .then(function (localExtension) {
+                return winjs_base_1.TPromise.join(dependecies.map(function (dep) { return _this.installCompatibleVersion(dep, false, false); }))
+                    .then(function (installedLocalExtensions) {
+                    for (var _i = 0, installedLocalExtensions_1 = installedLocalExtensions; _i < installedLocalExtensions_1.length; _i++) {
+                        var installedLocalExtension = installedLocalExtensions_1[_i];
+                        var gallery = _this.getGalleryExtensionForLocalExtension(dependecies, installedLocalExtension);
+                        _this._onDidInstallExtension.fire({ id: installedLocalExtension.id, local: installedLocalExtension, gallery: gallery });
+                    }
+                    return localExtension;
+                }, function (error) {
+                    return _this.rollback(localExtension, dependecies).then(function () {
+                        return winjs_base_1.TPromise.wrapError(Array.isArray(error) ? error[error.length - 1] : error);
+                    });
+                });
+            })
+                .then(function (localExtension) { return localExtension; }, function (error) {
+                for (var _i = 0, dependecies_2 = dependecies; _i < dependecies_2.length; _i++) {
+                    var dependency = dependecies_2[_i];
+                    _this._onDidInstallExtension.fire({ id: getExtensionId(dependency, dependency.version), gallery: dependency, error: error });
+                }
+                return winjs_base_1.TPromise.wrapError(error);
+            });
+        };
+        ExtensionManagementService.prototype.rollback = function (localExtension, dependecies) {
+            var _this = this;
+            return this.doUninstall(localExtension.id)
+                .then(function () { return _this.filterOutUninstalled(dependecies); })
+                .then(function (installed) { return winjs_base_1.TPromise.join(installed.map(function (i) { return _this.doUninstall(i.id); })); })
+                .then(function () { return null; });
+        };
+        ExtensionManagementService.prototype.filterDependenciesToInstall = function (extension, dependencies) {
+            return this.getInstalled()
+                .then(function (local) {
+                return dependencies.filter(function (d) {
+                    if (extension.id === d.id) {
+                        return false;
+                    }
+                    var extensionId = getExtensionId(d, d.version);
+                    return local.every(function (local) { return local.id !== extensionId; });
+                });
+            });
+        };
+        ExtensionManagementService.prototype.filterOutUninstalled = function (extensions) {
+            var _this = this;
+            return this.getInstalled()
+                .then(function (installed) { return installed.filter(function (local) { return !!_this.getGalleryExtensionForLocalExtension(extensions, local); }); });
+        };
+        ExtensionManagementService.prototype.getGalleryExtensionForLocalExtension = function (galleryExtensions, localExtension) {
+            var filtered = galleryExtensions.filter(function (galleryExtension) { return getExtensionId(galleryExtension, galleryExtension.version) === localExtension.id; });
+            return filtered.length ? filtered[0] : null;
+        };
+        ExtensionManagementService.prototype.downloadAndInstall = function (extension) {
+            var _this = this;
+            var id = getExtensionId(extension, extension.version);
+            var metadata = {
+                id: extension.id,
+                publisherId: extension.publisherId,
+                publisherDisplayName: extension.publisherDisplayName,
+            };
+            return this.galleryService.download(extension)
+                .then(function (zipPath) { return validate(zipPath).then(function () { return zipPath; }); })
+                .then(function (zipPath) { return _this.installExtension(zipPath, id, metadata); });
+        };
+        ExtensionManagementService.prototype.installExtension = function (zipPath, id, metadata) {
             if (metadata === void 0) { metadata = null; }
             var extensionPath = path.join(this.extensionsPath, id);
-            var manifestPath = path.join(extensionPath, 'package.json');
             return zip_1.extract(zipPath, extensionPath, { sourcePath: 'extension', overwrite: true })
-                .then(function () { return pfs.readFile(manifestPath, 'utf8'); })
-                .then(function (raw) { return parseManifest(raw); })
+                .then(function () { return readManifest(extensionPath); })
                 .then(function (_a) {
                 var manifest = _a.manifest;
                 return pfs.readdir(extensionPath).then(function (children) {
                     var readme = children.filter(function (child) { return /^readme(\.txt|\.md|)$/i.test(child); })[0];
-                    var readmeUrl = readme ? "file://" + extensionPath + "/" + readme : null;
-                    var local = { id: id, manifest: manifest, metadata: metadata, path: extensionPath, readmeUrl: readmeUrl };
-                    var rawManifest = objects_1.assign(manifest, { __metadata: metadata });
-                    return pfs.writeFile(manifestPath, JSON.stringify(rawManifest, null, '\t'))
+                    var readmeUrl = readme ? uri_1.default.file(path.join(extensionPath, readme)).toString() : null;
+                    var changelog = children.filter(function (child) { return /^changelog(\.txt|\.md|)$/i.test(child); })[0];
+                    var changelogUrl = changelog ? uri_1.default.file(path.join(extensionPath, changelog)).toString() : null;
+                    var type = extensionManagement_1.LocalExtensionType.User;
+                    var local = { type: type, id: id, manifest: manifest, metadata: metadata, path: extensionPath, readmeUrl: readmeUrl, changelogUrl: changelogUrl };
+                    var manifestPath = path.join(extensionPath, 'package.json');
+                    return pfs.readFile(manifestPath, 'utf8')
+                        .then(function (raw) { return parseManifest(raw); })
+                        .then(function (_a) {
+                        var manifest = _a.manifest;
+                        return objects_1.assign(manifest, { __metadata: metadata });
+                    })
+                        .then(function (manifest) { return pfs.writeFile(manifestPath, JSON.stringify(manifest, null, '\t')); })
                         .then(function () { return local; });
                 });
             });
         };
         ExtensionManagementService.prototype.uninstall = function (extension) {
             var _this = this;
-            var id = extension.id;
+            return this.removeOutdatedExtensions().then(function () {
+                return _this.scanUserExtensions().then(function (installed) {
+                    var promises = installed
+                        .filter(function (e) { return e.manifest.publisher === extension.manifest.publisher && e.manifest.name === extension.manifest.name; })
+                        .map(function (e) { return _this.checkForDependenciesAndUninstall(e, installed); });
+                    return winjs_base_1.TPromise.join(promises);
+                });
+            });
+        };
+        ExtensionManagementService.prototype.checkForDependenciesAndUninstall = function (extension, installed) {
+            var _this = this;
+            return this.preUninstallExtension(extension.id)
+                .then(function () { return _this.hasDependencies(extension, installed) ? _this.promptForDependenciesAndUninstall(extension, installed) : _this.promptAndUninstall(extension, installed); })
+                .then(function () { return _this.postUninstallExtension(extension.id); }, function (error) {
+                _this.postUninstallExtension(extension.id, error);
+                return winjs_base_1.TPromise.wrapError(error);
+            });
+        };
+        ExtensionManagementService.prototype.hasDependencies = function (extension, installed) {
+            if (extension.manifest.extensionDependencies && extension.manifest.extensionDependencies.length) {
+                return installed.some(function (i) { return extension.manifest.extensionDependencies.indexOf(i.manifest.publisher + "." + i.manifest.name) !== -1; });
+            }
+            return false;
+        };
+        ExtensionManagementService.prototype.promptForDependenciesAndUninstall = function (extension, installed) {
+            var _this = this;
+            var message = nls.localize(10, null, extension.manifest.displayName || extension.manifest.name);
+            var options = [
+                nls.localize(11, null),
+                nls.localize(12, null),
+                nls.localize(13, null)
+            ];
+            return this.choiceService.choose(message_1.Severity.Info, message, options)
+                .then(function (value) {
+                if (value === 0) {
+                    return _this.uninstallWithDependencies(extension, [], installed);
+                }
+                if (value === 1) {
+                    var dependencies = arrays_1.distinct(_this.getDependenciesToUninstallRecursively(extension, installed, [])).filter(function (e) { return e !== extension; });
+                    return _this.uninstallWithDependencies(extension, dependencies, installed);
+                }
+                return winjs_base_1.TPromise.wrapError(errors.canceled());
+            }, function (error) { return winjs_base_1.TPromise.wrapError(errors.canceled()); });
+        };
+        ExtensionManagementService.prototype.promptAndUninstall = function (extension, installed) {
+            var _this = this;
+            var message = nls.localize(14, null, extension.manifest.displayName || extension.manifest.name);
+            var options = [
+                nls.localize(15, null),
+                nls.localize(16, null)
+            ];
+            return this.choiceService.choose(message_1.Severity.Info, message, options)
+                .then(function (value) {
+                if (value === 0) {
+                    return _this.uninstallWithDependencies(extension, [], installed);
+                }
+                return winjs_base_1.TPromise.wrapError(errors.canceled());
+            }, function (error) { return winjs_base_1.TPromise.wrapError(errors.canceled()); });
+        };
+        ExtensionManagementService.prototype.uninstallWithDependencies = function (extension, dependencies, installed) {
+            var _this = this;
+            var dependenciesToUninstall = this.filterDependents(extension, dependencies, installed);
+            var dependents = this.getDependents(extension, installed).filter(function (dependent) { return extension !== dependent && dependenciesToUninstall.indexOf(dependent) === -1; });
+            if (dependents.length) {
+                return winjs_base_1.TPromise.wrapError(this.getDependentsErrorMessage(extension, dependents));
+            }
+            return winjs_base_1.TPromise.join([this.uninstallExtension(extension.id)].concat(dependenciesToUninstall.map(function (d) { return _this.doUninstall(d.id); }))).then(function () { return null; });
+        };
+        ExtensionManagementService.prototype.getDependentsErrorMessage = function (extension, dependents) {
+            if (dependents.length === 1) {
+                return nls.localize(17, null, extension.manifest.displayName || extension.manifest.name, dependents[0].manifest.displayName || dependents[0].manifest.name);
+            }
+            if (dependents.length === 2) {
+                return nls.localize(18, null, extension.manifest.displayName || extension.manifest.name, dependents[0].manifest.displayName || dependents[0].manifest.name, dependents[1].manifest.displayName || dependents[1].manifest.name);
+            }
+            return nls.localize(19, null, extension.manifest.displayName || extension.manifest.name, dependents[0].manifest.displayName || dependents[0].manifest.name, dependents[1].manifest.displayName || dependents[1].manifest.name);
+        };
+        ExtensionManagementService.prototype.getDependenciesToUninstallRecursively = function (extension, installed, checked) {
+            if (checked.indexOf(extension) !== -1) {
+                return [];
+            }
+            checked.push(extension);
+            if (!extension.manifest.extensionDependencies || extension.manifest.extensionDependencies.length === 0) {
+                return [];
+            }
+            var dependenciesToUninstall = installed.filter(function (i) { return extension.manifest.extensionDependencies.indexOf(i.manifest.publisher + "." + i.manifest.name) !== -1; });
+            var depsOfDeps = [];
+            for (var _i = 0, dependenciesToUninstall_1 = dependenciesToUninstall; _i < dependenciesToUninstall_1.length; _i++) {
+                var dep = dependenciesToUninstall_1[_i];
+                depsOfDeps.push.apply(depsOfDeps, this.getDependenciesToUninstallRecursively(dep, installed, checked));
+            }
+            return dependenciesToUninstall.concat(depsOfDeps);
+        };
+        ExtensionManagementService.prototype.filterDependents = function (extension, dependencies, installed) {
+            installed = installed.filter(function (i) { return i !== extension && i.manifest.extensionDependencies && i.manifest.extensionDependencies.length > 0; });
+            var result = dependencies.slice(0);
+            for (var i = 0; i < dependencies.length; i++) {
+                var dep = dependencies[i];
+                var dependents = this.getDependents(dep, installed).filter(function (e) { return dependencies.indexOf(e) === -1; });
+                if (dependents.length) {
+                    result.splice(i - (dependencies.length - result.length), 1);
+                }
+            }
+            return result;
+        };
+        ExtensionManagementService.prototype.getDependents = function (extension, installed) {
+            return installed.filter(function (e) { return e.manifest.extensionDependencies && e.manifest.extensionDependencies.indexOf(extension.manifest.publisher + "." + extension.manifest.name) !== -1; });
+        };
+        ExtensionManagementService.prototype.doUninstall = function (id) {
+            var _this = this;
+            return this.preUninstallExtension(id)
+                .then(function () { return _this.uninstallExtension(id); })
+                .then(function () { return _this.postUninstallExtension(id); }, function (error) {
+                _this.postUninstallExtension(id, error);
+                return winjs_base_1.TPromise.wrapError(error);
+            });
+        };
+        ExtensionManagementService.prototype.preUninstallExtension = function (id) {
+            var _this = this;
             var extensionPath = path.join(this.extensionsPath, id);
             return pfs.exists(extensionPath)
-                .then(function (exists) { return exists ? null : winjs_base_1.Promise.wrapError(new Error(nls.localize(6, null))); })
-                .then(function () { return _this._onUninstallExtension.fire(id); })
-                .then(function () { return _this.setObsolete(id); })
-                .then(function () { return pfs.rimraf(extensionPath); })
-                .then(function () { return _this.unsetObsolete(id); })
-                .then(function () { return _this._onDidUninstallExtension.fire(id); });
+                .then(function (exists) { return exists ? null : winjs_base_1.Promise.wrapError(new Error(nls.localize(20, null))); })
+                .then(function () { return _this._onUninstallExtension.fire(id); });
         };
-        ExtensionManagementService.prototype.getInstalled = function (includeDuplicateVersions) {
-            if (includeDuplicateVersions === void 0) { includeDuplicateVersions = false; }
-            var all = this.getAllInstalled();
-            if (includeDuplicateVersions) {
-                return all;
+        ExtensionManagementService.prototype.uninstallExtension = function (id) {
+            var _this = this;
+            var extensionPath = path.join(this.extensionsPath, id);
+            return this.setObsolete(id)
+                .then(function () { return pfs.rimraf(extensionPath); })
+                .then(function () { return _this.unsetObsolete(id); });
+        };
+        ExtensionManagementService.prototype.postUninstallExtension = function (id, error) {
+            return this._onDidUninstallExtension.fire({ id: id, error: error });
+        };
+        ExtensionManagementService.prototype.getInstalled = function (type) {
+            if (type === void 0) { type = null; }
+            var promises = [];
+            if (type === null || type === extensionManagement_1.LocalExtensionType.System) {
+                promises.push(this.scanSystemExtensions());
             }
-            return all.then(function (extensions) {
+            if (type === null || type === extensionManagement_1.LocalExtensionType.User) {
+                promises.push(this.scanUserExtensions());
+            }
+            return winjs_base_1.TPromise.join(promises).then(arrays_1.flatten);
+        };
+        ExtensionManagementService.prototype.scanSystemExtensions = function () {
+            return this.scanExtensions(SystemExtensionsRoot, extensionManagement_1.LocalExtensionType.System);
+        };
+        ExtensionManagementService.prototype.scanUserExtensions = function () {
+            return this.scanExtensions(this.extensionsPath, extensionManagement_1.LocalExtensionType.User).then(function (extensions) {
                 var byId = collections_1.values(collections_1.groupBy(extensions, function (p) { return (p.manifest.publisher + "." + p.manifest.name); }));
                 return byId.map(function (p) { return p.sort(function (a, b) { return semver.rcompare(a.manifest.version, b.manifest.version); })[0]; });
             });
         };
-        ExtensionManagementService.prototype.getAllInstalled = function () {
-            var _this = this;
+        ExtensionManagementService.prototype.scanExtensions = function (root, type) {
             var limiter = new async_1.Limiter(10);
+            return this.scanExtensionFolders(root)
+                .then(function (extensionIds) { return winjs_base_1.Promise.join(extensionIds.map(function (id) {
+                var extensionPath = path.join(root, id);
+                var each = function () { return pfs.readdir(extensionPath).then(function (children) {
+                    var readme = children.filter(function (child) { return /^readme(\.txt|\.md|)$/i.test(child); })[0];
+                    var readmeUrl = readme ? uri_1.default.file(path.join(extensionPath, readme)).toString() : null;
+                    var changelog = children.filter(function (child) { return /^changelog(\.txt|\.md|)$/i.test(child); })[0];
+                    var changelogUrl = changelog ? uri_1.default.file(path.join(extensionPath, changelog)).toString() : null;
+                    return readManifest(extensionPath)
+                        .then(function (_a) {
+                        var manifest = _a.manifest, metadata = _a.metadata;
+                        return ({ type: type, id: id, manifest: manifest, metadata: metadata, path: extensionPath, readmeUrl: readmeUrl, changelogUrl: changelogUrl });
+                    });
+                }).then(null, function () { return null; }); };
+                return limiter.queue(each);
+            })); })
+                .then(function (result) { return result.filter(function (a) { return !!a; }); });
+        };
+        ExtensionManagementService.prototype.scanExtensionFolders = function (root) {
             return this.getObsoleteExtensions()
-                .then(function (obsolete) {
-                return pfs.readdir(_this.extensionsPath)
-                    .then(function (extensions) { return extensions.filter(function (id) { return !obsolete[id]; }); })
-                    .then(function (extensionIds) { return winjs_base_1.Promise.join(extensionIds.map(function (id) {
-                    var extensionPath = path.join(_this.extensionsPath, id);
-                    var each = function () { return pfs.readdir(extensionPath).then(function (children) {
-                        var readme = children.filter(function (child) { return /^readme(\.txt|\.md|)$/i.test(child); })[0];
-                        var readmeUrl = readme ? "file://" + extensionPath + "/" + readme : null;
-                        return pfs.readFile(path.join(extensionPath, 'package.json'), 'utf8')
-                            .then(function (raw) { return parseManifest(raw); })
-                            .then(function (_a) {
-                            var manifest = _a.manifest, metadata = _a.metadata;
-                            return ({ id: id, manifest: manifest, metadata: metadata, path: extensionPath, readmeUrl: readmeUrl });
-                        });
-                    }).then(null, function () { return null; }); };
-                    return limiter.queue(each);
-                })); })
-                    .then(function (result) { return result.filter(function (a) { return !!a; }); });
-            });
+                .then(function (obsolete) { return pfs.readdir(root).then(function (extensions) { return extensions.filter(function (id) { return !obsolete[id]; }); }); });
         };
         ExtensionManagementService.prototype.removeDeprecatedExtensions = function () {
+            return winjs_base_1.TPromise.join([
+                this.removeOutdatedExtensions(),
+                this.removeObsoleteExtensions()
+            ]);
+        };
+        ExtensionManagementService.prototype.removeOutdatedExtensions = function () {
             var _this = this;
-            var outdated = this.getOutdatedExtensionIds()
-                .then(function (extensions) { return extensions.map(function (e) { return getExtensionId(e.manifest, e.manifest.version); }); });
-            var obsolete = this.getObsoleteExtensions()
-                .then(function (obsolete) { return Object.keys(obsolete); });
-            return winjs_base_1.TPromise.join([outdated, obsolete])
-                .then(function (result) { return arrays_1.flatten(result); })
-                .then(function (extensionsIds) {
-                return winjs_base_1.TPromise.join(extensionsIds.map(function (id) {
-                    return pfs.rimraf(path.join(_this.extensionsPath, id))
-                        .then(function () { return _this.withObsoleteExtensions(function (obsolete) { return delete obsolete[id]; }); });
-                }));
-            });
+            return this.getOutdatedExtensionIds()
+                .then(function (extensionIds) { return _this.removeExtensions(extensionIds); });
+        };
+        ExtensionManagementService.prototype.removeObsoleteExtensions = function () {
+            var _this = this;
+            return this.getObsoleteExtensions()
+                .then(function (obsolete) { return Object.keys(obsolete); })
+                .then(function (extensionIds) { return _this.removeExtensions(extensionIds); });
+        };
+        ExtensionManagementService.prototype.removeExtensions = function (extensionsIds) {
+            var _this = this;
+            return winjs_base_1.TPromise.join(extensionsIds.map(function (id) {
+                return pfs.rimraf(path.join(_this.extensionsPath, id))
+                    .then(function () { return _this.withObsoleteExtensions(function (obsolete) { return delete obsolete[id]; }); });
+            }));
         };
         ExtensionManagementService.prototype.getOutdatedExtensionIds = function () {
-            return this.getAllInstalled()
-                .then(function (extensions) { return collections_1.values(collections_1.groupBy(extensions, function (p) { return (p.manifest.publisher + "." + p.manifest.name); })); })
-                .then(function (versions) { return arrays_1.flatten(versions.map(function (p) { return p.sort(function (a, b) { return semver.rcompare(a.manifest.version, b.manifest.version); }).slice(1); })); });
+            return this.scanExtensionFolders(this.extensionsPath)
+                .then(function (folders) {
+                var galleryFolders = folders
+                    .map(function (folder) { return ({ folder: folder, match: /^([^.]+\..+)-(\d+\.\d+\.\d+)$/.exec(folder) }); })
+                    .filter(function (_a) {
+                    var match = _a.match;
+                    return !!match;
+                })
+                    .map(function (_a) {
+                    var folder = _a.folder, match = _a.match;
+                    return ({ folder: folder, id: match[1], version: match[2] });
+                });
+                var byId = collections_1.values(collections_1.groupBy(galleryFolders, function (p) { return p.id; }));
+                return arrays_1.flatten(byId.map(function (p) { return p.sort(function (a, b) { return semver.rcompare(a.version, b.version); }).slice(1); }))
+                    .map(function (a) { return a.folder; });
+            });
         };
         ExtensionManagementService.prototype.isObsolete = function (id) {
-            return this.withObsoleteExtensions(function (obsolete) { return !!obsolete[id]; });
+            return this.filterObsolete(id).then(function (obsolete) { return obsolete.length === 1; });
+        };
+        ExtensionManagementService.prototype.filterObsolete = function () {
+            var ids = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                ids[_i - 0] = arguments[_i];
+            }
+            return this.withObsoleteExtensions(function (allObsolete) {
+                var obsolete = [];
+                for (var _i = 0, ids_1 = ids; _i < ids_1.length; _i++) {
+                    var id = ids_1[_i];
+                    if (!!allObsolete[id]) {
+                        obsolete.push(id);
+                    }
+                }
+                return obsolete;
+            });
         };
         ExtensionManagementService.prototype.setObsolete = function (id) {
             return this.withObsoleteExtensions(function (obsolete) { return objects_1.assign(obsolete, (_a = {}, _a[id] = true, _a)); var _a; });
@@ -11639,7 +12314,12 @@ define(__m[65], __M([0,1,56,20,7,5,16,9,13,23,44,2,43,38,21,15,10,46,77,24,76,22
                 var result = null;
                 return pfs.readFile(_this.obsoletePath, 'utf8')
                     .then(null, function (err) { return err.code === 'ENOENT' ? winjs_base_1.TPromise.as('{}') : winjs_base_1.TPromise.wrapError(err); })
-                    .then(function (raw) { return JSON.parse(raw); })
+                    .then(function (raw) { try {
+                    return JSON.parse(raw);
+                }
+                catch (e) {
+                    return {};
+                } })
                     .then(function (obsolete) { result = fn(obsolete); return obsolete; })
                     .then(function (obsolete) {
                     if (Object.keys(obsolete).length === 0) {
@@ -11653,26 +12333,13 @@ define(__m[65], __M([0,1,56,20,7,5,16,9,13,23,44,2,43,38,21,15,10,46,77,24,76,22
                     .then(function () { return result; });
             });
         };
-        // Helper for proxy business... shameful.
-        // This should be pushed down and not rely on the context service
-        ExtensionManagementService.prototype.request = function (url) {
-            var settings = winjs_base_1.TPromise.join([
-                // TODO@Joao we need a nice configuration service here!
-                userSettings_1.UserSettings.getValue(this.environmentService.userDataPath, 'http.proxy'),
-                userSettings_1.UserSettings.getValue(this.environmentService.userDataPath, 'http.proxyStrictSSL')
-            ]);
-            return settings.then(function (settings) {
-                var proxyUrl = settings[0];
-                var strictSSL = settings[1];
-                var agent = proxy_1.getProxyAgent(url, { proxyUrl: proxyUrl, strictSSL: strictSSL });
-                return { url: url, agent: agent, strictSSL: strictSSL };
-            });
-        };
         ExtensionManagementService.prototype.dispose = function () {
             this.disposables = lifecycle_1.dispose(this.disposables);
         };
         ExtensionManagementService = __decorate([
-            __param(0, environment_1.IEnvironmentService)
+            __param(0, environment_1.IEnvironmentService),
+            __param(1, message_1.IChoiceService),
+            __param(2, extensionManagement_1.IExtensionGalleryService)
         ], ExtensionManagementService);
         return ExtensionManagementService;
     }());
@@ -11683,7 +12350,652 @@ define(__m[65], __M([0,1,56,20,7,5,16,9,13,23,44,2,43,38,21,15,10,46,77,24,76,22
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[93], __M([0,1,12,6,27,22,40,2,32,28,70,21,79,67,60,61,68,65,30,66,80,74,81,53,41]), function (require, exports, fs, platform, product_1, package_1, ipc_net_1, winjs_base_1, serviceCollection_1, descriptors_1, instantiationService_1, environment_1, environmentService_1, event_1, eventService_1, extensionManagementIpc_1, extensionManagement_1, extensionManagementService_1, configuration_1, nodeConfigurationService_1, telemetry_1, commonProperties_1, telemetryIpc_1, telemetryService_1, appInsightsAppender_1) {
+define(__m[32/*vs/base/node/request*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,6/*vs/base/common/types*/,95/*https*/,102/*http*/,31/*url*/,15/*fs*/,9/*vs/base/common/objects*/,103/*zlib*/]), function (require, exports, winjs_base_1, types_1, https, http, url_1, fs_1, objects_1, zlib_1) {
+    'use strict';
+    function request(options) {
+        var req;
+        return new winjs_base_1.TPromise(function (c, e) {
+            var endpoint = url_1.parse(options.url);
+            var rawRequest = endpoint.protocol === 'https:' ? https.request : http.request;
+            var opts = {
+                hostname: endpoint.hostname,
+                port: endpoint.port ? parseInt(endpoint.port) : (endpoint.protocol === 'https:' ? 443 : 80),
+                path: endpoint.path,
+                method: options.type || 'GET',
+                headers: options.headers,
+                agent: options.agent,
+                rejectUnauthorized: types_1.isBoolean(options.strictSSL) ? options.strictSSL : true
+            };
+            if (options.user && options.password) {
+                opts.auth = options.user + ':' + options.password;
+            }
+            req = rawRequest(opts, function (res) {
+                var followRedirects = types_1.isNumber(options.followRedirects) ? options.followRedirects : 3;
+                if (res.statusCode >= 300 && res.statusCode < 400 && followRedirects > 0 && res.headers['location']) {
+                    request(objects_1.assign({}, options, {
+                        url: res.headers['location'],
+                        followRedirects: followRedirects - 1
+                    })).done(c, e);
+                }
+                else {
+                    var stream = res;
+                    if (res.headers['content-encoding'] === 'gzip') {
+                        stream = stream.pipe(zlib_1.createGunzip());
+                    }
+                    c({ req: req, res: res, stream: stream });
+                }
+            });
+            req.on('error', e);
+            if (options.timeout) {
+                req.setTimeout(options.timeout);
+            }
+            if (options.data) {
+                req.write(options.data);
+            }
+            req.end();
+        }, function () { return req && req.abort(); });
+    }
+    exports.request = request;
+    function isSuccess(context) {
+        return (context.res.statusCode >= 200 && context.res.statusCode < 300) || context.res.statusCode === 1223;
+    }
+    function hasNoContent(context) {
+        return context.res.statusCode === 204;
+    }
+    function download(filePath, context) {
+        return new winjs_base_1.TPromise(function (c, e) {
+            var out = fs_1.createWriteStream(filePath);
+            out.once('finish', function () { return c(null); });
+            context.stream.once('error', e);
+            context.stream.pipe(out);
+        });
+    }
+    exports.download = download;
+    function asText(context) {
+        return new winjs_base_1.Promise(function (c, e) {
+            if (!isSuccess(context)) {
+                return e('Server returned ' + context.res.statusCode);
+            }
+            if (hasNoContent(context)) {
+                return c(null);
+            }
+            var buffer = [];
+            context.stream.on('data', function (d) { return buffer.push(d); });
+            context.stream.on('end', function () { return c(buffer.join('')); });
+            context.stream.on('error', e);
+        });
+    }
+    exports.asText = asText;
+    function asJson(context) {
+        return new winjs_base_1.Promise(function (c, e) {
+            if (!isSuccess(context)) {
+                return e('Server returned ' + context.res.statusCode);
+            }
+            if (hasNoContent(context)) {
+                return c(null);
+            }
+            if (!/application\/json/.test(context.res.headers['content-type'])) {
+                return e('Response doesn\'t appear to be JSON');
+            }
+            var buffer = [];
+            context.stream.on('data', function (d) { return buffer.push(d); });
+            context.stream.on('end', function () { return c(JSON.parse(buffer.join(''))); });
+            context.stream.on('error', e);
+        });
+    }
+    exports.asJson = asJson;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+define(__m[70/*vs/platform/extensionManagement/node/extensionGalleryService*/], __M([1/*require*/,0/*exports*/,56/*vs/nls!vs/platform/extensionManagement/node/extensionGalleryService*/,40/*os*/,10/*path*/,2/*vs/base/common/winjs.base*/,18/*vs/base/common/arrays*/,7/*vs/base/common/errors*/,29/*vs/base/common/decorators*/,87/*vs/base/common/set*/,20/*vs/platform/extensionManagement/common/extensionManagement*/,66/*vs/platform/extensionManagement/common/extensionTelemetry*/,9/*vs/base/common/objects*/,41/*vs/platform/request/common/request*/,24/*vs/platform/telemetry/common/telemetry*/,32/*vs/base/node/request*/,16/*vs/platform/configuration/common/configuration*/,28/*vs/platform/package*/,21/*vs/platform/product*/,67/*vs/platform/extensions/node/extensionValidator*/,31/*url*/,76/*vs/base/node/id*/]), function (require, exports, nls_1, os_1, path, winjs_base_1, arrays_1, errors_1, decorators_1, set_1, extensionManagement_1, extensionTelemetry_1, objects_1, request_1, telemetry_1, request_2, configuration_1, package_1, product_1, extensionValidator_1, url, id_1) {
+    "use strict";
+    var Flags;
+    (function (Flags) {
+        Flags[Flags["None"] = 0] = "None";
+        Flags[Flags["IncludeVersions"] = 1] = "IncludeVersions";
+        Flags[Flags["IncludeFiles"] = 2] = "IncludeFiles";
+        Flags[Flags["IncludeCategoryAndTags"] = 4] = "IncludeCategoryAndTags";
+        Flags[Flags["IncludeSharedAccounts"] = 8] = "IncludeSharedAccounts";
+        Flags[Flags["IncludeVersionProperties"] = 16] = "IncludeVersionProperties";
+        Flags[Flags["ExcludeNonValidated"] = 32] = "ExcludeNonValidated";
+        Flags[Flags["IncludeInstallationTargets"] = 64] = "IncludeInstallationTargets";
+        Flags[Flags["IncludeAssetUri"] = 128] = "IncludeAssetUri";
+        Flags[Flags["IncludeStatistics"] = 256] = "IncludeStatistics";
+        Flags[Flags["IncludeLatestVersionOnly"] = 512] = "IncludeLatestVersionOnly";
+        Flags[Flags["Unpublished"] = 4096] = "Unpublished";
+    })(Flags || (Flags = {}));
+    function flagsToString() {
+        var flags = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            flags[_i - 0] = arguments[_i];
+        }
+        return String(flags.reduce(function (r, f) { return r | f; }, 0));
+    }
+    var FilterType;
+    (function (FilterType) {
+        FilterType[FilterType["Tag"] = 1] = "Tag";
+        FilterType[FilterType["ExtensionId"] = 4] = "ExtensionId";
+        FilterType[FilterType["Category"] = 5] = "Category";
+        FilterType[FilterType["ExtensionName"] = 7] = "ExtensionName";
+        FilterType[FilterType["Target"] = 8] = "Target";
+        FilterType[FilterType["Featured"] = 9] = "Featured";
+        FilterType[FilterType["SearchText"] = 10] = "SearchText";
+        FilterType[FilterType["ExcludeWithFlags"] = 12] = "ExcludeWithFlags";
+    })(FilterType || (FilterType = {}));
+    var AssetType = {
+        Icon: 'Microsoft.VisualStudio.Services.Icons.Default',
+        Details: 'Microsoft.VisualStudio.Services.Content.Details',
+        Changelog: 'Microsoft.VisualStudio.Services.Content.Changelog',
+        Manifest: 'Microsoft.VisualStudio.Code.Manifest',
+        VSIX: 'Microsoft.VisualStudio.Services.VSIXPackage',
+        License: 'Microsoft.VisualStudio.Services.Content.License',
+    };
+    var PropertyType = {
+        Dependency: 'Microsoft.VisualStudio.Code.ExtensionDependencies',
+        Engine: 'Microsoft.VisualStudio.Code.Engine'
+    };
+    var DefaultPageSize = 10;
+    var DefaultQueryState = {
+        pageNumber: 1,
+        pageSize: DefaultPageSize,
+        sortBy: extensionManagement_1.SortBy.NoneOrRelevance,
+        sortOrder: extensionManagement_1.SortOrder.Default,
+        flags: Flags.None,
+        criteria: [],
+        assetTypes: []
+    };
+    var Query = (function () {
+        function Query(state) {
+            if (state === void 0) { state = DefaultQueryState; }
+            this.state = state;
+        }
+        Object.defineProperty(Query.prototype, "pageNumber", {
+            get: function () { return this.state.pageNumber; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Query.prototype, "pageSize", {
+            get: function () { return this.state.pageSize; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Query.prototype, "sortBy", {
+            get: function () { return this.state.sortBy; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Query.prototype, "sortOrder", {
+            get: function () { return this.state.sortOrder; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Query.prototype, "flags", {
+            get: function () { return this.state.flags; },
+            enumerable: true,
+            configurable: true
+        });
+        Query.prototype.withPage = function (pageNumber, pageSize) {
+            if (pageSize === void 0) { pageSize = this.state.pageSize; }
+            return new Query(objects_1.assign({}, this.state, { pageNumber: pageNumber, pageSize: pageSize }));
+        };
+        Query.prototype.withFilter = function (filterType) {
+            var values = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                values[_i - 1] = arguments[_i];
+            }
+            var criteria = this.state.criteria.concat(values.map(function (value) { return ({ filterType: filterType, value: value }); }));
+            return new Query(objects_1.assign({}, this.state, { criteria: criteria }));
+        };
+        Query.prototype.withSortBy = function (sortBy) {
+            return new Query(objects_1.assign({}, this.state, { sortBy: sortBy }));
+        };
+        Query.prototype.withSortOrder = function (sortOrder) {
+            return new Query(objects_1.assign({}, this.state, { sortOrder: sortOrder }));
+        };
+        Query.prototype.withFlags = function () {
+            var flags = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                flags[_i - 0] = arguments[_i];
+            }
+            return new Query(objects_1.assign({}, this.state, { flags: flags.reduce(function (r, f) { return r | f; }, 0) }));
+        };
+        Query.prototype.withAssetTypes = function () {
+            var assetTypes = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                assetTypes[_i - 0] = arguments[_i];
+            }
+            return new Query(objects_1.assign({}, this.state, { assetTypes: assetTypes }));
+        };
+        Object.defineProperty(Query.prototype, "raw", {
+            get: function () {
+                var _a = this.state, criteria = _a.criteria, pageNumber = _a.pageNumber, pageSize = _a.pageSize, sortBy = _a.sortBy, sortOrder = _a.sortOrder, flags = _a.flags, assetTypes = _a.assetTypes;
+                var filters = [{ criteria: criteria, pageNumber: pageNumber, pageSize: pageSize, sortBy: sortBy, sortOrder: sortOrder }];
+                return { filters: filters, assetTypes: assetTypes, flags: flags };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Query;
+    }());
+    function getStatistic(statistics, name) {
+        var result = (statistics || []).filter(function (s) { return s.statisticName === name; })[0];
+        return result ? result.value : 0;
+    }
+    function getAssetSource(files, type) {
+        var result = files.filter(function (f) { return f.assetType === type; })[0];
+        return result && result.source;
+    }
+    function getDependencies(version) {
+        var values = version.properties ? version.properties.filter(function (p) { return p.key === PropertyType.Dependency; }) : [];
+        var value = values.length > 0 && values[0].value;
+        return value ? value.split(',') : [];
+    }
+    function getEngine(version) {
+        var values = version.properties ? version.properties.filter(function (p) { return p.key === PropertyType.Engine; }) : [];
+        return (values.length > 0 && values[0].value) || '';
+    }
+    function toExtension(galleryExtension, extensionsGalleryUrl) {
+        var version = galleryExtension.versions[0];
+        var iconFallback = getAssetSource(version.files, AssetType.Icon);
+        var icon;
+        if (iconFallback) {
+            var parsedUrl = url.parse(iconFallback, true);
+            parsedUrl.search = undefined;
+            parsedUrl.query['redirect'] = 'true';
+            icon = url.format(parsedUrl);
+        }
+        else {
+            iconFallback = icon = require.toUrl('./media/defaultIcon.png');
+        }
+        var assets = {
+            manifest: getAssetSource(version.files, AssetType.Manifest),
+            readme: getAssetSource(version.files, AssetType.Details),
+            changelog: getAssetSource(version.files, AssetType.Changelog),
+            download: getAssetSource(version.files, AssetType.VSIX) + "?install=true",
+            icon: icon,
+            iconFallback: iconFallback,
+            license: getAssetSource(version.files, AssetType.License)
+        };
+        return {
+            id: galleryExtension.extensionId,
+            name: galleryExtension.extensionName,
+            version: version.version,
+            date: version.lastUpdated,
+            displayName: galleryExtension.displayName,
+            publisherId: galleryExtension.publisher.publisherId,
+            publisher: galleryExtension.publisher.publisherName,
+            publisherDisplayName: galleryExtension.publisher.displayName,
+            description: galleryExtension.shortDescription || '',
+            installCount: getStatistic(galleryExtension.statistics, 'install'),
+            rating: getStatistic(galleryExtension.statistics, 'averagerating'),
+            ratingCount: getStatistic(galleryExtension.statistics, 'ratingcount'),
+            assets: assets,
+            properties: {
+                dependencies: getDependencies(version),
+                engine: getEngine(version)
+            }
+        };
+    }
+    var ExtensionGalleryService = (function () {
+        function ExtensionGalleryService(requestService, telemetryService, configurationService) {
+            this.requestService = requestService;
+            this.telemetryService = telemetryService;
+            this.configurationService = configurationService;
+            var config = product_1.default.extensionsGallery;
+            this.extensionsGalleryUrl = config && config.serviceUrl;
+        }
+        Object.defineProperty(ExtensionGalleryService.prototype, "commonHeaders", {
+            get: function () {
+                return id_1.getMachineId().then(function (machineId) { return ({
+                    'X-Market-Client-Id': "VSCode " + package_1.default.version,
+                    'User-Agent': "VSCode " + package_1.default.version,
+                    'X-Market-User-Id': machineId
+                }); });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ExtensionGalleryService.prototype.api = function (path) {
+            if (path === void 0) { path = ''; }
+            return "" + this.extensionsGalleryUrl + path;
+        };
+        ExtensionGalleryService.prototype.isEnabled = function () {
+            return !!this.extensionsGalleryUrl;
+        };
+        ExtensionGalleryService.prototype.getRequestHeaders = function () {
+            return this.commonHeaders;
+        };
+        ExtensionGalleryService.prototype.query = function (options) {
+            var _this = this;
+            if (options === void 0) { options = {}; }
+            if (!this.isEnabled()) {
+                return winjs_base_1.TPromise.wrapError(new Error('No extension gallery service configured.'));
+            }
+            var type = options.names ? 'ids' : (options.text ? 'text' : 'all');
+            var text = options.text || '';
+            var pageSize = objects_1.getOrDefault(options, function (o) { return o.pageSize; }, 50);
+            this.telemetryService.publicLog('galleryService:query', { type: type, text: text });
+            var query = new Query()
+                .withFlags(Flags.IncludeLatestVersionOnly, Flags.IncludeAssetUri, Flags.IncludeStatistics, Flags.IncludeFiles, Flags.IncludeVersionProperties)
+                .withPage(1, pageSize)
+                .withFilter(FilterType.Target, 'Microsoft.VisualStudio.Code')
+                .withFilter(FilterType.ExcludeWithFlags, flagsToString(Flags.Unpublished))
+                .withAssetTypes(AssetType.Icon, AssetType.License, AssetType.Details, AssetType.Manifest, AssetType.VSIX);
+            if (text) {
+                query = query.withFilter(FilterType.SearchText, text).withSortBy(extensionManagement_1.SortBy.NoneOrRelevance);
+            }
+            else if (options.ids) {
+                query = query.withFilter.apply(query, [FilterType.ExtensionId].concat(options.ids));
+            }
+            else if (options.names) {
+                query = query.withFilter.apply(query, [FilterType.ExtensionName].concat(options.names));
+            }
+            else {
+                query = query.withSortBy(extensionManagement_1.SortBy.InstallCount);
+            }
+            if (typeof options.sortBy === 'number') {
+                query = query.withSortBy(options.sortBy);
+            }
+            if (typeof options.sortOrder === 'number') {
+                query = query.withSortOrder(options.sortOrder);
+            }
+            return this.queryGallery(query).then(function (_a) {
+                var galleryExtensions = _a.galleryExtensions, total = _a.total;
+                var extensions = galleryExtensions.map(function (e) { return toExtension(e, _this.extensionsGalleryUrl); });
+                var pageSize = query.pageSize;
+                var getPage = function (pageIndex) { return _this.queryGallery(query.withPage(pageIndex + 1))
+                    .then(function (_a) {
+                    var galleryExtensions = _a.galleryExtensions;
+                    return galleryExtensions.map(function (e) { return toExtension(e, _this.extensionsGalleryUrl); });
+                }); };
+                return { firstPage: extensions, total: total, pageSize: pageSize, getPage: getPage };
+            });
+        };
+        ExtensionGalleryService.prototype.queryGallery = function (query) {
+            var _this = this;
+            return this.commonHeaders
+                .then(function (headers) {
+                var data = JSON.stringify(query.raw);
+                headers = objects_1.assign({}, headers, {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json;api-version=3.0-preview.1',
+                    'Accept-Encoding': 'gzip',
+                    'Content-Length': data.length
+                });
+                return _this.requestService.request({
+                    type: 'POST',
+                    url: _this.api('/extensionquery'),
+                    data: data,
+                    headers: headers
+                });
+            })
+                .then(function (context) { return request_2.asJson(context); })
+                .then(function (result) {
+                var r = result.results[0];
+                var galleryExtensions = r.extensions;
+                var resultCount = r.resultMetadata && r.resultMetadata.filter(function (m) { return m.metadataType === 'ResultCount'; })[0];
+                var total = resultCount && resultCount.metadataItems.filter(function (i) { return i.name === 'TotalCount'; })[0].count || 0;
+                return { galleryExtensions: galleryExtensions, total: total };
+            });
+        };
+        ExtensionGalleryService.prototype.download = function (extension) {
+            var _this = this;
+            return this.loadCompatibleVersion(extension).then(function (extension) {
+                var url = extension.assets.download;
+                var zipPath = path.join(os_1.tmpdir(), extension.id);
+                var data = extensionTelemetry_1.getGalleryExtensionTelemetryData(extension);
+                var startTime = new Date().getTime();
+                var log = function (duration) { return _this.telemetryService.publicLog('galleryService:downloadVSIX', objects_1.assign(data, { duration: duration })); };
+                return _this._getAsset({ url: url })
+                    .then(function (context) { return request_2.download(zipPath, context); })
+                    .then(function () { return log(new Date().getTime() - startTime); })
+                    .then(function () { return zipPath; });
+            });
+        };
+        ExtensionGalleryService.prototype.getAsset = function (url) {
+            return this._getAsset({ url: url });
+        };
+        ExtensionGalleryService.prototype.getAllDependencies = function (extension) {
+            var _this = this;
+            return this.loadCompatibleVersion(extension)
+                .then(function (compatible) { return _this.getDependenciesReccursively(compatible.properties.dependencies, [], extension); });
+        };
+        ExtensionGalleryService.prototype.loadCompatibleVersion = function (extension) {
+            var _this = this;
+            if (extension.properties.engine && this.isEngineValid(extension.properties.engine)) {
+                return winjs_base_1.TPromise.wrap(extension);
+            }
+            var query = new Query()
+                .withFlags(Flags.IncludeVersions, Flags.IncludeFiles, Flags.IncludeVersionProperties)
+                .withPage(1, 1)
+                .withFilter(FilterType.Target, 'Microsoft.VisualStudio.Code')
+                .withFilter(FilterType.ExcludeWithFlags, flagsToString(Flags.Unpublished))
+                .withAssetTypes(AssetType.Manifest, AssetType.VSIX)
+                .withFilter(FilterType.ExtensionId, extension.id);
+            return this.queryGallery(query).then(function (_a) {
+                var galleryExtensions = _a.galleryExtensions;
+                var rawExtension = galleryExtensions[0];
+                if (!rawExtension) {
+                    return winjs_base_1.TPromise.wrapError(new Error(nls_1.localize(0, null)));
+                }
+                return _this.getLastValidExtensionVersion(rawExtension, rawExtension.versions)
+                    .then(function (rawVersion) {
+                    extension.properties.dependencies = getDependencies(rawVersion);
+                    extension.properties.engine = getEngine(rawVersion);
+                    extension.assets.download = getAssetSource(rawVersion.files, AssetType.VSIX) + "?install=true";
+                    extension.version = rawVersion.version;
+                    return extension;
+                });
+            });
+        };
+        ExtensionGalleryService.prototype.loadDependencies = function (extensionNames) {
+            var _this = this;
+            extensionNames = extensionNames.filter(function (e) { return extensionManagement_1.EXTENSION_IDENTIFIER_REGEX.test(e); });
+            var query = (_a = new Query()
+                .withFlags(Flags.IncludeLatestVersionOnly, Flags.IncludeAssetUri, Flags.IncludeStatistics, Flags.IncludeFiles, Flags.IncludeVersionProperties)
+                .withPage(1, extensionNames.length)
+                .withFilter(FilterType.Target, 'Microsoft.VisualStudio.Code')
+                .withFilter(FilterType.ExcludeWithFlags, flagsToString(Flags.Unpublished))
+                .withAssetTypes(AssetType.Icon, AssetType.License, AssetType.Details, AssetType.Manifest, AssetType.VSIX)).withFilter.apply(_a, [FilterType.ExtensionName].concat(extensionNames));
+            return this.queryGallery(query).then(function (result) {
+                var dependencies = [];
+                var ids = [];
+                for (var _i = 0, _a = result.galleryExtensions; _i < _a.length; _i++) {
+                    var rawExtension = _a[_i];
+                    if (ids.indexOf(rawExtension.extensionId) === -1) {
+                        dependencies.push(toExtension(rawExtension, _this.extensionsGalleryUrl));
+                        ids.push(rawExtension.extensionId);
+                    }
+                }
+                return dependencies;
+            });
+            var _a;
+        };
+        ExtensionGalleryService.prototype.getDependenciesReccursively = function (toGet, result, root) {
+            var _this = this;
+            if (!toGet || !toGet.length) {
+                return winjs_base_1.TPromise.wrap(result);
+            }
+            if (toGet.indexOf(root.publisher + "." + root.name) !== -1 && result.indexOf(root) === -1) {
+                result.push(root);
+            }
+            toGet = result.length ? toGet.filter(function (e) { return !ExtensionGalleryService.hasExtensionByName(result, e); }) : toGet;
+            if (!toGet.length) {
+                return winjs_base_1.TPromise.wrap(result);
+            }
+            return this.loadDependencies(toGet)
+                .then(function (loadedDependencies) {
+                var dependenciesSet = new set_1.ArraySet();
+                for (var _i = 0, loadedDependencies_1 = loadedDependencies; _i < loadedDependencies_1.length; _i++) {
+                    var dep = loadedDependencies_1[_i];
+                    if (dep.properties.dependencies) {
+                        dep.properties.dependencies.forEach(function (d) { return dependenciesSet.set(d); });
+                    }
+                }
+                result = arrays_1.distinct(result.concat(loadedDependencies), function (d) { return d.id; });
+                var dependencies = dependenciesSet.elements.filter(function (d) { return !ExtensionGalleryService.hasExtensionByName(result, d); });
+                return _this.getDependenciesReccursively(dependencies, result, root);
+            });
+        };
+        /**
+         * Always try with the `redirect=true` query string.
+         * If that does not return 200, try without it.
+         */
+        ExtensionGalleryService.prototype._getAsset = function (options) {
+            var _this = this;
+            var parsedUrl = url.parse(options.url, true);
+            parsedUrl.search = undefined;
+            parsedUrl.query['redirect'] = 'true';
+            return this.commonHeaders.then(function (headers) {
+                headers = objects_1.assign({}, headers, options.headers || {});
+                options = objects_1.assign({}, options, { headers: headers });
+                var cdnUrl = url.format(parsedUrl);
+                var cdnOptions = objects_1.assign({}, options, { url: cdnUrl });
+                return _this.requestService.request(cdnOptions)
+                    .then(function (context) { return context.res.statusCode === 200 ? context : winjs_base_1.TPromise.wrapError('expected 200'); })
+                    .then(null, function (err) {
+                    _this.telemetryService.publicLog('galleryService:requestError', { cdn: true, message: errors_1.getErrorMessage(err) });
+                    _this.telemetryService.publicLog('galleryService:cdnFallback', { url: cdnUrl });
+                    return _this.requestService.request(options).then(null, function (err) {
+                        _this.telemetryService.publicLog('galleryService:requestError', { cdn: false, message: errors_1.getErrorMessage(err) });
+                        return winjs_base_1.TPromise.wrapError(err);
+                    });
+                });
+            });
+        };
+        ExtensionGalleryService.prototype.getLastValidExtensionVersion = function (extension, versions) {
+            var version = this.getLastValidExtensionVersionFromProperties(extension, versions);
+            if (version) {
+                return version;
+            }
+            return this.getLastValidExtensionVersionReccursively(extension, versions);
+        };
+        ExtensionGalleryService.prototype.getLastValidExtensionVersionFromProperties = function (extension, versions) {
+            for (var _i = 0, versions_1 = versions; _i < versions_1.length; _i++) {
+                var version = versions_1[_i];
+                var engine = getEngine(version);
+                if (!engine) {
+                    return null;
+                }
+                if (this.isEngineValid(engine)) {
+                    return winjs_base_1.TPromise.wrap(version);
+                }
+            }
+            return null;
+        };
+        ExtensionGalleryService.prototype.getLastValidExtensionVersionReccursively = function (extension, versions) {
+            var _this = this;
+            if (!versions.length) {
+                return winjs_base_1.TPromise.wrapError(new Error(nls_1.localize(1, null, extension.displayName || extension.extensionName)));
+            }
+            var version = versions[0];
+            var url = getAssetSource(version.files, AssetType.Manifest);
+            var headers = { 'Accept-Encoding': 'gzip' };
+            return this._getAsset({ url: url, headers: headers })
+                .then(function (context) { return request_2.asJson(context); })
+                .then(function (manifest) {
+                var engine = manifest.engines.vscode;
+                if (!_this.isEngineValid(engine)) {
+                    return _this.getLastValidExtensionVersionReccursively(extension, versions.slice(1));
+                }
+                version.properties = version.properties || [];
+                version.properties.push({ key: PropertyType.Engine, value: manifest.engines.vscode });
+                return version;
+            });
+        };
+        ExtensionGalleryService.prototype.isEngineValid = function (engine) {
+            // TODO@joao: discuss with alex '*' doesn't seem to be a valid engine version
+            return engine === '*' || extensionValidator_1.isVersionValid(package_1.default.version, engine);
+        };
+        ExtensionGalleryService.hasExtensionByName = function (extensions, name) {
+            for (var _i = 0, extensions_1 = extensions; _i < extensions_1.length; _i++) {
+                var extension = extensions_1[_i];
+                if (extension.publisher + "." + extension.name === name) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        __decorate([
+            decorators_1.memoize
+        ], ExtensionGalleryService.prototype, "commonHeaders", null);
+        ExtensionGalleryService = __decorate([
+            __param(0, request_1.IRequestService),
+            __param(1, telemetry_1.ITelemetryService),
+            __param(2, configuration_1.IConfigurationService)
+        ], ExtensionGalleryService);
+        return ExtensionGalleryService;
+    }());
+    exports.ExtensionGalleryService = ExtensionGalleryService;
+});
+
+
+
+
+
+
+
+
+
+
+define(__m[47/*vs/platform/request/node/requestService*/], __M([1/*require*/,0/*exports*/,9/*vs/base/common/objects*/,32/*vs/base/node/request*/,84/*vs/base/node/proxy*/,16/*vs/platform/configuration/common/configuration*/]), function (require, exports, objects_1, request_1, proxy_1, configuration_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    /**
+     * This service exposes the `request` API, while using the global
+     * or configured proxy settings.
+     */
+    var RequestService = (function () {
+        function RequestService(configurationService) {
+            this.disposables = [];
+            this.configure(configurationService.getConfiguration());
+            configurationService.onDidUpdateConfiguration(this.onDidUpdateConfiguration, this, this.disposables);
+        }
+        RequestService.prototype.onDidUpdateConfiguration = function (e) {
+            this.configure(e.config);
+        };
+        RequestService.prototype.configure = function (config) {
+            this.proxyUrl = config.http && config.http.proxy;
+            this.strictSSL = config.http && config.http.proxyStrictSSL;
+            this.authorization = config.http && config.http.proxyAuthorization;
+        };
+        RequestService.prototype.request = function (options) {
+            var _a = this, proxyUrl = _a.proxyUrl, strictSSL = _a.strictSSL;
+            options.agent = options.agent || proxy_1.getProxyAgent(options.url, { proxyUrl: proxyUrl, strictSSL: strictSSL });
+            options.strictSSL = strictSSL;
+            if (this.authorization) {
+                options.headers = objects_1.assign(options.headers || {}, { 'Proxy-Authorization': this.authorization });
+            }
+            return request_1.request(options);
+        };
+        RequestService = __decorate([
+            __param(0, configuration_1.IConfigurationService)
+        ], RequestService);
+        return RequestService;
+    }());
+    exports.RequestService = RequestService;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[106/*vs/code/node/sharedProcessMain*/], __M([1/*require*/,0/*exports*/,15/*fs*/,13/*vs/base/common/platform*/,21/*vs/platform/product*/,28/*vs/platform/package*/,43/*vs/base/parts/ipc/node/ipc.net*/,2/*vs/base/common/winjs.base*/,33/*vs/platform/instantiation/common/serviceCollection*/,30/*vs/platform/instantiation/common/descriptors*/,77/*vs/platform/instantiation/common/instantiationService*/,22/*vs/platform/environment/common/environment*/,88/*vs/platform/environment/node/environmentService*/,74/*vs/platform/event/common/event*/,63/*vs/platform/event/common/eventService*/,64/*vs/platform/extensionManagement/common/extensionManagementIpc*/,20/*vs/platform/extensionManagement/common/extensionManagement*/,89/*vs/platform/extensionManagement/node/extensionManagementService*/,70/*vs/platform/extensionManagement/node/extensionGalleryService*/,16/*vs/platform/configuration/common/configuration*/,86/*vs/platform/configuration/node/configurationService*/,41/*vs/platform/request/common/request*/,47/*vs/platform/request/node/requestService*/,24/*vs/platform/telemetry/common/telemetry*/,44/*vs/platform/telemetry/node/commonProperties*/,92/*vs/platform/telemetry/common/telemetryIpc*/,93/*vs/platform/telemetry/common/telemetryService*/,94/*vs/platform/telemetry/node/appInsightsAppender*/,34/*vs/platform/message/common/message*/,79/*vs/platform/message/common/messageIpc*/,45/*vs/code/common/windowsIpc*/,71/*vs/code/common/windows*/]), function (require, exports, fs, platform, product_1, package_1, ipc_net_1, winjs_base_1, serviceCollection_1, descriptors_1, instantiationService_1, environment_1, environmentService_1, event_1, eventService_1, extensionManagementIpc_1, extensionManagement_1, extensionManagementService_1, extensionGalleryService_1, configuration_1, configurationService_1, request_1, requestService_1, telemetry_1, commonProperties_1, telemetryIpc_1, telemetryService_1, appInsightsAppender_1, message_1, messageIpc_1, windowsIpc_1, windows_1) {
     "use strict";
     function quit(err) {
         if (err) {
@@ -11705,12 +13017,22 @@ define(__m[93], __M([0,1,12,6,27,22,40,2,32,28,70,21,79,67,60,61,68,65,30,66,80,
         }, 5000);
     }
     var eventPrefix = 'monacoworkbench';
-    function main(server) {
+    function main(server, initData) {
         var services = new serviceCollection_1.ServiceCollection();
         services.set(event_1.IEventService, new descriptors_1.SyncDescriptor(eventService_1.EventService));
-        services.set(environment_1.IEnvironmentService, new descriptors_1.SyncDescriptor(environmentService_1.EnvironmentService));
-        services.set(extensionManagement_1.IExtensionManagementService, new descriptors_1.SyncDescriptor(extensionManagementService_1.ExtensionManagementService));
-        services.set(configuration_1.IConfigurationService, new descriptors_1.SyncDescriptor(nodeConfigurationService_1.NodeConfigurationService));
+        services.set(environment_1.IEnvironmentService, new descriptors_1.SyncDescriptor(environmentService_1.EnvironmentService, initData.args, process.execPath));
+        services.set(configuration_1.IConfigurationService, new descriptors_1.SyncDescriptor(configurationService_1.ConfigurationService));
+        services.set(request_1.IRequestService, new descriptors_1.SyncDescriptor(requestService_1.RequestService));
+        var windowEventService = new windowsIpc_1.WindowEventChannelClient(server.getChannel('windowEvent', {
+            routeCall: function (command, arg) {
+                return 'main';
+            }
+        }));
+        services.set(windows_1.IWindowEventService, windowEventService);
+        var activeWindowManager = new windows_1.ActiveWindowManager(windowEventService);
+        services.set(message_1.IChoiceService, new messageIpc_1.ChoiceChannelClient(server.getChannel('choice', {
+            routeCall: function () { return activeWindowManager.activeClientId; }
+        })));
         var instantiationService = new instantiationService_1.InstantiationService(services);
         instantiationService.invokeFunction(function (accessor) {
             var appenders = [];
@@ -11738,13 +13060,15 @@ define(__m[93], __M([0,1,12,6,27,22,40,2,32,28,70,21,79,67,60,61,68,65,30,66,80,
             else {
                 services.set(telemetry_1.ITelemetryService, telemetry_1.NullTelemetryService);
             }
+            services.set(extensionManagement_1.IExtensionManagementService, new descriptors_1.SyncDescriptor(extensionManagementService_1.ExtensionManagementService));
+            services.set(extensionManagement_1.IExtensionGalleryService, new descriptors_1.SyncDescriptor(extensionGalleryService_1.ExtensionGalleryService));
             var instantiationService2 = instantiationService.createChild(services);
             instantiationService2.invokeFunction(function (accessor) {
                 var extensionManagementService = accessor.get(extensionManagement_1.IExtensionManagementService);
                 var channel = new extensionManagementIpc_1.ExtensionManagementChannel(extensionManagementService);
                 server.registerChannel('extensions', channel);
-                // eventually clean up old extensions
-                setTimeout(function () { return extensionManagementService.removeDeprecatedExtensions(); }, 5000);
+                // clean up deprecated extensions
+                extensionManagementService.removeDeprecatedExtensions();
             });
         });
     }
@@ -11755,7 +13079,7 @@ define(__m[93], __M([0,1,12,6,27,22,40,2,32,28,70,21,79,67,60,61,68,65,30,66,80,
                     return winjs_base_1.TPromise.wrapError(err);
                 }
                 // should retry, not windows and eaddrinuse
-                return ipc_net_1.connect(hook).then(function (client) {
+                return ipc_net_1.connect(hook, '').then(function (client) {
                     // we could connect to a running instance. this is not good, abort
                     client.dispose();
                     return winjs_base_1.TPromise.wrapError(new Error('There is an instance already running.'));
@@ -11782,10 +13106,11 @@ define(__m[93], __M([0,1,12,6,27,22,40,2,32,28,70,21,79,67,60,61,68,65,30,66,80,
             process.send('hello');
         });
     }
-    winjs_base_1.TPromise.join([setupIPC(process.env['VSCODE_SHARED_IPC_HOOK']), handshake()])
-        .then(function (r) { return main(r[0]); })
+    setupIPC(process.env['VSCODE_SHARED_IPC_HOOK'])
+        .then(function (server) { return handshake()
+        .then(function (data) { return main(server, data); })
         .then(function () { return setupPlanB(process.env['VSCODE_PID']); })
-        .done(null, quit);
+        .done(null, quit); });
 });
 
 }).call(this);

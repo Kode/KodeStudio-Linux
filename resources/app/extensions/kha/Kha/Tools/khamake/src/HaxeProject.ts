@@ -1,11 +1,9 @@
-"use strict";
-
 import * as fs from 'fs-extra'; 
 import * as path from 'path';
 import {writeXml} from './XmlWriter';
 import * as log from './log';
 
-function copyAndReplace(from, to, names, values) {
+function copyAndReplace(from: string, to: string, names: string[], values: string[]) {
 	let data = fs.readFileSync(from, { encoding: 'utf8' });
 	for (let i = 0; i < names.length; ++i) {
 		data = data.replace(new RegExp(names[i], 'g'), values[i]);
@@ -13,9 +11,9 @@ function copyAndReplace(from, to, names, values) {
 	fs.writeFileSync(to, data, { encoding: 'utf8' });
 }
 
-function IntelliJ(projectdir, options) {
-    let indir = path.join(__dirname, '..', 'Data', 'intellij');
-    let outdir = path.join(projectdir, 'project-' + options.system + '-intellij');
+function IntelliJ(projectdir: string, options: any) {
+	let indir = path.join(__dirname, '..', 'Data', 'intellij');
+	let outdir = path.join(projectdir, options.safeName + '-' + options.system + '-intellij');
 
 	let sources = '';
 	for (let i = 0; i < options.sources.length; ++i) {
@@ -26,8 +24,8 @@ function IntelliJ(projectdir, options) {
 			sources += '      <sourceFolder url="file://$MODULE_DIR$/' + path.relative(outdir, path.resolve(options.from, options.sources[i])).replace(/\\/g, '/') + '" isTestSource="false" />\n';
 		}
 	}
-    	let libraries = '';
-    	for (let i = 0; i < options.libraries.length; ++i) {
+		let libraries = '';
+		for (let i = 0; i < options.libraries.length; ++i) {
 		if (path.isAbsolute(options.libraries[i].libpath)) {
 			libraries += '    <content url="file://' + options.libraries[i].libroot + '">\n';
 			libraries += '      <sourceFolder url="file://' + options.libraries[i].libpath + '" isTestSource="false" />\n';
@@ -36,13 +34,13 @@ function IntelliJ(projectdir, options) {
 			libraries += '    <content url="file://$MODULE_DIR$/' + path.relative(outdir, path.resolve(options.from, options.libraries[i].libroot)).replace(/\\/g, '/') + '">\n';
 			libraries += '      <sourceFolder url="file://$MODULE_DIR$/' + path.relative(outdir, path.resolve(options.from, options.libraries[i].libpath)).replace(/\\/g, '/') + '" isTestSource="false" />\n';
 		}
-		libraries += '    </content>\n'
+		libraries += '    </content>\n';
 	}
 
 	let args = '';
 
-    let defines = '';
-    for (let i = 0; i < options.defines.length; ++i) {
+	let defines = '';
+	for (let i = 0; i < options.defines.length; ++i) {
 		defines += options.defines[i];
 		if (i < options.defines.length - 1) defines += ',';
 	}
@@ -50,7 +48,7 @@ function IntelliJ(projectdir, options) {
 		defines += param + ',';
 	}
 
-	let target;
+	let target: string;
 	switch (options.language) {
 		case 'hl':
 		case 'cpp':
@@ -78,7 +76,7 @@ function IntelliJ(projectdir, options) {
 	}
 
 	fs.copySync(path.join(indir, 'name.iml'), path.join(outdir, options.name + '.iml'), { clobber: true });
-	copyAndReplace(path.join(indir, 'name.iml'), path.join(outdir, options.name + '.iml'), ['{name}', '{sources}', '{libraries}', '{target}', '{system}', '{args}'], [options.name, sources, libraries, target, options.system, args]);
+	copyAndReplace(path.join(indir, 'name.iml'), path.join(outdir, options.name + '.iml'), ['{name}', '{sources}', '{libraries}', '{target}', '{system}', '{args}'], [options.safeName, sources, libraries, target, options.system, args]);
 
 	fs.copySync(path.join(indir, 'idea', 'compiler.xml'), path.join(outdir, '.idea', 'compiler.xml'), { clobber: true });
 	copyAndReplace(path.join(indir, 'idea', 'haxe.xml'), path.join(outdir, '.idea', 'haxe.xml'), ['{defines}'], [defines]);
@@ -89,7 +87,7 @@ function IntelliJ(projectdir, options) {
 	fs.copySync(path.join(indir, 'idea', 'copyright', 'profiles_settings.xml'), path.join(outdir, '.idea', 'copyright', 'profiles_settings.xml'), { clobber: true });
 }
 
-export function hxml(projectdir, options) {
+function hxml(projectdir: string, options: any) {
 	let data = '';
 	for (let i = 0; i < options.sources.length; ++i) {
 		if (path.isAbsolute(options.sources[i])) {
@@ -132,11 +130,11 @@ export function hxml(projectdir, options) {
 	else if (options.language === 'as') {
 		data += '-swf ' + path.normalize(options.to) + '\n';
 		data += '-swf-version ' + options.swfVersion + '\n';
-		data += '-swf-header ' + options.width + ':' + options.height + ':' + options.framerate + ':' + options.stageBackground + '\n'
+		data += '-swf-header ' + options.width + ':' + options.height + ':' + options.framerate + ':' + options.stageBackground + '\n';
 	}
 	else if (options.language === 'xml') {
 		data += '-xml ' + path.normalize(options.to) + '\n';
-		data += "--macro include('kha')\n";
+		data += '--macro include(\'kha\')\n';
 	}
 	else if (options.language === 'hl') {
 		data += '-hl ' + path.normalize(options.to) + '\n';
@@ -148,8 +146,8 @@ export function hxml(projectdir, options) {
 	fs.outputFileSync(path.join(projectdir, 'project-' + options.system + '.hxml'), data);
 }
 
-function FlashDevelop(projectdir, options) {
-	let platform;
+function FlashDevelop(projectdir: string, options: any) {
+	let platform: string;
 
 	switch (options.language) {
 		case 'hl':
@@ -170,9 +168,9 @@ function FlashDevelop(projectdir, options) {
 			break;
 	}
 
-    options.swfVersion = 'swfVersion' in options ? options.swfVersion : 16.0;
-    options.stageBackground = 'stageBackground' in options ? options.stageBackground : 'ffffff';
-    options.framerate = 'framerate' in options ? options.framerate : 30;
+	options.swfVersion = 'swfVersion' in options ? options.swfVersion : 16.0;
+	options.stageBackground = 'stageBackground' in options ? options.stageBackground : 'ffffff';
+	options.framerate = 'framerate' in options ? options.framerate : 30;
     
 	let swfVersion = parseFloat(options.swfVersion).toFixed(1).split('.');
 	
@@ -229,7 +227,7 @@ function FlashDevelop(projectdir, options) {
 		});
 	}
 
-	var classpaths = [];
+	let classpaths: string[] = [];
 
 	for (let i = 0; i < options.sources.length; ++i) {
 		if (path.isAbsolute(options.sources[i])) {
@@ -400,10 +398,11 @@ function FlashDevelop(projectdir, options) {
 		]
 	};
 
-	writeXml(project, path.join(projectdir, 'project-' + options.system + '.hxproj'));
+	writeXml(project, path.join(projectdir, options.safeName + '-' + options.system + '.hxproj'));
 }
 
-export function writeHaxeProject(projectdir, options) {
+export function writeHaxeProject(projectdir: string, options: any) {
+	hxml(projectdir, options);
 	FlashDevelop(projectdir, options);
 	IntelliJ(projectdir, options);
 }

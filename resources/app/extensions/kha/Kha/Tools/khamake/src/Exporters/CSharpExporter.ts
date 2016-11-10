@@ -5,25 +5,26 @@ import {convert} from '../Converter';
 import {executeHaxe} from '../Haxe';
 import {Options} from '../Options';
 import {exportImage} from '../ImageTool';
-import {writeHaxeProject} from '../HaxeProject';
-import {hxml} from '../HaxeProject';
+import {Library} from '../Project';
 const uuid = require('uuid');
 
 export abstract class CSharpExporter extends KhaExporter {
 	parameters: Array<string>;
-	
+
 	constructor(options: Options) {
 		super(options);
+		this.addSourceDirectory(path.join(this.options.kha, 'Backends', this.backend()));
+		fs.removeSync(path.join(this.options.to, this.sysdir() + '-build', 'Sources'));
 	}
 
 	includeFiles(dir: string, baseDir: string) {
 		if (!dir || !fs.existsSync(dir)) return;
 		let files = fs.readdirSync(dir);
-		for (var f in files) {
+		for (let f in files) {
 			let file = path.join(dir, files[f]);
 			if (fs.existsSync(file) && fs.statSync(file).isDirectory()) this.includeFiles(file, baseDir);
-			else if (file.endsWith(".cs")) {
-				this.p("<Compile Include=\"" + path.relative(baseDir, file).replace(/\//g, '\\') + "\" />", 2);
+			else if (file.endsWith('.cs')) {
+				this.p('<Compile Include="' + path.relative(baseDir, file).replace(/\//g, '\\') + '" />', 2);
 			}
 		}
 	}
@@ -52,61 +53,53 @@ export abstract class CSharpExporter extends KhaExporter {
 		};
 	}
 
-	async exportSolution(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
-		this.addSourceDirectory(path.join(this.options.kha, 'Backends', this.backend()));
-		
-		hxml(this.options.to, haxeOptions);
-
+	async export(name: string, targetOptions: any, haxeOptions: any): Promise<void> {
 		if (this.projectFiles) {
-			writeHaxeProject(this.options.to, haxeOptions);
+			const projectUuid: string = uuid.v4();
+			this.exportSLN(projectUuid);
+			this.exportCsProj(projectUuid);
+			this.exportResources();
 		}
-
-		fs.removeSync(path.join(this.options.to, this.sysdir() + '-build', 'Sources'));
-
-		const projectUuid = uuid.v4();
-		this.exportSLN(projectUuid);
-		this.exportCsProj(projectUuid);
-		this.exportResources();
 	}
 
-	exportSLN(projectUuid) {
+	exportSLN(projectUuid: string) {
 		fs.ensureDirSync(path.join(this.options.to, this.sysdir() + '-build'));
 		this.writeFile(path.join(this.options.to, this.sysdir() + '-build', 'Project.sln'));
 		const solutionUuid = uuid.v4();
 
-		this.p("Microsoft Visual Studio Solution File, Format Version 11.00");
-		this.p("# Visual Studio 2010");
-		this.p("Project(\"{" + solutionUuid.toString().toUpperCase() + "}\") = \"HaxeProject\", \"Project.csproj\", \"{" + projectUuid.toString().toUpperCase() + "}\"");
-		this.p("EndProject");
-		this.p("Global");
-		this.p("GlobalSection(SolutionConfigurationPlatforms) = preSolution", 1);
-		this.p("Debug|x86 = Debug|x86", 2);
-		this.p("Release|x86 = Release|x86", 2);
-		this.p("EndGlobalSection", 1);
-		this.p("GlobalSection(ProjectConfigurationPlatforms) = postSolution", 1);
-		this.p("{" + projectUuid.toString().toUpperCase() + "}.Debug|x86.ActiveCfg = Debug|x86", 2);
-		this.p("{" + projectUuid.toString().toUpperCase() + "}.Debug|x86.Build.0 = Debug|x86", 2);
-		this.p("{" + projectUuid.toString().toUpperCase() + "}.Release|x86.ActiveCfg = Release|x86", 2);
-		this.p("{" + projectUuid.toString().toUpperCase() + "}.Release|x86.Build.0 = Release|x86", 2);
-		this.p("EndGlobalSection", 1);
-		this.p("GlobalSection(SolutionProperties) = preSolution", 1);
-		this.p("HideSolutionNode = FALSE", 2);
-		this.p("EndGlobalSection", 1);
-		this.p("EndGlobal");
+		this.p('Microsoft Visual Studio Solution File, Format Version 11.00');
+		this.p('# Visual Studio 2010');
+		this.p('Project("{' + solutionUuid.toString().toUpperCase() + '}") = "HaxeProject", "Project.csproj", "{' + projectUuid.toString().toUpperCase() + '}"');
+		this.p('EndProject');
+		this.p('Global');
+		this.p('GlobalSection(SolutionConfigurationPlatforms) = preSolution', 1);
+		this.p('Debug|x86 = Debug|x86', 2);
+		this.p('Release|x86 = Release|x86', 2);
+		this.p('EndGlobalSection', 1);
+		this.p('GlobalSection(ProjectConfigurationPlatforms) = postSolution', 1);
+		this.p('{' + projectUuid.toString().toUpperCase() + '}.Debug|x86.ActiveCfg = Debug|x86', 2);
+		this.p('{' + projectUuid.toString().toUpperCase() + '}.Debug|x86.Build.0 = Debug|x86', 2);
+		this.p('{' + projectUuid.toString().toUpperCase() + '}.Release|x86.ActiveCfg = Release|x86', 2);
+		this.p('{' + projectUuid.toString().toUpperCase() + '}.Release|x86.Build.0 = Release|x86', 2);
+		this.p('EndGlobalSection', 1);
+		this.p('GlobalSection(SolutionProperties) = preSolution', 1);
+		this.p('HideSolutionNode = FALSE', 2);
+		this.p('EndGlobalSection', 1);
+		this.p('EndGlobal');
 		this.closeFile();
 	}
 
 	/*copyMusic(platform, from, to, encoders) {
 		return [to];
 	}*/
-	
+
 	abstract sysdir(): string;
-	
+
 	abstract backend(): string;
-	
-	abstract exportCsProj(projectUuid);
-	
-	abstract exportResources();
+
+	abstract exportCsProj(projectUuid: string): void;
+
+	abstract exportResources(): void;
 
 	async copySound(platform: string, from: string, to: string) {
 		return [to];

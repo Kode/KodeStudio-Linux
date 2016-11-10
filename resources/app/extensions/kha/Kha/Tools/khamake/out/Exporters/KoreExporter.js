@@ -13,12 +13,11 @@ const KhaExporter_1 = require('./KhaExporter');
 const Converter_1 = require('../Converter');
 const Platform_1 = require('../Platform');
 const ImageTool_1 = require('../ImageTool');
-const HaxeProject_1 = require('../HaxeProject');
-const HaxeProject_2 = require('../HaxeProject');
 class KoreExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
         this.addSourceDirectory(path.join(options.kha, 'Backends', 'Kore'));
+        // Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
     }
     sysdir() {
         if (this.options.target === 'android')
@@ -30,6 +29,7 @@ class KoreExporter extends KhaExporter_1.KhaExporter {
     haxeOptions(name, targetOptions, defines) {
         defines.push('no-compilation');
         defines.push('sys_' + this.options.target);
+        defines.push('sys_kore');
         defines.push('sys_g1');
         defines.push('sys_g2');
         defines.push('sys_g3');
@@ -60,25 +60,21 @@ class KoreExporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    exportSolution(name, targetOptions, haxeOptions) {
-        return __awaiter(this, void 0, Promise, function* () {
-            HaxeProject_2.hxml(this.options.to, haxeOptions);
-            if (this.projectFiles) {
-                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
-            }
-            //Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
+    export(name, targetOptions, haxeOptions) {
+        return __awaiter(this, void 0, void 0, function* () {
         });
     }
-    /*copyMusic(platform, from, to, encoders, callback) {
-        Files.createDirectories(this.directory.resolve(this.sysdir()).resolve(to).parent());
-        Converter.convert(from, this.directory.resolve(this.sysdir()).resolve(to + '.ogg'), encoders.oggEncoder, (success) => {
-            callback([to + '.ogg']);
-        });
-    }*/
-    copySound(platform, from, to) {
+    copySound(platform, from, to, options) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { clobber: true });
-            return [to + '.wav'];
+            if (options.quality < 1) {
+                fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
+                let ogg = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
+                return [to + '.ogg'];
+            }
+            else {
+                fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { clobber: true });
+                return [to + '.wav'];
+            }
         });
     }
     copyImage(platform, from, to, options) {
@@ -117,5 +113,5 @@ class KoreExporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.KoreExporter = KoreExporter;
-//# sourceMappingURL=KoreExporter.js.map
+exports.KoreExporter = KoreExporter;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/KoreExporter.js.map

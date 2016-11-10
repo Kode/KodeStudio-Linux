@@ -1,15 +1,20 @@
 #include "pch.h"
-#include "VertexBufferImpl.h"
-#include <Kore/Graphics/Graphics.h>
+
 #include "ShaderImpl.h"
+#include "VertexBufferImpl.h"
 #include "ogl.h"
+
+#include <Kore/Graphics/Graphics.h>
+#include <assert.h>
 
 using namespace Kore;
 
 VertexBuffer* VertexBufferImpl::current = nullptr;
 
 VertexBufferImpl::VertexBufferImpl(int count, int instanceDataStepRate) : myCount(count), instanceDataStepRate(instanceDataStepRate) {
-
+#ifndef NDEBUG
+	initialized = false;
+#endif
 }
 
 VertexBuffer::VertexBuffer(int vertexCount, const VertexStructure& structure, int instanceDataStepRate) : VertexBufferImpl(vertexCount, instanceDataStepRate) {
@@ -55,8 +60,8 @@ float* VertexBuffer::lock() {
 /*
 // TODO: FIXME!
 float* VertexBuffer::lock(int start, int count) {
-	myCount = count;
-	return nullptr;//&buffer[start * 9];
+    myCount = count;
+    return nullptr;//&buffer[start * 9];
 }
 */
 
@@ -65,9 +70,13 @@ void VertexBuffer::unlock() {
 	glCheckErrors();
 	glBufferData(GL_ARRAY_BUFFER, myStride * myCount, data, GL_STATIC_DRAW);
 	glCheckErrors();
+#ifndef NDEBUG
+	initialized = true;
+#endif
 }
 
 int VertexBuffer::_set(int offset) {
+	assert(initialized); // Vertex Buffer is used before lock/unlock was called
 	int offsetoffset = setVertexAttributes(offset);
 	if (IndexBuffer::current != nullptr) IndexBuffer::current->_set();
 	return offsetoffset;
@@ -93,7 +102,7 @@ int VertexBufferImpl::setVertexAttributes(int offset) {
 	int actualIndex = 0;
 	for (int index = 0; index < structure.size; ++index) {
 		VertexElement element = structure.elements[index];
-		int    size = 0;
+		int size = 0;
 		GLenum type = GL_FLOAT;
 		switch (element.data) {
 		case ColorVertexData:
@@ -166,7 +175,7 @@ int VertexBufferImpl::setVertexAttributes(int offset) {
 		}
 	}
 	for (int index = actualIndex; index < 16; ++index) {
-		//glDisableVertexAttribArray(offset + index);
+		// glDisableVertexAttribArray(offset + index);
 		glCheckErrors();
 	}
 	return actualIndex;

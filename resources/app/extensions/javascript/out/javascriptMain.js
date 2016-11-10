@@ -17,5 +17,5 @@ exports.activate = activate;
 function configureHttpRequest() {
     var httpSettings = vscode_1.workspace.getConfiguration('http');
     httpRequest.configure(httpSettings.get('proxy'), httpSettings.get('proxyStrictSSL'));
-}
-//# sourceMappingURL=javascriptMain.js.map
+}
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/javascript/out/javascriptMain.js.map

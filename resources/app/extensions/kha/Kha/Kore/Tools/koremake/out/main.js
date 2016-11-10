@@ -15,43 +15,42 @@ const GraphicsApi_1 = require('./GraphicsApi');
 const Options_1 = require('./Options');
 const Project_1 = require('./Project');
 const Platform_1 = require('./Platform');
-const Solution_1 = require('./Solution');
 const exec = require('./exec');
-const ExporterAndroid_1 = require('./ExporterAndroid');
-const ExporterCodeBlocks_1 = require('./ExporterCodeBlocks');
-const ExporterMakefile_1 = require('./ExporterMakefile');
-const ExporterEmscripten_1 = require('./ExporterEmscripten');
-const ExporterTizen_1 = require('./ExporterTizen');
-const ExporterVisualStudio_1 = require('./ExporterVisualStudio');
-const ExporterXCode_1 = require('./ExporterXCode');
+const AndroidExporter_1 = require('./Exporters/AndroidExporter');
+const LinuxExporter_1 = require('./Exporters/LinuxExporter');
+const EmscriptenExporter_1 = require('./Exporters/EmscriptenExporter');
+const TizenExporter_1 = require('./Exporters/TizenExporter');
+const VisualStudioExporter_1 = require('./Exporters/VisualStudioExporter');
+const XCodeExporter_1 = require('./Exporters/XCodeExporter');
+let debug = false;
 function fromPlatform(platform) {
     switch (platform) {
         case Platform_1.Platform.Windows:
-            return "Windows";
+            return 'Windows';
         case Platform_1.Platform.WindowsApp:
-            return "Windows App";
+            return 'Windows App';
         case Platform_1.Platform.PlayStation3:
-            return "PlayStation 3";
+            return 'PlayStation 3';
         case Platform_1.Platform.iOS:
-            return "iOS";
+            return 'iOS';
         case Platform_1.Platform.OSX:
-            return "OS X";
+            return 'OS X';
         case Platform_1.Platform.Android:
-            return "Android";
+            return 'Android';
         case Platform_1.Platform.Xbox360:
-            return "Xbox 360";
+            return 'Xbox 360';
         case Platform_1.Platform.Linux:
-            return "Linux";
+            return 'Linux';
         case Platform_1.Platform.HTML5:
-            return "HTML5";
+            return 'HTML5';
         case Platform_1.Platform.Tizen:
-            return "Tizen";
+            return 'Tizen';
         case Platform_1.Platform.Pi:
-            return "Pi";
+            return 'Pi';
         case Platform_1.Platform.tvOS:
-            return "tvOS";
+            return 'tvOS';
         default:
-            return "unknown";
+            return 'unknown';
     }
 }
 function shaderLang(platform) {
@@ -60,22 +59,22 @@ function shaderLang(platform) {
             switch (Options_1.Options.graphicsApi) {
                 case GraphicsApi_1.GraphicsApi.OpenGL:
                 case GraphicsApi_1.GraphicsApi.OpenGL2:
-                    return "glsl";
+                    return 'glsl';
                 case GraphicsApi_1.GraphicsApi.Direct3D9:
-                    return "d3d9";
+                    return 'd3d9';
                 case GraphicsApi_1.GraphicsApi.Direct3D11:
-                    return "d3d11";
+                    return 'd3d11';
                 case GraphicsApi_1.GraphicsApi.Direct3D12:
                     return 'd3d11';
                 case GraphicsApi_1.GraphicsApi.Vulkan:
                     return 'spirv';
                 default:
-                    return "d3d9";
+                    return 'd3d9';
             }
         case Platform_1.Platform.WindowsApp:
-            return "d3d11";
+            return 'd3d11';
         case Platform_1.Platform.PlayStation3:
-            return "d3d9";
+            return 'd3d9';
         case Platform_1.Platform.iOS:
         case Platform_1.Platform.tvOS:
             switch (Options_1.Options.graphicsApi) {
@@ -99,7 +98,7 @@ function shaderLang(platform) {
                     return 'essl';
             }
         case Platform_1.Platform.Xbox360:
-            return "d3d9";
+            return 'd3d9';
         case Platform_1.Platform.Linux:
             switch (Options_1.Options.graphicsApi) {
                 case GraphicsApi_1.GraphicsApi.Vulkan:
@@ -108,123 +107,185 @@ function shaderLang(platform) {
                     return 'glsl';
             }
         case Platform_1.Platform.HTML5:
-            return "essl";
+            return 'essl';
         case Platform_1.Platform.Tizen:
-            return "essl";
+            return 'essl';
         case Platform_1.Platform.Pi:
-            return "essl";
+            return 'essl';
         default:
             return platform;
     }
 }
-function compileShader(projectDir, type, from, to, temp, platform, nokrafix) {
-    let compiler = '';
-    if (Project_1.Project.koreDir !== '') {
-        if (nokrafix) {
-            compiler = path.resolve(Project_1.Project.koreDir, 'Tools', 'kfx', 'kfx' + exec.sys());
+function compileShader(projectDir, type, from, to, temp, platform) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            let compilerPath = '';
+            if (Project_1.Project.koreDir !== '') {
+                compilerPath = path.resolve(Project_1.Project.koreDir, 'Tools', 'krafix', 'krafix' + exec.sys());
+            }
+            if (fs.existsSync(path.join(projectDir, 'Backends'))) {
+                let libdirs = fs.readdirSync(path.join(projectDir, 'Backends'));
+                for (let ld in libdirs) {
+                    let libdir = path.join(projectDir, 'Backends', libdirs[ld]);
+                    if (fs.statSync(libdir).isDirectory()) {
+                        let exe = path.join(libdir, 'krafix', 'krafix-' + platform + '.exe');
+                        if (fs.existsSync(exe)) {
+                            compilerPath = exe;
+                        }
+                    }
+                }
+            }
+            if (compilerPath !== '') {
+                let params = [type, from, to, temp, platform];
+                if (debug)
+                    params.push('--debug');
+                let compiler = child_process.spawn(compilerPath, params);
+                compiler.stdout.on('data', (data) => {
+                    log.info(data.toString());
+                });
+                let errorLine = '';
+                let newErrorLine = true;
+                let errorData = false;
+                function parseData(data) {
+                }
+                compiler.stderr.on('data', (data) => {
+                    let str = data.toString();
+                    for (let char of str) {
+                        if (char === '\n') {
+                            if (errorData) {
+                                parseData(errorLine.trim());
+                            }
+                            else {
+                                log.error(errorLine.trim());
+                            }
+                            errorLine = '';
+                            newErrorLine = true;
+                            errorData = false;
+                        }
+                        else if (newErrorLine && char === '#') {
+                            errorData = true;
+                            newErrorLine = false;
+                        }
+                        else {
+                            errorLine += char;
+                            newErrorLine = false;
+                        }
+                    }
+                });
+                compiler.on('close', (code) => {
+                    if (code === 0) {
+                        resolve();
+                    }
+                    else {
+                        // process.exitCode = 1;
+                        reject('Shader compiler error.');
+                    }
+                });
+            }
+            else {
+                throw 'Could not find shader compiler.';
+            }
+        });
+    });
+}
+function exportKoremakeProject(from, to, platform, options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        log.info('korefile found.');
+        log.info('Creating ' + fromPlatform(platform) + ' project files.');
+        let project;
+        try {
+            project = yield Project_1.Project.create(from, platform);
+            project.searchFiles(undefined);
+            project.flatten();
         }
-        else {
-            compiler = path.resolve(Project_1.Project.koreDir, 'Tools', 'krafix', 'krafix' + exec.sys());
+        catch (error) {
+            log.error(error);
+            throw error;
         }
-    }
-    if (fs.existsSync(path.join(projectDir.toString(), 'Backends'))) {
-        let libdirs = fs.readdirSync(path.join(projectDir.toString(), 'Backends'));
-        for (let ld in libdirs) {
-            let libdir = path.join(projectDir.toString(), 'Backends', libdirs[ld]);
-            if (fs.statSync(libdir).isDirectory()) {
-                let exe = path.join(libdir, 'krafix', 'krafix-' + platform + '.exe');
-                if (fs.existsSync(exe)) {
-                    compiler = exe;
+        fs.ensureDirSync(to);
+        let files = project.getFiles();
+        if (!options.noshaders) {
+            let shaderCount = 0;
+            for (let file of files) {
+                if (file.file.endsWith('.glsl')) {
+                    ++shaderCount;
+                }
+            }
+            let shaderIndex = 0;
+            for (let file of files) {
+                if (file.file.endsWith('.glsl')) {
+                    let outfile = file.file;
+                    const index = outfile.lastIndexOf('/');
+                    if (index > 0)
+                        outfile = outfile.substr(index);
+                    outfile = outfile.substr(0, outfile.length - 5);
+                    let parsedFile = path.parse(file.file);
+                    log.info('Compiling shader ' + (shaderIndex + 1) + ' of ' + shaderCount + ' (' + parsedFile.name + ').');
+                    ++shaderIndex;
+                    yield compileShader(from, shaderLang(platform), file.file, path.join(project.getDebugDir(), outfile), 'build', platform);
                 }
             }
         }
-    }
-    if (compiler !== '') {
-        child_process.spawnSync(compiler, [type, from, to, temp, platform]);
-    }
-}
-function exportKoremakeProject(from, to, platform, options) {
-    log.info('korefile found.');
-    log.info('Creating ' + fromPlatform(platform) + ' project files.');
-    let solution = Solution_1.Solution.create(from, platform);
-    solution.searchFiles();
-    solution.flatten();
-    fs.ensureDirSync(to);
-    let project = solution.getProjects()[0];
-    let files = project.getFiles();
-    for (let file of files) {
-        if (file.file.endsWith(".glsl")) {
-            let outfile = file.file;
-            const index = outfile.lastIndexOf('/');
-            if (index > 0)
-                outfile = outfile.substr(index);
-            outfile = outfile.substr(0, outfile.length - 5);
-            compileShader(from, shaderLang(platform), file.file, path.join(project.getDebugDir(), outfile), "build", platform, options.nokrafix);
-        }
-    }
-    let exporter = null;
-    if (platform === Platform_1.Platform.iOS || platform === Platform_1.Platform.OSX || platform === Platform_1.Platform.tvOS)
-        exporter = new ExporterXCode_1.ExporterXCode();
-    else if (platform == Platform_1.Platform.Android)
-        exporter = new ExporterAndroid_1.ExporterAndroid();
-    else if (platform == Platform_1.Platform.HTML5)
-        exporter = new ExporterEmscripten_1.ExporterEmscripten();
-    else if (platform == Platform_1.Platform.Linux || platform === Platform_1.Platform.Pi) {
-        if (options.compile)
-            exporter = new ExporterMakefile_1.ExporterMakefile();
-        else
-            exporter = new ExporterCodeBlocks_1.ExporterCodeBlocks();
-    }
-    else if (platform == Platform_1.Platform.Tizen)
-        exporter = new ExporterTizen_1.ExporterTizen();
-    else {
-        let found = false;
-        for (var p in Platform_1.Platform) {
-            if (platform === Platform_1.Platform[p]) {
-                found = true;
-                break;
-            }
-        }
-        if (found) {
-            exporter = new ExporterVisualStudio_1.ExporterVisualStudio();
-        }
+        let exporter = null;
+        if (platform === Platform_1.Platform.iOS || platform === Platform_1.Platform.OSX || platform === Platform_1.Platform.tvOS)
+            exporter = new XCodeExporter_1.XCodeExporter();
+        else if (platform === Platform_1.Platform.Android)
+            exporter = new AndroidExporter_1.AndroidExporter();
+        else if (platform === Platform_1.Platform.HTML5)
+            exporter = new EmscriptenExporter_1.EmscriptenExporter();
+        else if (platform === Platform_1.Platform.Linux || platform === Platform_1.Platform.Pi)
+            exporter = new LinuxExporter_1.LinuxExporter();
+        else if (platform === Platform_1.Platform.Tizen)
+            exporter = new TizenExporter_1.TizenExporter();
         else {
-            let libsdir = path.join(from.toString(), 'Backends');
-            if (fs.existsSync(libsdir) && fs.statSync(libsdir).isDirectory()) {
-                let libdirs = fs.readdirSync(libsdir);
-                for (let libdir of libdirs) {
-                    if (fs.statSync(path.join(from.toString(), 'Backends', libdir)).isDirectory()) {
-                        var libfiles = fs.readdirSync(path.join(from.toString(), 'Backends', libdir));
-                        for (var lf in libfiles) {
-                            var libfile = libfiles[lf];
-                            if (libfile.startsWith('Exporter') && libfile.endsWith('.js')) {
-                                var Exporter = require(path.relative(__dirname, path.join(from.toString(), 'Backends', libdir, libfile)));
-                                exporter = new Exporter();
-                                break;
+            let found = false;
+            for (let p in Platform_1.Platform) {
+                if (platform === Platform_1.Platform[p]) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                exporter = new VisualStudioExporter_1.VisualStudioExporter();
+            }
+            else {
+                let libsdir = path.join(from.toString(), 'Backends');
+                if (fs.existsSync(libsdir) && fs.statSync(libsdir).isDirectory()) {
+                    let libdirs = fs.readdirSync(libsdir);
+                    for (let libdir of libdirs) {
+                        if (fs.statSync(path.join(from.toString(), 'Backends', libdir)).isDirectory()) {
+                            let libfiles = fs.readdirSync(path.join(from.toString(), 'Backends', libdir));
+                            for (let libfile of libfiles) {
+                                if (libfile.startsWith('Exporter') && libfile.endsWith('.js')) {
+                                    let Exporter = require(path.relative(__dirname, path.join(from.toString(), 'Backends', libdir, libfile)));
+                                    exporter = new Exporter();
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
-    if (exporter === null) {
-        throw 'No exporter found for platform ' + platform + '.';
-    }
-    exporter.exportSolution(solution, from, to, platform, options.vrApi, options.nokrafix, options);
-    return solution;
+        if (exporter === null) {
+            throw 'No exporter found for platform ' + platform + '.';
+        }
+        exporter.exportSolution(project, from, to, platform, options.vrApi, options.nokrafix, options);
+        return project;
+    });
 }
 function isKoremakeProject(directory) {
     return fs.existsSync(path.resolve(directory, 'korefile.js'));
 }
 function exportProject(from, to, platform, options) {
-    if (isKoremakeProject(from)) {
-        return exportKoremakeProject(from, to, platform, options);
-    }
-    else {
-        log.error("korefile.js not found.");
-        return null;
-    }
+    return __awaiter(this, void 0, void 0, function* () {
+        if (isKoremakeProject(from)) {
+            return exportKoremakeProject(from, to, platform, options);
+        }
+        else {
+            throw 'korefile.js not found.';
+        }
+    });
 }
 function compileProject(make, project, solutionName, options) {
     return new Promise((resolve, reject) => {
@@ -237,7 +298,7 @@ function compileProject(make, project, solutionName, options) {
         make.on('close', function (code) {
             if (code === 0) {
                 if (options.target === Platform_1.Platform.Linux) {
-                    fs.copySync(path.join(options.to.toString(), solutionName), path.join(options.from.toString(), project.getDebugDir(), solutionName), { clobber: true });
+                    fs.copySync(path.join(path.join(options.to.toString(), options.buildPath), solutionName), path.join(options.from.toString(), project.getDebugDir(), solutionName), { clobber: true });
                 }
                 else if (options.target === Platform_1.Platform.Windows) {
                     fs.copySync(path.join(options.to.toString(), 'Debug', solutionName + '.exe'), path.join(options.from.toString(), project.getDebugDir(), solutionName + '.exe'), { clobber: true });
@@ -263,7 +324,7 @@ function compileProject(make, project, solutionName, options) {
 }
 exports.api = 2;
 function run(options, loglog) {
-    return __awaiter(this, void 0, Promise, function* () {
+    return __awaiter(this, void 0, void 0, function* () {
         log.set(loglog);
         if (options.graphics !== undefined) {
             Options_1.Options.graphicsApi = options.graphics;
@@ -271,17 +332,25 @@ function run(options, loglog) {
         if (options.visualstudio !== undefined) {
             Options_1.Options.visualStudioVersion = options.visualstudio;
         }
-        //if (options.vr != undefined) {
-        //	Options.vrApi = options.vr;
-        //}
-        let solution = exportProject(options.from, options.to, options.target, options);
-        let project = solution.getProjects()[0];
-        let solutionName = solution.getName();
-        if (options.compile && solutionName != "") {
+        debug = options.debug;
+        // if (options.vr != undefined) {
+        //     Options.vrApi = options.vr;
+        // }
+        options.buildPath = options.debug ? 'Debug' : 'Release';
+        let project = null;
+        try {
+            project = yield exportProject(options.from, options.to, options.target, options);
+        }
+        catch (error) {
+            log.error(error);
+            return '';
+        }
+        let solutionName = project.getName();
+        if (options.compile && solutionName !== '') {
             log.info('Compiling...');
             let make = null;
             if (options.target === Platform_1.Platform.Linux) {
-                make = child_process.spawn('make', [], { cwd: options.to });
+                make = child_process.spawn('make', [], { cwd: path.join(options.to, options.buildPath) });
             }
             else if (options.target === Platform_1.Platform.OSX) {
                 make = child_process.spawn('xcodebuild', ['-project', solutionName + '.xcodeproj'], { cwd: options.to });
@@ -317,6 +386,5 @@ function run(options, loglog) {
         return solutionName;
     });
 }
-exports.run = run;
-;
-//# sourceMappingURL=main.js.map
+exports.run = run;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Kore/Tools/koremake/out/main.js.map

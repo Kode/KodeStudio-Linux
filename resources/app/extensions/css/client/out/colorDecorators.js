@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 var vscode_1 = require('vscode');
+var embeddedContentUri_1 = require('./embeddedContentUri');
+var MAX_DECORATORS = 500;
 var decorationType = {
     before: {
         contentText: ' ',
@@ -38,52 +40,47 @@ function activateColorDecorations(decoratorProvider, supportedLanguages) {
     vscode_1.workspace.onDidChangeTextDocument(function (event) { return triggerUpdateDecorations(event.document); }, null, disposables);
     vscode_1.workspace.onDidOpenTextDocument(triggerUpdateDecorations, null, disposables);
     vscode_1.workspace.onDidCloseTextDocument(triggerUpdateDecorations, null, disposables);
+    vscode_1.workspace.textDocuments.forEach(triggerUpdateDecorations);
     function triggerUpdateDecorations(document) {
         var triggerUpdate = supportedLanguages[document.languageId];
-        var uri = document.uri.toString();
-        var timeout = pendingUpdateRequests[uri];
+        var documentUri = document.uri;
+        var documentUriStr = documentUri.toString();
+        var timeout = pendingUpdateRequests[documentUriStr];
         if (typeof timeout !== 'undefined') {
             clearTimeout(timeout);
             triggerUpdate = true; // force update, even if languageId is not supported (anymore)
         }
         if (triggerUpdate) {
-            pendingUpdateRequests[uri] = setTimeout(function () {
-                updateDecorations(uri);
-                delete pendingUpdateRequests[uri];
+            pendingUpdateRequests[documentUriStr] = setTimeout(function () {
+                // check if the document is in use by an active editor
+                var contentHostUri = embeddedContentUri_1.isEmbeddedContentUri(documentUri) ? embeddedContentUri_1.getHostDocumentUri(documentUri) : documentUriStr;
+                vscode_1.window.visibleTextEditors.forEach(function (editor) {
+                    if (editor.document && contentHostUri === editor.document.uri.toString()) {
+                        updateDecorationForEditor(editor, documentUriStr);
+                    }
+                });
+                delete pendingUpdateRequests[documentUriStr];
             }, 500);
         }
     }
-    function updateDecorations(uri) {
-        vscode_1.window.visibleTextEditors.forEach(function (editor) {
-            var document = editor.document;
-            if (document && document.uri.toString() === uri) {
-                updateDecorationForEditor(editor);
-            }
-        });
-    }
-    function updateDecorationForEditor(editor) {
+    function updateDecorationForEditor(editor, contentUri) {
         var document = editor.document;
-        if (supportedLanguages[document.languageId]) {
-            decoratorProvider(document.uri.toString()).then(function (ranges) {
-                var decorations = ranges.map(function (range) {
-                    var color = document.getText(range);
-                    return {
-                        range: range,
-                        renderOptions: {
-                            before: {
-                                backgroundColor: color
-                            }
+        decoratorProvider(contentUri).then(function (ranges) {
+            var decorations = ranges.slice(0, MAX_DECORATORS).map(function (range) {
+                var color = document.getText(range);
+                return {
+                    range: range,
+                    renderOptions: {
+                        before: {
+                            backgroundColor: color
                         }
-                    };
-                });
-                editor.setDecorations(colorsDecorationType, decorations);
+                    }
+                };
             });
-        }
-        else {
-            editor.setDecorations(colorsDecorationType, []);
-        }
+            editor.setDecorations(colorsDecorationType, decorations);
+        });
     }
     return vscode_1.Disposable.from.apply(vscode_1.Disposable, disposables);
 }
-exports.activateColorDecorations = activateColorDecorations;
-//# sourceMappingURL=colorDecorators.js.map
+exports.activateColorDecorations = activateColorDecorations;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/css/client/out/colorDecorators.js.map

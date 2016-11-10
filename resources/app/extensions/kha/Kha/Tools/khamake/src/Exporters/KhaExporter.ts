@@ -2,16 +2,18 @@ import * as path from 'path';
 import {convert} from '../Converter';
 import {Exporter} from './Exporter';
 import {Options} from '../Options';
+import {Library} from '../Project';
 
 export abstract class KhaExporter extends Exporter {
 	width: number;
 	height: number;
-	sources: Array<string>;
-	libraries: Array<string>;
+	sources: string[];
+	libraries: Library[];
 	name: string;
 	safename: string;
 	options: Options;
 	projectFiles: boolean;
+	parameters: string[];
 	
 	constructor(options: Options) {
 		super();
@@ -22,13 +24,14 @@ export abstract class KhaExporter extends Exporter {
 		this.libraries = [];
 		this.addSourceDirectory(path.join(options.kha, 'Sources'));
 		this.projectFiles = !options.noproject;
+		this.parameters = [];
 	}
 	
 	abstract sysdir(): string;
 
 	abstract haxeOptions(name: string, targetOptions: any, defines: Array<string>): any;
 
-	abstract async exportSolution(name: string, targetOptions: any, haxeOptions: any): Promise<void>;
+	abstract async export(name: string, targetOptions: any, haxeOptions: any): Promise<void>;
 
 	setWidthAndHeight(width: number, height: number): void {
 		this.width = width;
@@ -48,7 +51,7 @@ export abstract class KhaExporter extends Exporter {
 		this.sources.push(path);
 	}
 
-	addLibrary(library: string): void {
+	addLibrary(library: Library): void {
 		this.libraries.push(library);
 	}
 
@@ -61,23 +64,23 @@ export abstract class KhaExporter extends Exporter {
 		}
 	}
 
-	async copyImage(platform: string, from: string, to: string, asset: any): Promise<Array<string>> {
+	async copyImage(platform: string, from: string, to: string, options: any): Promise<Array<string>> {
 		return [];
 	}
 
-	async copySound(platform: string, from: string, to: string): Promise<Array<string>> {
+	async copySound(platform: string, from: string, to: string, options: any): Promise<Array<string>> {
 		return [];
 	}
 
-	async copyVideo(platform: string, from: string, to: string): Promise<Array<string>> {
+	async copyVideo(platform: string, from: string, to: string, options: any): Promise<Array<string>> {
 		return [];
 	}
 
-	async copyBlob(platform: string, from: string, to: string): Promise<Array<string>> {
+	async copyBlob(platform: string, from: string, to: string, options: any): Promise<Array<string>> {
 		return [];
 	}
 
-	async copyFont(platform: string, from: string, to: string): Promise<Array<string>> {
-		return await this.copyBlob(platform, from, to + '.ttf');
+	async copyFont(platform: string, from: string, to: string, options: any): Promise<Array<string>> {
+		return await this.copyBlob(platform, from, to + '.ttf', options);
 	}
 }

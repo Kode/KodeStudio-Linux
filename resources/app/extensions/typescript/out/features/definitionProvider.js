@@ -33,12 +33,13 @@ var TypeScriptDefinitionProvider = (function () {
                     return new vscode_1.Location(resource, new vscode_1.Range(location.start.line - 1, location.start.offset - 1, location.end.line - 1, location.end.offset - 1));
                 }
             });
-        }, function () {
+        }, function (error) {
+            _this.client.error("'definition' request failed with error.", error);
             return null;
         });
     };
     return TypeScriptDefinitionProvider;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = TypeScriptDefinitionProvider;
-//# sourceMappingURL=definitionProvider.js.map
+exports.default = TypeScriptDefinitionProvider;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/typescript/out/features/definitionProvider.js.map

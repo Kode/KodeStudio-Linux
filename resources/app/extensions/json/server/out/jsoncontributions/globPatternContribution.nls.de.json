@@ -11,9 +11,9 @@
 	"Ordnet mehrere Ordner auf oberster Ebene zu.",
 	"Ordner nach Name (beliebiger Speicherort)",
 	"Zuordnen eines Ordners mit einem bestimmten Namen an einem beliebigen Speicherort.",
-	"True",
+	"TRUE",
 	"Aktiviert das Muster.",
-	"False",
+	"FALSE",
 	"Deaktiviert das Muster.",
 	"Dateien mit gleichgeordneten Elementen nach Name",
 	"Ordnet Dateien zu, die gleichgeordnete Elemente mit dem gleichen Namen und einer anderen Erweiterung besitzen."

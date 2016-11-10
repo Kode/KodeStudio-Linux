@@ -34,6 +34,7 @@ class SystemImpl {
 	public static var anisotropicFilter: Dynamic;
 	public static var depthTexture: Dynamic;
 	public static var drawBuffers: Dynamic;
+	public static var elementIndexUint: Dynamic;
 	@:noCompletion public static var _hasWebAudio: Bool;
 	//public static var graphics(default, null): Graphics;
 	public static var khanvas: CanvasElement;
@@ -268,7 +269,7 @@ class SystemImpl {
 
 		#if webgl
 		try {
-			SystemImpl.gl = canvas.getContext("experimental-webgl", { alpha: false, antialias: options.samplesPerPixel > 1, stencil: true } ); // , preserveDrawingBuffer: true } ); // Firefox 36 does not like the preserveDrawingBuffer option
+			SystemImpl.gl = canvas.getContext("experimental-webgl", { alpha: false, antialias: options.samplesPerPixel > 1, stencil: true, preserveDrawingBuffer: true } );
 			if (SystemImpl.gl != null) {
 				SystemImpl.gl.pixelStorei(GL.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
 				SystemImpl.gl.getExtension("OES_texture_float");
@@ -281,6 +282,7 @@ class SystemImpl {
 				anisotropicFilter = SystemImpl.gl.getExtension("EXT_texture_filter_anisotropic");
 				if (anisotropicFilter == null) anisotropicFilter = SystemImpl.gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic");
 				drawBuffers = SystemImpl.gl.getExtension('WEBGL_draw_buffers');
+				elementIndexUint = SystemImpl.gl.getExtension("OES_element_index_uint");
 				gl = true;
 				Shaders.init();
 			}
@@ -915,5 +917,9 @@ class SystemImpl {
 	
 	public static function setKeepScreenOn(on: Bool): Void {
 		
+	}
+
+	public static function loadUrl(url: String): Void {
+		js.Browser.window.open(url, "_blank");
 	}
 }

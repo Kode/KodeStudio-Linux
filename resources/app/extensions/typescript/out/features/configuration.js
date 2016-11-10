@@ -14,5 +14,5 @@ function load(myPluginId) {
         useCodeSnippetsOnMethodSuggest: useCodeSnippetsOnMethodSuggest
     };
 }
-exports.load = load;
-//# sourceMappingURL=configuration.js.map
+exports.load = load;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/typescript/out/features/configuration.js.map

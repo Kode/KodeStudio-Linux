@@ -17,6 +17,10 @@ var MyCompletionItem = (function (_super) {
         _super.call(this, entry.name);
         this.sortText = entry.sortText;
         this.kind = MyCompletionItem.convertKind(entry.kind);
+        if (entry.replacementSpan) {
+            var span = entry.replacementSpan;
+            this.textEdit = vscode_1.TextEdit.replace(new vscode_1.Range(span.start.line, span.start.offset, span.end.line, span.end.offset), entry.name);
+        }
     }
     MyCompletionItem.convertKind = function (kind) {
         switch (kind) {
@@ -67,6 +71,7 @@ var TypeScriptCompletionItemProvider = (function () {
         this.config.useCodeSnippetsOnMethodSuggest = config.get(Configuration.useCodeSnippetsOnMethodSuggest, false);
     };
     TypeScriptCompletionItemProvider.prototype.provideCompletionItems = function (document, position, token) {
+        var _this = this;
         var filepath = this.client.asAbsolutePath(document.uri);
         var args = {
             file: filepath,
@@ -103,6 +108,7 @@ var TypeScriptCompletionItemProvider = (function () {
             }
             return completionItems;
         }, function (err) {
+            _this.client.error("'completions' request failed with error.", err);
             return [];
         });
     };
@@ -139,6 +145,7 @@ var TypeScriptCompletionItemProvider = (function () {
                 }
                 return item;
             }, function (err) {
+                _this.client.error("'completionEntryDetails' request failed with error.", err);
                 return item;
             });
         }
@@ -146,5 +153,5 @@ var TypeScriptCompletionItemProvider = (function () {
     return TypeScriptCompletionItemProvider;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = TypeScriptCompletionItemProvider;
-//# sourceMappingURL=completionItemProvider.js.map
+exports.default = TypeScriptCompletionItemProvider;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/typescript/out/features/completionItemProvider.js.map

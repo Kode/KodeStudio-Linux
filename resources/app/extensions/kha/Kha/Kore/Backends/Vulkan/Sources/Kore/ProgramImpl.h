@@ -26,8 +26,8 @@ namespace Kore {
 		Shader* vertexShader;
 		Shader* fragmentShader;
 		Shader* geometryShader;
-		Shader* tesselationControlShader;
-		Shader* tesselationEvaluationShader;
+		Shader* tessellationControlShader;
+		Shader* tessellationEvaluationShader;
 
 		ProgramImpl();
 		virtual ~ProgramImpl();
@@ -40,12 +40,13 @@ namespace Kore {
 		VkPipelineCache pipelineCache;
 		VkShaderModule vert_shader_module;
 		VkShaderModule frag_shader_module;
-		
+
 		std::map<std::string, u32> vertexLocations;
 		std::map<std::string, u32> fragmentLocations;
 		std::map<std::string, u32> textureBindings;
 		std::map<std::string, u32> vertexOffsets;
 		std::map<std::string, u32> fragmentOffsets;
+
 	public:
 		VkPipelineLayout pipeline_layout;
 		float uniformDataVertex[256];

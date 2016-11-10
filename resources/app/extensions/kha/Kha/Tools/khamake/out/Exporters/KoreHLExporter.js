@@ -13,12 +13,11 @@ const KhaExporter_1 = require('./KhaExporter');
 const Converter_1 = require('../Converter');
 const Platform_1 = require('../Platform');
 const ImageTool_1 = require('../ImageTool');
-const HaxeProject_1 = require('../HaxeProject');
-const HaxeProject_2 = require('../HaxeProject');
 class KoreHLExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
         this.addSourceDirectory(path.join(options.kha, 'Backends', 'KoreHL'));
+        // Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
     }
     sysdir() {
         return this.options.target + '-hl';
@@ -56,13 +55,8 @@ class KoreHLExporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    exportSolution(name, targetOptions, haxeOptions) {
-        return __awaiter(this, void 0, Promise, function* () {
-            HaxeProject_2.hxml(this.options.to, haxeOptions);
-            if (this.projectFiles) {
-                HaxeProject_1.writeHaxeProject(this.options.to, haxeOptions);
-            }
-            //Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
+    export(name, targetOptions, haxeOptions) {
+        return __awaiter(this, void 0, void 0, function* () {
         });
     }
     /*copyMusic(platform, from, to, encoders, callback) {
@@ -113,5 +107,5 @@ class KoreHLExporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.KoreHLExporter = KoreHLExporter;
-//# sourceMappingURL=KoreHLExporter.js.map
+exports.KoreHLExporter = KoreHLExporter;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/KoreHLExporter.js.map
