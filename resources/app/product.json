@@ -13,11 +13,11 @@
 	"darwinBundleIdentifier": "org.kodestudio",
 	"reportIssueUrl": "https://github.com/KTXSoftware/KodeStudio/issues/new",
 	"urlProtocol": "code-oss",
-	"kodeStudioVersion": "16.11.0",
-	"commit": "e0006c407164ee12f30cc86dcc2562a8638862d7",
-	"date": "2016-11-10T16:54:09.734Z",
+	"kodeStudioVersion": "16.11.1",
+	"commit": "7a90c381174c91af50b0a65fc8c20d61bb4f1be5",
+	"date": "2016-11-21T06:52:10.035Z",
 	"checksums": {
-		"vs/workbench/workbench.main.js": "73Ei5+dAlHB/oawq+Y9B6w",
+		"vs/workbench/workbench.main.js": "trP+/i6vX0Iuib6eRcDHIQ",
 		"vs/workbench/workbench.main.css": "DjH7Ts/t01VtbttPcrqgwg",
 		"vs/workbench/electron-browser/bootstrap/index.html": "A7FcwiFQwy0ydQR6MrrRrQ",
 		"vs/workbench/electron-browser/bootstrap/index.js": "vfNUYnBBQPqsmToJR+EMuA"

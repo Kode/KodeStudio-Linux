@@ -11543,7 +11543,7 @@ define(__m[93/*vs/platform/telemetry/common/telemetryService*/], __M([1/*require
             'telemetry.enableTelemetry': {
                 'type': 'boolean',
                 'description': nls_1.localize(1, null),
-                'default': true
+                'default': false
             }
         }
     });

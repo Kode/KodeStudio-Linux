@@ -40,6 +40,7 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
         return super.initialize(args);
     }
     launch(args) {
+        this._kha = args.kha;
         args.sourceMapPathOverrides = getSourceMapPathOverrides(args.webRoot, args.sourceMapPathOverrides);
         return super.launch(args).then(() => {
             vscode_chrome_debug_core_1.logger.log('Using Kha from ' + args.kha + '\n', true);
@@ -90,8 +91,8 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
                     return vscode_chrome_debug_core_1.utils.errP(`Can't find Krom.`);
                 }
                 // Start with remote debugging enabled
-                const port = args.port || 9224;
-                const kromArgs = [path.join(args.cwd, 'build', 'krom'), path.join(args.cwd, 'build', 'krom-resources')];
+                const port = args.port || Math.floor((Math.random() * 10000) + 10000);
+                const kromArgs = [path.join(args.cwd, 'build', 'krom'), path.join(args.cwd, 'build', 'krom-resources'), '--debug', port.toString(), '--watch'];
                 vscode_chrome_debug_core_1.logger.log(`spawn('${kromPath}', ${JSON.stringify(kromArgs)})`);
                 this._chromeProc = child_process_1.spawn(kromPath, kromArgs, {
                     detached: true,
@@ -110,7 +111,9 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
                 return this.doAttach(port, 'http://krom', args.address);
             }, (reason) => {
                 vscode_chrome_debug_core_1.logger.error('Launch canceled.', true);
-                return new Promise((resolve) => {
+                require(path.join(this._kha, 'Tools/khamake/out/main.js')).close();
+                return new Promise((resolve, reject) => {
+                    reject({ id: Math.floor(Math.random() * 100000), format: 'Compilation failed.' });
                 });
             });
         });
@@ -122,7 +125,12 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
     doAttach(port, targetUrl, address, timeout) {
         return super.doAttach(port, targetUrl, address, timeout).then(() => {
             // this.runScript();
+            this.chrome.Log.onEntryAdded(params => this.onEntryAdded(params));
+            // this.chrome.Log.enable();
         });
+    }
+    onEntryAdded(event) {
+        vscode_chrome_debug_core_1.logger.log(event.entry.text, true);
     }
     onPaused(notification) {
         this._overlayHelper.doAndCancel(() => this.chrome.Page.configureOverlay({ message: ChromeDebugAdapter.PAGE_PAUSE_MESSAGE }).catch(() => { }));
@@ -137,6 +145,7 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
             this._chromeProc.kill('SIGINT');
             this._chromeProc = null;
         }
+        require(path.join(this._kha, 'Tools/khamake/out/main.js')).close();
         return super.disconnect();
     }
     runScript() {
@@ -176,4 +185,4 @@ function resolveWebRootPattern(webRoot, sourceMapPathOverrides, warnOnMissing) {
     return resolvedOverrides;
 }
 exports.resolveWebRootPattern = resolveWebRootPattern;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/krom-debug/out/chromeDebugAdapter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/krom-debug/out/chromeDebugAdapter.js.map

@@ -18,6 +18,10 @@ class AssetConverter {
         this.platform = platform;
         this.assetMatchers = assetMatchers;
     }
+    close() {
+        if (this.watcher)
+            this.watcher.close();
+    }
     static replacePattern(pattern, value, fileinfo, options, from) {
         let basePath = options.nameBaseDir ? path.join(from, options.nameBaseDir) : from;
         let dirValue = path.relative(basePath, fileinfo.dir);
@@ -144,4 +148,4 @@ class AssetConverter {
     }
 }
 exports.AssetConverter = AssetConverter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/AssetConverter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/AssetConverter.js.map

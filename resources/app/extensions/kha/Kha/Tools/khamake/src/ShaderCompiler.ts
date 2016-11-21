@@ -56,6 +56,10 @@ export class ShaderCompiler {
 		this.shaderMatchers = shaderMatchers;
 	}
 
+	close(): void {
+		if (this.watcher) this.watcher.close();
+	}
+
 	static findType(platform: string, options: Options): string {
 		switch (platform) {
 		case Platform.Empty:
@@ -140,24 +144,36 @@ export class ShaderCompiler {
 			let shaders: string[] = [];
 			let ready = false;
 			this.watcher = chokidar.watch(match, { ignored: /[\/\\]\./, persistent: watch });
-			this.watcher.on('add', (file: string) => {
+			this.watcher.on('add', (filepath: string) => {
+				let file = path.parse(filepath);
 				if (ready) {
-					switch (path.parse(file).ext) {
+					switch (file.ext) {
 						case '.glsl':
-							log.info('Recompiling ' + path.parse(file).name);
-							this.compileShader(file, options);
+							if (!file.name.endsWith('.inc')) {
+								log.info('Compiling ' + file.name);
+								this.compileShader(filepath, options);
+							}
 							break;
 					}
 				}
 				else {
-					shaders.push(file);
+					switch (file.ext) {
+						case '.glsl':
+							if (!file.name.endsWith('.inc')) {
+								shaders.push(filepath);
+							}
+							break;
+					}
 				}
 			});
-			this.watcher.on('change', (file: string) => {
-				switch (path.parse(file).ext) {
+			this.watcher.on('change', (filepath: string) => {
+				let file = path.parse(filepath);
+				switch (file.ext) {
 					case '.glsl':
-						log.info('Recompiling ' + path.parse(file).name);
-						this.compileShader(file, options);
+						if (!file.name.endsWith('.inc')) {
+							log.info('Recompiling ' + file.name);
+							this.compileShader(filepath, options);
+						}
 						break;
 				}
 			});

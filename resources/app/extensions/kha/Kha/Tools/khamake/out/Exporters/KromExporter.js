@@ -22,6 +22,7 @@ class KromExporter extends KhaExporter_1.KhaExporter {
     }
     haxeOptions(name, targetOptions, defines) {
         defines.push('js-classic');
+        defines.push('sys_' + this.options.target);
         defines.push('sys_g1');
         defines.push('sys_g2');
         defines.push('sys_g3');
@@ -84,4 +85,4 @@ class KromExporter extends KhaExporter_1.KhaExporter {
     }
 }
 exports.KromExporter = KromExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/e0006c407164ee12f30cc86dcc2562a8638862d7/extensions/kha/Kha/Tools/khamake/out/Exporters/KromExporter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/Exporters/KromExporter.js.map
