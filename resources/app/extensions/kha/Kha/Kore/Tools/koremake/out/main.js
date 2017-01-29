@@ -116,7 +116,7 @@ function shaderLang(platform) {
             return platform;
     }
 }
-function compileShader(projectDir, type, from, to, temp, platform) {
+function compileShader(projectDir, type, from, to, temp, platform, builddir) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
             let compilerPath = '';
@@ -136,6 +136,17 @@ function compileShader(projectDir, type, from, to, temp, platform) {
                 }
             }
             if (compilerPath !== '') {
+                if (type === 'metal') {
+                    fs.ensureDirSync(path.join(builddir, 'Sources'));
+                    let fileinfo = path.parse(from);
+                    let funcname = fileinfo.name;
+                    funcname = funcname.replace(/-/g, '_');
+                    funcname = funcname.replace(/\./g, '_');
+                    funcname += '_main';
+                    fs.writeFileSync(to, funcname, 'utf8');
+                    to = path.join(builddir, 'Sources', fileinfo.name + '.' + type);
+                    temp = to + '.temp';
+                }
                 let params = [type, from, to, temp, platform];
                 if (debug)
                     params.push('--debug');
@@ -195,6 +206,9 @@ function exportKoremakeProject(from, to, platform, options) {
         let project;
         try {
             project = yield Project_1.Project.create(from, platform);
+            if (shaderLang(platform) === 'metal') {
+                project.addFile('build/Sources/*', {});
+            }
             project.searchFiles(undefined);
             project.flatten();
         }
@@ -222,10 +236,13 @@ function exportKoremakeProject(from, to, platform, options) {
                     let parsedFile = path.parse(file.file);
                     log.info('Compiling shader ' + (shaderIndex + 1) + ' of ' + shaderCount + ' (' + parsedFile.name + ').');
                     ++shaderIndex;
-                    yield compileShader(from, shaderLang(platform), file.file, path.join(project.getDebugDir(), outfile), 'build', platform);
+                    yield compileShader(from, shaderLang(platform), file.file, path.join(project.getDebugDir(), outfile), 'build', platform, 'build');
                 }
             }
         }
+        // Run again to find new shader files for Metal
+        project.searchFiles(undefined);
+        project.flatten();
         let exporter = null;
         if (platform === Platform_1.Platform.iOS || platform === Platform_1.Platform.OSX || platform === Platform_1.Platform.tvOS)
             exporter = new XCodeExporter_1.XCodeExporter();
@@ -297,17 +314,17 @@ function compileProject(make, project, solutionName, options) {
         });
         make.on('close', function (code) {
             if (code === 0) {
-                if (options.target === Platform_1.Platform.Linux) {
+                if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Linux) || options.target === Platform_1.Platform.Linux) {
                     fs.copySync(path.join(path.join(options.to.toString(), options.buildPath), solutionName), path.join(options.from.toString(), project.getDebugDir(), solutionName), { clobber: true });
                 }
-                else if (options.target === Platform_1.Platform.Windows) {
-                    fs.copySync(path.join(options.to.toString(), 'Debug', solutionName + '.exe'), path.join(options.from.toString(), project.getDebugDir(), solutionName + '.exe'), { clobber: true });
+                else if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Windows) || options.target === Platform_1.Platform.Windows) {
+                    fs.copySync(path.join(options.to.toString(), 'Release', solutionName + '.exe'), path.join(options.from.toString(), project.getDebugDir(), solutionName + '.exe'), { clobber: true });
                 }
                 if (options.run) {
-                    if (options.target === Platform_1.Platform.OSX) {
+                    if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.OSX) || options.target === Platform_1.Platform.OSX) {
                         child_process.spawn('open', ['build/Release/' + solutionName + '.app/Contents/MacOS/' + solutionName], { stdio: 'inherit', cwd: options.to });
                     }
-                    else if (options.target === Platform_1.Platform.Linux || options.target === Platform_1.Platform.Windows) {
+                    else if ((options.customTarget && (options.customTarget.baseTarget === Platform_1.Platform.Linux || options.customTarget.baseTarget === Platform_1.Platform.Windows)) || options.target === Platform_1.Platform.Linux || options.target === Platform_1.Platform.Windows) {
                         child_process.spawn(path.resolve(path.join(options.from.toString(), project.getDebugDir(), solutionName)), [], { stdio: 'inherit', cwd: path.join(options.from.toString(), project.getDebugDir()) });
                     }
                     else {
@@ -332,6 +349,15 @@ function run(options, loglog) {
         if (options.visualstudio !== undefined) {
             Options_1.Options.visualStudioVersion = options.visualstudio;
         }
+        if (!options.kore) {
+            let p = path.join(__dirname, '..', '..', '..');
+            if (fs.existsSync(p) && fs.statSync(p).isDirectory()) {
+                options.kore = p;
+            }
+        }
+        else {
+            options.kore = path.resolve(options.kore);
+        }
         debug = options.debug;
         // if (options.vr != undefined) {
         //     Options.vrApi = options.vr;
@@ -349,13 +375,13 @@ function run(options, loglog) {
         if (options.compile && solutionName !== '') {
             log.info('Compiling...');
             let make = null;
-            if (options.target === Platform_1.Platform.Linux) {
+            if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Linux) || options.target === Platform_1.Platform.Linux) {
                 make = child_process.spawn('make', [], { cwd: path.join(options.to, options.buildPath) });
             }
-            else if (options.target === Platform_1.Platform.OSX) {
-                make = child_process.spawn('xcodebuild', ['-project', solutionName + '.xcodeproj'], { cwd: options.to });
+            else if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.OSX) || options.target === Platform_1.Platform.OSX) {
+                make = child_process.spawn('xcodebuild', ['-configuration', 'Release', '-project', solutionName + '.xcodeproj'], { cwd: options.to });
             }
-            else if (options.target === Platform_1.Platform.Windows) {
+            else if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Windows) || options.target === Platform_1.Platform.Windows) {
                 let vsvars = null;
                 if (process.env.VS140COMNTOOLS) {
                     vsvars = process.env.VS140COMNTOOLS + '\\vsvars32.bat';
@@ -367,7 +393,7 @@ function run(options, loglog) {
                     vsvars = process.env.VS110COMNTOOLS + '\\vsvars32.bat';
                 }
                 if (vsvars !== null) {
-                    fs.writeFileSync(path.join(options.to, 'build.bat'), '@call "' + vsvars + '"\n' + '@MSBuild.exe "' + solutionName + '.vcxproj" /m /p:Configuration=Debug,Platform=Win32');
+                    fs.writeFileSync(path.join(options.to, 'build.bat'), '@call "' + vsvars + '"\n' + '@MSBuild.exe "' + solutionName + '.vcxproj" /m /p:Configuration=Release,Platform=Win32');
                     make = child_process.spawn('build.bat', [], { cwd: options.to });
                 }
                 else {
@@ -387,4 +413,4 @@ function run(options, loglog) {
     });
 }
 exports.run = run;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Kore/Tools/koremake/out/main.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/main.js.map

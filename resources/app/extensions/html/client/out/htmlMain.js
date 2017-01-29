@@ -7,18 +7,17 @@ var path = require('path');
 var vscode_1 = require('vscode');
 var vscode_languageclient_1 = require('vscode-languageclient');
 var htmlEmptyTagsShared_1 = require('./htmlEmptyTagsShared');
-var embeddedContentDocuments_1 = require('./embeddedContentDocuments');
+var colorDecorators_1 = require('./colorDecorators');
+var vscode_extension_telemetry_1 = require('vscode-extension-telemetry');
 var nls = require('vscode-nls');
 var localize = nls.loadMessageBundle(__filename);
-var EmbeddedCompletionRequest;
-(function (EmbeddedCompletionRequest) {
-    EmbeddedCompletionRequest.type = { get method() { return 'embedded/completion'; } };
-})(EmbeddedCompletionRequest || (EmbeddedCompletionRequest = {}));
-var EmbeddedHoverRequest;
-(function (EmbeddedHoverRequest) {
-    EmbeddedHoverRequest.type = { get method() { return 'embedded/hover'; } };
-})(EmbeddedHoverRequest || (EmbeddedHoverRequest = {}));
+var ColorSymbolRequest;
+(function (ColorSymbolRequest) {
+    ColorSymbolRequest.type = { get method() { return 'css/colorSymbols'; }, _: null };
+})(ColorSymbolRequest || (ColorSymbolRequest = {}));
 function activate(context) {
+    var packageInfo = getPackageInfo(context);
+    var telemetryReporter = packageInfo && new vscode_extension_telemetry_1.default(packageInfo.name, packageInfo.version, packageInfo.aiKey);
     // The server is implemented in node
     var serverModule = context.asAbsolutePath(path.join('server', 'out', 'htmlServerMain.js'));
     // The debug options for the server
@@ -30,12 +29,12 @@ function activate(context) {
         debug: { module: serverModule, transport: vscode_languageclient_1.TransportKind.ipc, options: debugOptions }
     };
     var documentSelector = ['html', 'handlebars', 'razor'];
-    var embeddedLanguages = { 'css': true };
+    var embeddedLanguages = { css: true, javascript: true };
     // Options to control the language client
     var clientOptions = {
         documentSelector: documentSelector,
         synchronize: {
-            configurationSection: ['html'],
+            configurationSection: ['html', 'css', 'javascript'],
         },
         initializationOptions: (_a = {
                 embeddedLanguages: embeddedLanguages
@@ -45,49 +44,21 @@ function activate(context) {
         )
     };
     // Create the language client and start the client.
-    var client = new vscode_languageclient_1.LanguageClient('html', localize(0, null), serverOptions, clientOptions);
-    var embeddedDocuments = embeddedContentDocuments_1.initializeEmbeddedContentDocuments(documentSelector, embeddedLanguages, client);
-    context.subscriptions.push(embeddedDocuments);
-    client.onRequest(EmbeddedCompletionRequest.type, function (params) {
-        var position = vscode_languageclient_1.Protocol2Code.asPosition(params.position);
-        var virtualDocumentURI = embeddedDocuments.getEmbeddedContentUri(params.uri, params.embeddedLanguageId);
-        return embeddedDocuments.openEmbeddedContentDocument(virtualDocumentURI, params.version).then(function (document) {
-            if (document) {
-                return vscode_1.commands.executeCommand('vscode.executeCompletionItemProvider', virtualDocumentURI, position).then(function (completionList) {
-                    if (completionList) {
-                        return {
-                            isIncomplete: completionList.isIncomplete,
-                            items: completionList.items.map(vscode_languageclient_1.Code2Protocol.asCompletionItem)
-                        };
-                    }
-                    return { isIncomplete: true, items: [] };
-                });
-            }
-            return { isIncomplete: true, items: [] };
-        });
-    });
-    client.onRequest(EmbeddedHoverRequest.type, function (params) {
-        var position = vscode_languageclient_1.Protocol2Code.asPosition(params.position);
-        var virtualDocumentURI = embeddedDocuments.getEmbeddedContentUri(params.uri, params.embeddedLanguageId);
-        return embeddedDocuments.openEmbeddedContentDocument(virtualDocumentURI, params.version).then(function (document) {
-            if (document) {
-                return vscode_1.commands.executeCommand('vscode.executeHoverProvider', virtualDocumentURI, position).then(function (hover) {
-                    if (hover && hover.length > 0) {
-                        return {
-                            contents: hover[0].contents,
-                            range: vscode_languageclient_1.Code2Protocol.asRange(hover[0].range)
-                        };
-                    }
-                    return void 0;
-                });
-            }
-            return void 0;
-        });
-    });
+    var client = new vscode_languageclient_1.LanguageClient('html', localize(0, null), serverOptions, clientOptions, true);
     var disposable = client.start();
-    // Push the disposable to the context's subscriptions so that the
-    // client can be deactivated on extension deactivation
     context.subscriptions.push(disposable);
+    client.onReady().then(function () {
+        var colorRequestor = function (uri) {
+            return client.sendRequest(ColorSymbolRequest.type, uri).then(function (ranges) { return ranges.map(client.protocol2CodeConverter.asRange); });
+        };
+        var disposable = colorDecorators_1.activateColorDecorations(colorRequestor, { html: true, handlebars: true, razor: true });
+        context.subscriptions.push(disposable);
+        client.onTelemetry(function (e) {
+            if (telemetryReporter) {
+                telemetryReporter.sendTelemetryEvent(e.key, e.data);
+            }
+        });
+    });
     vscode_1.languages.setLanguageConfiguration('html', {
         wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\$\^\&\*\(\)\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\s]+)/g,
         onEnterRules: [
@@ -132,5 +103,16 @@ function activate(context) {
     });
     var _a;
 }
-exports.activate = activate;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/html/client/out/htmlMain.js.map
+exports.activate = activate;
+function getPackageInfo(context) {
+    var extensionPackage = require(context.asAbsolutePath('./package.json'));
+    if (extensionPackage) {
+        return {
+            name: extensionPackage.name,
+            version: extensionPackage.version,
+            aiKey: extensionPackage.aiKey
+        };
+    }
+    return null;
+}
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/html/client/out/htmlMain.js.map

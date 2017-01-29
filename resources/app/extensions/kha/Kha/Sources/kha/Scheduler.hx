@@ -95,7 +95,7 @@ class Scheduler {
 
 		stopped = false;
 		resetTime();
-		lastTime = realTime();
+		lastTime = realTime() - startTime;
 		for (i in 0...DIF_COUNT) deltas[i] = 0;
 		
 		if (restartTimers) {
@@ -167,11 +167,11 @@ class Scheduler {
 	}
 	
 	public static function executeFrame(): Void {
-		var now: Float = realTime();
+		var now: Float = realTime() - startTime;
 		var delta = now - lastTime;
 		
 		var frameEnd: Float = current;
-		 
+		
 		if (delta < 0) {
 			return;
 		}
@@ -291,12 +291,19 @@ class Scheduler {
 		#end
 	}
 
+	/**
+	 * An approximation of the amount of time (in fractional seconds) that elapsed while the game was active.
+	 * This value is optimized for achieving smooth framerates.
+	 */
 	public static function time(): Float {
 		return current;
 	}
 	
+	/**
+	 * The amount of time (in fractional seconds) that elapsed since the game started.
+	*/
 	public static function realTime(): Float {
-		return System.time - startTime;
+		return System.time;
 	}
 	
 	public static function resetTime(): Void {

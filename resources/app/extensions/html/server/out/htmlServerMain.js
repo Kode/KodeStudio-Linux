@@ -4,30 +4,16 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 var vscode_languageserver_1 = require('vscode-languageserver');
-var vscode_html_languageservice_1 = require('vscode-html-languageservice');
-var languageModelCache_1 = require('./languageModelCache');
-var embeddedSupport_1 = require('./embeddedSupport');
+var languageModes_1 = require('./modes/languageModes');
 var url = require('url');
 var path = require('path');
 var vscode_uri_1 = require('vscode-uri');
 var nls = require('vscode-nls');
 nls.config(process.env['VSCODE_NLS_CONFIG']);
-var EmbeddedCompletionRequest;
-(function (EmbeddedCompletionRequest) {
-    EmbeddedCompletionRequest.type = { get method() { return 'embedded/completion'; } };
-})(EmbeddedCompletionRequest || (EmbeddedCompletionRequest = {}));
-var EmbeddedHoverRequest;
-(function (EmbeddedHoverRequest) {
-    EmbeddedHoverRequest.type = { get method() { return 'embedded/hover'; } };
-})(EmbeddedHoverRequest || (EmbeddedHoverRequest = {}));
-var EmbeddedContentRequest;
-(function (EmbeddedContentRequest) {
-    EmbeddedContentRequest.type = { get method() { return 'embedded/content'; } };
-})(EmbeddedContentRequest || (EmbeddedContentRequest = {}));
-var EmbeddedContentChangedNotification;
-(function (EmbeddedContentChangedNotification) {
-    EmbeddedContentChangedNotification.type = { get method() { return 'embedded/contentchanged'; } };
-})(EmbeddedContentChangedNotification || (EmbeddedContentChangedNotification = {}));
+var ColorSymbolRequest;
+(function (ColorSymbolRequest) {
+    ColorSymbolRequest.type = { get method() { return 'css/colorSymbols'; }, _: null };
+})(ColorSymbolRequest || (ColorSymbolRequest = {}));
 // Create a connection for the server
 var connection = vscode_languageserver_1.createConnection();
 console.log = connection.console.log.bind(connection.console);
@@ -38,39 +24,46 @@ var documents = new vscode_languageserver_1.TextDocuments();
 // Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);
-var htmlDocuments = languageModelCache_1.getLanguageModelCache(10, 60, function (document) { return vscode_html_languageservice_1.getLanguageService().parseHTMLDocument(document); });
-documents.onDidClose(function (e) {
-    htmlDocuments.onDocumentRemoved(e.document);
-});
-connection.onShutdown(function () {
-    htmlDocuments.dispose();
-});
 var workspacePath;
-var embeddedLanguages;
+var languageModes;
+var settings = {};
 // After the server has started the client sends an initilize request. The server receives
 // in the passed params the rootPath of the workspace plus the client capabilites
 connection.onInitialize(function (params) {
+    var initializationOptions = params.initializationOptions;
     workspacePath = params.rootPath;
-    embeddedLanguages = params.initializationOptions.embeddedLanguages;
+    languageModes = languageModes_1.getLanguageModes(initializationOptions ? initializationOptions.embeddedLanguages : { css: true, javascript: true });
+    documents.onDidClose(function (e) {
+        languageModes.onDocumentRemoved(e.document);
+    });
+    connection.onShutdown(function () {
+        languageModes.dispose();
+    });
     return {
         capabilities: {
             // Tell the client that the server works in FULL text document sync mode
             textDocumentSync: documents.syncKind,
-            completionProvider: { resolveProvider: false, triggerCharacters: ['.', ':', '<', '"', '=', '/'] },
+            completionProvider: { resolveProvider: true, triggerCharacters: ['.', ':', '<', '"', '=', '/'] },
             hoverProvider: true,
             documentHighlightProvider: true,
-            documentRangeFormattingProvider: params.initializationOptions['format.enable'],
-            documentLinkProvider: true
+            documentRangeFormattingProvider: initializationOptions && initializationOptions['format.enable'],
+            documentLinkProvider: true,
+            documentSymbolProvider: true,
+            definitionProvider: true,
+            signatureHelpProvider: { triggerCharacters: ['('] },
+            referencesProvider: true
         }
     };
 });
-// create the JSON language service
-var languageService = vscode_html_languageservice_1.getLanguageService();
-var languageSettings;
 // The settings have changed. Is send on server activation as well.
 connection.onDidChangeConfiguration(function (change) {
-    var settings = change.settings;
-    languageSettings = settings.html;
+    settings = change.settings;
+    languageModes.getAllModes().forEach(function (m) {
+        if (m.configure) {
+            m.configure(change.settings);
+        }
+    });
+    documents.all().forEach(triggerValidation);
 });
 var pendingValidationRequests = {};
 var validationDelayMs = 200;
@@ -82,10 +75,7 @@ documents.onDidChangeContent(function (change) {
 // a document has closed: clear all diagnostics
 documents.onDidClose(function (event) {
     cleanPendingValidation(event.document);
-    //connection.sendDiagnostics({ uri: event.document.uri, diagnostics: [] });
-    if (embeddedLanguages) {
-        connection.sendNotification(EmbeddedContentChangedNotification.type, { uri: event.document.uri, version: event.document.version, embeddedLanguageIds: [] });
-    }
+    connection.sendDiagnostics({ uri: event.document.uri, diagnostics: [] });
 });
 function cleanPendingValidation(textDocument) {
     var request = pendingValidationRequests[textDocument.uri];
@@ -102,85 +92,138 @@ function triggerValidation(textDocument) {
     }, validationDelayMs);
 }
 function validateTextDocument(textDocument) {
-    var htmlDocument = htmlDocuments.get(textDocument);
-    //let diagnostics = languageService.doValidation(textDocument, htmlDocument);
-    // Send the computed diagnostics to VSCode.
-    //connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
-    if (embeddedLanguages) {
-        var embeddedLanguageIds = embeddedSupport_1.hasEmbeddedContent(languageService, textDocument, htmlDocument, embeddedLanguages);
-        var p = { uri: textDocument.uri, version: textDocument.version, embeddedLanguageIds: embeddedLanguageIds };
-        connection.sendNotification(EmbeddedContentChangedNotification.type, p);
+    var diagnostics = [];
+    languageModes.getAllModesInDocument(textDocument).forEach(function (mode) {
+        if (mode.doValidation) {
+            pushAll(diagnostics, mode.doValidation(textDocument));
+        }
+    });
+    connection.sendDiagnostics({ uri: textDocument.uri, diagnostics: diagnostics });
+}
+function pushAll(to, from) {
+    if (from) {
+        for (var i = 0; i < from.length; i++) {
+            to.push(from[i]);
+        }
     }
 }
 connection.onCompletion(function (textDocumentPosition) {
     var document = documents.get(textDocumentPosition.textDocument.uri);
-    var htmlDocument = htmlDocuments.get(document);
-    var options = languageSettings && languageSettings.suggest;
-    var list = languageService.doComplete(document, textDocumentPosition.position, htmlDocument, options);
-    if (list.items.length === 0 && embeddedLanguages) {
-        var embeddedLanguageId = embeddedSupport_1.getEmbeddedLanguageAtPosition(languageService, document, htmlDocument, textDocumentPosition.position);
-        if (embeddedLanguageId && embeddedLanguages[embeddedLanguageId]) {
-            return connection.sendRequest(EmbeddedCompletionRequest.type, { uri: document.uri, version: document.version, embeddedLanguageId: embeddedLanguageId, position: textDocumentPosition.position });
+    var mode = languageModes.getModeAtPosition(document, textDocumentPosition.position);
+    if (mode && mode.doComplete) {
+        if (mode.getId() !== 'html') {
+            connection.telemetry.logEvent({ key: 'html.embbedded.complete', value: { languageId: mode.getId() } });
+        }
+        return mode.doComplete(document, textDocumentPosition.position);
+    }
+    return { isIncomplete: true, items: [] };
+});
+connection.onCompletionResolve(function (item) {
+    var data = item.data;
+    if (data && data.languageId && data.uri) {
+        var mode = languageModes.getMode(data.languageId);
+        var document = documents.get(data.uri);
+        if (mode && mode.doResolve && document) {
+            return mode.doResolve(document, item);
         }
     }
-    return list;
+    return item;
 });
 connection.onHover(function (textDocumentPosition) {
     var document = documents.get(textDocumentPosition.textDocument.uri);
-    var htmlDocument = htmlDocuments.get(document);
-    var hover = languageService.doHover(document, textDocumentPosition.position, htmlDocument);
-    if (!hover && embeddedLanguages) {
-        var embeddedLanguageId = embeddedSupport_1.getEmbeddedLanguageAtPosition(languageService, document, htmlDocument, textDocumentPosition.position);
-        if (embeddedLanguageId && embeddedLanguages[embeddedLanguageId]) {
-            return connection.sendRequest(EmbeddedHoverRequest.type, { uri: document.uri, version: document.version, embeddedLanguageId: embeddedLanguageId, position: textDocumentPosition.position });
-        }
+    var mode = languageModes.getModeAtPosition(document, textDocumentPosition.position);
+    if (mode && mode.doHover) {
+        return mode.doHover(document, textDocumentPosition.position);
     }
-    return hover;
-});
-connection.onRequest(EmbeddedContentRequest.type, function (parms) {
-    var document = documents.get(parms.uri);
-    if (document) {
-        var htmlDocument = htmlDocuments.get(document);
-        return { content: embeddedSupport_1.getEmbeddedContent(languageService, document, htmlDocument, parms.embeddedLanguageId), version: document.version };
-    }
-    return void 0;
+    return null;
 });
 connection.onDocumentHighlight(function (documentHighlightParams) {
     var document = documents.get(documentHighlightParams.textDocument.uri);
-    var htmlDocument = htmlDocuments.get(document);
-    return languageService.findDocumentHighlights(document, documentHighlightParams.position, htmlDocument);
+    var mode = languageModes.getModeAtPosition(document, documentHighlightParams.position);
+    if (mode && mode.findDocumentHighlight) {
+        return mode.findDocumentHighlight(document, documentHighlightParams.position);
+    }
+    return [];
 });
-function merge(src, dst) {
-    for (var key in src) {
-        if (src.hasOwnProperty(key)) {
-            dst[key] = src[key];
-        }
+connection.onDefinition(function (definitionParams) {
+    var document = documents.get(definitionParams.textDocument.uri);
+    var mode = languageModes.getModeAtPosition(document, definitionParams.position);
+    if (mode && mode.findDefinition) {
+        return mode.findDefinition(document, definitionParams.position);
     }
-    return dst;
-}
-function getFormattingOptions(formatParams) {
-    var formatSettings = languageSettings && languageSettings.format;
-    if (!formatSettings) {
-        return formatParams;
+    return [];
+});
+connection.onReferences(function (referenceParams) {
+    var document = documents.get(referenceParams.textDocument.uri);
+    var mode = languageModes.getModeAtPosition(document, referenceParams.position);
+    if (mode && mode.findReferences) {
+        return mode.findReferences(document, referenceParams.position);
     }
-    return merge(formatParams, merge(formatSettings, {}));
-}
+    return [];
+});
+connection.onSignatureHelp(function (signatureHelpParms) {
+    var document = documents.get(signatureHelpParms.textDocument.uri);
+    var mode = languageModes.getModeAtPosition(document, signatureHelpParms.position);
+    if (mode && mode.doSignatureHelp) {
+        return mode.doSignatureHelp(document, signatureHelpParms.position);
+    }
+    return null;
+});
 connection.onDocumentRangeFormatting(function (formatParams) {
     var document = documents.get(formatParams.textDocument.uri);
-    return languageService.format(document, formatParams.range, getFormattingOptions(formatParams.options));
+    var ranges = languageModes.getModesInRange(document, formatParams.range);
+    var result = [];
+    var unformattedTags = settings && settings.html && settings.html.format && settings.html.format.unformatted || '';
+    var enabledModes = { css: !unformattedTags.match(/\bstyle\b/), javascript: !unformattedTags.match(/\bscript\b/), html: true };
+    ranges.forEach(function (r) {
+        var mode = r.mode;
+        if (mode && mode.format && enabledModes[mode.getId()] && !r.attributeValue) {
+            var edits = mode.format(document, r, formatParams.options);
+            pushAll(result, edits);
+        }
+    });
+    return result;
 });
 connection.onDocumentLinks(function (documentLinkParam) {
     var document = documents.get(documentLinkParam.textDocument.uri);
     var documentContext = {
         resolveReference: function (ref) {
-            if (ref[0] === '/') {
+            if (workspacePath && ref[0] === '/') {
                 return vscode_uri_1.default.file(path.join(workspacePath, ref)).toString();
             }
             return url.resolve(document.uri, ref);
         }
     };
-    return languageService.findDocumentLinks(document, documentContext);
+    var links = [];
+    languageModes.getAllModesInDocument(document).forEach(function (m) {
+        if (m.findDocumentLinks) {
+            pushAll(links, m.findDocumentLinks(document, documentContext));
+        }
+    });
+    return links;
+});
+connection.onDocumentSymbol(function (documentSymbolParms) {
+    var document = documents.get(documentSymbolParms.textDocument.uri);
+    var symbols = [];
+    languageModes.getAllModesInDocument(document).forEach(function (m) {
+        if (m.findDocumentSymbols) {
+            pushAll(symbols, m.findDocumentSymbols(document));
+        }
+    });
+    return symbols;
+});
+connection.onRequest(ColorSymbolRequest.type, function (uri) {
+    var ranges = [];
+    var document = documents.get(uri);
+    if (document) {
+        languageModes.getAllModesInDocument(document).forEach(function (m) {
+            if (m.findColorSymbols) {
+                pushAll(ranges, m.findColorSymbols(document));
+            }
+        });
+    }
+    return ranges;
 });
 // Listen on the connection
 connection.listen();
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/html/server/out/htmlServerMain.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/html/server/out/htmlServerMain.js.map

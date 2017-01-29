@@ -15,6 +15,7 @@
 	"Der Programmpfad verwendet ein Zeichen mit anderer Groß-/Kleinschreibung als die Datei auf dem Datenträger. Dies kann dazu führen, dass Haltepunkte nicht erreicht werden.",
 	"Das Programm \"{0}\" kann nicht gestartet werden. Das Konfigurieren von Quellzuordnungen ist ggf. hilfreich.",
 	"Das Programm \"{0}\" kann nicht gestartet werden. Das Festlegen des Attributs \"{1}\" ist ggf. hilfreich.",
+	"Umgebungsvariablen können nicht aus Datei \"{0}\" geladen werden.",
 	"Node-Debugging-Konsole",
 	"Das Debugziel im Terminal kann nicht gestartet werden ({0}).",
 	"Das Debugziel kann nicht gestartet werden ({0}).",

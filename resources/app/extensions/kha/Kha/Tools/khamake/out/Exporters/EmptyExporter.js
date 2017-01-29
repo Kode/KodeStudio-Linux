@@ -18,9 +18,6 @@ class EmptyExporter extends KhaExporter_1.KhaExporter {
         super(options);
         this.addSourceDirectory(path.join(options.kha, 'Backends', 'Empty'));
     }
-    sysdir() {
-        return 'empty';
-    }
     haxeOptions(name, targetOptions, defines) {
         defines.push('sys_g1');
         defines.push('sys_g2');
@@ -80,4 +77,4 @@ class EmptyExporter extends KhaExporter_1.KhaExporter {
     }
 }
 exports.EmptyExporter = EmptyExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/Exporters/EmptyExporter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/EmptyExporter.js.map

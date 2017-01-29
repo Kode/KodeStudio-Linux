@@ -16,9 +16,6 @@ class WpfExporter extends CSharpExporter_1.CSharpExporter {
     constructor(options) {
         super(options);
     }
-    sysdir() {
-        return 'wpf';
-    }
     backend() {
         return 'WPF';
     }
@@ -287,4 +284,4 @@ class WpfExporter extends CSharpExporter_1.CSharpExporter {
     }
 }
 exports.WpfExporter = WpfExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/Exporters/WpfExporter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/WpfExporter.js.map

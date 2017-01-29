@@ -31,6 +31,7 @@ define("vs/code/node/sharedProcessMain.nls.it", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"Estensioni",
+		"Preferenze",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"L\'estensione non è stata trovata",
@@ -102,7 +103,7 @@ define("vs/code/node/sharedProcessMain.nls.it", {
 		"In seguito",
 		"Annulla",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"Impostazione proxy da usare. Se non è impostata, verrà ottenuta dalle variabili di ambiente http_proxy e https_proxy",
 		"Indica se il certificato del server proxy deve essere verificato in base all\'elenco di CA specificate.",

@@ -19,6 +19,14 @@ define("vs/workbench/node/extensionHostProcess.nls", {
 	"vs/base/node/processes": [
 		"Can't execute a shell command on an UNC drive."
 	],
+	"vs/platform/configuration/common/configurationRegistry": [
+		"Contributes configuration settings.",
+		"A summary of the settings. This label will be used in the settings file as separating comment.",
+		"Description of the configuration properties.",
+		"if set, 'configuration.type' must be set to 'object",
+		"'configuration.title' must be a string",
+		"'configuration.properties' must be an object"
+	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"Extension `{1}` failed to activate. Reason: unknown dependency `{0}`.",
 		"Extension `{1}` failed to activate. Reason: dependency `{0}` failed to activate.",
@@ -46,6 +54,12 @@ define("vs/workbench/node/extensionHostProcess.nls", {
 	],
 	"vs/workbench/api/node/extHostDiagnostics": [
 		"Not showing {0} further errors and warnings."
+	],
+	"vs/workbench/api/node/extHostTreeExplorers": [
+		"No TreeExplorerNodeProvider with id '{0}' registered.",
+		"TreeExplorerNodeProvider '{0}' failed to provide root node.",
+		"No TreeExplorerNodeProvider with id '{0}' registered.",
+		"TreeExplorerNodeProvider '{0}' failed to resolveChildren."
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"Path {0} does not point to a valid extension test runner."

@@ -48,9 +48,18 @@ var Configuration;
 })(Configuration || (Configuration = {}));
 var TypeScriptFormattingProvider = (function () {
     function TypeScriptFormattingProvider(client) {
+        var _this = this;
         this.client = client;
         this.config = Configuration.def();
         this.formatOptions = Object.create(null);
+        vscode_1.workspace.onDidCloseTextDocument(function (textDocument) {
+            var key = textDocument.uri.toString();
+            // When a document gets closed delete the cached formatting options.
+            // This is necessary sine the tsserver now closed a project when its
+            // last file in it closes which drops the stored formatting options
+            // as well.
+            delete _this.formatOptions[key];
+        });
     }
     TypeScriptFormattingProvider.prototype.updateConfiguration = function (config) {
         var newConfig = config.get('format', Configuration.def());
@@ -70,8 +79,12 @@ var TypeScriptFormattingProvider = (function () {
             return Promise.resolve(currentOptions);
         }
         else {
+            var absPath = this.client.asAbsolutePath(document.uri);
+            if (!absPath) {
+                return Promise.resolve(Object.create(null));
+            }
             var args_1 = {
-                file: this.client.asAbsolutePath(document.uri),
+                file: absPath,
                 formatOptions: this.getFormatOptions(options)
             };
             return this.client.execute('configure', args_1, token).then(function (response) {
@@ -84,7 +97,12 @@ var TypeScriptFormattingProvider = (function () {
         var _this = this;
         return this.ensureFormatOptions(document, options, token).then(function () {
             return _this.client.execute('format', args, token).then(function (response) {
-                return response.body.map(_this.codeEdit2SingleEditOperation);
+                if (response.body) {
+                    return response.body.map(_this.codeEdit2SingleEditOperation);
+                }
+                else {
+                    return [];
+                }
             }, function (err) {
                 _this.client.error("'format' request failed with error.", err);
                 return [];
@@ -92,8 +110,12 @@ var TypeScriptFormattingProvider = (function () {
         });
     };
     TypeScriptFormattingProvider.prototype.provideDocumentRangeFormattingEdits = function (document, range, options, token) {
+        var absPath = this.client.asAbsolutePath(document.uri);
+        if (!absPath) {
+            return Promise.resolve([]);
+        }
         var args = {
-            file: this.client.asAbsolutePath(document.uri),
+            file: absPath,
             line: range.start.line + 1,
             offset: range.start.character + 1,
             endLine: range.end.line + 1,
@@ -103,8 +125,12 @@ var TypeScriptFormattingProvider = (function () {
     };
     TypeScriptFormattingProvider.prototype.provideOnTypeFormattingEdits = function (document, position, ch, options, token) {
         var _this = this;
+        var filepath = this.client.asAbsolutePath(document.uri);
+        if (!filepath) {
+            return Promise.resolve([]);
+        }
         var args = {
-            file: this.client.asAbsolutePath(document.uri),
+            file: filepath,
             line: position.line + 1,
             offset: position.character + 1,
             key: ch
@@ -113,6 +139,9 @@ var TypeScriptFormattingProvider = (function () {
             return _this.client.execute('formatonkey', args, token).then(function (response) {
                 var edits = response.body;
                 var result = [];
+                if (!edits) {
+                    return result;
+                }
                 for (var _i = 0, edits_1 = edits; _i < edits_1.length; _i++) {
                     var edit = edits_1[_i];
                     var textEdit = _this.codeEdit2SingleEditOperation(edit);
@@ -166,4 +195,4 @@ var TypeScriptFormattingProvider = (function () {
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeScriptFormattingProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/features/formattingProvider.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/features/formattingProvider.js.map

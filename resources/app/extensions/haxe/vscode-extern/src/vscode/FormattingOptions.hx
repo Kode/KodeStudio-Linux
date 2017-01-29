@@ -1,6 +1,16 @@
 package vscode;
 
+/**
+ * Value-object describing what options formatting should use.
+ */
 typedef FormattingOptions = {
-	var tabSize:Int;
-	var insertSpaces:Bool;
+    /**
+     * Size of a tab in spaces.
+     */
+    var tabSize:Int;
+
+    /**
+     * Prefer spaces over tabs.
+     */
+    var insertSpaces:Bool;
 }

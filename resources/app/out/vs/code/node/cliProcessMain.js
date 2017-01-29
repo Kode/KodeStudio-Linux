@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/common/winjs.base","vs/nls!vs/code/node/cliProcessMain","vs/nls","vs/platform/instantiation/common/instantiation","vs/base/common/objects","vs/base/common/errors","vs/base/common/types","path","vs/platform/platform","vs/base/common/event","vs/base/common/lifecycle","vs/platform/configuration/common/configuration","vs/base/common/async","fs","vs/platform/configuration/common/configurationRegistry","vs/base/node/pfs","vs/base/common/platform","vs/base/common/uuid","vs/base/common/eventEmitter","vs/base/common/strings","vs/platform/environment/common/environment","vs/platform/extensionManagement/common/extensionManagement","vs/base/common/arrays","vs/platform/telemetry/common/telemetry","vs/base/common/collections","vs/platform/instantiation/common/descriptors","url","vs/base/common/decorators","vs/base/common/paths","vs/base/common/assert","vs/platform/instantiation/common/serviceCollection","vs/platform/message/common/message","vs/base/common/uri","vs/platform/jsonschemas/common/jsonContributionRegistry","vs/base/common/severity","os","vs/platform/package","vs/platform/product","vs/platform/request/common/request","vs/base/node/request","vs/base/common/json","vs/base/node/config","vs/base/node/flow","vs/nls!vs/base/common/severity","vs/platform/request/node/requestService","vs/nls!vs/base/node/zip","vs/nls!vs/platform/configuration/common/configurationRegistry","vs/base/node/extfs","vs/nls!vs/platform/extensionManagement/node/extensionGalleryService","vs/nls!vs/platform/extensionManagement/node/extensionManagementService","vs/nls!vs/platform/extensions/common/extensionsRegistry","vs/nls!vs/platform/extensions/node/extensionValidator","vs/nls!vs/platform/message/common/message","vs/nls!vs/platform/request/common/request","vs/nls!vs/platform/telemetry/common/telemetryService","vs/platform/event/common/eventService","vs/platform/extensionManagement/common/extensionNls","vs/platform/extensionManagement/common/extensionTelemetry","vs/platform/extensions/node/extensionValidator","semver","vs/base/common/set","vs/nls!vs/platform/extensionManagement/common/extensionManagement","vs/base/node/id","vs/platform/extensionManagement/node/extensionGalleryService","vs/platform/event/common/event","crypto","vs/base/node/paths","vs/platform/instantiation/common/instantiationService","vs/base/common/callbackList","vs/platform/message/common/messageCli","vs/base/node/zip","vs/base/common/cancellation","vs/base/node/proxy","vs/platform/extensions/common/extensionsRegistry","vs/base/common/events","vs/platform/configuration/common/model","vs/platform/configuration/node/configurationService","vs/platform/environment/node/environmentService","vs/base/common/actions","vs/platform/extensionManagement/node/extensionManagementService","vs/nls!vs/base/common/json","vs/base/common/map","vs/base/common/graph","vs/platform/telemetry/common/telemetryService","vs/platform/telemetry/node/appInsightsAppender","vs/platform/telemetry/node/commonProperties","https","applicationinsights","yauzl","https-proxy-agent","http-proxy-agent","readline","http","zlib","getmac","assert","vs/code/node/cliProcessMain"];
+var __m = ["require","exports","vs/base/common/winjs.base","vs/nls!vs/code/node/cliProcessMain","vs/nls","vs/platform/instantiation/common/instantiation","vs/base/common/event","vs/base/common/objects","vs/base/common/types","vs/base/common/errors","path","vs/platform/platform","vs/base/common/lifecycle","vs/platform/configuration/common/configuration","vs/base/common/strings","vs/base/common/paths","vs/base/common/platform","vs/base/common/arrays","fs","vs/base/common/async","vs/platform/configuration/common/configurationRegistry","vs/base/node/pfs","vs/platform/environment/common/environment","vs/platform/telemetry/common/telemetry","vs/base/common/eventEmitter","vs/base/common/uuid","os","vs/platform/extensionManagement/common/extensionManagement","vs/platform/package","vs/base/common/map","vs/platform/instantiation/common/descriptors","vs/base/node/request","vs/base/common/uri","vs/platform/instantiation/common/serviceCollection","vs/platform/message/common/message","vs/base/common/severity","vs/base/common/decorators","vs/platform/jsonschemas/common/jsonContributionRegistry","vs/base/common/collections","vs/platform/product","vs/platform/request/node/request","vs/base/common/assert","vs/nls!vs/base/common/json","vs/base/common/actions","vs/base/common/set","vs/base/common/json","vs/base/node/config","vs/base/common/graph","vs/nls!vs/base/common/severity","vs/base/node/flow","vs/nls!vs/base/node/zip","vs/nls!vs/platform/configuration/common/configurationRegistry","vs/platform/request/node/requestService","vs/nls!vs/platform/extensionManagement/node/extensionGalleryService","vs/nls!vs/platform/extensionManagement/node/extensionManagementService","vs/nls!vs/platform/extensions/common/extensionsRegistry","vs/nls!vs/platform/extensions/node/extensionValidator","vs/nls!vs/platform/message/common/message","vs/nls!vs/platform/request/node/request","vs/nls!vs/platform/telemetry/common/telemetryService","vs/platform/event/common/eventService","vs/platform/extensionManagement/common/extensionNls","vs/platform/extensionManagement/common/extensionTelemetry","vs/platform/extensions/node/extensionValidator","semver","vs/base/node/extfs","vs/nls!vs/platform/extensionManagement/common/extensionManagement","vs/base/common/glob","vs/base/node/id","vs/platform/event/common/event","vs/platform/extensionManagement/node/extensionGalleryService","crypto","vs/platform/instantiation/common/instantiationService","vs/platform/keybinding/common/keybinding","vs/platform/lifecycle/common/lifecycle","vs/base/common/callbackList","vs/platform/message/node/messageCli","vs/base/node/zip","vs/platform/environment/node/http","vs/base/node/paths","vs/base/common/cancellation","vs/base/common/mime","vs/platform/extensions/common/extensionsRegistry","vs/base/node/proxy","vs/platform/configuration/common/model","vs/platform/configuration/node/configurationService","vs/platform/environment/node/environmentService","url","vs/base/common/events","vs/platform/extensionManagement/node/extensionManagementService","vs/platform/telemetry/common/telemetryService","vs/platform/telemetry/node/appInsightsAppender","vs/platform/telemetry/node/commonProperties","https","applicationinsights","yauzl","https-proxy-agent","http-proxy-agent","readline","http","zlib","getmac","assert","vs/code/node/cliProcessMain"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,7 +10,7 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[31/*vs/base/common/assert*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[41/*vs/base/common/assert*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -27,7 +27,7 @@ define(__m[31/*vs/base/common/assert*/], __M([1/*require*/,0/*exports*/]), funct
     exports.ok = ok;
 });
 
-define(__m[26/*vs/base/common/collections*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[38/*vs/base/common/collections*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -120,7 +120,7 @@ define(__m[26/*vs/base/common/collections*/], __M([1/*require*/,0/*exports*/]), 
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[29/*vs/base/common/decorators*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[36/*vs/base/common/decorators*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     function memoize(target, key, descriptor) {
         var fnKey = null;
@@ -161,7 +161,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[76/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[88/*vs/base/common/events*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -224,7 +224,7 @@ define(__m[76/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), funct
 
 
 
-define(__m[83/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[29/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     /**
      * A simple map to store value by a key object. Key can be any object that has toString() function to get
@@ -490,12 +490,26 @@ define(__m[83/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function
             }
             node.element = element;
         };
+        TrieMap.prototype.lookUp = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            return node.element;
+        };
         TrieMap.prototype.findSubstr = function (path) {
             var parts = this._splitter(path);
             var lastNode;
             var children = this._root.children;
-            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
-                var part = parts_1[_i];
+            for (var _i = 0, parts_2 = parts; _i < parts_2.length; _i++) {
+                var part = parts_2[_i];
                 var node = children[part];
                 if (!node) {
                     break;
@@ -511,13 +525,29 @@ define(__m[83/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function
                 return lastNode.element;
             }
         };
-        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/); };
+        TrieMap.prototype.findSuperstr = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_3 = parts; _i < parts_3.length; _i++) {
+                var part = parts_3[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            var result = new TrieMap(this._splitter);
+            result._root = node;
+            return result;
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/).filter(function (s) { return !!s; }); };
         return TrieMap;
     }());
     exports.TrieMap = TrieMap;
 });
 
-define(__m[30/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,18/*vs/base/common/platform*/,24/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
+define(__m[15/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,16/*vs/base/common/platform*/,17/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -867,7 +897,7 @@ define(__m[30/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,18/*vs/ba
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[62/*vs/base/common/set*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[44/*vs/base/common/set*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     "use strict";
     var ArraySet = (function () {
         function ArraySet(elements) {
@@ -906,7 +936,7 @@ define(__m[62/*vs/base/common/set*/], __M([1/*require*/,0/*exports*/]), function
     exports.ArraySet = ArraySet;
 });
 
-define(__m[21/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/,83/*vs/base/common/map*/]), function (require, exports, map_1) {
+define(__m[14/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,29/*vs/base/common/map*/]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1474,7 +1504,482 @@ define(__m[21/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/,83/*vs/
     exports.repeat = repeat;
 });
 
-define(__m[70/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+define(__m[67/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,17/*vs/base/common/arrays*/,14/*vs/base/common/strings*/,15/*vs/base/common/paths*/,29/*vs/base/common/map*/]), function (require, exports, arrays, strings, paths, map_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var PATH_REGEX = '[/\\\\]'; // any slash or backslash
+    var NO_PATH_REGEX = '[^/\\\\]'; // any non-slash and non-backslash
+    var ALL_FORWARD_SLASHES = /\//g;
+    function starsToRegExp(starCount) {
+        switch (starCount) {
+            case 0:
+                return '';
+            case 1:
+                return NO_PATH_REGEX + "*?"; // 1 star matches any number of characters except path separator (/ and \) - non greedy (?)
+            default:
+                // Matches:  (Path Sep OR Path Val followed by Path Sep OR Path Sep followed by Path Val) 0-many times
+                // Group is non capturing because we don't need to capture at all (?:...)
+                // Overall we use non-greedy matching because it could be that we match too much
+                return "(?:" + PATH_REGEX + "|" + NO_PATH_REGEX + "+" + PATH_REGEX + "|" + PATH_REGEX + NO_PATH_REGEX + "+)*?";
+        }
+    }
+    function splitGlobAware(pattern, splitChar) {
+        if (!pattern) {
+            return [];
+        }
+        var segments = [];
+        var inBraces = false;
+        var inBrackets = false;
+        var char;
+        var curVal = '';
+        for (var i = 0; i < pattern.length; i++) {
+            char = pattern[i];
+            switch (char) {
+                case splitChar:
+                    if (!inBraces && !inBrackets) {
+                        segments.push(curVal);
+                        curVal = '';
+                        continue;
+                    }
+                    break;
+                case '{':
+                    inBraces = true;
+                    break;
+                case '}':
+                    inBraces = false;
+                    break;
+                case '[':
+                    inBrackets = true;
+                    break;
+                case ']':
+                    inBrackets = false;
+                    break;
+            }
+            curVal += char;
+        }
+        // Tail
+        if (curVal) {
+            segments.push(curVal);
+        }
+        return segments;
+    }
+    exports.splitGlobAware = splitGlobAware;
+    function parseRegExp(pattern) {
+        if (!pattern) {
+            return '';
+        }
+        var regEx = '';
+        // Split up into segments for each slash found
+        var segments = splitGlobAware(pattern, '/');
+        // Special case where we only have globstars
+        if (segments.every(function (s) { return s === '**'; })) {
+            regEx = '.*';
+        }
+        else {
+            var previousSegmentWasGlobStar_1 = false;
+            segments.forEach(function (segment, index) {
+                // Globstar is special
+                if (segment === '**') {
+                    // if we have more than one globstar after another, just ignore it
+                    if (!previousSegmentWasGlobStar_1) {
+                        regEx += starsToRegExp(2);
+                        previousSegmentWasGlobStar_1 = true;
+                    }
+                    return;
+                }
+                // States
+                var inBraces = false;
+                var braceVal = '';
+                var inBrackets = false;
+                var bracketVal = '';
+                var char;
+                for (var i = 0; i < segment.length; i++) {
+                    char = segment[i];
+                    // Support brace expansion
+                    if (char !== '}' && inBraces) {
+                        braceVal += char;
+                        continue;
+                    }
+                    // Support brackets
+                    if (char !== ']' && inBrackets) {
+                        var res = void 0;
+                        switch (char) {
+                            case '-':
+                                res = char;
+                                break;
+                            case '^':
+                                res = char;
+                                break;
+                            default:
+                                res = strings.escapeRegExpCharacters(char);
+                        }
+                        bracketVal += res;
+                        continue;
+                    }
+                    switch (char) {
+                        case '{':
+                            inBraces = true;
+                            continue;
+                        case '[':
+                            inBrackets = true;
+                            continue;
+                        case '}':
+                            var choices = splitGlobAware(braceVal, ',');
+                            // Converts {foo,bar} => [foo|bar]
+                            var braceRegExp = "(?:" + choices.map(function (c) { return parseRegExp(c); }).join('|') + ")";
+                            regEx += braceRegExp;
+                            inBraces = false;
+                            braceVal = '';
+                            break;
+                        case ']':
+                            regEx += ('[' + bracketVal + ']');
+                            inBrackets = false;
+                            bracketVal = '';
+                            break;
+                        case '?':
+                            regEx += NO_PATH_REGEX; // 1 ? matches any single character except path separator (/ and \)
+                            continue;
+                        case '*':
+                            regEx += starsToRegExp(1);
+                            continue;
+                        default:
+                            regEx += strings.escapeRegExpCharacters(char);
+                    }
+                }
+                // Tail: Add the slash we had split on if there is more to come and the next one is not a globstar
+                if (index < segments.length - 1 && segments[index + 1] !== '**') {
+                    regEx += PATH_REGEX;
+                }
+                // reset state
+                previousSegmentWasGlobStar_1 = false;
+            });
+        }
+        return regEx;
+    }
+    // regexes to check for trival glob patterns that just check for String#endsWith
+    var T1 = /^\*\*\/\*\.[\w\.-]+$/; // **/*.something
+    var T2 = /^\*\*\/([\w\.-]+)\/?$/; // **/something
+    var T3 = /^{\*\*\/[\*\.]?[\w\.-]+\/?(,\*\*\/[\*\.]?[\w\.-]+\/?)*}$/; // {**/*.something,**/*.else} or {**/package.json,**/project.json}
+    var T3_2 = /^{\*\*\/[\*\.]?[\w\.-]+(\/(\*\*)?)?(,\*\*\/[\*\.]?[\w\.-]+(\/(\*\*)?)?)*}$/; // Like T3, with optional trailing /**
+    var T4 = /^\*\*((\/[\w\.-]+)+)\/?$/; // **/something/else
+    var T5 = /^([\w\.-]+(\/[\w\.-]+)*)\/?$/; // something/else
+    var CACHE = new map_1.BoundedLinkedMap(10000); // bounded to 10000 elements
+    var FALSE = function () {
+        return false;
+    };
+    var NULL = function () {
+        return null;
+    };
+    function parsePattern(pattern, options) {
+        if (!pattern) {
+            return NULL;
+        }
+        // Whitespace trimming
+        pattern = pattern.trim();
+        // Check cache
+        var patternKey = pattern + "_" + !!options.trimForExclusions;
+        var parsedPattern = CACHE.get(patternKey);
+        if (parsedPattern) {
+            return parsedPattern;
+        }
+        // Check for Trivias
+        var match;
+        if (T1.test(pattern)) {
+            var base_1 = pattern.substr(4); // '**/*'.length === 4
+            parsedPattern = function (path, basename) {
+                return path && strings.endsWith(path, base_1) ? pattern : null;
+            };
+        }
+        else if (match = T2.exec(trimForExclusions(pattern, options))) {
+            parsedPattern = trivia2(match[1], pattern);
+        }
+        else if ((options.trimForExclusions ? T3_2 : T3).test(pattern)) {
+            parsedPattern = trivia3(pattern, options);
+        }
+        else if (match = T4.exec(trimForExclusions(pattern, options))) {
+            parsedPattern = trivia4and5(match[1].substr(1), pattern, true);
+        }
+        else if (match = T5.exec(trimForExclusions(pattern, options))) {
+            parsedPattern = trivia4and5(match[1], pattern, false);
+        }
+        else {
+            parsedPattern = toRegExp(pattern);
+        }
+        // Cache
+        CACHE.set(patternKey, parsedPattern);
+        return parsedPattern;
+    }
+    function trimForExclusions(pattern, options) {
+        return options.trimForExclusions && strings.endsWith(pattern, '/**') ? pattern.substr(0, pattern.length - 2) : pattern; // dropping **, tailing / is dropped later
+    }
+    // common pattern: **/some.txt just need basename check
+    function trivia2(base, originalPattern) {
+        var slashBase = "/" + base;
+        var backslashBase = "\\" + base;
+        var parsedPattern = function (path, basename) {
+            if (!path) {
+                return null;
+            }
+            if (basename) {
+                return basename === base ? originalPattern : null;
+            }
+            return path === base || strings.endsWith(path, slashBase) || strings.endsWith(path, backslashBase) ? originalPattern : null;
+        };
+        var basenames = [base];
+        parsedPattern.basenames = basenames;
+        parsedPattern.patterns = [originalPattern];
+        parsedPattern.allBasenames = basenames;
+        return parsedPattern;
+    }
+    // repetition of common patterns (see above) {**/*.txt,**/*.png}
+    function trivia3(pattern, options) {
+        var parsedPatterns = aggregateBasenameMatches(pattern.slice(1, -1).split(',')
+            .map(function (pattern) { return parsePattern(pattern, options); })
+            .filter(function (pattern) { return pattern !== NULL; }), pattern);
+        var n = parsedPatterns.length;
+        if (!n) {
+            return NULL;
+        }
+        if (n === 1) {
+            return parsedPatterns[0];
+        }
+        var parsedPattern = function (path, basename) {
+            for (var i = 0, n_1 = parsedPatterns.length; i < n_1; i++) {
+                if (parsedPatterns[i](path, basename)) {
+                    return pattern;
+                }
+            }
+            return null;
+        };
+        var withBasenames = arrays.first(parsedPatterns, function (pattern) { return !!pattern.allBasenames; });
+        if (withBasenames) {
+            parsedPattern.allBasenames = withBasenames.allBasenames;
+        }
+        var allPaths = parsedPatterns.reduce(function (all, current) { return current.allPaths ? all.concat(current.allPaths) : all; }, []);
+        if (allPaths.length) {
+            parsedPattern.allPaths = allPaths;
+        }
+        return parsedPattern;
+    }
+    // common patterns: **/something/else just need endsWith check, something/else just needs and equals check
+    function trivia4and5(path, pattern, matchPathEnds) {
+        var nativePath = paths.nativeSep !== paths.sep ? path.replace(ALL_FORWARD_SLASHES, paths.nativeSep) : path;
+        var nativePathEnd = paths.nativeSep + nativePath;
+        var parsedPattern = matchPathEnds ? function (path, basename) {
+            return path && (path === nativePath || strings.endsWith(path, nativePathEnd)) ? pattern : null;
+        } : function (path, basename) {
+            return path && path === nativePath ? pattern : null;
+        };
+        parsedPattern.allPaths = [(matchPathEnds ? '*/' : './') + path];
+        return parsedPattern;
+    }
+    function toRegExp(pattern) {
+        try {
+            var regExp_1 = new RegExp("^" + parseRegExp(pattern) + "$");
+            return function (path, basename) {
+                regExp_1.lastIndex = 0; // reset RegExp to its initial state to reuse it!
+                return path && regExp_1.test(path) ? pattern : null;
+            };
+        }
+        catch (error) {
+            return NULL;
+        }
+    }
+    function match(arg1, path, siblingsFn) {
+        if (!arg1 || !path) {
+            return false;
+        }
+        return parse(arg1)(path, undefined, siblingsFn);
+    }
+    exports.match = match;
+    function parse(arg1, options) {
+        if (options === void 0) { options = {}; }
+        if (!arg1) {
+            return FALSE;
+        }
+        // Glob with String
+        if (typeof arg1 === 'string') {
+            var parsedPattern_1 = parsePattern(arg1, options);
+            if (parsedPattern_1 === NULL) {
+                return FALSE;
+            }
+            var resultPattern = function (path, basename) {
+                return !!parsedPattern_1(path, basename);
+            };
+            if (parsedPattern_1.allBasenames) {
+                resultPattern.allBasenames = parsedPattern_1.allBasenames;
+            }
+            if (parsedPattern_1.allPaths) {
+                resultPattern.allPaths = parsedPattern_1.allPaths;
+            }
+            return resultPattern;
+        }
+        // Glob with Expression
+        return parsedExpression(arg1, options);
+    }
+    exports.parse = parse;
+    function getBasenameTerms(patternOrExpression) {
+        return patternOrExpression.allBasenames || [];
+    }
+    exports.getBasenameTerms = getBasenameTerms;
+    function getPathTerms(patternOrExpression) {
+        return patternOrExpression.allPaths || [];
+    }
+    exports.getPathTerms = getPathTerms;
+    function parsedExpression(expression, options) {
+        var parsedPatterns = aggregateBasenameMatches(Object.getOwnPropertyNames(expression)
+            .map(function (pattern) { return parseExpressionPattern(pattern, expression[pattern], options); })
+            .filter(function (pattern) { return pattern !== NULL; }));
+        var n = parsedPatterns.length;
+        if (!n) {
+            return NULL;
+        }
+        if (!parsedPatterns.some(function (parsedPattern) { return parsedPattern.requiresSiblings; })) {
+            if (n === 1) {
+                return parsedPatterns[0];
+            }
+            var resultExpression_1 = function (path, basename, siblingsFn) {
+                for (var i = 0, n_2 = parsedPatterns.length; i < n_2; i++) {
+                    // Pattern matches path
+                    var result = parsedPatterns[i](path, basename);
+                    if (result) {
+                        return result;
+                    }
+                }
+                return null;
+            };
+            var withBasenames_1 = arrays.first(parsedPatterns, function (pattern) { return !!pattern.allBasenames; });
+            if (withBasenames_1) {
+                resultExpression_1.allBasenames = withBasenames_1.allBasenames;
+            }
+            var allPaths_1 = parsedPatterns.reduce(function (all, current) { return current.allPaths ? all.concat(current.allPaths) : all; }, []);
+            if (allPaths_1.length) {
+                resultExpression_1.allPaths = allPaths_1;
+            }
+            return resultExpression_1;
+        }
+        var resultExpression = function (path, basename, siblingsFn) {
+            var siblingsPattern;
+            var siblingsResolved = !siblingsFn;
+            function siblingsPatternFn() {
+                // Resolve siblings only once
+                if (!siblingsResolved) {
+                    siblingsResolved = true;
+                    var siblings = siblingsFn();
+                    if (siblings && siblings.length) {
+                        if (!basename) {
+                            basename = paths.basename(path);
+                        }
+                        var name_1 = basename.substr(0, basename.length - paths.extname(path).length);
+                        siblingsPattern = { siblings: siblings, name: name_1 };
+                    }
+                }
+                return siblingsPattern;
+            }
+            for (var i = 0, n_3 = parsedPatterns.length; i < n_3; i++) {
+                // Pattern matches path
+                var result = parsedPatterns[i](path, basename, siblingsPatternFn);
+                if (result) {
+                    return result;
+                }
+            }
+            return null;
+        };
+        var withBasenames = arrays.first(parsedPatterns, function (pattern) { return !!pattern.allBasenames; });
+        if (withBasenames) {
+            resultExpression.allBasenames = withBasenames.allBasenames;
+        }
+        var allPaths = parsedPatterns.reduce(function (all, current) { return current.allPaths ? all.concat(current.allPaths) : all; }, []);
+        if (allPaths.length) {
+            resultExpression.allPaths = allPaths;
+        }
+        return resultExpression;
+    }
+    function parseExpressionPattern(pattern, value, options) {
+        if (value === false) {
+            return NULL; // pattern is disabled
+        }
+        var parsedPattern = parsePattern(pattern, options);
+        if (parsedPattern === NULL) {
+            return NULL;
+        }
+        // Expression Pattern is <boolean>
+        if (typeof value === 'boolean') {
+            return parsedPattern;
+        }
+        // Expression Pattern is <SiblingClause>
+        if (value) {
+            var when_1 = value.when;
+            if (typeof when_1 === 'string') {
+                var result = function (path, basename, siblingsPatternFn) {
+                    if (!parsedPattern(path, basename)) {
+                        return null;
+                    }
+                    var siblingsPattern = siblingsPatternFn();
+                    if (!siblingsPattern) {
+                        return null; // pattern is malformed or we don't have siblings
+                    }
+                    var clausePattern = when_1.replace('$(basename)', siblingsPattern.name);
+                    if (siblingsPattern.siblings.indexOf(clausePattern) !== -1) {
+                        return pattern;
+                    }
+                    else {
+                        return null; // pattern does not match in the end because the when clause is not satisfied
+                    }
+                };
+                result.requiresSiblings = true;
+                return result;
+            }
+        }
+        // Expression is Anything
+        return parsedPattern;
+    }
+    function aggregateBasenameMatches(parsedPatterns, result) {
+        var basenamePatterns = parsedPatterns.filter(function (parsedPattern) { return !!parsedPattern.basenames; });
+        if (basenamePatterns.length < 2) {
+            return parsedPatterns;
+        }
+        var basenames = basenamePatterns.reduce(function (all, current) { return all.concat(current.basenames); }, []);
+        var patterns;
+        if (result) {
+            patterns = [];
+            for (var i = 0, n = basenames.length; i < n; i++) {
+                patterns.push(result);
+            }
+        }
+        else {
+            patterns = basenamePatterns.reduce(function (all, current) { return all.concat(current.patterns); }, []);
+        }
+        var aggregate = function (path, basename) {
+            if (!path) {
+                return null;
+            }
+            if (!basename) {
+                var i = void 0;
+                for (i = path.length; i > 0; i--) {
+                    var ch = path.charCodeAt(i - 1);
+                    if (ch === 47 /* Slash */ || ch === 92 /* Backslash */) {
+                        break;
+                    }
+                }
+                basename = path.substr(i);
+            }
+            var index = basenames.indexOf(basename);
+            return index !== -1 ? patterns[index] : null;
+        };
+        aggregate.basenames = basenames;
+        aggregate.patterns = patterns;
+        aggregate.allBasenames = basenames;
+        var aggregatedPatterns = parsedPatterns.filter(function (parsedPattern) { return !parsedPattern.basenames; });
+        aggregatedPatterns.push(aggregate);
+        return aggregatedPatterns;
+    }
+});
+
+define(__m[75/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/errors*/]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1563,7 +2068,7 @@ define(__m[70/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,7/
 
 
 
-define(__m[20/*vs/base/common/eventEmitter*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/errors*/]), function (require, exports, Errors) {
+define(__m[24/*vs/base/common/eventEmitter*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/errors*/]), function (require, exports, Errors) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1734,13 +2239,19 @@ define(__m[20/*vs/base/common/eventEmitter*/], __M([1/*require*/,0/*exports*/,7/
                 this._collectedEvents.push(emitterEvent);
             }
         };
-        EventEmitter.prototype.deferredEmit = function (callback) {
+        EventEmitter.prototype._beginDeferredEmit = function () {
             this._deferredCnt = this._deferredCnt + 1;
-            var result = safeInvokeNoArg(callback);
+        };
+        EventEmitter.prototype._endDeferredEmit = function () {
             this._deferredCnt = this._deferredCnt - 1;
             if (this._deferredCnt === 0) {
                 this._emitCollected();
             }
+        };
+        EventEmitter.prototype.deferredEmit = function (callback) {
+            this._beginDeferredEmit();
+            var result = safeInvokeNoArg(callback);
+            this._endDeferredEmit();
             return result;
         };
         EventEmitter.prototype._emitCollected = function () {
@@ -1813,7 +2324,7 @@ define(__m[20/*vs/base/common/eventEmitter*/], __M([1/*require*/,0/*exports*/,7/
     }
 });
 
-define(__m[84/*vs/base/common/graph*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/types*/,26/*vs/base/common/collections*/]), function (require, exports, types_1, collections_1) {
+define(__m[47/*vs/base/common/graph*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/types*/,38/*vs/base/common/collections*/]), function (require, exports, types_1, collections_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1907,7 +2418,7 @@ define(__m[84/*vs/base/common/graph*/], __M([1/*require*/,0/*exports*/,8/*vs/bas
 
 
 
-define(__m[12/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/types*/]), function (require, exports, types_1) {
+define(__m[12/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1974,9 +2485,40 @@ define(__m[12/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,8/*vs
         return Disposables;
     }(Disposable));
     exports.Disposables = Disposables;
+    var ReferenceCollection = (function () {
+        function ReferenceCollection() {
+            this.references = Object.create(null);
+        }
+        ReferenceCollection.prototype.acquire = function (key) {
+            var _this = this;
+            var reference = this.references[key];
+            if (!reference) {
+                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
+            }
+            var object = reference.object;
+            var dispose = function () {
+                if (--reference.counter === 0) {
+                    _this.destroyReferencedObject(reference.object);
+                    delete _this.references[key];
+                }
+            };
+            reference.counter++;
+            return { object: object, dispose: dispose };
+        };
+        return ReferenceCollection;
+    }());
+    exports.ReferenceCollection = ReferenceCollection;
+    var ImmortalReference = (function () {
+        function ImmortalReference(object) {
+            this.object = object;
+        }
+        ImmortalReference.prototype.dispose = function () { };
+        return ImmortalReference;
+    }());
+    exports.ImmortalReference = ImmortalReference;
 });
 
-define(__m[11/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,12/*vs/base/common/lifecycle*/,70/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
+define(__m[6/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,12/*vs/base/common/lifecycle*/,75/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2360,7 +2902,7 @@ define(__m[11/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,12/*vs/ba
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[73/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,11/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[80/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     var shortcutEvent = Object.freeze(function (callback, context) {
         var handle = setTimeout(callback.bind(context), 0);
@@ -2446,12 +2988,219 @@ define(__m[73/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,11
     exports.CancellationTokenSource = CancellationTokenSource;
 });
 
+define(__m[81/*vs/base/common/mime*/], __M([0/*require*/,1/*exports*/,15/*vs/base/common/paths*/,8/*vs/base/common/types*/,14/*vs/base/common/strings*/,67/*vs/base/common/glob*/]), function (require, exports, paths, types, strings, glob_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.MIME_TEXT = 'text/plain';
+    exports.MIME_BINARY = 'application/octet-stream';
+    exports.MIME_UNKNOWN = 'application/unknown';
+    var registeredAssociations = [];
+    var nonUserRegisteredAssociations = [];
+    var userRegisteredAssociations = [];
+    /**
+     * Associate a text mime to the registry.
+     */
+    function registerTextMime(association) {
+        // Register
+        var associationItem = toTextMimeAssociationItem(association);
+        registeredAssociations.push(associationItem);
+        if (!associationItem.userConfigured) {
+            nonUserRegisteredAssociations.push(associationItem);
+        }
+        else {
+            userRegisteredAssociations.push(associationItem);
+        }
+        // Check for conflicts unless this is a user configured association
+        if (!associationItem.userConfigured) {
+            registeredAssociations.forEach(function (a) {
+                if (a.mime === associationItem.mime || a.userConfigured) {
+                    return; // same mime or userConfigured is ok
+                }
+                if (associationItem.extension && a.extension === associationItem.extension) {
+                    console.warn("Overwriting extension <<" + associationItem.extension + ">> to now point to mime <<" + associationItem.mime + ">>");
+                }
+                if (associationItem.filename && a.filename === associationItem.filename) {
+                    console.warn("Overwriting filename <<" + associationItem.filename + ">> to now point to mime <<" + associationItem.mime + ">>");
+                }
+                if (associationItem.filepattern && a.filepattern === associationItem.filepattern) {
+                    console.warn("Overwriting filepattern <<" + associationItem.filepattern + ">> to now point to mime <<" + associationItem.mime + ">>");
+                }
+                if (associationItem.firstline && a.firstline === associationItem.firstline) {
+                    console.warn("Overwriting firstline <<" + associationItem.firstline + ">> to now point to mime <<" + associationItem.mime + ">>");
+                }
+            });
+        }
+    }
+    exports.registerTextMime = registerTextMime;
+    function toTextMimeAssociationItem(association) {
+        return {
+            id: association.id,
+            mime: association.mime,
+            filename: association.filename,
+            extension: association.extension,
+            filepattern: association.filepattern,
+            firstline: association.firstline,
+            userConfigured: association.userConfigured,
+            filenameLowercase: association.filename ? association.filename.toLowerCase() : void 0,
+            extensionLowercase: association.extension ? association.extension.toLowerCase() : void 0,
+            filepatternLowercase: association.filepattern ? association.filepattern.toLowerCase() : void 0,
+            filepatternOnPath: association.filepattern ? association.filepattern.indexOf(paths.sep) >= 0 : false
+        };
+    }
+    /**
+     * Clear text mimes from the registry.
+     */
+    function clearTextMimes(onlyUserConfigured) {
+        if (!onlyUserConfigured) {
+            registeredAssociations = [];
+            nonUserRegisteredAssociations = [];
+            userRegisteredAssociations = [];
+        }
+        else {
+            registeredAssociations = registeredAssociations.filter(function (a) { return !a.userConfigured; });
+            userRegisteredAssociations = [];
+        }
+    }
+    exports.clearTextMimes = clearTextMimes;
+    /**
+     * Given a file, return the best matching mime type for it
+     */
+    function guessMimeTypes(path, firstLine) {
+        if (!path) {
+            return [exports.MIME_UNKNOWN];
+        }
+        path = path.toLowerCase();
+        var filename = paths.basename(path);
+        // 1.) User configured mappings have highest priority
+        var configuredMime = guessMimeTypeByPath(path, filename, userRegisteredAssociations);
+        if (configuredMime) {
+            return [configuredMime, exports.MIME_TEXT];
+        }
+        // 2.) Registered mappings have middle priority
+        var registeredMime = guessMimeTypeByPath(path, filename, nonUserRegisteredAssociations);
+        if (registeredMime) {
+            return [registeredMime, exports.MIME_TEXT];
+        }
+        // 3.) Firstline has lowest priority
+        if (firstLine) {
+            var firstlineMime = guessMimeTypeByFirstline(firstLine);
+            if (firstlineMime) {
+                return [firstlineMime, exports.MIME_TEXT];
+            }
+        }
+        return [exports.MIME_UNKNOWN];
+    }
+    exports.guessMimeTypes = guessMimeTypes;
+    function guessMimeTypeByPath(path, filename, associations) {
+        var filenameMatch;
+        var patternMatch;
+        var extensionMatch;
+        for (var i = 0; i < associations.length; i++) {
+            var association = associations[i];
+            // First exact name match
+            if (filename === association.filenameLowercase) {
+                filenameMatch = association;
+                break; // take it!
+            }
+            // Longest pattern match
+            if (association.filepattern) {
+                if (!patternMatch || association.filepattern.length > patternMatch.filepattern.length) {
+                    var target = association.filepatternOnPath ? path : filename; // match on full path if pattern contains path separator
+                    if (glob_1.match(association.filepatternLowercase, target)) {
+                        patternMatch = association;
+                    }
+                }
+            }
+            // Longest extension match
+            if (association.extension) {
+                if (!extensionMatch || association.extension.length > extensionMatch.extension.length) {
+                    if (strings.endsWith(filename, association.extensionLowercase)) {
+                        extensionMatch = association;
+                    }
+                }
+            }
+        }
+        // 1.) Exact name match has second highest prio
+        if (filenameMatch) {
+            return filenameMatch.mime;
+        }
+        // 2.) Match on pattern
+        if (patternMatch) {
+            return patternMatch.mime;
+        }
+        // 3.) Match on extension comes next
+        if (extensionMatch) {
+            return extensionMatch.mime;
+        }
+        return null;
+    }
+    function guessMimeTypeByFirstline(firstLine) {
+        if (strings.startsWithUTF8BOM(firstLine)) {
+            firstLine = firstLine.substr(1);
+        }
+        if (firstLine.length > 0) {
+            for (var i = 0; i < registeredAssociations.length; ++i) {
+                var association = registeredAssociations[i];
+                if (!association.firstline) {
+                    continue;
+                }
+                // Make sure the entire line matches, not just a subpart.
+                var matches = firstLine.match(association.firstline);
+                if (matches && matches.length > 0 && matches[0].length === firstLine.length) {
+                    return association.mime;
+                }
+            }
+        }
+        return null;
+    }
+    function isBinaryMime(mimes) {
+        if (!mimes) {
+            return false;
+        }
+        var mimeVals;
+        if (types.isArray(mimes)) {
+            mimeVals = mimes;
+        }
+        else {
+            mimeVals = mimes.split(',').map(function (mime) { return mime.trim(); });
+        }
+        return mimeVals.indexOf(exports.MIME_BINARY) >= 0;
+    }
+    exports.isBinaryMime = isBinaryMime;
+    function isUnspecific(mime) {
+        if (!mime) {
+            return true;
+        }
+        if (typeof mime === 'string') {
+            return mime === exports.MIME_BINARY || mime === exports.MIME_TEXT || mime === exports.MIME_UNKNOWN;
+        }
+        return mime.length === 1 && isUnspecific(mime[0]);
+    }
+    exports.isUnspecific = isUnspecific;
+    function suggestFilename(langId, prefix) {
+        for (var i = 0; i < registeredAssociations.length; i++) {
+            var association = registeredAssociations[i];
+            if (association.userConfigured) {
+                continue; // only support registered ones
+            }
+            if (association.id === langId && association.extension) {
+                return prefix + association.extension;
+            }
+        }
+        return prefix; // without any known extension, just return the prefix
+    }
+    exports.suggestFilename = suggestFilename;
+});
 
 
 
 
 
-define(__m[19/*vs/base/common/uuid*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+
+define(__m[25/*vs/base/common/uuid*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2557,7 +3306,7 @@ define(__m[19/*vs/base/common/uuid*/], __M([1/*require*/,0/*exports*/]), functio
 
 
 
-define(__m[80/*vs/base/common/actions*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,20/*vs/base/common/eventEmitter*/,76/*vs/base/common/events*/,11/*vs/base/common/event*/]), function (require, exports, winjs_base_1, eventEmitter_1, Events, event_1) {
+define(__m[43/*vs/base/common/actions*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,24/*vs/base/common/eventEmitter*/,88/*vs/base/common/events*/,6/*vs/base/common/event*/]), function (require, exports, winjs_base_1, eventEmitter_1, Events, event_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2701,10 +3450,26 @@ define(__m[80/*vs/base/common/actions*/], __M([1/*require*/,0/*exports*/,2/*vs/b
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Action.prototype, "radio", {
+            get: function () {
+                return this._radio;
+            },
+            set: function (value) {
+                this._setRadio(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Action.prototype._setChecked = function (value) {
             if (this._checked !== value) {
                 this._checked = value;
                 this._onDidChange.fire({ checked: value });
+            }
+        };
+        Action.prototype._setRadio = function (value) {
+            if (this._radio !== value) {
+                this._radio = value;
+                this._onDidChange.fire({ radio: value });
             }
         };
         Object.defineProperty(Action.prototype, "order", {
@@ -2757,7 +3522,7 @@ define(__m[80/*vs/base/common/actions*/], __M([1/*require*/,0/*exports*/,2/*vs/b
 
 
 
-define(__m[14/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/errors*/,18/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,73/*vs/base/common/cancellation*/,12/*vs/base/common/lifecycle*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
+define(__m[19/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/errors*/,16/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,80/*vs/base/common/cancellation*/,12/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -3085,13 +3850,13 @@ define(__m[14/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,7/*vs/bas
      * Runs the provided list of promise factories in sequential order. The returned
      * promise will complete to an array of results from each promise.
      */
-    function sequence(promiseFactory) {
+    function sequence(promiseFactories) {
         var results = [];
         // reverse since we start with last element using pop()
-        promiseFactory = promiseFactory.reverse();
+        promiseFactories = promiseFactories.reverse();
         function next() {
-            if (promiseFactory.length) {
-                return promiseFactory.pop()();
+            if (promiseFactories.length) {
+                return promiseFactories.pop()();
             }
             return null;
         }
@@ -3108,6 +3873,25 @@ define(__m[14/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,7/*vs/bas
         return winjs_base_1.TPromise.as(null).then(thenHandler);
     }
     exports.sequence = sequence;
+    function first(promiseFactories, shouldStop) {
+        if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
+        promiseFactories = promiseFactories.reverse().slice();
+        var loop = function () {
+            if (promiseFactories.length === 0) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            var factory = promiseFactories.pop();
+            var promise = factory();
+            return promise.then(function (result) {
+                if (shouldStop(result)) {
+                    return winjs_base_1.TPromise.as(result);
+                }
+                return loop();
+            });
+        };
+        return loop();
+    }
+    exports.first = first;
     function once(fn) {
         var _this = this;
         var didCall = false;
@@ -3131,7 +3915,15 @@ define(__m[14/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,7/*vs/bas
             this.maxDegreeOfParalellism = maxDegreeOfParalellism;
             this.outstandingPromises = [];
             this.runningPromises = 0;
+            this._onFinished = new event_1.Emitter();
         }
+        Object.defineProperty(Limiter.prototype, "onFinished", {
+            get: function () {
+                return this._onFinished.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Limiter.prototype.queue = function (promiseFactory) {
             var _this = this;
             return new winjs_base_1.TPromise(function (c, e, p) {
@@ -3156,7 +3948,15 @@ define(__m[14/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,7/*vs/bas
         };
         Limiter.prototype.consumed = function () {
             this.runningPromises--;
-            this.consume();
+            if (this.outstandingPromises.length > 0) {
+                this.consume();
+            }
+            else {
+                this._onFinished.fire();
+            }
+        };
+        Limiter.prototype.dispose = function () {
+            this._onFinished.dispose();
         };
         return Limiter;
     }());
@@ -3309,7 +4109,7 @@ define(__m[14/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,7/*vs/bas
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[44/*vs/base/node/flow*/], __M([1/*require*/,0/*exports*/,97/*assert*/]), function (require, exports, assert) {
+define(__m[49/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,102/*assert*/]), function (require, exports, assert) {
     'use strict';
     /**
      * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
@@ -3452,7 +4252,7 @@ define(__m[44/*vs/base/node/flow*/], __M([1/*require*/,0/*exports*/,97/*assert*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[49/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,19/*vs/base/common/uuid*/,21/*vs/base/common/strings*/,18/*vs/base/common/platform*/,44/*vs/base/node/flow*/,15/*fs*/,9/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
+define(__m[65/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,25/*vs/base/common/uuid*/,14/*vs/base/common/strings*/,16/*vs/base/common/platform*/,49/*vs/base/node/flow*/,18/*fs*/,10/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
     'use strict';
     var loop = flow.loop;
     function readdirSync(path) {
@@ -3675,6 +4475,25 @@ define(__m[49/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,19/*vs/base
             }
         });
     }
+    function delSync(path) {
+        try {
+            var stat = fs.lstatSync(path);
+            if (stat.isDirectory() && !stat.isSymbolicLink()) {
+                readdirSync(path).forEach(function (child) { return delSync(paths.join(path, child)); });
+                fs.rmdirSync(path);
+            }
+            else {
+                fs.unlinkSync(path);
+            }
+        }
+        catch (err) {
+            if (err.code === 'ENOENT') {
+                return; // not found
+            }
+            throw err;
+        }
+    }
+    exports.delSync = delSync;
     function mv(source, target, callback) {
         if (source === target) {
             return callback(null);
@@ -3774,8 +4593,41 @@ define(__m[49/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,19/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[64/*vs/base/node/id*/], __M([1/*require*/,0/*exports*/,96/*getmac*/,67/*crypto*/,2/*vs/base/common/winjs.base*/,7/*vs/base/common/errors*/,19/*vs/base/common/uuid*/]), function (require, exports, getmac, crypto, winjs_base_1, errors, uuid) {
+define(__m[68/*vs/base/node/id*/], __M([0/*require*/,1/*exports*/,101/*getmac*/,71/*crypto*/,2/*vs/base/common/winjs.base*/,9/*vs/base/common/errors*/,25/*vs/base/common/uuid*/,26/*os*/]), function (require, exports, getmac, crypto, winjs_base_1, errors, uuid, os_1) {
     "use strict";
+    var mac = new (function () {
+        function class_1() {
+        }
+        Object.defineProperty(class_1.prototype, "value", {
+            get: function () {
+                if (this._value === void 0) {
+                    this._initValue();
+                }
+                return this._value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        class_1.prototype._initValue = function () {
+            this._value = null;
+            var interfaces = os_1.networkInterfaces();
+            for (var key in interfaces) {
+                for (var _i = 0, _a = interfaces[key]; _i < _a.length; _i++) {
+                    var i = _a[_i];
+                    if (!i.internal) {
+                        this._value = crypto.createHash('sha256').update(i.mac, 'utf8').digest('hex');
+                        return;
+                    }
+                }
+            }
+            this._value = "missing-" + uuid.generateUuid();
+        };
+        return class_1;
+    }());
+    function _futureMachineIdExperiment() {
+        return mac.value;
+    }
+    exports._futureMachineIdExperiment = _futureMachineIdExperiment;
     function getMachineId() {
         return new winjs_base_1.TPromise(function (resolve) {
             try {
@@ -3801,7 +4653,7 @@ define(__m[64/*vs/base/node/id*/], __M([1/*require*/,0/*exports*/,96/*getmac*/,6
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[68/*vs/base/node/paths*/], __M([1/*require*/,0/*exports*/,34/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+define(__m[79/*vs/base/node/paths*/], __M([0/*require*/,1/*exports*/,32/*vs/base/common/uri*/]), function (require, exports, uri_1) {
     "use strict";
     var pathsPath = uri_1.default.parse(require.toUrl('paths')).fsPath;
     var paths = require.__$__nodeRequire(pathsPath);
@@ -3813,7 +4665,7 @@ define(__m[68/*vs/base/node/paths*/], __M([1/*require*/,0/*exports*/,34/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[17/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,49/*vs/base/node/extfs*/,30/*vs/base/common/paths*/,9/*path*/,14/*vs/base/common/async*/,15/*fs*/]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs) {
+define(__m[21/*vs/base/node/pfs*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,65/*vs/base/node/extfs*/,15/*vs/base/common/paths*/,10/*path*/,19/*vs/base/common/async*/,18/*fs*/,16/*vs/base/common/platform*/,6/*vs/base/common/event*/]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs, platform, event_1) {
     'use strict';
     function readdir(path) {
         return async_1.nfcall(extfs.readdir, path);
@@ -3862,7 +4714,7 @@ define(__m[17/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/co
             }
         }, function (err) {
             if (err.code === 'ENOENT') {
-                return;
+                return void 0;
             }
             return winjs_base_1.TPromise.wrapError(err);
         });
@@ -3900,24 +4752,45 @@ define(__m[17/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/co
         return async_1.nfcall(fs.readlink, path);
     }
     exports.readlink = readlink;
-    function utimes(path, atime, mtime) {
-        return async_1.nfcall(fs.utimes, path, atime, mtime);
+    function touch(path) {
+        var now = Date.now() / 1000; // the value should be a Unix timestamp in seconds
+        return async_1.nfcall(fs.utimes, path, now, now);
     }
-    exports.utimes = utimes;
+    exports.touch = touch;
     function readFile(path, encoding) {
         return async_1.nfcall(fs.readFile, path, encoding);
     }
     exports.readFile = readFile;
+    // According to node.js docs (https://nodejs.org/docs/v6.5.0/api/fs.html#fs_fs_writefile_file_data_options_callback)
+    // it is not safe to call writeFile() on the same path multiple times without waiting for the callback to return.
+    // Therefor we use a Queue on the path that is given to us to sequentialize calls to the same path properly.
+    var writeFilePathQueue = Object.create(null);
     function writeFile(path, data, encoding) {
         if (encoding === void 0) { encoding = 'utf8'; }
-        return async_1.nfcall(fs.writeFile, path, data, encoding);
+        var queueKey = toQueueKey(path);
+        return ensureWriteFileQueue(queueKey).queue(function () { return async_1.nfcall(extfs.writeFileAndFlush, path, data, encoding); });
     }
     exports.writeFile = writeFile;
-    function writeFileAndFlush(path, data, encoding) {
-        if (encoding === void 0) { encoding = 'utf8'; }
-        return async_1.nfcall(extfs.writeFileAndFlush, path, data, encoding);
+    function toQueueKey(path) {
+        var queueKey = path;
+        if (platform.isWindows || platform.isMacintosh) {
+            queueKey = queueKey.toLowerCase(); // accomodate for case insensitive file systems
+        }
+        return queueKey;
     }
-    exports.writeFileAndFlush = writeFileAndFlush;
+    function ensureWriteFileQueue(queueKey) {
+        var writeFileQueue = writeFilePathQueue[queueKey];
+        if (!writeFileQueue) {
+            writeFileQueue = new async_1.Queue();
+            writeFilePathQueue[queueKey] = writeFileQueue;
+            var onFinish = event_1.once(writeFileQueue.onFinished);
+            onFinish(function () {
+                delete writeFilePathQueue[queueKey];
+                writeFileQueue.dispose();
+            });
+        }
+        return writeFileQueue;
+    }
     /**
     * Read a dir and return only subfolders
     */
@@ -3949,7 +4822,7 @@ define(__m[17/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/co
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[74/*vs/base/node/proxy*/], __M([1/*require*/,0/*exports*/,28/*url*/,8/*vs/base/common/types*/,92/*http-proxy-agent*/,91/*https-proxy-agent*/]), function (require, exports, url_1, types_1, HttpProxyAgent, HttpsProxyAgent) {
+define(__m[83/*vs/base/node/proxy*/], __M([0/*require*/,1/*exports*/,87/*url*/,8/*vs/base/common/types*/,97/*http-proxy-agent*/,96/*https-proxy-agent*/]), function (require, exports, url_1, types_1, HttpProxyAgent, HttpsProxyAgent) {
     'use strict';
     function getSystemProxyURI(requestURL) {
         if (requestURL.protocol === 'http:') {
@@ -3982,8 +4855,8 @@ define(__m[74/*vs/base/node/proxy*/], __M([1/*require*/,0/*exports*/,28/*url*/,8
     exports.getProxyAgent = getProxyAgent;
 });
 
-define(__m[82/*vs/nls!vs/base/common/json*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/base/common/json", data); });
-define(__m[42/*vs/base/common/json*/], __M([1/*require*/,0/*exports*/,82/*vs/nls!vs/base/common/json*/]), function (require, exports, nls_1) {
+define(__m[42/*vs/nls!vs/base/common/json*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/base/common/json", data); });
+define(__m[45/*vs/base/common/json*/], __M([0/*require*/,1/*exports*/,42/*vs/nls!vs/base/common/json*/]), function (require, exports, nls_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5032,7 +5905,7 @@ define(__m[42/*vs/base/common/json*/], __M([1/*require*/,0/*exports*/,82/*vs/nls
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[43/*vs/base/node/config*/], __M([1/*require*/,0/*exports*/,15/*fs*/,9/*path*/,6/*vs/base/common/objects*/,12/*vs/base/common/lifecycle*/,11/*vs/base/common/event*/,42/*vs/base/common/json*/]), function (require, exports, fs, path, objects, lifecycle_1, event_1, json) {
+define(__m[46/*vs/base/node/config*/], __M([0/*require*/,1/*exports*/,18/*fs*/,10/*path*/,7/*vs/base/common/objects*/,12/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/,45/*vs/base/common/json*/]), function (require, exports, fs, path, objects, lifecycle_1, event_1, json) {
     'use strict';
     /**
      * A simple helper to watch a configured file for changes and process its contents as JSON object.
@@ -5202,8 +6075,8 @@ define(__m[43/*vs/base/node/config*/], __M([1/*require*/,0/*exports*/,15/*fs*/,9
     exports.ConfigWatcher = ConfigWatcher;
 });
 
-define(__m[45/*vs/nls!vs/base/common/severity*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/base/common/severity", data); });
-define(__m[36/*vs/base/common/severity*/], __M([1/*require*/,0/*exports*/,45/*vs/nls!vs/base/common/severity*/,21/*vs/base/common/strings*/]), function (require, exports, nls, strings) {
+define(__m[48/*vs/nls!vs/base/common/severity*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/base/common/severity", data); });
+define(__m[35/*vs/base/common/severity*/], __M([0/*require*/,1/*exports*/,48/*vs/nls!vs/base/common/severity*/,14/*vs/base/common/strings*/]), function (require, exports, nls, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5256,23 +6129,23 @@ define(__m[36/*vs/base/common/severity*/], __M([1/*require*/,0/*exports*/,45/*vs
     exports.default = Severity;
 });
 
-define(__m[47/*vs/nls!vs/base/node/zip*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/base/node/zip", data); });
+define(__m[50/*vs/nls!vs/base/node/zip*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/base/node/zip", data); });
 
-define(__m[48/*vs/nls!vs/platform/configuration/common/configurationRegistry*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/configuration/common/configurationRegistry", data); });
-define(__m[63/*vs/nls!vs/platform/extensionManagement/common/extensionManagement*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensionManagement/common/extensionManagement", data); });
-define(__m[50/*vs/nls!vs/platform/extensionManagement/node/extensionGalleryService*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensionManagement/node/extensionGalleryService", data); });
-define(__m[51/*vs/nls!vs/platform/extensionManagement/node/extensionManagementService*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensionManagement/node/extensionManagementService", data); });
-define(__m[52/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/extensionsRegistry", data); });
-define(__m[53/*vs/nls!vs/platform/extensions/node/extensionValidator*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensions/node/extensionValidator", data); });
-define(__m[54/*vs/nls!vs/platform/message/common/message*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/message/common/message", data); });
-define(__m[55/*vs/nls!vs/platform/request/common/request*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/request/common/request", data); });
-define(__m[56/*vs/nls!vs/platform/telemetry/common/telemetryService*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/telemetry/common/telemetryService", data); });
-
-
+define(__m[51/*vs/nls!vs/platform/configuration/common/configurationRegistry*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/configuration/common/configurationRegistry", data); });
+define(__m[66/*vs/nls!vs/platform/extensionManagement/common/extensionManagement*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensionManagement/common/extensionManagement", data); });
+define(__m[53/*vs/nls!vs/platform/extensionManagement/node/extensionGalleryService*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensionManagement/node/extensionGalleryService", data); });
+define(__m[54/*vs/nls!vs/platform/extensionManagement/node/extensionManagementService*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensionManagement/node/extensionManagementService", data); });
+define(__m[55/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/extensionsRegistry", data); });
+define(__m[56/*vs/nls!vs/platform/extensions/node/extensionValidator*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/extensions/node/extensionValidator", data); });
+define(__m[57/*vs/nls!vs/platform/message/common/message*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/message/common/message", data); });
+define(__m[58/*vs/nls!vs/platform/request/node/request*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/request/node/request", data); });
+define(__m[59/*vs/nls!vs/platform/telemetry/common/telemetryService*/], __M([4/*vs/nls*/,3/*vs/nls!vs/code/node/cliProcessMain*/]), function(nls, data) { return nls.create("vs/platform/telemetry/common/telemetryService", data); });
 
 
 
-define(__m[57/*vs/platform/event/common/eventService*/], __M([1/*require*/,0/*exports*/,20/*vs/base/common/eventEmitter*/]), function (require, exports, eventEmitter_1) {
+
+
+define(__m[60/*vs/platform/event/common/eventService*/], __M([0/*require*/,1/*exports*/,24/*vs/base/common/eventEmitter*/]), function (require, exports, eventEmitter_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5293,7 +6166,7 @@ define(__m[57/*vs/platform/event/common/eventService*/], __M([1/*require*/,0/*ex
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[58/*vs/platform/extensionManagement/common/extensionNls*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/objects*/]), function (require, exports, objects_1) {
+define(__m[61/*vs/platform/extensionManagement/common/extensionNls*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/objects*/]), function (require, exports, objects_1) {
     'use strict';
     var nlsRegex = /^%([\w\d.]+)%$/i;
     function localizeManifest(manifest, translations) {
@@ -5316,7 +6189,7 @@ define(__m[58/*vs/platform/extensionManagement/common/extensionNls*/], __M([1/*r
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[59/*vs/platform/extensionManagement/common/extensionTelemetry*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[62/*vs/platform/extensionManagement/common/extensionTelemetry*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     function getLocalExtensionTelemetryData(extension) {
         return {
@@ -5344,13 +6217,13 @@ define(__m[59/*vs/platform/extensionManagement/common/extensionTelemetry*/], __M
     exports.getGalleryExtensionTelemetryData = getGalleryExtensionTelemetryData;
 });
 
-define(__m[60/*vs/platform/extensions/node/extensionValidator*/], __M([1/*require*/,0/*exports*/,53/*vs/nls!vs/platform/extensions/node/extensionValidator*/,61/*semver*/,30/*vs/base/common/paths*/]), function (require, exports, nls, semver_1, paths) {
+define(__m[63/*vs/platform/extensions/node/extensionValidator*/], __M([0/*require*/,1/*exports*/,56/*vs/nls!vs/platform/extensions/node/extensionValidator*/,64/*semver*/,15/*vs/base/common/paths*/]), function (require, exports, nls, semver_1, paths) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    var VERSION_REGEXP = /^(\^)?((\d+)|x)\.((\d+)|x)\.((\d+)|x)(\-.*)?$/;
+    var VERSION_REGEXP = /^(\^|>=)?((\d+)|x)\.((\d+)|x)\.((\d+)|x)(\-.*)?$/;
     function isValidVersionStr(version) {
         version = version.trim();
         return (version === '*' || VERSION_REGEXP.test(version));
@@ -5364,6 +6237,7 @@ define(__m[60/*vs/platform/extensions/node/extensionValidator*/], __M([1/*requir
         if (version === '*') {
             return {
                 hasCaret: false,
+                hasGreaterEquals: false,
                 majorBase: 0,
                 majorMustEqual: false,
                 minorBase: 0,
@@ -5375,7 +6249,8 @@ define(__m[60/*vs/platform/extensions/node/extensionValidator*/], __M([1/*requir
         }
         var m = version.match(VERSION_REGEXP);
         return {
-            hasCaret: !!m[1],
+            hasCaret: m[1] === '^',
+            hasGreaterEquals: m[1] === '>=',
             majorBase: m[2] === 'x' ? 0 : parseInt(m[2], 10),
             majorMustEqual: (m[2] === 'x' ? false : true),
             minorBase: m[4] === 'x' ? 0 : parseInt(m[4], 10),
@@ -5406,7 +6281,8 @@ define(__m[60/*vs/platform/extensions/node/extensionValidator*/], __M([1/*requir
             minorBase: minorBase,
             minorMustEqual: minorMustEqual,
             patchBase: patchBase,
-            patchMustEqual: patchMustEqual
+            patchMustEqual: patchMustEqual,
+            isMinimum: version.hasGreaterEquals
         };
     }
     exports.normalizeVersion = normalizeVersion;
@@ -5437,6 +6313,21 @@ define(__m[60/*vs/platform/extensions/node/extensionValidator*/], __M([1/*requir
         var majorMustEqual = desiredVersion.majorMustEqual;
         var minorMustEqual = desiredVersion.minorMustEqual;
         var patchMustEqual = desiredVersion.patchMustEqual;
+        if (desiredVersion.isMinimum) {
+            if (majorBase > desiredMajorBase) {
+                return true;
+            }
+            if (majorBase < desiredMajorBase) {
+                return false;
+            }
+            if (minorBase > desiredMinorBase) {
+                return true;
+            }
+            if (minorBase < desiredMinorBase) {
+                return false;
+            }
+            return patchBase >= desiredPatchBase;
+        }
         // Anything < 1.0.0 is compatible with >= 1.0.0, except exact matches
         if (majorBase === 1 && desiredMajorBase === 0 && (!majorMustEqual || !minorMustEqual || !patchMustEqual)) {
             desiredMajorBase = 1;
@@ -5603,7 +6494,7 @@ define(__m[60/*vs/platform/extensions/node/extensionValidator*/], __M([1/*requir
 
 
 
-define(__m[27/*vs/platform/instantiation/common/descriptors*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+define(__m[30/*vs/platform/instantiation/common/descriptors*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/errors*/]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5716,7 +6607,7 @@ define(__m[27/*vs/platform/instantiation/common/descriptors*/], __M([1/*require*
     exports.AsyncDescriptor = AsyncDescriptor;
 });
 
-define(__m[5/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[5/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5774,9 +6665,15 @@ define(__m[5/*vs/platform/instantiation/common/instantiation*/], __M([1/*require
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[13/*vs/platform/configuration/common/configuration*/], __M([1/*require*/,0/*exports*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[13/*vs/platform/configuration/common/configuration*/], __M([0/*require*/,1/*exports*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     "use strict";
     exports.IConfigurationService = instantiation_1.createDecorator('configurationService');
+    (function (ConfigurationSource) {
+        ConfigurationSource[ConfigurationSource["Default"] = 1] = "Default";
+        ConfigurationSource[ConfigurationSource["User"] = 2] = "User";
+        ConfigurationSource[ConfigurationSource["Workspace"] = 3] = "Workspace";
+    })(exports.ConfigurationSource || (exports.ConfigurationSource = {}));
+    var ConfigurationSource = exports.ConfigurationSource;
     /**
      * A helper function to get the configuration value with a specific settings path (e.g. config.some.setting)
      */
@@ -5785,7 +6682,7 @@ define(__m[13/*vs/platform/configuration/common/configuration*/], __M([1/*requir
             var current = config;
             for (var i = 0; i < path.length; i++) {
                 current = current[path[i]];
-                if (!current) {
+                if (typeof current === 'undefined') {
                     return undefined;
                 }
             }
@@ -5802,12 +6699,12 @@ define(__m[13/*vs/platform/configuration/common/configuration*/], __M([1/*requir
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[22/*vs/platform/environment/common/environment*/], __M([1/*require*/,0/*exports*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[22/*vs/platform/environment/common/environment*/], __M([0/*require*/,1/*exports*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     "use strict";
     exports.IEnvironmentService = instantiation_1.createDecorator('environmentService');
 });
 
-define(__m[66/*vs/platform/event/common/event*/], __M([1/*require*/,0/*exports*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[69/*vs/platform/event/common/event*/], __M([0/*require*/,1/*exports*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5820,7 +6717,7 @@ define(__m[66/*vs/platform/event/common/event*/], __M([1/*require*/,0/*exports*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[23/*vs/platform/extensionManagement/common/extensionManagement*/], __M([1/*require*/,0/*exports*/,63/*vs/nls!vs/platform/extensionManagement/common/extensionManagement*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, nls, instantiation_1) {
+define(__m[27/*vs/platform/extensionManagement/common/extensionManagement*/], __M([0/*require*/,1/*exports*/,66/*vs/nls!vs/platform/extensionManagement/common/extensionManagement*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, nls_1, instantiation_1) {
     'use strict';
     exports.EXTENSION_IDENTIFIER_PATTERN = '^[a-z0-9A-Z][a-z0-9\-A-Z]*\\.[a-z0-9A-Z][a-z0-9\-A-Z]*$';
     exports.EXTENSION_IDENTIFIER_REGEX = new RegExp(exports.EXTENSION_IDENTIFIER_PATTERN);
@@ -5847,12 +6744,14 @@ define(__m[23/*vs/platform/extensionManagement/common/extensionManagement*/], __
         SortOrder[SortOrder["Descending"] = 2] = "Descending";
     })(exports.SortOrder || (exports.SortOrder = {}));
     var SortOrder = exports.SortOrder;
+    exports.IExtensionEnablementService = instantiation_1.createDecorator('extensionEnablementService');
     exports.IExtensionTipsService = instantiation_1.createDecorator('extensionTipsService');
-    exports.ExtensionsLabel = nls.localize(0, null);
+    exports.ExtensionsLabel = nls_1.localize(0, null);
     exports.ExtensionsChannelId = 'extensions';
+    exports.PreferencesLabel = nls_1.localize(1, null);
 });
 
-define(__m[32/*vs/platform/instantiation/common/serviceCollection*/], __M([1/*require*/,0/*exports*/,24/*vs/base/common/arrays*/]), function (require, exports, arrays_1) {
+define(__m[33/*vs/platform/instantiation/common/serviceCollection*/], __M([0/*require*/,1/*exports*/,17/*vs/base/common/arrays*/]), function (require, exports, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5922,7 +6821,7 @@ define(__m[32/*vs/platform/instantiation/common/serviceCollection*/], __M([1/*re
     exports.ServiceCollection = ServiceCollection;
 });
 
-define(__m[69/*vs/platform/instantiation/common/instantiationService*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,7/*vs/base/common/errors*/,8/*vs/base/common/types*/,31/*vs/base/common/assert*/,84/*vs/base/common/graph*/,27/*vs/platform/instantiation/common/descriptors*/,5/*vs/platform/instantiation/common/instantiation*/,32/*vs/platform/instantiation/common/serviceCollection*/]), function (require, exports, winjs_base_1, errors_1, types_1, assert, graph_1, descriptors_1, instantiation_1, serviceCollection_1) {
+define(__m[72/*vs/platform/instantiation/common/instantiationService*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,9/*vs/base/common/errors*/,8/*vs/base/common/types*/,41/*vs/base/common/assert*/,47/*vs/base/common/graph*/,30/*vs/platform/instantiation/common/descriptors*/,5/*vs/platform/instantiation/common/instantiation*/,33/*vs/platform/instantiation/common/serviceCollection*/]), function (require, exports, winjs_base_1, errors_1, types_1, assert, graph_1, descriptors_1, instantiation_1, serviceCollection_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6133,7 +7032,47 @@ define(__m[69/*vs/platform/instantiation/common/instantiationService*/], __M([1/
     exports.InstantiationService = InstantiationService;
 });
 
-define(__m[33/*vs/platform/message/common/message*/], __M([1/*require*/,0/*exports*/,54/*vs/nls!vs/platform/message/common/message*/,2/*vs/base/common/winjs.base*/,36/*vs/base/common/severity*/,5/*vs/platform/instantiation/common/instantiation*/,80/*vs/base/common/actions*/]), function (require, exports, nls, winjs_base_1, severity_1, instantiation_1, actions_1) {
+define(__m[73/*vs/platform/keybinding/common/keybinding*/], __M([0/*require*/,1/*exports*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    (function (KeybindingSource) {
+        KeybindingSource[KeybindingSource["Default"] = 1] = "Default";
+        KeybindingSource[KeybindingSource["User"] = 2] = "User";
+    })(exports.KeybindingSource || (exports.KeybindingSource = {}));
+    var KeybindingSource = exports.KeybindingSource;
+    exports.IKeybindingService = instantiation_1.createDecorator('keybindingService');
+});
+
+define(__m[74/*vs/platform/lifecycle/common/lifecycle*/], __M([0/*require*/,1/*exports*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.ILifecycleService = instantiation_1.createDecorator('lifecycleService');
+    (function (ShutdownReason) {
+        /** Window is closed */
+        ShutdownReason[ShutdownReason["CLOSE"] = 0] = "CLOSE";
+        /** Application is quit */
+        ShutdownReason[ShutdownReason["QUIT"] = 1] = "QUIT";
+        /** Window is reloaded */
+        ShutdownReason[ShutdownReason["RELOAD"] = 2] = "RELOAD";
+        /** Other configuration loaded into window */
+        ShutdownReason[ShutdownReason["LOAD"] = 3] = "LOAD";
+    })(exports.ShutdownReason || (exports.ShutdownReason = {}));
+    var ShutdownReason = exports.ShutdownReason;
+    exports.NullLifecycleService = {
+        _serviceBrand: null,
+        willShutdown: false,
+        onWillShutdown: function () { return ({ dispose: function () { } }); },
+        onShutdown: function (reason) { return ({ dispose: function () { } }); }
+    };
+});
+
+define(__m[34/*vs/platform/message/common/message*/], __M([0/*require*/,1/*exports*/,57/*vs/nls!vs/platform/message/common/message*/,2/*vs/base/common/winjs.base*/,35/*vs/base/common/severity*/,5/*vs/platform/instantiation/common/instantiation*/,43/*vs/base/common/actions*/]), function (require, exports, nls, winjs_base_1, severity_1, instantiation_1, actions_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6151,7 +7090,7 @@ define(__m[33/*vs/platform/message/common/message*/], __M([1/*require*/,0/*expor
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[71/*vs/platform/message/common/messageCli*/], __M([1/*require*/,0/*exports*/,93/*readline*/,2/*vs/base/common/winjs.base*/]), function (require, exports, readline, winjs_base_1) {
+define(__m[76/*vs/platform/message/node/messageCli*/], __M([0/*require*/,1/*exports*/,98/*readline*/,2/*vs/base/common/winjs.base*/]), function (require, exports, readline, winjs_base_1) {
     "use strict";
     var ChoiceCliService = (function () {
         function ChoiceCliService() {
@@ -6201,7 +7140,23 @@ define(__m[71/*vs/platform/message/common/messageCli*/], __M([1/*require*/,0/*ex
     exports.ChoiceCliService = ChoiceCliService;
 });
 
-define(__m[10/*vs/platform/platform*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/types*/,31/*vs/base/common/assert*/]), function (require, exports, Types, Assert) {
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[78/*vs/platform/environment/node/http*/], __M([0/*require*/,1/*exports*/,68/*vs/base/node/id*/,28/*vs/platform/package*/]), function (require, exports, id_1, package_1) {
+    "use strict";
+    function getCommonHTTPHeaders() {
+        return id_1.getMachineId().then(function (machineId) { return ({
+            'X-Market-Client-Id': "VSCode " + package_1.default.version,
+            'User-Agent': "VSCode " + package_1.default.version,
+            'X-Market-User-Id': machineId
+        }); });
+    }
+    exports.getCommonHTTPHeaders = getCommonHTTPHeaders;
+});
+
+define(__m[11/*vs/platform/platform*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/types*/,41/*vs/base/common/assert*/]), function (require, exports, Types, Assert) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6264,7 +7219,7 @@ define(__m[10/*vs/platform/platform*/], __M([1/*require*/,0/*exports*/,8/*vs/bas
     exports.BaseRegistry = BaseRegistry;
 });
 
-define(__m[35/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([1/*require*/,0/*exports*/,10/*vs/platform/platform*/,20/*vs/base/common/eventEmitter*/]), function (require, exports, platform, eventEmitter_1) {
+define(__m[37/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([0/*require*/,1/*exports*/,11/*vs/platform/platform*/,24/*vs/base/common/eventEmitter*/]), function (require, exports, platform, eventEmitter_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6302,7 +7257,7 @@ define(__m[35/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([
     platform.Registry.add(exports.Extensions.JSONContribution, jsonContributionRegistry);
 });
 
-define(__m[75/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*require*/,0/*exports*/,52/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/,7/*vs/base/common/errors*/,36/*vs/base/common/severity*/,35/*vs/platform/jsonschemas/common/jsonContributionRegistry*/,10/*vs/platform/platform*/,11/*vs/base/common/event*/]), function (require, exports, nls, errors_1, severity_1, jsonContributionRegistry_1, platform_1, event_1) {
+define(__m[82/*vs/platform/extensions/common/extensionsRegistry*/], __M([0/*require*/,1/*exports*/,55/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/,9/*vs/base/common/errors*/,35/*vs/base/common/severity*/,37/*vs/platform/jsonschemas/common/jsonContributionRegistry*/,11/*vs/platform/platform*/,6/*vs/base/common/event*/]), function (require, exports, nls, errors_1, severity_1, jsonContributionRegistry_1, platform_1, event_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6377,16 +7332,9 @@ define(__m[75/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*requ
     exports.ExtensionPoint = ExtensionPoint;
     var schemaId = 'vscode://schemas/vscode-extensions';
     var schema = {
-        default: {
-            'name': '{{name}}',
-            'description': '{{description}}',
-            'author': '{{author}}',
-            'version': '{{1.0.0}}',
-            'main': '{{pathToMain}}',
-            'dependencies': {}
-        },
         properties: {
             engines: {
+                type: 'object',
                 properties: {
                     'vscode': {
                         type: 'string',
@@ -6409,7 +7357,7 @@ define(__m[75/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*requ
                 uniqueItems: true,
                 items: {
                     type: 'string',
-                    enum: ['Languages', 'Snippets', 'Linters', 'Themes', 'Debuggers', 'Productivity', 'Other', 'Keymaps', 'Formatters']
+                    enum: ['Languages', 'Snippets', 'Linters', 'Themes', 'Debuggers', 'Other', 'Keymaps', 'Formatters']
                 }
             },
             galleryBanner: {
@@ -6442,7 +7390,7 @@ define(__m[75/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*requ
                 type: 'array',
                 items: {
                     type: 'string',
-                    defaultSnippets: [{ label: 'onLanguage', body: 'onLanguage:{{languageId}}' }, { label: 'onCommand', body: 'onCommand:{{commandId}}' }, { label: 'onDebug', body: 'onDebug:{{type}}' }, { label: 'workspaceContains', body: 'workspaceContains:{{fileName}}' }],
+                    defaultSnippets: [{ label: 'onLanguage', body: 'onLanguage:${1:languageId}' }, { label: 'onCommand', body: 'onCommand:${2:commandId}' }, { label: 'onDebug', body: 'onDebug:${3:type}' }, { label: 'workspaceContains', body: 'workspaceContains:${4:fileName}' }],
                 }
             },
             badges: {
@@ -6519,7 +7467,7 @@ define(__m[75/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*requ
     schemaRegistry.registerSchema(schemaId, schema);
 });
 
-define(__m[16/*vs/platform/configuration/common/configurationRegistry*/], __M([1/*require*/,0/*exports*/,48/*vs/nls!vs/platform/configuration/common/configurationRegistry*/,11/*vs/base/common/event*/,10/*vs/platform/platform*/,6/*vs/base/common/objects*/,75/*vs/platform/extensions/common/extensionsRegistry*/,35/*vs/platform/jsonschemas/common/jsonContributionRegistry*/]), function (require, exports, nls, event_1, platform_1, objects, extensionsRegistry_1, jsonContributionRegistry_1) {
+define(__m[20/*vs/platform/configuration/common/configurationRegistry*/], __M([0/*require*/,1/*exports*/,51/*vs/nls!vs/platform/configuration/common/configurationRegistry*/,6/*vs/base/common/event*/,11/*vs/platform/platform*/,7/*vs/base/common/objects*/,8/*vs/base/common/types*/,82/*vs/platform/extensions/common/extensionsRegistry*/,37/*vs/platform/jsonschemas/common/jsonContributionRegistry*/]), function (require, exports, nls, event_1, platform_1, objects, types, extensionsRegistry_1, jsonContributionRegistry_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6533,8 +7481,9 @@ define(__m[16/*vs/platform/configuration/common/configurationRegistry*/], __M([1
     var ConfigurationRegistry = (function () {
         function ConfigurationRegistry() {
             this.configurationContributors = [];
-            this.configurationSchema = { allOf: [] };
+            this.configurationSchema = { properties: {}, additionalProperties: false, errorMessage: 'Unknown configuration setting' };
             this._onDidRegisterConfiguration = new event_1.Emitter();
+            this.configurationProperties = {};
             contributionRegistry.registerSchema(schemaId, this.configurationSchema);
         }
         Object.defineProperty(ConfigurationRegistry.prototype, "onDidRegisterConfiguration", {
@@ -6545,20 +7494,83 @@ define(__m[16/*vs/platform/configuration/common/configurationRegistry*/], __M([1
             configurable: true
         });
         ConfigurationRegistry.prototype.registerConfiguration = function (configuration) {
-            this.configurationContributors.push(configuration);
-            this.registerJSONConfiguration(configuration);
+            this.registerConfigurations([configuration]);
+        };
+        ConfigurationRegistry.prototype.registerConfigurations = function (configurations) {
+            var _this = this;
+            configurations.forEach(function (configuration) {
+                _this.registerProperties(configuration); // fills in defaults
+                _this.configurationContributors.push(configuration);
+                _this.registerJSONConfiguration(configuration);
+            });
             this._onDidRegisterConfiguration.fire(this);
         };
+        ConfigurationRegistry.prototype.registerProperties = function (configuration) {
+            var properties = configuration.properties;
+            if (properties) {
+                for (var key in properties) {
+                    // fill in default values
+                    var property = properties[key];
+                    var defaultValue = property.default;
+                    if (types.isUndefined(defaultValue)) {
+                        property.default = getDefaultValue(property.type);
+                    }
+                    // add to properties map
+                    this.configurationProperties[key] = properties[key];
+                }
+            }
+            var subNodes = configuration.allOf;
+            if (subNodes) {
+                for (var _i = 0, subNodes_1 = subNodes; _i < subNodes_1.length; _i++) {
+                    var node = subNodes_1[_i];
+                    this.registerProperties(node);
+                }
+            }
+        };
         ConfigurationRegistry.prototype.getConfigurations = function () {
-            return this.configurationContributors.slice(0);
+            return this.configurationContributors;
+        };
+        ConfigurationRegistry.prototype.getConfigurationProperties = function () {
+            return this.configurationProperties;
         };
         ConfigurationRegistry.prototype.registerJSONConfiguration = function (configuration) {
-            var schema = objects.clone(configuration);
-            this.configurationSchema.allOf.push(schema);
-            contributionRegistry.registerSchema(schemaId, this.configurationSchema);
+            var configurationSchema = this.configurationSchema;
+            function register(configuration) {
+                var properties = configuration.properties;
+                if (properties) {
+                    for (var key in properties) {
+                        configurationSchema.properties[key] = properties[key];
+                    }
+                }
+                var subNodes = configuration.allOf;
+                if (subNodes) {
+                    subNodes.forEach(register);
+                }
+            }
+            ;
+            register(configuration);
+            contributionRegistry.registerSchema(schemaId, configurationSchema);
         };
         return ConfigurationRegistry;
     }());
+    function getDefaultValue(type) {
+        var t = Array.isArray(type) ? type[0] : type;
+        switch (t) {
+            case 'boolean':
+                return false;
+            case 'integer':
+            case 'number':
+                return 0;
+            case 'string':
+                return '';
+            case 'array':
+                return [];
+            case 'object':
+                return {};
+            default:
+                return null;
+        }
+    }
     var configurationRegistry = new ConfigurationRegistry();
     platform_1.Registry.add(exports.Extensions.Configuration, configurationRegistry);
     var configurationExtPoint = extensionsRegistry_1.ExtensionsRegistry.registerExtensionPoint('configuration', [], {
@@ -6580,6 +7592,7 @@ define(__m[16/*vs/platform/configuration/common/configurationRegistry*/], __M([1
         }
     });
     configurationExtPoint.setHandler(function (extensions) {
+        var configurations = [];
         for (var i = 0; i < extensions.length; i++) {
             var configuration = extensions[i].value;
             var collector = extensions[i].collector;
@@ -6598,22 +7611,42 @@ define(__m[16/*vs/platform/configuration/common/configurationRegistry*/], __M([1
             }
             var clonedConfiguration = objects.clone(configuration);
             clonedConfiguration.id = extensions[i].description.id;
-            configurationRegistry.registerConfiguration(clonedConfiguration);
+            configurations.push(clonedConfiguration);
         }
+        configurationRegistry.registerConfigurations(configurations);
     });
 });
 
-define(__m[77/*vs/platform/configuration/common/model*/], __M([1/*require*/,0/*exports*/,10/*vs/platform/platform*/,8/*vs/base/common/types*/,16/*vs/platform/configuration/common/configurationRegistry*/]), function (require, exports, platform_1, types, configurationRegistry_1) {
+define(__m[84/*vs/platform/configuration/common/model*/], __M([0/*require*/,1/*exports*/,11/*vs/platform/platform*/,20/*vs/platform/configuration/common/configurationRegistry*/]), function (require, exports, platform_1, configurationRegistry_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    function setNode(root, key, value) {
+    function getDefaultValues() {
+        var valueTreeRoot = Object.create(null);
+        var properties = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurationProperties();
+        for (var key in properties) {
+            var value = properties[key].default;
+            addToValueTree(valueTreeRoot, key, value, function (message) { return console.error("Conflict in default settings: " + message); });
+        }
+        return valueTreeRoot;
+    }
+    exports.getDefaultValues = getDefaultValues;
+    function toValuesTree(properties, conflictReporter) {
+        var root = Object.create(null);
+        for (var key in properties) {
+            addToValueTree(root, key, properties[key], conflictReporter);
+        }
+        return root;
+    }
+    exports.toValuesTree = toValuesTree;
+    function addToValueTree(settingsTreeRoot, key, value, conflictReporter) {
         var segments = key.split('.');
         var last = segments.pop();
-        var curr = root;
-        segments.forEach(function (s) {
+        var curr = settingsTreeRoot;
+        for (var i = 0; i < segments.length; i++) {
+            var s = segments[i];
             var obj = curr[s];
             switch (typeof obj) {
                 case 'undefined':
@@ -6622,148 +7655,22 @@ define(__m[77/*vs/platform/configuration/common/model*/], __M([1/*require*/,0/*e
                 case 'object':
                     break;
                 default:
-                    console.error("Conflicting configuration setting: " + key + " at " + s + " with " + JSON.stringify(obj));
+                    conflictReporter("Ignoring " + key + " as " + segments.slice(0, i + 1).join('.') + " is " + JSON.stringify(obj));
+                    return;
             }
             curr = obj;
-        });
+        }
+        ;
         if (typeof curr === 'object') {
             curr[last] = value; // workaround https://github.com/Microsoft/vscode/issues/13606
         }
-    }
-    exports.setNode = setNode;
-    function processDefaultValues(withConfig) {
-        var configurations = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurations();
-        var visit = function (config, level) {
-            var handled = withConfig(config, level === 0);
-            if (Array.isArray(config.allOf)) {
-                config.allOf.forEach(function (c) {
-                    // if the config node only contains an `allOf` we treat the `allOf` children as if they were at the top level
-                    visit(c, (!handled && level === 0) ? level : level + 1);
-                });
-            }
-        };
-        configurations.sort(function (c1, c2) {
-            if (typeof c1.order !== 'number') {
-                return 1;
-            }
-            if (typeof c2.order !== 'number') {
-                return -1;
-            }
-            if (c1.order === c2.order) {
-                var title1 = c1.title || '';
-                var title2 = c2.title || '';
-                return title1.localeCompare(title2);
-            }
-            return c1.order - c2.order;
-        }).forEach(function (config) {
-            visit(config, 0);
-        });
-    }
-    function getDefaultValues() {
-        var ret = Object.create(null);
-        var handleConfig = function (config, isTop) {
-            if (config.properties) {
-                Object.keys(config.properties).forEach(function (key) {
-                    var prop = config.properties[key];
-                    var value = prop.default;
-                    if (types.isUndefined(prop.default)) {
-                        value = getDefaultValue(prop.type);
-                    }
-                    setNode(ret, key, value);
-                });
-                return true;
-            }
-            return false;
-        };
-        processDefaultValues(handleConfig);
-        return ret;
-    }
-    exports.getDefaultValues = getDefaultValues;
-    function getDefaultValuesContent(indent) {
-        var lastEntry = -1;
-        var result = [];
-        result.push('{');
-        var handleConfig = function (config, isTop) {
-            var handled = false;
-            if (config.title) {
-                handled = true;
-                if (isTop) {
-                    result.push('');
-                    result.push('// ' + config.title);
-                }
-                else {
-                    result.push(indent + '// ' + config.title);
-                }
-                result.push('');
-            }
-            if (config.properties) {
-                handled = true;
-                Object.keys(config.properties).forEach(function (key) {
-                    var prop = config.properties[key];
-                    var defaultValue = prop.default;
-                    if (types.isUndefined(defaultValue)) {
-                        defaultValue = getDefaultValue(prop.type);
-                    }
-                    if (prop.description) {
-                        result.push(indent + '// ' + prop.description);
-                    }
-                    var valueString = JSON.stringify(defaultValue, null, indent);
-                    if (valueString && (typeof defaultValue === 'object')) {
-                        valueString = addIndent(valueString, indent);
-                    }
-                    if (lastEntry !== -1) {
-                        result[lastEntry] += ',';
-                    }
-                    lastEntry = result.length;
-                    result.push(indent + JSON.stringify(key) + ': ' + valueString);
-                    result.push('');
-                });
-            }
-            return handled;
-        };
-        processDefaultValues(handleConfig);
-        result.push('}');
-        return result.join('\n');
-    }
-    exports.getDefaultValuesContent = getDefaultValuesContent;
-    function addIndent(str, indent) {
-        return str.split('\n').join('\n' + indent);
-    }
-    function getDefaultValue(type) {
-        var t = Array.isArray(type) ? type[0] : type;
-        switch (t) {
-            case 'boolean':
-                return false;
-            case 'integer':
-            case 'number':
-                return 0;
-            case 'string':
-                return '';
-            case 'array':
-                return [];
-            case 'object':
-                return {};
-            default:
-                return null;
+        else {
+            conflictReporter("Ignoring " + key + " as " + segments.join('.') + " is " + JSON.stringify(curr));
         }
     }
-    function flatten(contents) {
-        var root = Object.create(null);
-        for (var key in contents) {
-            setNode(root, key, contents[key]);
-        }
-        return root;
-    }
-    exports.flatten = flatten;
     function getConfigurationKeys() {
-        var keys = [];
-        var configurations = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurations();
-        configurations.forEach(function (config) {
-            if (config.properties) {
-                keys.push.apply(keys, Object.keys(config.properties));
-            }
-        });
-        return keys;
+        var properties = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurationProperties();
+        return Object.keys(properties);
     }
     exports.getConfigurationKeys = getConfigurationKeys;
 });
@@ -6777,7 +7684,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-define(__m[78/*vs/platform/configuration/node/configurationService*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,6/*vs/base/common/objects*/,77/*vs/platform/configuration/common/model*/,43/*vs/base/node/config*/,10/*vs/platform/platform*/,16/*vs/platform/configuration/common/configurationRegistry*/,12/*vs/base/common/lifecycle*/,13/*vs/platform/configuration/common/configuration*/,11/*vs/base/common/event*/,22/*vs/platform/environment/common/environment*/]), function (require, exports, winjs_base_1, objects, model_1, config_1, platform_1, configurationRegistry_1, lifecycle_1, configuration_1, event_1, environment_1) {
+define(__m[85/*vs/platform/configuration/node/configurationService*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,7/*vs/base/common/objects*/,84/*vs/platform/configuration/common/model*/,46/*vs/base/node/config*/,11/*vs/platform/platform*/,20/*vs/platform/configuration/common/configurationRegistry*/,12/*vs/base/common/lifecycle*/,13/*vs/platform/configuration/common/configuration*/,6/*vs/base/common/event*/,22/*vs/platform/environment/common/environment*/]), function (require, exports, winjs_base_1, objects, model_1, config_1, platform_1, configurationRegistry_1, lifecycle_1, configuration_1, event_1, environment_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6792,17 +7699,17 @@ define(__m[78/*vs/platform/configuration/node/configurationService*/], __M([1/*r
             this.rawConfig = new config_1.ConfigWatcher(environmentService.appSettingsPath, { changeBufferDelay: 300, defaultConfig: Object.create(null) });
             this.disposables.push(lifecycle_1.toDisposable(function () { return _this.rawConfig.dispose(); }));
             // Listeners
-            this.disposables.push(this.rawConfig.onDidUpdateConfiguration(function (event) {
-                _this.onConfigurationChange();
-                if (_this._telemetryService) {
-                    _this._telemetryService.publicLog('updateUserConfiguration', { userConfigurationKeys: Object.keys(event.config) });
-                }
-            }));
-            this.disposables.push(platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).onDidRegisterConfiguration(function () { return _this.onConfigurationChange(); }));
+            this.disposables.push(this.rawConfig.onDidUpdateConfiguration(function () { return _this.onConfigurationChange(configuration_1.ConfigurationSource.User); }));
+            this.disposables.push(platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).onDidRegisterConfiguration(function () { return _this.onConfigurationChange(configuration_1.ConfigurationSource.Default); }));
         }
-        ConfigurationService.prototype.onConfigurationChange = function () {
+        ConfigurationService.prototype.onConfigurationChange = function (source) {
             this.cache = void 0; // reset our caches
-            this._onDidUpdateConfiguration.fire({ config: this.getConfiguration() });
+            var cache = this.getCache();
+            this._onDidUpdateConfiguration.fire({
+                config: this.getConfiguration(),
+                source: source,
+                sourceConfig: source === configuration_1.ConfigurationSource.Default ? cache.defaults : cache.user
+            });
         };
         Object.defineProperty(ConfigurationService.prototype, "onDidUpdateConfiguration", {
             get: function () {
@@ -6821,39 +7728,39 @@ define(__m[78/*vs/platform/configuration/node/configurationService*/], __M([1/*r
             });
         };
         ConfigurationService.prototype.getConfiguration = function (section) {
-            var consolidatedConfig = this.cache;
-            if (!consolidatedConfig) {
-                consolidatedConfig = this.getConsolidatedConfig();
-                this.cache = consolidatedConfig;
-            }
-            return section ? consolidatedConfig[section] : consolidatedConfig;
+            var cache = this.getCache();
+            return section ? cache.consolidated[section] : cache.consolidated;
+        };
+        ConfigurationService.prototype.getCache = function () {
+            return this.cache || (this.cache = this.consolidateConfigurations());
         };
         ConfigurationService.prototype.lookup = function (key) {
+            var cache = this.getCache();
             // make sure to clone the configuration so that the receiver does not tamper with the values
             return {
-                default: objects.clone(configuration_1.getConfigurationValue(model_1.getDefaultValues(), key)),
-                user: objects.clone(configuration_1.getConfigurationValue(model_1.flatten(this.rawConfig.getConfig()), key)),
-                value: objects.clone(configuration_1.getConfigurationValue(this.getConfiguration(), key))
+                default: objects.clone(configuration_1.getConfigurationValue(cache.defaults, key)),
+                user: objects.clone(configuration_1.getConfigurationValue(cache.user, key)),
+                value: objects.clone(configuration_1.getConfigurationValue(cache.consolidated, key))
             };
         };
-        ConfigurationService.prototype.getConsolidatedConfig = function () {
+        ConfigurationService.prototype.keys = function () {
+            return {
+                default: model_1.getConfigurationKeys(),
+                user: Object.keys(this.rawConfig.getConfig())
+            };
+        };
+        ConfigurationService.prototype.consolidateConfigurations = function () {
             var defaults = model_1.getDefaultValues(); // defaults coming from contributions to registries
-            var user = model_1.flatten(this.rawConfig.getConfig()); // user configured settings
-            return objects.mixin(objects.clone(defaults), // target: default values (but dont modify!)
+            var user = model_1.toValuesTree(this.rawConfig.getConfig(), function (message) { return console.error("Conflict in user settings: " + message); }); // user configured settings
+            var consolidated = objects.mixin(objects.clone(defaults), // target: default values (but dont modify!)
             user, // source: user settings
             true // overwrite
             );
+            return { defaults: defaults, user: user, consolidated: consolidated };
         };
         ConfigurationService.prototype.dispose = function () {
             this.disposables = lifecycle_1.dispose(this.disposables);
         };
-        Object.defineProperty(ConfigurationService.prototype, "telemetryService", {
-            set: function (value) {
-                this._telemetryService = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
         ConfigurationService = __decorate([
             __param(0, environment_1.IEnvironmentService)
         ], ConfigurationService);
@@ -6872,7 +7779,7 @@ define(__m[78/*vs/platform/configuration/node/configurationService*/], __M([1/*r
 
 
 
-define(__m[79/*vs/platform/environment/node/environmentService*/], __M([1/*require*/,0/*exports*/,67/*crypto*/,68/*vs/base/node/paths*/,37/*os*/,9/*path*/,34/*vs/base/common/uri*/,29/*vs/base/common/decorators*/,38/*vs/platform/package*/,39/*vs/platform/product*/]), function (require, exports, crypto, paths, os, path, uri_1, decorators_1, package_1, product_1) {
+define(__m[86/*vs/platform/environment/node/environmentService*/], __M([0/*require*/,1/*exports*/,71/*crypto*/,79/*vs/base/node/paths*/,26/*os*/,10/*path*/,32/*vs/base/common/uri*/,36/*vs/base/common/decorators*/,28/*vs/platform/package*/,39/*vs/platform/product*/]), function (require, exports, crypto, paths, os, path, uri_1, decorators_1, package_1, product_1) {
     "use strict";
     function getUniqueUserId() {
         var username;
@@ -6925,7 +7832,12 @@ define(__m[79/*vs/platform/environment/node/environmentService*/], __M([1/*requi
             configurable: true
         });
         Object.defineProperty(EnvironmentService.prototype, "userHome", {
-            get: function () { return path.join(os.homedir(), product_1.default.dataFolderName); },
+            get: function () { return os.homedir(); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "userProductHome", {
+            get: function () { return path.join(this.userHome, product_1.default.dataFolderName); },
             enumerable: true,
             configurable: true
         });
@@ -6949,8 +7861,23 @@ define(__m[79/*vs/platform/environment/node/environmentService*/], __M([1/*requi
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(EnvironmentService.prototype, "isExtensionDevelopment", {
+            get: function () { return !!this._args.extensionDevelopmentPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "backupHome", {
+            get: function () { return path.join(this.userDataPath, 'Backups'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "backupWorkspacesPath", {
+            get: function () { return path.join(this.backupHome, 'workspaces.json'); },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(EnvironmentService.prototype, "extensionsPath", {
-            get: function () { return path.normalize(this._args.extensionHomePath || path.join(this.userHome, 'extensions')); },
+            get: function () { return path.normalize(this._args['extensions-dir'] || path.join(this.userProductHome, 'extensions')); },
             enumerable: true,
             configurable: true
         });
@@ -7009,12 +7936,20 @@ define(__m[79/*vs/platform/environment/node/environmentService*/], __M([1/*requi
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(EnvironmentService.prototype, "nodeCachedDataDir", {
+            get: function () { return path.join(this.userDataPath, 'CachedData', package_1.default.version); },
+            enumerable: true,
+            configurable: true
+        });
         __decorate([
             decorators_1.memoize
         ], EnvironmentService.prototype, "appRoot", null);
         __decorate([
             decorators_1.memoize
         ], EnvironmentService.prototype, "userHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "userProductHome", null);
         __decorate([
             decorators_1.memoize
         ], EnvironmentService.prototype, "userDataPath", null);
@@ -7027,6 +7962,15 @@ define(__m[79/*vs/platform/environment/node/environmentService*/], __M([1/*requi
         __decorate([
             decorators_1.memoize
         ], EnvironmentService.prototype, "appKeybindingsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "isExtensionDevelopment", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "backupHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "backupWorkspacesPath", null);
         __decorate([
             decorators_1.memoize
         ], EnvironmentService.prototype, "extensionsPath", null);
@@ -7045,6 +7989,9 @@ define(__m[79/*vs/platform/environment/node/environmentService*/], __M([1/*requi
         __decorate([
             decorators_1.memoize
         ], EnvironmentService.prototype, "sharedIPCHandle", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "nodeCachedDataDir", null);
         return EnvironmentService;
     }());
     exports.EnvironmentService = EnvironmentService;
@@ -7073,7 +8020,7 @@ define(__m[79/*vs/platform/environment/node/environmentService*/], __M([1/*requi
     exports.parseUserDataDir = parseUserDataDir;
 });
 
-define(__m[40/*vs/platform/request/common/request*/], __M([1/*require*/,0/*exports*/,55/*vs/nls!vs/platform/request/common/request*/,5/*vs/platform/instantiation/common/instantiation*/,16/*vs/platform/configuration/common/configurationRegistry*/,10/*vs/platform/platform*/]), function (require, exports, nls_1, instantiation_1, configurationRegistry_1, platform_1) {
+define(__m[40/*vs/platform/request/node/request*/], __M([0/*require*/,1/*exports*/,58/*vs/nls!vs/platform/request/node/request*/,5/*vs/platform/instantiation/common/instantiation*/,20/*vs/platform/configuration/common/configurationRegistry*/,11/*vs/platform/platform*/]), function (require, exports, nls_1, instantiation_1, configurationRegistry_1, platform_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7106,7 +8053,7 @@ define(__m[40/*vs/platform/request/common/request*/], __M([1/*require*/,0/*expor
     });
 });
 
-define(__m[25/*vs/platform/telemetry/common/telemetry*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,5/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, winjs_base_1, instantiation_1) {
+define(__m[23/*vs/platform/telemetry/common/telemetry*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,81/*vs/base/common/mime*/,15/*vs/base/common/paths*/,13/*vs/platform/configuration/common/configuration*/,5/*vs/platform/instantiation/common/instantiation*/,73/*vs/platform/keybinding/common/keybinding*/,74/*vs/platform/lifecycle/common/lifecycle*/]), function (require, exports, winjs_base_1, mime_1, paths, configuration_1, instantiation_1, keybinding_1, lifecycle_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7114,8 +8061,7 @@ define(__m[25/*vs/platform/telemetry/common/telemetry*/], __M([1/*require*/,0/*e
     'use strict';
     exports.ITelemetryService = instantiation_1.createDecorator('telemetryService');
     exports.defaultExperiments = {
-        showDefaultViewlet: false,
-        showCommandsWatermark: false,
+        showNewUserWatermark: false,
         openUntitledFile: true
     };
     exports.NullTelemetryService = {
@@ -7136,28 +8082,35 @@ define(__m[25/*vs/platform/telemetry/common/telemetry*/], __M([1/*require*/,0/*e
             return this._experiments;
         }
     };
-    function loadExperiments(storageService, configurationService) {
+    var beginGettingStartedExp = Date.UTC(2017, 0, 9);
+    var endGettingStartedExp = Date.UTC(2017, 0, 16);
+    function loadExperiments(contextService, storageService, configurationService) {
         var key = 'experiments.randomness';
         var valueString = storageService.get(key);
         if (!valueString) {
             valueString = Math.random().toString();
             storageService.store(key, valueString);
         }
-        var random0 = parseFloat(valueString);
-        var _a = splitRandom(random0), random1 = _a[0], showDefaultViewlet = _a[1];
-        var _b = splitRandom(random1), random2 = _b[0], showCommandsWatermark = _b[1];
-        var _c = splitRandom(random2), openUntitledFile = _c[1];
-        // is the user a first time user?
-        var isNewSession = storageService.get('telemetry.lastSessionDate') ? false : true;
-        if (!isNewSession) {
-            // for returning users we fall back to the default configuration for the sidebar and the initially opened, empty editor
-            showDefaultViewlet = exports.defaultExperiments.showDefaultViewlet;
+        var random1 = parseFloat(valueString);
+        var _a = splitRandom(random1), random2 = _a[0], showNewUserWatermark = _a[1];
+        var _b = splitRandom(random2), random3 = _b[0], openUntitledFile = _b[1];
+        var _c = splitRandom(random3), openGettingStarted = _c[1];
+        var newUserDuration = 24 * 60 * 60 * 1000;
+        var firstSessionDate = storageService.get('telemetry.firstSessionDate');
+        var isNewUser = !firstSessionDate || Date.now() - Date.parse(firstSessionDate) < newUserDuration;
+        if (!isNewUser || !!contextService.getWorkspace()) {
+            showNewUserWatermark = exports.defaultExperiments.showNewUserWatermark;
             openUntitledFile = exports.defaultExperiments.openUntitledFile;
         }
+        var isNewSession = !storageService.get('telemetry.lastSessionDate');
+        var now = Date.now();
+        if (!(isNewSession && now >= beginGettingStartedExp && now < endGettingStartedExp)) {
+            openGettingStarted = undefined;
+        }
         return applyOverrides(configurationService, {
-            showDefaultViewlet: showDefaultViewlet,
-            showCommandsWatermark: showCommandsWatermark,
-            openUntitledFile: openUntitledFile
+            showNewUserWatermark: showNewUserWatermark,
+            openUntitledFile: openUntitledFile,
+            openGettingStarted: openGettingStarted
         });
     }
     exports.loadExperiments = loadExperiments;
@@ -7211,6 +8164,146 @@ define(__m[25/*vs/platform/telemetry/common/telemetry*/], __M([1/*require*/,0/*e
         return r;
     }
     exports.anonymize = anonymize;
+    function telemetryURIDescriptor(uri) {
+        var fsPath = uri && uri.fsPath;
+        return fsPath ? { mimeType: mime_1.guessMimeTypes(fsPath).join(', '), ext: paths.extname(fsPath), path: anonymize(fsPath) } : {};
+    }
+    exports.telemetryURIDescriptor = telemetryURIDescriptor;
+    var configurationValueWhitelist = [
+        'window.zoomLevel',
+        'editor.fontSize',
+        'editor.fontFamily',
+        'editor.tabSize',
+        'files.autoSave',
+        'files.hotExit',
+        'typescript.check.tscVersion',
+        'editor.renderWhitespace',
+        'editor.cursorBlinking',
+        'editor.cursorStyle',
+        'files.associations',
+        'workbench.statusBar.visible',
+        'editor.wrappingColumn',
+        'editor.insertSpaces',
+        'editor.renderIndentGuides',
+        'files.trimTrailingWhitespace',
+        'git.confirmSync',
+        'editor.rulers',
+        'workbench.sideBar.location',
+        'editor.fontLigatures',
+        'editor.wordWrap',
+        'editor.lineHeight',
+        'editor.detectIndentation',
+        'editor.formatOnType',
+        'editor.formatOnSave',
+        'window.openFilesInNewWindow',
+        'javascript.validate.enable',
+        'editor.mouseWheelZoom',
+        'typescript.check.workspaceVersion',
+        'editor.fontWeight',
+        'editor.scrollBeyondLastLine',
+        'editor.lineNumbers',
+        'editor.wrappingIndent',
+        'editor.renderControlCharacters',
+        'editor.autoClosingBrackets',
+        'window.reopenFolders',
+        'extensions.autoUpdate',
+        'editor.tabCompletion',
+        'files.eol',
+        'explorer.openEditors.visible',
+        'workbench.editor.enablePreview',
+        'files.autoSaveDelay',
+        'editor.roundedSelection',
+        'editor.quickSuggestions',
+        'editor.acceptSuggestionOnEnter',
+        'workbench.editor.showTabs',
+        'files.encoding',
+        'editor.quickSuggestionsDelay',
+        'editor.snippetSuggestions',
+        'editor.selectionHighlight',
+        'editor.glyphMargin',
+        'php.validate.run',
+        'editor.wordSeparators',
+        'editor.mouseWheelScrollSensitivity',
+        'editor.suggestOnTriggerCharacters',
+        'git.enabled',
+        'http.proxyStrictSSL',
+        'terminal.integrated.fontFamily',
+        'editor.overviewRulerLanes',
+        'editor.wordBasedSuggestions',
+        'editor.hideCursorInOverviewRuler',
+        'editor.trimAutoWhitespace',
+        'editor.folding',
+        'workbench.editor.enablePreviewFromQuickOpen',
+        'php.validate.enable',
+        'editor.parameterHints',
+    ];
+    function configurationTelemetry(telemetryService, configurationService) {
+        return configurationService.onDidUpdateConfiguration(function (event) {
+            if (event.source !== configuration_1.ConfigurationSource.Default) {
+                telemetryService.publicLog('updateConfiguration', {
+                    configurationSource: configuration_1.ConfigurationSource[event.source],
+                    configurationKeys: flattenKeys(event.sourceConfig)
+                });
+                telemetryService.publicLog('updateConfigurationValues', {
+                    configurationSource: configuration_1.ConfigurationSource[event.source],
+                    configurationValues: flattenValues(event.sourceConfig, configurationValueWhitelist)
+                });
+            }
+        });
+    }
+    exports.configurationTelemetry = configurationTelemetry;
+    function lifecycleTelemetry(telemetryService, lifecycleService) {
+        return lifecycleService.onShutdown(function (event) {
+            telemetryService.publicLog('shutdown', { reason: lifecycle_1.ShutdownReason[event] });
+        });
+    }
+    exports.lifecycleTelemetry = lifecycleTelemetry;
+    function keybindingsTelemetry(telemetryService, keybindingService) {
+        return keybindingService.onDidUpdateKeybindings(function (event) {
+            if (event.source === keybinding_1.KeybindingSource.User && event.keybindings) {
+                telemetryService.publicLog('updateKeybindings', {
+                    bindings: event.keybindings.map(function (binding) { return ({
+                        key: binding.key,
+                        command: binding.command,
+                        when: binding.when,
+                        args: binding.args ? true : undefined
+                    }); })
+                });
+            }
+        });
+    }
+    exports.keybindingsTelemetry = keybindingsTelemetry;
+    function flattenKeys(value) {
+        if (!value) {
+            return [];
+        }
+        var result = [];
+        flatKeys(result, '', value);
+        return result;
+    }
+    function flatKeys(result, prefix, value) {
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+            Object.keys(value)
+                .forEach(function (key) { return flatKeys(result, prefix ? prefix + "." + key : key, value[key]); });
+        }
+        else {
+            result.push(prefix);
+        }
+    }
+    function flattenValues(value, keys) {
+        if (!value) {
+            return [];
+        }
+        return keys.reduce(function (array, key) {
+            var v = key.split('.')
+                .reduce(function (tmp, k) { return tmp && typeof tmp === 'object' ? tmp[k] : undefined; }, value);
+            if (typeof v !== 'undefined') {
+                array.push((_a = {}, _a[key] = v, _a));
+            }
+            return array;
+            var _a;
+        }, []);
+    }
 });
 
 /*---------------------------------------------------------------------------------------------
@@ -7226,7 +8319,7 @@ define(__m[25/*vs/platform/telemetry/common/telemetry*/], __M([1/*require*/,0/*e
 
 
 
-define(__m[85/*vs/platform/telemetry/common/telemetryService*/], __M([1/*require*/,0/*exports*/,56/*vs/nls!vs/platform/telemetry/common/telemetryService*/,21/*vs/base/common/strings*/,25/*vs/platform/telemetry/common/telemetry*/,5/*vs/platform/instantiation/common/instantiation*/,13/*vs/platform/configuration/common/configuration*/,16/*vs/platform/configuration/common/configurationRegistry*/,2/*vs/base/common/winjs.base*/,12/*vs/base/common/lifecycle*/,6/*vs/base/common/objects*/,10/*vs/platform/platform*/]), function (require, exports, nls_1, strings_1, telemetry_1, instantiation_1, configuration_1, configurationRegistry_1, winjs_base_1, lifecycle_1, objects_1, platform_1) {
+define(__m[90/*vs/platform/telemetry/common/telemetryService*/], __M([0/*require*/,1/*exports*/,59/*vs/nls!vs/platform/telemetry/common/telemetryService*/,14/*vs/base/common/strings*/,23/*vs/platform/telemetry/common/telemetry*/,5/*vs/platform/instantiation/common/instantiation*/,13/*vs/platform/configuration/common/configuration*/,20/*vs/platform/configuration/common/configurationRegistry*/,2/*vs/base/common/winjs.base*/,12/*vs/base/common/lifecycle*/,7/*vs/base/common/objects*/,11/*vs/platform/platform*/]), function (require, exports, nls_1, strings_1, telemetry_1, instantiation_1, configuration_1, configurationRegistry_1, winjs_base_1, lifecycle_1, objects_1, platform_1) {
     'use strict';
     var TelemetryService = (function () {
         function TelemetryService(config, _configurationService) {
@@ -7242,11 +8335,11 @@ define(__m[85/*vs/platform/telemetry/common/telemetryService*/], __M([1/*require
             // #1 `file:///DANGEROUS/PATH/resources/app/Useful/Information`
             // #2 // Any other file path that doesn't match the approved form above should be cleaned.
             // #3 "Error: ENOENT; no such file or directory" is often followed with PII, clean it
+            this._cleanupPatterns.push([/file:\/\/\/.*?\/resources\/app\//gi, ''], [/file:\/\/\/.*/gi, ''], [/ENOENT: no such file or directory.*?\'([^\']+)\'/gi, 'ENOENT: no such file or directory']);
             for (var _i = 0, _a = this._piiPaths; _i < _a.length; _i++) {
                 var piiPath = _a[_i];
                 this._cleanupPatterns.push([new RegExp(strings_1.escapeRegExpCharacters(piiPath), 'gi'), '']);
             }
-            this._cleanupPatterns.push([/file:\/\/\/.*?\/resources\/app\//gi, ''], [/file:\/\/\/.*/gi, ''], [/ENOENT: no such file or directory.*?\'([^\']+)\'/gi, 'ENOENT: no such file or directory']);
             if (this._configurationService) {
                 this._updateUserOptIn();
                 this._configurationService.onDidUpdateConfiguration(this._updateUserOptIn, this, this._disposables);
@@ -7281,8 +8374,8 @@ define(__m[85/*vs/platform/telemetry/common/telemetryService*/], __M([1/*require
         };
         TelemetryService.prototype.publicLog = function (eventName, data) {
             var _this = this;
-            // don't send events when the user is optout unless the event is the opt{in|out} signal
-            if (!this._userOptIn && eventName !== 'optInStatus') {
+            // don't send events when the user is optout
+            if (!this._userOptIn) {
                 return winjs_base_1.TPromise.as(undefined);
             }
             return this._commonProperties.then(function (values) {
@@ -7333,7 +8426,7 @@ define(__m[85/*vs/platform/telemetry/common/telemetryService*/], __M([1/*require
     });
 });
 
-define(__m[86/*vs/platform/telemetry/node/appInsightsAppender*/], __M([1/*require*/,0/*exports*/,89/*applicationinsights*/,8/*vs/base/common/types*/,6/*vs/base/common/objects*/,2/*vs/base/common/winjs.base*/]), function (require, exports, appInsights, types_1, objects_1, winjs_base_1) {
+define(__m[91/*vs/platform/telemetry/node/appInsightsAppender*/], __M([0/*require*/,1/*exports*/,94/*applicationinsights*/,8/*vs/base/common/types*/,7/*vs/base/common/objects*/,2/*vs/base/common/winjs.base*/]), function (require, exports, appInsights, types_1, objects_1, winjs_base_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7462,7 +8555,7 @@ define(__m[86/*vs/platform/telemetry/node/appInsightsAppender*/], __M([1/*requir
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[87/*vs/platform/telemetry/node/commonProperties*/], __M([1/*require*/,0/*exports*/,18/*vs/base/common/platform*/,37/*os*/,2/*vs/base/common/winjs.base*/,19/*vs/base/common/uuid*/]), function (require, exports, Platform, os, winjs_base_1, uuid) {
+define(__m[92/*vs/platform/telemetry/node/commonProperties*/], __M([0/*require*/,1/*exports*/,16/*vs/base/common/platform*/,26/*os*/,2/*vs/base/common/winjs.base*/,25/*vs/base/common/uuid*/]), function (require, exports, Platform, os, winjs_base_1, uuid) {
     "use strict";
     function resolveCommonProperties(commit, version) {
         var result = Object.create(null);
@@ -7497,7 +8590,7 @@ define(__m[87/*vs/platform/telemetry/node/commonProperties*/], __M([1/*require*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[72/*vs/base/node/zip*/], __M([1/*require*/,0/*exports*/,47/*vs/nls!vs/base/node/zip*/,9/*path*/,15/*fs*/,14/*vs/base/common/async*/,17/*vs/base/node/pfs*/,2/*vs/base/common/winjs.base*/,90/*yauzl*/]), function (require, exports, nls, path, fs_1, async_1, pfs_1, winjs_base_1, yauzl_1) {
+define(__m[77/*vs/base/node/zip*/], __M([0/*require*/,1/*exports*/,50/*vs/nls!vs/base/node/zip*/,10/*path*/,18/*fs*/,19/*vs/base/common/async*/,21/*vs/base/node/pfs*/,2/*vs/base/common/winjs.base*/,95/*yauzl*/]), function (require, exports, nls, path, fs_1, async_1, pfs_1, winjs_base_1, yauzl_1) {
     "use strict";
     function modeFromEntry(entry) {
         var attr = entry.externalFileAttributes >> 16 || 33188;
@@ -7588,7 +8681,7 @@ define(__m[72/*vs/base/node/zip*/], __M([1/*require*/,0/*exports*/,47/*vs/nls!vs
 
 
 
-define(__m[81/*vs/platform/extensionManagement/node/extensionManagementService*/], __M([1/*require*/,0/*exports*/,51/*vs/nls!vs/platform/extensionManagement/node/extensionManagementService*/,9/*path*/,17/*vs/base/node/pfs*/,7/*vs/base/common/errors*/,6/*vs/base/common/objects*/,12/*vs/base/common/lifecycle*/,24/*vs/base/common/arrays*/,72/*vs/base/node/zip*/,2/*vs/base/common/winjs.base*/,23/*vs/platform/extensionManagement/common/extensionManagement*/,58/*vs/platform/extensionManagement/common/extensionNls*/,22/*vs/platform/environment/common/environment*/,14/*vs/base/common/async*/,11/*vs/base/common/event*/,61/*semver*/,26/*vs/base/common/collections*/,34/*vs/base/common/uri*/,33/*vs/platform/message/common/message*/]), function (require, exports, nls, path, pfs, errors, objects_1, lifecycle_1, arrays_1, zip_1, winjs_base_1, extensionManagement_1, extensionNls_1, environment_1, async_1, event_1, semver, collections_1, uri_1, message_1) {
+define(__m[89/*vs/platform/extensionManagement/node/extensionManagementService*/], __M([0/*require*/,1/*exports*/,54/*vs/nls!vs/platform/extensionManagement/node/extensionManagementService*/,10/*path*/,21/*vs/base/node/pfs*/,9/*vs/base/common/errors*/,7/*vs/base/common/objects*/,12/*vs/base/common/lifecycle*/,17/*vs/base/common/arrays*/,77/*vs/base/node/zip*/,2/*vs/base/common/winjs.base*/,27/*vs/platform/extensionManagement/common/extensionManagement*/,61/*vs/platform/extensionManagement/common/extensionNls*/,22/*vs/platform/environment/common/environment*/,19/*vs/base/common/async*/,6/*vs/base/common/event*/,64/*semver*/,38/*vs/base/common/collections*/,32/*vs/base/common/uri*/,34/*vs/platform/message/common/message*/]), function (require, exports, nls, path, pfs, errors, objects_1, lifecycle_1, arrays_1, zip_1, winjs_base_1, extensionManagement_1, extensionNls_1, environment_1, async_1, event_1, semver, collections_1, uri_1, message_1) {
     'use strict';
     var SystemExtensionsRoot = path.normalize(path.join(uri_1.default.parse(require.toUrl('')).fsPath, '..', 'extensions'));
     function parseManifest(raw) {
@@ -7876,7 +8969,7 @@ define(__m[81/*vs/platform/extensionManagement/node/extensionManagementService*/
                 nls.localize(12, null),
                 nls.localize(13, null)
             ];
-            return this.choiceService.choose(message_1.Severity.Info, message, options)
+            return this.choiceService.choose(message_1.Severity.Info, message, options, true)
                 .then(function (value) {
                 if (value === 0) {
                     return _this.uninstallWithDependencies(extension, [], installed);
@@ -7895,7 +8988,7 @@ define(__m[81/*vs/platform/extensionManagement/node/extensionManagementService*/
                 nls.localize(15, null),
                 nls.localize(16, null)
             ];
-            return this.choiceService.choose(message_1.Severity.Info, message, options)
+            return this.choiceService.choose(message_1.Severity.Info, message, options, true)
                 .then(function (value) {
                 if (value === 0) {
                     return _this.uninstallWithDependencies(extension, [], installed);
@@ -8134,7 +9227,7 @@ define(__m[81/*vs/platform/extensionManagement/node/extensionManagementService*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[41/*vs/base/node/request*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,8/*vs/base/common/types*/,88/*https*/,94/*http*/,28/*url*/,15/*fs*/,6/*vs/base/common/objects*/,95/*zlib*/]), function (require, exports, winjs_base_1, types_1, https, http, url_1, fs_1, objects_1, zlib_1) {
+define(__m[31/*vs/base/node/request*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,8/*vs/base/common/types*/,93/*https*/,99/*http*/,87/*url*/,18/*fs*/,7/*vs/base/common/objects*/,100/*zlib*/]), function (require, exports, winjs_base_1, types_1, https, http, url_1, fs_1, objects_1, zlib_1) {
     'use strict';
     function request(options) {
         var req;
@@ -8166,7 +9259,7 @@ define(__m[41/*vs/base/node/request*/], __M([1/*require*/,0/*exports*/,2/*vs/bas
                     if (res.headers['content-encoding'] === 'gzip') {
                         stream = stream.pipe(zlib_1.createGunzip());
                     }
-                    c({ req: req, res: res, stream: stream });
+                    c({ res: res, stream: stream });
                 }
             });
             req.on('error', e);
@@ -8243,7 +9336,7 @@ define(__m[41/*vs/base/node/request*/], __M([1/*require*/,0/*exports*/,2/*vs/bas
 
 
 
-define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], __M([1/*require*/,0/*exports*/,50/*vs/nls!vs/platform/extensionManagement/node/extensionGalleryService*/,37/*os*/,9/*path*/,2/*vs/base/common/winjs.base*/,24/*vs/base/common/arrays*/,7/*vs/base/common/errors*/,29/*vs/base/common/decorators*/,62/*vs/base/common/set*/,23/*vs/platform/extensionManagement/common/extensionManagement*/,59/*vs/platform/extensionManagement/common/extensionTelemetry*/,6/*vs/base/common/objects*/,40/*vs/platform/request/common/request*/,25/*vs/platform/telemetry/common/telemetry*/,41/*vs/base/node/request*/,13/*vs/platform/configuration/common/configuration*/,38/*vs/platform/package*/,39/*vs/platform/product*/,60/*vs/platform/extensions/node/extensionValidator*/,28/*url*/,64/*vs/base/node/id*/]), function (require, exports, nls_1, os_1, path, winjs_base_1, arrays_1, errors_1, decorators_1, set_1, extensionManagement_1, extensionTelemetry_1, objects_1, request_1, telemetry_1, request_2, configuration_1, package_1, product_1, extensionValidator_1, url, id_1) {
+define(__m[70/*vs/platform/extensionManagement/node/extensionGalleryService*/], __M([0/*require*/,1/*exports*/,53/*vs/nls!vs/platform/extensionManagement/node/extensionGalleryService*/,26/*os*/,10/*path*/,2/*vs/base/common/winjs.base*/,17/*vs/base/common/arrays*/,9/*vs/base/common/errors*/,36/*vs/base/common/decorators*/,44/*vs/base/common/set*/,27/*vs/platform/extensionManagement/common/extensionManagement*/,62/*vs/platform/extensionManagement/common/extensionTelemetry*/,7/*vs/base/common/objects*/,40/*vs/platform/request/node/request*/,23/*vs/platform/telemetry/common/telemetry*/,31/*vs/base/node/request*/,13/*vs/platform/configuration/common/configuration*/,28/*vs/platform/package*/,39/*vs/platform/product*/,63/*vs/platform/extensions/node/extensionValidator*/,78/*vs/platform/environment/node/http*/]), function (require, exports, nls_1, os_1, path, winjs_base_1, arrays_1, errors_1, decorators_1, set_1, extensionManagement_1, extensionTelemetry_1, objects_1, request_1, telemetry_1, request_2, configuration_1, package_1, product_1, extensionValidator_1, http_1) {
     "use strict";
     var Flags;
     (function (Flags) {
@@ -8377,9 +9470,25 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
         var result = (statistics || []).filter(function (s) { return s.statisticName === name; })[0];
         return result ? result.value : 0;
     }
-    function getAssetSource(files, type) {
-        var result = files.filter(function (f) { return f.assetType === type; })[0];
-        return result && result.source;
+    function getVersionAsset(version, type) {
+        var result = version.files.filter(function (f) { return f.assetType === type; })[0];
+        if (!result) {
+            if (type === AssetType.Icon) {
+                var uri = require.toUrl('./media/defaultIcon.png');
+                return { uri: uri, fallbackUri: uri };
+            }
+            return null;
+        }
+        if (type === AssetType.VSIX) {
+            return {
+                uri: version.fallbackAssetUri + "/" + type + "?redirect=true&install=true",
+                fallbackUri: version.fallbackAssetUri + "/" + type + "?install=true"
+            };
+        }
+        return {
+            uri: version.assetUri + "/" + type,
+            fallbackUri: version.fallbackAssetUri + "/" + type
+        };
     }
     function getDependencies(version) {
         var values = version.properties ? version.properties.filter(function (p) { return p.key === PropertyType.Dependency; }) : [];
@@ -8392,25 +9501,13 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
     }
     function toExtension(galleryExtension, extensionsGalleryUrl) {
         var version = galleryExtension.versions[0];
-        var iconFallback = getAssetSource(version.files, AssetType.Icon);
-        var icon;
-        if (iconFallback) {
-            var parsedUrl = url.parse(iconFallback, true);
-            parsedUrl.search = undefined;
-            parsedUrl.query['redirect'] = 'true';
-            icon = url.format(parsedUrl);
-        }
-        else {
-            iconFallback = icon = require.toUrl('./media/defaultIcon.png');
-        }
         var assets = {
-            manifest: getAssetSource(version.files, AssetType.Manifest),
-            readme: getAssetSource(version.files, AssetType.Details),
-            changelog: getAssetSource(version.files, AssetType.Changelog),
-            download: getAssetSource(version.files, AssetType.VSIX) + "?install=true",
-            icon: icon,
-            iconFallback: iconFallback,
-            license: getAssetSource(version.files, AssetType.License)
+            manifest: getVersionAsset(version, AssetType.Manifest),
+            readme: getVersionAsset(version, AssetType.Details),
+            changelog: getVersionAsset(version, AssetType.Changelog),
+            download: getVersionAsset(version, AssetType.VSIX),
+            icon: getVersionAsset(version, AssetType.Icon),
+            license: getVersionAsset(version, AssetType.License)
         };
         return {
             id: galleryExtension.extensionId,
@@ -8440,13 +9537,9 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
             var config = product_1.default.extensionsGallery;
             this.extensionsGalleryUrl = config && config.serviceUrl;
         }
-        Object.defineProperty(ExtensionGalleryService.prototype, "commonHeaders", {
+        Object.defineProperty(ExtensionGalleryService.prototype, "commonHTTPHeaders", {
             get: function () {
-                return id_1.getMachineId().then(function (machineId) { return ({
-                    'X-Market-Client-Id': "VSCode " + package_1.default.version,
-                    'User-Agent': "VSCode " + package_1.default.version,
-                    'X-Market-User-Id': machineId
-                }); });
+                return http_1.getCommonHTTPHeaders();
             },
             enumerable: true,
             configurable: true
@@ -8459,7 +9552,7 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
             return !!this.extensionsGalleryUrl;
         };
         ExtensionGalleryService.prototype.getRequestHeaders = function () {
-            return this.commonHeaders;
+            return this.commonHTTPHeaders;
         };
         ExtensionGalleryService.prototype.query = function (options) {
             var _this = this;
@@ -8476,7 +9569,7 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
                 .withPage(1, pageSize)
                 .withFilter(FilterType.Target, 'Microsoft.VisualStudio.Code')
                 .withFilter(FilterType.ExcludeWithFlags, flagsToString(Flags.Unpublished))
-                .withAssetTypes(AssetType.Icon, AssetType.License, AssetType.Details, AssetType.Manifest, AssetType.VSIX);
+                .withAssetTypes(AssetType.Icon, AssetType.License, AssetType.Details, AssetType.Manifest, AssetType.VSIX, AssetType.Changelog);
             if (text) {
                 query = query.withFilter(FilterType.SearchText, text).withSortBy(extensionManagement_1.SortBy.NoneOrRelevance);
             }
@@ -8509,7 +9602,7 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
         };
         ExtensionGalleryService.prototype.queryGallery = function (query) {
             var _this = this;
-            return this.commonHeaders
+            return this.commonHTTPHeaders
                 .then(function (headers) {
                 var data = JSON.stringify(query.raw);
                 headers = objects_1.assign({}, headers, {
@@ -8537,19 +9630,28 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
         ExtensionGalleryService.prototype.download = function (extension) {
             var _this = this;
             return this.loadCompatibleVersion(extension).then(function (extension) {
-                var url = extension.assets.download;
                 var zipPath = path.join(os_1.tmpdir(), extension.id);
                 var data = extensionTelemetry_1.getGalleryExtensionTelemetryData(extension);
                 var startTime = new Date().getTime();
                 var log = function (duration) { return _this.telemetryService.publicLog('galleryService:downloadVSIX', objects_1.assign(data, { duration: duration })); };
-                return _this._getAsset({ url: url })
+                return _this.getAsset(extension.assets.download)
                     .then(function (context) { return request_2.download(zipPath, context); })
                     .then(function () { return log(new Date().getTime() - startTime); })
                     .then(function () { return zipPath; });
             });
         };
-        ExtensionGalleryService.prototype.getAsset = function (url) {
-            return this._getAsset({ url: url });
+        ExtensionGalleryService.prototype.getReadme = function (extension) {
+            return this.getAsset(extension.assets.readme)
+                .then(request_2.asText);
+        };
+        ExtensionGalleryService.prototype.getManifest = function (extension) {
+            return this.getAsset(extension.assets.manifest)
+                .then(request_2.asText)
+                .then(JSON.parse);
+        };
+        ExtensionGalleryService.prototype.getChangelog = function (extension) {
+            return this.getAsset(extension.assets.changelog)
+                .then(request_2.asText);
         };
         ExtensionGalleryService.prototype.getAllDependencies = function (extension) {
             var _this = this;
@@ -8578,7 +9680,7 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
                     .then(function (rawVersion) {
                     extension.properties.dependencies = getDependencies(rawVersion);
                     extension.properties.engine = getEngine(rawVersion);
-                    extension.assets.download = getAssetSource(rawVersion.files, AssetType.VSIX) + "?install=true";
+                    extension.assets.download = getVersionAsset(rawVersion, AssetType.VSIX);
                     extension.version = rawVersion.version;
                     return extension;
                 });
@@ -8633,26 +9735,21 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
                 return _this.getDependenciesReccursively(dependencies, result, root);
             });
         };
-        /**
-         * Always try with the `redirect=true` query string.
-         * If that does not return 200, try without it.
-         */
-        ExtensionGalleryService.prototype._getAsset = function (options) {
+        ExtensionGalleryService.prototype.getAsset = function (asset, options) {
             var _this = this;
-            var parsedUrl = url.parse(options.url, true);
-            parsedUrl.search = undefined;
-            parsedUrl.query['redirect'] = 'true';
-            return this.commonHeaders.then(function (headers) {
+            if (options === void 0) { options = {}; }
+            var baseOptions = { type: 'GET' };
+            return this.commonHTTPHeaders.then(function (headers) {
                 headers = objects_1.assign({}, headers, options.headers || {});
-                options = objects_1.assign({}, options, { headers: headers });
-                var cdnUrl = url.format(parsedUrl);
-                var cdnOptions = objects_1.assign({}, options, { url: cdnUrl });
-                return _this.requestService.request(cdnOptions)
+                options = objects_1.assign({}, options, baseOptions, { headers: headers });
+                var firstOptions = objects_1.assign({}, options, { url: asset.uri });
+                return _this.requestService.request(firstOptions)
                     .then(function (context) { return context.res.statusCode === 200 ? context : winjs_base_1.TPromise.wrapError('expected 200'); })
                     .then(null, function (err) {
                     _this.telemetryService.publicLog('galleryService:requestError', { cdn: true, message: errors_1.getErrorMessage(err) });
-                    _this.telemetryService.publicLog('galleryService:cdnFallback', { url: cdnUrl });
-                    return _this.requestService.request(options).then(null, function (err) {
+                    _this.telemetryService.publicLog('galleryService:cdnFallback', { url: asset.uri });
+                    var fallbackOptions = objects_1.assign({}, options, { url: asset.fallbackUri });
+                    return _this.requestService.request(fallbackOptions).then(null, function (err) {
                         _this.telemetryService.publicLog('galleryService:requestError', { cdn: false, message: errors_1.getErrorMessage(err) });
                         return winjs_base_1.TPromise.wrapError(err);
                     });
@@ -8685,9 +9782,9 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
                 return winjs_base_1.TPromise.wrapError(new Error(nls_1.localize(1, null, extension.displayName || extension.extensionName)));
             }
             var version = versions[0];
-            var url = getAssetSource(version.files, AssetType.Manifest);
+            var asset = getVersionAsset(version, AssetType.Manifest);
             var headers = { 'Accept-Encoding': 'gzip' };
-            return this._getAsset({ url: url, headers: headers })
+            return this.getAsset(asset, { headers: headers })
                 .then(function (context) { return request_2.asJson(context); })
                 .then(function (manifest) {
                 var engine = manifest.engines.vscode;
@@ -8714,7 +9811,7 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
         };
         __decorate([
             decorators_1.memoize
-        ], ExtensionGalleryService.prototype, "commonHeaders", null);
+        ], ExtensionGalleryService.prototype, "commonHTTPHeaders", null);
         ExtensionGalleryService = __decorate([
             __param(0, request_1.IRequestService),
             __param(1, telemetry_1.ITelemetryService),
@@ -8734,7 +9831,7 @@ define(__m[65/*vs/platform/extensionManagement/node/extensionGalleryService*/], 
 
 
 
-define(__m[46/*vs/platform/request/node/requestService*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/objects*/,41/*vs/base/node/request*/,74/*vs/base/node/proxy*/,13/*vs/platform/configuration/common/configuration*/]), function (require, exports, objects_1, request_1, proxy_1, configuration_1) {
+define(__m[52/*vs/platform/request/node/requestService*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/objects*/,31/*vs/base/node/request*/,83/*vs/base/node/proxy*/,13/*vs/platform/configuration/common/configuration*/]), function (require, exports, objects_1, request_1, proxy_1, configuration_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -8758,14 +9855,15 @@ define(__m[46/*vs/platform/request/node/requestService*/], __M([1/*require*/,0/*
             this.strictSSL = config.http && config.http.proxyStrictSSL;
             this.authorization = config.http && config.http.proxyAuthorization;
         };
-        RequestService.prototype.request = function (options) {
+        RequestService.prototype.request = function (options, requestFn) {
+            if (requestFn === void 0) { requestFn = request_1.request; }
             var _a = this, proxyUrl = _a.proxyUrl, strictSSL = _a.strictSSL;
             options.agent = options.agent || proxy_1.getProxyAgent(options.url, { proxyUrl: proxyUrl, strictSSL: strictSSL });
             options.strictSSL = strictSSL;
             if (this.authorization) {
                 options.headers = objects_1.assign(options.headers || {}, { 'Proxy-Authorization': this.authorization });
             }
-            return request_1.request(options);
+            return requestFn(options);
         };
         RequestService = __decorate([
             __param(0, configuration_1.IConfigurationService)
@@ -8788,7 +9886,7 @@ define(__m[46/*vs/platform/request/node/requestService*/], __M([1/*require*/,0/*
 
 
 
-define(__m[98/*vs/code/node/cliProcessMain*/], __M([1/*require*/,0/*exports*/,3/*vs/nls!vs/code/node/cliProcessMain*/,39/*vs/platform/product*/,38/*vs/platform/package*/,9/*path*/,2/*vs/base/common/winjs.base*/,14/*vs/base/common/async*/,32/*vs/platform/instantiation/common/serviceCollection*/,27/*vs/platform/instantiation/common/descriptors*/,69/*vs/platform/instantiation/common/instantiationService*/,22/*vs/platform/environment/common/environment*/,79/*vs/platform/environment/node/environmentService*/,66/*vs/platform/event/common/event*/,57/*vs/platform/event/common/eventService*/,23/*vs/platform/extensionManagement/common/extensionManagement*/,81/*vs/platform/extensionManagement/node/extensionManagementService*/,65/*vs/platform/extensionManagement/node/extensionGalleryService*/,25/*vs/platform/telemetry/common/telemetry*/,85/*vs/platform/telemetry/common/telemetryService*/,87/*vs/platform/telemetry/node/commonProperties*/,40/*vs/platform/request/common/request*/,46/*vs/platform/request/node/requestService*/,13/*vs/platform/configuration/common/configuration*/,78/*vs/platform/configuration/node/configurationService*/,86/*vs/platform/telemetry/node/appInsightsAppender*/,17/*vs/base/node/pfs*/,33/*vs/platform/message/common/message*/,71/*vs/platform/message/common/messageCli*/]), function (require, exports, nls_1, product_1, package_1, path, winjs_base_1, async_1, serviceCollection_1, descriptors_1, instantiationService_1, environment_1, environmentService_1, event_1, eventService_1, extensionManagement_1, extensionManagementService_1, extensionGalleryService_1, telemetry_1, telemetryService_1, commonProperties_1, request_1, requestService_1, configuration_1, configurationService_1, appInsightsAppender_1, pfs_1, message_1, messageCli_1) {
+define(__m[103/*vs/code/node/cliProcessMain*/], __M([0/*require*/,1/*exports*/,3/*vs/nls!vs/code/node/cliProcessMain*/,39/*vs/platform/product*/,28/*vs/platform/package*/,10/*path*/,2/*vs/base/common/winjs.base*/,19/*vs/base/common/async*/,33/*vs/platform/instantiation/common/serviceCollection*/,30/*vs/platform/instantiation/common/descriptors*/,72/*vs/platform/instantiation/common/instantiationService*/,22/*vs/platform/environment/common/environment*/,86/*vs/platform/environment/node/environmentService*/,69/*vs/platform/event/common/event*/,60/*vs/platform/event/common/eventService*/,27/*vs/platform/extensionManagement/common/extensionManagement*/,89/*vs/platform/extensionManagement/node/extensionManagementService*/,70/*vs/platform/extensionManagement/node/extensionGalleryService*/,23/*vs/platform/telemetry/common/telemetry*/,90/*vs/platform/telemetry/common/telemetryService*/,92/*vs/platform/telemetry/node/commonProperties*/,40/*vs/platform/request/node/request*/,52/*vs/platform/request/node/requestService*/,13/*vs/platform/configuration/common/configuration*/,85/*vs/platform/configuration/node/configurationService*/,91/*vs/platform/telemetry/node/appInsightsAppender*/,21/*vs/base/node/pfs*/,34/*vs/platform/message/common/message*/,76/*vs/platform/message/node/messageCli*/]), function (require, exports, nls_1, product_1, package_1, path, winjs_base_1, async_1, serviceCollection_1, descriptors_1, instantiationService_1, environment_1, environmentService_1, event_1, eventService_1, extensionManagement_1, extensionManagementService_1, extensionGalleryService_1, telemetry_1, telemetryService_1, commonProperties_1, request_1, requestService_1, configuration_1, configurationService_1, appInsightsAppender_1, pfs_1, message_1, messageCli_1) {
     "use strict";
     var notFound = function (id) { return nls_1.localize(0, null, id); };
     var notInstalled = function (id) { return nls_1.localize(1, null, id); };
@@ -8899,7 +9997,7 @@ define(__m[98/*vs/code/node/cliProcessMain*/], __M([1/*require*/,0/*exports*/,3/
         var instantiationService = new instantiationService_1.InstantiationService(services);
         return instantiationService.invokeFunction(function (accessor) {
             var envService = accessor.get(environment_1.IEnvironmentService);
-            return winjs_base_1.TPromise.join([envService.appSettingsHome, envService.userHome, envService.extensionsPath].map(function (p) { return pfs_1.mkdirp(p); })).then(function () {
+            return winjs_base_1.TPromise.join([envService.appSettingsHome, envService.userProductHome, envService.extensionsPath].map(function (p) { return pfs_1.mkdirp(p); })).then(function () {
                 var appRoot = envService.appRoot, extensionsPath = envService.extensionsPath, extensionDevelopmentPath = envService.extensionDevelopmentPath, isBuilt = envService.isBuilt;
                 var services = new serviceCollection_1.ServiceCollection();
                 services.set(event_1.IEventService, new descriptors_1.SyncDescriptor(eventService_1.EventService));

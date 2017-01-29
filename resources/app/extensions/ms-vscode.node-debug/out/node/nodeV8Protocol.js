@@ -8,8 +8,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var EE = require('events');
-var nls = require('vscode-nls');
+var EE = require("events");
+var nls = require("vscode-nls");
 var localize = nls.loadMessageBundle(__filename);
 var NodeV8Message = (function () {
     function NodeV8Message(type) {
@@ -22,16 +22,17 @@ exports.NodeV8Message = NodeV8Message;
 var NodeV8Response = (function (_super) {
     __extends(NodeV8Response, _super);
     function NodeV8Response(request, message) {
-        _super.call(this, 'response');
-        this.request_seq = request.seq;
-        this.command = request.command;
+        var _this = _super.call(this, 'response') || this;
+        _this.request_seq = request.seq;
+        _this.command = request.command;
         if (message) {
-            this.success = false;
-            this.message = message;
+            _this.success = false;
+            _this.message = message;
         }
         else {
-            this.success = true;
+            _this.success = true;
         }
+        return _this;
     }
     return NodeV8Response;
 }(NodeV8Message));
@@ -39,11 +40,12 @@ exports.NodeV8Response = NodeV8Response;
 var NodeV8Event = (function (_super) {
     __extends(NodeV8Event, _super);
     function NodeV8Event(event, body) {
-        _super.call(this, 'event');
-        this.event = event;
+        var _this = _super.call(this, 'event') || this;
+        _this.event = event;
         if (body) {
-            this.body = body;
+            _this.body = body;
         }
+        return _this;
     }
     return NodeV8Event;
 }(NodeV8Message));
@@ -52,10 +54,11 @@ exports.NodeV8Event = NodeV8Event;
 var NodeV8Protocol = (function (_super) {
     __extends(NodeV8Protocol, _super);
     function NodeV8Protocol(responseHook) {
-        _super.call(this);
-        this._pendingRequests = new Map();
-        this.embeddedHostVersion = -1;
-        this._responseHook = responseHook;
+        var _this = _super.call(this) || this;
+        _this._pendingRequests = new Map();
+        _this.embeddedHostVersion = -1;
+        _this._responseHook = responseHook;
+        return _this;
     }
     NodeV8Protocol.prototype.startDispatch = function (inStream, outStream) {
         var _this = this;
@@ -258,6 +261,10 @@ var NodeV8Protocol = (function (_super) {
                                 else if (pair[1] === 'Electron') {
                                     this.embeddedHostVersion = 60300; // TODO this needs to be detected in a smarter way by looking at the V8 version in Electron
                                 }
+                                var match1 = pair[1].match(/node\s(v\d+\.\d+\.\d+)/);
+                                if (match1 && match1.length === 2) {
+                                    this.hostVersion = match1[1];
+                                }
                                 break;
                             case 'Content-Length':
                                 this._contentLength = +pair[1];
@@ -271,10 +278,10 @@ var NodeV8Protocol = (function (_super) {
             break;
         }
     };
-    NodeV8Protocol.TIMEOUT = 10000;
-    NodeV8Protocol.TWO_CRLF = '\r\n\r\n';
     return NodeV8Protocol;
 }(EE.EventEmitter));
+NodeV8Protocol.TIMEOUT = 10000;
+NodeV8Protocol.TWO_CRLF = '\r\n\r\n';
 exports.NodeV8Protocol = NodeV8Protocol;
 
 //# sourceMappingURL=../../out/node/nodeV8Protocol.js.map

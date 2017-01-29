@@ -3,10 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 "use strict";
-var Path = require('path');
-var FS = require('fs');
-var CP = require('child_process');
+var Path = require("path");
+var FS = require("fs");
+var CP = require("child_process");
 var glob = require('glob');
+var minimatch = require('minimatch');
 /**
   * The input paths must use the path syntax of the underlying operating system.
  */
@@ -283,13 +284,26 @@ function multiGlob(patterns, opts) {
                 set.add(p);
             }
         }
-        var array = [];
-        set.forEach(function (v) { return array.push(v); });
+        var array = new Array();
+        set.forEach(function (v) { return array.push(Path.posix.normalize(v)); });
         return array;
     });
 }
 exports.multiGlob = multiGlob;
 ;
+function multiGlobMatches(patterns, path) {
+    var matched = false;
+    for (var _i = 0, patterns_1 = patterns; _i < patterns_1.length; _i++) {
+        var p = patterns_1[_i];
+        var isExclude = p[0] === '!';
+        if (matched !== isExclude) {
+            break;
+        }
+        matched = minimatch(path, p);
+    }
+    return matched;
+}
+exports.multiGlobMatches = multiGlobMatches;
 //---- misc
 /**
  * Copy attributes from fromObject to toObject.

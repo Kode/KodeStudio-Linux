@@ -1,8 +1,8 @@
-# vscode-languageserver-haxe
+[![Build Status](https://travis-ci.org/vshaxe/language-server-protocol-haxe.svg?branch=master)](https://travis-ci.org/vshaxe/language-server-protocol-haxe)
 
-Implementation of [VSCode Language Server Protocol](https://github.com/Microsoft/vscode-languageserver-protocol) for [Haxe](http://haxe.org/).
+This is an implementation of the [Language Server Protocol](https://github.com/Microsoft/language-server-protocol) in [Haxe](http://haxe.org/).
 
-Used by [Haxe Language Server](https://github.com/vshaxe/haxe-languageserver) and was separated from it so one could implement a client
-using this code in Haxe.
+It's used by the [Haxe Language Server](https://github.com/vshaxe/haxe-languageserver) and was separated from it
+so one could implement their own client and/or server using Haxe.
 
-**Status**: alpha
+**Status**: beta

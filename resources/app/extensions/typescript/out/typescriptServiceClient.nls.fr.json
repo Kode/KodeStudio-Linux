@@ -1,6 +1,6 @@
 [
 	"TypeScript",
-	"Le dossier d'espace de travail contient TypeScript version {0}. Voulez-vous utiliser cette version à la place de la version d'ensemble {1} ?",
+	"Le dossier d'espace de travail contient TypeScript version {0}. Voulez-vous utiliser cette version à la place de la version groupée {1} ?",
 	"Utiliser l'espace de travail ({0})",
 	"Utiliser l'ensemble d'applications ({0})",
 	"Ne jamais vérifier la version de l'espace de travail",

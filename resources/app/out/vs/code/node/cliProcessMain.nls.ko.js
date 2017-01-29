@@ -43,10 +43,11 @@ define("vs/code/node/cliProcessMain.nls.ko", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"확장",
+		"기본 설정",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"확장을 찾을 수 없습니다.",
-		"이 버전의 코드에서 {0}의 호환 버전을 찾을 수 없습니다.",
+		"이 버전의 Code에서 {0}의 호환 버전을 찾을 수 없습니다.",
 	],
 	"vs/platform/extensionManagement/node/extensionManagementService": [
 		"잘못된 확장: package.json이 JSON 파일이 아닙니다.",
@@ -114,7 +115,7 @@ define("vs/code/node/cliProcessMain.nls.ko", {
 		"나중에",
 		"취소",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"사용할 프록시 설정입니다. 설정되지 않으면 http_proxy 및 https_proxy 환경 변수에서 가져옵니다.",
 		"제공된 CA 목록에 대해 프록시 서버 인증서를 확인해야 하는지 여부를 나타냅니다.",

@@ -1,7 +1,7 @@
 {
 	"typescript.reloadProjects.title": "TypeScript プロジェクトを再度読み込みます",
 	"javascript.reloadProjects.title": "JavaScript プロジェクトを再度読み込みます",
-	"configuration.typescript": "TypeScript。",
+	"configuration.typescript": "TypeScript",
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "パラメーター シグネチャを含む完全な関数。",
 	"typescript.tsdk.desc": "使用する tsserver と lib*.d.ts ファイルが含まれているフォルダーのパスを指定します。",
 	"typescript.tsdk_version.desc": "TS サーバーのバージョンを指定します。TS サーバーが NPM でインストールされていない場合のみ必要です。",

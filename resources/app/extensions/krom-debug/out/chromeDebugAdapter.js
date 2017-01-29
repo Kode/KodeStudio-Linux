@@ -37,11 +37,12 @@ function osExt() {
 class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
     initialize(args) {
         this._overlayHelper = new utils.DebounceHelper(/*timeoutMs=*/ 200);
-        return super.initialize(args);
+        const capabilities = super.initialize(args);
+        capabilities.supportsRestartRequest = true;
+        return capabilities;
     }
     launch(args) {
         this._kha = args.kha;
-        args.sourceMapPathOverrides = getSourceMapPathOverrides(args.webRoot, args.sourceMapPathOverrides);
         return super.launch(args).then(() => {
             vscode_chrome_debug_core_1.logger.log('Using Kha from ' + args.kha + '\n', true);
             let options = {
@@ -119,8 +120,12 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
         });
     }
     attach(args) {
-        args.sourceMapPathOverrides = getSourceMapPathOverrides(args.webRoot, args.sourceMapPathOverrides);
         return super.attach(args);
+    }
+    commonArgs(args) {
+        args.sourceMapPathOverrides = getSourceMapPathOverrides(args.webRoot, args.sourceMapPathOverrides);
+        args.skipFileRegExps = ['^chrome-extension:.*'];
+        super.commonArgs(args);
     }
     doAttach(port, targetUrl, address, timeout) {
         return super.doAttach(port, targetUrl, address, timeout).then(() => {
@@ -128,6 +133,9 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
             this.chrome.Log.onEntryAdded(params => this.onEntryAdded(params));
             // this.chrome.Log.enable();
         });
+    }
+    runConnection() {
+        return [...super.runConnection()]; //, this.chrome.Page.enable()];
     }
     onEntryAdded(event) {
         vscode_chrome_debug_core_1.logger.log(event.entry.text, true);
@@ -153,6 +161,12 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
         promise.then(response => {
             this.chrome.Runtime.runScript({ scriptId: response.scriptId, executionContextId: 1 });
         });
+    }
+    /**
+     * Opt-in event called when the 'reload' button in the debug widget is pressed
+     */
+    restart() {
+        return this.chrome.Page.reload({ ignoreCache: true });
     }
 }
 ChromeDebugAdapter.PAGE_PAUSE_MESSAGE = 'Paused in Visual Studio Code';
@@ -185,4 +199,4 @@ function resolveWebRootPattern(webRoot, sourceMapPathOverrides, warnOnMissing) {
     return resolvedOverrides;
 }
 exports.resolveWebRootPattern = resolveWebRootPattern;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/krom-debug/out/chromeDebugAdapter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/krom-debug/out/chromeDebugAdapter.js.map

@@ -16,6 +16,14 @@ define("vs/workbench/node/extensionHostProcess.nls.it", {
 	"vs/base/node/processes": [
 		"Non è possibile eseguire un comando della shell su un\'unità UNC.",
 	],
+	"vs/platform/configuration/common/configurationRegistry": [
+		"Impostazioni di configurazione di contributes.",
+		"Riepilogo delle impostazioni. Questa etichetta verrà usata nel file di impostazioni come commento di separazione.",
+		"Descrizione delle proprietà di configurazione.",
+		"se impostato, \'configuration.type\' deve essere impostato su \'object",
+		"\'configuration.title\' deve essere una stringa",
+		"\'configuration.properties\' deve essere un oggetto",
+	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"L\'attivazione dell\'estensione `{1}` non è riuscita. Motivo: la dipendenza `{0}` è sconosciuta.",
 		"L\'attivazione dell\'estensione `{1}` non è riuscita. Motivo: non è stato possibile attivare la dipendenza `{0}`.",
@@ -43,6 +51,12 @@ define("vs/workbench/node/extensionHostProcess.nls.it", {
 	],
 	"vs/workbench/api/node/extHostDiagnostics": [
 		"Non verranno visualizzati altri {0} errori e avvisi.",
+	],
+	"vs/workbench/api/node/extHostTreeExplorers": [
+		"Non è stato registrato alcun elemento TreeExplorerNodeProvider con ID \'{0}\'.",
+		"Con l\'elemento TreeExplorerNodeProvider \'{0}\' non è stato possibile fornire il nodo radice.",
+		"Non è stato registrato alcun elemento TreeExplorerNodeProvider con ID \'{0}\'.",
+		"Con l\'elemento TreeExplorerNodeProvider \'{0}\' non è stato possibile risolvere gli elementi figlio.",
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"Il percorso {0} non punta a un Test Runner di estensioni valido.",

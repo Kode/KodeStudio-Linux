@@ -1,6 +1,17 @@
 package vscode;
 
-@:enum abstract EndOfLine(Int) {
-	var LF = 1;
-	var CRLF = 2;
+/**
+ * Represents an end of line character sequence in a [document](#TextDocument).
+ */
+@:jsRequire("vscode", "EndOfLine")
+@:enum extern abstract EndOfLine(Int) {
+    /**
+     * The line feed `\n` character.
+     */
+    var LF;
+
+    /**
+     * The carriage return line feed `\r\n` sequence.
+     */
+    var CRLF;
 }

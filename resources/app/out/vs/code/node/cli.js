@@ -600,6 +600,10 @@ define(__m[7/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,2/*vs/bas
             this.unexpectedErrorHandler(e);
             this.emit(e);
         };
+        // For external errors, we don't want the listeners to be called
+        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
+            this.unexpectedErrorHandler(e);
+        };
         return ErrorHandler;
     }());
     exports.ErrorHandler = ErrorHandler;
@@ -615,6 +619,13 @@ define(__m[7/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,2/*vs/bas
         }
     }
     exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedExternalError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedExternalError(e);
+        }
+    }
+    exports.onUnexpectedExternalError = onUnexpectedExternalError;
     function onUnexpectedPromiseError(promise) {
         return promise.then(null, onUnexpectedError);
     }
@@ -3535,7 +3546,7 @@ define(__m[10/*vs/platform/environment/node/argv*/], __M([1/*require*/,0/*export
         string: [
             'locale',
             'user-data-dir',
-            'extensionHomePath',
+            'extensions-dir',
             'extensionDevelopmentPath',
             'extensionTestsPath',
             'install-extension',
@@ -3569,7 +3580,8 @@ define(__m[10/*vs/platform/environment/node/argv*/], __M([1/*require*/,0/*export
             'new-window': 'n',
             'reuse-window': 'r',
             performance: 'p',
-            'disable-extensions': 'disableExtensions'
+            'disable-extensions': 'disableExtensions',
+            'extensions-dir': 'extensionHomePath'
         }
     };
     function validate(args) {
@@ -3624,7 +3636,7 @@ define(__m[10/*vs/platform/environment/node/argv*/], __M([1/*require*/,0/*export
         '--user-data-dir <dir>': nls_1.localize(7, null),
         '--verbose': nls_1.localize(8, null),
         '-w, --wait': nls_1.localize(9, null),
-        '--extensionHomePath': nls_1.localize(10, null),
+        '--extensions-dir <dir>': nls_1.localize(10, null),
         '--list-extensions': nls_1.localize(11, null),
         '--show-versions': nls_1.localize(12, null),
         '--install-extension <ext>': nls_1.localize(13, null),

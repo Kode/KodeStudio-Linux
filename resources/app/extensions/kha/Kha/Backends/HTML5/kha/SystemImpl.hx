@@ -16,6 +16,7 @@ import kha.input.Surface;
 import kha.js.AudioElementAudio;
 import kha.js.AEAudioChannel;
 import kha.js.CanvasGraphics;
+import kha.js.MobileWebAudio;
 import kha.System;
 
 class GamepadStates {
@@ -43,9 +44,10 @@ class SystemImpl {
 	public static var mobile: Bool = false;
 	public static var mobileAudioPlaying: Bool = false;
 	public static var insideInputEvent: Bool = false;
-
+	private static var loaded: Bool = false;
+	
 	public static function initPerformanceTimer(): Void {
-		if (Browser.window.performance != null) {
+		if (Browser.window.performance != null && Browser.window.performance.now != null) {
 			performance = Browser.window.performance;
 		}
 		else {
@@ -64,7 +66,7 @@ class SystemImpl {
 		Browser.window.onerror = cast errorHandler;
 		var electron = untyped __js__("require('electron')");
 		electron.webFrame.setZoomLevelLimits(1, 1);
-		electron.ipcRenderer.send('asynchronous-message', {type: 'showWindow', width: options.width, height: options.height});
+		electron.ipcRenderer.send('asynchronous-message', {type: 'showWindow', title: options.title, width: options.width, height: options.height});
 		// Wait a second so the debugger can attach
 		Browser.window.setTimeout(function () {
 			init2();
@@ -80,7 +82,7 @@ class SystemImpl {
 	public static function initEx(title: String, options: Array<WindowOptions>, windowCallback: Int -> Void, callback: Void -> Void) {
 		trace('initEx is not supported on the html5 target, running init() with first window options');
 
-		init({ title : title, width : options[0].width, height : options[0].height}, callback);
+		init({title : title, width : options[0].width, height : options[0].height}, callback);
 
 		if (windowCallback != null) {
 			windowCallback(0);
@@ -104,11 +106,31 @@ class SystemImpl {
 	}
 
 	public static function windowWidth(windowId: Int = 0): Int {
-		return khanvas.width;
+		if (loaded) {
+			return khanvas.width;
+		}
+		else {
+			if (options.width != null) {
+				return options.width;
+			}
+			else {
+				return khanvas.width;
+			}
+		}
 	}
 
 	public static function windowHeight(windowId: Int = 0): Int {
-		return khanvas.height;
+		if (loaded) {
+			return khanvas.height;
+		}
+		else {
+			if (options.height != null) {
+				return options.height;
+			}
+			else {
+				return khanvas.height;
+			}
+		}
 	}
 
 	public static function screenDpi(): Int {
@@ -262,8 +284,20 @@ class SystemImpl {
 	//}
 
 	private static function loadFinished() {
-		var canvas: Dynamic = Browser.document.getElementById("khanvas");
+		// Only consider custom canvas ID for release builds
+        var canvas: Dynamic = khanvas;
+        if(canvas == null) {
+            #if (sys_debug_html5 || !canvas_id)
+            canvas = Browser.document.getElementById("khanvas");
+            #else
+            canvas = Browser.document.getElementById(kha.CompilerDefines.canvas_id);
+            #end
+        }
 		canvas.style.cursor = "default";
+
+		canvas.onload = function () {
+			loaded = true;
+		};
 
 		var gl: Bool = false;
 
@@ -312,6 +346,11 @@ class SystemImpl {
 			SystemImpl._hasWebAudio = true;
 			kha.audio2.Audio1._init();
 		}
+		else if (mobile) {
+			SystemImpl._hasWebAudio = false;
+			MobileWebAudio._init();
+			untyped __js__ ("kha_audio2_Audio1 = kha_js_MobileWebAudio");
+		}
 		else {
 			SystemImpl._hasWebAudio = false;
 			AudioElementAudio._compile();
@@ -350,7 +389,7 @@ class SystemImpl {
 
 			Scheduler.executeFrame();
 
-			if (canvas.getContext) {
+			if (untyped canvas.getContext) {
 
 				// Lookup the size the browser is displaying the canvas.
 				//TODO deal with window.devicePixelRatio ?
@@ -395,7 +434,8 @@ class SystemImpl {
 		canvas.onkeyup = keyUp;
 		canvas.onblur = onBlur;
 		canvas.onfocus = onFocus;
-		canvas.onmousewheel = canvas.onwheel = mouseWheel;
+		untyped (canvas.onmousewheel = canvas.onwheel = mouseWheel);
+		canvas.onmouseleave = mouseLeave;
 
 		canvas.addEventListener("wheel mousewheel", mouseWheel, false);
 		canvas.addEventListener("touchstart", touchDown, false);
@@ -475,9 +515,27 @@ class SystemImpl {
 		mouseY = Std.int((event.clientY - rect.top - borderHeight) * SystemImpl.khanvas.height / (rect.height - 2 * borderHeight));
 	}
 
+	private static var iosSoundEnabled: Bool = false;
+
+	private static function unlockSoundOnIOS(): Void {
+		if (!mobile || iosSoundEnabled) return;
+		
+		var buffer = MobileWebAudio._context.createBuffer(1, 1, 22050);
+		var source = MobileWebAudio._context.createBufferSource();
+		source.buffer = buffer;
+		source.connect(MobileWebAudio._context.destination);
+		untyped(if (source.noteOn) source.noteOn(0));
+
+		iosSoundEnabled = true;
+	}
+
+	private static function mouseLeave():Void {
+		mouse.sendLeaveEvent(0);
+	}
+	
 	private static function mouseWheel(event: WheelEvent): Bool {
 		insideInputEvent = true;
-		AEAudioChannel.catchUp();
+		unlockSoundOnIOS();
 
 		event.preventDefault();
 
@@ -506,7 +564,7 @@ class SystemImpl {
 
 	private static function mouseDown(event: MouseEvent): Void {
 		insideInputEvent = true;
-		AEAudioChannel.catchUp();
+		unlockSoundOnIOS();
 
 		setMouseXY(event);
 		if (event.which == 1) { //left button
@@ -519,6 +577,7 @@ class SystemImpl {
 				mouse.sendDownEvent(0, 0, mouseX, mouseY);
 			}
 
+			if(Reflect.hasField(khanvas, 'setCapture'))  khanvas.setCapture();
 			Browser.document.addEventListener('mouseup', mouseLeftUp);
 		}
 		else if(event.which == 2) { //middle button
@@ -533,13 +592,13 @@ class SystemImpl {
 	}
 
 	private static function mouseLeftUp(event: MouseEvent): Void {
-		insideInputEvent = true;
-		AEAudioChannel.catchUp();
-
+		unlockSoundOnIOS();
+	
 		if (event.which != 1) return;
-
+		
+		insideInputEvent = true;
 		Browser.document.removeEventListener('mouseup', mouseLeftUp);
-
+		if(Reflect.hasField(Browser.document, 'releaseCapture')) Browser.document.releaseCapture();
 		if (leftMouseCtrlDown) {
 			mouse.sendUpEvent(0, 1, mouseX, mouseY);
 		}
@@ -551,20 +610,22 @@ class SystemImpl {
 	}
 
 	private static function mouseMiddleUp(event: MouseEvent): Void {
-		insideInputEvent = true;
-		AEAudioChannel.catchUp();
+		unlockSoundOnIOS();
 
 		if (event.which != 2) return;
+		
+		insideInputEvent = true;
 		Browser.document.removeEventListener('mouseup', mouseMiddleUp);
 		mouse.sendUpEvent(0, 2, mouseX, mouseY);
 		insideInputEvent = false;
 	}
 
 	private static function mouseRightUp(event: MouseEvent): Void {
-		insideInputEvent = true;
-		AEAudioChannel.catchUp();
+		unlockSoundOnIOS();
 
 		if (event.which != 3) return;
+		
+		insideInputEvent = true;
 		Browser.document.removeEventListener('mouseup', mouseRightUp);
 		mouse.sendUpEvent(0, 1, mouseX, mouseY);
 		insideInputEvent = false;
@@ -572,7 +633,7 @@ class SystemImpl {
 
 	private static function mouseMove(event: MouseEvent): Void {
 		insideInputEvent = true;
-		AEAudioChannel.catchUp();
+		unlockSoundOnIOS();
 
 		var lastMouseX = mouseX;
 		var lastMouseY = mouseY;
@@ -600,7 +661,7 @@ class SystemImpl {
 
 	private static function touchDown(event: TouchEvent): Void {
 		insideInputEvent = true;
-		AEAudioChannel.catchUp();
+		unlockSoundOnIOS();
 
 		event.stopPropagation();
 		event.preventDefault();
@@ -615,7 +676,7 @@ class SystemImpl {
 
 	private static function touchUp(event: TouchEvent): Void {
 		insideInputEvent = true;
-		AEAudioChannel.catchUp();
+		unlockSoundOnIOS();
 
 		for (touch in event.changedTouches)	{
 			setTouchXY(touch);
@@ -627,7 +688,7 @@ class SystemImpl {
 
 	private static function touchMove(event: TouchEvent): Void {
 		insideInputEvent = true;
-		AEAudioChannel.catchUp();
+		unlockSoundOnIOS();
 
 		var index = 0;
 		for (touch in event.changedTouches) {

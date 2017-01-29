@@ -33,7 +33,8 @@ define("vs/code/node/sharedProcessMain.nls", {
 		"'configuration.properties' must be an object"
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
-		"Extensions"
+		"Extensions",
+		"Preferences"
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"Extension not found",
@@ -105,7 +106,7 @@ define("vs/code/node/sharedProcessMain.nls", {
 		"Later",
 		"Cancel"
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"The proxy setting to use. If not set will be taken from the http_proxy and https_proxy environment variables",
 		"Whether the proxy server certificate should be verified against the list of supplied CAs.",

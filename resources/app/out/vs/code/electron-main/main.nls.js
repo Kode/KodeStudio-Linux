@@ -34,14 +34,10 @@ define("vs/code/electron-main/main.nls", {
 		"Warning",
 		"Info"
 	],
-	"vs/code/electron-main/main": [
-		"New Window",
-		"Opens a new window",
-		"{0} {1}"
-	],
 	"vs/code/electron-main/menus": [
 		"&&File",
 		"&&Edit",
+		"&&Selection",
 		"&&View",
 		"&&Go",
 		"Window",
@@ -67,11 +63,12 @@ define("vs/code/electron-main/main.nls", {
 		"Revert F&&ile",
 		"Close &&Window",
 		"Close &&Folder",
-		"Close &&Editor",
+		"&&Close Editor",
 		"E&&xit",
 		"&&User Settings",
 		"&&Workspace Settings",
 		"&&Keyboard Shortcuts",
+		"&&Keymap Extensions",
 		"User &&Snippets",
 		"&&Color Theme",
 		"File &&Icon Theme",
@@ -83,17 +80,33 @@ define("vs/code/electron-main/main.nls", {
 		"&&Cut",
 		"C&&opy",
 		"&&Paste",
-		"&&Select All",
 		"&&Undo",
 		"&&Redo",
 		"&&Cut",
 		"C&&opy",
 		"&&Paste",
-		"&&Select All",
 		"&&Find",
 		"&&Replace",
 		"Find &&in Files",
 		"Replace &&in Files",
+		"Emmet: E&&xpand Abbreviation",
+		"E&&mmet...",
+		"&&Toggle Line Comment",
+		"Toggle &&Block Comment",
+		"&&Add Cursor Above",
+		"A&&dd Cursor Below",
+		"Add C&&ursors to Line Ends",
+		"Add &&Next Occurrence",
+		"Add P&&revious Occurrence",
+		"Select All &&Occurrences",
+		"&&Copy Line Up",
+		"Co&&py Line Down",
+		"Mo&&ve Line Up",
+		"Move &&Line Down",
+		"&&Select All",
+		"&&Select All",
+		"&&Expand Selection",
+		"&&Shrink Selection",
 		"&&Explorer",
 		"&&Search",
 		"&&Git",
@@ -103,8 +116,10 @@ define("vs/code/electron-main/main.nls", {
 		"De&&bug Console",
 		"&&Integrated Terminal",
 		"&&Problems",
+		"Additional &&Views",
 		"&&Command Palette...",
 		"Toggle &&Full Screen",
+		"Toggle Zen Mode",
 		"Toggle Menu &&Bar",
 		"Split &&Editor",
 		"Toggle Editor Group &&Layout",
@@ -114,6 +129,8 @@ define("vs/code/electron-main/main.nls", {
 		"Toggle &&Panel",
 		"&&Hide Status Bar",
 		"&&Show Status Bar",
+		"Hide &&Activity Bar",
+		"Show &&Activity Bar",
 		"Toggle &&Word Wrap",
 		"Toggle &&Render Whitespace",
 		"Toggle &&Control Characters",
@@ -163,7 +180,6 @@ define("vs/code/electron-main/main.nls", {
 		"OK"
 	],
 	"vs/code/electron-main/windows": [
-		"You can still access the menu bar by pressing the **Alt** key.",
 		"OK",
 		"Path does not exist",
 		"The path '{0}' does not seem to exist anymore on disk.",
@@ -176,7 +192,12 @@ define("vs/code/electron-main/main.nls", {
 		"Reopen",
 		"Close",
 		"The window has crashed",
-		"We are sorry for the inconvenience! You can reopen the window to continue where you left off."
+		"We are sorry for the inconvenience! You can reopen the window to continue where you left off.",
+		"You can still access the menu bar by pressing the **Alt** key.",
+		"New Window",
+		"Opens a new window",
+		"Recent Folders",
+		"{0} {1}"
 	],
 	"vs/platform/configuration/common/configurationRegistry": [
 		"Contributes configuration settings.",
@@ -230,11 +251,15 @@ define("vs/code/electron-main/main.nls", {
 		"Script executed before the package is published as a VS Code extension.",
 		"The path to a 128x128 pixel icon."
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"The proxy setting to use. If not set will be taken from the http_proxy and https_proxy environment variables",
 		"Whether the proxy server certificate should be verified against the list of supplied CAs.",
 		"The value to send as the 'Proxy-Authorization' header for every network request."
+	],
+	"vs/platform/telemetry/common/telemetryService": [
+		"Telemetry",
+		"Enable usage data and errors to be sent to Microsoft."
 	],
 	"vs/workbench/parts/git/electron-main/askpassService": [
 		"Git"

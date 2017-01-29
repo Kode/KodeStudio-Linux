@@ -103,9 +103,11 @@ function exportProjectFiles(name, options, exporter, kore, korehl, libraries, ta
                 haxeOptions.parameters.push('-debug');
             }
             HaxeProject_1.writeHaxeProject(options.to, haxeOptions);
-            let compiler = new HaxeCompiler_1.HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources);
-            lastHaxeCompiler = compiler;
-            yield compiler.run(options.watch);
+            if (!options.nohaxe) {
+                let compiler = new HaxeCompiler_1.HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources);
+                lastHaxeCompiler = compiler;
+                yield compiler.run(options.watch);
+            }
             yield exporter.export(name, targetOptions, haxeOptions);
         }
         if (options.haxe !== '' && kore && !options.noproject) {
@@ -204,13 +206,14 @@ function exportKhaProject(options) {
         let exporter = null;
         let kore = false;
         let korehl = false;
-        let target = options.target;
+        let target = options.target.toLowerCase();
+        let baseTarget = target;
         let customTarget = null;
         if (project.customTargets.get(options.target)) {
             customTarget = project.customTargets.get(options.target);
-            target = customTarget.baseTarget;
+            baseTarget = customTarget.baseTarget;
         }
-        switch (target) {
+        switch (baseTarget) {
             case Platform_1.Platform.Krom:
                 exporter = new KromExporter_1.KromExporter(options);
                 break;
@@ -263,6 +266,7 @@ function exportKhaProject(options) {
                 }
                 break;
         }
+        exporter.setSystemDirectory(target);
         // Create the target build folder
         // e.g. 'build/android-native'
         fs.ensureDirSync(path.join(options.to, exporter.sysdir()));
@@ -290,9 +294,12 @@ function exportKhaProject(options) {
             shaderDir = path.join(options.to, exporter.sysdir(), 'Assets', 'Shaders');
         }
         fs.ensureDirSync(shaderDir);
-        let shaderCompiler = new ShaderCompiler_1.ShaderCompiler(exporter, options.target, options.krafix, shaderDir, temp, path.join(options.to, exporter.sysdir() + '-build'), options, project.shaderMatchers);
-        lastShaderCompiler = shaderCompiler;
-        let exportedShaders = yield shaderCompiler.run(options.watch);
+        let exportedShaders = [];
+        if (!options.noshaders) {
+            let shaderCompiler = new ShaderCompiler_1.ShaderCompiler(exporter, options.target, options.krafix, shaderDir, temp, path.join(options.to, exporter.sysdir() + '-build'), options, project.shaderMatchers);
+            lastShaderCompiler = shaderCompiler;
+            exportedShaders = yield shaderCompiler.run(options.watch);
+        }
         if (target === Platform_1.Platform.Unity) {
             fs.ensureDirSync(path.join(options.to, exporter.sysdir() + '-resources'));
             for (let shader of exportedShaders) {
@@ -491,4 +498,4 @@ function close() {
         lastHaxeCompiler.close();
 }
 exports.close = close;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/main.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/main.js.map

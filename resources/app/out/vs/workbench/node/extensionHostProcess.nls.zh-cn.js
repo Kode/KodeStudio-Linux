@@ -16,8 +16,16 @@ define("vs/workbench/node/extensionHostProcess.nls.zh-cn", {
 	"vs/base/node/processes": [
 		"无法对 UNC 驱动器执行 shell 命令。",
 	],
+	"vs/platform/configuration/common/configurationRegistry": [
+		"用于配置字符串。",
+		"设置摘要。此标签将在设置文件中用作分隔注释。",
+		"配置属性的描述。",
+		"如果进行设置，\"configuration.type\" 必须设置为对象",
+		"configuration.title 必须是字符串",
+		"configuration.properties 必须是对象",
+	],
 	"vs/platform/extensions/common/abstractExtensionService": [
-		"无法激活扩展”{1}“。原因：未知依赖关系”{0}“。",
+		"无法激活扩展”{1}“。原因: 未知依赖关系“{0}”。",
 		"无法激活扩展”{1}“。原因: 无法激活依赖关系”{0}“。",
 		"无法激活扩展”{0}“。原因: 依赖关系多于 10 级(最可能是依赖关系循环)。",
 		"激活扩展“{0}”失败: {1}。",
@@ -43,6 +51,12 @@ define("vs/workbench/node/extensionHostProcess.nls.zh-cn", {
 	],
 	"vs/workbench/api/node/extHostDiagnostics": [
 		"未显示 {0} 个进一步的错误和警告。",
+	],
+	"vs/workbench/api/node/extHostTreeExplorers": [
+		"没有注册 ID 为“{0}”的 TreeExplorerNodeProvider。",
+		"TreeExplorerNodeProvider“{0}”无法提供根节点。",
+		"没有注册 ID 为“{0}”的 TreeExplorerNodeProvider。",
+		"TreeExplorerNodeProvider“{0}”无法解析 Children。",
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"路径 {0} 未指向有效的扩展测试运行程序。",

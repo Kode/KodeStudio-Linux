@@ -3,12 +3,13 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
+var vscode_languageserver_1 = require('vscode-languageserver');
 var Strings = require('../utils/strings');
 var nls = require('vscode-nls');
 var localize = nls.loadMessageBundle(__filename);
 var globProperties = [
-    { kind: 12 /* Value */, label: localize(0, null), insertText: '"*.{{extension}}": "{{language}}"', documentation: localize(1, null) },
-    { kind: 12 /* Value */, label: localize(2, null), insertText: '"/{{path to file}}/*.{{extension}}": "{{language}}"', documentation: localize(3, null) }
+    { kind: 12 /* Value */, label: localize(0, null), insertText: vscode_languageserver_1.SnippetString.create('"*.${1:extension}": "${2:language}"'), documentation: localize(1, null) },
+    { kind: 12 /* Value */, label: localize(2, null), insertText: vscode_languageserver_1.SnippetString.create('"/${1:path to file}/*.${2:extension}": "${3:language}"'), documentation: localize(3, null) }
 ];
 var FileAssociationContribution = (function () {
     function FileAssociationContribution() {
@@ -25,7 +26,6 @@ var FileAssociationContribution = (function () {
     FileAssociationContribution.prototype.collectPropertyCompletions = function (resource, location, currentWord, addValue, isLast, result) {
         if (this.isSettingsFile(resource) && location.length === 1 && location[0] === 'files.associations') {
             globProperties.forEach(function (e) {
-                e.filterText = e.insertText;
                 result.add(e);
             });
         }
@@ -37,7 +37,7 @@ var FileAssociationContribution = (function () {
                 result.add({
                     kind: 12 /* Value */,
                     label: l,
-                    insertText: JSON.stringify('{{' + l + '}}'),
+                    insertText: vscode_languageserver_1.SnippetString.create(JSON.stringify('${1:' + l + '}')),
                     filterText: JSON.stringify(l)
                 });
             });
@@ -50,4 +50,4 @@ var FileAssociationContribution = (function () {
     return FileAssociationContribution;
 }());
 exports.FileAssociationContribution = FileAssociationContribution;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/json/server/out/jsoncontributions/fileAssociationContribution.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/json/server/out/jsoncontributions/fileAssociationContribution.js.map

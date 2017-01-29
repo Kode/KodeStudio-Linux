@@ -43,6 +43,7 @@ define("vs/code/node/cliProcessMain.nls.de", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"Erweiterungen",
+		"Einstellungen",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"Die Extension wurde nicht gefunden.",
@@ -114,7 +115,7 @@ define("vs/code/node/cliProcessMain.nls.de", {
 		"Später",
 		"Abbrechen",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"Die zu verwendende Proxyeinstellung. Wenn diese Option nicht festgelegt wird, wird der Wert aus den Umgebungsvariablen \"http_proxy\" und \"https_proxy\" übernommen.",
 		"Gibt an, ob das Proxyserverzertifikat anhand der Liste der bereitgestellten Zertifizierungsstellen überprüft werden soll.",

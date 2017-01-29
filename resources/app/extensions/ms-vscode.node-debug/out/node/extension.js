@@ -2,11 +2,11 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 'use strict';
-var vscode = require('vscode');
-var child_process_1 = require('child_process');
-var path_1 = require('path');
-var nls = require('vscode-nls');
-var fs = require('fs');
+var vscode = require("vscode");
+var child_process_1 = require("child_process");
+var path_1 = require("path");
+var nls = require("vscode-nls");
+var fs = require("fs");
 var localize = nls.config(process.env.VSCODE_NLS_CONFIG)(__filename);
 function listProcesses() {
     return new Promise(function (resolve, reject) {
@@ -78,7 +78,7 @@ function listProcesses() {
         else {
             var PID_CMD_1 = new RegExp('^\\s*([0-9]+)\\s+(.+)$');
             var MAC_APPS_1 = new RegExp('^.*/(.*).(?:app|bundle)/Contents/.*$');
-            child_process_1.exec('ps -ax -o pid=,command=', function (err, stdout, stderr) {
+            child_process_1.exec('ps -ax -o pid=,command=', { maxBuffer: 1000 * 1024 }, function (err, stdout, stderr) {
                 if (err || stderr) {
                     reject(err || stderr.toString());
                 }
@@ -151,7 +151,7 @@ function activate(context) {
     context.subscriptions.push(pickNodeProcess);
     context.subscriptions.push(vscode.commands.registerCommand('extension.node-debug.provideInitialConfigurations', function () {
         var packageJsonPath = path_1.join(vscode.workspace.rootPath, 'package.json');
-        var program = vscode.workspace.textDocuments.some(function (document) { return document.languageId === 'typescript'; }) ? 'app.ts' : null;
+        var program = vscode.workspace.textDocuments.some(function (document) { return document.languageId === 'typescript'; }) ? 'app.ts' : undefined;
         try {
             var jsonContent = fs.readFileSync(packageJsonPath, 'utf8');
             var jsonObject = JSON.parse(jsonContent);
@@ -162,7 +162,8 @@ function activate(context) {
                 program = jsonObject.scripts.start.split(' ').pop();
             }
         }
-        catch (error) { }
+        catch (error) {
+        }
         if (program) {
             program = path_1.isAbsolute(program) ? program : path_1.join('${workspaceRoot}', program);
             initialConfigurations.forEach(function (config) {

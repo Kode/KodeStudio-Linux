@@ -16,6 +16,14 @@ define("vs/workbench/node/extensionHostProcess.nls.fr", {
 	"vs/base/node/processes": [
 		"Impossible d\'exécuter une commande d\'interpréteur de commandes sur un lecteur UNC.",
 	],
+	"vs/platform/configuration/common/configurationRegistry": [
+		"Ajoute des paramètres de configuration.",
+		"Résumé des paramètres. Cette étiquette va être utilisée dans le fichier de paramètres en tant que commentaire de séparation.",
+		"Description des propriétés de configuration.",
+		"s\'il est défini, \'configuration.type\' doit avoir la valeur \'object",
+		"\'configuration.title\' doit être une chaîne",
+		"\'configuration.properties\' doit être un objet",
+	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"Échec de l\'activation de l\'extension \'{1}\'. Raison : dépendance \'{0}\' inconnue.",
 		"Échec de l\'activation de l\'extension \'{1}\'. Raison : échec de l\'activation de la dépendance \'{0}\'.",
@@ -43,6 +51,12 @@ define("vs/workbench/node/extensionHostProcess.nls.fr", {
 	],
 	"vs/workbench/api/node/extHostDiagnostics": [
 		"Les {0} erreurs et avertissements supplémentaires ne sont pas affichés.",
+	],
+	"vs/workbench/api/node/extHostTreeExplorers": [
+		"Aucun TreeExplorerNodeProvider ayant l\'ID \'{0}\' n\'est inscrit.",
+		"Le TreeExplorerNodeProvider \'{0}\' n\'a pas pu fournir le nœud racine.",
+		"Aucun TreeExplorerNodeProvider ayant l\'ID \'{0}\' n\'est inscrit.",
+		"Le TreeExplorerNodeProvider \'{0}\' n\'a pas pu résoudre resolveChildren.",
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"Le chemin {0} ne pointe pas vers un Test Runner d\'extension valide.",

@@ -25,7 +25,7 @@ define("vs/code/node/cliProcessMain.nls.zh-tw", {
 		"找不到擴充功能 \'{0}\'。",
 		"未安裝擴充功能 \'{0}\'。",
 		"請確定您使用完整擴充功能識別碼 (包括發行者)，例如: {0}",
-		"已成功安裝擴充功能 \'{0}\'!",
+		"已成功安裝延伸模組 \'{0}\'!",
 		"已安裝過擴充功能 \'{0}\'。",
 		"在市集中找到 \'{0}\'。",
 		"正在安裝...",
@@ -43,6 +43,7 @@ define("vs/code/node/cliProcessMain.nls.zh-tw", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"擴充功能",
+		"喜好設定",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"找不到擴充功能",
@@ -114,7 +115,7 @@ define("vs/code/node/cliProcessMain.nls.zh-tw", {
 		"稍後",
 		"取消",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"要使用的 Proxy 設定。如果未設定，會從 http_proxy 與 https_proxy 環境變數取得設定。",
 		"是否應該針對提供的 CA 清單驗證 Proxy 伺服器憑證。",

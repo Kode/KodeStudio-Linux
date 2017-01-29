@@ -35,7 +35,9 @@ class Log {
 
 		This method can be rebound to a custom function:
 			var oldTrace = haxe.Log.trace; // store old function
-			haxe.Log.trace = function(v,infos) { // handle trace }
+			haxe.Log.trace = function(v, ?infos) {
+			  // handle trace
+			}
 			...
 			haxe.Log.trace = oldTrace;
 
@@ -60,6 +62,8 @@ class Log {
 			}
 		#elseif js
 			untyped js.Boot.__trace(v,infos);
+		#elseif (php && php7)
+			php.Boot.trace(v, infos);
 		#elseif php
 			if (infos!=null && infos.customParams!=null) {
 				var extra:String = "";
@@ -94,7 +98,7 @@ class Log {
 			#elseif java
 			untyped __java__("java.lang.System.out.println(str)");
 			#elseif lua
-			untyped __lua__("_hx_print({0})", lua.Boot.__string_rec(str));
+			untyped __define_feature__("use._hx_print",_hx_print(Std.string(str)));
 			#end
 		#elseif (python)
 			var str:String = null;

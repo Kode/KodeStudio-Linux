@@ -185,6 +185,22 @@ StringBuf.prototype = {
 };
 var StringTools = function() { };
 StringTools.__name__ = ["StringTools"];
+StringTools.startsWith = function(s,start) {
+	if(s.length >= start.length) {
+		return HxOverrides.substr(s,0,start.length) == start;
+	} else {
+		return false;
+	}
+};
+StringTools.endsWith = function(s,end) {
+	var elen = end.length;
+	var slen = s.length;
+	if(slen >= elen) {
+		return HxOverrides.substr(s,slen - elen,elen) == end;
+	} else {
+		return false;
+	}
+};
 StringTools.isSpace = function(s,pos) {
 	var c = HxOverrides.cca(s,pos);
 	if(!(c > 8 && c < 14)) {
@@ -218,6 +234,20 @@ StringTools.trim = function(s) {
 };
 StringTools.replace = function(s,sub,by) {
 	return s.split(sub).join(by);
+};
+StringTools.hex = function(n,digits) {
+	var s = "";
+	while(true) {
+		s = "0123456789ABCDEF".charAt(n & 15) + s;
+		n >>>= 4;
+		if(!(n > 0)) {
+			break;
+		}
+	}
+	if(digits != null) {
+		while(s.length < digits) s = "0" + s;
+	}
+	return s;
 };
 var Sys = function() { };
 Sys.__name__ = ["Sys"];
@@ -544,6 +574,18 @@ haxe_ds_BalancedTree.prototype = {
 		}
 		return null;
 	}
+	,remove: function(key) {
+		try {
+			this.root = this.removeLoop(key,this.root);
+			return true;
+		} catch( e ) {
+			haxe_CallStack.lastException = e;
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+			if( js_Boot.__instanceof(e,String) ) {
+				return false;
+			} else throw(e);
+		}
+	}
 	,iterator: function() {
 		var ret = [];
 		this.iteratorLoop(this.root,ret);
@@ -564,11 +606,50 @@ haxe_ds_BalancedTree.prototype = {
 			return this.balance(node.left,node.key,node.value,nr);
 		}
 	}
+	,removeLoop: function(k,node) {
+		if(node == null) {
+			throw new js__$Boot_HaxeError("Not_found");
+		}
+		var c = this.compare(k,node.key);
+		if(c == 0) {
+			return this.merge(node.left,node.right);
+		} else if(c < 0) {
+			return this.balance(this.removeLoop(k,node.left),node.key,node.value,node.right);
+		} else {
+			return this.balance(node.left,node.key,node.value,this.removeLoop(k,node.right));
+		}
+	}
 	,iteratorLoop: function(node,acc) {
 		if(node != null) {
 			this.iteratorLoop(node.left,acc);
 			acc.push(node.value);
 			this.iteratorLoop(node.right,acc);
+		}
+	}
+	,merge: function(t1,t2) {
+		if(t1 == null) {
+			return t2;
+		}
+		if(t2 == null) {
+			return t1;
+		}
+		var t = this.minBinding(t2);
+		return this.balance(t1,t.key,t.value,this.removeMinBinding(t2));
+	}
+	,minBinding: function(t) {
+		if(t == null) {
+			throw new js__$Boot_HaxeError("Not_found");
+		} else if(t.left == null) {
+			return t;
+		} else {
+			return this.minBinding(t.left);
+		}
+	}
+	,removeMinBinding: function(t) {
+		if(t.left == null) {
+			return t.right;
+		} else {
+			return this.balance(this.removeMinBinding(t.left),t.key,t.value,t.right);
 		}
 	}
 	,balance: function(l,k,v,r) {
@@ -761,6 +842,9 @@ haxe_ds_StringMap.prototype = {
 			return true;
 		}
 	}
+	,keys: function() {
+		return HxOverrides.iter(this.arrayKeys());
+	}
 	,arrayKeys: function() {
 		var out = [];
 		for( var key in this.h ) {
@@ -786,6 +870,73 @@ var haxe_io_Bytes = function() { };
 haxe_io_Bytes.__name__ = ["haxe","io","Bytes"];
 haxe_io_Bytes.prototype = {
 	__class__: haxe_io_Bytes
+};
+var haxe_io_Path = function() { };
+haxe_io_Path.__name__ = ["haxe","io","Path"];
+haxe_io_Path.normalize = function(path) {
+	path = path.split("\\").join("/");
+	if(path == "/") {
+		return "/";
+	}
+	var target = [];
+	var _g = 0;
+	var _g1 = path.split("/");
+	while(_g < _g1.length) {
+		var token = _g1[_g];
+		++_g;
+		if(token == ".." && target.length > 0 && target[target.length - 1] != "..") {
+			target.pop();
+		} else if(token != ".") {
+			target.push(token);
+		}
+	}
+	var tmp = target.join("/");
+	var regex_r = new RegExp("([^:])/+","g".split("u").join(""));
+	tmp.replace(regex_r,"$1" + "/");
+	var acc_b = "";
+	var colon = false;
+	var slashes = false;
+	var _g11 = 0;
+	var _g2 = tmp.length;
+	while(_g11 < _g2) {
+		var i = _g11++;
+		var _g21 = HxOverrides.cca(tmp,i);
+		if(_g21 == null) {
+			colon = false;
+			if(slashes) {
+				acc_b += "/";
+				slashes = false;
+			}
+			acc_b += Std.string(String.fromCharCode(_g21));
+		} else {
+			switch(_g21) {
+			case 47:
+				if(!colon) {
+					slashes = true;
+				} else {
+					colon = false;
+					if(slashes) {
+						acc_b += "/";
+						slashes = false;
+					}
+					acc_b += Std.string(String.fromCharCode(_g21));
+				}
+				break;
+			case 58:
+				acc_b += ":";
+				colon = true;
+				break;
+			default:
+				colon = false;
+				if(slashes) {
+					acc_b += "/";
+					slashes = false;
+				}
+				acc_b += Std.string(String.fromCharCode(_g21));
+			}
+		}
+	}
+	return acc_b;
 };
 var haxe_xml_XmlParserException = function(message,xml,position) {
 	this.xml = xml;
@@ -1154,18 +1305,18 @@ haxe_xml_Parser.doParse = function(str,strict,p,parent) {
 var haxeLanguageServer_Context = function(protocol) {
 	this.protocol = protocol;
 	this.haxeServer = new haxeLanguageServer_HaxeServer(this);
-	var value = $bind(this,this.onInitialize);
-	protocol.requestHandlers.set("initialize",value);
-	var value1 = $bind(this,this.onShutdown);
-	protocol.requestHandlers.set("shutdown",value1);
-	var value2 = $bind(this,this.onDidChangeConfiguration);
-	protocol.notificationHandlers.set("workspace/didChangeConfiguration",value2);
-	var value3 = $bind(this,this.onDidOpenTextDocument);
-	protocol.notificationHandlers.set("textDocument/didOpen",value3);
-	var value4 = $bind(this,this.onDidSaveTextDocument);
-	protocol.notificationHandlers.set("textDocument/didSave",value4);
-	var value5 = $bind(this,this.onDidChangeDisplayConfigurationIndex);
-	protocol.notificationHandlers.set("vshaxe/didChangeDisplayConfigurationIndex",value5);
+	var handler = $bind(this,this.onInitialize);
+	protocol.requestHandlers.set("initialize",handler);
+	var handler1 = $bind(this,this.onShutdown);
+	protocol.requestHandlers.set("shutdown",handler1);
+	var handler2 = $bind(this,this.onDidChangeConfiguration);
+	protocol.notificationHandlers.set("workspace/didChangeConfiguration",handler2);
+	var handler3 = $bind(this,this.onDidOpenTextDocument);
+	protocol.notificationHandlers.set("textDocument/didOpen",handler3);
+	var handler4 = $bind(this,this.onDidSaveTextDocument);
+	protocol.notificationHandlers.set("textDocument/didSave",handler4);
+	var handler5 = $bind(this,this.onDidChangeDisplayConfigurationIndex);
+	protocol.notificationHandlers.set("vshaxe/didChangeDisplayConfigurationIndex",handler5);
 };
 haxeLanguageServer_Context.__name__ = ["haxeLanguageServer","Context"];
 haxeLanguageServer_Context.findHaxe = function(kha) {
@@ -1191,7 +1342,7 @@ haxeLanguageServer_Context.prototype = {
 		this.haxePath = haxeLanguageServer_Context.findHaxe(params.initializationOptions.kha);
 		this.displayConfigurationIndex = params.initializationOptions.displayConfigurationIndex;
 		this.documents = new haxeLanguageServer_TextDocuments(this.protocol);
-		resolve({ capabilities : { textDocumentSync : 2, completionProvider : { triggerCharacters : ["."]}, signatureHelpProvider : { triggerCharacters : ["(",","]}, definitionProvider : true, hoverProvider : true, referencesProvider : true, documentSymbolProvider : true, codeActionProvider : true}});
+		resolve({ capabilities : { textDocumentSync : 2, completionProvider : { triggerCharacters : [".","@",":"]}, signatureHelpProvider : { triggerCharacters : ["(",","]}, definitionProvider : true, hoverProvider : true, referencesProvider : true, documentSymbolProvider : true, workspaceSymbolProvider : true, codeActionProvider : true, codeLensProvider : { resolveProvider : true}}});
 		return;
 	}
 	,onDidChangeDisplayConfigurationIndex: function(params) {
@@ -1209,17 +1360,20 @@ haxeLanguageServer_Context.prototype = {
 		var firstInit = this.config == null;
 		this.config = newConfig.settings.haxe;
 		this.updateDisplayServerConfig();
+		this.updateCodeGenerationConfig();
 		if(firstInit) {
 			this.haxeServer.start(this.haxePath,function() {
+				_gthis.codeActions = new haxeLanguageServer_features_CodeActionFeature(_gthis);
 				new haxeLanguageServer_features_CompletionFeature(_gthis);
 				new haxeLanguageServer_features_HoverFeature(_gthis);
-				new haxeLanguageServer_features_SignatureHelpFeature(_gthis);
+				_gthis.signatureHelp = new haxeLanguageServer_features_SignatureHelpFeature(_gthis);
 				new haxeLanguageServer_features_GotoDefinitionFeature(_gthis);
 				new haxeLanguageServer_features_FindReferencesFeature(_gthis);
 				new haxeLanguageServer_features_DocumentSymbolsFeature(_gthis);
-				new haxeLanguageServer_features_CalculatePackageFeature(_gthis);
+				new haxeLanguageServer_features_DeterminePackageFeature(_gthis);
 				_gthis.diagnostics = new haxeLanguageServer_features_DiagnosticsManager(_gthis);
-				new haxeLanguageServer_features_CodeActionFeature(_gthis,_gthis.diagnostics);
+				new haxeLanguageServer_features_CodeLensFeature(_gthis);
+				new haxeLanguageServer_features_CodeGenerationFeature(_gthis);
 				if(_gthis.config.enableDiagnostics) {
 					var doc = _gthis.documents.documents.iterator();
 					while(doc.hasNext()) {
@@ -1255,6 +1409,16 @@ haxeLanguageServer_Context.prototype = {
 			}
 		}
 	}
+	,updateCodeGenerationConfig: function() {
+		var codeGen = this.config.codeGeneration;
+		if(codeGen.functions == null) {
+			codeGen.functions = { };
+		}
+		var functions = codeGen.functions;
+		if(functions.anonymous == null) {
+			functions.anonymous = { argumentTypeHints : false, returnTypeHint : "never"};
+		}
+	}
 	,onDidOpenTextDocument: function(event) {
 		this.documents.onDidOpenTextDocument(event);
 		if(this.diagnostics != null && this.config.enableDiagnostics) {
@@ -1262,7 +1426,6 @@ haxeLanguageServer_Context.prototype = {
 		}
 	}
 	,onDidSaveTextDocument: function(event) {
-		this.documents.onDidSaveTextDocument(event);
 		if(this.diagnostics != null && this.config.enableDiagnostics) {
 			this.diagnostics.publishDiagnostics(event.textDocument.uri);
 		}
@@ -1287,7 +1450,7 @@ haxeLanguageServer_HaxePosition.parse = function(pos,doc,cache) {
 	if(s != null) {
 		var startLine = Std.parseInt(s);
 		var endLine = Std.parseInt(haxeLanguageServer_HaxePosition.positionRe.matched(4));
-		return { uri : file == doc.fsPath?doc.uri:haxeLanguageServer_Uri.fsPathToUri(file), range : { start : { line : startLine - 1, character : 0}, end : { line : endLine - 1, character : 0}}};
+		return { uri : file == doc.fsPath?doc.uri:haxeLanguageServer_Uri.fsPathToUri(file), range : { start : { line : startLine - 1, character : 0}, end : { line : endLine, character : 0}}};
 	} else {
 		var line = Std.parseInt(haxeLanguageServer_HaxePosition.positionRe.matched(2));
 		--line;
@@ -1375,12 +1538,13 @@ haxeLanguageServer_HaxePosition.getProperFileNameCase = function(normalizedPath)
 	return result;
 };
 var js_node_buffer_Buffer = require("buffer").Buffer;
-var haxeLanguageServer__$HaxeServer_DisplayRequest = function(token,args,stdin,callback,errback) {
+var haxeLanguageServer__$HaxeServer_DisplayRequest = function(token,args,stdin,callback,errback,socket) {
 	this.token = token;
 	this.args = args;
 	this.stdin = stdin;
 	this.callback = callback;
 	this.errback = errback;
+	this.socket = socket;
 };
 haxeLanguageServer__$HaxeServer_DisplayRequest.__name__ = ["haxeLanguageServer","_HaxeServer","DisplayRequest"];
 haxeLanguageServer__$HaxeServer_DisplayRequest.prototype = {
@@ -1425,7 +1589,12 @@ haxeLanguageServer__$HaxeServer_DisplayRequest.prototype = {
 			var _g2 = line.charCodeAt(0);
 			switch(_g2) {
 			case 1:
-				haxe_Log.trace("Haxe print:\n" + StringTools.replace(line.substring(1),"\x01","\n"),{ fileName : "HaxeServer.hx", lineNumber : 69, className : "haxeLanguageServer._HaxeServer.DisplayRequest", methodName : "processResult"});
+				var line1 = StringTools.replace(line.substring(1),"\x01","\n");
+				if(this.socket != null) {
+					this.socket.write(line1);
+				} else {
+					haxe_Log.trace("Haxe print:\n" + line1,{ fileName : "HaxeServer.hx", lineNumber : 75, className : "haxeLanguageServer._HaxeServer.DisplayRequest", methodName : "processResult"});
+				}
 				break;
 			case 2:
 				hasError = true;
@@ -1437,7 +1606,7 @@ haxeLanguageServer__$HaxeServer_DisplayRequest.prototype = {
 		}
 		var data1 = StringTools.trim(buf_b);
 		if(hasError) {
-			this.errback("Error from haxe server: " + data1);
+			this.errback("Error from Haxe server: " + data1);
 			return;
 		}
 		try {
@@ -1445,7 +1614,7 @@ haxeLanguageServer__$HaxeServer_DisplayRequest.prototype = {
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
-			this.errback(jsonrpc_ErrorUtils.errorToString(e,"Exception while handling haxe completion response: "));
+			this.errback(jsonrpc_ErrorUtils.errorToString(e,"Exception while handling Haxe completion response: "));
 		}
 	}
 	,__class__: haxeLanguageServer__$HaxeServer_DisplayRequest
@@ -1458,7 +1627,6 @@ haxeLanguageServer_HaxeServer.prototype = {
 	start: function(haxePath,callback) {
 		var _gthis = this;
 		this.stop();
-		var args = this.context.displayServerConfig["arguments"].concat(["--wait","stdio"]);
 		var this1 = { };
 		var env = this1;
 		var _g = 0;
@@ -1476,58 +1644,115 @@ haxeLanguageServer_HaxeServer.prototype = {
 			env[key1] = this.context.displayServerConfig.env[key1];
 		}
 		env["HAXE_STD_PATH"] = js_node_Path.normalize(js_node_Path.join(haxePath,"..","std"));
-		this.proc = js_node_ChildProcess.spawn(haxePath,args,{ env : env});
-		this.buffer = new haxeLanguageServer__$HaxeServer_MessageBuffer();
-		this.nextMessageLength = -1;
-		this.proc.stdout.on("data",function(buf) {
-			var _this = _gthis.context.protocol;
-			var params = buf.toString();
-			var message = { jsonrpc : "2.0", method : "vshaxe/log"};
+		var checkRun = js_node_ChildProcess.spawnSync(haxePath,["-version"],{ env : env});
+		if(checkRun.error != null) {
+			var params = { type : 1, message : "Error starting Haxe server: " + Std.string(checkRun.error)};
+			var message = { jsonrpc : "2.0", method : "window/showMessage"};
 			if(params != null) {
 				message.params = params;
 			}
-			_this.writeMessage(message);
-		});
-		this.proc.stderr.on("data",$bind(this,this.onData));
-		this.proc.on("exit",$bind(this,this.onExit));
-		this.process(["-version"],null,null,function(data) {
-			if(!haxeLanguageServer_HaxeServer.reVersion.match(data)) {
-				var params1 = { type : 1, message : "Error parsing haxe version " + data};
-				var message1 = { jsonrpc : "2.0", method : "window/showMessage"};
-				if(params1 != null) {
-					message1.params = params1;
-				}
-				_gthis.context.protocol.writeMessage(message1);
-				return;
+			_gthis.context.protocol.writeMessage(message);
+			return;
+		}
+		var output = StringTools.trim(checkRun.stderr.toString());
+		if(checkRun.status != 0) {
+			var params1 = { type : 1, message : "Haxe version check failed: " + output};
+			var message1 = { jsonrpc : "2.0", method : "window/showMessage"};
+			if(params1 != null) {
+				message1.params = params1;
 			}
-			var major = Std.parseInt(haxeLanguageServer_HaxeServer.reVersion.matched(1));
-			var minor = Std.parseInt(haxeLanguageServer_HaxeServer.reVersion.matched(2));
-			var patch = Std.parseInt(haxeLanguageServer_HaxeServer.reVersion.matched(3));
-			if(major < 3 || minor < 3) {
-				var params2 = { type : 1, message : "Unsupported Haxe version! Minimum version required: 3.3.0"};
-				var message2 = { jsonrpc : "2.0", method : "window/showMessage"};
-				if(params2 != null) {
-					message2.params = params2;
-				}
-				_gthis.context.protocol.writeMessage(message2);
-			} else {
-				_gthis.version = [major,minor,patch];
-				callback();
+			_gthis.context.protocol.writeMessage(message1);
+			return;
+		}
+		if(!haxeLanguageServer_HaxeServer.reVersion.match(output)) {
+			var params2 = { type : 1, message : "Error parsing Haxe version " + JSON.stringify(output)};
+			var message2 = { jsonrpc : "2.0", method : "window/showMessage"};
+			if(params2 != null) {
+				message2.params = params2;
 			}
-		},function(errorMessage) {
-			var params3 = { type : 1, message : errorMessage};
+			_gthis.context.protocol.writeMessage(message2);
+			return;
+		}
+		var major = Std.parseInt(haxeLanguageServer_HaxeServer.reVersion.matched(1));
+		var minor = Std.parseInt(haxeLanguageServer_HaxeServer.reVersion.matched(2));
+		haxeLanguageServer_HaxeServer.reVersion.matched(3);
+		if(major < 3 || minor < 4) {
+			var params3 = { type : 1, message : "Unsupported Haxe version! Minimum version required: 3.4.0"};
 			var message3 = { jsonrpc : "2.0", method : "window/showMessage"};
 			if(params3 != null) {
 				message3.params = params3;
 			}
 			_gthis.context.protocol.writeMessage(message3);
+			return;
+		}
+		this.buffer = new haxeLanguageServer__$HaxeServer_MessageBuffer();
+		this.nextMessageLength = -1;
+		this.proc = js_node_ChildProcess.spawn(haxePath,this.context.displayServerConfig["arguments"].concat(["--wait","stdio"]),{ env : env});
+		this.proc.stdout.on("data",function(buf) {
+			var _this = _gthis.context;
+			var _this1 = haxeLanguageServer_HaxeServer.reTrailingNewline;
+			var params4 = { type : 4, message : buf.toString().replace(_this1.r,"")};
+			var message4 = { jsonrpc : "2.0", method : "window/logMessage"};
+			if(params4 != null) {
+				message4.params = params4;
+			}
+			_this.protocol.writeMessage(message4);
 		});
+		this.proc.stderr.on("data",$bind(this,this.onData));
+		this.proc.on("exit",$bind(this,this.onExit));
+		if(this.context.config.buildCompletionCache) {
+			haxe_Log.trace("Initializing completion cache...",{ fileName : "HaxeServer.hx", lineNumber : 160, className : "haxeLanguageServer.HaxeServer", methodName : "start"});
+			var _this2 = this.context;
+			this.process(_this2.config.displayConfigurations[_this2.displayConfigurationIndex].concat(["--no-output"]),null,null,function(_) {
+				haxe_Log.trace("Done.",{ fileName : "HaxeServer.hx", lineNumber : 162, className : "haxeLanguageServer.HaxeServer", methodName : "start"});
+			},function(errorMessage) {
+				haxe_Log.trace("Failed - try fixing the error(s) and restarting the language server:\n\n" + errorMessage,{ fileName : "HaxeServer.hx", lineNumber : 164, className : "haxeLanguageServer.HaxeServer", methodName : "start"});
+			});
+		}
+		if(this.context.config.displayPort != null) {
+			this.startSocketServer(this.context.config.displayPort);
+		}
+		callback();
+	}
+	,startSocketServer: function(port) {
+		var _gthis = this;
+		if(this.socketListener != null) {
+			this.socketListener.close();
+		}
+		this.socketListener = js_node_Net.createServer(function(socket) {
+			haxe_Log.trace("Client connected",{ fileName : "HaxeServer.hx", lineNumber : 179, className : "haxeLanguageServer.HaxeServer", methodName : "startSocketServer"});
+			socket.on("data",function(data) {
+				var s = data.toString();
+				var split = s.split("\n");
+				split.pop();
+				var send = function(message) {
+					socket.write(message);
+					socket.end();
+					socket.destroy();
+					haxe_Log.trace("Client disconnected",{ fileName : "HaxeServer.hx", lineNumber : 188, className : "haxeLanguageServer.HaxeServer", methodName : "startSocketServer"});
+				};
+				_gthis.process(split,null,null,send,send,socket);
+			});
+			socket.on("error",function(err) {
+				haxe_Log.trace("Socket error: " + err,{ fileName : "HaxeServer.hx", lineNumber : 193, className : "haxeLanguageServer.HaxeServer", methodName : "startSocketServer"});
+			});
+		});
+		this.socketListener.listen(port);
+		var params = { type : 4, message : "Listening on port " + port};
+		var message1 = { jsonrpc : "2.0", method : "window/logMessage"};
+		if(params != null) {
+			message1.params = params;
+		}
+		this.context.protocol.writeMessage(message1);
 	}
 	,stop: function() {
 		if(this.proc != null) {
 			this.proc.removeAllListeners();
 			this.proc.kill();
 			this.proc = null;
+		}
+		if(this.socketListener != null) {
+			this.socketListener.close();
 		}
 		var request = this.requestsHead;
 		while(request != null) {
@@ -1537,8 +1762,8 @@ haxeLanguageServer_HaxeServer.prototype = {
 		this.requestsHead = this.requestsTail = this.currentRequest = null;
 	}
 	,restart: function(reason) {
-		var params = "Restarting Haxe completion server: " + reason + "\n";
-		var message = { jsonrpc : "2.0", method : "vshaxe/log"};
+		var params = { type : 4, message : "Restarting Haxe completion server: " + reason};
+		var message = { jsonrpc : "2.0", method : "window/logMessage"};
 		if(params != null) {
 			message.params = params;
 		}
@@ -1572,9 +1797,9 @@ haxeLanguageServer_HaxeServer.prototype = {
 			}
 		}
 	}
-	,process: function(args,token,stdin,callback,errback) {
+	,process: function(args,token,stdin,callback,errback,socket) {
 		var _gthis = this;
-		var request = new haxeLanguageServer__$HaxeServer_DisplayRequest(token,args,stdin,callback,errback);
+		var request = new haxeLanguageServer__$HaxeServer_DisplayRequest(token,args,stdin,callback,errback,socket);
 		if(token != null) {
 			token.callback = function() {
 				if(request == _gthis.currentRequest) {
@@ -1660,7 +1885,15 @@ haxeLanguageServer_Main.__name__ = ["haxeLanguageServer","Main"];
 haxeLanguageServer_Main.main = function() {
 	var reader = new jsonrpc_node_MessageReader(process.stdin);
 	var writer = new jsonrpc_node_MessageWriter(process.stdout);
-	var protocol = new vscodeProtocol_Protocol($bind(writer,writer.write));
+	var protocol = new jsonrpc_Protocol($bind(writer,writer.write));
+	protocol.logError = function(message) {
+		var params = { type : 2, message : message};
+		var message1 = { jsonrpc : "2.0", method : "window/logMessage"};
+		if(params != null) {
+			message1.params = params;
+		}
+		protocol.writeMessage(message1);
+	};
 	haxeLanguageServer_Main.setupTrace(protocol);
 	new haxeLanguageServer_Context(protocol);
 	reader.listen($bind(protocol,protocol.handleMessage));
@@ -1741,6 +1974,14 @@ haxeLanguageServer_TextDocument.prototype = {
 		var nextLineOffset = position.line + 1 < lineOffsets.length?lineOffsets[position.line + 1]:this.content.length;
 		return Math.max(Math.min(lineOffset + position.character,nextLineOffset),lineOffset) | 0;
 	}
+	,indentAt: function(line) {
+		var re = new EReg("^\\s*","");
+		re.match(this.lineAt(line));
+		return re.matched(0);
+	}
+	,getText: function(range) {
+		return this.content.substring(this.offsetToByteOffset(this.offsetAt(range.start)),this.offsetToByteOffset(this.offsetAt(range.end)));
+	}
 	,getLineOffsets: function() {
 		if(this.lineOffsets == null) {
 			var offsets = [];
@@ -1774,23 +2015,23 @@ haxeLanguageServer_TextDocument.prototype = {
 };
 var haxeLanguageServer_TextDocuments = function(protocol) {
 	this.documents = new haxe_ds_StringMap();
-	var value = $bind(this,this.onDidChangeTextDocument);
-	protocol.notificationHandlers.set("textDocument/didChange",value);
-	var value1 = $bind(this,this.onDidCloseTextDocument);
-	protocol.notificationHandlers.set("textDocument/didClose",value1);
+	var handler = $bind(this,this.onDidChangeTextDocument);
+	protocol.notificationHandlers.set("textDocument/didChange",handler);
+	var handler1 = $bind(this,this.onDidCloseTextDocument);
+	protocol.notificationHandlers.set("textDocument/didClose",handler1);
 };
 haxeLanguageServer_TextDocuments.__name__ = ["haxeLanguageServer","TextDocuments"];
 haxeLanguageServer_TextDocuments.prototype = {
 	onDidOpenTextDocument: function(event) {
 		var td = event.textDocument;
-		var document = new haxeLanguageServer_TextDocument(td.uri,td.languageId,td.version,td.text);
-		document.saved = false;
+		var this1 = this.documents;
 		var k = td.uri;
-		var _this = this.documents;
+		var v = new haxeLanguageServer_TextDocument(td.uri,td.languageId,td.version,td.text);
+		var _this = this1;
 		if(__map_reserved[k] != null) {
-			_this.setReserved(k,document);
+			_this.setReserved(k,v);
 		} else {
-			_this.h[k] = document;
+			_this.h[k] = v;
 		}
 	}
 	,onDidChangeTextDocument: function(event) {
@@ -1804,186 +2045,13 @@ haxeLanguageServer_TextDocuments.prototype = {
 		var document = __map_reserved[key] != null?_this.getReserved(key):_this.h[key];
 		if(document != null) {
 			document.update(changes,td.version);
-			document.saved = false;
 		}
 	}
 	,onDidCloseTextDocument: function(event) {
 		this.documents.remove(event.textDocument.uri);
 	}
-	,onDidSaveTextDocument: function(event) {
-		var key = event.textDocument.uri;
-		var _this = this.documents;
-		var document = __map_reserved[key] != null?_this.getReserved(key):_this.h[key];
-		if(document != null) {
-			document.saved = true;
-		}
-	}
 	,__class__: haxeLanguageServer_TextDocuments
 };
-var haxeLanguageServer_TypeHelper = function() { };
-haxeLanguageServer_TypeHelper.__name__ = ["haxeLanguageServer","TypeHelper"];
-haxeLanguageServer_TypeHelper.getCloseChar = function(c) {
-	switch(c) {
-	case "(":
-		return ")";
-	case "<":
-		return ">";
-	case "{":
-		return "}";
-	default:
-		throw new js__$Boot_HaxeError("unknown opening char " + c);
-	}
-};
-haxeLanguageServer_TypeHelper.prepareSignature = function(type) {
-	var _g = haxeLanguageServer_TypeHelper.parseDisplayType(type);
-	switch(_g[1]) {
-	case 0:
-		var type1 = _g[2];
-		if(type1 == null) {
-			return "";
-		} else {
-			return type1;
-		}
-		break;
-	case 1:
-		var ret = _g[3];
-		var args = _g[2];
-		return haxeLanguageServer_TypeHelper.printFunctionSignature(args,ret);
-	}
-};
-haxeLanguageServer_TypeHelper.printFunctionSignature = function(args,ret) {
-	var result_b = "";
-	result_b = "(";
-	var first = true;
-	var _g = 0;
-	while(_g < args.length) {
-		var arg = args[_g];
-		++_g;
-		if(first) {
-			first = false;
-		} else {
-			result_b += ", ";
-		}
-		result_b += Std.string(haxeLanguageServer_TypeHelper.printFunctionArgument(arg));
-	}
-	result_b += ")";
-	if(ret != null) {
-		result_b += ":";
-		result_b += ret == null?"null":"" + ret;
-	}
-	return result_b;
-};
-haxeLanguageServer_TypeHelper.printFunctionArgument = function(arg) {
-	var result = arg.name;
-	if(arg.opt) {
-		result = "?" + result;
-	}
-	if(arg.type != null) {
-		result += ":";
-		result += arg.type;
-	}
-	return result;
-};
-haxeLanguageServer_TypeHelper.parseDisplayType = function(type) {
-	type = StringTools.replace(type," -> ","%");
-	var toplevel_b = "";
-	var groups = new haxe_ds_IntMap();
-	var closeStack = new haxe_ds_GenericStack();
-	var depth = 0;
-	var groupId = 0;
-	var _g1 = 0;
-	var _g = type.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var $char = type.charAt(i);
-		if($char == "(" || $char == "<" || $char == "{") {
-			++depth;
-			closeStack.head = new haxe_ds_GenericCell(haxeLanguageServer_TypeHelper.getCloseChar($char),closeStack.head);
-			if(depth == 1) {
-				++groupId;
-				var v = new StringBuf();
-				groups.h[groupId] = v;
-				toplevel_b += $char == null?"null":"" + $char;
-				toplevel_b += Std.string("$" + groupId);
-				continue;
-			}
-		} else if($char == (closeStack.head == null?null:closeStack.head.elt)) {
-			var k = closeStack.head;
-			if(k != null) {
-				closeStack.head = k.next;
-			}
-			--depth;
-		}
-		if(depth == 0) {
-			toplevel_b += $char == null?"null":"" + $char;
-		} else {
-			groups.h[groupId].b += $char == null?"null":"" + $char;
-		}
-	}
-	var processType = function(type1) {
-		type1 = haxeLanguageServer_TypeHelper.groupRegex.map(type1,function(r) {
-			var groupId1 = Std.parseInt(r.matched(1));
-			return StringTools.replace(groups.h[groupId1].b,"%","->");
-		});
-		if(haxeLanguageServer_TypeHelper.parenRegex.match(type1)) {
-			type1 = haxeLanguageServer_TypeHelper.parenRegex.matched(1);
-		}
-		return type1;
-	};
-	var parts = toplevel_b.split("%");
-	var returnType = processType(parts.pop());
-	if(haxeLanguageServer_TypeHelper.monomorphRegex.match(returnType)) {
-		returnType = null;
-	}
-	if(parts.length > 0) {
-		var args = [];
-		var _g11 = 0;
-		var _g2 = parts.length;
-		while(_g11 < _g2) {
-			var i1 = _g11++;
-			var part = parts[i1];
-			var name;
-			var type2;
-			var opt = false;
-			if(haxeLanguageServer_TypeHelper.argNameRegex.match(part)) {
-				name = haxeLanguageServer_TypeHelper.argNameRegex.matched(1);
-				if(HxOverrides.cca(name,0) == 63) {
-					name = name.substring(1);
-					opt = true;
-				}
-				type2 = haxeLanguageServer_TypeHelper.argNameRegex.matchedRight();
-			} else {
-				name = String.fromCharCode(97 + i1);
-				type2 = part;
-				if(HxOverrides.cca(part,0) == 63) {
-					type2 = part.substring(1);
-					opt = true;
-				}
-			}
-			if(opt && haxeLanguageServer_TypeHelper.nullRegex.match(type2)) {
-				type2 = haxeLanguageServer_TypeHelper.nullRegex.matched(1);
-			}
-			type2 = processType(type2);
-			if(type2 == "Void") {
-				continue;
-			}
-			var arg = { name : name};
-			if(!haxeLanguageServer_TypeHelper.monomorphRegex.match(type2)) {
-				arg.type = type2;
-			}
-			if(opt) {
-				arg.opt = true;
-			}
-			args.push(arg);
-		}
-		return haxeLanguageServer_DisplayType.DTFunction(args,returnType);
-	} else {
-		return haxeLanguageServer_DisplayType.DTValue(returnType);
-	}
-};
-var haxeLanguageServer_DisplayType = { __ename__ : true, __constructs__ : ["DTValue","DTFunction"] };
-haxeLanguageServer_DisplayType.DTValue = function(type) { var $x = ["DTValue",0,type]; $x.__enum__ = haxeLanguageServer_DisplayType; $x.toString = $estr; return $x; };
-haxeLanguageServer_DisplayType.DTFunction = function(args,ret) { var $x = ["DTFunction",1,args,ret]; $x.__enum__ = haxeLanguageServer_DisplayType; $x.toString = $estr; return $x; };
 var haxeLanguageServer_Uri = function() { };
 haxeLanguageServer_Uri.__name__ = ["haxeLanguageServer","Uri"];
 haxeLanguageServer_Uri.fsPathToUri = function(path) {
@@ -1999,16 +2067,19 @@ haxeLanguageServer_Uri.fsPathToUri = function(path) {
 	while(true) {
 		var idx = path.indexOf("/",lastIdx);
 		if(idx == -1) {
-			var s = path.substring(lastIdx);
-			parts.push(encodeURIComponent(s));
+			parts.push(haxeLanguageServer_Uri.urlEncode2(path.substring(lastIdx)));
 			break;
 		}
-		var s1 = path.substring(lastIdx,idx);
-		parts.push(encodeURIComponent(s1));
+		parts.push(haxeLanguageServer_Uri.urlEncode2(path.substring(lastIdx,idx)));
 		parts.push("/");
 		lastIdx = idx + 1;
 	}
 	return parts.join("");
+};
+haxeLanguageServer_Uri.urlEncode2 = function(s) {
+	return new EReg("[!'()*]","g").map(encodeURIComponent(s),function(re) {
+		return "%" + StringTools.hex(re.matched(0).charCodeAt(0));
+	});
 };
 haxeLanguageServer_Uri.uriToFsPath = function(uri) {
 	if(!haxeLanguageServer_Uri.uriRe.match(uri) || haxeLanguageServer_Uri.uriRe.matched(2) != "file") {
@@ -2022,58 +2093,201 @@ haxeLanguageServer_Uri.uriToFsPath = function(uri) {
 		return path;
 	}
 };
-var haxeLanguageServer_features_CalculatePackageFeature = function(context) {
+var haxeLanguageServer_features_CodeActionFeature = function(context) {
+	this.contributors = [];
 	this.context = context;
-	var value = $bind(this,this.onCalculatePackage);
-	context.protocol.requestHandlers.set("vshaxe/calculatePackage",value);
-};
-haxeLanguageServer_features_CalculatePackageFeature.__name__ = ["haxeLanguageServer","features","CalculatePackageFeature"];
-haxeLanguageServer_features_CalculatePackageFeature.prototype = {
-	onCalculatePackage: function(params,token,resolve,reject) {
-		var args = ["--display","" + params.fsPath + "@0@package"];
-		this.context.callDisplay(args,null,token,function(data) {
-			if(token.canceled) {
-				return;
-			}
-			resolve({ pack : data});
-		},function(error) {
-			var this1 = { code : -32603, message : error};
-			reject(this1);
-		});
-	}
-	,__class__: haxeLanguageServer_features_CalculatePackageFeature
-};
-var haxeLanguageServer_features_CodeActionFeature = function(context,diagnostics) {
-	this.context = context;
-	this.diagnostics = diagnostics;
-	var value = $bind(this,this.onCodeAction);
-	context.protocol.requestHandlers.set("textDocument/codeAction",value);
+	var handler = $bind(this,this.onCodeAction);
+	context.protocol.requestHandlers.set("textDocument/codeAction",handler);
 };
 haxeLanguageServer_features_CodeActionFeature.__name__ = ["haxeLanguageServer","features","CodeActionFeature"];
 haxeLanguageServer_features_CodeActionFeature.prototype = {
-	onCodeAction: function(params,token,resolve,reject) {
-		var result = [];
-		this.diagnostics.addCodeActions(params,result);
-		resolve(result);
+	registerContributor: function(contributor) {
+		this.contributors.push(contributor);
+	}
+	,onCodeAction: function(params,token,resolve,reject) {
+		var codeActions = [];
+		var _g = 0;
+		var _g1 = this.contributors;
+		while(_g < _g1.length) {
+			var contributor = _g1[_g];
+			++_g;
+			codeActions = codeActions.concat(contributor(params));
+		}
+		resolve(codeActions);
 	}
 	,__class__: haxeLanguageServer_features_CodeActionFeature
 };
+var haxeLanguageServer_features_CodeGenerationFeature = function(context) {
+	this.context = context;
+	context.codeActions.registerContributor($bind(this,this.generateAnonymousFunction));
+	context.codeActions.registerContributor($bind(this,this.extractVariable));
+};
+haxeLanguageServer_features_CodeGenerationFeature.__name__ = ["haxeLanguageServer","features","CodeGenerationFeature"];
+haxeLanguageServer_features_CodeGenerationFeature.prototype = {
+	generateAnonymousFunction: function(params) {
+		var currentSignature = this.context.signatureHelp.currentSignature;
+		if(currentSignature == null || currentSignature.params.textDocument.uri != params.textDocument.uri) {
+			return [];
+		}
+		var help = currentSignature.help;
+		var activeParam = help.signatures[help.activeSignature].parameters[help.activeParameter];
+		if(activeParam == null) {
+			return [];
+		}
+		var position = currentSignature.params.position;
+		var currentType = haxeLanguageServer_helper_TypeHelper.parseFunctionArgumentType(activeParam.label);
+		if(currentType[1] == 1) {
+			var ret = currentType[3];
+			var args = currentType[2];
+			var generatedCode = haxeLanguageServer_helper_TypeHelper.printFunctionDeclaration(args,ret,this.context.config.codeGeneration.functions.anonymous) + " ";
+			return [{ title : "Generate anonymous function", command : "haxe.applyFixes", 'arguments' : [params.textDocument.uri,0,[{ range : { start : position, end : position}, newText : generatedCode}]]}];
+		} else {
+			return [];
+		}
+	}
+	,extractVariable: function(params) {
+		if(haxeLanguageServer_helper_RangeHelper.isEmpty(params.range)) {
+			return [];
+		}
+		var doc = this.context.documents.documents.get(params.textDocument.uri);
+		var range = params.range;
+		var startLine = range.start.line;
+		var indent = doc.indentAt(startLine);
+		var extraction = StringTools.replace(doc.getText(range),"$","\\$");
+		var variable = "" + indent + "var $" + " = " + extraction + ";\n";
+		var pos = { line : startLine, character : 0};
+		var insertRange = { start : pos, end : pos};
+		return [{ title : "Extract variable", 'arguments' : [params.textDocument.uri,0,[{ range : insertRange, newText : variable},{ range : params.range, newText : "$"}]], command : "haxe.applyFixes"}];
+	}
+	,__class__: haxeLanguageServer_features_CodeGenerationFeature
+};
+var haxeLanguageServer_features_CodeLensFeature = function(context) {
+	this.context = context;
+	var handler = $bind(this,this.onCodeLens);
+	context.protocol.requestHandlers.set("textDocument/codeLens",handler);
+};
+haxeLanguageServer_features_CodeLensFeature.__name__ = ["haxeLanguageServer","features","CodeLensFeature"];
+haxeLanguageServer_features_CodeLensFeature.prototype = {
+	getCodeLensFromStatistics: function(uri,statistics) {
+		var actions = [];
+		var addRelation = function(kind,plural,range,relations) {
+			if(relations == null) {
+				relations = [];
+			}
+			var title = relations.length + " " + kind + (relations.length == 1?"":plural);
+			var action;
+			if(relations.length == 0) {
+				action = { command : { title : title, command : "", 'arguments' : []}, range : range};
+			} else {
+				var range1 = range.start;
+				var args = relations.map(function(c) {
+					var cRange = c.range;
+					if(c.range.start.line != c.range.end.line) {
+						var nextLineStart = { character : 0, line : c.range.start.line + 1};
+						cRange = { start : c.range.start, end : nextLineStart};
+					}
+					return { range : cRange, uri : haxeLanguageServer_Uri.fsPathToUri(c.file)};
+				});
+				var args1 = [uri,range1,args];
+				action = { command : { title : title, command : "haxe.showReferences", 'arguments' : args1}, range : range};
+			}
+			actions.push(action);
+		};
+		var _g = 0;
+		while(_g < statistics.length) {
+			var statistic = statistics[_g];
+			++_g;
+			if(statistic.kind == null) {
+				continue;
+			}
+			var range2 = statistic.range;
+			var _g1 = statistic.kind;
+			switch(_g1) {
+			case "class field":
+				if(statistic.overrides != null) {
+					addRelation("override","s",range2,statistic.overrides);
+				}
+				addRelation("reference","s",range2,statistic.references);
+				if(statistic.implementers != null) {
+					addRelation("implementation","s",range2,statistic.implementers);
+				}
+				break;
+			case "class type":
+				addRelation("subclass","es",range2,statistic.subclasses);
+				break;
+			case "enum field":
+				addRelation("reference","s",range2,statistic.references);
+				break;
+			case "enum type":
+				addRelation("reference","s",range2,statistic.references);
+				break;
+			case "interface type":
+				addRelation("implementer","s",range2,statistic.implementers);
+				addRelation("subinterface","s",range2,statistic.subclasses);
+				break;
+			}
+		}
+		return actions;
+	}
+	,onCodeLens: function(params,token,resolve,reject) {
+		var _gthis = this;
+		if(!this.context.config.enableCodeLens) {
+			resolve([]);
+			return;
+		}
+		var doc = this.context.documents.documents.get(params.textDocument.uri);
+		var processError = function(error) {
+			var params1 = { type : 4, message : error};
+			var message = { jsonrpc : "2.0", method : "window/logMessage"};
+			if(params1 != null) {
+				message.params = params1;
+			}
+			_gthis.context.protocol.writeMessage(message);
+		};
+		var processStatisticsReply = function(s) {
+			var data;
+			try {
+				data = JSON.parse(s);
+			} catch( e ) {
+				haxe_CallStack.lastException = e;
+				if (e instanceof js__$Boot_HaxeError) e = e.val;
+				var this1 = { code : -32603, message : "Error parsing stats response: " + Std.string(e)};
+				reject(this1);
+				return;
+			}
+			var _g = 0;
+			while(_g < data.length) {
+				var statistics = data[_g];
+				++_g;
+				var uri = haxeLanguageServer_Uri.fsPathToUri(statistics.file);
+				if(uri == params.textDocument.uri) {
+					var processStatisticsReply1 = _gthis.getCodeLensFromStatistics(uri,statistics.statistics);
+					resolve(processStatisticsReply1);
+				}
+			}
+		};
+		this.context.callDisplay(["--display",doc.fsPath + "@0@statistics"],doc.content,null,processStatisticsReply,processError);
+	}
+	,__class__: haxeLanguageServer_features_CodeLensFeature
+};
 var haxeLanguageServer_features_CompletionFeature = function(context) {
 	this.context = context;
-	var value = $bind(this,this.onCompletion);
-	context.protocol.requestHandlers.set("textDocument/completion",value);
+	var handler = $bind(this,this.onCompletion);
+	context.protocol.requestHandlers.set("textDocument/completion",handler);
 };
 haxeLanguageServer_features_CompletionFeature.__name__ = ["haxeLanguageServer","features","CompletionFeature"];
 haxeLanguageServer_features_CompletionFeature.calculateCompletionPosition = function(text,index) {
-	text = text.substring(0,index);
 	if(haxeLanguageServer_features_CompletionFeature.reFieldPart.match(text)) {
-		return { pos : index - haxeLanguageServer_features_CompletionFeature.reFieldPart.matched(1).length, toplevel : false};
+		return { pos : index - haxeLanguageServer_features_CompletionFeature.reFieldPart.matched(3).length, toplevel : false};
+	} else if(haxeLanguageServer_features_CompletionFeature.reStructPart.match(text)) {
+		return { pos : index - haxeLanguageServer_features_CompletionFeature.reStructPart.matched(1).length, toplevel : false};
 	} else {
 		return { pos : index, toplevel : true};
 	}
 };
 haxeLanguageServer_features_CompletionFeature.parseToplevelCompletion = function(x) {
 	var result = [];
+	var timers = [];
 	var el = x.elements();
 	while(el.hasNext()) {
 		var el1 = el.next();
@@ -2091,6 +2305,11 @@ haxeLanguageServer_features_CompletionFeature.parseToplevelCompletion = function
 		var displayKind = haxeLanguageServer_features_CompletionFeature.toplevelKindToCompletionItemKind(kind);
 		if(displayKind != null) {
 			item.kind = displayKind;
+		}
+		if(StringTools.startsWith(name,"@TIME") || StringTools.startsWith(name,"@TOTAL")) {
+			var info = name.split(":");
+			timers.push(haxeLanguageServer_features_CompletionFeature.getTimerCompletionItem(info[0],info[1]));
+			continue;
 		}
 		var fullName = name;
 		if(kind == "global") {
@@ -2110,18 +2329,21 @@ haxeLanguageServer_features_CompletionFeature.parseToplevelCompletion = function
 		}
 		var doc = el1.get("d");
 		if(doc != null) {
-			item.documentation = doc;
+			item.documentation = haxeLanguageServer_helper_DocHelper.extractText(doc);
 		}
 		result.push(item);
 	}
-	return result;
+	haxeLanguageServer_features_CompletionFeature.sortTimers(timers);
+	return result.concat(timers);
 };
 haxeLanguageServer_features_CompletionFeature.toplevelKindToCompletionItemKind = function(kind) {
 	switch(kind) {
-	case "enum":
+	case "enum":case "enumabstract":
 		return 13;
 	case "global":
 		return 6;
+	case "literal":
+		return 14;
 	case "local":
 		return 6;
 	case "member":
@@ -2130,19 +2352,23 @@ haxeLanguageServer_features_CompletionFeature.toplevelKindToCompletionItemKind =
 		return 9;
 	case "static":
 		return 7;
+	case "timer":
+		return 12;
 	case "type":
 		return 7;
 	default:
-		haxe_Log.trace("unknown toplevel item kind: " + kind,{ fileName : "CompletionFeature.hx", lineNumber : 95, className : "haxeLanguageServer.features.CompletionFeature", methodName : "toplevelKindToCompletionItemKind"});
+		haxe_Log.trace("unknown toplevel item kind: " + kind,{ fileName : "CompletionFeature.hx", lineNumber : 113, className : "haxeLanguageServer.features.CompletionFeature", methodName : "toplevelKindToCompletionItemKind"});
 		return null;
 	}
 };
-haxeLanguageServer_features_CompletionFeature.parseFieldCompletion = function(x) {
+haxeLanguageServer_features_CompletionFeature.parseFieldCompletion = function(x,textBefore) {
 	var result = [];
+	var timers = [];
 	var el = x.elements();
 	while(el.hasNext()) {
 		var el1 = el.next();
-		var kind = haxeLanguageServer_features_CompletionFeature.fieldKindToCompletionItemKind(el1.get("k"));
+		var rawKind = el1.get("k");
+		var kind = haxeLanguageServer_features_CompletionFeature.fieldKindToCompletionItemKind(rawKind);
 		var type = null;
 		var doc = null;
 		var child = el1.elements();
@@ -2161,7 +2387,12 @@ haxeLanguageServer_features_CompletionFeature.parseFieldCompletion = function(x)
 				if(_this.nodeType == Xml.Document || _this.nodeType == Xml.Element) {
 					throw new js__$Boot_HaxeError("Bad node type, unexpected " + _this.nodeType);
 				}
-				doc = _this.nodeValue;
+				var s = _this.nodeValue;
+				if(s == "") {
+					doc = null;
+				} else {
+					doc = s;
+				}
 				break;
 			case "t":
 				if(child1.nodeType != Xml.Document && child1.nodeType != Xml.Element) {
@@ -2171,14 +2402,30 @@ haxeLanguageServer_features_CompletionFeature.parseFieldCompletion = function(x)
 				if(_this1.nodeType == Xml.Document || _this1.nodeType == Xml.Element) {
 					throw new js__$Boot_HaxeError("Bad node type, unexpected " + _this1.nodeType);
 				}
-				type = _this1.nodeValue;
+				var s1 = _this1.nodeValue;
+				if(s1 == "") {
+					type = null;
+				} else {
+					type = s1;
+				}
 				break;
 			}
 		}
 		var name = el1.get("n");
+		var insertText = null;
+		if(rawKind == "metadata") {
+			name = HxOverrides.substr(name,1,null);
+			haxeLanguageServer_features_CompletionFeature.reFieldPart.match(textBefore);
+			if(haxeLanguageServer_features_CompletionFeature.reFieldPart.matched(2) == ":") {
+				insertText = HxOverrides.substr(name,1,null);
+			}
+		} else if(StringTools.startsWith(name,"@TIME") || StringTools.startsWith(name,"@TOTAL")) {
+			timers.push(haxeLanguageServer_features_CompletionFeature.getTimerCompletionItem(name,type));
+			continue;
+		}
 		var item = { label : name};
 		if(doc != null) {
-			item.documentation = doc;
+			item.documentation = haxeLanguageServer_helper_DocHelper.extractText(doc);
 		}
 		if(kind != null) {
 			item.kind = kind;
@@ -2186,40 +2433,89 @@ haxeLanguageServer_features_CompletionFeature.parseFieldCompletion = function(x)
 		if(type != null) {
 			item.detail = haxeLanguageServer_features_CompletionFeature.formatType(type,name,kind);
 		}
+		if(insertText != null) {
+			item.insertText = insertText;
+		}
 		result.push(item);
 	}
-	return result;
+	haxeLanguageServer_features_CompletionFeature.sortTimers(timers);
+	return result.concat(timers);
+};
+haxeLanguageServer_features_CompletionFeature.sortTimers = function(items) {
+	items.sort(function(a,b) {
+		var time1 = a.data;
+		var time2 = b.data;
+		if(time1 < time2) {
+			return 1;
+		}
+		if(time1 > time2) {
+			return -1;
+		}
+		return 0;
+	});
+	var _g1 = 0;
+	var _g = items.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var tmp = String.fromCharCode(65 + i);
+		items[i].sortText = "_" + tmp;
+	}
+};
+haxeLanguageServer_features_CompletionFeature.getTimerCompletionItem = function(name,time) {
+	var timeRegex = new EReg("([0-9.]*)s(?: \\(([0-9]*)%\\))?","");
+	var seconds = 0.0;
+	var percentage = "--";
+	try {
+		timeRegex.match(time);
+		seconds = parseFloat(timeRegex.matched(1));
+		percentage = timeRegex.matched(2);
+	} catch( e ) {
+		haxe_CallStack.lastException = e;
+	}
+	var doc = null;
+	if(StringTools.startsWith(name,"@TIME @TOTAL")) {
+		name = "@Total time: " + time;
+	} else {
+		name = StringTools.replace(name,"@TIME ","" + percentage + "% ");
+		doc = seconds + "s";
+	}
+	return { label : name, kind : 12, documentation : doc, insertText : " ", data : seconds};
 };
 haxeLanguageServer_features_CompletionFeature.formatType = function(type,name,kind) {
 	if(kind == 2) {
-		return name + haxeLanguageServer_TypeHelper.prepareSignature(type);
+		return name + haxeLanguageServer_helper_TypeHelper.prepareSignature(type);
 	} else {
 		return type;
 	}
 };
 haxeLanguageServer_features_CompletionFeature.fieldKindToCompletionItemKind = function(kind) {
 	switch(kind) {
+	case "metadata":
+		return 3;
 	case "method":
 		return 2;
 	case "package":
 		return 9;
+	case "timer":
+		return 12;
 	case "type":
 		return 7;
 	case "var":
 		return 5;
 	default:
-		haxe_Log.trace("unknown field item kind: " + kind,{ fileName : "CompletionFeature.hx", lineNumber : 134, className : "haxeLanguageServer.features.CompletionFeature", methodName : "fieldKindToCompletionItemKind"});
+		haxe_Log.trace("unknown field item kind: " + kind,{ fileName : "CompletionFeature.hx", lineNumber : 214, className : "haxeLanguageServer.features.CompletionFeature", methodName : "fieldKindToCompletionItemKind"});
 		return null;
 	}
 };
 haxeLanguageServer_features_CompletionFeature.prototype = {
 	onCompletion: function(params,token,resolve,reject) {
 		var doc = this.context.documents.documents.get(params.textDocument.uri);
-		var r = haxeLanguageServer_features_CompletionFeature.calculateCompletionPosition(doc.content,doc.offsetAt(params.position));
+		var offset = doc.offsetAt(params.position);
+		var textBefore = doc.content.substring(0,offset);
+		var r = haxeLanguageServer_features_CompletionFeature.calculateCompletionPosition(textBefore,offset);
 		var bytePos = doc.offsetToByteOffset(r.pos);
 		var args = ["--display","" + doc.fsPath + "@" + bytePos + (r.toplevel?"@toplevel":"")];
-		var stdin = doc.saved?null:doc.content;
-		this.context.callDisplay(args,stdin,token,function(data) {
+		this.context.callDisplay(args,doc.content,token,function(data) {
 			if(token.canceled) {
 				return;
 			}
@@ -2235,7 +2531,7 @@ haxeLanguageServer_features_CompletionFeature.prototype = {
 				reject(this1);
 				return;
 			}
-			var items = r.toplevel?haxeLanguageServer_features_CompletionFeature.parseToplevelCompletion(xml):haxeLanguageServer_features_CompletionFeature.parseFieldCompletion(xml);
+			var items = r.toplevel?haxeLanguageServer_features_CompletionFeature.parseToplevelCompletion(xml):haxeLanguageServer_features_CompletionFeature.parseFieldCompletion(xml,textBefore);
 			resolve(items);
 		},function(error) {
 			var this2 = { code : -32603, message : error};
@@ -2244,125 +2540,140 @@ haxeLanguageServer_features_CompletionFeature.prototype = {
 	}
 	,__class__: haxeLanguageServer_features_CompletionFeature
 };
-var haxeLanguageServer_features_DiagnosticsManager = function(context) {
+var haxeLanguageServer_features_DeterminePackageFeature = function(context) {
 	this.context = context;
-	this.diagnosticsArguments = new haxeLanguageServer_features__$DiagnosticsManager_DiagnosticsMap();
+	var handler = $bind(this,this.onDeterminePackage);
+	context.protocol.requestHandlers.set("vshaxe/determinePackage",handler);
+};
+haxeLanguageServer_features_DeterminePackageFeature.__name__ = ["haxeLanguageServer","features","DeterminePackageFeature"];
+haxeLanguageServer_features_DeterminePackageFeature.prototype = {
+	onDeterminePackage: function(params,token,resolve,reject) {
+		var args = ["--display","" + params.fsPath + "@0@package"];
+		this.context.callDisplay(args,null,token,function(data) {
+			if(token.canceled) {
+				return;
+			}
+			resolve({ pack : data});
+		},function(error) {
+			var this1 = { code : -32603, message : error};
+			reject(this1);
+		});
+	}
+	,__class__: haxeLanguageServer_features_DeterminePackageFeature
+};
+var haxeLanguageServer_features_DiagnosticsManager = function(context) {
+	var _gthis = this;
+	this.context = context;
+	this.diagnosticsArguments = new haxe_ds_StringMap();
+	var handler = $bind(this,this.onRunGlobalDiagnostics);
+	context.protocol.notificationHandlers.set("vshaxe/runGlobalDiagnostics",handler);
+	js_node_ChildProcess.exec("haxelib config",function(error,stdout,stderr) {
+		_gthis.haxelibPath = StringTools.trim(stdout);
+	});
 };
 haxeLanguageServer_features_DiagnosticsManager.__name__ = ["haxeLanguageServer","features","DiagnosticsManager"];
 haxeLanguageServer_features_DiagnosticsManager.prototype = {
-	publishDiagnostics: function(uri) {
-		var _gthis = this;
-		var doc = this.context.documents.documents.get(uri);
-		var processReply = function(s) {
-			_gthis.diagnosticsArguments = new haxeLanguageServer_features__$DiagnosticsManager_DiagnosticsMap();
-			var data;
-			try {
-				data = JSON.parse(s);
-			} catch( e ) {
-				haxe_CallStack.lastException = e;
-				if (e instanceof js__$Boot_HaxeError) e = e.val;
-				haxe_Log.trace("Error parsing diagnostics response: " + Std.string(e),{ fileName : "DiagnosticsManager.hx", lineNumber : 22, className : "haxeLanguageServer.features.DiagnosticsManager", methodName : "publishDiagnostics"});
-				return;
-			}
-			var diagnostics = [];
-			var _g = 0;
-			while(_g < data.length) {
-				var hxDiag = data[_g];
-				++_g;
-				if(hxDiag.range == null) {
-					continue;
-				}
-				var byteRange = hxDiag.range;
-				var bytePosition = byteRange.start;
-				var line = doc.lineAt(bytePosition.line);
-				var bytePosition1 = bytePosition.line;
-				var byteOffset = bytePosition.character;
-				var buf = new js_node_buffer_Buffer(line,"utf-8");
-				var diag = { line : bytePosition1, character : buf.toString("utf-8",0,byteOffset).length};
-				var bytePosition2 = byteRange.end;
-				var line1 = doc.lineAt(bytePosition2.line);
-				var bytePosition3 = bytePosition2.line;
-				var byteOffset1 = bytePosition2.character;
-				var buf1 = new js_node_buffer_Buffer(line1,"utf-8");
-				var diag1 = { range : { start : diag, end : { line : bytePosition3, character : buf1.toString("utf-8",0,byteOffset1).length}}, source : "haxe", code : hxDiag.kind, severity : hxDiag.severity, message : haxeLanguageServer_features__$DiagnosticsManager_DiagnosticsKind_$Impl_$.getMessage(hxDiag.kind,hxDiag.args)};
-				_gthis.diagnosticsArguments.set({ code : diag1.code, range : diag1.range},hxDiag.args);
-				diagnostics.push(diag1);
-			}
-			var params = { uri : uri, diagnostics : diagnostics};
-			var message = { jsonrpc : "2.0", method : "textDocument/publishDiagnostics"};
-			if(params != null) {
-				message.params = params;
-			}
-			_gthis.context.protocol.writeMessage(message);
+	onRunGlobalDiagnostics: function(_) {
+		var f = $bind(this,this.processDiagnosticsReply);
+		var tmp = function(s) {
+			f(null,s);
 		};
-		var processError = function(error) {
-			var params1 = { type : 1, message : error};
-			var message1 = { jsonrpc : "2.0", method : "window/logMessage"};
-			if(params1 != null) {
-				message1.params = params1;
-			}
-			_gthis.context.protocol.writeMessage(message1);
-		};
-		this.context.callDisplay(["--display",doc.fsPath + "@0@diagnostics"],null,null,processReply,processError);
+		this.context.callDisplay(["--display","diagnostics"],null,null,tmp,$bind(this,this.processErrorReply));
 	}
-	,addCodeActions: function(params,actions) {
+	,processErrorReply: function(error) {
+		var params = { type : 4, message : error};
+		var message = { jsonrpc : "2.0", method : "window/logMessage"};
+		if(params != null) {
+			message.params = params;
+		}
+		this.context.protocol.writeMessage(message);
+	}
+	,processDiagnosticsReply: function(uri,s) {
+		var _gthis = this;
+		var data;
+		try {
+			data = JSON.parse(s);
+		} catch( e ) {
+			haxe_CallStack.lastException = e;
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+			haxe_Log.trace("Error parsing diagnostics response: " + Std.string(e),{ fileName : "DiagnosticsManager.hx", lineNumber : 32, className : "haxeLanguageServer.features.DiagnosticsManager", methodName : "processDiagnosticsReply"});
+			return;
+		}
+		var pathFilter = haxeLanguageServer_helper_PathHelper.preparePathFilter(this.context.config.diagnosticsPathFilter,this.haxelibPath,this.context.workspacePath);
+		var sent = new haxe_ds_StringMap();
 		var _g = 0;
-		var _g1 = params.context.diagnostics;
-		while(_g < _g1.length) {
-			var d = _g1[_g];
+		while(_g < data.length) {
+			var data1 = data[_g];
 			++_g;
-			var v = d.code;
-			if(!(typeof(v) == "number" && ((v | 0) === v))) {
-				continue;
-			}
-			var this1 = d.code;
-			var code = this1;
-			switch(code) {
-			case 0:
-				actions.push({ title : "Remove import", command : "haxe.applyFixes", 'arguments' : [params.textDocument.uri,0,[{ range : d.range, newText : ""}]]});
-				break;
-			case 1:
-				var args = this.diagnosticsArguments.get({ code : code, range : d.range});
-				var _g2 = 0;
-				while(_g2 < args.length) {
-					var arg = args[_g2];
-					++_g2;
-					var this2 = d.code;
-					var kind = this2;
-					var command;
-					switch(kind) {
-					case 0:
-						command = { title : "import " + arg.name, command : "haxe.applyFixes", 'arguments' : []};
-						break;
-					case 1:
-						command = { title : "Change to " + arg.name, command : "haxe.applyFixes", 'arguments' : [params.textDocument.uri,0,[{ range : d.range, newText : arg.name}]]};
-						break;
-					}
-					actions.push(command);
+			if(haxeLanguageServer_helper_PathHelper.matches(data1.file,pathFilter)) {
+				var uri1 = haxeLanguageServer_Uri.fsPathToUri(data1.file);
+				var v = new haxeLanguageServer_features__$DiagnosticsManager_DiagnosticsMap();
+				var _this = this.diagnosticsArguments;
+				if(__map_reserved[uri1] != null) {
+					_this.setReserved(uri1,v);
+				} else {
+					_this.h[uri1] = v;
 				}
-				break;
-			case 2:
-				var arg1 = this.diagnosticsArguments.get({ code : code, range : d.range});
-				var sugrex = new EReg("\\(Suggestions?: (.*)\\)","");
-				if(sugrex.match(arg1)) {
-					var suggestions = sugrex.matched(1).split(",");
-					var range = d.range;
-					var fieldrex = new EReg("has no field ([^ ]+) ","");
-					if(fieldrex.match(arg1)) {
-						fieldrex.matched(1);
-						range.start.character += range.end.character - fieldrex.matched(1).length - 2;
+				var diagnostics = [];
+				var _g1 = 0;
+				var _g2 = data1.diagnostics;
+				while(_g1 < _g2.length) {
+					var hxDiag = _g2[_g1];
+					++_g1;
+					if(hxDiag.range == null) {
+						continue;
 					}
-					var _g21 = 0;
-					while(_g21 < suggestions.length) {
-						var suggestion = suggestions[_g21];
-						++_g21;
-						suggestion = StringTools.trim(suggestion);
-						actions.push({ title : "Change to " + suggestion, command : "haxe.applyFixes", 'arguments' : [params.textDocument.uri,0,[{ range : range, newText : suggestion}]]});
-					}
+					var diag = { range : hxDiag.range, source : "haxe", code : hxDiag.kind, severity : hxDiag.severity, message : haxeLanguageServer_features__$DiagnosticsManager_DiagnosticsKind_$Impl_$.getMessage(hxDiag.kind,hxDiag.args)};
+					v.set({ code : diag.code, range : diag.range},hxDiag.args);
+					diagnostics.push(diag);
 				}
-				break;
+				var params = { uri : uri1, diagnostics : diagnostics};
+				var message = { jsonrpc : "2.0", method : "textDocument/publishDiagnostics"};
+				if(params != null) {
+					message.params = params;
+				}
+				this.context.protocol.writeMessage(message);
+				if(__map_reserved[uri1] != null) {
+					sent.setReserved(uri1,true);
+				} else {
+					sent.h[uri1] = true;
+				}
 			}
 		}
+		if(uri == null) {
+			var uri2 = this.diagnosticsArguments.keys();
+			while(uri2.hasNext()) {
+				var uri3 = uri2.next();
+				if(!(__map_reserved[uri3] != null?sent.existsReserved(uri3):sent.h.hasOwnProperty(uri3))) {
+					if(_gthis.diagnosticsArguments.remove(uri3)) {
+						var params1 = { uri : uri3, diagnostics : []};
+						var message1 = { jsonrpc : "2.0", method : "textDocument/publishDiagnostics"};
+						if(params1 != null) {
+							message1.params = params1;
+						}
+						_gthis.context.protocol.writeMessage(message1);
+					}
+				}
+			}
+		} else if(!(__map_reserved[uri] != null?sent.existsReserved(uri):sent.h.hasOwnProperty(uri))) {
+			if(_gthis.diagnosticsArguments.remove(uri)) {
+				var params2 = { uri : uri, diagnostics : []};
+				var message2 = { jsonrpc : "2.0", method : "textDocument/publishDiagnostics"};
+				if(params2 != null) {
+					message2.params = params2;
+				}
+				_gthis.context.protocol.writeMessage(message2);
+			}
+		}
+	}
+	,publishDiagnostics: function(uri) {
+		var doc = this.context.documents.documents.get(uri);
+		var f = $bind(this,this.processDiagnosticsReply);
+		var a1 = uri;
+		var tmp = function(s) {
+			f(a1,s);
+		};
+		this.context.callDisplay(["--display",doc.fsPath + "@0@diagnostics"],null,null,tmp,$bind(this,this.processErrorReply));
 	}
 	,__class__: haxeLanguageServer_features_DiagnosticsManager
 };
@@ -2377,6 +2688,8 @@ haxeLanguageServer_features__$DiagnosticsManager_DiagnosticsKind_$Impl_$.getMess
 		return "Unresolved identifier";
 	case 2:
 		return args;
+	case 3:
+		return args.description;
 	}
 };
 var haxeLanguageServer_features__$DiagnosticsManager_DiagnosticsMap = function() {
@@ -2412,57 +2725,75 @@ haxeLanguageServer_features__$DiagnosticsManager_DiagnosticsMap.prototype = $ext
 });
 var haxeLanguageServer_features_DocumentSymbolsFeature = function(context) {
 	this.context = context;
-	var value = $bind(this,this.onDocumentSymbols);
-	context.protocol.requestHandlers.set("textDocument/documentSymbol",value);
+	var handler = $bind(this,this.onDocumentSymbols);
+	context.protocol.requestHandlers.set("textDocument/documentSymbol",handler);
+	var handler1 = $bind(this,this.onWorkspaceSymbols);
+	context.protocol.requestHandlers.set("workspace/symbol",handler1);
 };
 haxeLanguageServer_features_DocumentSymbolsFeature.__name__ = ["haxeLanguageServer","features","DocumentSymbolsFeature"];
 haxeLanguageServer_features_DocumentSymbolsFeature.prototype = {
-	onDocumentSymbols: function(params,token,resolve,reject) {
+	processSymbolsReply: function(data,reject) {
+		var data1;
+		try {
+			data1 = JSON.parse(data);
+		} catch( e ) {
+			haxe_CallStack.lastException = e;
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+			var this1 = { code : -32603, message : "Error parsing document symbol response: " + Std.string(e)};
+			reject(this1);
+			return [];
+		}
+		var result = [];
+		var _g = 0;
+		while(_g < data1.length) {
+			var file = data1[_g];
+			++_g;
+			var uri = haxeLanguageServer_Uri.fsPathToUri(haxeLanguageServer_HaxePosition.getProperFileNameCase(file.file));
+			var _g1 = 0;
+			var _g2 = file.symbols;
+			while(_g1 < _g2.length) {
+				var symbol = _g2[_g1];
+				++_g1;
+				if(symbol.range == null) {
+					var _this = this.context;
+					var params = { type : 1, message : "Unknown location for " + JSON.stringify(symbol)};
+					var message = { jsonrpc : "2.0", method : "window/showMessage"};
+					if(params != null) {
+						message.params = params;
+					}
+					_this.protocol.writeMessage(message);
+					continue;
+				}
+				result.push(this.moduleSymbolEntryToSymbolInformation(symbol,uri));
+			}
+		}
+		return result;
+	}
+	,makeRequest: function(args,doc,token,resolve,reject) {
 		var _gthis = this;
-		var doc = this.context.documents.documents.get(params.textDocument.uri);
-		var args = ["--display","" + doc.fsPath + "@0@module-symbols"];
-		var stdin = doc.saved?null:doc.content;
-		this.context.callDisplay(args,stdin,token,function(data) {
+		this.context.callDisplay(args,doc == null?null:doc.content,token,function(data) {
 			if(token.canceled) {
 				return;
 			}
-			var data1;
-			try {
-				data1 = JSON.parse(data);
-			} catch( e ) {
-				haxe_CallStack.lastException = e;
-				if (e instanceof js__$Boot_HaxeError) e = e.val;
-				var this1 = { code : -32603, message : "Error parsing document symbol response: " + Std.string(e)};
-				reject(this1);
-				return;
-			}
-			var result = [];
-			var _g = 0;
-			while(_g < data1.length) {
-				var entry = data1[_g];
-				++_g;
-				if(entry.range == null) {
-					var _this = _gthis.context.protocol;
-					var params1 = { type : 1, message : "Unknown location for " + JSON.stringify(entry)};
-					var message = { jsonrpc : "2.0", method : "window/showMessage"};
-					if(params1 != null) {
-						message.params = params1;
-					}
-					_this.writeMessage(message);
-					continue;
-				}
-				result.push(_gthis.moduleSymbolEntryToSymbolInformation(entry,doc));
-			}
+			var result = _gthis.processSymbolsReply(data,reject);
 			resolve(result);
 		},function(error) {
-			var this2 = { code : -32603, message : error};
-			reject(this2);
+			var this1 = { code : -32603, message : error};
+			reject(this1);
 		});
 	}
-	,moduleSymbolEntryToSymbolInformation: function(entry,document) {
-		var entry1 = entry.name;
-		var result;
+	,onDocumentSymbols: function(params,token,resolve,reject) {
+		var doc = this.context.documents.documents.get(params.textDocument.uri);
+		var args = ["--display","" + doc.fsPath + "@0@module-symbols"];
+		this.makeRequest(args,doc,token,resolve,reject);
+	}
+	,onWorkspaceSymbols: function(params,token,resolve,reject) {
+		var args = ["--display ?@0@workspace-symbols@" + params.query];
+		this.makeRequest(args,null,token,resolve,reject);
+	}
+	,moduleSymbolEntryToSymbolInformation: function(entry,uri) {
 		var _g = entry.kind;
+		var result;
 		switch(_g) {
 		case 1:case 5:
 			result = 5;
@@ -2492,31 +2823,18 @@ haxeLanguageServer_features_DocumentSymbolsFeature.prototype = {
 			result = 13;
 			break;
 		}
-		var document1 = document.uri;
-		var byteRange = entry.range;
-		var bytePosition = byteRange.start;
-		var line = document.lineAt(bytePosition.line);
-		var bytePosition1 = bytePosition.line;
-		var byteOffset = bytePosition.character;
-		var buf = new js_node_buffer_Buffer(line,"utf-8");
-		var result1 = { line : bytePosition1, character : buf.toString("utf-8",0,byteOffset).length};
-		var bytePosition2 = byteRange.end;
-		var line1 = document.lineAt(bytePosition2.line);
-		var bytePosition3 = bytePosition2.line;
-		var byteOffset1 = bytePosition2.character;
-		var buf1 = new js_node_buffer_Buffer(line1,"utf-8");
-		var result2 = { name : entry1, kind : result, location : { uri : document1, range : { start : result1, end : { line : bytePosition3, character : buf1.toString("utf-8",0,byteOffset1).length}}}};
+		var result1 = { name : entry.name, kind : result, location : { uri : uri, range : entry.range}};
 		if(entry.containerName != null) {
-			result2.containerName = entry.containerName;
+			result1.containerName = entry.containerName;
 		}
-		return result2;
+		return result1;
 	}
 	,__class__: haxeLanguageServer_features_DocumentSymbolsFeature
 };
 var haxeLanguageServer_features_FindReferencesFeature = function(context) {
 	this.context = context;
-	var value = $bind(this,this.onFindReferences);
-	context.protocol.requestHandlers.set("textDocument/references",value);
+	var handler = $bind(this,this.onFindReferences);
+	context.protocol.requestHandlers.set("textDocument/references",handler);
 };
 haxeLanguageServer_features_FindReferencesFeature.__name__ = ["haxeLanguageServer","features","FindReferencesFeature"];
 haxeLanguageServer_features_FindReferencesFeature.prototype = {
@@ -2525,8 +2843,7 @@ haxeLanguageServer_features_FindReferencesFeature.prototype = {
 		var bytePos = doc.offsetAt(params.position);
 		var bytePos1 = doc.offsetToByteOffset(bytePos);
 		var args = ["--display","" + doc.fsPath + "@" + bytePos1 + "@usage"];
-		var stdin = doc.saved?null:doc.content;
-		this.context.callDisplay(args,stdin,token,function(data) {
+		this.context.callDisplay(args,doc.content,token,function(data) {
 			if(token.canceled) {
 				return;
 			}
@@ -2567,7 +2884,7 @@ haxeLanguageServer_features_FindReferencesFeature.prototype = {
 				++_g1;
 				var location = haxeLanguageServer_HaxePosition.parse(pos,doc,haxePosCache);
 				if(location == null) {
-					haxe_Log.trace("Got invalid position: " + pos,{ fileName : "FindReferencesFeature.hx", lineNumber : 37, className : "haxeLanguageServer.features.FindReferencesFeature", methodName : "onFindReferences"});
+					haxe_Log.trace("Got invalid position: " + pos,{ fileName : "FindReferencesFeature.hx", lineNumber : 36, className : "haxeLanguageServer.features.FindReferencesFeature", methodName : "onFindReferences"});
 					continue;
 				}
 				results.push(location);
@@ -2583,8 +2900,8 @@ haxeLanguageServer_features_FindReferencesFeature.prototype = {
 };
 var haxeLanguageServer_features_GotoDefinitionFeature = function(context) {
 	this.context = context;
-	var value = $bind(this,this.onGotoDefinition);
-	context.protocol.requestHandlers.set("textDocument/definition",value);
+	var handler = $bind(this,this.onGotoDefinition);
+	context.protocol.requestHandlers.set("textDocument/definition",handler);
 };
 haxeLanguageServer_features_GotoDefinitionFeature.__name__ = ["haxeLanguageServer","features","GotoDefinitionFeature"];
 haxeLanguageServer_features_GotoDefinitionFeature.prototype = {
@@ -2593,8 +2910,7 @@ haxeLanguageServer_features_GotoDefinitionFeature.prototype = {
 		var bytePos = doc.offsetAt(params.position);
 		var bytePos1 = doc.offsetToByteOffset(bytePos);
 		var args = ["--display","" + doc.fsPath + "@" + bytePos1 + "@position"];
-		var stdin = doc.saved?null:doc.content;
-		this.context.callDisplay(args,stdin,token,function(data) {
+		this.context.callDisplay(args,doc.content,token,function(data) {
 			if(token.canceled) {
 				return;
 			}
@@ -2634,7 +2950,7 @@ haxeLanguageServer_features_GotoDefinitionFeature.prototype = {
 				++_g1;
 				var location = haxeLanguageServer_HaxePosition.parse(pos,doc,null);
 				if(location == null) {
-					haxe_Log.trace("Got invalid position: " + pos,{ fileName : "GotoDefinitionFeature.hx", lineNumber : 37, className : "haxeLanguageServer.features.GotoDefinitionFeature", methodName : "onGotoDefinition"});
+					haxe_Log.trace("Got invalid position: " + pos,{ fileName : "GotoDefinitionFeature.hx", lineNumber : 36, className : "haxeLanguageServer.features.GotoDefinitionFeature", methodName : "onGotoDefinition"});
 					continue;
 				}
 				results.push(location);
@@ -2650,8 +2966,8 @@ haxeLanguageServer_features_GotoDefinitionFeature.prototype = {
 };
 var haxeLanguageServer_features_HoverFeature = function(context) {
 	this.context = context;
-	var value = $bind(this,this.onHover);
-	context.protocol.requestHandlers.set("textDocument/hover",value);
+	var handler = $bind(this,this.onHover);
+	context.protocol.requestHandlers.set("textDocument/hover",handler);
 };
 haxeLanguageServer_features_HoverFeature.__name__ = ["haxeLanguageServer","features","HoverFeature"];
 haxeLanguageServer_features_HoverFeature.prototype = {
@@ -2660,8 +2976,7 @@ haxeLanguageServer_features_HoverFeature.prototype = {
 		var bytePos = doc.offsetAt(params.position);
 		var bytePos1 = doc.offsetToByteOffset(bytePos);
 		var args = ["--display","" + doc.fsPath + "@" + bytePos1 + "@type"];
-		var stdin = doc.saved?null:doc.content;
-		this.context.callDisplay(args,stdin,token,function(data) {
+		this.context.callDisplay(args,doc.content,token,function(data) {
 			if(token.canceled) {
 				return;
 			}
@@ -2685,258 +3000,457 @@ haxeLanguageServer_features_HoverFeature.prototype = {
 				throw new js__$Boot_HaxeError("Bad node type, unexpected " + _this.nodeType);
 			}
 			var s = StringTools.trim(_this.nodeValue);
-			if(s.length == 0) {
-				var this2 = { code : 0, message : "No type information"};
-				reject(this2);
-				return;
+			if(xml.nodeType != Xml.Element) {
+				throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + xml.nodeType);
 			}
-			var type;
-			var _g = haxeLanguageServer_TypeHelper.parseDisplayType(s);
-			switch(_g[1]) {
-			case 0:
-				var type1 = _g[2];
-				if(type1 == null) {
-					type = "unknown";
-				} else {
-					type = type1;
+			var _g = xml.nodeName;
+			if(_g == "metadata") {
+				if(s.length == 0) {
+					var this2 = { code : 0, message : "No metadata information"};
+					reject(this2);
+					return;
 				}
-				break;
-			case 1:
-				var ret = _g[3];
-				var args1 = _g[2];
-				type = "function" + haxeLanguageServer_TypeHelper.printFunctionSignature(args1,ret);
-				break;
+				resolve({ contents : s});
+			} else {
+				if(s.length == 0) {
+					var this3 = { code : 0, message : "No type information"};
+					reject(this3);
+					return;
+				}
+				var type;
+				var _g1 = haxeLanguageServer_helper_TypeHelper.parseDisplayType(s);
+				switch(_g1[1]) {
+				case 0:
+					var type1 = _g1[2];
+					if(type1 == null) {
+						type = "unknown";
+					} else {
+						type = type1;
+					}
+					break;
+				case 1:
+					var ret = _g1[3];
+					var args1 = _g1[2];
+					type = haxeLanguageServer_helper_TypeHelper.printFunctionDeclaration(args1,ret,{ argumentTypeHints : true, returnTypeHint : "always"});
+					break;
+				}
+				var d = xml.get("d");
+				if(d == null) {
+					d = "";
+				} else {
+					d = haxeLanguageServer_helper_DocHelper.markdownFormat(d);
+				}
+				var result = { contents : "```haxe\n" + type + "\n```\n" + d};
+				var p = haxeLanguageServer_HaxePosition.parse(xml.get("p"),doc,null);
+				if(p != null) {
+					result.range = p.range;
+				}
+				resolve(result);
 			}
-			var result = { contents : { language : "haxe", value : type}};
-			var p = haxeLanguageServer_HaxePosition.parse(xml.get("p"),doc,null);
-			if(p != null) {
-				result.range = p.range;
-			}
-			resolve(result);
 		},function(error) {
-			var this3 = { code : -32603, message : error};
-			reject(this3);
+			var this4 = { code : -32603, message : error};
+			reject(this4);
 		});
 	}
 	,__class__: haxeLanguageServer_features_HoverFeature
 };
 var haxeLanguageServer_features_SignatureHelpFeature = function(context) {
 	this.context = context;
-	var value = $bind(this,this.onSignatureHelp);
-	context.protocol.requestHandlers.set("textDocument/signatureHelp",value);
+	var handler = $bind(this,this.onSignatureHelp);
+	context.protocol.requestHandlers.set("textDocument/signatureHelp",handler);
 };
 haxeLanguageServer_features_SignatureHelpFeature.__name__ = ["haxeLanguageServer","features","SignatureHelpFeature"];
-haxeLanguageServer_features_SignatureHelpFeature.calculateSignaturePosition = function(text,index) {
-	text = haxeLanguageServer_features_SignatureHelpFeature.prepareText(text.substring(0,index));
-	var parens = 0;
-	var braces = 0;
-	var brackets = 0;
-	var argIndex = 0;
-	var i = index - 1;
-	while(i > 0) {
-		var _g = text.charCodeAt(i);
-		switch(_g) {
-		case 34:case 39:
-			while(i >= 0) {
-				--i;
-				if(text.charCodeAt(i) == _g) {
-					break;
-				}
-			}
-			break;
-		case 40:
-			if(parens > 0) {
-				--parens;
-			} else {
-				var textBefore = text.substring(0,i);
-				if(haxeLanguageServer_features_SignatureHelpFeature.reEndsWithCall.match(textBefore)) {
-					if(haxeLanguageServer_features_SignatureHelpFeature.reEndsWithFunctionDef.match(textBefore)) {
-						return null;
-					} else {
-						return { pos : i + 1, arg : argIndex};
-					}
-				}
-				argIndex = 0;
-			}
-			break;
-		case 41:
-			++parens;
-			break;
-		case 44:
-			if(parens == 0 && braces == 0 && brackets == 0) {
-				++argIndex;
-			}
-			break;
-		case 91:
-			if(brackets > 0) {
-				--brackets;
-			} else {
-				argIndex = 0;
-			}
-			break;
-		case 93:
-			++brackets;
-			break;
-		case 123:
-			if(braces > 0) {
-				--braces;
-			} else {
-				argIndex = 0;
-			}
-			break;
-		case 125:
-			++braces;
-			break;
-		}
-		--i;
-	}
-	return null;
-};
-haxeLanguageServer_features_SignatureHelpFeature.prepareText = function(input) {
-	var output = "";
-	var inLineComment = false;
-	var inBlockComment = false;
-	var i = 0;
-	var len = input.length;
-	while(i < len) if(inLineComment) {
-		if(input.charCodeAt(i) == 10) {
-			inLineComment = false;
-			output += "\n";
-		} else {
-			output += " ";
-		}
-		++i;
-	} else if(inBlockComment) {
-		if(HxOverrides.substr(input,i,2) == "*/") {
-			inBlockComment = false;
-			output += "  ";
-			i += 2;
-		} else {
-			if(input.charCodeAt(i) == 10) {
-				output += "\n";
-			} else {
-				output += " ";
-			}
-			++i;
-		}
-	} else if(HxOverrides.substr(input,i,2) == "//") {
-		inLineComment = true;
-		output += "  ";
-		i += 2;
-	} else if(HxOverrides.substr(input,i,2) == "/*") {
-		inBlockComment = true;
-		output += "  ";
-		i += 2;
-	} else if(input.charCodeAt(i) == 39 || input.charCodeAt(i) == 34) {
-		if(haxeLanguageServer_features_SignatureHelpFeature.reStartsWithString.match(input.substring(i))) {
-			output += "\"";
-			var stringLength = haxeLanguageServer_features_SignatureHelpFeature.reStartsWithString.matched(0).length;
-			var _g1 = 0;
-			var _g = stringLength - 2;
-			while(_g1 < _g) {
-				++_g1;
-				output += " ";
-			}
-			output += "\"";
-			i += stringLength;
-		} else {
-			while(i < len) {
-				output += " ";
-				++i;
-			}
-		}
-	} else if(input.charCodeAt(i) == 126) {
-		if(haxeLanguageServer_features_SignatureHelpFeature.reStartsWithRegex.match(input.substring(i))) {
-			output += "~/";
-			var regexLength = haxeLanguageServer_features_SignatureHelpFeature.reStartsWithRegex.matched(0).length;
-			var _g11 = 1;
-			var _g2 = regexLength - 2;
-			while(_g11 < _g2) {
-				++_g11;
-				output += " ";
-			}
-			output += "/";
-			i += regexLength;
-		} else {
-			while(i < len) {
-				output += " ";
-				++i;
-			}
-		}
-	} else {
-		output += input.charAt(i);
-		++i;
-	}
-	return output.toString();
-};
 haxeLanguageServer_features_SignatureHelpFeature.prototype = {
 	onSignatureHelp: function(params,token,resolve,reject) {
+		var _gthis = this;
 		var doc = this.context.documents.documents.get(params.textDocument.uri);
-		var r = haxeLanguageServer_features_SignatureHelpFeature.calculateSignaturePosition(doc.content,doc.offsetAt(params.position));
-		if(r == null) {
-			var this1 = { code : 0, message : "Invalid signature position " + Std.string(params.position)};
-			reject(this1);
-			return;
-		}
-		var bytePos = doc.offsetToByteOffset(r.pos);
-		var args = ["--display","" + doc.fsPath + "@" + bytePos];
-		var stdin = doc.saved?null:doc.content;
-		this.context.callDisplay(args,stdin,token,function(data) {
+		var bytePos = doc.offsetToByteOffset(doc.offsetAt(params.position));
+		var args = ["--display","" + doc.fsPath + "@" + bytePos + "@signature"];
+		this.context.callDisplay(args,doc.content,token,function(data) {
 			if(token.canceled) {
 				return;
 			}
-			data = "<x>" + data + "</x>";
-			var xml;
-			try {
-				xml = Xml.parse(data).firstElement();
-			} catch( _ ) {
-				haxe_CallStack.lastException = _;
-				xml = null;
-			}
-			if(xml == null) {
-				var this2 = { code : -32603, message : "Invalid xml data: " + data};
-				reject(this2);
-				return;
-			}
-			var signatures = [];
-			var el = xml.elements();
-			while(el.hasNext()) {
-				var el1 = el.next();
-				if(el1.nodeType != Xml.Document && el1.nodeType != Xml.Element) {
-					throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + el1.nodeType);
-				}
-				var _this = el1.children[0];
-				if(_this.nodeType == Xml.Document || _this.nodeType == Xml.Element) {
-					throw new js__$Boot_HaxeError("Bad node type, unexpected " + _this.nodeType);
-				}
-				var text = StringTools.trim(_this.nodeValue);
-				var signature;
-				var _g = haxeLanguageServer_TypeHelper.parseDisplayType(text);
-				if(_g[1] == 1) {
-					var ret = _g[3];
-					var args1 = _g[2];
-					var signature1 = haxeLanguageServer_TypeHelper.printFunctionSignature(args1,ret);
-					var _g1 = [];
-					var _g11 = 0;
-					while(_g11 < args1.length) {
-						var arg = args1[_g11];
-						++_g11;
-						_g1.push({ label : haxeLanguageServer_TypeHelper.printFunctionArgument(arg)});
-					}
-					signature = { label : signature1, parameters : _g1};
-				} else {
-					signature = { label : text};
-				}
-				signatures.push(signature);
-			}
-			resolve({ signatures : signatures, activeSignature : 0, activeParameter : r.arg});
+			var help = JSON.parse(data);
+			resolve(help);
+			_gthis.currentSignature = { help : help, params : params};
 		},function(error) {
-			var this3 = { code : -32603, message : error};
-			reject(this3);
+			var this1 = { code : -32603, message : error};
+			reject(this1);
 		});
 	}
 	,__class__: haxeLanguageServer_features_SignatureHelpFeature
 };
+var haxeLanguageServer_helper_DocHelper = function() { };
+haxeLanguageServer_helper_DocHelper.__name__ = ["haxeLanguageServer","helper","DocHelper"];
+haxeLanguageServer_helper_DocHelper.trim = function(doc) {
+	if(doc == null) {
+		return "";
+	}
+	while(doc.charAt(0) == "*") doc = HxOverrides.substr(doc,1,null);
+	while(doc.charAt(doc.length - 1) == "*") doc = HxOverrides.substr(doc,0,doc.length - 1);
+	doc = StringTools.trim(doc);
+	var ereg = new EReg("^([ \t]+(\\* )?)[^\\s\\*]","m");
+	var matched = ereg.match(doc);
+	if(matched) {
+		var string = ereg.matched(1);
+		string = string.split("* ").join("\\* ?");
+		var indent_r = new RegExp("^" + string,"gm".split("u").join(""));
+		doc = doc.replace(indent_r,"");
+	}
+	if(doc.charAt(0) == "*") {
+		doc = StringTools.ltrim(HxOverrides.substr(doc,1,null));
+	}
+	return doc;
+};
+haxeLanguageServer_helper_DocHelper.markdownFormat = function(doc) {
+	var tableLine = function(a,b) {
+		return "| " + a + " | " + b + " |\n";
+	};
+	var tableHeader = function(a1,b1) {
+		return "\n" + tableLine(a1,b1) + tableLine("------","------");
+	};
+	var replaceNewlines = function(s,by) {
+		return StringTools.replace(StringTools.replace(s,"\n",by),"\r",by);
+	};
+	var mapDocTags = function(tags) {
+		return tags.map(function(p) {
+			var desc = replaceNewlines(p.doc," ");
+			return tableLine("`" + p.value + "`",desc);
+		}).join("");
+	};
+	doc = haxeLanguageServer_helper_DocHelper.trim(doc);
+	var docInfos = haxeLanguageServer_helper_JavadocHelper.parse(doc);
+	var result = docInfos.doc;
+	var hasParams = docInfos.params.length > 0;
+	var hasReturn = docInfos.returns != null;
+	if(docInfos.deprecated != null) {
+		result += "\n**Deprecated:** " + docInfos.deprecated.doc + "\n";
+	}
+	if(hasParams || hasReturn) {
+		result += tableHeader("Argument","Description");
+	}
+	if(hasParams) {
+		result += mapDocTags(docInfos.params);
+	}
+	if(hasReturn) {
+		var result1 = replaceNewlines(docInfos.returns.doc," ");
+		result += tableLine("`return`",result1);
+	}
+	if(docInfos["throws"].length > 0) {
+		result += tableHeader("Exception","Description") + mapDocTags(docInfos["throws"]);
+	}
+	if(docInfos.sees.length > 0) {
+		result += "\nSee also:\n" + docInfos.sees.map(function(p1) {
+			return "* " + p1.doc;
+		}).join("\n") + "\n";
+	}
+	if(docInfos.since != null) {
+		result += "\n_Available since " + docInfos.since.doc + "_";
+	}
+	return result;
+};
+haxeLanguageServer_helper_DocHelper.extractText = function(doc) {
+	if(doc == null) {
+		return null;
+	}
+	return StringTools.trim(doc).split("\n").map(function(line) {
+		line = StringTools.trim(line);
+		if(StringTools.startsWith(line,"*")) {
+			line = HxOverrides.substr(line,1,null);
+		}
+		return line;
+	}).join("\n");
+};
+var haxeLanguageServer_helper_JavadocHelper = function() { };
+haxeLanguageServer_helper_JavadocHelper.__name__ = ["haxeLanguageServer","helper","JavadocHelper"];
+haxeLanguageServer_helper_JavadocHelper.parse = function(doc) {
+	var tags = [];
+	var ereg = new EReg("^@(param|default|exception|throws|deprecated|return|returns|since|see)\\s+([^@]+)","gm");
+	doc = ereg.map(doc,function(e) {
+		var name = e.matched(1);
+		var doc1 = e.matched(2);
+		var value = null;
+		switch(name) {
+		case "exception":case "param":case "throws":
+			var ereg1 = new EReg("([^\\s]+)\\s+([\\s\\S]*)","g");
+			if(ereg1.match(doc1)) {
+				value = ereg1.matched(1);
+				doc1 = ereg1.matched(2);
+			}
+			break;
+		default:
+		}
+		doc1 = haxeLanguageServer_helper_JavadocHelper.trimDoc(doc1);
+		tags.push({ name : name, doc : doc1, value : value});
+		return "";
+	});
+	var infos = { doc : doc, 'throws' : [], params : [], sees : [], tags : tags};
+	var _g = 0;
+	while(_g < tags.length) {
+		var tag = tags[_g];
+		++_g;
+		var _g1 = tag.name;
+		switch(_g1) {
+		case "default":
+			infos.defaultValue = tag;
+			break;
+		case "deprecated":
+			infos.deprecated = tag;
+			break;
+		case "param":
+			infos.params.push(tag);
+			break;
+		case "return":case "returns":
+			infos.returns = tag;
+			break;
+		case "see":
+			infos.sees.push(tag);
+			break;
+		case "since":
+			infos.since = tag;
+			break;
+		case "exception":case "throws":
+			infos["throws"].push(tag);
+			break;
+		default:
+		}
+	}
+	return infos;
+};
+haxeLanguageServer_helper_JavadocHelper.trimDoc = function(doc) {
+	var ereg = new EReg("^\\s+","m");
+	if(ereg.match(doc)) {
+		var space_r = new RegExp("^" + ereg.matched(0),"mg".split("u").join(""));
+		doc = doc.replace(space_r,"");
+	}
+	return doc;
+};
+var haxeLanguageServer_helper_PathHelper = function() { };
+haxeLanguageServer_helper_PathHelper.__name__ = ["haxeLanguageServer","helper","PathHelper"];
+haxeLanguageServer_helper_PathHelper.matches = function(path,pathFilter) {
+	return new EReg(pathFilter,"").match(haxeLanguageServer_helper_PathHelper.normalize(path));
+};
+haxeLanguageServer_helper_PathHelper.preparePathFilter = function(diagnosticsPathFilter,haxelibPath,workspaceRoot) {
+	var path = diagnosticsPathFilter;
+	path = StringTools.replace(diagnosticsPathFilter,"${workspaceRoot}",workspaceRoot);
+	if(haxelibPath != null) {
+		path = StringTools.replace(path,"${haxelibPath}",haxelibPath);
+	} else {
+		haxe_Log.trace("Could not retrieve haxelib repo path for diagnostics filtering",{ fileName : "PathHelper.hx", lineNumber : 17, className : "haxeLanguageServer.helper.PathHelper", methodName : "preparePathFilter"});
+	}
+	return haxeLanguageServer_helper_PathHelper.normalize(path);
+};
+haxeLanguageServer_helper_PathHelper.normalize = function(path) {
+	path = haxe_io_Path.normalize(path);
+	if(haxeLanguageServer_helper_PathHelper.reUpperCaseDriveLetter.match(path)) {
+		var letter = HxOverrides.substr(path,0,1).toLowerCase();
+		path = letter + path.substring(1);
+	}
+	return path;
+};
+var haxeLanguageServer_helper_PositionHelper = function() { };
+haxeLanguageServer_helper_PositionHelper.__name__ = ["haxeLanguageServer","helper","PositionHelper"];
+haxeLanguageServer_helper_PositionHelper.isEqual = function(pos,other) {
+	if(pos.line == other.line) {
+		return pos.character == other.character;
+	} else {
+		return false;
+	}
+};
+var haxeLanguageServer_helper_RangeHelper = function() { };
+haxeLanguageServer_helper_RangeHelper.__name__ = ["haxeLanguageServer","helper","RangeHelper"];
+haxeLanguageServer_helper_RangeHelper.isEmpty = function(range) {
+	return haxeLanguageServer_helper_PositionHelper.isEqual(range.end,range.start);
+};
+var haxeLanguageServer_helper_TypeHelper = function() { };
+haxeLanguageServer_helper_TypeHelper.__name__ = ["haxeLanguageServer","helper","TypeHelper"];
+haxeLanguageServer_helper_TypeHelper.getCloseChar = function(c) {
+	switch(c) {
+	case "(":
+		return ")";
+	case "<":
+		return ">";
+	case "{":
+		return "}";
+	default:
+		throw new js__$Boot_HaxeError("unknown opening char " + c);
+	}
+};
+haxeLanguageServer_helper_TypeHelper.prepareSignature = function(type) {
+	var _g = haxeLanguageServer_helper_TypeHelper.parseDisplayType(type);
+	switch(_g[1]) {
+	case 0:
+		var type1 = _g[2];
+		if(type1 == null) {
+			return "";
+		} else {
+			return type1;
+		}
+		break;
+	case 1:
+		var ret = _g[3];
+		var args = _g[2];
+		return haxeLanguageServer_helper_TypeHelper.printFunctionSignature(args,ret,{ argumentTypeHints : true, returnTypeHint : "always"});
+	}
+};
+haxeLanguageServer_helper_TypeHelper.printFunctionDeclaration = function(args,ret,formatting) {
+	return "function" + haxeLanguageServer_helper_TypeHelper.printFunctionSignature(args,ret,formatting);
+};
+haxeLanguageServer_helper_TypeHelper.printFunctionSignature = function(args,ret,formatting) {
+	var result_b = "";
+	result_b = "(";
+	var first = true;
+	var _g = 0;
+	while(_g < args.length) {
+		var arg = args[_g];
+		++_g;
+		if(first) {
+			first = false;
+		} else {
+			result_b += ", ";
+		}
+		result_b += Std.string(haxeLanguageServer_helper_TypeHelper.printSignatureArgument(arg,formatting.argumentTypeHints));
+	}
+	result_b += ")";
+	if(haxeLanguageServer_helper_TypeHelper.shouldPrintReturnType(ret,formatting.returnTypeHint)) {
+		result_b += ":";
+		result_b += ret == null?"null":"" + ret;
+	}
+	return result_b;
+};
+haxeLanguageServer_helper_TypeHelper.shouldPrintReturnType = function(ret,option) {
+	if(ret == null) {
+		return false;
+	}
+	switch(option) {
+	case "always":
+		return true;
+	case "never":
+		return false;
+	case "non-void":
+		return ret != "Void";
+	}
+};
+haxeLanguageServer_helper_TypeHelper.printSignatureArgument = function(arg,typeHints) {
+	var result = arg.name;
+	if(arg.opt) {
+		result = "?" + result;
+	}
+	if(arg.type != null && typeHints) {
+		result += ":";
+		result += arg.type;
+	}
+	return result;
+};
+haxeLanguageServer_helper_TypeHelper.parseFunctionArgumentType = function(argument) {
+	if(StringTools.startsWith(argument,"?")) {
+		argument = HxOverrides.substr(argument,1,null);
+	}
+	var colonIndex = argument.indexOf(":");
+	var argumentType = HxOverrides.substr(argument,colonIndex + 1,null);
+	while(StringTools.startsWith(argumentType,"Null<") && StringTools.endsWith(argumentType,">")) argumentType = argumentType.substring("Null<".length,argumentType.length - 1);
+	return haxeLanguageServer_helper_TypeHelper.parseDisplayType(argumentType);
+};
+haxeLanguageServer_helper_TypeHelper.parseDisplayType = function(type) {
+	type = StringTools.replace(type," -> ","%");
+	var toplevel_b = "";
+	var groups = new haxe_ds_IntMap();
+	var closeStack = new haxe_ds_GenericStack();
+	var depth = 0;
+	var groupId = 0;
+	var _g1 = 0;
+	var _g = type.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var $char = type.charAt(i);
+		if($char == "(" || $char == "<" || $char == "{") {
+			++depth;
+			closeStack.head = new haxe_ds_GenericCell(haxeLanguageServer_helper_TypeHelper.getCloseChar($char),closeStack.head);
+			if(depth == 1) {
+				++groupId;
+				var v = new StringBuf();
+				groups.h[groupId] = v;
+				toplevel_b += $char == null?"null":"" + $char;
+				toplevel_b += Std.string("$" + groupId);
+				continue;
+			}
+		} else if($char == (closeStack.head == null?null:closeStack.head.elt)) {
+			var k = closeStack.head;
+			if(k != null) {
+				closeStack.head = k.next;
+			}
+			--depth;
+		}
+		if(depth == 0) {
+			toplevel_b += $char == null?"null":"" + $char;
+		} else {
+			groups.h[groupId].b += $char == null?"null":"" + $char;
+		}
+	}
+	var processType = function(type1) {
+		type1 = haxeLanguageServer_helper_TypeHelper.groupRegex.map(type1,function(r) {
+			var groupId1 = Std.parseInt(r.matched(1));
+			return StringTools.replace(groups.h[groupId1].b,"%","->");
+		});
+		if(haxeLanguageServer_helper_TypeHelper.parenRegex.match(type1)) {
+			type1 = haxeLanguageServer_helper_TypeHelper.parenRegex.matched(1);
+		}
+		return type1;
+	};
+	var parts = toplevel_b.split("%");
+	var returnType = processType(parts.pop());
+	if(haxeLanguageServer_helper_TypeHelper.monomorphRegex.match(returnType)) {
+		returnType = null;
+	}
+	if(parts.length > 0) {
+		var args = [];
+		var _g11 = 0;
+		var _g2 = parts.length;
+		while(_g11 < _g2) {
+			var i1 = _g11++;
+			var part = parts[i1];
+			var name;
+			var type2;
+			var opt = false;
+			if(haxeLanguageServer_helper_TypeHelper.argNameRegex.match(part)) {
+				name = haxeLanguageServer_helper_TypeHelper.argNameRegex.matched(1);
+				if(HxOverrides.cca(name,0) == 63) {
+					name = name.substring(1);
+					opt = true;
+				}
+				type2 = haxeLanguageServer_helper_TypeHelper.argNameRegex.matchedRight();
+			} else {
+				name = String.fromCharCode(97 + i1);
+				type2 = part;
+				if(HxOverrides.cca(part,0) == 63) {
+					type2 = part.substring(1);
+					opt = true;
+				}
+			}
+			if(opt && haxeLanguageServer_helper_TypeHelper.nullRegex.match(type2)) {
+				type2 = haxeLanguageServer_helper_TypeHelper.nullRegex.matched(1);
+			}
+			type2 = processType(type2);
+			if(type2 == "Void") {
+				continue;
+			}
+			var arg = { name : name};
+			if(!haxeLanguageServer_helper_TypeHelper.monomorphRegex.match(type2)) {
+				arg.type = type2;
+			}
+			if(opt) {
+				arg.opt = true;
+			}
+			args.push(arg);
+		}
+		return haxeLanguageServer_helper_DisplayType.DTFunction(args,returnType);
+	} else {
+		return haxeLanguageServer_helper_DisplayType.DTValue(returnType);
+	}
+};
+var haxeLanguageServer_helper_DisplayType = { __ename__ : true, __constructs__ : ["DTValue","DTFunction"] };
+haxeLanguageServer_helper_DisplayType.DTValue = function(type) { var $x = ["DTValue",0,type]; $x.__enum__ = haxeLanguageServer_helper_DisplayType; $x.toString = $estr; return $x; };
+haxeLanguageServer_helper_DisplayType.DTFunction = function(args,ret) { var $x = ["DTFunction",1,args,ret]; $x.__enum__ = haxeLanguageServer_helper_DisplayType; $x.toString = $estr; return $x; };
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
 	this.val = val;
@@ -3088,6 +3602,80 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
+js_Boot.__interfLoop = function(cc,cl) {
+	if(cc == null) {
+		return false;
+	}
+	if(cc == cl) {
+		return true;
+	}
+	var intf = cc.__interfaces__;
+	if(intf != null) {
+		var _g1 = 0;
+		var _g = intf.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var i1 = intf[i];
+			if(i1 == cl || js_Boot.__interfLoop(i1,cl)) {
+				return true;
+			}
+		}
+	}
+	return js_Boot.__interfLoop(cc.__super__,cl);
+};
+js_Boot.__instanceof = function(o,cl) {
+	if(cl == null) {
+		return false;
+	}
+	switch(cl) {
+	case Array:
+		if((o instanceof Array)) {
+			return o.__enum__ == null;
+		} else {
+			return false;
+		}
+		break;
+	case Bool:
+		return typeof(o) == "boolean";
+	case Dynamic:
+		return true;
+	case Float:
+		return typeof(o) == "number";
+	case Int:
+		if(typeof(o) == "number") {
+			return (o|0) === o;
+		} else {
+			return false;
+		}
+		break;
+	case String:
+		return typeof(o) == "string";
+	default:
+		if(o != null) {
+			if(typeof(cl) == "function") {
+				if(o instanceof cl) {
+					return true;
+				}
+				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) {
+					return true;
+				}
+			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
+				if(o instanceof cl) {
+					return true;
+				}
+			}
+		} else {
+			return false;
+		}
+		if(cl == Class?o.__name__ != null:false) {
+			return true;
+		}
+		if(cl == Enum?o.__ename__ != null:false) {
+			return true;
+		}
+		return o.__enum__ == cl;
+	}
+};
 js_Boot.__nativeClassName = function(o) {
 	var name = js_Boot.__toStr.call(o).slice(8,-1);
 	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") {
@@ -3095,11 +3683,15 @@ js_Boot.__nativeClassName = function(o) {
 	}
 	return name;
 };
+js_Boot.__isNativeObj = function(o) {
+	return js_Boot.__nativeClassName(o) != null;
+};
 js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
 var js_node_ChildProcess = require("child_process");
 var js_node_Fs = require("fs");
+var js_node_Net = require("net");
 var js_node_Path = require("path");
 var jsonrpc__$CancellationToken_CancellationTokenImpl = function() {
 	this.canceled = false;
@@ -3205,14 +3797,14 @@ jsonrpc_Protocol.prototype = {
 			} catch( e ) {
 				haxe_CallStack.lastException = e;
 				if (e instanceof js__$Boot_HaxeError) e = e.val;
-				this.logError(jsonrpc_ErrorUtils.errorToString(e,"Exception while processing notification " + notification.method + ": "));
+				$bind(this,this.logError)(jsonrpc_ErrorUtils.errorToString(e,"Exception while processing notification " + notification.method + ": "));
 			}
 		}
 	}
 	,handleResponse: function(response) {
 		var v = response.id;
 		if(!(typeof(v) == "number" && ((v | 0) === v))) {
-			this.logError("Got response with non-integer id:\n" + JSON.stringify(response,null,"    "));
+			$bind(this,this.logError)("Got response with non-integer id:\n" + JSON.stringify(response,null,"    "));
 			return;
 		}
 		var handler = this.responseCallbacks.h[response.id];
@@ -3227,7 +3819,7 @@ jsonrpc_Protocol.prototype = {
 			} catch( e ) {
 				haxe_CallStack.lastException = e;
 				if (e instanceof js__$Boot_HaxeError) e = e.val;
-				this.logError(jsonrpc_ErrorUtils.errorToString(e,"Exception while handing response " + handler.method + ": "));
+				$bind(this,this.logError)(jsonrpc_ErrorUtils.errorToString(e,"Exception while handing response " + handler.method + ": "));
 			}
 		}
 	}
@@ -3376,27 +3968,19 @@ jsonrpc_node_MessageWriter.prototype = {
 	}
 	,__class__: jsonrpc_node_MessageWriter
 };
-var vscodeProtocol_Protocol = function(writeMessage) {
-	jsonrpc_Protocol.call(this,writeMessage);
-};
-vscodeProtocol_Protocol.__name__ = ["vscodeProtocol","Protocol"];
-vscodeProtocol_Protocol.__super__ = jsonrpc_Protocol;
-vscodeProtocol_Protocol.prototype = $extend(jsonrpc_Protocol.prototype,{
-	logError: function(message) {
-		var params = { type : 2, message : message};
-		var message1 = { jsonrpc : "2.0", method : "window/logMessage"};
-		if(params != null) {
-			message1.params = params;
-		}
-		this.writeMessage(message1);
-	}
-	,__class__: vscodeProtocol_Protocol
-});
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 String.prototype.__class__ = String;
 String.__name__ = ["String"];
 Array.__name__ = ["Array"];
+var Int = { __name__ : ["Int"]};
+var Dynamic = { __name__ : ["Dynamic"]};
+var Float = Number;
+Float.__name__ = ["Float"];
+var Bool = Boolean;
+Bool.__ename__ = ["Bool"];
+var Class = { __name__ : ["Class"]};
+var Enum = { };
 var __map_reserved = {}
 Xml.Element = 0;
 Xml.PCData = 1;
@@ -3459,19 +4043,18 @@ haxeLanguageServer_HaxePosition.positionRe = new EReg("^(.+):(\\d+): (?:lines (\
 haxeLanguageServer_HaxePosition.isWindows = Sys.systemName() == "Windows";
 haxeLanguageServer__$HaxeServer_DisplayRequest.stdinSepBuf = new js_node_buffer_Buffer([1]);
 haxeLanguageServer_HaxeServer.reVersion = new EReg("^(\\d+)\\.(\\d+)\\.(\\d+)(?:\\s.*)?$","");
-haxeLanguageServer_TypeHelper.groupRegex = new EReg("\\$(\\d)+","g");
-haxeLanguageServer_TypeHelper.parenRegex = new EReg("^\\((.*)\\)$","");
-haxeLanguageServer_TypeHelper.argNameRegex = new EReg("^(\\??\\w+) : ","");
-haxeLanguageServer_TypeHelper.monomorphRegex = new EReg("^Unknown<\\d+>$","");
-haxeLanguageServer_TypeHelper.nullRegex = new EReg("^Null<(\\$\\d+)>$","");
+haxeLanguageServer_HaxeServer.reTrailingNewline = new EReg("\r?\n$","");
 haxeLanguageServer_Uri.driveLetterPathRe = new EReg("^/[a-zA-Z]:","");
 haxeLanguageServer_Uri.upperCaseDriveRe = new EReg("^(/)?([A-Z]:)","");
 haxeLanguageServer_Uri.uriRe = new EReg("^(([^:/?#]+?):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?","");
-haxeLanguageServer_features_CompletionFeature.reFieldPart = new EReg("\\.(\\w*)$","");
-haxeLanguageServer_features_SignatureHelpFeature.reEndsWithCall = new EReg("[\\w\\]\\)]\\s*$","");
-haxeLanguageServer_features_SignatureHelpFeature.reEndsWithFunctionDef = new EReg("\\Wfunction(?:\\s+\\w+)?(?:<[\\w<>, ]+>)?\\s*$","");
-haxeLanguageServer_features_SignatureHelpFeature.reStartsWithString = new EReg("^\"(?:[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"|'(?:[^'\\\\]*(?:\\\\.[^'\\\\]*)*)'","");
-haxeLanguageServer_features_SignatureHelpFeature.reStartsWithRegex = new EReg("^~/(?:[^/\\\\]*(?:\\\\.[^/\\\\]*)*)/","");
+haxeLanguageServer_features_CompletionFeature.reFieldPart = new EReg("(\\.|@(:?))(\\w*)$","");
+haxeLanguageServer_features_CompletionFeature.reStructPart = new EReg("[(,]\\s*{(\\s*(\\s*\\w+\\s*:\\s*[\"'\\w()\\.]+\\s*,\\s*)*\\w*)$","");
+haxeLanguageServer_helper_PathHelper.reUpperCaseDriveLetter = new EReg("^([A-Z]:)","");
+haxeLanguageServer_helper_TypeHelper.groupRegex = new EReg("\\$(\\d+)","g");
+haxeLanguageServer_helper_TypeHelper.parenRegex = new EReg("^\\((.*)\\)$","");
+haxeLanguageServer_helper_TypeHelper.argNameRegex = new EReg("^(\\??\\w+) : ","");
+haxeLanguageServer_helper_TypeHelper.monomorphRegex = new EReg("^Unknown<\\d+>$","");
+haxeLanguageServer_helper_TypeHelper.nullRegex = new EReg("^Null<(\\$\\d+)>$","");
 js_Boot.__toStr = ({ }).toString;
 jsonrpc_node__$MessageReader_MessageBuffer.CR = new js_node_buffer_Buffer("\r","ascii")[0];
 jsonrpc_node__$MessageReader_MessageBuffer.LF = new js_node_buffer_Buffer("\n","ascii")[0];

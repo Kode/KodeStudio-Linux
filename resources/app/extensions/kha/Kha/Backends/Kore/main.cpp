@@ -156,6 +156,10 @@ namespace {
 		SystemImpl_obj::mouseWheel(windowId, delta);
 	}
 
+	void mouseLeave(int windowId) {
+		SystemImpl_obj::mouseLeave(windowId);
+	}
+
 	void accelerometerChanged(float x, float y, float z) {
 		Sensor_obj::_changed(0, x, y, z);
 	}
@@ -325,7 +329,7 @@ void init_kore_impl(bool ex, const char* name, int width, int height, int x, int
 		height = Kore::min(height, Kore::System::desktopHeight());
 
 		Kore::WindowOptions options;
-		options.title = "";
+		options.title = name;
 		options.width = width;
 		options.height = height;
 		options.x = x;
@@ -362,6 +366,7 @@ void init_kore_impl(bool ex, const char* name, int width, int height, int x, int
 	Kore::Mouse::the()->Release = mouseUp;
 	Kore::Mouse::the()->Move = mouseMove;
 	Kore::Mouse::the()->Scroll = mouseWheel;
+	Kore::Mouse::the()->Leave = mouseLeave;
 	Kore::Gamepad::get(0)->Axis = gamepad1Axis;
 	Kore::Gamepad::get(0)->Button = gamepad1Button;
 	Kore::Gamepad::get(1)->Axis = gamepad2Axis;

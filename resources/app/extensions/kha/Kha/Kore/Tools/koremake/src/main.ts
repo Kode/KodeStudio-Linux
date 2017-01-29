@@ -114,7 +114,7 @@ function shaderLang(platform: string): string {
 	}
 }
 
-async function compileShader(projectDir: string, type: string, from: string, to: string, temp: string, platform: string) {
+async function compileShader(projectDir: string, type: string, from: string, to: string, temp: string, platform: string, builddir: string) {
 	return new Promise<void>((resolve, reject) => {
 		let compilerPath = '';
 		
@@ -136,6 +136,20 @@ async function compileShader(projectDir: string, type: string, from: string, to:
 		}
 
 		if (compilerPath !== '') {
+			if (type === 'metal') {
+				fs.ensureDirSync(path.join(builddir, 'Sources'));
+				let fileinfo = path.parse(from);
+				let funcname = fileinfo.name;
+				funcname = funcname.replace(/-/g, '_');
+				funcname = funcname.replace(/\./g, '_');
+				funcname += '_main';
+
+				fs.writeFileSync(to, funcname, 'utf8');
+
+				to = path.join(builddir, 'Sources', fileinfo.name + '.' + type);
+				temp = to + '.temp';
+			}
+
 			let params = [type, from, to, temp, platform];
 			if (debug) params.push('--debug');
 			let compiler = child_process.spawn(compilerPath, params);
@@ -200,6 +214,9 @@ async function exportKoremakeProject(from: string, to: string, platform: string,
 	let project: Project;
 	try {
 		project = await Project.create(from, platform);
+		if (shaderLang(platform) === 'metal') {
+			project.addFile('build/Sources/*', {});
+		}
 		project.searchFiles(undefined);
 		project.flatten();
 	}
@@ -230,10 +247,14 @@ async function exportKoremakeProject(from: string, to: string, platform: string,
 				log.info('Compiling shader ' + (shaderIndex + 1) + ' of ' + shaderCount + ' (' + parsedFile.name + ').');
 				
 				++shaderIndex;
-				await compileShader(from, shaderLang(platform), file.file, path.join(project.getDebugDir(), outfile), 'build', platform);
+				await compileShader(from, shaderLang(platform), file.file, path.join(project.getDebugDir(), outfile), 'build', platform, 'build');
 			}
 		}
 	}
+
+	// Run again to find new shader files for Metal
+	project.searchFiles(undefined);
+	project.flatten();
 
 	let exporter: Exporter = null;
 	if (platform === Platform.iOS || platform === Platform.OSX || platform === Platform.tvOS) exporter = new XCodeExporter();
@@ -306,17 +327,17 @@ function compileProject(make: child_process.ChildProcess, project: Project, solu
 
 		make.on('close', function (code: number) {
 			if (code === 0) {
-				if (options.target === Platform.Linux) {
+				if ((options.customTarget && options.customTarget.baseTarget === Platform.Linux) || options.target === Platform.Linux) {
 					fs.copySync(path.join(path.join(options.to.toString(), options.buildPath), solutionName), path.join(options.from.toString(), project.getDebugDir(), solutionName), { clobber: true });
 				}
-				else if (options.target === Platform.Windows) {
-					fs.copySync(path.join(options.to.toString(), 'Debug', solutionName + '.exe'), path.join(options.from.toString(), project.getDebugDir(), solutionName + '.exe'), { clobber: true });
+				else if ((options.customTarget && options.customTarget.baseTarget === Platform.Windows) || options.target === Platform.Windows) {
+					fs.copySync(path.join(options.to.toString(), 'Release', solutionName + '.exe'), path.join(options.from.toString(), project.getDebugDir(), solutionName + '.exe'), { clobber: true });
 				}
 				if (options.run) {
-					if (options.target === Platform.OSX) {
+					if ((options.customTarget && options.customTarget.baseTarget === Platform.OSX) || options.target === Platform.OSX) {
 						child_process.spawn('open', ['build/Release/' + solutionName + '.app/Contents/MacOS/' + solutionName], {stdio: 'inherit', cwd: options.to});
 					}
-					else if (options.target === Platform.Linux || options.target === Platform.Windows) {
+					else if ((options.customTarget && (options.customTarget.baseTarget === Platform.Linux || options.customTarget.baseTarget === Platform.Windows)) || options.target === Platform.Linux || options.target === Platform.Windows) {
 						child_process.spawn(path.resolve(path.join(options.from.toString(), project.getDebugDir(), solutionName)), [], {stdio: 'inherit', cwd: path.join(options.from.toString(), project.getDebugDir())});
 					}
 					else {
@@ -345,6 +366,16 @@ export async function run(options: any, loglog: any): Promise<string> {
 		Options.visualStudioVersion = options.visualstudio;	
 	}
 
+	if (!options.kore) {
+		let p = path.join(__dirname, '..', '..', '..');
+		if (fs.existsSync(p) && fs.statSync(p).isDirectory()) {
+			options.kore = p;
+		}
+	}
+	else {
+		options.kore = path.resolve(options.kore);
+	}
+
 	debug = options.debug;
 	
 	// if (options.vr != undefined) {
@@ -367,13 +398,13 @@ export async function run(options: any, loglog: any): Promise<string> {
 		
 		let make: child_process.ChildProcess = null;
 
-		if (options.target === Platform.Linux) {
+		if ((options.customTarget && options.customTarget.baseTarget === Platform.Linux) || options.target === Platform.Linux) {
 			make = child_process.spawn('make', [], { cwd: path.join(options.to, options.buildPath) });
 		}
-		else if (options.target === Platform.OSX) {
-			make = child_process.spawn('xcodebuild', ['-project', solutionName + '.xcodeproj'], { cwd: options.to });
+		else if ((options.customTarget && options.customTarget.baseTarget === Platform.OSX) || options.target === Platform.OSX) {
+			make = child_process.spawn('xcodebuild', ['-configuration', 'Release', '-project', solutionName + '.xcodeproj'], { cwd: options.to });
 		}
-		else if (options.target === Platform.Windows) {
+		else if ((options.customTarget && options.customTarget.baseTarget === Platform.Windows) || options.target === Platform.Windows) {
 			let vsvars: string = null;
 			if (process.env.VS140COMNTOOLS) {
 				vsvars = process.env.VS140COMNTOOLS + '\\vsvars32.bat';
@@ -385,7 +416,7 @@ export async function run(options: any, loglog: any): Promise<string> {
 				vsvars = process.env.VS110COMNTOOLS + '\\vsvars32.bat';
 			}
 			if (vsvars !== null) {
-				fs.writeFileSync(path.join(options.to, 'build.bat'), '@call "' + vsvars + '"\n' + '@MSBuild.exe "' + solutionName + '.vcxproj" /m /p:Configuration=Debug,Platform=Win32');
+				fs.writeFileSync(path.join(options.to, 'build.bat'), '@call "' + vsvars + '"\n' + '@MSBuild.exe "' + solutionName + '.vcxproj" /m /p:Configuration=Release,Platform=Win32');
 				make = child_process.spawn('build.bat', [], {cwd: options.to});
 			}
 			else {

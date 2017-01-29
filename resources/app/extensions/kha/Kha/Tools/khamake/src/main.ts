@@ -15,7 +15,7 @@ import {loadProject} from './ProjectFile';
 import {VisualStudioVersion} from './VisualStudioVersion';
 import {AssetConverter} from './AssetConverter';
 import {HaxeCompiler} from './HaxeCompiler';
-import {ShaderCompiler} from './ShaderCompiler';
+import {ShaderCompiler, CompiledShader} from './ShaderCompiler';
 import {KhaExporter} from './Exporters/KhaExporter';
 import {AndroidExporter} from './Exporters/AndroidExporter';
 import {DebugHtml5Exporter} from './Exporters/DebugHtml5Exporter';
@@ -114,9 +114,11 @@ async function exportProjectFiles(name: string, options: Options, exporter: KhaE
 
 		writeHaxeProject(options.to, haxeOptions);
 
-		let compiler = new HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources);
-		lastHaxeCompiler = compiler;
-		await compiler.run(options.watch);
+		if (!options.nohaxe) {
+			let compiler = new HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources);
+			lastHaxeCompiler = compiler;
+			await compiler.run(options.watch);
+		}
 
 		await exporter.export(name, targetOptions, haxeOptions);
 	}
@@ -225,14 +227,15 @@ async function exportKhaProject(options: Options): Promise<string> {
 	let kore = false;
 	let korehl = false;
 	
-	let target = options.target;
+	let target = options.target.toLowerCase();
+	let baseTarget = target;
 	let customTarget: Target = null;
 	if (project.customTargets.get(options.target)) {
 		customTarget = project.customTargets.get(options.target);
-		target = customTarget.baseTarget;
+		baseTarget = customTarget.baseTarget;
 	}
 	
-	switch (target) {
+	switch (baseTarget) {
 		case Platform.Krom:
 			exporter = new KromExporter(options);
 			break;
@@ -286,6 +289,8 @@ async function exportKhaProject(options: Options): Promise<string> {
 			break;
 	}
 
+	exporter.setSystemDirectory(target);
+
 	// Create the target build folder
 	// e.g. 'build/android-native'
 	fs.ensureDirSync(path.join(options.to, exporter.sysdir()));
@@ -315,16 +320,20 @@ async function exportKhaProject(options: Options): Promise<string> {
 	let assetConverter = new AssetConverter(exporter, options.target, project.assetMatchers);
 	lastAssetConverter = assetConverter;
 	let assets = await assetConverter.run(options.watch);
+
 	let shaderDir = path.join(options.to, exporter.sysdir() + '-resources');
 	if (target === Platform.Unity) {
 		shaderDir = path.join(options.to, exporter.sysdir(), 'Assets', 'Shaders');
 	}
 	
 	fs.ensureDirSync(shaderDir);
-	let shaderCompiler = new ShaderCompiler(exporter, options.target, options.krafix, shaderDir, temp,
+	let exportedShaders: CompiledShader[] = [];
+	if (!options.noshaders) {
+		let shaderCompiler = new ShaderCompiler(exporter, options.target, options.krafix, shaderDir, temp,
 		path.join(options.to, exporter.sysdir() + '-build'), options, project.shaderMatchers);
-	lastShaderCompiler = shaderCompiler;
-	let exportedShaders = await shaderCompiler.run(options.watch);
+		lastShaderCompiler = shaderCompiler;
+		exportedShaders = await shaderCompiler.run(options.watch);
+	}
 
 	if (target === Platform.Unity) {
 		fs.ensureDirSync(path.join(options.to, exporter.sysdir() + '-resources'));

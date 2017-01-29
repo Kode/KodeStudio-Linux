@@ -27,9 +27,24 @@ namespace {
 		WSACleanup();
 #endif
 	}
+
+	// Important: Must be cleaned with freeaddrinfo(address) later if the result is 0 in order to prevent memory leaks
+	int resolveAddress(const char* url, int port, addrinfo*& result) {
+#if defined(SYS_WINDOWS) || defined(SYS_WINDOWSAPP) || defined(SYS_UNIXOID)
+		addrinfo hints = {};
+		hints.ai_family = AF_INET;
+		hints.ai_socktype = SOCK_DGRAM;
+		hints.ai_protocol = IPPROTO_UDP;
+
+		char serv[6];
+		sprintf(serv, "%u", port);
+
+		return getaddrinfo(url, serv, &hints, &result);
+#endif
+	}
 }
 
-Socket::Socket() { }
+Socket::Socket() {}
 
 void Socket::init() {
 	if (initialized) return;
@@ -47,6 +62,52 @@ void Socket::open(int port) {
 	handle = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (handle <= 0) {
 		log(Kore::Error, "Could not create socket.");
+#if defined(SYS_WINDOWS) || defined (SYS_WINDOWSAPP)
+		int errorCode = WSAGetLastError();
+		switch (errorCode) {
+			case(WSANOTINITIALISED) :
+				Kore::log(Error, "A successful WSAStartup call must occur before using this function.");
+				break;
+			case (WSAENETDOWN) :
+				Kore::log(Error, "The network subsystem or the associated service provider has failed.");
+				break;
+			case (WSAEAFNOSUPPORT):
+				Kore::log(Error, "The specified address family is not supported.For example, an application tried to create a socket for the AF_IRDA address family but an infrared adapter and device driver is not installed on the local computer.");
+				break;
+			case (WSAEINPROGRESS):
+				Kore::log(Error, "A blocking Windows Sockets 1.1 call is in progress, or the service provider is still processing a callback function.");
+				break;
+			case (WSAEMFILE) :
+				Kore::log(Error, "No more socket descriptors are available.");
+				break;
+			case (WSAEINVAL):
+				Kore::log(Error, "An invalid argument was supplied.This error is returned if the af parameter is set to AF_UNSPEC and the type and protocol parameter are unspecified.");
+				break;
+			case (WSAENOBUFS):
+				Kore::log(Error, "No buffer space is available.The socket cannot be created.");
+				break;
+			case (WSAEPROTONOSUPPORT):
+				Kore::log(Error, "The specified protocol is not supported.");
+				break;
+			case (WSAEPROTOTYPE):
+				Kore::log(Error, "The specified protocol is the wrong type for this socket.");
+				break;
+			case (WSAEPROVIDERFAILEDINIT):
+				Kore::log(Error, "The service provider failed to initialize.This error is returned if a layered service provider(LSP) or namespace provider was improperly installed or the provider fails to operate correctly.");
+				break;
+			case (WSAESOCKTNOSUPPORT):
+				Kore::log(Error, "The specified socket type is not supported in this address family.");
+				break;
+			case (WSAEINVALIDPROVIDER):
+				Kore::log(Error, "The service provider returned a version other than 2.2.");
+				break;
+			case (WSAEINVALIDPROCTABLE):
+				Kore::log(Error, "The service provider returned an invalid or incomplete procedure table to the WSPStartup.");
+				break;
+			default:
+				Kore::log(Error, "Unknown error.");
+		}
+#endif // defined(SYS_WINDOWS) || defined (SYS_WINDOWSAPP)
 		return;
 	}
 
@@ -58,7 +119,7 @@ void Socket::open(int port) {
 		log(Kore::Error, "Could not bind socket.");
 		return;
 	}
-#endif
+#endif // defined(SYS_WINDOWS) || defined(SYS_WINDOWSAPP) || defined(SYS_UNIXOID)
 
 #if defined(SYS_WINDOWS) || defined(SYS_WINDOWSAPP)
 	DWORD nonBlocking = 1;
@@ -84,18 +145,42 @@ Socket::~Socket() {
 	destroy();
 }
 
+unsigned Socket::urlToInt(const char* url, int port) {
+#if defined(SYS_WINDOWS) || defined(SYS_WINDOWSAPP)
+	addrinfo* address = new addrinfo;
+	int res = resolveAddress(url, port, address);
+	if (res != 0) {
+		log(Kore::Error, "Could not resolve address.");
+		return -1;
+	}
+
+	unsigned fromAddress = ntohl(((sockaddr_in*)address->ai_addr)->sin_addr.S_un.S_addr);
+	freeaddrinfo(address);
+
+	return fromAddress;
+#else
+	return 0;
+#endif
+}
+
+void Socket::send(unsigned address, int port, const u8* data, int size) {
+#if defined(SYS_WINDOWS) || defined(SYS_WINDOWSAPP) || defined(SYS_UNIXOID)
+	sockaddr_in addr;
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(address);
+	addr.sin_port = htons(port);
+
+	int sent = sendto(handle, (const char*)data, size, 0, (sockaddr*)&addr, sizeof(sockaddr_in));
+	if (sent != size) {
+		log(Kore::Error, "Could not send packet.");
+	}
+#endif
+}
+
 void Socket::send(const char* url, int port, const u8* data, int size) {
 #if defined(SYS_WINDOWS) || defined(SYS_WINDOWSAPP) || defined(SYS_UNIXOID)
-	addrinfo hints = {};
-	hints.ai_family = AF_INET;
-	hints.ai_socktype = SOCK_DGRAM;
-	hints.ai_protocol = IPPROTO_UDP;
-
-	addrinfo* address = NULL;
-	char serv[5];
-	sprintf(serv, "%u", port);
-
-	int res = getaddrinfo(url, serv, &hints, &address);
+	addrinfo* address = new addrinfo;
+	int res = resolveAddress(url, port, address);
 	if (res != 0) {
 		log(Kore::Error, "Could not resolve address.");
 		return;
@@ -104,8 +189,8 @@ void Socket::send(const char* url, int port, const u8* data, int size) {
 	int sent = sendto(handle, (const char*)data, size, 0, address->ai_addr, sizeof(sockaddr_in));
 	if (sent != size) {
 		log(Kore::Error, "Could not send packet.");
-		return;
 	}
+	freeaddrinfo(address);
 #endif
 }
 

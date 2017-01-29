@@ -20,6 +20,12 @@ namespace Kore {
 		int displayCounter = -1;
 		bool initialized = false;
 #ifdef OPENGL
+		volatile static struct StaticInitializer {
+			StaticInitializer() {
+				enumerate();
+			}
+		} displayInitializer;
+
 		void enumDisplayMonitors(DeviceInfo screens[], int& displayCounter);
 #endif
 		void enumerate() {
@@ -43,6 +49,18 @@ namespace Kore {
 
 		int height(int index) {
 			return displays[index].height;
+		}
+
+		int x(int index) {
+			return displays[index].x;
+		}
+
+		int y(int index) {
+			return displays[index].y;
+		}
+
+		bool isPrimary(int index) {
+			return displays[index].isPrimary;
 		}
 
 		const DeviceInfo* primaryScreen() {

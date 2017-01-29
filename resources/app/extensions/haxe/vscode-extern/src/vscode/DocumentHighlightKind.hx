@@ -1,7 +1,22 @@
 package vscode;
 
-@:enum abstract DocumentHighlightKind(Int) {
-	var Text = 0;
-	var Read = 1;
-	var Write = 2;
+/**
+ * A document highlight kind.
+ */
+@:jsRequire("vscode", "DocumentHighlightKind")
+@:enum extern abstract DocumentHighlightKind(Int) {
+    /**
+     * A textual occurrence.
+     */
+    var Text;
+
+    /**
+     * Read-access of a symbol, like reading a variable.
+     */
+    var Read;
+
+    /**
+     * Write-access of a symbol, like writing to a variable.
+     */
+    var Write;
 }

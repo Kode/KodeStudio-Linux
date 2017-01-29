@@ -11,11 +11,11 @@ var nls = require('vscode-nls');
 var localize = nls.loadMessageBundle(__filename);
 var VSCodeContentRequest;
 (function (VSCodeContentRequest) {
-    VSCodeContentRequest.type = { get method() { return 'vscode/content'; } };
+    VSCodeContentRequest.type = { get method() { return 'vscode/content'; }, _: null };
 })(VSCodeContentRequest || (VSCodeContentRequest = {}));
 var SchemaAssociationNotification;
 (function (SchemaAssociationNotification) {
-    SchemaAssociationNotification.type = { get method() { return 'json/schemaAssociations'; } };
+    SchemaAssociationNotification.type = { get method() { return 'json/schemaAssociations'; }, _: null };
 })(SchemaAssociationNotification || (SchemaAssociationNotification = {}));
 function activate(context) {
     var packageInfo = getPackageInfo(context);
@@ -50,22 +50,24 @@ function activate(context) {
         };
         // Create the language client and start the client.
         var client = new vscode_languageclient_1.LanguageClient('json', localize(0, null), serverOptions, clientOptions);
-        client.onTelemetry(function (e) {
-            if (telemetryReporter) {
-                telemetryReporter.sendTelemetryEvent(e.key, e.data);
-            }
-        });
-        // handle content request
-        client.onRequest(VSCodeContentRequest.type, function (uriPath) {
-            var uri = vscode_1.Uri.parse(uriPath);
-            return vscode_1.workspace.openTextDocument(uri).then(function (doc) {
-                return doc.getText();
-            }, function (error) {
-                return Promise.reject(error);
-            });
-        });
         var disposable = client.start();
-        client.sendNotification(SchemaAssociationNotification.type, getSchemaAssociation(context));
+        client.onReady().then(function () {
+            client.onTelemetry(function (e) {
+                if (telemetryReporter) {
+                    telemetryReporter.sendTelemetryEvent(e.key, e.data);
+                }
+            });
+            // handle content request
+            client.onRequest(VSCodeContentRequest.type, function (uriPath) {
+                var uri = vscode_1.Uri.parse(uriPath);
+                return vscode_1.workspace.openTextDocument(uri).then(function (doc) {
+                    return doc.getText();
+                }, function (error) {
+                    return Promise.reject(error);
+                });
+            });
+            client.sendNotification(SchemaAssociationNotification.type, getSchemaAssociation(context));
+        });
         // Push the disposable to the context's subscriptions so that the
         // client can be deactivated on extension deactivation
         context.subscriptions.push(disposable);
@@ -119,4 +121,4 @@ function getPackageInfo(context) {
     }
     return null;
 }
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/json/client/out/jsonMain.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/json/client/out/jsonMain.js.map

@@ -320,6 +320,10 @@ define(__m[5/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,10/*vs/ba
             this.unexpectedErrorHandler(e);
             this.emit(e);
         };
+        // For external errors, we don't want the listeners to be called
+        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
+            this.unexpectedErrorHandler(e);
+        };
         return ErrorHandler;
     }());
     exports.ErrorHandler = ErrorHandler;
@@ -335,6 +339,13 @@ define(__m[5/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,10/*vs/ba
         }
     }
     exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedExternalError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedExternalError(e);
+        }
+    }
+    exports.onUnexpectedExternalError = onUnexpectedExternalError;
     function onUnexpectedPromiseError(promise) {
         return promise.then(null, onUnexpectedError);
     }
@@ -585,6 +596,37 @@ define(__m[6/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,4/*vs/
         return Disposables;
     }(Disposable));
     exports.Disposables = Disposables;
+    var ReferenceCollection = (function () {
+        function ReferenceCollection() {
+            this.references = Object.create(null);
+        }
+        ReferenceCollection.prototype.acquire = function (key) {
+            var _this = this;
+            var reference = this.references[key];
+            if (!reference) {
+                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
+            }
+            var object = reference.object;
+            var dispose = function () {
+                if (--reference.counter === 0) {
+                    _this.destroyReferencedObject(reference.object);
+                    delete _this.references[key];
+                }
+            };
+            reference.counter++;
+            return { object: object, dispose: dispose };
+        };
+        return ReferenceCollection;
+    }());
+    exports.ReferenceCollection = ReferenceCollection;
+    var ImmortalReference = (function () {
+        function ImmortalReference(object) {
+            this.object = object;
+        }
+        ImmortalReference.prototype.dispose = function () { };
+        return ImmortalReference;
+    }());
+    exports.ImmortalReference = ImmortalReference;
 });
 
 define(__m[3/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/lifecycle*/,8/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
@@ -3107,6 +3149,7 @@ define(__m[2/*vs/base/common/winjs.base*/], __M([18/*vs/base/common/winjs.base.r
 define(__m[9/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     function fromEventEmitter(emitter, eventName, map) {
+        if (map === void 0) { map = function (id) { return id; }; }
         var fn = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -3342,6 +3385,99 @@ define(__m[7/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2/
         return ChannelClient;
     }());
     exports.ChannelClient = ChannelClient;
+    /**
+     * An `IPCServer` is both a channel server and a routing channel
+     * client.
+     *
+     * As the owner of a protocol, you should extend both this
+     * and the `IPCClient` classes to get IPC implementations
+     * for your protocol.
+     */
+    var IPCServer = (function () {
+        function IPCServer(onDidClientConnect) {
+            var _this = this;
+            this.channels = Object.create(null);
+            this.channelClients = Object.create(null);
+            this.onClientAdded = new event_1.Emitter();
+            onDidClientConnect(function (_a) {
+                var protocol = _a.protocol, onDidClientDisconnect = _a.onDidClientDisconnect;
+                var onFirstMessage = event_1.once(protocol.onMessage);
+                onFirstMessage(function (id) {
+                    var channelServer = new ChannelServer(protocol);
+                    var channelClient = new ChannelClient(protocol);
+                    Object.keys(_this.channels)
+                        .forEach(function (name) { return channelServer.registerChannel(name, _this.channels[name]); });
+                    _this.channelClients[id] = channelClient;
+                    _this.onClientAdded.fire(id);
+                    onDidClientDisconnect(function () {
+                        channelServer.dispose();
+                        channelClient.dispose();
+                        delete _this.channelClients[id];
+                    });
+                });
+            });
+        }
+        IPCServer.prototype.getChannel = function (channelName, router) {
+            var _this = this;
+            var call = function (command, arg) {
+                var id = router.route(command, arg);
+                if (!id) {
+                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
+                }
+                return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
+            };
+            return { call: call };
+        };
+        IPCServer.prototype.registerChannel = function (channelName, channel) {
+            this.channels[channelName] = channel;
+        };
+        IPCServer.prototype.getClient = function (clientId) {
+            var _this = this;
+            var client = this.channelClients[clientId];
+            if (client) {
+                return winjs_base_1.TPromise.as(client);
+            }
+            return new winjs_base_1.TPromise(function (c) {
+                var onClient = event_1.once(event_1.filterEvent(_this.onClientAdded.event, function (id) { return id === clientId; }));
+                onClient(function () { return c(_this.channelClients[clientId]); });
+            });
+        };
+        IPCServer.prototype.dispose = function () {
+            this.channels = null;
+            this.channelClients = null;
+            this.onClientAdded.dispose();
+        };
+        return IPCServer;
+    }());
+    exports.IPCServer = IPCServer;
+    /**
+     * An `IPCClient` is both a channel client and a channel server.
+     *
+     * As the owner of a protocol, you should extend both this
+     * and the `IPCClient` classes to get IPC implementations
+     * for your protocol.
+     */
+    var IPCClient = (function () {
+        function IPCClient(protocol, id) {
+            protocol.send(id);
+            this.channelClient = new ChannelClient(protocol);
+            this.channelServer = new ChannelServer(protocol);
+        }
+        IPCClient.prototype.getChannel = function (channelName) {
+            return this.channelClient.getChannel(channelName);
+        };
+        IPCClient.prototype.registerChannel = function (channelName, channel) {
+            this.channelServer.registerChannel(channelName, channel);
+        };
+        IPCClient.prototype.dispose = function () {
+            this.channelClient.dispose();
+            this.channelClient = null;
+            this.channelServer.dispose();
+            this.channelServer = null;
+        };
+        return IPCClient;
+    }());
+    exports.IPCClient = IPCClient;
     function getDelayedChannel(promise) {
         var call = function (command, arg) { return promise.then(function (c) { return c.call(command, arg); }); };
         return { call: call };
@@ -3389,6 +3525,11 @@ define(__m[7/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
 define(__m[11/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/,15/*net*/,2/*vs/base/common/winjs.base*/,3/*vs/base/common/event*/,9/*vs/base/node/event*/,7/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, net_1, winjs_base_1, event_1, event_2, ipc_1) {
     'use strict';
     function bufferIndexOf(buffer, value, start) {
@@ -3446,104 +3587,34 @@ define(__m[11/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/
         Protocol.Boundary = new Buffer([0]);
         return Protocol;
     }());
-    var RoutingChannelClient = (function () {
-        function RoutingChannelClient() {
-            this.onClientAdded = new event_1.Emitter();
-            this.ipcClients = Object.create(null);
-        }
-        RoutingChannelClient.prototype.add = function (id, client) {
-            this.ipcClients[id] = client;
-            this.onClientAdded.fire();
-        };
-        RoutingChannelClient.prototype.remove = function (id) {
-            delete this.ipcClients[id];
-        };
-        RoutingChannelClient.prototype.getClient = function (clientId) {
-            var _this = this;
-            var getClientFn = function (clientId, c) {
-                var client = _this.ipcClients[clientId];
-                if (client) {
-                    c(client);
-                    return true;
-                }
-                return false;
-            };
-            return new winjs_base_1.TPromise(function (c, e) {
-                if (!getClientFn(clientId, c)) {
-                    var disposable_1 = _this.onClientAdded.event(function () {
-                        if (getClientFn(clientId, c)) {
-                            disposable_1.dispose();
-                        }
-                    });
-                }
-            });
-        };
-        RoutingChannelClient.prototype.getChannel = function (channelName, router) {
-            var _this = this;
-            var call = function (command, arg) {
-                var id = router.routeCall(command, arg);
-                if (!id) {
-                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
-                }
-                return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
-            };
-            return { call: call };
-        };
-        RoutingChannelClient.prototype.dispose = function () {
-            this.ipcClients = null;
-            this.onClientAdded.dispose();
-        };
-        return RoutingChannelClient;
-    }());
-    // TODO@joao: move multi channel implementation down to ipc
-    var Server = (function () {
+    var Server = (function (_super) {
+        __extends(Server, _super);
         function Server(server) {
-            var _this = this;
+            _super.call(this, Server.toClientConnectionEvent(server));
             this.server = server;
-            this.channels = Object.create(null);
-            this.router = new RoutingChannelClient();
-            this.server.on('connection', function (socket) {
-                var protocol = new Protocol(socket);
-                var onFirstMessage = event_1.once(protocol.onMessage);
-                onFirstMessage(function (id) {
-                    var channelServer = new ipc_1.ChannelServer(protocol);
-                    Object.keys(_this.channels)
-                        .forEach(function (name) { return channelServer.registerChannel(name, _this.channels[name]); });
-                    var channelClient = new ipc_1.ChannelClient(protocol);
-                    _this.router.add(id, channelClient);
-                    socket.once('close', function () {
-                        channelClient.dispose();
-                        _this.router.remove(id);
-                        channelServer.dispose();
-                    });
-                });
-            });
         }
-        Server.prototype.getChannel = function (channelName, router) {
-            return this.router.getChannel(channelName, router);
-        };
-        Server.prototype.registerChannel = function (channelName, channel) {
-            this.channels[channelName] = channel;
+        Server.toClientConnectionEvent = function (server) {
+            var onConnection = event_2.fromEventEmitter(server, 'connection');
+            return event_1.mapEvent(onConnection, function (socket) { return ({
+                protocol: new Protocol(socket),
+                onDidClientDisconnect: event_1.once(event_2.fromEventEmitter(socket, 'close'))
+            }); });
         };
         Server.prototype.dispose = function () {
-            this.router.dispose();
-            this.router = null;
-            this.channels = null;
+            _super.prototype.dispose.call(this);
             this.server.close();
             this.server = null;
         };
         return Server;
-    }());
+    }(ipc_1.IPCServer));
     exports.Server = Server;
-    var Client = (function () {
+    var Client = (function (_super) {
+        __extends(Client, _super);
         function Client(socket, id) {
             var _this = this;
+            _super.call(this, new Protocol(socket), id);
             this.socket = socket;
             this._onClose = new event_1.Emitter();
-            var protocol = new Protocol(socket);
-            protocol.send(id);
-            this.channelClient = new ipc_1.ChannelClient(protocol);
-            this.channelServer = new ipc_1.ChannelServer(protocol);
             socket.once('close', function () { return _this._onClose.fire(); });
         }
         Object.defineProperty(Client.prototype, "onClose", {
@@ -3551,21 +3622,13 @@ define(__m[11/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/
             enumerable: true,
             configurable: true
         });
-        Client.prototype.getChannel = function (channelName) {
-            return this.channelClient.getChannel(channelName);
-        };
-        Client.prototype.registerChannel = function (channelName, channel) {
-            this.channelServer.registerChannel(channelName, channel);
-        };
         Client.prototype.dispose = function () {
+            _super.prototype.dispose.call(this);
             this.socket.end();
             this.socket = null;
-            this.channelClient = null;
-            this.channelServer.dispose();
-            this.channelServer = null;
         };
         return Client;
-    }());
+    }(ipc_1.IPCClient));
     exports.Client = Client;
     function serve(hook) {
         return new winjs_base_1.TPromise(function (c, e) {
@@ -3833,6 +3896,7 @@ define(__m[14/*vs/workbench/parts/git/common/gitIpc*/], __M([1/*require*/,0/*exp
                 case 'commit': return this.service.then(function (s) { return s.commit(args[0], args[1], args[2], args[3]); }).then(RawStatusSerializer.to);
                 case 'detectMimetypes': return this.service.then(function (s) { return s.detectMimetypes(args[0], args[1]); });
                 case 'show': return this.service.then(function (s) { return s.show(args[0], args[1]); });
+                case 'clone': return this.service.then(function (s) { return s.clone(args[0], args[1]); });
                 case 'onOutput': return this.service.then(function (s) { return ipc_1.eventToCall(s.onOutput); });
                 case 'getCommitTemplate': return this.service.then(function (s) { return s.getCommitTemplate(); });
                 case 'getCommit': return this.service.then(function (s) { return s.getCommit(args); });
@@ -3922,6 +3986,9 @@ define(__m[14/*vs/workbench/parts/git/common/gitIpc*/], __M([1/*require*/,0/*exp
         };
         GitChannelClient.prototype.show = function (path, treeish) {
             return this.channel.call('show', [path, treeish]);
+        };
+        GitChannelClient.prototype.clone = function (url, parentPath) {
+            return this.channel.call('clone', [url, parentPath]);
         };
         GitChannelClient.prototype.getCommitTemplate = function () {
             return this.channel.call('getCommitTemplate');

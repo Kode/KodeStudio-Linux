@@ -99,6 +99,11 @@ let options = [
         default: ''
     },
     {
+        full: 'nohaxe',
+        description: 'Do not compile Haxe sources',
+        value: false,
+    },
+    {
         full: 'ffmpeg',
         description: 'Location of ffmpeg executable',
         value: true,
@@ -109,6 +114,11 @@ let options = [
         description: 'Location of krafix shader compiler',
         value: true,
         default: ''
+    },
+    {
+        full: 'noshaders',
+        description: 'Do not compile shaders',
+        value: false
     },
     {
         full: 'noproject',
@@ -172,7 +182,13 @@ let options = [
         full: 'glsl2',
         description: 'Use experimental SPIRV-Cross glsl mode.',
         value: false
-    }
+    },
+    {
+        full: 'shaderversion',
+        description: 'Set target shader version manually.',
+        value: true,
+        default: 0
+    },
 ];
 let parsedOptions = new Options_1.Options();
 function printHelp() {
@@ -287,4 +303,4 @@ else if (parsedOptions.server) {
 else {
     runKhamake();
 }
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/khamake.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/khamake.js.map

@@ -23,16 +23,16 @@ var PackageJSONContribution = (function () {
     };
     PackageJSONContribution.prototype.collectDefaultSuggestions = function (fileName, result) {
         var defaultValue = {
-            'name': '{{name}}',
-            'description': '{{description}}',
-            'author': '{{author}}',
-            'version': '{{1.0.0}}',
-            'main': '{{pathToMain}}',
+            'name': '${1:name}',
+            'description': '${2:description}',
+            'authors': '${3:author}',
+            'version': '${4:1.0.0}',
+            'main': '${5:pathToMain}',
             'dependencies': {}
         };
         var proposal = new vscode_1.CompletionItem(localize(0, null));
         proposal.kind = vscode_1.CompletionItemKind.Module;
-        proposal.insertText = JSON.stringify(defaultValue, null, '\t');
+        proposal.insertText = new vscode_1.SnippetString(JSON.stringify(defaultValue, null, '\t'));
         result.add(proposal);
         return Promise.resolve(null);
     };
@@ -53,11 +53,11 @@ var PackageJSONContribution = (function () {
                                     var keys = results[i].key;
                                     if (Array.isArray(keys) && keys.length > 0) {
                                         var name = keys[0];
-                                        var insertText = JSON.stringify(name);
+                                        var insertText = new vscode_1.SnippetString().appendText(JSON.stringify(name));
                                         if (addValue) {
-                                            insertText += ': "{{*}}"';
+                                            insertText.appendText(': ').appendPlaceholder('*');
                                             if (!isLast) {
-                                                insertText += ',';
+                                                insertText.appendText(',');
                                             }
                                         }
                                         var proposal = new vscode_1.CompletionItem(name);
@@ -87,11 +87,11 @@ var PackageJSONContribution = (function () {
             }
             else {
                 this.mostDependedOn.forEach(function (name) {
-                    var insertText = JSON.stringify(name);
+                    var insertText = new vscode_1.SnippetString().appendText(JSON.stringify(name));
                     if (addValue) {
-                        insertText += ': "{{*}}"';
+                        insertText.appendText(': ').appendPlaceholder('*');
                         if (!isLast) {
-                            insertText += ',';
+                            insertText.appendText(',');
                         }
                     }
                     var proposal = new vscode_1.CompletionItem(name);
@@ -195,13 +195,11 @@ var PackageJSONContribution = (function () {
         if ((location.matches(['dependencies', '*']) || location.matches(['devDependencies', '*']) || location.matches(['optionalDependencies', '*']) || location.matches(['peerDependencies', '*']))) {
             var pack = location.path[location.path.length - 1];
             if (typeof pack === 'string') {
-                var htmlContent_1 = [];
-                htmlContent_1.push(localize(7, null, pack));
                 return this.getInfo(pack).then(function (infos) {
-                    infos.forEach(function (info) {
-                        htmlContent_1.push(markedTextUtil_1.textToMarkedString(info));
-                    });
-                    return htmlContent_1;
+                    if (infos.length) {
+                        return [infos.map(markedTextUtil_1.textToMarkedString).join('\n\n')];
+                    }
+                    return null;
                 });
             }
         }
@@ -210,4 +208,4 @@ var PackageJSONContribution = (function () {
     return PackageJSONContribution;
 }());
 exports.PackageJSONContribution = PackageJSONContribution;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/javascript/out/features/packageJSONContribution.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/javascript/out/features/packageJSONContribution.js.map

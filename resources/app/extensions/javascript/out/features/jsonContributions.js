@@ -79,7 +79,7 @@ var JSONCompletionItemProvider = (function () {
             add: function (suggestion) {
                 if (!proposed[suggestion.label]) {
                     proposed[suggestion.label] = true;
-                    suggestion.textEdit = vscode_1.TextEdit.replace(overwriteRange, suggestion.insertText);
+                    suggestion.range = overwriteRange;
                     items.push(suggestion);
                 }
             },
@@ -131,4 +131,4 @@ var JSONCompletionItemProvider = (function () {
     return JSONCompletionItemProvider;
 }());
 exports.JSONCompletionItemProvider = JSONCompletionItemProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/javascript/out/features/jsonContributions.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/javascript/out/features/jsonContributions.js.map

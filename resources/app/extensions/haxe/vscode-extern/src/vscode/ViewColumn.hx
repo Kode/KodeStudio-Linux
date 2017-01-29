@@ -1,7 +1,12 @@
 package vscode;
 
-@:enum abstract ViewColumn(Int) {
-	var One = 1;
-	var Two = 2;
-	var Three = 3;
+/**
+ * Denotes a column in the VS Code window. Columns are
+ * used to show editors side by side.
+ */
+@:jsRequire("vscode", "ViewColumn")
+@:enum extern abstract ViewColumn(Int) {
+    var One;
+    var Two;
+    var Three;
 }

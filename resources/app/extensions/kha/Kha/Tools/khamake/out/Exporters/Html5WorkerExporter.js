@@ -7,9 +7,6 @@ class Html5WorkerExporter extends Html5Exporter_1.Html5Exporter {
         this.sources.pop();
         this.addSourceDirectory(path.join(options.kha, 'Backends', 'HTML5-Worker'));
     }
-    sysdir() {
-        return 'html5-worker';
-    }
 }
 exports.Html5WorkerExporter = Html5WorkerExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/Exporters/Html5WorkerExporter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/Html5WorkerExporter.js.map

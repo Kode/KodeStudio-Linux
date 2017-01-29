@@ -31,6 +31,7 @@ define("vs/code/node/sharedProcessMain.nls.ja", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"拡張機能",
+		"基本設定",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"拡張子が見つかりません",
@@ -68,7 +69,7 @@ define("vs/code/node/sharedProcessMain.nls.ja", {
 		"VS Code マーケットプレース ページ ヘッダー上のバナーの色。",
 		"バナーで使用されるフォントの配色テーマ。",
 		"このパッケージで表される VS Code 拡張機能のすべてのコントリビューション。",
-		"Marketplace で Preview としてフラグを付けられる拡張機能を設定します。",
+		"Marketplace で Preview としてフラグが付けられるように拡張機能を設定します。",
 		"VS Code 拡張機能のアクティブ化イベント。",
 		"Marketplace の拡張機能ページのサイドバーに表示されるバッジの配列。",
 		"バッジのイメージ URL。",
@@ -102,11 +103,11 @@ define("vs/code/node/sharedProcessMain.nls.ja", {
 		"後で",
 		"キャンセル",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"使用するプロキシ設定。設定されていない場合、環境変数 http_proxy および https_proxy から取得されます。",
 		"提供された CA の一覧と照らしてプロキシ サーバーの証明書を確認するかどうか。",
-		"すべてのネットワーク要求に対して \'プロキシ認証\' ヘッダーとして送信する値。",
+		"すべてのネットワーク要求に対して \'Proxy-Authorization\' ヘッダーとして送信する値。",
 	],
 	"vs/platform/telemetry/common/telemetryService": [
 		"テレメトリ",

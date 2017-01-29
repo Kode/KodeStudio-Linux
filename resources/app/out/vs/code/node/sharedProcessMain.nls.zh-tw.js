@@ -31,6 +31,7 @@ define("vs/code/node/sharedProcessMain.nls.zh-tw", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"擴充功能",
+		"喜好設定",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"找不到擴充功能",
@@ -102,7 +103,7 @@ define("vs/code/node/sharedProcessMain.nls.zh-tw", {
 		"稍後",
 		"取消",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"要使用的 Proxy 設定。如果未設定，會從 http_proxy 與 https_proxy 環境變數取得設定。",
 		"是否應該針對提供的 CA 清單驗證 Proxy 伺服器憑證。",

@@ -19,9 +19,6 @@ class KoreHLExporter extends KhaExporter_1.KhaExporter {
         this.addSourceDirectory(path.join(options.kha, 'Backends', 'KoreHL'));
         // Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
     }
-    sysdir() {
-        return this.options.target + '-hl';
-    }
     haxeOptions(name, targetOptions, defines) {
         defines.push('no-compilation');
         defines.push('sys_' + this.options.target);
@@ -108,4 +105,4 @@ class KoreHLExporter extends KhaExporter_1.KhaExporter {
     }
 }
 exports.KoreHLExporter = KoreHLExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/Exporters/KoreHLExporter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/KoreHLExporter.js.map

@@ -3,14 +3,12 @@
 		"Default bower.json",
 		"Request to the bower repository failed: {0}",
 		"Request to the bower repository failed: {0}",
-		"latest",
-		"{0}"
+		"latest"
 	],
 	"keys": [
 		"json.bower.default",
 		"json.bower.error.repoaccess",
 		"json.bower.error.repoaccess",
-		"json.bower.latest.version",
-		"json.bower.package.hover"
+		"json.bower.latest.version"
 	]
 }

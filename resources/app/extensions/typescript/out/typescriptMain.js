@@ -167,7 +167,7 @@ var LanguageProvider = (function () {
             this.formattingProvider.updateConfiguration(config);
             if (!this.formattingProvider.isEnabled() && this.formattingProviderRegistration) {
                 this.formattingProviderRegistration.dispose();
-                this.formattingProviderRegistration = undefined;
+                this.formattingProviderRegistration = null;
             }
             else if (this.formattingProvider.isEnabled() && !this.formattingProviderRegistration) {
                 this.formattingProviderRegistration = vscode_1.languages.registerDocumentRangeFormattingEditProvider(this.description.modeIds, this.formattingProvider);
@@ -180,7 +180,7 @@ var LanguageProvider = (function () {
             return true;
         }
         var basename = path.basename(file);
-        return basename && basename === this.description.configFile;
+        return !!basename && basename === this.description.configFile;
     };
     Object.defineProperty(LanguageProvider.prototype, "id", {
         get: function () {
@@ -296,7 +296,7 @@ var TypeScriptServiceClientHost = (function () {
     };
     /* internal */ TypeScriptServiceClientHost.prototype.syntaxDiagnosticsReceived = function (event) {
         var body = event.body;
-        if (body.diagnostics) {
+        if (body && body.diagnostics) {
             var language = this.findLanguage(body.file);
             if (language) {
                 language.syntaxDiagnosticsReceived(body.file, this.createMarkerDatas(body.diagnostics, language.diagnosticSource));
@@ -305,7 +305,7 @@ var TypeScriptServiceClientHost = (function () {
     };
     /* internal */ TypeScriptServiceClientHost.prototype.semanticDiagnosticsReceived = function (event) {
         var body = event.body;
-        if (body.diagnostics) {
+        if (body && body.diagnostics) {
             var language = this.findLanguage(body.file);
             if (language) {
                 language.semanticDiagnosticsReceived(body.file, this.createMarkerDatas(body.diagnostics, language.diagnosticSource));
@@ -379,4 +379,4 @@ var TypeScriptServiceClientHost = (function () {
     };
     return TypeScriptServiceClientHost;
 }());
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/typescriptMain.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/typescriptMain.js.map

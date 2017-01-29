@@ -29,8 +29,12 @@ var TypeScriptDocumentSymbolProvider = (function () {
     }
     TypeScriptDocumentSymbolProvider.prototype.provideDocumentSymbols = function (resource, token) {
         var _this = this;
+        var filepath = this.client.asAbsolutePath(resource.uri);
+        if (!filepath) {
+            return Promise.resolve([]);
+        }
         var args = {
-            file: this.client.asAbsolutePath(resource.uri)
+            file: filepath
         };
         if (!args.file) {
             return Promise.resolve([]);
@@ -39,7 +43,7 @@ var TypeScriptDocumentSymbolProvider = (function () {
             var realIndent = indent + item.indent;
             var key = realIndent + "|" + item.text;
             if (realIndent !== 0 && !foldingMap[key]) {
-                var result = new vscode_1.SymbolInformation(item.text, outlineTypeTable[item.kind] || vscode_1.SymbolKind.Variable, containerLabel, new vscode_1.Location(resource.uri, textSpan2Range(item.spans[0])));
+                var result = new vscode_1.SymbolInformation(item.text, outlineTypeTable[item.kind] || vscode_1.SymbolKind.Variable, containerLabel ? containerLabel : '', new vscode_1.Location(resource.uri, textSpan2Range(item.spans[0])));
                 foldingMap[key] = result;
                 bucket.push(result);
             }
@@ -51,7 +55,7 @@ var TypeScriptDocumentSymbolProvider = (function () {
             }
         }
         function convertNavTree(bucket, item, containerLabel) {
-            var result = new vscode_1.SymbolInformation(item.text, outlineTypeTable[item.kind] || vscode_1.SymbolKind.Variable, containerLabel, new vscode_1.Location(resource.uri, textSpan2Range(item.spans[0])));
+            var result = new vscode_1.SymbolInformation(item.text, outlineTypeTable[item.kind] || vscode_1.SymbolKind.Variable, containerLabel ? containerLabel : '', new vscode_1.Location(resource.uri, textSpan2Range(item.spans[0])));
             if (item.childItems && item.childItems.length > 0) {
                 for (var _i = 0, _a = item.childItems; _i < _a.length; _i++) {
                     var child = _a[_i];
@@ -94,4 +98,4 @@ var TypeScriptDocumentSymbolProvider = (function () {
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeScriptDocumentSymbolProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/features/documentSymbolProvider.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/features/documentSymbolProvider.js.map

@@ -10,8 +10,12 @@ var TypeScriptHoverProvider = (function () {
     }
     TypeScriptHoverProvider.prototype.provideHover = function (document, position, token) {
         var _this = this;
+        var filepath = this.client.asAbsolutePath(document.uri);
+        if (!filepath) {
+            return Promise.resolve(null);
+        }
         var args = {
-            file: this.client.asAbsolutePath(document.uri),
+            file: filepath,
             line: position.line + 1,
             offset: position.character + 1
         };
@@ -32,4 +36,4 @@ var TypeScriptHoverProvider = (function () {
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeScriptHoverProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/features/hoverProvider.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/features/hoverProvider.js.map

@@ -97,6 +97,11 @@ let options: Array<any> = [
 		default: ''
 	},
 	{
+		full: 'nohaxe',
+		description: 'Do not compile Haxe sources',
+		value: false,
+	},
+	{
 		full: 'ffmpeg',
 		description: 'Location of ffmpeg executable',
 		value: true,
@@ -107,6 +112,11 @@ let options: Array<any> = [
 		description: 'Location of krafix shader compiler',
 		value: true,
 		default: ''
+	},
+	{
+		full: 'noshaders',
+		description: 'Do not compile shaders',
+		value: false
 	},
 	{
 		full: 'noproject',
@@ -170,7 +180,13 @@ let options: Array<any> = [
 		full: 'glsl2',
 		description: 'Use experimental SPIRV-Cross glsl mode.',
 		value: false
-	}
+	},
+	{
+		full: 'shaderversion',
+		description: 'Set target shader version manually.',
+		value: true,
+		default: 0
+	},
 ];
 
 let parsedOptions: any = new Options();

@@ -17,9 +17,6 @@ class KromExporter extends KhaExporter_1.KhaExporter {
         super(options);
         this.addSourceDirectory(path.join(options.kha, 'Backends', 'Krom'));
     }
-    sysdir() {
-        return 'krom';
-    }
     haxeOptions(name, targetOptions, defines) {
         defines.push('js-classic');
         defines.push('sys_' + this.options.target);
@@ -53,12 +50,8 @@ class KromExporter extends KhaExporter_1.KhaExporter {
     }
     copySound(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
-            let ogg = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), to + '.ogg'), this.options.ogg);
-            let files = [];
-            if (ogg)
-                files.push(to + '.ogg');
-            return files;
+            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { clobber: true });
+            return [to + '.wav'];
         });
     }
     copyImage(platform, from, to, options) {
@@ -85,4 +78,4 @@ class KromExporter extends KhaExporter_1.KhaExporter {
     }
 }
 exports.KromExporter = KromExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/Exporters/KromExporter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/KromExporter.js.map

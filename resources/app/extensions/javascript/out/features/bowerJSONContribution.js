@@ -23,16 +23,16 @@ var BowerJSONContribution = (function () {
     };
     BowerJSONContribution.prototype.collectDefaultSuggestions = function (resource, collector) {
         var defaultValue = {
-            'name': '{{name}}',
-            'description': '{{description}}',
-            'authors': ['{{author}}'],
-            'version': '{{1.0.0}}',
-            'main': '{{pathToMain}}',
+            'name': '${1:name}',
+            'description': '${2:description}',
+            'authors': ['${3:author}'],
+            'version': '${4:1.0.0}',
+            'main': '${5:pathToMain}',
             'dependencies': {}
         };
         var proposal = new vscode_1.CompletionItem(localize(0, null));
         proposal.kind = vscode_1.CompletionItemKind.Class;
-        proposal.insertText = JSON.stringify(defaultValue, null, '\t');
+        proposal.insertText = new vscode_1.SnippetString(JSON.stringify(defaultValue, null, '\t'));
         collector.add(proposal);
         return Promise.resolve(null);
     };
@@ -51,11 +51,11 @@ var BowerJSONContribution = (function () {
                                 for (var i = 0; i < results.length; i++) {
                                     var name = results[i].name;
                                     var description = results[i].description || '';
-                                    var insertText = JSON.stringify(name);
+                                    var insertText = new vscode_1.SnippetString().appendText(JSON.stringify(name));
                                     if (addValue) {
-                                        insertText += ': "{{latest}}"';
+                                        insertText.appendText(': ').appendPlaceholder('latest');
                                         if (!isLast) {
-                                            insertText += ',';
+                                            insertText.appendText(',');
                                         }
                                     }
                                     var proposal = new vscode_1.CompletionItem(name);
@@ -82,11 +82,11 @@ var BowerJSONContribution = (function () {
             }
             else {
                 this.topRanked.forEach(function (name) {
-                    var insertText = JSON.stringify(name);
+                    var insertText = new vscode_1.SnippetString().appendText(JSON.stringify(name));
                     if (addValue) {
-                        insertText += ': "{{latest}}"';
+                        insertText.appendText(': ').appendPlaceholder('latest');
                         if (!isLast) {
-                            insertText += ',';
+                            insertText.appendText(',');
                         }
                     }
                     var proposal = new vscode_1.CompletionItem(name);
@@ -106,7 +106,7 @@ var BowerJSONContribution = (function () {
         if ((location.matches(['dependencies', '*']) || location.matches(['devDependencies', '*']))) {
             // not implemented. Could be do done calling the bower command. Waiting for web API: https://github.com/bower/registry/issues/26
             var proposal = new vscode_1.CompletionItem(localize(3, null));
-            proposal.insertText = '"{{latest}}"';
+            proposal.insertText = new vscode_1.SnippetString('"${1:latest}"');
             proposal.filterText = '""';
             proposal.kind = vscode_1.CompletionItemKind.Value;
             proposal.documentation = 'The latest version of the package';
@@ -156,13 +156,11 @@ var BowerJSONContribution = (function () {
         if ((location.matches(['dependencies', '*']) || location.matches(['devDependencies', '*']))) {
             var pack = location.path[location.path.length - 1];
             if (typeof pack === 'string') {
-                var htmlContent_1 = [];
-                htmlContent_1.push(localize(4, null, pack));
                 return this.getInfo(pack).then(function (documentation) {
                     if (documentation) {
-                        htmlContent_1.push(markedTextUtil_1.textToMarkedString(documentation));
+                        return [markedTextUtil_1.textToMarkedString(documentation)];
                     }
-                    return htmlContent_1;
+                    return null;
                 });
             }
         }
@@ -171,4 +169,4 @@ var BowerJSONContribution = (function () {
     return BowerJSONContribution;
 }());
 exports.BowerJSONContribution = BowerJSONContribution;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/javascript/out/features/bowerJSONContribution.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/javascript/out/features/bowerJSONContribution.js.map

@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["require","exports","vs/base/common/strings","vs/base/common/types","vs/base/common/arrays","vs/base/common/platform","vs/base/common/winjs.base","vs/base/common/paths","fs","vs/base/common/event","vs/base/common/lifecycle","path","vs/base/common/objects","vs/base/common/scorer","vs/base/common/errors","vs/base/common/glob","vs/base/node/encoding","vs/base/common/mime","vs/base/common/map","vs/base/node/flow","vs/base/node/stream","vs/base/parts/ipc/node/ipc.cp","child_process","vs/base/common/uuid","vs/base/node/extfs","vs/base/common/cancellation","vs/base/common/callbackList","vs/base/common/comparers","vs/base/common/events","vs/base/node/mime","vs/base/parts/ipc/common/ipc","vs/base/node/event","vs/base/common/async","vs/nls!vs/base/common/errorMessage","vs/base/common/errorMessage","vs/platform/instantiation/common/instantiation","vs/platform/files/common/files","vs/workbench/services/search/node/fileSearch","vs/workbench/services/search/node/searchIpc","vs/workbench/services/search/node/textSearch","vs/workbench/services/search/node/rawSearchService","vs/base/common/winjs.base.raw","vs/nls","string_decoder","vs/nls!vs/workbench/services/search/node/searchApp","iconv-lite","assert","graceful-fs","vs/workbench/services/search/node/searchApp"];
+var __m = ["require","exports","vs/base/common/platform","vs/base/common/strings","vs/base/common/types","vs/base/common/arrays","vs/base/common/event","vs/base/common/errors","vs/base/common/winjs.base","vs/base/common/lifecycle","vs/base/common/scorer","vs/base/common/paths","vs/base/common/objects","fs","vs/base/node/flow","vs/base/parts/ipc/common/ipc","path","vs/base/parts/ipc/node/ipc.cp","vs/base/common/map","vs/nls!vs/base/common/errorMessage","vs/base/common/uuid","vs/base/node/event","vs/base/common/cancellation","vs/base/node/extfs","vs/base/common/callbackList","vs/base/common/glob","vs/base/common/comparers","vs/base/common/events","child_process","vs/base/common/async","vs/base/common/uri","vs/base/common/errorMessage","vs/platform/instantiation/common/instantiation","vs/platform/files/common/files","vs/workbench/services/search/node/fileSearch","vs/workbench/services/search/node/searchIpc","vs/workbench/services/search/node/textSearch","vs/workbench/services/search/node/worker/searchWorkerIpc","vs/workbench/services/search/node/textSearchWorkerProvider","vs/workbench/services/search/node/rawSearchService","assert","vs/base/common/winjs.base.raw","vs/workbench/services/search/node/searchApp","vs/nls!vs/workbench/services/search/node/searchApp","os","string_decoder","graceful-fs","vs/nls"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,7 +10,7 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[4/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[5/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -295,7 +295,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[28/*vs/base/common/events*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[27/*vs/base/common/events*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -624,12 +624,26 @@ define(__m[18/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function
             }
             node.element = element;
         };
+        TrieMap.prototype.lookUp = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            return node.element;
+        };
         TrieMap.prototype.findSubstr = function (path) {
             var parts = this._splitter(path);
             var lastNode;
             var children = this._root.children;
-            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
-                var part = parts_1[_i];
+            for (var _i = 0, parts_2 = parts; _i < parts_2.length; _i++) {
+                var part = parts_2[_i];
                 var node = children[part];
                 if (!node) {
                     break;
@@ -645,13 +659,29 @@ define(__m[18/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function
                 return lastNode.element;
             }
         };
-        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/); };
+        TrieMap.prototype.findSuperstr = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_3 = parts; _i < parts_3.length; _i++) {
+                var part = parts_3[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            var result = new TrieMap(this._splitter);
+            result._root = node;
+            return result;
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/).filter(function (s) { return !!s; }); };
         return TrieMap;
     }());
     exports.TrieMap = TrieMap;
 });
 
-define(__m[5/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[2/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -749,7 +779,7 @@ define(__m[5/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), func
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[7/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/platform*/,4/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
+define(__m[11/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/platform*/,5/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1099,7 +1129,7 @@ define(__m[7/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,5/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[13/*vs/base/common/scorer*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[10/*vs/base/common/scorer*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     // Based on material from:
     /*!
@@ -1214,7 +1244,7 @@ define(__m[13/*vs/base/common/scorer*/], __M([0/*require*/,1/*exports*/]), funct
 END THIRD PARTY
 */ 
 
-define(__m[2/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,18/*vs/base/common/map*/]), function (require, exports, map_1) {
+define(__m[3/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,18/*vs/base/common/map*/]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1782,7 +1812,7 @@ define(__m[2/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,18/*vs/b
     exports.repeat = repeat;
 });
 
-define(__m[27/*vs/base/common/comparers*/], __M([0/*require*/,1/*exports*/,13/*vs/base/common/scorer*/,2/*vs/base/common/strings*/]), function (require, exports, scorer, strings) {
+define(__m[26/*vs/base/common/comparers*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/scorer*/,3/*vs/base/common/strings*/]), function (require, exports, scorer, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1894,7 +1924,7 @@ define(__m[27/*vs/base/common/comparers*/], __M([0/*require*/,1/*exports*/,13/*v
     exports.compareByScore = compareByScore;
 });
 
-define(__m[15/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/arrays*/,2/*vs/base/common/strings*/,7/*vs/base/common/paths*/,18/*vs/base/common/map*/]), function (require, exports, arrays, strings, paths, map_1) {
+define(__m[25/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/arrays*/,3/*vs/base/common/strings*/,11/*vs/base/common/paths*/,18/*vs/base/common/map*/]), function (require, exports, arrays, strings, paths, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1902,6 +1932,7 @@ define(__m[15/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,4/*vs/base
     'use strict';
     var PATH_REGEX = '[/\\\\]'; // any slash or backslash
     var NO_PATH_REGEX = '[^/\\\\]'; // any non-slash and non-backslash
+    var ALL_FORWARD_SLASHES = /\//g;
     function starsToRegExp(starCount) {
         switch (starCount) {
             case 0:
@@ -2155,7 +2186,7 @@ define(__m[15/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,4/*vs/base
     }
     // common patterns: **/something/else just need endsWith check, something/else just needs and equals check
     function trivia4and5(path, pattern, matchPathEnds) {
-        var nativePath = path.replace(paths.sep, paths.nativeSep);
+        var nativePath = paths.nativeSep !== paths.sep ? path.replace(ALL_FORWARD_SLASHES, paths.nativeSep) : path;
         var nativePathEnd = paths.nativeSep + nativePath;
         var parsedPattern = matchPathEnds ? function (path, basename) {
             return path && (path === nativePath || strings.endsWith(path, nativePathEnd)) ? pattern : null;
@@ -2368,7 +2399,7 @@ define(__m[15/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,4/*vs/base
     }
 });
 
-define(__m[3/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[4/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2536,7 +2567,7 @@ define(__m[3/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), functio
     exports.create = create;
 });
 
-define(__m[14/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/platform*/,3/*vs/base/common/types*/]), function (require, exports, platform, types) {
+define(__m[7/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/platform*/,4/*vs/base/common/types*/]), function (require, exports, platform, types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2580,6 +2611,10 @@ define(__m[14/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,5/*vs/ba
             this.unexpectedErrorHandler(e);
             this.emit(e);
         };
+        // For external errors, we don't want the listeners to be called
+        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
+            this.unexpectedErrorHandler(e);
+        };
         return ErrorHandler;
     }());
     exports.ErrorHandler = ErrorHandler;
@@ -2595,6 +2630,13 @@ define(__m[14/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,5/*vs/ba
         }
     }
     exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedExternalError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedExternalError(e);
+        }
+    }
+    exports.onUnexpectedExternalError = onUnexpectedExternalError;
     function onUnexpectedPromiseError(promise) {
         return promise.then(null, onUnexpectedError);
     }
@@ -2689,7 +2731,7 @@ define(__m[14/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,5/*vs/ba
     exports.getErrorMessage = getErrorMessage;
 });
 
-define(__m[26/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,14/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+define(__m[24/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/errors*/]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2778,7 +2820,7 @@ define(__m[26/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,14
 
 
 
-define(__m[10/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/types*/]), function (require, exports, types_1) {
+define(__m[9/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2845,9 +2887,40 @@ define(__m[10/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,3/*vs
         return Disposables;
     }(Disposable));
     exports.Disposables = Disposables;
+    var ReferenceCollection = (function () {
+        function ReferenceCollection() {
+            this.references = Object.create(null);
+        }
+        ReferenceCollection.prototype.acquire = function (key) {
+            var _this = this;
+            var reference = this.references[key];
+            if (!reference) {
+                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
+            }
+            var object = reference.object;
+            var dispose = function () {
+                if (--reference.counter === 0) {
+                    _this.destroyReferencedObject(reference.object);
+                    delete _this.references[key];
+                }
+            };
+            reference.counter++;
+            return { object: object, dispose: dispose };
+        };
+        return ReferenceCollection;
+    }());
+    exports.ReferenceCollection = ReferenceCollection;
+    var ImmortalReference = (function () {
+        function ImmortalReference(object) {
+            this.object = object;
+        }
+        ImmortalReference.prototype.dispose = function () { };
+        return ImmortalReference;
+    }());
+    exports.ImmortalReference = ImmortalReference;
 });
 
-define(__m[9/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/lifecycle*/,26/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
+define(__m[6/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/lifecycle*/,24/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3231,7 +3304,7 @@ define(__m[9/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[25/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[22/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     var shortcutEvent = Object.freeze(function (callback, context) {
         var handle = setTimeout(callback.bind(context), 0);
@@ -3317,214 +3390,7 @@ define(__m[25/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,9/
     exports.CancellationTokenSource = CancellationTokenSource;
 });
 
-define(__m[17/*vs/base/common/mime*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/paths*/,3/*vs/base/common/types*/,2/*vs/base/common/strings*/,15/*vs/base/common/glob*/]), function (require, exports, paths, types, strings, glob_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    exports.MIME_TEXT = 'text/plain';
-    exports.MIME_BINARY = 'application/octet-stream';
-    exports.MIME_UNKNOWN = 'application/unknown';
-    var registeredAssociations = [];
-    var nonUserRegisteredAssociations = [];
-    var userRegisteredAssociations = [];
-    /**
-     * Associate a text mime to the registry.
-     */
-    function registerTextMime(association) {
-        // Register
-        var associationItem = toTextMimeAssociationItem(association);
-        registeredAssociations.push(associationItem);
-        if (!associationItem.userConfigured) {
-            nonUserRegisteredAssociations.push(associationItem);
-        }
-        else {
-            userRegisteredAssociations.push(associationItem);
-        }
-        // Check for conflicts unless this is a user configured association
-        if (!associationItem.userConfigured) {
-            registeredAssociations.forEach(function (a) {
-                if (a.mime === associationItem.mime || a.userConfigured) {
-                    return; // same mime or userConfigured is ok
-                }
-                if (associationItem.extension && a.extension === associationItem.extension) {
-                    console.warn("Overwriting extension <<" + associationItem.extension + ">> to now point to mime <<" + associationItem.mime + ">>");
-                }
-                if (associationItem.filename && a.filename === associationItem.filename) {
-                    console.warn("Overwriting filename <<" + associationItem.filename + ">> to now point to mime <<" + associationItem.mime + ">>");
-                }
-                if (associationItem.filepattern && a.filepattern === associationItem.filepattern) {
-                    console.warn("Overwriting filepattern <<" + associationItem.filepattern + ">> to now point to mime <<" + associationItem.mime + ">>");
-                }
-                if (associationItem.firstline && a.firstline === associationItem.firstline) {
-                    console.warn("Overwriting firstline <<" + associationItem.firstline + ">> to now point to mime <<" + associationItem.mime + ">>");
-                }
-            });
-        }
-    }
-    exports.registerTextMime = registerTextMime;
-    function toTextMimeAssociationItem(association) {
-        return {
-            id: association.id,
-            mime: association.mime,
-            filename: association.filename,
-            extension: association.extension,
-            filepattern: association.filepattern,
-            firstline: association.firstline,
-            userConfigured: association.userConfigured,
-            filenameLowercase: association.filename ? association.filename.toLowerCase() : void 0,
-            extensionLowercase: association.extension ? association.extension.toLowerCase() : void 0,
-            filepatternLowercase: association.filepattern ? association.filepattern.toLowerCase() : void 0,
-            filepatternOnPath: association.filepattern ? association.filepattern.indexOf(paths.sep) >= 0 : false
-        };
-    }
-    /**
-     * Clear text mimes from the registry.
-     */
-    function clearTextMimes(onlyUserConfigured) {
-        if (!onlyUserConfigured) {
-            registeredAssociations = [];
-            nonUserRegisteredAssociations = [];
-            userRegisteredAssociations = [];
-        }
-        else {
-            registeredAssociations = registeredAssociations.filter(function (a) { return !a.userConfigured; });
-            userRegisteredAssociations = [];
-        }
-    }
-    exports.clearTextMimes = clearTextMimes;
-    /**
-     * Given a file, return the best matching mime type for it
-     */
-    function guessMimeTypes(path, firstLine) {
-        if (!path) {
-            return [exports.MIME_UNKNOWN];
-        }
-        path = path.toLowerCase();
-        var filename = paths.basename(path);
-        // 1.) User configured mappings have highest priority
-        var configuredMime = guessMimeTypeByPath(path, filename, userRegisteredAssociations);
-        if (configuredMime) {
-            return [configuredMime, exports.MIME_TEXT];
-        }
-        // 2.) Registered mappings have middle priority
-        var registeredMime = guessMimeTypeByPath(path, filename, nonUserRegisteredAssociations);
-        if (registeredMime) {
-            return [registeredMime, exports.MIME_TEXT];
-        }
-        // 3.) Firstline has lowest priority
-        if (firstLine) {
-            var firstlineMime = guessMimeTypeByFirstline(firstLine);
-            if (firstlineMime) {
-                return [firstlineMime, exports.MIME_TEXT];
-            }
-        }
-        return [exports.MIME_UNKNOWN];
-    }
-    exports.guessMimeTypes = guessMimeTypes;
-    function guessMimeTypeByPath(path, filename, associations) {
-        var filenameMatch;
-        var patternMatch;
-        var extensionMatch;
-        for (var i = 0; i < associations.length; i++) {
-            var association = associations[i];
-            // First exact name match
-            if (filename === association.filenameLowercase) {
-                filenameMatch = association;
-                break; // take it!
-            }
-            // Longest pattern match
-            if (association.filepattern) {
-                if (!patternMatch || association.filepattern.length > patternMatch.filepattern.length) {
-                    var target = association.filepatternOnPath ? path : filename; // match on full path if pattern contains path separator
-                    if (glob_1.match(association.filepatternLowercase, target)) {
-                        patternMatch = association;
-                    }
-                }
-            }
-            // Longest extension match
-            if (association.extension) {
-                if (!extensionMatch || association.extension.length > extensionMatch.extension.length) {
-                    if (strings.endsWith(filename, association.extensionLowercase)) {
-                        extensionMatch = association;
-                    }
-                }
-            }
-        }
-        // 1.) Exact name match has second highest prio
-        if (filenameMatch) {
-            return filenameMatch.mime;
-        }
-        // 2.) Match on pattern
-        if (patternMatch) {
-            return patternMatch.mime;
-        }
-        // 3.) Match on extension comes next
-        if (extensionMatch) {
-            return extensionMatch.mime;
-        }
-        return null;
-    }
-    function guessMimeTypeByFirstline(firstLine) {
-        if (strings.startsWithUTF8BOM(firstLine)) {
-            firstLine = firstLine.substr(1);
-        }
-        if (firstLine.length > 0) {
-            for (var i = 0; i < registeredAssociations.length; ++i) {
-                var association = registeredAssociations[i];
-                if (!association.firstline) {
-                    continue;
-                }
-                // Make sure the entire line matches, not just a subpart.
-                var matches = firstLine.match(association.firstline);
-                if (matches && matches.length > 0 && matches[0].length === firstLine.length) {
-                    return association.mime;
-                }
-            }
-        }
-        return null;
-    }
-    function isBinaryMime(mimes) {
-        if (!mimes) {
-            return false;
-        }
-        var mimeVals;
-        if (types.isArray(mimes)) {
-            mimeVals = mimes;
-        }
-        else {
-            mimeVals = mimes.split(',').map(function (mime) { return mime.trim(); });
-        }
-        return mimeVals.indexOf(exports.MIME_BINARY) >= 0;
-    }
-    exports.isBinaryMime = isBinaryMime;
-    function isUnspecific(mime) {
-        if (!mime) {
-            return true;
-        }
-        if (typeof mime === 'string') {
-            return mime === exports.MIME_BINARY || mime === exports.MIME_TEXT || mime === exports.MIME_UNKNOWN;
-        }
-        return mime.length === 1 && isUnspecific(mime[0]);
-    }
-    exports.isUnspecific = isUnspecific;
-    function suggestFilename(langId, prefix) {
-        for (var i = 0; i < registeredAssociations.length; i++) {
-            var association = registeredAssociations[i];
-            if (association.userConfigured) {
-                continue; // only support registered ones
-            }
-            if (association.id === langId && association.extension) {
-                return prefix + association.extension;
-            }
-        }
-        return prefix; // without any known extension, just return the prefix
-    }
-    exports.suggestFilename = suggestFilename;
-});
-
-define(__m[12/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/types*/]), function (require, exports, Types) {
+define(__m[12/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/types*/]), function (require, exports, Types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3816,12 +3682,402 @@ define(__m[12/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,3/*vs/b
     exports.getOrDefault = getOrDefault;
 });
 
+define(__m[30/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/platform*/]), function (require, exports, platform) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    function _encode(ch) {
+        return '%' + ch.charCodeAt(0).toString(16).toUpperCase();
+    }
+    // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+    function encodeURIComponent2(str) {
+        return encodeURIComponent(str).replace(/[!'()*]/g, _encode);
+    }
+    function encodeNoop(str) {
+        return str;
+    }
+    /**
+     * Uniform Resource Identifier (URI) http://tools.ietf.org/html/rfc3986.
+     * This class is a simple parser which creates the basic component paths
+     * (http://tools.ietf.org/html/rfc3986#section-3) with minimal validation
+     * and encoding.
+     *
+     *       foo://example.com:8042/over/there?name=ferret#nose
+     *       \_/   \______________/\_________/ \_________/ \__/
+     *        |           |            |            |        |
+     *     scheme     authority       path        query   fragment
+     *        |   _____________________|__
+     *       / \ /                        \
+     *       urn:example:animal:ferret:nose
+     *
+     *
+     */
+    var URI = (function () {
+        function URI() {
+            this._scheme = URI._empty;
+            this._authority = URI._empty;
+            this._path = URI._empty;
+            this._query = URI._empty;
+            this._fragment = URI._empty;
+            this._formatted = null;
+            this._fsPath = null;
+        }
+        URI.isUri = function (thing) {
+            if (thing instanceof URI) {
+                return true;
+            }
+            if (!thing) {
+                return false;
+            }
+            return typeof thing.authority === 'string'
+                && typeof thing.fragment === 'string'
+                && typeof thing.path === 'string'
+                && typeof thing.query === 'string'
+                && typeof thing.scheme === 'string';
+        };
+        Object.defineProperty(URI.prototype, "scheme", {
+            /**
+             * scheme is the 'http' part of 'http://www.msft.com/some/path?query#fragment'.
+             * The part before the first colon.
+             */
+            get: function () {
+                return this._scheme;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(URI.prototype, "authority", {
+            /**
+             * authority is the 'www.msft.com' part of 'http://www.msft.com/some/path?query#fragment'.
+             * The part between the first double slashes and the next slash.
+             */
+            get: function () {
+                return this._authority;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(URI.prototype, "path", {
+            /**
+             * path is the '/some/path' part of 'http://www.msft.com/some/path?query#fragment'.
+             */
+            get: function () {
+                return this._path;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(URI.prototype, "query", {
+            /**
+             * query is the 'query' part of 'http://www.msft.com/some/path?query#fragment'.
+             */
+            get: function () {
+                return this._query;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(URI.prototype, "fragment", {
+            /**
+             * fragment is the 'fragment' part of 'http://www.msft.com/some/path?query#fragment'.
+             */
+            get: function () {
+                return this._fragment;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(URI.prototype, "fsPath", {
+            // ---- filesystem path -----------------------
+            /**
+             * Returns a string representing the corresponding file system path of this URI.
+             * Will handle UNC paths and normalize windows drive letters to lower-case. Also
+             * uses the platform specific path separator. Will *not* validate the path for
+             * invalid characters and semantics. Will *not* look at the scheme of this URI.
+             */
+            get: function () {
+                if (!this._fsPath) {
+                    var value;
+                    if (this._authority && this._path && this.scheme === 'file') {
+                        // unc path: file://shares/c$/far/boo
+                        value = "//" + this._authority + this._path;
+                    }
+                    else if (URI._driveLetterPath.test(this._path)) {
+                        // windows drive letter: file:///c:/far/boo
+                        value = this._path[1].toLowerCase() + this._path.substr(2);
+                    }
+                    else {
+                        // other path
+                        value = this._path;
+                    }
+                    if (platform.isWindows) {
+                        value = value.replace(/\//g, '\\');
+                    }
+                    this._fsPath = value;
+                }
+                return this._fsPath;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        // ---- modify to new -------------------------
+        URI.prototype.with = function (change) {
+            if (!change) {
+                return this;
+            }
+            var scheme = change.scheme, authority = change.authority, path = change.path, query = change.query, fragment = change.fragment;
+            if (scheme === void 0) {
+                scheme = this.scheme;
+            }
+            else if (scheme === null) {
+                scheme = '';
+            }
+            if (authority === void 0) {
+                authority = this.authority;
+            }
+            else if (authority === null) {
+                authority = '';
+            }
+            if (path === void 0) {
+                path = this.path;
+            }
+            else if (path === null) {
+                path = '';
+            }
+            if (query === void 0) {
+                query = this.query;
+            }
+            else if (query === null) {
+                query = '';
+            }
+            if (fragment === void 0) {
+                fragment = this.fragment;
+            }
+            else if (fragment === null) {
+                fragment = '';
+            }
+            if (scheme === this.scheme
+                && authority === this.authority
+                && path === this.path
+                && query === this.query
+                && fragment === this.fragment) {
+                return this;
+            }
+            var ret = new URI();
+            ret._scheme = scheme;
+            ret._authority = authority;
+            ret._path = path;
+            ret._query = query;
+            ret._fragment = fragment;
+            URI._validate(ret);
+            return ret;
+        };
+        // ---- parse & validate ------------------------
+        URI.parse = function (value) {
+            var ret = new URI();
+            var data = URI._parseComponents(value);
+            ret._scheme = data.scheme;
+            ret._authority = decodeURIComponent(data.authority);
+            ret._path = decodeURIComponent(data.path);
+            ret._query = decodeURIComponent(data.query);
+            ret._fragment = decodeURIComponent(data.fragment);
+            URI._validate(ret);
+            return ret;
+        };
+        URI.file = function (path) {
+            var ret = new URI();
+            ret._scheme = 'file';
+            // normalize to fwd-slashes
+            path = path.replace(/\\/g, URI._slash);
+            // check for authority as used in UNC shares
+            // or use the path as given
+            if (path[0] === URI._slash && path[0] === path[1]) {
+                var idx = path.indexOf(URI._slash, 2);
+                if (idx === -1) {
+                    ret._authority = path.substring(2);
+                }
+                else {
+                    ret._authority = path.substring(2, idx);
+                    ret._path = path.substring(idx);
+                }
+            }
+            else {
+                ret._path = path;
+            }
+            // Ensure that path starts with a slash
+            // or that it is at least a slash
+            if (ret._path[0] !== URI._slash) {
+                ret._path = URI._slash + ret._path;
+            }
+            URI._validate(ret);
+            return ret;
+        };
+        URI._parseComponents = function (value) {
+            var ret = {
+                scheme: URI._empty,
+                authority: URI._empty,
+                path: URI._empty,
+                query: URI._empty,
+                fragment: URI._empty,
+            };
+            var match = URI._regexp.exec(value);
+            if (match) {
+                ret.scheme = match[2] || ret.scheme;
+                ret.authority = match[4] || ret.authority;
+                ret.path = match[5] || ret.path;
+                ret.query = match[7] || ret.query;
+                ret.fragment = match[9] || ret.fragment;
+            }
+            return ret;
+        };
+        URI.from = function (components) {
+            return new URI().with(components);
+        };
+        URI._validate = function (ret) {
+            // scheme, https://tools.ietf.org/html/rfc3986#section-3.1
+            // ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+            if (ret.scheme && !URI._schemePattern.test(ret.scheme)) {
+                throw new Error('[UriError]: Scheme contains illegal characters.');
+            }
+            // path, http://tools.ietf.org/html/rfc3986#section-3.3
+            // If a URI contains an authority component, then the path component
+            // must either be empty or begin with a slash ("/") character.  If a URI
+            // does not contain an authority component, then the path cannot begin
+            // with two slash characters ("//").
+            if (ret.path) {
+                if (ret.authority) {
+                    if (!URI._singleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
+                    }
+                }
+                else {
+                    if (URI._doubleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
+                    }
+                }
+            }
+        };
+        // ---- printing/externalize ---------------------------
+        /**
+         *
+         * @param skipEncoding Do not encode the result, default is `false`
+         */
+        URI.prototype.toString = function (skipEncoding) {
+            if (skipEncoding === void 0) { skipEncoding = false; }
+            if (!skipEncoding) {
+                if (!this._formatted) {
+                    this._formatted = URI._asFormatted(this, false);
+                }
+                return this._formatted;
+            }
+            else {
+                // we don't cache that
+                return URI._asFormatted(this, true);
+            }
+        };
+        URI._asFormatted = function (uri, skipEncoding) {
+            var encoder = !skipEncoding
+                ? encodeURIComponent2
+                : encodeNoop;
+            var parts = [];
+            var scheme = uri.scheme, authority = uri.authority, path = uri.path, query = uri.query, fragment = uri.fragment;
+            if (scheme) {
+                parts.push(scheme, ':');
+            }
+            if (authority || scheme === 'file') {
+                parts.push('//');
+            }
+            if (authority) {
+                authority = authority.toLowerCase();
+                var idx = authority.indexOf(':');
+                if (idx === -1) {
+                    parts.push(encoder(authority));
+                }
+                else {
+                    parts.push(encoder(authority.substr(0, idx)), authority.substr(idx));
+                }
+            }
+            if (path) {
+                // lower-case windows drive letters in /C:/fff or C:/fff
+                var m = URI._upperCaseDrive.exec(path);
+                if (m) {
+                    if (m[1]) {
+                        path = '/' + m[2].toLowerCase() + path.substr(3); // "/c:".length === 3
+                    }
+                    else {
+                        path = m[2].toLowerCase() + path.substr(2); // // "c:".length === 2
+                    }
+                }
+                // encode every segement but not slashes
+                // make sure that # and ? are always encoded
+                // when occurring in paths - otherwise the result
+                // cannot be parsed back again
+                var lastIdx = 0;
+                while (true) {
+                    var idx = path.indexOf(URI._slash, lastIdx);
+                    if (idx === -1) {
+                        parts.push(encoder(path.substring(lastIdx)).replace(/[#?]/, _encode));
+                        break;
+                    }
+                    parts.push(encoder(path.substring(lastIdx, idx)).replace(/[#?]/, _encode), URI._slash);
+                    lastIdx = idx + 1;
+                }
+                ;
+            }
+            if (query) {
+                parts.push('?', encoder(query));
+            }
+            if (fragment) {
+                parts.push('#', encoder(fragment));
+            }
+            return parts.join(URI._empty);
+        };
+        URI.prototype.toJSON = function () {
+            return {
+                scheme: this.scheme,
+                authority: this.authority,
+                path: this.path,
+                fsPath: this.fsPath,
+                query: this.query,
+                fragment: this.fragment,
+                external: this.toString(),
+                $mid: 1
+            };
+        };
+        URI.revive = function (data) {
+            var result = new URI();
+            result._scheme = data.scheme;
+            result._authority = data.authority;
+            result._path = data.path;
+            result._query = data.query;
+            result._fragment = data.fragment;
+            result._fsPath = data.fsPath;
+            result._formatted = data.external;
+            URI._validate(result);
+            return result;
+        };
+        URI._empty = '';
+        URI._slash = '/';
+        URI._regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
+        URI._driveLetterPath = /^\/[a-zA-z]:/;
+        URI._upperCaseDrive = /^(\/)?([A-Z]:)/;
+        URI._schemePattern = /^\w[\w\d+.-]*$/;
+        URI._singleSlashStart = /^\//;
+        URI._doubleSlashStart = /^\/\//;
+        return URI;
+    }());
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = URI;
+});
 
 
 
 
 
-define(__m[23/*vs/base/common/uuid*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+
+define(__m[20/*vs/base/common/uuid*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5998,7 +6254,7 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define(__m[6/*vs/base/common/winjs.base*/], __M([41/*vs/base/common/winjs.base.raw*/,14/*vs/base/common/errors*/]), function (winjs, __Errors__) {
+define(__m[8/*vs/base/common/winjs.base*/], __M([41/*vs/base/common/winjs.base.raw*/,7/*vs/base/common/errors*/]), function (winjs, __Errors__) {
 	'use strict';
 
 	var outstandingPromiseErrors = {};
@@ -6064,7 +6320,7 @@ define(__m[6/*vs/base/common/winjs.base*/], __M([41/*vs/base/common/winjs.base.r
 
 
 
-define(__m[32/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,14/*vs/base/common/errors*/,5/*vs/base/common/platform*/,6/*vs/base/common/winjs.base*/,25/*vs/base/common/cancellation*/,10/*vs/base/common/lifecycle*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
+define(__m[29/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/errors*/,2/*vs/base/common/platform*/,8/*vs/base/common/winjs.base*/,22/*vs/base/common/cancellation*/,9/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -6392,13 +6648,13 @@ define(__m[32/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,14/*vs/ba
      * Runs the provided list of promise factories in sequential order. The returned
      * promise will complete to an array of results from each promise.
      */
-    function sequence(promiseFactory) {
+    function sequence(promiseFactories) {
         var results = [];
         // reverse since we start with last element using pop()
-        promiseFactory = promiseFactory.reverse();
+        promiseFactories = promiseFactories.reverse();
         function next() {
-            if (promiseFactory.length) {
-                return promiseFactory.pop()();
+            if (promiseFactories.length) {
+                return promiseFactories.pop()();
             }
             return null;
         }
@@ -6415,6 +6671,25 @@ define(__m[32/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,14/*vs/ba
         return winjs_base_1.TPromise.as(null).then(thenHandler);
     }
     exports.sequence = sequence;
+    function first(promiseFactories, shouldStop) {
+        if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
+        promiseFactories = promiseFactories.reverse().slice();
+        var loop = function () {
+            if (promiseFactories.length === 0) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            var factory = promiseFactories.pop();
+            var promise = factory();
+            return promise.then(function (result) {
+                if (shouldStop(result)) {
+                    return winjs_base_1.TPromise.as(result);
+                }
+                return loop();
+            });
+        };
+        return loop();
+    }
+    exports.first = first;
     function once(fn) {
         var _this = this;
         var didCall = false;
@@ -6438,7 +6713,15 @@ define(__m[32/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,14/*vs/ba
             this.maxDegreeOfParalellism = maxDegreeOfParalellism;
             this.outstandingPromises = [];
             this.runningPromises = 0;
+            this._onFinished = new event_1.Emitter();
         }
+        Object.defineProperty(Limiter.prototype, "onFinished", {
+            get: function () {
+                return this._onFinished.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Limiter.prototype.queue = function (promiseFactory) {
             var _this = this;
             return new winjs_base_1.TPromise(function (c, e, p) {
@@ -6463,7 +6746,15 @@ define(__m[32/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,14/*vs/ba
         };
         Limiter.prototype.consumed = function () {
             this.runningPromises--;
-            this.consume();
+            if (this.outstandingPromises.length > 0) {
+                this.consume();
+            }
+            else {
+                this._onFinished.fire();
+            }
+        };
+        Limiter.prototype.dispose = function () {
+            this._onFinished.dispose();
         };
         return Limiter;
     }());
@@ -6616,9 +6907,10 @@ define(__m[32/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,14/*vs/ba
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[31/*vs/base/node/event*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[21/*vs/base/node/event*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     function fromEventEmitter(emitter, eventName, map) {
+        if (map === void 0) { map = function (id) { return id; }; }
         var fn = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -6639,7 +6931,7 @@ define(__m[31/*vs/base/node/event*/], __M([0/*require*/,1/*exports*/,9/*vs/base/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[19/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,46/*assert*/]), function (require, exports, assert) {
+define(__m[14/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,40/*assert*/]), function (require, exports, assert) {
     'use strict';
     /**
      * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
@@ -6782,7 +7074,7 @@ define(__m[19/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,46/*assert*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[24/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,23/*vs/base/common/uuid*/,2/*vs/base/common/strings*/,5/*vs/base/common/platform*/,19/*vs/base/node/flow*/,8/*fs*/,11/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
+define(__m[23/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,20/*vs/base/common/uuid*/,3/*vs/base/common/strings*/,2/*vs/base/common/platform*/,14/*vs/base/node/flow*/,13/*fs*/,16/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
     'use strict';
     var loop = flow.loop;
     function readdirSync(path) {
@@ -7005,6 +7297,25 @@ define(__m[24/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,23/*vs/base
             }
         });
     }
+    function delSync(path) {
+        try {
+            var stat = fs.lstatSync(path);
+            if (stat.isDirectory() && !stat.isSymbolicLink()) {
+                readdirSync(path).forEach(function (child) { return delSync(paths.join(path, child)); });
+                fs.rmdirSync(path);
+            }
+            else {
+                fs.unlinkSync(path);
+            }
+        }
+        catch (err) {
+            if (err.code === 'ENOENT') {
+                return; // not found
+            }
+            throw err;
+        }
+    }
+    exports.delSync = delSync;
     function mv(source, target, callback) {
         if (source === target) {
             return callback(null);
@@ -7104,307 +7415,7 @@ define(__m[24/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,23/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[20/*vs/base/node/stream*/], __M([0/*require*/,1/*exports*/,8/*fs*/]), function (require, exports, fs) {
-    'use strict';
-    /**
-     * Reads up to total bytes from the provided stream.
-     */
-    function readExactlyByStream(stream, totalBytes, callback) {
-        var done = false;
-        var buffer = new Buffer(totalBytes);
-        var bytesRead = 0;
-        stream.on('data', function (data) {
-            var bytesToRead = Math.min(totalBytes - bytesRead, data.length);
-            data.copy(buffer, bytesRead, 0, bytesToRead);
-            bytesRead += bytesToRead;
-            if (bytesRead === totalBytes) {
-                stream.destroy(); // Will trigger the close event eventually
-            }
-        });
-        stream.on('error', function (e) {
-            if (!done) {
-                done = true;
-                callback(e, null, null);
-            }
-        });
-        var onSuccess = function () {
-            if (!done) {
-                done = true;
-                callback(null, buffer, bytesRead);
-            }
-        };
-        stream.on('close', onSuccess);
-    }
-    exports.readExactlyByStream = readExactlyByStream;
-    /**
-     * Reads totalBytes from the provided file.
-     */
-    function readExactlyByFile(file, totalBytes, callback) {
-        fs.open(file, 'r', null, function (err, fd) {
-            if (err) {
-                return callback(err, null, 0);
-            }
-            function end(err, resultBuffer, bytesRead) {
-                fs.close(fd, function (closeError) {
-                    if (closeError) {
-                        return callback(closeError, null, bytesRead);
-                    }
-                    if (err && err.code === 'EISDIR') {
-                        return callback(err, null, bytesRead); // we want to bubble this error up (file is actually a folder)
-                    }
-                    return callback(null, resultBuffer, bytesRead);
-                });
-            }
-            var buffer = new Buffer(totalBytes);
-            var bytesRead = 0;
-            var zeroAttempts = 0;
-            function loop() {
-                fs.read(fd, buffer, bytesRead, totalBytes - bytesRead, null, function (err, moreBytesRead) {
-                    if (err) {
-                        return end(err, null, 0);
-                    }
-                    // Retry up to N times in case 0 bytes where read
-                    if (moreBytesRead === 0) {
-                        if (++zeroAttempts === 10) {
-                            return end(null, buffer, bytesRead);
-                        }
-                        return loop();
-                    }
-                    bytesRead += moreBytesRead;
-                    if (bytesRead === totalBytes) {
-                        return end(null, buffer, bytesRead);
-                    }
-                    return loop();
-                });
-            }
-            loop();
-        });
-    }
-    exports.readExactlyByFile = readExactlyByFile;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[16/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,20/*vs/base/node/stream*/,45/*iconv-lite*/]), function (require, exports, stream, iconv) {
-    'use strict';
-    exports.UTF8 = 'utf8';
-    exports.UTF8_with_bom = 'utf8bom';
-    exports.UTF16be = 'utf16be';
-    exports.UTF16le = 'utf16le';
-    function decode(buffer, encoding, options) {
-        return iconv.decode(buffer, toNodeEncoding(encoding), options);
-    }
-    exports.decode = decode;
-    function encode(content, encoding, options) {
-        return iconv.encode(content, toNodeEncoding(encoding), options);
-    }
-    exports.encode = encode;
-    function encodingExists(encoding) {
-        return iconv.encodingExists(toNodeEncoding(encoding));
-    }
-    exports.encodingExists = encodingExists;
-    function decodeStream(encoding) {
-        return iconv.decodeStream(toNodeEncoding(encoding));
-    }
-    exports.decodeStream = decodeStream;
-    function encodeStream(encoding) {
-        return iconv.encodeStream(toNodeEncoding(encoding));
-    }
-    exports.encodeStream = encodeStream;
-    function toNodeEncoding(enc) {
-        if (enc === exports.UTF8_with_bom) {
-            return exports.UTF8; // iconv does not distinguish UTF 8 with or without BOM, so we need to help it
-        }
-        return enc;
-    }
-    function detectEncodingByBOMFromBuffer(buffer, bytesRead) {
-        if (!buffer || bytesRead < 2) {
-            return null;
-        }
-        var b0 = buffer.readUInt8(0);
-        var b1 = buffer.readUInt8(1);
-        // UTF-16 BE
-        if (b0 === 0xFE && b1 === 0xFF) {
-            return exports.UTF16be;
-        }
-        // UTF-16 LE
-        if (b0 === 0xFF && b1 === 0xFE) {
-            return exports.UTF16le;
-        }
-        if (bytesRead < 3) {
-            return null;
-        }
-        var b2 = buffer.readUInt8(2);
-        // UTF-8
-        if (b0 === 0xEF && b1 === 0xBB && b2 === 0xBF) {
-            return exports.UTF8;
-        }
-        return null;
-    }
-    exports.detectEncodingByBOMFromBuffer = detectEncodingByBOMFromBuffer;
-    /**
-     * Detects the Byte Order Mark in a given file.
-     * If no BOM is detected, `encoding` will be null.
-     */
-    function detectEncodingByBOM(file, callback) {
-        stream.readExactlyByFile(file, 3, function (err, buffer, bytesRead) {
-            if (err) {
-                return callback(err, null);
-            }
-            return callback(null, detectEncodingByBOMFromBuffer(buffer, bytesRead));
-        });
-    }
-    exports.detectEncodingByBOM = detectEncodingByBOM;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[29/*vs/base/node/mime*/], __M([0/*require*/,1/*exports*/,11/*path*/,17/*vs/base/common/mime*/,20/*vs/base/node/stream*/,16/*vs/base/node/encoding*/]), function (require, exports, paths, mime, stream, encoding) {
-    'use strict';
-    /**
-     * Lots of binary file types exists where the type can be determined by matching the first few bytes against some "magic patterns".
-     * E.g. PDF files always start with %PDF- and the rest of the file contains mostly text, but sometimes binary data (for fonts and images).
-     * In order to detect these types correctly (and independently from the file's extension), the content base mime type detection must be performed
-     * on any file, not only on text files.
-     *
-     * Here is the original mime type detection in pseudocode:
-     *
-     * let mimes = [];
-     *
-     * read file extension
-     *
-     * if (file extension matches) {
-     * 	if (file extension is bogus) {
-     * 		// ignore.
-     * 		// this covers *.manifest files which can contain arbitrary content, so the extension is of no value.
-     * 		// a consequence of this is that the content based mime type becomes the most specific type in the array
-     * 	} else {
-     * 		mimes.push(associated mime type)	  // first element: most specific
-     * 	}
-     * }
-     *
-     * read file contents
-     *
-     * if (content based match found) {	// this is independent from text or binary
-     * 	mimes.push(associated mime type)
-     * 	if (a second mime exists for the match) {   // should be rare; text/plain should never be included here
-     * 		// e.g. for svg: ['image/svg+xml', 'application/xml']
-     * 		mimes.push(second mime)
-     * 	}
-     * }
-     *
-     * if (content == text)
-     * 	mimes.push('text/plain')   // last element: least specific
-     * else
-     * 	mimes.push('application/octet-stream')    // last element: least specific
-     */
-    var BUFFER_READ_MAX_LEN = 512; // max buffer len to use when detecting encoding/mime
-    var ASAR_EXT = '.asar';
-    function doDetectMimesFromStream(instream, callback) {
-        stream.readExactlyByStream(instream, BUFFER_READ_MAX_LEN, function (err, buffer, bytesRead) {
-            handleReadResult(err, buffer, bytesRead, callback);
-        });
-    }
-    function doDetectMimesFromFile(absolutePath, callback) {
-        if (paths.extname(absolutePath) === ASAR_EXT) {
-            return callback(null, { encoding: encoding.UTF8, mimes: [mime.MIME_BINARY] }); // https://github.com/Microsoft/vscode/issues/646
-        }
-        stream.readExactlyByFile(absolutePath, BUFFER_READ_MAX_LEN, function (err, buffer, bytesRead) {
-            handleReadResult(err, buffer, bytesRead, callback);
-        });
-    }
-    function handleReadResult(err, buffer, bytesRead, callback) {
-        if (err) {
-            return callback(err, null);
-        }
-        return callback(null, detectMimeAndEncodingFromBuffer(buffer, bytesRead));
-    }
-    function detectMimeAndEncodingFromBuffer(buffer, bytesRead) {
-        var enc = encoding.detectEncodingByBOMFromBuffer(buffer, bytesRead);
-        // Detect 0 bytes to see if file is binary (ignore for UTF 16 though)
-        var isText = true;
-        if (enc !== encoding.UTF16be && enc !== encoding.UTF16le) {
-            for (var i = 0; i < bytesRead && i < BUFFER_READ_MAX_LEN; i++) {
-                if (buffer.readInt8(i) === 0) {
-                    isText = false;
-                    break;
-                }
-            }
-        }
-        return {
-            mimes: isText ? [mime.MIME_TEXT] : [mime.MIME_BINARY],
-            encoding: enc
-        };
-    }
-    exports.detectMimeAndEncodingFromBuffer = detectMimeAndEncodingFromBuffer;
-    function filterAndSortMimes(detectedMimes, guessedMimes) {
-        var mimes = detectedMimes;
-        // Add extension based mime as first element as this is the desire of whoever created the file.
-        // Never care about application/octet-stream or application/unknown as guessed mime, as this is the fallback of the guess which is never accurate
-        var guessedMime = guessedMimes[0];
-        if (guessedMime !== mime.MIME_BINARY && guessedMime !== mime.MIME_UNKNOWN) {
-            mimes.unshift(guessedMime);
-        }
-        // Remove duplicate elements from array and sort unspecific mime to the end
-        var uniqueSortedMimes = mimes.filter(function (element, position) {
-            return element && mimes.indexOf(element) === position;
-        }).sort(function (mimeA, mimeB) {
-            if (mimeA === mime.MIME_BINARY) {
-                return 1;
-            }
-            if (mimeB === mime.MIME_BINARY) {
-                return -1;
-            }
-            if (mimeA === mime.MIME_TEXT) {
-                return 1;
-            }
-            if (mimeB === mime.MIME_TEXT) {
-                return -1;
-            }
-            return 0;
-        });
-        return uniqueSortedMimes;
-    }
-    /**
-     * Opens the given stream to detect its mime type. Returns an array of mime types sorted from most specific to unspecific.
-     * @param instream the readable stream to detect the mime types from.
-     * @param nameHint an additional hint that can be used to detect a mime from a file extension.
-     */
-    function detectMimesFromStream(instream, nameHint, callback) {
-        doDetectMimesFromStream(instream, function (error, result) {
-            handleMimeResult(nameHint, error, result, callback);
-        });
-    }
-    exports.detectMimesFromStream = detectMimesFromStream;
-    /**
-     * Opens the given file to detect its mime type. Returns an array of mime types sorted from most specific to unspecific.
-     * @param absolutePath the absolute path of the file.
-     */
-    function detectMimesFromFile(absolutePath, callback) {
-        doDetectMimesFromFile(absolutePath, function (error, result) {
-            handleMimeResult(absolutePath, error, result, callback);
-        });
-    }
-    exports.detectMimesFromFile = detectMimesFromFile;
-    function handleMimeResult(nameHint, error, result, callback) {
-        if (error) {
-            return callback(error, null);
-        }
-        var filterAndSortedMimes = filterAndSortMimes(result.mimes, mime.guessMimeTypes(nameHint));
-        result.mimes = filterAndSortedMimes;
-        callback(null, result);
-    }
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[30/*vs/base/parts/ipc/common/ipc*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/winjs.base*/,10/*vs/base/common/lifecycle*/,9/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+define(__m[15/*vs/base/parts/ipc/common/ipc*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/winjs.base*/,9/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
     'use strict';
     var MessageType;
     (function (MessageType) {
@@ -7619,6 +7630,99 @@ define(__m[30/*vs/base/parts/ipc/common/ipc*/], __M([0/*require*/,1/*exports*/,6
         return ChannelClient;
     }());
     exports.ChannelClient = ChannelClient;
+    /**
+     * An `IPCServer` is both a channel server and a routing channel
+     * client.
+     *
+     * As the owner of a protocol, you should extend both this
+     * and the `IPCClient` classes to get IPC implementations
+     * for your protocol.
+     */
+    var IPCServer = (function () {
+        function IPCServer(onDidClientConnect) {
+            var _this = this;
+            this.channels = Object.create(null);
+            this.channelClients = Object.create(null);
+            this.onClientAdded = new event_1.Emitter();
+            onDidClientConnect(function (_a) {
+                var protocol = _a.protocol, onDidClientDisconnect = _a.onDidClientDisconnect;
+                var onFirstMessage = event_1.once(protocol.onMessage);
+                onFirstMessage(function (id) {
+                    var channelServer = new ChannelServer(protocol);
+                    var channelClient = new ChannelClient(protocol);
+                    Object.keys(_this.channels)
+                        .forEach(function (name) { return channelServer.registerChannel(name, _this.channels[name]); });
+                    _this.channelClients[id] = channelClient;
+                    _this.onClientAdded.fire(id);
+                    onDidClientDisconnect(function () {
+                        channelServer.dispose();
+                        channelClient.dispose();
+                        delete _this.channelClients[id];
+                    });
+                });
+            });
+        }
+        IPCServer.prototype.getChannel = function (channelName, router) {
+            var _this = this;
+            var call = function (command, arg) {
+                var id = router.route(command, arg);
+                if (!id) {
+                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
+                }
+                return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
+            };
+            return { call: call };
+        };
+        IPCServer.prototype.registerChannel = function (channelName, channel) {
+            this.channels[channelName] = channel;
+        };
+        IPCServer.prototype.getClient = function (clientId) {
+            var _this = this;
+            var client = this.channelClients[clientId];
+            if (client) {
+                return winjs_base_1.TPromise.as(client);
+            }
+            return new winjs_base_1.TPromise(function (c) {
+                var onClient = event_1.once(event_1.filterEvent(_this.onClientAdded.event, function (id) { return id === clientId; }));
+                onClient(function () { return c(_this.channelClients[clientId]); });
+            });
+        };
+        IPCServer.prototype.dispose = function () {
+            this.channels = null;
+            this.channelClients = null;
+            this.onClientAdded.dispose();
+        };
+        return IPCServer;
+    }());
+    exports.IPCServer = IPCServer;
+    /**
+     * An `IPCClient` is both a channel client and a channel server.
+     *
+     * As the owner of a protocol, you should extend both this
+     * and the `IPCClient` classes to get IPC implementations
+     * for your protocol.
+     */
+    var IPCClient = (function () {
+        function IPCClient(protocol, id) {
+            protocol.send(id);
+            this.channelClient = new ChannelClient(protocol);
+            this.channelServer = new ChannelServer(protocol);
+        }
+        IPCClient.prototype.getChannel = function (channelName) {
+            return this.channelClient.getChannel(channelName);
+        };
+        IPCClient.prototype.registerChannel = function (channelName, channel) {
+            this.channelServer.registerChannel(channelName, channel);
+        };
+        IPCClient.prototype.dispose = function () {
+            this.channelClient.dispose();
+            this.channelClient = null;
+            this.channelServer.dispose();
+            this.channelServer = null;
+        };
+        return IPCClient;
+    }());
+    exports.IPCClient = IPCClient;
     function getDelayedChannel(promise) {
         var call = function (command, arg) { return promise.then(function (c) { return c.call(command, arg); }); };
         return { call: call };
@@ -7671,7 +7775,7 @@ define(__m[30/*vs/base/parts/ipc/common/ipc*/], __M([0/*require*/,1/*exports*/,6
 
 
 
-define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([0/*require*/,1/*exports*/,22/*child_process*/,6/*vs/base/common/winjs.base*/,32/*vs/base/common/async*/,12/*vs/base/common/objects*/,9/*vs/base/common/event*/,31/*vs/base/node/event*/,30/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, child_process_1, winjs_base_1, async_1, objects_1, event_1, event_2, ipc_1) {
+define(__m[17/*vs/base/parts/ipc/node/ipc.cp*/], __M([0/*require*/,1/*exports*/,28/*child_process*/,8/*vs/base/common/winjs.base*/,29/*vs/base/common/async*/,12/*vs/base/common/objects*/,6/*vs/base/common/event*/,21/*vs/base/node/event*/,15/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, child_process_1, winjs_base_1, async_1, objects_1, event_1, event_2, ipc_1) {
     "use strict";
     var Server = (function (_super) {
         __extends(Server, _super);
@@ -7707,6 +7811,9 @@ define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([0/*require*/,1/*exports*/,
         };
         Client.prototype.request = function (channelName, name, arg) {
             var _this = this;
+            if (!this.disposeDelayer) {
+                return winjs_base_1.Promise.wrapError('disposed');
+            }
             this.disposeDelayer.cancel();
             var channel = this.channels[channelName] || (this.channels[channelName] = this.client.getChannel(channelName));
             var request = channel.call(name, arg);
@@ -7775,7 +7882,7 @@ define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([0/*require*/,1/*exports*/,
                             _this.activeRequests.forEach(function (req) { return req.cancel(); });
                             _this.activeRequests = [];
                         }
-                        if (code && signal !== 'SIGTERM') {
+                        if (code !== 0 && signal !== 'SIGTERM') {
                             console.warn('IPC "' + _this.options.serverName + '" crashed with exit code ' + code);
                             _this.disposeDelayer.cancel();
                             _this.disposeClient();
@@ -7806,8 +7913,8 @@ define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([0/*require*/,1/*exports*/,
     exports.Client = Client;
 });
 
-define(__m[33/*vs/nls!vs/base/common/errorMessage*/], __M([42/*vs/nls*/,44/*vs/nls!vs/workbench/services/search/node/searchApp*/]), function(nls, data) { return nls.create("vs/base/common/errorMessage", data); });
-define(__m[34/*vs/base/common/errorMessage*/], __M([0/*require*/,1/*exports*/,33/*vs/nls!vs/base/common/errorMessage*/,12/*vs/base/common/objects*/,3/*vs/base/common/types*/,4/*vs/base/common/arrays*/,2/*vs/base/common/strings*/]), function (require, exports, nls, objects, types, arrays, strings) {
+define(__m[19/*vs/nls!vs/base/common/errorMessage*/], __M([47/*vs/nls*/,43/*vs/nls!vs/workbench/services/search/node/searchApp*/]), function(nls, data) { return nls.create("vs/base/common/errorMessage", data); });
+define(__m[31/*vs/base/common/errorMessage*/], __M([0/*require*/,1/*exports*/,19/*vs/nls!vs/base/common/errorMessage*/,12/*vs/base/common/objects*/,4/*vs/base/common/types*/,5/*vs/base/common/arrays*/,3/*vs/base/common/strings*/]), function (require, exports, nls, objects, types, arrays, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7996,7 +8103,7 @@ define(__m[34/*vs/base/common/errorMessage*/], __M([0/*require*/,1/*exports*/,33
     exports.toErrorMessage = toErrorMessage;
 });
 
-define(__m[35/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[32/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -8055,7 +8162,7 @@ define(__m[35/*vs/platform/instantiation/common/instantiation*/], __M([0/*requir
 
 
 
-define(__m[36/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/paths*/,28/*vs/base/common/events*/,35/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, paths, events, instantiation_1) {
+define(__m[33/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/paths*/,27/*vs/base/common/events*/,2/*vs/base/common/platform*/,32/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, paths, events, platform_1, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -8102,36 +8209,15 @@ define(__m[36/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/
             if (!resource) {
                 return false;
             }
-            return this.containsAny([resource], type);
-        };
-        /**
-         * Returns true if this change event contains any of the provided files with the given change type. In case of
-         * type DELETED, this method will also return true if a folder got deleted that is the parent of any of the
-         * provided file paths.
-         */
-        FileChangesEvent.prototype.containsAny = function (resources, type) {
-            if (!resources || !resources.length) {
-                return false;
-            }
             return this._changes.some(function (change) {
                 if (change.type !== type) {
                     return false;
                 }
                 // For deleted also return true when deleted folder is parent of target path
                 if (type === FileChangeType.DELETED) {
-                    return resources.some(function (a) {
-                        if (!a) {
-                            return false;
-                        }
-                        return paths.isEqualOrParent(a.fsPath, change.resource.fsPath);
-                    });
+                    return isEqual(resource.fsPath, change.resource.fsPath) || isParent(resource.fsPath, change.resource.fsPath);
                 }
-                return resources.some(function (a) {
-                    if (!a) {
-                        return false;
-                    }
-                    return a.fsPath === change.resource.fsPath;
-                });
+                return isEqual(resource.fsPath, change.resource.fsPath);
             });
         };
         /**
@@ -8181,6 +8267,22 @@ define(__m[36/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/
         return FileChangesEvent;
     }(events.Event));
     exports.FileChangesEvent = FileChangesEvent;
+    function isEqual(path1, path2) {
+        var identityEquals = (path1 === path2);
+        if (platform_1.isLinux || identityEquals) {
+            return identityEquals;
+        }
+        return path1.toLowerCase() === path2.toLowerCase();
+    }
+    exports.isEqual = isEqual;
+    function isParent(path, candidate) {
+        if (!platform_1.isLinux) {
+            path = path.toLowerCase();
+            candidate = candidate.toLowerCase();
+        }
+        return path.indexOf(candidate + paths.nativeSep) === 0;
+    }
+    exports.isParent = isParent;
     (function (FileOperationResult) {
         FileOperationResult[FileOperationResult["FILE_IS_BINARY"] = 0] = "FILE_IS_BINARY";
         FileOperationResult[FileOperationResult["FILE_IS_DIRECTORY"] = 1] = "FILE_IS_DIRECTORY";
@@ -8200,6 +8302,7 @@ define(__m[36/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/
         ON_FOCUS_CHANGE: 'onFocusChange',
         ON_WINDOW_CHANGE: 'onWindowChange'
     };
+    exports.CONTENT_CHANGE_EVENT_BUFFER_DELAY = 1000;
     exports.SUPPORTED_ENCODINGS = {
         utf8: {
             labelLong: 'UTF-8',
@@ -8436,7 +8539,7 @@ define(__m[36/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[37/*vs/workbench/services/search/node/fileSearch*/], __M([0/*require*/,1/*exports*/,22/*child_process*/,43/*string_decoder*/,34/*vs/base/common/errorMessage*/,8/*fs*/,11/*path*/,13/*vs/base/common/scorer*/,4/*vs/base/common/arrays*/,5/*vs/base/common/platform*/,2/*vs/base/common/strings*/,3/*vs/base/common/types*/,15/*vs/base/common/glob*/,24/*vs/base/node/extfs*/,19/*vs/base/node/flow*/]), function (require, exports, childProcess, string_decoder_1, errorMessage_1, fs, paths, scorer, arrays, platform, strings, types, glob, extfs, flow) {
+define(__m[34/*vs/workbench/services/search/node/fileSearch*/], __M([0/*require*/,1/*exports*/,28/*child_process*/,45/*string_decoder*/,31/*vs/base/common/errorMessage*/,13/*fs*/,16/*path*/,10/*vs/base/common/scorer*/,5/*vs/base/common/arrays*/,2/*vs/base/common/platform*/,3/*vs/base/common/strings*/,4/*vs/base/common/types*/,25/*vs/base/common/glob*/,23/*vs/base/node/extfs*/,14/*vs/base/node/flow*/]), function (require, exports, childProcess, string_decoder_1, errorMessage_1, fs, paths, scorer, arrays, platform, strings, types, glob, extfs, flow) {
     'use strict';
     var Traversal;
     (function (Traversal) {
@@ -8519,7 +8622,7 @@ define(__m[37/*vs/workbench/services/search/node/fileSearch*/], __M([0/*require*
                 }
                 // For each root folder
                 flow.parallel(rootFolders, function (rootFolder, rootFolderDone) {
-                    traverse.call(_this, rootFolder, onResult, function (err) {
+                    _this.call(traverse, _this, rootFolder, onResult, function (err) {
                         if (err) {
                             if (isNodeTraversal) {
                                 rootFolderDone(err);
@@ -8540,6 +8643,18 @@ define(__m[37/*vs/workbench/services/search/node/fileSearch*/], __M([0/*require*
                     done(err ? err[0] : null, _this.isLimitHit);
                 });
             });
+        };
+        FileWalker.prototype.call = function (fun, that) {
+            var args = [];
+            for (var _i = 2; _i < arguments.length; _i++) {
+                args[_i - 2] = arguments[_i];
+            }
+            try {
+                fun.apply(that, args);
+            }
+            catch (e) {
+                args[args.length - 1](e);
+            }
         };
         FileWalker.prototype.findTraversal = function (rootFolder, onResult, cb) {
             var _this = this;
@@ -8958,7 +9073,7 @@ define(__m[37/*vs/workbench/services/search/node/fileSearch*/], __M([0/*require*
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[38/*vs/workbench/services/search/node/searchIpc*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[35/*vs/workbench/services/search/node/searchIpc*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     var SearchChannel = (function () {
         function SearchChannel(service) {
@@ -8996,43 +9111,54 @@ define(__m[38/*vs/workbench/services/search/node/searchIpc*/], __M([0/*require*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[39/*vs/workbench/services/search/node/textSearch*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/strings*/,8/*fs*/,11/*path*/,17/*vs/base/common/mime*/,29/*vs/base/node/mime*/,16/*vs/base/node/encoding*/]), function (require, exports, strings, fs, path, baseMime, mime_1, encoding_1) {
+define(__m[36/*vs/workbench/services/search/node/textSearch*/], __M([0/*require*/,1/*exports*/,16/*path*/,7/*vs/base/common/errors*/]), function (require, exports, path, errors_1) {
     'use strict';
     var Engine = (function () {
-        function Engine(config, walker) {
-            this.rootFolders = config.rootFolders;
-            this.extraFiles = config.extraFiles;
-            this.walker = walker;
-            this.contentPattern = strings.createRegExp(config.contentPattern.pattern, config.contentPattern.isRegExp, { matchCase: config.contentPattern.isCaseSensitive, wholeWord: config.contentPattern.isWordMatch, multiline: false, global: true });
+        function Engine(config, walker, workerProvider) {
             this.isCanceled = false;
-            this.limitReached = false;
-            this.maxResults = config.maxResults;
-            this.worked = 0;
+            this.isDone = false;
+            this.totalBytes = 0;
+            this.processedBytes = 0;
             this.progressed = 0;
-            this.total = 0;
-            this.fileEncoding = encoding_1.encodingExists(config.fileEncoding) ? config.fileEncoding : encoding_1.UTF8;
+            this.walkerIsDone = false;
+            this.limitReached = false;
+            this.numResults = 0;
+            this.nextWorker = 0;
+            this.config = config;
+            this.walker = walker;
+            this.workerProvider = workerProvider;
         }
         Engine.prototype.cancel = function () {
             this.isCanceled = true;
             this.walker.cancel();
+            this.workers.forEach(function (w) {
+                w.cancel()
+                    .then(null, errors_1.onUnexpectedError);
+            });
+        };
+        Engine.prototype.initializeWorkers = function () {
+            this.workers.forEach(function (w) {
+                w.initialize()
+                    .then(null, errors_1.onUnexpectedError);
+            });
         };
         Engine.prototype.search = function (onResult, onProgress, done) {
             var _this = this;
-            var resultCounter = 0;
+            this.workers = this.workerProvider.getWorkers();
+            this.initializeWorkers();
             var progress = function () {
-                _this.progressed++;
-                if (_this.progressed % Engine.PROGRESS_FLUSH_CHUNK_SIZE === 0) {
-                    onProgress({ total: _this.total, worked: _this.worked }); // buffer progress in chunks to reduce pressure
+                if (++_this.progressed % Engine.PROGRESS_FLUSH_CHUNK_SIZE === 0) {
+                    onProgress({ total: _this.totalBytes, worked: _this.processedBytes }); // buffer progress in chunks to reduce pressure
                 }
             };
             var unwind = function (processed) {
-                _this.worked += processed;
+                _this.processedBytes += processed;
                 // Emit progress() unless we got canceled or hit the limit
                 if (processed && !_this.isDone && !_this.isCanceled && !_this.limitReached) {
                     progress();
                 }
                 // Emit done()
-                if (_this.worked === _this.total && _this.walkerIsDone && !_this.isDone) {
+                if (!_this.isDone && _this.processedBytes === _this.totalBytes && _this.walkerIsDone) {
                     _this.isDone = true;
                     done(_this.walkerError, {
                         limitHit: _this.limitReached,
@@ -9040,216 +9166,156 @@ define(__m[39/*vs/workbench/services/search/node/textSearch*/], __M([0/*require*
                     });
                 }
             };
+            var run = function (batch, batchBytes) {
+                var worker = _this.workers[_this.nextWorker];
+                _this.nextWorker = (_this.nextWorker + 1) % _this.workers.length;
+                var maxResults = _this.config.maxResults && (_this.config.maxResults - _this.numResults);
+                var searchArgs = { absolutePaths: batch, maxResults: maxResults, pattern: _this.config.contentPattern, fileEncoding: _this.config.fileEncoding };
+                worker.search(searchArgs).then(function (result) {
+                    if (!result || _this.limitReached || _this.isCanceled) {
+                        return unwind(batchBytes);
+                    }
+                    var matches = result.matches;
+                    _this.numResults += result.numMatches;
+                    matches.forEach(function (m) {
+                        onResult(m);
+                    });
+                    if (_this.config.maxResults && _this.numResults >= _this.config.maxResults) {
+                        // It's possible to go over maxResults like this, but it's much simpler than trying to extract the exact number
+                        // of file matches, line matches, and matches within a line to == maxResults.
+                        _this.limitReached = true;
+                    }
+                    unwind(batchBytes);
+                }, function (error) {
+                    // An error on the worker's end, not in reading the file, but in processing the batch. Log and continue.
+                    errors_1.onUnexpectedError(error);
+                    unwind(batchBytes);
+                });
+            };
             // Walk over the file system
-            this.walker.walk(this.rootFolders, this.extraFiles, function (result) {
-                var size = result.size || 1;
-                _this.total += size;
-                // If the result is empty or we have reached the limit or we are canceled, ignore it
+            var nextBatch = [];
+            var nextBatchBytes = 0;
+            var batchFlushBytes = Math.pow(2, 20); // 1MB
+            this.walker.walk(this.config.rootFolders, this.config.extraFiles, function (result) {
+                var bytes = result.size || 1;
+                _this.totalBytes += bytes;
+                // If we have reached the limit or we are canceled, ignore it
                 if (_this.limitReached || _this.isCanceled) {
-                    return unwind(size);
+                    return unwind(bytes);
                 }
                 // Indicate progress to the outside
                 progress();
-                var fileMatch = null;
-                var doneCallback = function (error) {
-                    if (!error && !_this.isCanceled && fileMatch && !fileMatch.isEmpty()) {
-                        onResult(fileMatch.serialize());
-                    }
-                    return unwind(size);
-                };
                 var absolutePath = result.base ? [result.base, result.relativePath].join(path.sep) : result.relativePath;
-                var perLineCallback = function (line, lineNumber) {
-                    if (_this.limitReached || _this.isCanceled) {
-                        return; // return early if canceled or limit reached
-                    }
-                    var lineMatch = null;
-                    var match = _this.contentPattern.exec(line);
-                    // Record all matches into file result
-                    while (match !== null && match[0].length > 0 && !_this.limitReached && !_this.isCanceled) {
-                        resultCounter++;
-                        if (_this.maxResults && resultCounter >= _this.maxResults) {
-                            _this.limitReached = true;
-                        }
-                        if (fileMatch === null) {
-                            fileMatch = new FileMatch(absolutePath);
-                        }
-                        if (lineMatch === null) {
-                            lineMatch = new LineMatch(line, lineNumber);
-                            fileMatch.addMatch(lineMatch);
-                        }
-                        lineMatch.addMatch(match.index, match[0].length);
-                        match = _this.contentPattern.exec(line);
-                    }
-                };
-                // Read lines buffered to support large files
-                _this.readlinesAsync(absolutePath, perLineCallback, { bufferLength: 8096, encoding: _this.fileEncoding }, doneCallback);
+                nextBatch.push(absolutePath);
+                nextBatchBytes += bytes;
+                if (nextBatchBytes >= batchFlushBytes) {
+                    run(nextBatch, nextBatchBytes);
+                    nextBatch = [];
+                    nextBatchBytes = 0;
+                }
             }, function (error, isLimitHit) {
                 _this.walkerIsDone = true;
                 _this.walkerError = error;
-                unwind(0 /* walker is done, indicate this back to our handler to be able to unwind */);
-            });
-        };
-        Engine.prototype.readlinesAsync = function (filename, perLineCallback, options, callback) {
-            var _this = this;
-            fs.open(filename, 'r', null, function (error, fd) {
-                if (error) {
-                    return callback(error);
-                }
-                var buffer = new Buffer(options.bufferLength);
-                var pos;
-                var i;
-                var line = '';
-                var lineNumber = 0;
-                var lastBufferHadTraillingCR = false;
-                var outer = _this;
-                function decodeBuffer(buffer) {
-                    if (options.encoding === encoding_1.UTF8 || options.encoding === encoding_1.UTF8_with_bom) {
-                        return buffer.toString(); // much faster to use built in toString() when encoding is default
+                // Send any remaining paths to a worker, or unwind if we're stopping
+                if (nextBatch.length) {
+                    if (_this.limitReached || _this.isCanceled) {
+                        unwind(nextBatchBytes);
                     }
-                    return encoding_1.decode(buffer, options.encoding);
-                }
-                function lineFinished(offset) {
-                    line += decodeBuffer(buffer.slice(pos, i + offset));
-                    perLineCallback(line, lineNumber);
-                    line = '';
-                    lineNumber++;
-                    pos = i + offset;
-                }
-                function readFile(isFirstRead, clb) {
-                    if (outer.limitReached || outer.isCanceled) {
-                        return clb(null); // return early if canceled or limit reached
+                    else {
+                        run(nextBatch, nextBatchBytes);
                     }
-                    fs.read(fd, buffer, 0, buffer.length, null, function (error, bytesRead, buffer) {
-                        if (error || bytesRead === 0 || outer.limitReached || outer.isCanceled) {
-                            return clb(error); // return early if canceled or limit reached or no more bytes to read
-                        }
-                        pos = 0;
-                        i = 0;
-                        // Detect encoding and mime when this is the beginning of the file
-                        if (isFirstRead) {
-                            var mimeAndEncoding = mime_1.detectMimeAndEncodingFromBuffer(buffer, bytesRead);
-                            if (mimeAndEncoding.mimes[mimeAndEncoding.mimes.length - 1] !== baseMime.MIME_TEXT) {
-                                return clb(null); // skip files that seem binary
-                            }
-                            // Check for BOM offset
-                            switch (mimeAndEncoding.encoding) {
-                                case encoding_1.UTF8:
-                                    pos = i = 3;
-                                    options.encoding = encoding_1.UTF8;
-                                    break;
-                                case encoding_1.UTF16be:
-                                    pos = i = 2;
-                                    options.encoding = encoding_1.UTF16be;
-                                    break;
-                                case encoding_1.UTF16le:
-                                    pos = i = 2;
-                                    options.encoding = encoding_1.UTF16le;
-                                    break;
-                            }
-                        }
-                        if (lastBufferHadTraillingCR) {
-                            if (buffer[i] === 0x0a) {
-                                lineFinished(1);
-                                i++;
-                            }
-                            else {
-                                lineFinished(0);
-                            }
-                            lastBufferHadTraillingCR = false;
-                        }
-                        for (; i < bytesRead; ++i) {
-                            if (buffer[i] === 0x0a) {
-                                lineFinished(1);
-                            }
-                            else if (buffer[i] === 0x0d) {
-                                if (i + 1 === bytesRead) {
-                                    lastBufferHadTraillingCR = true;
-                                }
-                                else if (buffer[i + 1] === 0x0a) {
-                                    lineFinished(2);
-                                    i++;
-                                }
-                                else {
-                                    lineFinished(1);
-                                }
-                            }
-                        }
-                        line += decodeBuffer(buffer.slice(pos, bytesRead));
-                        readFile(false /* isFirstRead */, clb); // Continue reading
-                    });
                 }
-                readFile(true /* isFirstRead */, function (error) {
-                    if (error) {
-                        return callback(error);
-                    }
-                    if (line.length) {
-                        perLineCallback(line, lineNumber); // handle last line
-                    }
-                    fs.close(fd, function (error) {
-                        callback(error);
-                    });
-                });
+                else {
+                    unwind(0);
+                }
             });
         };
         Engine.PROGRESS_FLUSH_CHUNK_SIZE = 50; // optimization: number of files to process before emitting progress event
         return Engine;
     }());
     exports.Engine = Engine;
-    var FileMatch = (function () {
-        function FileMatch(path) {
-            this.path = path;
-            this.lineMatches = [];
-        }
-        FileMatch.prototype.addMatch = function (lineMatch) {
-            this.lineMatches.push(lineMatch);
-        };
-        FileMatch.prototype.isEmpty = function () {
-            return this.lineMatches.length === 0;
-        };
-        FileMatch.prototype.serialize = function () {
-            var lineMatches = [];
-            for (var i = 0; i < this.lineMatches.length; i++) {
-                lineMatches.push(this.lineMatches[i].serialize());
-            }
-            return {
-                path: this.path,
-                lineMatches: lineMatches
-            };
-        };
-        return FileMatch;
-    }());
-    var LineMatch = (function () {
-        function LineMatch(preview, lineNumber) {
-            this.preview = preview.replace(/(\r|\n)*$/, '');
-            this.lineNumber = lineNumber;
-            this.offsetAndLengths = [];
-        }
-        LineMatch.prototype.getText = function () {
-            return this.preview;
-        };
-        LineMatch.prototype.getLineNumber = function () {
-            return this.lineNumber;
-        };
-        LineMatch.prototype.addMatch = function (offset, length) {
-            this.offsetAndLengths.push([offset, length]);
-        };
-        LineMatch.prototype.serialize = function () {
-            var result = {
-                preview: this.preview,
-                lineNumber: this.lineNumber,
-                offsetAndLengths: this.offsetAndLengths
-            };
-            return result;
-        };
-        return LineMatch;
-    }());
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[40/*vs/workbench/services/search/node/rawSearchService*/], __M([0/*require*/,1/*exports*/,8/*fs*/,47/*graceful-fs*/,4/*vs/base/common/arrays*/,27/*vs/base/common/comparers*/,12/*vs/base/common/objects*/,7/*vs/base/common/paths*/,13/*vs/base/common/scorer*/,2/*vs/base/common/strings*/,6/*vs/base/common/winjs.base*/,36/*vs/platform/files/common/files*/,37/*vs/workbench/services/search/node/fileSearch*/,39/*vs/workbench/services/search/node/textSearch*/]), function (require, exports, fs, gracefulFs, arrays, comparers_1, objects, paths, scorer, strings, winjs_base_1, files_1, fileSearch_1, textSearch_1) {
+define(__m[37/*vs/workbench/services/search/node/worker/searchWorkerIpc*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    'use strict';
+    var SearchWorkerChannel = (function () {
+        function SearchWorkerChannel(worker) {
+            this.worker = worker;
+        }
+        SearchWorkerChannel.prototype.call = function (command, arg) {
+            switch (command) {
+                case 'initialize': return this.worker.initialize();
+                case 'search': return this.worker.search(arg);
+                case 'cancel': return this.worker.cancel();
+            }
+        };
+        return SearchWorkerChannel;
+    }());
+    exports.SearchWorkerChannel = SearchWorkerChannel;
+    var SearchWorkerChannelClient = (function () {
+        function SearchWorkerChannelClient(channel) {
+            this.channel = channel;
+        }
+        SearchWorkerChannelClient.prototype.initialize = function () {
+            return this.channel.call('initialize');
+        };
+        SearchWorkerChannelClient.prototype.search = function (args) {
+            return this.channel.call('search', args);
+        };
+        SearchWorkerChannelClient.prototype.cancel = function () {
+            return this.channel.call('cancel');
+        };
+        return SearchWorkerChannelClient;
+    }());
+    exports.SearchWorkerChannelClient = SearchWorkerChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[38/*vs/workbench/services/search/node/textSearchWorkerProvider*/], __M([0/*require*/,1/*exports*/,44/*os*/,30/*vs/base/common/uri*/,15/*vs/base/parts/ipc/common/ipc*/,17/*vs/base/parts/ipc/node/ipc.cp*/,37/*vs/workbench/services/search/node/worker/searchWorkerIpc*/]), function (require, exports, os, uri_1, ipc, ipc_cp_1, searchWorkerIpc_1) {
+    'use strict';
+    var TextSearchWorkerProvider = (function () {
+        function TextSearchWorkerProvider() {
+            this.workers = [];
+        }
+        TextSearchWorkerProvider.prototype.getWorkers = function () {
+            var numWorkers = os.cpus().length;
+            while (this.workers.length < numWorkers) {
+                this.createWorker();
+            }
+            return this.workers;
+        };
+        TextSearchWorkerProvider.prototype.createWorker = function () {
+            var client = new ipc_cp_1.Client(uri_1.default.parse(require.toUrl('bootstrap')).fsPath, {
+                serverName: 'Search Worker ' + this.workers.length,
+                args: ['--type=searchWorker'],
+                timeout: 30 * 1000,
+                env: {
+                    AMD_ENTRYPOINT: 'vs/workbench/services/search/node/worker/searchWorkerApp',
+                    PIPE_LOGGING: 'true',
+                    VERBOSE_LOGGING: process.env.VERBOSE_LOGGING
+                }
+            });
+            var channel = ipc.getNextTickChannel(client.getChannel('searchWorker'));
+            var channelClient = new searchWorkerIpc_1.SearchWorkerChannelClient(channel);
+            this.workers.push(channelClient);
+        };
+        return TextSearchWorkerProvider;
+    }());
+    exports.TextSearchWorkerProvider = TextSearchWorkerProvider;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[39/*vs/workbench/services/search/node/rawSearchService*/], __M([0/*require*/,1/*exports*/,13/*fs*/,46/*graceful-fs*/,5/*vs/base/common/arrays*/,26/*vs/base/common/comparers*/,12/*vs/base/common/objects*/,11/*vs/base/common/paths*/,10/*vs/base/common/scorer*/,3/*vs/base/common/strings*/,8/*vs/base/common/winjs.base*/,33/*vs/platform/files/common/files*/,34/*vs/workbench/services/search/node/fileSearch*/,36/*vs/workbench/services/search/node/textSearch*/,38/*vs/workbench/services/search/node/textSearchWorkerProvider*/]), function (require, exports, fs, gracefulFs, arrays, comparers_1, objects, paths, scorer, strings, winjs_base_1, files_1, fileSearch_1, textSearch_1, textSearchWorkerProvider_1) {
     'use strict';
     gracefulFs.gracefulify(fs);
     var SearchService = (function () {
@@ -9260,6 +9326,9 @@ define(__m[40/*vs/workbench/services/search/node/rawSearchService*/], __M([0/*re
             return this.doFileSearch(fileSearch_1.Engine, config, SearchService.BATCH_SIZE);
         };
         SearchService.prototype.textSearch = function (config) {
+            if (!this.textSearchWorkerProvider) {
+                this.textSearchWorkerProvider = new textSearchWorkerProvider_1.TextSearchWorkerProvider();
+            }
             var engine = new textSearch_1.Engine(config, new fileSearch_1.FileWalker({
                 rootFolders: config.rootFolders,
                 extraFiles: config.extraFiles,
@@ -9267,8 +9336,8 @@ define(__m[40/*vs/workbench/services/search/node/rawSearchService*/], __M([0/*re
                 excludePattern: config.excludePattern,
                 filePattern: config.filePattern,
                 maxFilesize: files_1.MAX_FILE_SIZE
-            }));
-            return this.doSearch(engine, SearchService.BATCH_SIZE);
+            }), this.textSearchWorkerProvider);
+            return this.doSearchWithBatchTimeout(engine, SearchService.BATCH_SIZE);
         };
         SearchService.prototype.doFileSearch = function (EngineClass, config, batchSize) {
             var _this = this;
@@ -9476,6 +9545,27 @@ define(__m[40/*vs/workbench/services/search/node/rawSearchService*/], __M([0/*re
                 cached.cancel();
             });
         };
+        SearchService.prototype.doSearchWithBatchTimeout = function (engine, batchSize) {
+            return new winjs_base_1.PPromise(function (c, e, p) {
+                // Use BatchedCollector to get new results to the frontend every 2s at least, until 50 results have been returned
+                var collector = new BatchedCollector(batchSize, p);
+                engine.search(function (match) {
+                    collector.addItem(match, match.numMatches);
+                }, function (progress) {
+                    p(progress);
+                }, function (error, stats) {
+                    collector.flush();
+                    if (error) {
+                        e(error);
+                    }
+                    else {
+                        c(stats);
+                    }
+                });
+            }, function () {
+                engine.cancel();
+            });
+        };
         SearchService.prototype.doSearch = function (engine, batchSize) {
             return new winjs_base_1.PPromise(function (c, e, p) {
                 var batch = [];
@@ -9545,13 +9635,81 @@ define(__m[40/*vs/workbench/services/search/node/rawSearchService*/], __M([0/*re
         };
         return FileMatchAccessor;
     }());
+    /**
+     * Collects a batch of items that each have a size. When the cumulative size of the batch reaches 'maxBatchSize', it calls the callback.
+     * If the batch isn't filled within some time, the callback is also called.
+     * And after 'runTimeoutUntilCount' items, the timeout is ignored, and the callback is called only when the batch is full.
+     */
+    var BatchedCollector = (function () {
+        function BatchedCollector(maxBatchSize, cb) {
+            this.maxBatchSize = maxBatchSize;
+            this.cb = cb;
+            this.totalNumberCompleted = 0;
+            this.batch = [];
+            this.batchSize = 0;
+        }
+        BatchedCollector.prototype.addItem = function (item, size) {
+            if (!item) {
+                return;
+            }
+            if (this.maxBatchSize > 0) {
+                this.addItemToBatch(item, size);
+            }
+            else {
+                this.cb(item);
+            }
+        };
+        BatchedCollector.prototype.addItemToBatch = function (item, size) {
+            var _this = this;
+            if (!this.startTime) {
+                this.startTime = Date.now();
+            }
+            this.batch.push(item);
+            this.batchSize += size;
+            if (this.batchSize >= this.maxBatchSize) {
+                // Flush because the batch is full
+                this.flush();
+            }
+            else if (!this.timeoutHandle && this.totalNumberCompleted < BatchedCollector.RUN_TIMEOUT_UNTIL_COUNT) {
+                // No timeout running, start a timeout to flush
+                var t = this.getTimeout();
+                this.timeoutHandle = setTimeout(function () {
+                    _this.flush();
+                }, t);
+            }
+        };
+        BatchedCollector.prototype.flush = function () {
+            if (this.batchSize) {
+                this.totalNumberCompleted += this.batchSize;
+                this.cb(this.batch);
+                this.batch = [];
+                this.batchSize = 0;
+                if (this.timeoutHandle) {
+                    clearTimeout(this.timeoutHandle);
+                    this.timeoutHandle = 0;
+                }
+            }
+        };
+        BatchedCollector.prototype.getTimeout = function () {
+            return Date.now() - this.startTime < BatchedCollector.INIT_TIMEOUT_DURATION ?
+                BatchedCollector.INIT_TIMEOUT :
+                BatchedCollector.LONGER_TIMEOUT;
+        };
+        // Use INIT_TIMEOUT for INIT_TIMEOUT_DURATION ms, then switch to LONGER_TIMEOUT
+        BatchedCollector.INIT_TIMEOUT = 500;
+        BatchedCollector.INIT_TIMEOUT_DURATION = 5000;
+        BatchedCollector.LONGER_TIMEOUT = 2000;
+        // After RUN_TIMEOUT_UNTIL_COUNT items have been collected, stop flushing on timeout
+        BatchedCollector.RUN_TIMEOUT_UNTIL_COUNT = 50;
+        return BatchedCollector;
+    }());
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[48/*vs/workbench/services/search/node/searchApp*/], __M([0/*require*/,1/*exports*/,21/*vs/base/parts/ipc/node/ipc.cp*/,38/*vs/workbench/services/search/node/searchIpc*/,40/*vs/workbench/services/search/node/rawSearchService*/]), function (require, exports, ipc_cp_1, searchIpc_1, rawSearchService_1) {
+define(__m[42/*vs/workbench/services/search/node/searchApp*/], __M([0/*require*/,1/*exports*/,17/*vs/base/parts/ipc/node/ipc.cp*/,35/*vs/workbench/services/search/node/searchIpc*/,39/*vs/workbench/services/search/node/rawSearchService*/]), function (require, exports, ipc_cp_1, searchIpc_1, rawSearchService_1) {
     'use strict';
     var server = new ipc_cp_1.Server();
     var service = new rawSearchService_1.SearchService();

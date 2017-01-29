@@ -31,6 +31,7 @@ define("vs/code/node/sharedProcessMain.nls.es", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"Extensiones",
+		"Preferencias",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"Extensión no encontrada",
@@ -102,7 +103,7 @@ define("vs/code/node/sharedProcessMain.nls.es", {
 		"Más tarde",
 		"Cancelar",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"El valor del proxy que se debe utilizar. Si no se establece, se tomará de las variables de entorno http_proxy y https_proxy",
 		"Indica si el certificado del servidor proxy debe comprobarse en la lista de entidades de certificación proporcionada.",

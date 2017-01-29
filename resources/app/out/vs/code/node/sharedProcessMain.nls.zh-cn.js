@@ -31,6 +31,7 @@ define("vs/code/node/sharedProcessMain.nls.zh-cn", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"扩展",
+		"首选项",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"未找到扩展名",
@@ -102,7 +103,7 @@ define("vs/code/node/sharedProcessMain.nls.zh-cn", {
 		"稍后",
 		"取消",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"要使用的代理设置。如果尚未设置，则将从 http_proxy 和 https_proxy 环境变量获取",
 		"是否应根据提供的 CA 列表验证代理服务器证书。",

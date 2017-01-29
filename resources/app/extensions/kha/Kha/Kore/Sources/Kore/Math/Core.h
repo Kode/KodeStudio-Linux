@@ -23,12 +23,18 @@ namespace Kore {
 	float atan2(float y, float x);
 	float floor(float value);
 	float mod(float numer, float denom);
-
+	float exp(float exponent);
+		
 	template <class T> T min(T a, T b) {
 		return (a < b) ? a : b;
 	}
 
 	template <class T> T max(T a, T b) {
 		return (a > b) ? a : b;
+	}
+
+	template <class T> T clamp(T value, T minValue, T maxValue) {
+		const T clampedToMin = value < minValue ? minValue : value;
+		return clampedToMin > maxValue ? maxValue : clampedToMin;
 	}
 }

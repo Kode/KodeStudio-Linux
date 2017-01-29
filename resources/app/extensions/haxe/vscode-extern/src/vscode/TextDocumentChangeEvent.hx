@@ -1,6 +1,16 @@
 package vscode;
 
+/**
+ * An event describing a transactional [document](#TextDocument) change.
+ */
 typedef TextDocumentChangeEvent = {
-	var document:TextDocument;
-	var contentChanges:Array<TextDocumentContentChangeEvent>;
+    /**
+     * The affected document.
+     */
+    var document:TextDocument;
+
+    /**
+     * An array of content changes.
+     */
+    var contentChanges:Array<TextDocumentContentChangeEvent>;
 }

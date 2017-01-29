@@ -15,6 +15,7 @@
 	"La combinazione di minuscole/maiuscole usata nel percorso del programma è diversa rispetto al file su disco. È possibile che i punti di interruzione non vengano rilevati.",
 	"Non è possibile avviare il programma '{0}'. Per risolvere il problema, provare a configurare i mapping di origine.",
 	"Non è possibile avviare il programma '{0}'. Per risolvere il problema, provare a impostare l'attributo '{1}'.",
+	"Non è possibile caricare le variabili di ambiente dal file ({0}).",
 	"Console di debug nodo",
 	"Non è possibile avviare la destinazione di debug nel terminale ({0}).",
 	"Non è possibile avviare la destinazione di debug ({0}).",

@@ -6,7 +6,6 @@
 var vscode_languageserver_1 = require('vscode-languageserver');
 var Strings = require('../utils/strings');
 var request_light_1 = require('request-light');
-var request_light_2 = require('request-light');
 var nls = require('vscode-nls');
 var localize = nls.loadMessageBundle(__filename);
 var FEED_INDEX_URL = 'https://api.nuget.org/v3/index.json';
@@ -29,9 +28,10 @@ var ProjectJSONContribution = (function () {
                 this.cacheSize--;
                 return false;
             }
+            var insertTextValue = item.insertText.value;
             item.detail = entry.version;
             item.documentation = entry.description;
-            item.insertText = item.insertText.replace(/\{\{\}\}/, '{{' + entry.version + '}}');
+            item.insertText = insertTextValue.replace(/\$1/, '${1:' + entry.version + '}');
             return true;
         }
         return false;
@@ -80,20 +80,20 @@ var ProjectJSONContribution = (function () {
     };
     ProjectJSONContribution.prototype.collectDefaultCompletions = function (resource, result) {
         if (this.isProjectJSONFile(resource)) {
-            var defaultValue = {
-                'version': '{{1.0.0-*}}',
+            var insertText = vscode_languageserver_1.SnippetString.create(JSON.stringify({
+                'version': '${1:1.0.0-*}',
                 'dependencies': {},
                 'frameworks': {
                     'net461': {},
                     'netcoreapp1.0': {}
                 }
-            };
-            result.add({ kind: 7 /* Class */, label: localize(1, null), insertText: JSON.stringify(defaultValue, null, '\t'), documentation: '' });
+            }, null, '\t'));
+            result.add({ kind: 7 /* Class */, label: localize(1, null), insertText: insertText, documentation: '' });
         }
         return null;
     };
     ProjectJSONContribution.prototype.makeJSONRequest = function (url) {
-        return request_light_2.xhr({
+        return request_light_1.xhr({
             url: url
         }).then(function (success) {
             if (success.status === 200) {
@@ -127,12 +127,12 @@ var ProjectJSONContribution = (function () {
                             var name = results[i];
                             var insertText = JSON.stringify(name);
                             if (addValue) {
-                                insertText += ': "{{}}"';
+                                insertText += ': "$1"';
                                 if (!isLast) {
                                     insertText += ',';
                                 }
                             }
-                            var item = { kind: 10 /* Property */, label: name, insertText: insertText, filterText: JSON.stringify(name) };
+                            var item = { kind: 10 /* Property */, label: name, insertText: vscode_languageserver_1.SnippetString.create(insertText), filterText: JSON.stringify(name) };
                             if (!_this.completeWithCache(name, item)) {
                                 item.data = RESOLVE_ID + name;
                             }
@@ -259,4 +259,4 @@ function matches(segments, pattern) {
     }
     return k === pattern.length;
 }
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/json/server/out/jsoncontributions/projectJSONContribution.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/json/server/out/jsoncontributions/projectJSONContribution.js.map

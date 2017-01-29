@@ -11,7 +11,7 @@ var nls = require('vscode-nls');
 var localize = nls.loadMessageBundle(__filename);
 var ColorSymbolRequest;
 (function (ColorSymbolRequest) {
-    ColorSymbolRequest.type = { get method() { return 'css/colorSymbols'; } };
+    ColorSymbolRequest.type = { get method() { return 'css/colorSymbols'; }, _: null };
 })(ColorSymbolRequest || (ColorSymbolRequest = {}));
 // this method is called when vs code is activated
 function activate(context) {
@@ -40,7 +40,7 @@ function activate(context) {
     // client can be deactivated on extension deactivation
     context.subscriptions.push(disposable);
     var colorRequestor = function (uri) {
-        return client.sendRequest(ColorSymbolRequest.type, uri).then(function (ranges) { return ranges.map(vscode_languageclient_1.Protocol2Code.asRange); });
+        return client.sendRequest(ColorSymbolRequest.type, uri).then(function (ranges) { return ranges.map(client.protocol2CodeConverter.asRange); });
     };
     disposable = colorDecorators_1.activateColorDecorations(colorRequestor, { css: true, scss: true, less: true });
     context.subscriptions.push(disposable);
@@ -54,24 +54,24 @@ function activate(context) {
         wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]*(?=[^,{;]*[,{]))|(([@$#.!])?[\w-?]+%?|[@#!$.])/g
     });
     vscode_1.commands.registerCommand('_css.applyCodeAction', applyCodeAction);
-}
-exports.activate = activate;
-function applyCodeAction(uri, documentVersion, edits) {
-    var textEditor = vscode_1.window.activeTextEditor;
-    if (textEditor && textEditor.document.uri.toString() === uri) {
-        if (textEditor.document.version !== documentVersion) {
-            vscode_1.window.showInformationMessage("CSS fix is outdated and can't be applied to the document.");
+    function applyCodeAction(uri, documentVersion, edits) {
+        var textEditor = vscode_1.window.activeTextEditor;
+        if (textEditor && textEditor.document.uri.toString() === uri) {
+            if (textEditor.document.version !== documentVersion) {
+                vscode_1.window.showInformationMessage("CSS fix is outdated and can't be applied to the document.");
+            }
+            textEditor.edit(function (mutator) {
+                for (var _i = 0, edits_1 = edits; _i < edits_1.length; _i++) {
+                    var edit = edits_1[_i];
+                    mutator.replace(client.protocol2CodeConverter.asRange(edit.range), edit.newText);
+                }
+            }).then(function (success) {
+                if (!success) {
+                    vscode_1.window.showErrorMessage('Failed to apply CSS fix to the document. Please consider opening an issue with steps to reproduce.');
+                }
+            });
         }
-        textEditor.edit(function (mutator) {
-            for (var _i = 0, edits_1 = edits; _i < edits_1.length; _i++) {
-                var edit = edits_1[_i];
-                mutator.replace(vscode_languageclient_1.Protocol2Code.asRange(edit.range), edit.newText);
-            }
-        }).then(function (success) {
-            if (!success) {
-                vscode_1.window.showErrorMessage('Failed to apply CSS fix to the document. Please consider opening an issue with steps to reproduce.');
-            }
-        });
     }
-}
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/css/client/out/cssMain.js.map
+}
+exports.activate = activate;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/css/client/out/cssMain.js.map

@@ -1,12 +1,7 @@
 [
-	"Erstellen Sie eine Datei \"jsconfig.json\", um leistungsfähigere IntelliSense-Funktionen und Codenavigation im gesamten Arbeitsbereich zu ermöglichen.",
-	"Ignorieren",
-	"\"jsconfig.json\" erstellen",
-	"Erstellen Sie eine Datei \"jsconfig.json\", um leistungsfähigere IntelliSense-Funktionen und Codenavigation im gesamten Arbeitsbereich zu ermöglichen.",
-	"Schließen Sie Ordner mit vielen Dateien aus, um eine bessere Leistung zu erzielen, beispielsweise: {0}",
-	"Schließen Sie Ordner mit vielen Dateien aus, um eine bessere Leistung zu erzielen.",
+	"Um JavaScript/TypeScript IntelliSense zu aktivieren, schließen Sie Ordner mit vielen Dateien aus. Beispiel: {0}",
+	"Um JavaScript/TypeScript IntelliSense zu aktivieren, schließen Sie große Ordner mit Quelldateien aus, an denen Sie nicht arbeiten.",
 	"Auszuschließende Elemente konfigurieren",
 	"Auszuschließende Elemente konfigurieren",
-	"Schließen Sie Ordner mit vielen Dateien aus, um eine bessere Leistung zu erzielen.",
-	"// Unter https://go.microsoft.com/fwlink/?LinkId=759670\n\t// finden Sie die Dokumentation zum jsconfig.json-Format."
+	"Um JavaScript/TypeScript IntelliSense zu aktivieren, schließen Sie große Ordner mit Quelldateien aus, an denen Sie nicht arbeiten."
 ]

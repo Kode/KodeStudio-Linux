@@ -1,7 +1,7 @@
 {
   "name": "node-debug2",
   "displayName": "Node Debug 2 - Experimental",
-  "version": "1.7.2",
+  "version": "1.8.6",
   "publisher": "ms-vscode",
   "description": "%extension.description%",
   "icon": "images/node-debug-icon.svg",
@@ -14,9 +14,9 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "vscode-chrome-debug-core": "3.3.5",
-    "vscode-debugadapter": "^1.14.0-pre.2",
-    "vscode-debugprotocol": "^1.14.0-pre.2",
+    "vscode-chrome-debug-core": "3.8.1",
+    "vscode-debugadapter": "^1.14.0",
+    "vscode-debugprotocol": "^1.14.0",
     "vscode-nls": "^1.0.4"
   },
   "devDependencies": {
@@ -33,10 +33,10 @@
     "mocha": "^3.1.1",
     "run-sequence": "^1.2.2",
     "tslint": "^3.15.1",
-    "typescript": "^2.0.2",
+    "typescript": "~2.0.2",
     "vsce": "^1.14.0",
     "vscode": "^1.0.0",
-    "vscode-debugadapter-testsupport": "^1.14.0-pre.0",
+    "vscode-debugadapter-testsupport": "^1.15.0-pre.0",
     "vscode-nls-dev": "^2.0.0-beta.1"
   },
   "main": "./out/src/extension",
@@ -47,11 +47,11 @@
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
     "build": "gulp build",
-    "test": "mocha --timeout 20000 -s 2000 -u tdd --reporter out/test/loggingReporter.js ./out/test/",
+    "test": "mocha --timeout 20000 -s 2000 -u tdd --colors --reporter out/test/loggingReporter.js ./out/test/",
     "vscode:prepublish": "gulp verify-no-linked-modules"
   },
   "engines": {
-    "vscode": "^1.7.0",
+    "vscode": "^1.8.0",
     "node": "^6.3.0"
   },
   "repository": {
@@ -74,6 +74,26 @@
       "runtime": "node",
       "aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
       "initialConfigurations": "extension.node-debug2.provideInitialConfigurations",
+      "configurationSnippets": [{
+        "label": "%node.snippet.launch.label%",
+        "description": "%node.snippet.launch.description%",
+        "body": {
+          "type": "node2",
+          "request": "launch",
+          "name": "${2:Launch Program}",
+          "program": "^\"\\${workspaceRoot}/${1:app.js}\"",
+          "cwd": "^\"\\${workspaceRoot}\""
+        }
+      }, {
+        "label": "%node.snippet.attach.label%",
+        "description": "%node.snippet.attach.description%",
+        "body": {
+          "type": "node",
+          "request": "attach",
+          "name": "${2:Attach to Port}",
+          "port": 9229
+        }
+      }],
       "configurationAttributes": {
         "launch": {
           "required": [
@@ -146,6 +166,7 @@
                 "null"
               ],
               "description": "%node.outDir.description%",
+              "deprecationMessage": "%outDir.deprecationMessage%",
               "default": null
             },
             "outFiles": {
@@ -178,13 +199,23 @@
             },
             "diagnosticLogging": {
               "type": "boolean",
-              "description": "When true, the adapter logs its own diagnostic info to the console",
+              "description": "%node.diagnosticLogging.description%",
               "default": true
             },
             "verboseDiagnosticLogging": {
               "type": "boolean",
-              "description": "When true, the adapter logs all traffic with the client and target (as well as the info logged by 'diagnosticLogging')",
+              "description": "%node.verboseDiagnosticLogging.description%",
               "default": true
+            },
+            "sourceMapPathOverrides": {
+              "type": "object",
+              "description": "%node.sourceMapPathOverrides.description%",
+              "default": {}
+            },
+            "skipFiles": {
+              "type": "array",
+              "description": "%node.skipFiles.description%",
+              "default": []
             }
           }
         },
@@ -221,6 +252,7 @@
                 "null"
               ],
               "description": "%node.outDir.description%",
+              "deprecationMessage": "%outDir.deprecationMessage%",
               "default": null
             },
             "outFiles": {
@@ -259,13 +291,23 @@
             },
             "diagnosticLogging": {
               "type": "boolean",
-              "description": "When true, the adapter logs its own diagnostic info to the console",
+              "description": "%node.diagnosticLogging.description%",
               "default": true
             },
             "verboseDiagnosticLogging": {
               "type": "boolean",
-              "description": "When true, the adapter logs all traffic with the client and target (as well as the info logged by 'diagnosticLogging')",
+              "description": "%node.verboseDiagnosticLogging.description%",
               "default": true
+            },
+            "sourceMapPathOverrides": {
+              "type": "object",
+              "description": "%node.sourceMapPathOverrides.description%",
+              "default": {}
+            },
+            "skipFiles": {
+              "type": "array",
+              "description": "%node.skipFiles.description%",
+              "default": []
             }
           }
         }

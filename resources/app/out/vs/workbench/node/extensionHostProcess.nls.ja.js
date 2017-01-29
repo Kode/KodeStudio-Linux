@@ -16,6 +16,14 @@ define("vs/workbench/node/extensionHostProcess.nls.ja", {
 	"vs/base/node/processes": [
 		"UNC ドライブでシェル コマンドを実行できません。",
 	],
+	"vs/platform/configuration/common/configurationRegistry": [
+		"構成の設定を提供します。",
+		"設定の概要です。このラベルは、設定ファイルでコメントの区切り文字として使用します。",
+		"構成のプロパティの説明です。",
+		"設定すると、\'configuration.type\' は \'オブジェクトに設定されなければなりません",
+		"\'configuration.title\' は、文字列である必要があります",
+		"\'configuration.properties\' は、オブジェクトである必要があります",
+	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"拡張機能 `{1}` のアクティブ化に失敗しました。理由: 依存関係 `{0}` が不明です。",
 		"拡張機能 `{1}` のアクティブ化に失敗しました。理由: 依存関係 `{0}` のアクティブ化に失敗しました。",
@@ -31,7 +39,7 @@ define("vs/workbench/node/extensionHostProcess.nls.ja", {
 		"VS Code マーケットプレース ページ ヘッダー上のバナーの色。",
 		"バナーで使用されるフォントの配色テーマ。",
 		"このパッケージで表される VS Code 拡張機能のすべてのコントリビューション。",
-		"Marketplace で Preview としてフラグを付けられる拡張機能を設定します。",
+		"Marketplace で Preview としてフラグが付けられるように拡張機能を設定します。",
 		"VS Code 拡張機能のアクティブ化イベント。",
 		"Marketplace の拡張機能ページのサイドバーに表示されるバッジの配列。",
 		"バッジのイメージ URL。",
@@ -43,6 +51,12 @@ define("vs/workbench/node/extensionHostProcess.nls.ja", {
 	],
 	"vs/workbench/api/node/extHostDiagnostics": [
 		"{0} 個の追加のエラーと警告が表示されていません。",
+	],
+	"vs/workbench/api/node/extHostTreeExplorers": [
+		"ID \'{0}\' の TreeExplorerNodeProvider は登録されていません。",
+		"TreeExplorerNodeProvider \'{0}\' がルート ノードの指定に失敗しました。",
+		"ID \'{0}\' の TreeExplorerNodeProvider は登録されていません。",
+		"TreeExplorerNodeProvider \'{0}\' が子の解決に失敗しました。",
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"パス {0} は有効な拡張機能テスト ランナーを指していません。",

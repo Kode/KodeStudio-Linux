@@ -34,15 +34,27 @@ function registerKeybindingsCompletions() {
         }
     });
 }
+function newCompletionItem(text, range) {
+    var item = new vscode.CompletionItem(JSON.stringify(text));
+    item.kind = vscode.CompletionItemKind.Value;
+    item.textEdit = {
+        range: range,
+        newText: item.label
+    };
+    return item;
+}
 function updateLaunchJsonDecorations(editor) {
     if (!editor || path.basename(editor.document.fileName) !== 'launch.json') {
         return;
     }
     var ranges = [];
     var addPropertyAndValue = false;
+    var depthInArray = 0;
     jsonc_parser_1.visit(editor.document.getText(), {
         onObjectProperty: function (property, offset, length) {
-            addPropertyAndValue = property === 'version' || property === 'type' || property === 'request' || property === 'configurations';
+            // Decorate attributes which are unlikely to be edited by the user.
+            // Only decorate "configurations" if it is not inside an array (compounds have a configurations property which should not be decorated).
+            addPropertyAndValue = property === 'version' || property === 'type' || property === 'request' || property === 'compounds' || (property === 'configurations' && depthInArray === 0);
             if (addPropertyAndValue) {
                 ranges.push(new vscode.Range(editor.document.positionAt(offset), editor.document.positionAt(offset + length)));
             }
@@ -51,18 +63,14 @@ function updateLaunchJsonDecorations(editor) {
             if (addPropertyAndValue) {
                 ranges.push(new vscode.Range(editor.document.positionAt(offset), editor.document.positionAt(offset + length)));
             }
+        },
+        onArrayBegin: function (offset, length) {
+            depthInArray++;
+        },
+        onArrayEnd: function (offset, length) {
+            depthInArray--;
         }
     });
     editor.setDecorations(decoration, ranges);
-}
-function newCompletionItem(text, range, documentation) {
-    var item = new vscode.CompletionItem(JSON.stringify(text));
-    item.kind = vscode.CompletionItemKind.Value;
-    item.documentation = documentation;
-    item.textEdit = {
-        range: range,
-        newText: item.label
-    };
-    return item;
 }
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/configuration-editing/out/extension.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/configuration-editing/out/extension.js.map

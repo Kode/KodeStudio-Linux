@@ -8,18 +8,16 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference types="es6-collections" />
-/// <reference types="node" />
-var vscode_debugadapter_1 = require('vscode-debugadapter');
-var nodeV8Protocol_1 = require('./nodeV8Protocol');
-var sourceMaps_1 = require('./sourceMaps');
-var PathUtils = require('./pathUtilities');
-var CP = require('child_process');
-var Net = require('net');
-var URL = require('url');
-var Path = require('path');
-var FS = require('fs');
-var nls = require('vscode-nls');
+var vscode_debugadapter_1 = require("vscode-debugadapter");
+var nodeV8Protocol_1 = require("./nodeV8Protocol");
+var sourceMaps_1 = require("./sourceMaps");
+var PathUtils = require("./pathUtilities");
+var CP = require("child_process");
+var Net = require("net");
+var URL = require("url");
+var Path = require("path");
+var FS = require("fs");
+var nls = require("vscode-nls");
 var localize = nls.config(process.env.VSCODE_NLS_CONFIG)(__filename);
 var Expander = (function () {
     function Expander(func) {
@@ -31,9 +29,9 @@ var Expander = (function () {
     Expander.prototype.SetValue = function (session, name, value) {
         return Promise.reject(new Error(Expander.SET_VALUE_ERROR));
     };
-    Expander.SET_VALUE_ERROR = localize(0, null);
     return Expander;
 }());
+Expander.SET_VALUE_ERROR = localize(0, null);
 exports.Expander = Expander;
 var PropertyContainer = (function () {
     function PropertyContainer(obj, ths) {
@@ -46,7 +44,9 @@ var PropertyContainer = (function () {
             return session._createProperties(this._object, 'named').then(function (variables) {
                 if (_this._this) {
                     return session._createVariable('this', _this._this).then(function (variable) {
-                        variables.push(variable);
+                        if (variable) {
+                            variables.push(variable);
+                        }
                         return variables;
                     });
                 }
@@ -62,7 +62,9 @@ var PropertyContainer = (function () {
             return session._createProperties(this._object, 'all').then(function (variables) {
                 if (_this._this) {
                     return session._createVariable('this', _this._this).then(function (variable) {
-                        variables.push(variable);
+                        if (variable) {
+                            variables.push(variable);
+                        }
                         return variables;
                     });
                 }
@@ -111,7 +113,9 @@ var ScopeContainer = (function () {
         return session._createProperties(this._object, filter).then(function (variables) {
             if (_this._this) {
                 return session._createVariable('this', _this._this).then(function (variable) {
-                    variables.push(variable);
+                    if (variable) {
+                        variables.push(variable);
+                    }
                     return variables;
                 });
             }
@@ -156,44 +160,46 @@ var SourceSource = (function () {
 var NodeDebugSession = (function (_super) {
     __extends(NodeDebugSession, _super);
     function NodeDebugSession() {
-        var _this = this;
-        _super.call(this);
-        this._traceAll = false;
+        var _this = _super.call(this) || this;
+        _this._traceAll = false;
         // options
-        this._tryToInjectExtension = true;
-        this._skipRejects = false; // do not stop on rejected promises
-        this._maxVariablesPerScope = 100; // only load this many variables for a scope
-        this._smartStep = false; // try to automatically step over uninteresting source
-        this._mapToFilesOnDisk = true; // by default try to map node.js scripts to files on disk
-        this._compareContents = true; // by default verify that script contents is same as file contents
-        this._supportsRunInTerminalRequest = false;
-        this._nodeProcessId = -1; // pid of the node runtime
-        this._functionBreakpoints = new Array(); // node function breakpoint ids
-        this._scripts = new Map(); // script cache
-        this._files = new Map(); // file cache
-        this._modifiedSources = new Set(); // track edited files
-        this._hitCounts = new Map(); // breakpoint ID -> ignore count
+        _this._tryToInjectExtension = true;
+        _this._skipRejects = false; // do not stop on rejected promises
+        _this._maxVariablesPerScope = 100; // only load this many variables for a scope
+        _this._smartStep = false; // try to automatically step over uninteresting source
+        _this._mapToFilesOnDisk = true; // by default try to map node.js scripts to files on disk
+        _this._compareContents = true; // by default verify that script contents is same as file contents
+        _this._supportsRunInTerminalRequest = false;
+        _this._nodeProcessId = -1; // pid of the node runtime
+        _this._functionBreakpoints = new Array(); // node function breakpoint ids
+        _this._scripts = new Map(); // script cache
+        _this._files = new Map(); // file cache
+        _this._scriptId2Handle = new Map();
+        _this._inlinedContentHandle = new Map();
+        _this._modifiedSources = new Set(); // track edited files
+        _this._hitCounts = new Map(); // breakpoint ID -> ignore count
         // session configurations
-        this._noDebug = false;
-        this._attachMode = false;
-        this._restartMode = false;
-        this._console = 'internalConsole';
-        this._stepBack = false;
+        _this._noDebug = false;
+        _this._attachMode = false;
+        _this._restartMode = false;
+        _this._console = 'internalConsole';
+        _this._stepBack = false;
         // state valid between stop events
-        this._variableHandles = new vscode_debugadapter_1.Handles();
-        this._frameHandles = new vscode_debugadapter_1.Handles();
-        this._sourceHandles = new vscode_debugadapter_1.Handles();
-        this._refCache = new Map();
-        this._pollForNodeProcess = false;
-        this._nodeInjectionAvailable = false;
-        this._gotDebuggerEvent = false;
-        this._smartStepCount = 0;
-        this._catchRejects = false;
+        _this._variableHandles = new vscode_debugadapter_1.Handles();
+        _this._frameHandles = new vscode_debugadapter_1.Handles();
+        _this._sourceHandles = new vscode_debugadapter_1.Handles();
+        _this._refCache = new Map();
+        _this._pollForNodeProcess = false;
+        _this._nodeInjectionAvailable = false;
+        _this._gotDebuggerEvent = false;
+        _this._smartStepCount = 0;
+        _this._catchRejects = false;
+        _this._disableSkipFiles = false;
         // this debugger uses zero-based lines and columns which is the default
         // so the following two calls are not really necessary.
-        this.setDebuggerLinesStartAt1(false);
-        this.setDebuggerColumnsStartAt1(false);
-        this._node = new nodeV8Protocol_1.NodeV8Protocol(function (response) {
+        _this.setDebuggerLinesStartAt1(false);
+        _this.setDebuggerColumnsStartAt1(false);
+        _this._node = new nodeV8Protocol_1.NodeV8Protocol(function (response) {
             // if request successful, cache alls refs
             if (response.success && response.refs) {
                 var oldSize = _this._refCache.size;
@@ -206,11 +212,11 @@ var NodeDebugSession = (function (_super) {
                 }
             }
         });
-        this._node.on('break', function (event) {
+        _this._node.on('break', function (event) {
             _this._stopped('break');
             _this._handleNodeBreakEvent(event.body);
         });
-        this._node.on('exception', function (event) {
+        _this._node.on('exception', function (event) {
             _this._stopped('exception');
             _this._handleNodeBreakEvent(event.body);
         });
@@ -222,12 +228,13 @@ var NodeDebugSession = (function (_super) {
             this.outLine(`afterCompile ${event.body.name}`);
         });
         */
-        this._node.on('close', function (event) {
+        _this._node.on('close', function (event) {
             _this._terminated('node v8protocol close');
         });
-        this._node.on('error', function (event) {
+        _this._node.on('error', function (event) {
             _this._terminated('node v8protocol error');
         });
+        return _this;
         /*
         this._node.on('diagnostic', (event: NodeV8Event) => {
             this.outLine(`diagnostic event ${event.body.reason}`);
@@ -241,7 +248,6 @@ var NodeDebugSession = (function (_super) {
         var _this = this;
         var isEntry = false;
         var reason;
-        var exception_text;
         // in order to identify reject calls and debugger statements extract source at current location
         var source = null;
         if (eventBody.sourceLineText && typeof eventBody.sourceColumn === 'number') {
@@ -249,6 +255,10 @@ var NodeDebugSession = (function (_super) {
         }
         // is exception?
         if (eventBody.exception) {
+            if (this._skip(eventBody)) {
+                this._node.command('continue');
+                return;
+            }
             // if this exception originates from a 'reject', skip it if 'All Exception' is not set.
             if (this._skipRejects && source && source.indexOf('reject') === 0) {
                 if (!this._catchRejects) {
@@ -261,13 +271,14 @@ var NodeDebugSession = (function (_super) {
             }
             // remember exception
             this._exception = eventBody.exception;
-            exception_text = eventBody.exception.text;
-            reason = this._reasonText('exception');
+            this._handleNodeBreakEvent2(this._reasonText('exception'), isEntry, eventBody.exception.text);
+            return;
         }
         // is breakpoint?
         if (!reason) {
             var breakpoints = eventBody.breakpoints;
             if (Array.isArray(breakpoints) && breakpoints.length > 0) {
+                this._disableSkipFiles = this._skip(eventBody);
                 var id = breakpoints[0];
                 if (!this._gotEntryEvent && id === 1) {
                     isEntry = true;
@@ -279,7 +290,7 @@ var NodeDebugSession = (function (_super) {
                     var ibp = this._hitCounts.get(id);
                     if (ibp) {
                         ibp.hitCount++;
-                        if (!ibp.hitter(ibp.hitCount)) {
+                        if (ibp.hitter && !ibp.hitter(ibp.hitCount)) {
                             this._node.command('continue');
                             return;
                         }
@@ -290,7 +301,7 @@ var NodeDebugSession = (function (_super) {
         }
         // is debugger statement?
         if (!reason) {
-            if (source && source.indexOf('debugger') == 0) {
+            if (source && source.indexOf('debugger') === 0) {
                 reason = this._reasonText('debugger');
                 this._gotDebuggerEvent = true;
             }
@@ -304,21 +315,23 @@ var NodeDebugSession = (function (_super) {
             else {
                 reason = this._reasonText('step');
             }
-            // should we continue until we find a better place to stop?
-            if (this._smartStep) {
-                this._skipGenerated(eventBody).then(function (r) {
-                    if (r) {
-                        _this._node.command('continue', { stepaction: 'in' });
-                        _this._smartStepCount++;
-                    }
-                    else {
-                        _this._handleNodeBreakEvent2(reason, exception_text, isEntry);
-                    }
-                });
-                return;
+            if (!this._disableSkipFiles) {
+                // should we continue until we find a better place to stop?
+                if ((this._smartStep && this._sourceMaps) || this._skipFiles) {
+                    this._skipGenerated(eventBody).then(function (r) {
+                        if (r) {
+                            _this._node.command('continue', { stepaction: 'in' });
+                            _this._smartStepCount++;
+                        }
+                        else {
+                            _this._handleNodeBreakEvent2(reason, isEntry);
+                        }
+                    });
+                    return;
+                }
             }
         }
-        this._handleNodeBreakEvent2(reason, exception_text, isEntry);
+        this._handleNodeBreakEvent2(reason, isEntry);
     };
     NodeDebugSession.prototype._reasonText = function (reason) {
         switch (reason) {
@@ -340,7 +353,7 @@ var NodeDebugSession = (function (_super) {
                 return reason;
         }
     };
-    NodeDebugSession.prototype._handleNodeBreakEvent2 = function (reason, exception_text, isEntry) {
+    NodeDebugSession.prototype._handleNodeBreakEvent2 = function (reason, isEntry, exception_text) {
         this._lastStoppedEvent = new vscode_debugadapter_1.StoppedEvent(reason, NodeDebugSession.DUMMY_THREAD_ID, exception_text);
         if (!isEntry) {
             if (this._smartStepCount > 0) {
@@ -351,20 +364,36 @@ var NodeDebugSession = (function (_super) {
         }
     };
     /**
-     * Returns true if a source location of the gievn event should be skipped.
+     * Returns true if a source location of the given event should be skipped.
+     */
+    NodeDebugSession.prototype._skip = function (event) {
+        if (this._skipFiles) {
+            var path = event.script.name;
+            if (path /*&& PathUtils.isAbsolutePath(path)*/) {
+                // if launch.json defines localRoot and remoteRoot try to convert remote path back to a local path
+                var localPath = this._remoteToLocal(path);
+                return PathUtils.multiGlobMatches(this._skipFiles, localPath);
+            }
+        }
+        return false;
+    };
+    /**
+     * Returns true if a source location of the given event should be skipped.
      */
     NodeDebugSession.prototype._skipGenerated = function (event) {
-        if (!this._sourceMaps) {
-            // proceed as normal
-            return Promise.resolve(false);
-        }
-        var line = event.sourceLine;
-        var column = this._adjustColumn(line, event.sourceColumn);
-        var remotePath = event.script.name;
-        if (remotePath && PathUtils.isAbsolutePath(remotePath)) {
+        var path = event.script.name;
+        if (path /*&& PathUtils.isAbsolutePath(path)*/) {
             // if launch.json defines localRoot and remoteRoot try to convert remote path back to a local path
-            var localPath = this._remoteToLocal(remotePath);
+            var localPath = this._remoteToLocal(path);
+            if (this._skipFiles) {
+                if (PathUtils.multiGlobMatches(this._skipFiles, localPath)) {
+                    return Promise.resolve(true);
+                }
+                return Promise.resolve(false);
+            }
             // try to map
+            var line = event.sourceLine;
+            var column = this._adjustColumn(line, event.sourceColumn);
             return this._sourceMaps.MapToSource(localPath, null, line, column).then(function (mapresult) {
                 return !mapresult;
             });
@@ -407,6 +436,7 @@ var NodeDebugSession = (function (_super) {
             this._supportsRunInTerminalRequest = args.supportsRunInTerminalRequest;
         }
         //---- Send back feature and their options
+        response.body = response.body || {};
         // This debug adapter supports the configurationDoneRequest.
         response.body.supportsConfigurationDoneRequest = true;
         // This debug adapter supports function breakpoints.
@@ -591,13 +621,36 @@ var NodeDebugSession = (function (_super) {
         launchArgs = launchArgs.concat(programArgs);
         var address = args.address;
         var timeout = args.timeout;
+        var envVars = args.env;
+        // read env from disk and merge into envVars
+        if (args.envFile) {
+            try {
+                var buffer = FS.readFileSync(args.envFile, 'utf8');
+                var env_1 = {};
+                buffer.split('\n').forEach(function (line) {
+                    var r = line.match(/^\s*([\w\.\-]+)\s*=\s*(.*)?\s*$/);
+                    if (r !== null) {
+                        var value = r[2] || '';
+                        if (value.length > 0 && value.charAt(0) === '"' && value.charAt(value.length - 1) === '"') {
+                            value = value.replace(/\\n/gm, '\n');
+                        }
+                        env_1[r[1]] = value.replace(/(^['"]|['"]$)/g, '');
+                    }
+                });
+                envVars = PathUtils.extendObject(env_1, args.env); // launch config env vars overwrite .env vars
+            }
+            catch (e) {
+                this.sendErrorResponse(response, 2029, localize(16, null, '{_error}'), { _error: e.message });
+                return;
+            }
+        }
         if (this._supportsRunInTerminalRequest && (this._console === 'externalTerminal' || this._console === 'integratedTerminal')) {
             var termArgs = {
                 kind: this._console === 'integratedTerminal' ? 'integrated' : 'external',
-                title: localize(16, null),
+                title: localize(17, null),
                 cwd: workingDirectory,
                 args: launchArgs,
-                env: args.env
+                env: envVars
             };
             this.runInTerminalRequest(termArgs, NodeDebugSession.RUNINTERMINAL_TIMEOUT, function (runResponse) {
                 if (runResponse.success) {
@@ -612,7 +665,7 @@ var NodeDebugSession = (function (_super) {
                     }
                 }
                 else {
-                    _this.sendErrorResponse(response, 2011, localize(17, null, '{_error}'), { _error: runResponse.message });
+                    _this.sendErrorResponse(response, 2011, localize(18, null, '{_error}'), { _error: runResponse.message });
                     _this._terminated('terminal error: ' + runResponse.message);
                 }
             });
@@ -620,14 +673,15 @@ var NodeDebugSession = (function (_super) {
         else {
             this._sendLaunchCommandToConsole(launchArgs);
             // merge environment variables into a copy of the process.env
-            var env = PathUtils.extendObject(PathUtils.extendObject({}, process.env), args.env);
+            envVars = PathUtils.extendObject(PathUtils.extendObject({}, process.env), envVars);
             var options = {
                 cwd: workingDirectory,
-                env: env
+                env: envVars
             };
             var nodeProcess = CP.spawn(runtimeExecutable, launchArgs.slice(1), options);
             nodeProcess.on('error', function (error) {
-                _this.sendErrorResponse(response, 2017, localize(18, null, '{_error}'), { _error: error.message }, vscode_debugadapter_1.ErrorDestination.Telemetry | vscode_debugadapter_1.ErrorDestination.User);
+                // tslint:disable-next-line:no-bitwise
+                _this.sendErrorResponse(response, 2017, localize(19, null, '{_error}'), { _error: error.message }, vscode_debugadapter_1.ErrorDestination.Telemetry | vscode_debugadapter_1.ErrorDestination.User);
                 _this._terminated("failed to launch target (" + error + ")");
             });
             nodeProcess.on('exit', function () {
@@ -686,6 +740,9 @@ var NodeDebugSession = (function (_super) {
         }
         if (typeof args.smartStep === 'boolean') {
             this._smartStep = args.smartStep;
+        }
+        if (typeof args.skipFiles) {
+            this._skipFiles = args.skipFiles;
         }
         if (typeof args.stopOnEntry === 'boolean') {
             this._stopOnEntry = args.stopOnEntry;
@@ -755,12 +812,12 @@ var NodeDebugSession = (function (_super) {
                     }
                 }
                 catch (e) {
-                    this.sendErrorResponse(response, 2021, localize(19, null, pid, e));
+                    this.sendErrorResponse(response, 2021, localize(20, null, pid, e));
                     return;
                 }
             }
             else {
-                this.sendErrorResponse(response, 2006, localize(20, null, pid_string));
+                this.sendErrorResponse(response, 2006, localize(21, null, pid_string));
                 return;
             }
         }
@@ -807,11 +864,11 @@ var NodeDebugSession = (function (_super) {
                         }, 200); // retry after 200 ms
                     }
                     else {
-                        _this.sendErrorResponse(response, 2009, localize(21, null, '{_timeout}'), { _timeout: timeout });
+                        _this.sendErrorResponse(response, 2009, localize(22, null, '{_timeout}'), { _timeout: timeout });
                     }
                 }
                 else {
-                    _this.sendErrorResponse(response, 2010, localize(22, null, '{_error}'), { _error: err.message });
+                    _this.sendErrorResponse(response, 2010, localize(23, null, '{_error}'), { _error: err.message });
                 }
             }
         });
@@ -1056,11 +1113,14 @@ var NodeDebugSession = (function (_super) {
         if (args.breakpoints) {
             for (var _i = 0, _a = args.breakpoints; _i < _a.length; _i++) {
                 var b = _a[_i];
-                var hitter = null;
+                var hitter = void 0;
                 if (b.hitCondition) {
                     var result = NodeDebugSession.HITCOUNT_MATCHER.exec(b.hitCondition.trim());
-                    if (result.length >= 3) {
+                    if (result && result.length >= 3) {
                         var op = result[1] || '>=';
+                        if (op === '=') {
+                            op = '==';
+                        }
                         var value = result[2];
                         var expr = op === '%'
                             ? "return (hitcnt % " + value + ") === 0;"
@@ -1073,7 +1133,7 @@ var NodeDebugSession = (function (_super) {
                 sbs.push(new InternalSourceBreakpoint(this.convertClientLineToDebugger(b.line), typeof b.column === 'number' ? this.convertClientColumnToDebugger(b.column) : 0, b.condition, hitter));
             }
         }
-        else {
+        else if (args.lines) {
             // deprecated API: convert line number array
             for (var _b = 0, _c = args.lines; _b < _c.length; _b++) {
                 var l = _c[_b];
@@ -1094,7 +1154,7 @@ var NodeDebugSession = (function (_super) {
                 }
             }
             if (keepUnverified) {
-                var message = localize(23, null);
+                var message = localize(24, null);
                 for (var _d = 0, sbs_1 = sbs; _d < sbs_1.length; _d++) {
                     var ibp = sbs_1[_d];
                     ibp.verificationMessage = message;
@@ -1113,7 +1173,7 @@ var NodeDebugSession = (function (_super) {
                 return;
             }
         }
-        if (source.sourceReference > 0) {
+        if (typeof source.sourceReference === 'number' && source.sourceReference > 0) {
             var srcSource = this._sourceHandles.get(source.sourceReference);
             if (srcSource && srcSource.scriptId) {
                 this._updateBreakpoints(response, null, srcSource.scriptId, sbs);
@@ -1132,7 +1192,7 @@ var NodeDebugSession = (function (_super) {
                     _this._updateBreakpoints(response, null, scriptId, sbs);
                 }
                 else {
-                    _this.sendErrorResponse(response, 2019, localize(24, null, '{_module}'), { _module: source.name });
+                    _this.sendErrorResponse(response, 2019, localize(25, null, '{_module}'), { _module: source.name });
                 }
                 return;
             });
@@ -1142,7 +1202,7 @@ var NodeDebugSession = (function (_super) {
     };
     NodeDebugSession.prototype._mapSourceAndUpdateBreakpoints = function (response, path, lbs) {
         var _this = this;
-        var generated = null;
+        var generated = '';
         Promise.resolve(generated).then(function (generated) {
             if (_this._sourceMaps) {
                 return _this._sourceMaps.MapPathFromSource(path);
@@ -1151,7 +1211,7 @@ var NodeDebugSession = (function (_super) {
         }).then(function (generated) {
             if (PathUtils.pathCompare(generated, path)) {
                 _this.log('bp', "_mapSourceAndUpdateBreakpoints: source and generated are same -> ignore sourcemap");
-                generated = null;
+                generated = '';
             }
             if (generated) {
                 // source map line numbers
@@ -1251,7 +1311,7 @@ var NodeDebugSession = (function (_super) {
         if (lb.line < 0) {
             // ignore this breakpoint because it couldn't be source mapped successfully
             var bp = new vscode_debugadapter_1.Breakpoint(false);
-            bp.message = localize(25, null);
+            bp.message = localize(26, null);
             return Promise.resolve(bp);
         }
         if (lb.line === 0) {
@@ -1288,7 +1348,7 @@ var NodeDebugSession = (function (_super) {
                 actualLine = al[0].line;
                 actualColumn = _this._adjustColumn(actualLine, al[0].column);
             }
-            if (sourcemap) {
+            if (path && sourcemap) {
                 if (actualLine !== args.line || actualColumn !== args.column) {
                     // breakpoint location was adjusted by node.js so we have to map the new location back to source
                     // first try to map the remote path back to local
@@ -1322,7 +1382,7 @@ var NodeDebugSession = (function (_super) {
         // stop in the entry point line if the user has an explicit breakpoint there (or if there is a 'debugger' statement).
         // For this we check here whether a breakpoint is at the same location as the 'break-on-entry' location.
         // If yes, then we plan for hitting the breakpoint instead of 'continue' over it!
-        if (!this._stopOnEntry && PathUtils.pathCompare(this._entryPath, path)) {
+        if (!this._stopOnEntry && path && PathUtils.pathCompare(this._entryPath, path)) {
             if (this._entryLine === actualLine && this._entryColumn === actualColumn) {
                 // we do not have to 'continue' but we have to generate a stopped event instead
                 this._needContinue = false;
@@ -1486,7 +1546,17 @@ var NodeDebugSession = (function (_super) {
                 }
             }
             if (threads.length === 0) {
-                threads.push(new vscode_debugadapter_1.Thread(NodeDebugSession.DUMMY_THREAD_ID, NodeDebugSession.DUMMY_THREAD_NAME));
+                var name_1 = NodeDebugSession.DUMMY_THREAD_NAME;
+                if (_this._nodeProcessId > 0 && _this._node.hostVersion) {
+                    name_1 = name_1 + " (" + _this._nodeProcessId + ", " + _this._node.hostVersion + ")";
+                }
+                else if (_this._nodeProcessId > 0) {
+                    name_1 = name_1 + " (" + _this._nodeProcessId + ")";
+                }
+                else if (_this._node.hostVersion) {
+                    name_1 = name_1 + " (" + _this._node.hostVersion + ")";
+                }
+                threads.push(new vscode_debugadapter_1.Thread(NodeDebugSession.DUMMY_THREAD_ID, name_1));
             }
             response.body = {
                 threads: threads
@@ -1529,14 +1599,14 @@ var NodeDebugSession = (function (_super) {
         }).catch(function (error) {
             if (error.message === 'no stack') {
                 if (_this._stoppedReason === 'pause') {
-                    _this.sendErrorResponse(response, 2022, localize(26, null));
+                    _this.sendErrorResponse(response, 2022, localize(27, null));
                 }
                 else {
-                    _this.sendErrorResponse(response, 2023, localize(27, null));
+                    _this.sendErrorResponse(response, 2023, localize(28, null));
                 }
             }
             else {
-                _this.sendErrorResponse(response, 2018, localize(28, null), { _command: error.command, _error: error.message });
+                _this.sendErrorResponse(response, 2018, localize(29, null), { _command: error.command, _error: error.message });
             }
         });
     };
@@ -1549,60 +1619,57 @@ var NodeDebugSession = (function (_super) {
         return this._resolveValues([frame.script, frame.func, frame.receiver]).then(function () {
             var line = frame.line;
             var column = _this._adjustColumn(line, frame.column);
-            var src = null;
-            var origin = localize(29, null);
+            var src;
+            var origin = localize(30, null);
             var script_val = _this._getValueFromCache(frame.script);
             if (script_val) {
-                var name_1 = script_val.name;
-                if (name_1) {
+                var name_2 = script_val.name;
+                if (name_2) {
                     if (_this._mapToFilesOnDisk) {
                         // try to map the script to a file in the workspace
                         // first convert urls to paths
-                        var u = URL.parse(name_1);
-                        if (u.protocol === 'file:') {
+                        var u = URL.parse(name_2);
+                        if (u.protocol === 'file:' && u.path) {
                             // a local file path
-                            name_1 = decodeURI(u.path);
+                            name_2 = decodeURI(u.path);
                         }
                         // we can only map absolute paths
-                        if (PathUtils.isAbsolutePath(name_1)) {
+                        if (PathUtils.isAbsolutePath(name_2)) {
                             // with remote debugging path might come from a different OS
-                            var remotePath_1 = name_1;
+                            var remotePath_1 = name_2;
                             // if launch.json defines localRoot and remoteRoot try to convert remote path back to a local path
                             var localPath_1 = _this._remoteToLocal(remotePath_1);
                             if (localPath_1 !== remotePath_1 && _this._attachMode) {
                                 // assume attached to remote node process
-                                origin = localize(30, null);
+                                origin = localize(31, null);
                             }
                             // source mapping is enabled
                             if (_this._sourceMaps) {
                                 // load script to find source reference
                                 return _this._loadScript(script_val.id).then(function (script) {
-                                    return _this._createStackFrameFromSourceMap(frame, script.contents, name_1, localPath_1, remotePath_1, origin, line, column);
+                                    return _this._createStackFrameFromSourceMap(frame, script.contents, name_2, localPath_1, remotePath_1, origin, line, column);
                                 });
                             }
-                            return _this._createStackFrameFromPath(frame, name_1, localPath_1, remotePath_1, origin, line, column);
+                            return _this._createStackFrameFromPath(frame, name_2, localPath_1, remotePath_1, origin, line, column);
                         }
                         // if we end up here, 'name' is not a path and is an internal module
-                        origin = localize(31, null);
+                        origin = localize(32, null);
                     }
                     else {
                     }
                 }
-                if (!name_1) {
+                if (!name_2) {
                     // if a function is dynamically created from a string, its script has no name.
-                    name_1 = "VM" + script_val.id;
+                    name_2 = "VM" + script_val.id;
                 }
                 // source not found locally -> prepare to stream source content from node backend.
-                var sourceHandle = _this._sourceHandles.create(new SourceSource(script_val.id));
-                src = new vscode_debugadapter_1.Source(name_1, null, sourceHandle, origin);
+                var sourceHandle = _this._getScriptIdHandle(script_val.id);
+                src = new vscode_debugadapter_1.Source(name_2, undefined, sourceHandle, origin);
             }
             return _this._createStackFrameFromSource(frame, src, line, column);
         }).catch(function (err) {
-            if (err.stack) {
-                _this.log('7683', "" + err.stack);
-            }
             var func_name = _this._getFrameName(frame);
-            var name = localize(32, null, func_name, err.message);
+            var name = localize(33, null, func_name, err.message);
             return new vscode_debugadapter_1.StackFrame(_this._frameHandles.create(frame), name);
         });
     };
@@ -1623,9 +1690,9 @@ var NodeDebugSession = (function (_super) {
                     // file doesn't exist at path: if source map has inlined source use it
                     if (mapresult.content) {
                         _this.log('sm', "_createStackFrameFromSourceMap: source '" + mapresult.path + "' doesn't exist -> use inlined source");
-                        var sourceHandle = _this._sourceHandles.create(new SourceSource(0, mapresult.content));
-                        origin = localize(33, null);
-                        var src = new vscode_debugadapter_1.Source(Path.basename(mapresult.path), null, sourceHandle, origin, { inlinePath: mapresult.path });
+                        var sourceHandle = _this._getInlinedContentHandle(mapresult.content);
+                        origin = localize(34, null);
+                        var src = new vscode_debugadapter_1.Source(Path.basename(mapresult.path), undefined, sourceHandle, origin, { inlinePath: mapresult.path });
                         return _this._createStackFrameFromSource(frame, src, mapresult.line, mapresult.column);
                     }
                     _this.log('sm', "_createStackFrameFromSourceMap: gen: '" + localPath + "' " + line + ":" + column + " -> can't find source -> use generated file");
@@ -1636,6 +1703,14 @@ var NodeDebugSession = (function (_super) {
             return _this._createStackFrameFromPath(frame, name, localPath, remotePath, origin, line, column);
         });
     };
+    NodeDebugSession.prototype._getInlinedContentHandle = function (content) {
+        var handle = this._inlinedContentHandle.get(content);
+        if (!handle) {
+            handle = this._sourceHandles.create(new SourceSource(0, content));
+            this._inlinedContentHandle.set(content, handle);
+        }
+        return handle;
+    };
     /**
      * Creates a StackFrame from the given local path.
      * The remote path is used if the local path doesn't exist.
@@ -1644,7 +1719,7 @@ var NodeDebugSession = (function (_super) {
         var _this = this;
         var script_val = this._getValueFromCache(frame.script);
         var script_id = script_val.id;
-        return this._sameFile(localPath, this._compareContents, script_id, null).then(function (same) {
+        return this._sameFile(localPath, this._compareContents, script_id).then(function (same) {
             var src;
             if (same) {
                 // we use the file on disk
@@ -1652,11 +1727,19 @@ var NodeDebugSession = (function (_super) {
             }
             else {
                 // we use the script's content streamed from node
-                var sourceHandle = _this._sourceHandles.create(new SourceSource(script_id));
-                src = new vscode_debugadapter_1.Source(name, null, sourceHandle, origin, { remotePath: remotePath }); // assume it is a remote path
+                var sourceHandle = _this._getScriptIdHandle(script_id);
+                src = new vscode_debugadapter_1.Source(name, undefined, sourceHandle, origin, { remotePath: remotePath }); // assume it is a remote path
             }
             return _this._createStackFrameFromSource(frame, src, line, column);
         });
+    };
+    NodeDebugSession.prototype._getScriptIdHandle = function (scriptId) {
+        var handle = this._scriptId2Handle.get(scriptId);
+        if (!handle) {
+            handle = this._sourceHandles.create(new SourceSource(scriptId));
+            this._scriptId2Handle.set(scriptId, handle);
+        }
+        return handle;
     };
     /**
      * Creates a StackFrame with the given source location information.
@@ -1677,7 +1760,7 @@ var NodeDebugSession = (function (_super) {
             }
         }
         if (!func_name || func_name.length === 0) {
-            func_name = localize(34, null);
+            func_name = localize(35, null);
         }
         return func_name;
     };
@@ -1766,20 +1849,20 @@ var NodeDebugSession = (function (_super) {
             var scopes = scopesResponse.body.scopes;
             return Promise.all(scopes.map(function (scope) {
                 var type = scope.type;
-                var extra = type === 1 ? frameThis : null;
+                var extra = type === 1 ? frameThis : undefined;
                 var expensive = type === 0; // global scope is expensive
                 var scopeName;
                 if (type >= 0 && type < NodeDebugSession.SCOPE_NAMES.length) {
                     if (type === 1 && typeof scopesResponse.body.vscode_locals === 'number') {
                         expensive = true;
-                        scopeName = localize(35, null, scopesArgs.maxLocals, scopesResponse.body.vscode_locals);
+                        scopeName = localize(36, null, scopesArgs.maxLocals, scopesResponse.body.vscode_locals);
                     }
                     else {
                         scopeName = NodeDebugSession.SCOPE_NAMES[type];
                     }
                 }
                 else {
-                    scopeName = localize(36, null, type);
+                    scopeName = localize(37, null, type);
                 }
                 return _this._resolveValues([scope.object]).then(function (resolved) {
                     return new vscode_debugadapter_1.Scope(scopeName, _this._variableHandles.create(new ScopeContainer(scope, resolved[0], extra)), expensive);
@@ -1790,7 +1873,7 @@ var NodeDebugSession = (function (_super) {
         }).then(function (scopes) {
             // exception scope
             if (frameIx === 0 && _this._exception) {
-                scopes.unshift(new vscode_debugadapter_1.Scope(localize(37, null), _this._variableHandles.create(new PropertyContainer(_this._exception))));
+                scopes.unshift(new vscode_debugadapter_1.Scope(localize(38, null), _this._variableHandles.create(new PropertyContainer(_this._exception))));
             }
             response.body = {
                 scopes: scopes
@@ -1863,30 +1946,32 @@ var NodeDebugSession = (function (_super) {
         }
         var selectedProperties = new Array();
         var found_proto = false;
-        for (var _i = 0, _a = obj.properties; _i < _a.length; _i++) {
-            var property = _a[_i];
-            if ('name' in property) {
-                var name_2 = property.name;
-                if (name_2 === NodeDebugSession.PROTO) {
-                    found_proto = true;
-                }
-                switch (mode) {
-                    case 'all':
-                        selectedProperties.push(property);
-                        break;
-                    case 'named':
-                        if (!isIndex(name_2)) {
+        if (obj.properties) {
+            for (var _i = 0, _a = obj.properties; _i < _a.length; _i++) {
+                var property = _a[_i];
+                if ('name' in property) {
+                    var name_3 = property.name;
+                    if (name_3 === NodeDebugSession.PROTO) {
+                        found_proto = true;
+                    }
+                    switch (mode) {
+                        case 'all':
                             selectedProperties.push(property);
-                        }
-                        break;
-                    case 'indexed':
-                        if (isIndex(name_2)) {
-                            var ix = +name_2;
-                            if (ix >= start && ix < start + count) {
+                            break;
+                        case 'named':
+                            if (!isIndex(name_3)) {
                                 selectedProperties.push(property);
                             }
-                        }
-                        break;
+                            break;
+                        case 'indexed':
+                            if (isIndex(name_3)) {
+                                var ix = +name_3;
+                                if (ix >= start && ix < start + count) {
+                                    selectedProperties.push(property);
+                                }
+                            }
+                            break;
+                    }
                 }
             }
         }
@@ -1954,6 +2039,7 @@ var NodeDebugSession = (function (_super) {
         if (!val) {
             return Promise.resolve(null);
         }
+        var simple = val;
         switch (val.type) {
             case 'undefined':
             case 'null':
@@ -1961,9 +2047,15 @@ var NodeDebugSession = (function (_super) {
             case 'string':
                 return this._createStringVariable(name, val, doPreview ? undefined : NodeDebugSession.PREVIEW_MAX_STRING_LENGTH);
             case 'number':
-                return Promise.resolve(new vscode_debugadapter_1.Variable(name, val.value.toString()));
+                if (typeof simple.value === 'number') {
+                    return Promise.resolve(new vscode_debugadapter_1.Variable(name, simple.value.toString()));
+                }
+                break;
             case 'boolean':
-                return Promise.resolve(new vscode_debugadapter_1.Variable(name, val.value.toString().toLowerCase())); // node returns these boolean values capitalized
+                if (typeof simple.value === 'boolean') {
+                    return Promise.resolve(new vscode_debugadapter_1.Variable(name, simple.value.toString().toLowerCase())); // node returns these boolean values capitalized
+                }
+                break;
             case 'set':
             case 'map':
                 if (this._node.v8Version) {
@@ -1978,7 +2070,6 @@ var NodeDebugSession = (function (_super) {
             case 'error':
                 var object_1 = val;
                 var value_1 = object_1.className;
-                var text = object_1.text;
                 switch (value_1) {
                     case 'Array':
                     case 'ArrayBuffer':
@@ -1993,11 +2084,14 @@ var NodeDebugSession = (function (_super) {
                     case 'Float64Array':
                         return this._createArrayVariable(name, val, doPreview);
                     case 'RegExp':
-                        return Promise.resolve(new vscode_debugadapter_1.Variable(name, text, this._variableHandles.create(new PropertyContainer(val))));
+                        if (typeof object_1.text === 'string') {
+                            return Promise.resolve(new vscode_debugadapter_1.Variable(name, object_1.text, this._variableHandles.create(new PropertyContainer(val))));
+                        }
+                        break;
                     case 'Generator':
                     case 'Object':
-                        return this._resolveValues([object_1.constructorFunction]).then(function (resolved) {
-                            if (resolved[0]) {
+                        return this._resolveValues(object_1.constructorFunction ? [object_1.constructorFunction] : []).then(function (resolved) {
+                            if (resolved.length > 0 && resolved[0]) {
                                 var constructor_name = resolved[0].name;
                                 if (constructor_name) {
                                     value_1 = constructor_name;
@@ -2020,10 +2114,12 @@ var NodeDebugSession = (function (_super) {
                             }
                             return new vscode_debugadapter_1.Variable(name, value_1, _this._variableHandles.create(new PropertyContainer(val)));
                         });
+                    //break;
                     case 'Function':
                     case 'Error':
                     default:
-                        if (text) {
+                        if (object_1.text) {
+                            var text = object_1.text;
                             if (text.indexOf('\n') >= 0) {
                                 // replace body of function with '...'
                                 var pos = text.indexOf('{');
@@ -2038,14 +2134,16 @@ var NodeDebugSession = (function (_super) {
                 return Promise.resolve(new vscode_debugadapter_1.Variable(name, value_1, this._variableHandles.create(new PropertyContainer(val))));
             case 'frame':
             default:
-                return Promise.resolve(new vscode_debugadapter_1.Variable(name, val.value ? val.value.toString() : 'undefined'));
+                break;
         }
+        return Promise.resolve(new vscode_debugadapter_1.Variable(name, simple.value ? simple.value.toString() : 'undefined'));
     };
     /**
      * creates something like this: {a: 123, b: "hi", c: true …}
      */
     NodeDebugSession.prototype._objectPreview = function (object, doPreview) {
         if (doPreview && object && object.properties && object.properties.length > 0) {
+            var propcnt_1 = object.properties.length;
             return this._createPropertyVariables(object, object.properties.slice(0, NodeDebugSession.PREVIEW_PROPERTIES), false).then(function (props) {
                 var preview = '{';
                 for (var i = 0; i < props.length; i++) {
@@ -2054,7 +2152,7 @@ var NodeDebugSession = (function (_super) {
                         preview += ', ';
                     }
                     else {
-                        if (object.properties.length > NodeDebugSession.PREVIEW_PROPERTIES) {
+                        if (propcnt_1 > NodeDebugSession.PREVIEW_PROPERTIES) {
                             preview += ' …';
                         }
                     }
@@ -2106,12 +2204,12 @@ var NodeDebugSession = (function (_super) {
     NodeDebugSession.prototype._createArrayVariable = function (name, array, doPreview) {
         var _this = this;
         return this._getArraySize(array).then(function (pair) {
-            var indexedSize;
-            var namedSize;
+            var indexedSize = 0;
+            var namedSize = 0;
             var arraySize = '';
-            if (pair) {
-                indexedSize = pair[0] || 0;
-                namedSize = pair[1] || 0;
+            if (pair.length >= 2) {
+                indexedSize = pair[0];
+                namedSize = pair[1];
                 arraySize = indexedSize.toString();
             }
             return _this._arrayPreview(array, indexedSize, doPreview).then(function (preview) {
@@ -2140,7 +2238,7 @@ var NodeDebugSession = (function (_super) {
                 return JSON.parse(response.body.value);
             });
         }
-        return Promise.resolve(undefined);
+        return Promise.resolve([]);
     };
     //--- ES6 Set/Map support
     NodeDebugSession.prototype._createSetMapVariable = function (name, obj) {
@@ -2186,7 +2284,7 @@ var NodeDebugSession = (function (_super) {
         };
         this.log('va', "_createSetElements: set.slice " + start + " " + count);
         return this._node.evaluate(args).then(function (response) {
-            var properties = response.body.properties;
+            var properties = response.body.properties || [];
             var selectedProperties = new Array();
             for (var _i = 0, properties_1 = properties; _i < properties_1.length; _i++) {
                 var property = properties_1[_i];
@@ -2209,7 +2307,7 @@ var NodeDebugSession = (function (_super) {
         };
         this.log('va', "_createMapElements: map.slice " + start + " " + count);
         return this._node.evaluate(args).then(function (response) {
-            var properties = response.body.properties;
+            var properties = response.body.properties || [];
             var selectedProperties = new Array();
             for (var _i = 0, properties_2 = properties; _i < properties_2.length; _i++) {
                 var property = properties_2[_i];
@@ -2218,11 +2316,11 @@ var NodeDebugSession = (function (_super) {
                 }
             }
             return _this._resolveValues(selectedProperties).then(function () {
-                var variables = [];
-                var _loop_1 = function(i) {
+                var variables = new Array();
+                var _loop_1 = function (i) {
                     var key = _this._getValueFromCache(selectedProperties[i + 1]);
                     var val = _this._getValueFromCache(selectedProperties[i + 2]);
-                    var expander = new Expander(function () {
+                    var expander = new Expander(function (start, count) {
                         return Promise.all([
                             _this._createVariable('key', key),
                             _this._createVariable('value', val)
@@ -2246,7 +2344,7 @@ var NodeDebugSession = (function (_super) {
             if (str_val.length > maxLength) {
                 str_val = str_val.substr(0, maxLength) + '…';
             }
-            return Promise.resolve(this._createStringVariable2(name, str_val));
+            return Promise.resolve(new vscode_debugadapter_1.Variable(name, this._escapeStringValue(str_val)));
         }
         if (this._node.v8Version && NodeDebugSession.LONG_STRING_MATCHER.exec(str_val)) {
             var args = {
@@ -2260,25 +2358,20 @@ var NodeDebugSession = (function (_super) {
             this.log('va', "_createStringVariable: get full string");
             return this._node.evaluate(args).then(function (response) {
                 str_val = response.body.value;
-                return _this._createStringVariable2(name, str_val);
+                return new vscode_debugadapter_1.Variable(name, _this._escapeStringValue(str_val));
             });
         }
         else {
-            return Promise.resolve(this._createStringVariable2(name, str_val));
+            return Promise.resolve(new vscode_debugadapter_1.Variable(name, this._escapeStringValue(str_val)));
         }
     };
-    NodeDebugSession.prototype._createStringVariable2 = function (name, s) {
+    NodeDebugSession.prototype._escapeStringValue = function (s) {
+        /* disabled for now because chrome dev tools doesn't escape quotes either
         if (s) {
-            s = s.replace(/\n|\r|\"|\\/g, function (x) {
-                switch (x) {
-                    case '\n': return '\\n';
-                    case '\r': return '\\r';
-                    case '\"': return '\\"';
-                    case '\\': return '\\\\';
-                }
-            });
+            s = s.replace(/\"/g, '\\"');	// escape quotes because they are used as delimiters for a string
         }
-        return new vscode_debugadapter_1.Variable(name, "\"" + s + "\"");
+        */
+        return "\"" + s + "\"";
     };
     //--- setVariable request -------------------------------------------------------------------------------------------------
     NodeDebugSession.prototype.setVariableRequest = function (response, args) {
@@ -2374,6 +2467,7 @@ var NodeDebugSession = (function (_super) {
     //--- continue request ----------------------------------------------------------------------------------------------------
     NodeDebugSession.prototype.continueRequest = function (response, args) {
         var _this = this;
+        this._disableSkipFiles = false;
         this._node.command('continue', null, function (nodeResponse) {
             _this._sendNodeResponse(response, nodeResponse);
         });
@@ -2393,6 +2487,7 @@ var NodeDebugSession = (function (_super) {
     };
     NodeDebugSession.prototype.stepOutRequest = function (response, args) {
         var _this = this;
+        this._disableSkipFiles = false;
         this._node.command('continue', { stepaction: 'out' }, function (nodeResponse) {
             _this._sendNodeResponse(response, nodeResponse);
         });
@@ -2400,6 +2495,13 @@ var NodeDebugSession = (function (_super) {
     NodeDebugSession.prototype.stepBackRequest = function (response, args) {
         var _this = this;
         this._node.command('continue', { stepaction: 'back' }, function (nodeResponse) {
+            _this._sendNodeResponse(response, nodeResponse);
+        });
+    };
+    NodeDebugSession.prototype.reverseContinueRequest = function (response, args) {
+        var _this = this;
+        this._disableSkipFiles = false;
+        this._node.command('continue', { stepaction: 'reverse' }, function (nodeResponse) {
             _this._sendNodeResponse(response, nodeResponse);
         });
     };
@@ -2432,7 +2534,7 @@ var NodeDebugSession = (function (_super) {
             disable_break: true,
             maxStringLength: NodeDebugSession.MAX_STRING_LENGTH
         };
-        if (args.frameId > 0) {
+        if (typeof args.frameId === 'number' && args.frameId > 0) {
             var frame = this._frameHandles.get(args.frameId);
             if (!frame) {
                 this.sendErrorResponse(response, 2020, 'stack frame not valid', null, vscode_debugadapter_1.ErrorDestination.Telemetry);
@@ -2457,7 +2559,7 @@ var NodeDebugSession = (function (_super) {
                     }
                     else {
                         response.success = false;
-                        response.message = localize(38, null);
+                        response.message = localize(39, null);
                     }
                     _this.sendResponse(response);
                 });
@@ -2465,11 +2567,11 @@ var NodeDebugSession = (function (_super) {
             else {
                 response.success = false;
                 if (resp.message.indexOf('ReferenceError: ') === 0 || resp.message === 'No frames') {
-                    response.message = localize(39, null);
+                    response.message = localize(40, null);
                 }
                 else if (resp.message.indexOf('SyntaxError: ') === 0) {
                     var m = resp.message.substring('SyntaxError: '.length).toLowerCase();
-                    response.message = localize(40, null, m);
+                    response.message = localize(41, null, m);
                 }
                 else {
                     response.message = resp.message;
@@ -2500,7 +2602,7 @@ var NodeDebugSession = (function (_super) {
                     };
                     _this.sendResponse(response);
                 }).catch(function (err) {
-                    _this.sendErrorResponse(response, 2026, localize(41, null));
+                    _this.sendErrorResponse(response, 2026, localize(42, null));
                 });
                 return;
             }
@@ -2541,7 +2643,7 @@ var NodeDebugSession = (function (_super) {
                 disable_break: true,
                 maxStringLength: NodeDebugSession.MAX_JSON_LENGTH
             };
-            if (args.frameId > 0) {
+            if (typeof args.frameId === 'number' && args.frameId > 0) {
                 var frame = this._frameHandles.get(args.frameId);
                 if (!frame) {
                     this.sendErrorResponse(response, 2020, 'stack frame not valid', null, vscode_debugadapter_1.ErrorDestination.Telemetry);
@@ -2559,11 +2661,11 @@ var NodeDebugSession = (function (_super) {
                 var arrays = JSON.parse(resp.body.value);
                 for (var i = 0; i < arrays.length; i++) {
                     for (var _i = 0, _a = arrays[i]; _i < _a.length; _i++) {
-                        var name_3 = _a[_i];
-                        if (!isIndex(name_3) && !set.has(name_3)) {
-                            set.add(name_3);
+                        var name_4 = _a[_i];
+                        if (!isIndex(name_4) && !set.has(name_4)) {
+                            set.add(name_4);
                             items.push({
-                                label: name_3,
+                                label: name_4,
                                 type: 'property'
                             });
                         }
@@ -2581,7 +2683,10 @@ var NodeDebugSession = (function (_super) {
             });
         }
         else {
-            var frame = this._frameHandles.get(args.frameId);
+            var frame = void 0;
+            if (typeof args.frameId === 'number' && args.frameId > 0) {
+                frame = this._frameHandles.get(args.frameId);
+            }
             if (!frame) {
                 this.sendErrorResponse(response, 2020, 'stack frame not valid', null, vscode_debugadapter_1.ErrorDestination.Telemetry);
                 return;
@@ -2613,14 +2718,16 @@ var NodeDebugSession = (function (_super) {
                 var items = new Array();
                 for (var _i = 0, resolved_1 = resolved; _i < resolved_1.length; _i++) {
                     var r = resolved_1[_i];
-                    for (var _a = 0, _b = r.properties; _a < _b.length; _a++) {
-                        var property = _b[_a];
-                        if (!isIndex(property.name) && !set.has(property.name)) {
-                            set.add(property.name);
-                            items.push({
-                                label: property.name,
-                                type: 'function'
-                            });
+                    if (r.properties) {
+                        for (var _a = 0, _b = r.properties; _a < _b.length; _a++) {
+                            var property = _b[_a];
+                            if (!isIndex(property.name) && !set.has(property.name)) {
+                                set.add(property.name);
+                                items.push({
+                                    label: property.name,
+                                    type: 'function'
+                                });
+                            }
                         }
                     }
                 }
@@ -2641,13 +2748,13 @@ var NodeDebugSession = (function (_super) {
      * 'Path does not exist' error
      */
     NodeDebugSession.prototype.sendNotExistErrorResponse = function (response, attribute, path) {
-        this.sendErrorResponse(response, 2007, localize(42, null, attribute, '{path}'), { path: path });
+        this.sendErrorResponse(response, 2007, localize(43, null, attribute, '{path}'), { path: path });
     };
     /**
      * 'Path not absolute' error with 'More Information' link.
      */
     NodeDebugSession.prototype.sendRelativePathErrorResponse = function (response, attribute, path) {
-        var format = localize(43, null, attribute, '{path}', '${workspaceRoot}/');
+        var format = localize(44, null, attribute, '{path}', '${workspaceRoot}/');
         this.sendErrorResponseWithInfoLink(response, 2008, format, { path: path }, 20003);
     };
     /**
@@ -2660,7 +2767,7 @@ var NodeDebugSession = (function (_super) {
             variables: variables,
             showUser: true,
             url: 'http://go.microsoft.com/fwlink/?linkID=534832#_' + infoId.toString(),
-            urlLabel: localize(44, null)
+            urlLabel: localize(45, null)
         });
     };
     /**
@@ -2712,10 +2819,10 @@ var NodeDebugSession = (function (_super) {
         else {
             var errmsg = nodeResponse.message;
             if (errmsg.indexOf('unresponsive') >= 0) {
-                this.sendErrorResponse(response, 2015, localize(45, null), { _request: nodeResponse.command });
+                this.sendErrorResponse(response, 2015, localize(46, null), { _request: nodeResponse.command });
             }
             else if (errmsg.indexOf('timeout') >= 0) {
-                this.sendErrorResponse(response, 2016, localize(46, null), { _request: nodeResponse.command });
+                this.sendErrorResponse(response, 2016, localize(47, null), { _request: nodeResponse.command });
             }
             else {
                 this.sendErrorResponse(response, 2013, 'Node.js request \'{_request}\' failed (reason: {_error}).', { _request: nodeResponse.command, _error: errmsg }, vscode_debugadapter_1.ErrorDestination.Telemetry);
@@ -2746,13 +2853,22 @@ var NodeDebugSession = (function (_super) {
         }
         if (needLookup.length > 0) {
             return this._resolveToCache(needLookup).then(function () {
-                return mirrors.map(function (m) { return _this._refCache.get(m.ref || m.handle); });
+                return mirrors.map(function (m) { return _this._getCache(m); });
             });
         }
         else {
             //return Promise.resolve(<V8Object[]>mirrors);
-            return Promise.resolve(mirrors.map(function (m) { return _this._refCache.get(m.ref || m.handle); }));
+            return Promise.resolve(mirrors.map(function (m) { return _this._getCache(m); }));
         }
+    };
+    NodeDebugSession.prototype._getCache = function (m) {
+        if (typeof m.ref === 'number') {
+            return this._refCache.get(m.ref);
+        }
+        if (typeof m.handle === 'number') {
+            return this._refCache.get(m.handle);
+        }
+        return null;
     };
     NodeDebugSession.prototype._resolveToCache = function (handles) {
         var _this = this;
@@ -2915,34 +3031,34 @@ var NodeDebugSession = (function (_super) {
             }
         }
     };
-    NodeDebugSession.MAX_STRING_LENGTH = 10000; // max string size to return in 'evaluate' request
-    NodeDebugSession.MAX_JSON_LENGTH = 500000; // max size of stringified object to return in 'evaluate' request
-    NodeDebugSession.NODE_TERMINATION_POLL_INTERVAL = 3000;
-    NodeDebugSession.ATTACH_TIMEOUT = 10000;
-    NodeDebugSession.RUNINTERMINAL_TIMEOUT = 5000;
-    NodeDebugSession.PREVIEW_PROPERTIES = 3; // maximum number of properties to show in object/array preview
-    NodeDebugSession.PREVIEW_MAX_STRING_LENGTH = 50; // truncate long strings for object/array preview
-    NodeDebugSession.NODE = 'node';
-    NodeDebugSession.DUMMY_THREAD_ID = 1;
-    NodeDebugSession.DUMMY_THREAD_NAME = 'Node';
-    NodeDebugSession.FIRST_LINE_OFFSET = 62;
-    NodeDebugSession.PROTO = '__proto__';
-    NodeDebugSession.DEBUG_INJECTION = 'debugInjection.js';
-    NodeDebugSession.NODE_SHEBANG_MATCHER = new RegExp('#! */usr/bin/env +node');
-    NodeDebugSession.LONG_STRING_MATCHER = /\.\.\. \(length: [0-9]+\)$/;
-    NodeDebugSession.HITCOUNT_MATCHER = /(>|>=|=|<|<=|%)?\s*([0-9]+)/;
-    //--- scopes request ------------------------------------------------------------------------------------------------------
-    NodeDebugSession.SCOPE_NAMES = [
-        localize(47, null),
-        localize(48, null),
-        localize(49, null),
-        localize(50, null),
-        localize(51, null),
-        localize(52, null),
-        localize(53, null)
-    ];
     return NodeDebugSession;
 }(vscode_debugadapter_1.DebugSession));
+NodeDebugSession.MAX_STRING_LENGTH = 10000; // max string size to return in 'evaluate' request
+NodeDebugSession.MAX_JSON_LENGTH = 500000; // max size of stringified object to return in 'evaluate' request
+NodeDebugSession.NODE_TERMINATION_POLL_INTERVAL = 3000;
+NodeDebugSession.ATTACH_TIMEOUT = 10000;
+NodeDebugSession.RUNINTERMINAL_TIMEOUT = 5000;
+NodeDebugSession.PREVIEW_PROPERTIES = 3; // maximum number of properties to show in object/array preview
+NodeDebugSession.PREVIEW_MAX_STRING_LENGTH = 50; // truncate long strings for object/array preview
+NodeDebugSession.NODE = 'node';
+NodeDebugSession.DUMMY_THREAD_ID = 1;
+NodeDebugSession.DUMMY_THREAD_NAME = 'Node';
+NodeDebugSession.FIRST_LINE_OFFSET = 62;
+NodeDebugSession.PROTO = '__proto__';
+NodeDebugSession.DEBUG_INJECTION = 'debugInjection.js';
+NodeDebugSession.NODE_SHEBANG_MATCHER = new RegExp('#! */usr/bin/env +node');
+NodeDebugSession.LONG_STRING_MATCHER = /\.\.\. \(length: [0-9]+\)$/;
+NodeDebugSession.HITCOUNT_MATCHER = /(>|>=|=|==|<|<=|%)?\s*([0-9]+)/;
+//--- scopes request ------------------------------------------------------------------------------------------------------
+NodeDebugSession.SCOPE_NAMES = [
+    localize(48, null),
+    localize(49, null),
+    localize(50, null),
+    localize(51, null),
+    localize(52, null),
+    localize(53, null),
+    localize(54, null)
+];
 exports.NodeDebugSession = NodeDebugSession;
 var INDEX_PATTERN = /^[0-9]+$/;
 function isIndex(name) {

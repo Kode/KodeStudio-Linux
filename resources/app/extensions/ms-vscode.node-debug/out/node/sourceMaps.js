@@ -3,21 +3,20 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 "use strict";
-/// <reference types="es6-promise" />
-var Path = require('path');
-var FS = require('fs');
-var CRYPTO = require('crypto');
-var OS = require('os');
-var XHR = require('request-light');
-var SM = require('source-map');
-var PathUtils = require('./pathUtilities');
-var URI_1 = require('./URI');
+var Path = require("path");
+var FS = require("fs");
+var CRYPTO = require("crypto");
+var OS = require("os");
+var XHR = require("request-light");
+var SM = require("source-map");
+var PathUtils = require("./pathUtilities");
+var URI_1 = require("./URI");
 var util = require('../../node_modules/source-map/lib/util.js');
+var Bias;
 (function (Bias) {
     Bias[Bias["GREATEST_LOWER_BOUND"] = 1] = "GREATEST_LOWER_BOUND";
     Bias[Bias["LEAST_UPPER_BOUND"] = 2] = "LEAST_UPPER_BOUND";
-})(exports.Bias || (exports.Bias = {}));
-var Bias = exports.Bias;
+})(Bias = exports.Bias || (exports.Bias = {}));
 var SourceMaps = (function () {
     function SourceMaps(session, generatedCodeDirectory, generatedCodeGlobs) {
         var _this = this;
@@ -342,9 +341,9 @@ var SourceMaps = (function () {
     SourceMaps.prototype._log = function (message) {
         this._session.log('sm', message);
     };
-    SourceMaps.SOURCE_MAPPING_MATCHER = new RegExp('^//[#@] ?sourceMappingURL=(.+)$');
     return SourceMaps;
 }());
+SourceMaps.SOURCE_MAPPING_MATCHER = new RegExp('^//[#@] ?sourceMappingURL=(.+)$');
 exports.SourceMaps = SourceMaps;
 var SourceMap = (function () {
     function SourceMap(mapPath, generatedPath, json) {
@@ -386,7 +385,7 @@ var SourceMap = (function () {
         return this._generatedFile;
     };
     SourceMap.prototype.allSourcePaths = function () {
-        var paths = [];
+        var paths = new Array();
         for (var _i = 0, _a = this._sources; _i < _a.length; _i++) {
             var name_1 = _a[_i];
             if (!util.isAbsolute(name_1)) {

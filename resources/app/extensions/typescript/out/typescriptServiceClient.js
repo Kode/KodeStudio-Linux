@@ -47,12 +47,13 @@ var MessageAction;
 var TypeScriptServiceClient = (function () {
     function TypeScriptServiceClient(host, storagePath, globalState) {
         var _this = this;
+        this._onProjectLanguageServiceStateChanged = new vscode_1.EventEmitter();
         this.host = host;
         this.storagePath = storagePath;
         this.globalState = globalState;
         this.pathSeparator = path.sep;
         var p = new Promise(function (resolve, reject) {
-            _this._onReady = { promise: null, resolve: resolve, reject: reject };
+            _this._onReady = { promise: p, resolve: resolve, reject: reject };
         });
         this._onReady.promise = p;
         this.servicePromise = null;
@@ -83,6 +84,13 @@ var TypeScriptServiceClient = (function () {
         }
         this.startService();
     }
+    Object.defineProperty(TypeScriptServiceClient.prototype, "onProjectLanguageServiceStateChanged", {
+        get: function () {
+            return this._onProjectLanguageServiceStateChanged.event;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(TypeScriptServiceClient.prototype, "output", {
         get: function () {
             if (!this._output) {
@@ -205,7 +213,10 @@ var TypeScriptServiceClient = (function () {
             return Promise.reject(this.lastError);
         }
         this.startService();
-        return this.servicePromise;
+        if (this.servicePromise) {
+            return this.servicePromise;
+        }
+        return Promise.reject(new Error('Could not create TS service'));
     };
     TypeScriptServiceClient.prototype.startService = function (resendModels) {
         var _this = this;
@@ -325,14 +336,12 @@ var TypeScriptServiceClient = (function () {
                     var args = [];
                     if (_this.apiVersion.has206Features()) {
                         args.push('--useSingleInferredProject');
-                        /* https://github.com/Microsoft/vscode/issues/14889
-                        if (workspace.getConfiguration().get<boolean>('typescript.disableAutomaticTypeAcquisition', false)) {
+                        if (vscode_1.workspace.getConfiguration().get('typescript.disableAutomaticTypeAcquisition', false)) {
                             args.push('--disableAutomaticTypingAcquisition');
                         }
-                        */
-                        if (!(process.env.CH_ATA_ENABLE)) {
-                            args.push('--disableAutomaticTypingAcquisition');
-                        }
+                    }
+                    if (_this.apiVersion.has208Features()) {
+                        args.push('--enableTelemetry');
                     }
                     electron.fork(modulePath, args, options, function (err, childProcess) {
                         if (err) {
@@ -389,11 +398,12 @@ var TypeScriptServiceClient = (function () {
                 allowSyntheticDefaultImports: true,
                 allowNonTsExtensions: true,
                 allowJs: true,
+                jsx: 'Preserve'
             };
             var args = {
                 options: compilerOptions
             };
-            this.execute('compilerOptionsForInferredProjects', args).then(null, function (err) {
+            this.execute('compilerOptionsForInferredProjects', args, true).catch(function (err) {
                 _this.error("'compilerOptionsForInferredProjects' request failed with error.", err);
             });
         }
@@ -420,7 +430,7 @@ var TypeScriptServiceClient = (function () {
         catch (err) {
             return undefined;
         }
-        if (!desc.version) {
+        if (!desc || !desc.version) {
             return undefined;
         }
         return desc.version;
@@ -485,7 +495,7 @@ var TypeScriptServiceClient = (function () {
             promise: null,
             callbacks: null
         };
-        var result = null;
+        var result = Promise.resolve(null);
         if (expectsResult) {
             result = new Promise(function (resolve, reject) {
                 requestInfo.callbacks = { c: resolve, e: reject, start: Date.now() };
@@ -504,7 +514,10 @@ var TypeScriptServiceClient = (function () {
     };
     TypeScriptServiceClient.prototype.sendNextRequests = function () {
         while (this.pendingResponses === 0 && this.requestQueue.length > 0) {
-            this.sendRequest(this.requestQueue.shift());
+            var item = this.requestQueue.shift();
+            if (item) {
+                this.sendRequest(item);
+            }
         }
     };
     TypeScriptServiceClient.prototype.sendRequest = function (requestItem) {
@@ -575,6 +588,39 @@ var TypeScriptServiceClient = (function () {
                 else if (event.event === 'configFileDiag') {
                     this.host.configFileDiagnosticsReceived(event);
                 }
+                else if (event.event === 'telemetry') {
+                    var telemetryData = event.body;
+                    var properties_1 = Object.create(null);
+                    switch (telemetryData.telemetryEventName) {
+                        case 'typingsInstalled':
+                            var typingsInstalledPayload = telemetryData.payload;
+                            properties_1['installedPackages'] = typingsInstalledPayload.installedPackages;
+                            if (is.defined(typingsInstalledPayload.installSuccess)) {
+                                properties_1['installSuccess'] = typingsInstalledPayload.installSuccess.toString();
+                            }
+                            if (is.string(typingsInstalledPayload.typingsInstallerVersion)) {
+                                properties_1['typingsInstallerVersion'] = typingsInstalledPayload.typingsInstallerVersion;
+                            }
+                            break;
+                        default:
+                            var payload_1 = telemetryData.payload;
+                            if (payload_1) {
+                                Object.keys(payload_1).forEach(function (key) {
+                                    if (payload_1.hasOwnProperty(key) && is.string(payload_1[key])) {
+                                        properties_1[key] = payload_1[key];
+                                    }
+                                });
+                            }
+                            break;
+                    }
+                    this.logTelemetry(telemetryData.telemetryEventName, properties_1);
+                }
+                else if (event.event === 'projectLanguageServiceState') {
+                    var data = event.body;
+                    if (data) {
+                        this._onProjectLanguageServiceStateChanged.fire(data);
+                    }
+                }
             }
             else {
                 throw new Error('Unknown message type ' + message.type + ' recevied');
@@ -590,7 +636,7 @@ var TypeScriptServiceClient = (function () {
         }
         var data = undefined;
         if (this.trace === Trace.Verbose && request.arguments) {
-            data = "Arguments: " + JSON.stringify(request.arguments, null, 4);
+            data = "Arguments: " + JSON.stringify(request.arguments, [], 4);
         }
         this.logTrace("Sending request: " + request.command + " (" + request.seq + "). Response expected: " + (responseExpected ? 'yes' : 'no') + ". Current queue length: " + this.requestQueue.length, data);
     };
@@ -600,7 +646,7 @@ var TypeScriptServiceClient = (function () {
         }
         var data = undefined;
         if (this.trace === Trace.Verbose && response.body) {
-            data = "Result: " + JSON.stringify(response.body, null, 4);
+            data = "Result: " + JSON.stringify(response.body, [], 4);
         }
         this.logTrace("Response received: " + response.command + " (" + response.request_seq + "). Request took " + (Date.now() - startTime) + " ms. Success: " + response.success + " " + (!response.success ? '. Message: ' + response.message : ''), data);
     };
@@ -610,7 +656,7 @@ var TypeScriptServiceClient = (function () {
         }
         var data = undefined;
         if (this.trace === Trace.Verbose && event.body) {
-            data = "Data: " + JSON.stringify(event.body, null, 4);
+            data = "Data: " + JSON.stringify(event.body, [], 4);
         }
         this.logTrace("Event received: " + event.event + " (" + event.seq + ").", data);
     };
@@ -618,4 +664,4 @@ var TypeScriptServiceClient = (function () {
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeScriptServiceClient;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/typescriptServiceClient.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/typescriptServiceClient.js.map

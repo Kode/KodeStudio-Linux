@@ -16,6 +16,14 @@ define("vs/workbench/node/extensionHostProcess.nls.ru", {
 	"vs/base/node/processes": [
 		"Невозможно выполнить команду оболочки на диске UNC.",
 	],
+	"vs/platform/configuration/common/configurationRegistry": [
+		"Добавляет параметры конфигурации.",
+		"Краткая сводка параметров. Эта метка будет использоваться в файле параметров в качестве разделяющего комментария.",
+		"Описание свойств конфигурации.",
+		"Если тип configuration.type задан, то он должен иметь значение object",
+		"configuration.title должно быть строкой",
+		"configuration.properties должно быть объектом",
+	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"Не удалось активировать расширение \"{1}\". Причина: неизвестный зависимый компонент \"{0}\".",
 		"Не удалось активировать расширение \"{1}\". Причина: ошибка активации зависимого компонента \"{0}\".",
@@ -43,6 +51,12 @@ define("vs/workbench/node/extensionHostProcess.nls.ru", {
 	],
 	"vs/workbench/api/node/extHostDiagnostics": [
 		"Не отображается еще несколько ошибок и предупреждений ({0}).",
+	],
+	"vs/workbench/api/node/extHostTreeExplorers": [
+		"TreeExplorerNodeProvider с идентификатором \"{0}\" не зарегистрирован.",
+		"TreeExplorerNodeProvider \"{0}\" не удалось предоставить корневой узел.",
+		"TreeExplorerNodeProvider с идентификатором \"{0}\" не зарегистрирован.",
+		"TreeExplorerNodeProvider \"{0}\" не удалось выполнить операцию resolveChildren.",
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"Путь \"{0}\" не указывает на допустимый модуль выполнения тестов расширения.",

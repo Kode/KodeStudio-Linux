@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 var vscode_1 = require('vscode');
-var embeddedContentUri_1 = require('./embeddedContentUri');
 var MAX_DECORATORS = 500;
 var decorationType = {
     before: {
@@ -53,9 +52,8 @@ function activateColorDecorations(decoratorProvider, supportedLanguages) {
         if (triggerUpdate) {
             pendingUpdateRequests[documentUriStr] = setTimeout(function () {
                 // check if the document is in use by an active editor
-                var contentHostUri = embeddedContentUri_1.isEmbeddedContentUri(documentUri) ? embeddedContentUri_1.getHostDocumentUri(documentUri) : documentUriStr;
                 vscode_1.window.visibleTextEditors.forEach(function (editor) {
-                    if (editor.document && contentHostUri === editor.document.uri.toString()) {
+                    if (editor.document && documentUriStr === editor.document.uri.toString()) {
                         updateDecorationForEditor(editor, documentUriStr);
                     }
                 });
@@ -83,4 +81,4 @@ function activateColorDecorations(decoratorProvider, supportedLanguages) {
     return vscode_1.Disposable.from.apply(vscode_1.Disposable, disposables);
 }
 exports.activateColorDecorations = activateColorDecorations;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/css/client/out/colorDecorators.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/css/client/out/colorDecorators.js.map

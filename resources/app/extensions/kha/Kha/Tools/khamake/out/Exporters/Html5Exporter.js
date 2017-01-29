@@ -17,9 +17,6 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
         super(options);
         this.addSourceDirectory(path.join(options.kha, 'Backends', 'HTML5'));
     }
-    sysdir() {
-        return 'html5';
-    }
     isDebugHtml5() {
         return this.sysdir() === 'debug-html5';
     }
@@ -33,6 +30,13 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
         defines.push('sys_g4');
         defines.push('sys_a1');
         defines.push('sys_a2');
+        let canvasId = targetOptions.html5.canvasId == null ? 'khanvas' : targetOptions.html5.canvasId;
+        defines.push('canvas_id=' + canvasId);
+        let scriptName = 'kha';
+        if (targetOptions.html5.scriptName != null && !(this.isNode() || this.isDebugHtml5())) {
+            scriptName = targetOptions.html5.scriptName;
+        }
+        defines.push('script_name=' + scriptName);
         let webgl = targetOptions.html5.webgl == null ? true : targetOptions.html5.webgl;
         if (webgl) {
             defines.push('webgl');
@@ -51,7 +55,7 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
         }
         return {
             from: this.options.from.toString(),
-            to: path.join(this.sysdir(), 'kha.js'),
+            to: path.join(this.sysdir(), scriptName + '.js'),
             sources: this.sources,
             libraries: this.libraries,
             defines: defines,
@@ -64,8 +68,19 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
             name: name
         };
     }
-    export(name, targetOptions, haxeOptions) {
+    export(name, _targetOptions, haxeOptions) {
         return __awaiter(this, void 0, void 0, function* () {
+            let targetOptions = {
+                canvasId: 'khanvas',
+                scriptName: 'kha'
+            };
+            if (_targetOptions != null && _targetOptions.html5 != null) {
+                let userOptions = _targetOptions.html5;
+                if (userOptions.canvasId != null)
+                    targetOptions.canvasId = userOptions.canvasId;
+                if (userOptions.scriptName != null)
+                    targetOptions.scriptName = userOptions.scriptName;
+            }
             fs.ensureDirSync(path.join(this.options.to, this.sysdir()));
             if (this.isDebugHtml5()) {
                 let index = path.join(this.options.to, this.sysdir(), 'index.html');
@@ -74,6 +89,8 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
                     protoindex = protoindex.replace(/{Name}/g, name);
                     protoindex = protoindex.replace(/{Width}/g, '' + this.width);
                     protoindex = protoindex.replace(/{Height}/g, '' + this.height);
+                    protoindex = protoindex.replace(/{CanvasId}/g, '' + targetOptions.canvasId);
+                    protoindex = protoindex.replace(/{ScriptName}/g, '' + targetOptions.scriptName);
                     fs.writeFileSync(index.toString(), protoindex);
                 }
                 let pack = path.join(this.options.to, this.sysdir(), 'package.json');
@@ -101,6 +118,8 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
                     protoindex = protoindex.replace(/{Name}/g, name);
                     protoindex = protoindex.replace(/{Width}/g, '' + this.width);
                     protoindex = protoindex.replace(/{Height}/g, '' + this.height);
+                    protoindex = protoindex.replace(/{CanvasId}/g, '' + targetOptions.canvasId);
+                    protoindex = protoindex.replace(/{ScriptName}/g, '' + targetOptions.scriptName);
                     fs.writeFileSync(index.toString(), protoindex);
                 }
             }
@@ -163,4 +182,4 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
     }
 }
 exports.Html5Exporter = Html5Exporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/Exporters/Html5Exporter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/Html5Exporter.js.map

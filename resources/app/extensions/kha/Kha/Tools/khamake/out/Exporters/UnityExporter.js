@@ -19,9 +19,6 @@ class UnityExporter extends KhaExporter_1.KhaExporter {
         this.addSourceDirectory(path.join(this.options.kha, 'Backends', 'Unity'));
         fs.removeSync(path.join(this.options.to, this.sysdir(), 'Assets', 'Sources'));
     }
-    sysdir() {
-        return 'unity';
-    }
     haxeOptions(name, targetOptions, defines) {
         defines.push('no-root');
         defines.push('no-compilation');
@@ -89,4 +86,4 @@ class UnityExporter extends KhaExporter_1.KhaExporter {
     }
 }
 exports.UnityExporter = UnityExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/Exporters/UnityExporter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/UnityExporter.js.map

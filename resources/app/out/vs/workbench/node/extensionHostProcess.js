@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["require","exports","vs/workbench/api/node/extHost.protocol","vs/base/common/winjs.base","vs/base/common/errors","vs/workbench/api/node/extHostTypes","vs/base/common/uri","vs/base/common/event","vs/base/common/types","vs/base/common/paths","vs/platform/instantiation/common/instantiation","vs/base/common/platform","vs/workbench/api/node/extHostTypeConverters","vs/nls!vs/workbench/node/extensionHostProcess","vs/nls","vs/base/common/severity","vs/base/common/async","vs/base/common/strings","path","vs/base/common/objects","vs/base/common/arrays","fs","vs/base/common/cancellation","vs/base/common/lifecycle","vs/base/common/map","vs/editor/common/modes/languageSelector","vs/base/common/callbackList","vs/platform/platform","vs/base/common/glob","vs/base/common/marshalling","vs/base/node/flow","vs/workbench/api/node/extHostWorkspace","vs/base/node/extfs","vs/base/common/diff/diff","vs/base/common/events","vs/base/node/pfs","vs/base/node/stdFork","vs/workbench/api/node/extHostTerminalService","vs/workbench/api/node/extHostTelemetry","child_process","vs/editor/common/model/wordHelper","vs/base/common/idGenerator","vs/editor/common/modes/languageFeatureRegistry","vs/editor/common/modes","vs/editor/common/viewModel/prefixSumComputer","vs/editor/common/model/mirrorModel2","vs/nls!vs/base/common/processes","vs/base/common/parsers","vs/nls!vs/base/node/processes","vs/base/common/processes","vs/nls!vs/base/common/severity","vs/base/common/assert","vs/base/common/uuid","vs/base/node/processes","vs/workbench/api/node/extHostExtensionService","vs/nls!vs/platform/extensions/common/abstractExtensionService","vs/nls!vs/platform/extensions/common/extensionsRegistry","vs/nls!vs/workbench/api/node/extHostDiagnostics","vs/nls!vs/workbench/node/extensionHostMain","vs/platform/extensions/common/ipcRemoteCom","vs/base/common/eventEmitter","vs/platform/contextkey/common/contextkey","vs/editor/common/editorCommon","vs/platform/editor/common/editor","vs/platform/extensions/common/extensions","vs/platform/package","vs/workbench/node/extensionHostMain","vs/platform/jsonschemas/common/jsonContributionRegistry","vs/platform/extensions/common/extensionsRegistry","vs/platform/extensions/common/abstractExtensionService","vs/platform/product","vs/platform/statusbar/common/statusbar","vs/platform/workspace/common/workspace","vs/base/common/diff/diffChange","vs/workbench/services/configuration/common/configurationEditing","vs/workbench/services/textfile/common/textfiles","vs/base/node/decoder","vs/workbench/api/node/extHostApiCommands","vs/workbench/services/thread/common/abstractThreadService","vs/workbench/services/thread/common/extHostThreadService","vs/workbench/services/thread/common/threadService","vs/workbench/api/node/extHost.api.impl","vs/workbench/api/node/extHostCommands","vs/workbench/api/node/extHostConfiguration","vs/workbench/api/node/extHostDiagnostics","vs/workbench/api/node/extHostDocumentSaveParticipant","vs/workbench/api/node/extHostDocuments","vs/workbench/api/node/extHostEditors","vs/workbench/api/node/extHostFileSystemEventService","vs/workbench/api/node/extHostHeapService","vs/workbench/api/node/extHostLanguageFeatures","vs/workbench/api/node/extHostLanguages","vs/workbench/api/node/extHostMessageService","vs/workbench/api/node/extHostOutputService","vs/workbench/api/node/extHostQuickOpen","vs/workbench/api/node/extHostStatusBar","vs/workbench/api/node/extHostStorage","stream","net","os","assert","string_decoder","vs/base/common/winjs.base.raw","crypto","vs/workbench/node/extensionHostProcess"];
+var __m = ["exports","require","vs/workbench/api/node/extHost.protocol","vs/base/common/winjs.base","vs/base/common/errors","vs/workbench/api/node/extHostTypes","vs/base/common/event","vs/base/common/uri","vs/base/common/types","vs/base/common/platform","vs/base/common/paths","vs/platform/instantiation/common/instantiation","vs/nls!vs/workbench/node/extensionHostProcess","vs/nls","vs/workbench/api/node/extHostTypeConverters","vs/base/common/objects","vs/base/common/severity","vs/base/common/async","vs/base/common/strings","path","vs/base/common/arrays","vs/platform/platform","vs/base/common/cancellation","vs/base/common/lifecycle","vs/base/common/map","vs/base/common/glob","vs/base/common/callbackList","fs","vs/platform/jsonschemas/common/jsonContributionRegistry","vs/platform/extensions/common/extensionsRegistry","vs/base/node/pfs","vs/base/common/idGenerator","vs/base/common/marshalling","vs/base/common/assert","vs/base/node/stdFork","vs/workbench/api/node/extHostWorkspace","vs/workbench/api/node/extHostTreeExplorers","child_process","vs/editor/common/model/wordHelper","vs/editor/common/modes/languageConfiguration","vs/editor/common/modes/languageSelector","vs/editor/common/viewModel/prefixSumComputer","vs/editor/common/model/mirrorModel2","vs/nls!vs/base/common/processes","vs/base/common/uuid","vs/base/common/events","vs/base/common/processes","vs/nls!vs/base/common/severity","vs/workbench/node/extensionHostMain","vs/nls!vs/base/node/processes","vs/base/node/processes","vs/workbench/api/node/extHostTerminalService","vs/nls!vs/platform/configuration/common/configurationRegistry","vs/base/common/eventEmitter","vs/nls!vs/platform/extensions/common/extensionsRegistry","vs/nls!vs/workbench/api/node/extHostDiagnostics","vs/nls!vs/workbench/api/node/extHostTreeExplorers","vs/nls!vs/workbench/node/extensionHostMain","vs/platform/extensions/common/ipcRemoteCom","vs/base/node/decoder","vs/platform/contextkey/common/contextkey","vs/editor/common/editorCommon","vs/platform/editor/common/editor","vs/platform/extensions/common/extensions","vs/platform/package","vs/workbench/api/node/extHostExtensionService","vs/base/node/flow","vs/workbench/api/node/extHost.api.impl","vs/platform/configuration/common/configurationRegistry","vs/platform/configuration/common/model","vs/platform/extensions/common/abstractExtensionService","vs/platform/product","vs/platform/statusbar/common/statusbar","vs/platform/workspace/common/workspace","vs/base/node/extfs","vs/workbench/services/configuration/common/configurationEditing","vs/workbench/services/textfile/common/textfiles","vs/base/common/parsers","vs/workbench/api/node/extHostApiCommands","vs/workbench/services/thread/common/abstractThreadService","vs/workbench/services/thread/common/extHostThreadService","vs/workbench/services/thread/common/threadService","vs/nls!vs/platform/extensions/common/abstractExtensionService","vs/workbench/api/node/extHostCommands","vs/workbench/api/node/extHostConfiguration","vs/workbench/api/node/extHostDiagnostics","vs/workbench/api/node/extHostDocumentSaveParticipant","vs/workbench/api/node/extHostDocuments","vs/workbench/api/node/extHostEditors","vs/workbench/api/node/extHostFileSystemEventService","vs/workbench/api/node/extHostHeapService","vs/workbench/api/node/extHostLanguageFeatures","vs/workbench/api/node/extHostLanguages","vs/workbench/api/node/extHostMessageService","vs/workbench/api/node/extHostOutputService","vs/workbench/api/node/extHostQuickOpen","vs/workbench/api/node/extHostStatusBar","vs/workbench/api/node/extHostStorage","vs/workbench/api/node/extHostTelemetry","stream","net","os","assert","string_decoder","crypto","vs/base/common/winjs.base.raw","vs/workbench/node/extensionHostProcess"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,7 +10,7 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[20/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[20/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -290,7 +290,7 @@ define(__m[20/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/]), funct
     exports.insert = insert;
 });
 
-define(__m[51/*vs/base/common/assert*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[33/*vs/base/common/assert*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -307,774 +307,12 @@ define(__m[51/*vs/base/common/assert*/], __M([0/*require*/,1/*exports*/]), funct
     exports.ok = ok;
 });
 
-define(__m[73/*vs/base/common/diff/diffChange*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    exports.DifferenceType = {
-        Add: 0,
-        Remove: 1,
-        Change: 2
-    };
-    /**
-     * Represents information about a specific difference between two sequences.
-     */
-    var DiffChange = (function () {
-        /**
-         * Constructs a new DiffChange with the given sequence information
-         * and content.
-         */
-        function DiffChange(originalStart, originalLength, modifiedStart, modifiedLength) {
-            //Debug.Assert(originalLength > 0 || modifiedLength > 0, "originalLength and modifiedLength cannot both be <= 0");
-            this.originalStart = originalStart;
-            this.originalLength = originalLength;
-            this.modifiedStart = modifiedStart;
-            this.modifiedLength = modifiedLength;
-        }
-        /**
-         * The type of difference.
-         */
-        DiffChange.prototype.getChangeType = function () {
-            if (this.originalLength === 0) {
-                return exports.DifferenceType.Add;
-            }
-            else if (this.modifiedLength === 0) {
-                return exports.DifferenceType.Remove;
-            }
-            else {
-                return exports.DifferenceType.Change;
-            }
-        };
-        /**
-         * The end point (exclusive) of the change in the original sequence.
-         */
-        DiffChange.prototype.getOriginalEnd = function () {
-            return this.originalStart + this.originalLength;
-        };
-        /**
-         * The end point (exclusive) of the change in the modified sequence.
-         */
-        DiffChange.prototype.getModifiedEnd = function () {
-            return this.modifiedStart + this.modifiedLength;
-        };
-        return DiffChange;
-    }());
-    exports.DiffChange = DiffChange;
-});
-
-define(__m[33/*vs/base/common/diff/diff*/], __M([0/*require*/,1/*exports*/,73/*vs/base/common/diff/diffChange*/]), function (require, exports, diffChange_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    function createStringSequence(a) {
-        return {
-            getLength: function () { return a.length; },
-            getElementHash: function (pos) { return a[pos]; }
-        };
-    }
-    function stringDiff(original, modified) {
-        return new LcsDiff(createStringSequence(original), createStringSequence(modified)).ComputeDiff();
-    }
-    exports.stringDiff = stringDiff;
-    //
-    // The code below has been ported from a C# implementation in VS
-    //
-    var Debug = (function () {
-        function Debug() {
-        }
-        Debug.Assert = function (condition, message) {
-            if (!condition) {
-                throw new Error(message);
-            }
-        };
-        return Debug;
-    }());
-    exports.Debug = Debug;
-    var MyArray = (function () {
-        function MyArray() {
-        }
-        /**
-         * Copies a range of elements from an Array starting at the specified source index and pastes
-         * them to another Array starting at the specified destination index. The length and the indexes
-         * are specified as 64-bit integers.
-         * sourceArray:
-         *		The Array that contains the data to copy.
-         * sourceIndex:
-         *		A 64-bit integer that represents the index in the sourceArray at which copying begins.
-         * destinationArray:
-         *		The Array that receives the data.
-         * destinationIndex:
-         *		A 64-bit integer that represents the index in the destinationArray at which storing begins.
-         * length:
-         *		A 64-bit integer that represents the number of elements to copy.
-         */
-        MyArray.Copy = function (sourceArray, sourceIndex, destinationArray, destinationIndex, length) {
-            for (var i = 0; i < length; i++) {
-                destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
-            }
-        };
-        return MyArray;
-    }());
-    exports.MyArray = MyArray;
-    //*****************************************************************************
-    // LcsDiff.cs
-    //
-    // An implementation of the difference algorithm described in
-    // "An O(ND) Difference Algorithm and its letiations" by Eugene W. Myers
-    //
-    // Copyright (C) 2008 Microsoft Corporation @minifier_do_not_preserve
-    //*****************************************************************************
-    // Our total memory usage for storing history is (worst-case):
-    // 2 * [(MaxDifferencesHistory + 1) * (MaxDifferencesHistory + 1) - 1] * sizeof(int)
-    // 2 * [1448*1448 - 1] * 4 = 16773624 = 16MB
-    var MaxDifferencesHistory = 1447;
-    //let MaxDifferencesHistory = 100;
-    /**
-     * A utility class which helps to create the set of DiffChanges from
-     * a difference operation. This class accepts original DiffElements and
-     * modified DiffElements that are involved in a particular change. The
-     * MarktNextChange() method can be called to mark the separation between
-     * distinct changes. At the end, the Changes property can be called to retrieve
-     * the constructed changes.
-     */
-    var DiffChangeHelper = (function () {
-        /**
-         * Constructs a new DiffChangeHelper for the given DiffSequences.
-         */
-        function DiffChangeHelper() {
-            this.m_changes = [];
-            this.m_originalStart = Number.MAX_VALUE;
-            this.m_modifiedStart = Number.MAX_VALUE;
-            this.m_originalCount = 0;
-            this.m_modifiedCount = 0;
-        }
-        /**
-         * Marks the beginning of the next change in the set of differences.
-         */
-        DiffChangeHelper.prototype.MarkNextChange = function () {
-            // Only add to the list if there is something to add
-            if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
-                // Add the new change to our list
-                this.m_changes.push(new diffChange_1.DiffChange(this.m_originalStart, this.m_originalCount, this.m_modifiedStart, this.m_modifiedCount));
-            }
-            // Reset for the next change
-            this.m_originalCount = 0;
-            this.m_modifiedCount = 0;
-            this.m_originalStart = Number.MAX_VALUE;
-            this.m_modifiedStart = Number.MAX_VALUE;
-        };
-        /**
-         * Adds the original element at the given position to the elements
-         * affected by the current change. The modified index gives context
-         * to the change position with respect to the original sequence.
-         * @param originalIndex The index of the original element to add.
-         * @param modifiedIndex The index of the modified element that provides corresponding position in the modified sequence.
-         */
-        DiffChangeHelper.prototype.AddOriginalElement = function (originalIndex, modifiedIndex) {
-            // The 'true' start index is the smallest of the ones we've seen
-            this.m_originalStart = Math.min(this.m_originalStart, originalIndex);
-            this.m_modifiedStart = Math.min(this.m_modifiedStart, modifiedIndex);
-            this.m_originalCount++;
-        };
-        /**
-         * Adds the modified element at the given position to the elements
-         * affected by the current change. The original index gives context
-         * to the change position with respect to the modified sequence.
-         * @param originalIndex The index of the original element that provides corresponding position in the original sequence.
-         * @param modifiedIndex The index of the modified element to add.
-         */
-        DiffChangeHelper.prototype.AddModifiedElement = function (originalIndex, modifiedIndex) {
-            // The 'true' start index is the smallest of the ones we've seen
-            this.m_originalStart = Math.min(this.m_originalStart, originalIndex);
-            this.m_modifiedStart = Math.min(this.m_modifiedStart, modifiedIndex);
-            this.m_modifiedCount++;
-        };
-        /**
-         * Retrieves all of the changes marked by the class.
-         */
-        DiffChangeHelper.prototype.getChanges = function () {
-            if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
-                // Finish up on whatever is left
-                this.MarkNextChange();
-            }
-            return this.m_changes;
-        };
-        DiffChangeHelper.prototype.getReverseChanges = function () {
-            /// <summary>
-            /// Retrieves all of the changes marked by the class in the reverse order
-            /// </summary>
-            if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
-                // Finish up on whatever is left
-                this.MarkNextChange();
-            }
-            this.m_changes.reverse();
-            return this.m_changes;
-        };
-        return DiffChangeHelper;
-    }());
-    var hasOwnProperty = Object.prototype.hasOwnProperty;
-    /**
-     * An implementation of the difference algorithm described in
-     * "An O(ND) Difference Algorithm and its letiations" by Eugene W. Myers
-     */
-    var LcsDiff = (function () {
-        /**
-         * Constructs the DiffFinder
-         */
-        function LcsDiff(originalSequence, newSequence, continueProcessingPredicate) {
-            if (continueProcessingPredicate === void 0) { continueProcessingPredicate = null; }
-            this.OriginalSequence = originalSequence;
-            this.ModifiedSequence = newSequence;
-            this.ContinueProcessingPredicate = continueProcessingPredicate;
-            this.m_originalIds = [];
-            this.m_modifiedIds = [];
-            this.m_forwardHistory = [];
-            this.m_reverseHistory = [];
-            this.ComputeUniqueIdentifiers();
-        }
-        LcsDiff.prototype.ComputeUniqueIdentifiers = function () {
-            var originalSequenceLength = this.OriginalSequence.getLength();
-            var modifiedSequenceLength = this.ModifiedSequence.getLength();
-            this.m_originalIds = new Array(originalSequenceLength);
-            this.m_modifiedIds = new Array(modifiedSequenceLength);
-            // Create a new hash table for unique elements from the original
-            // sequence.
-            var hashTable = {};
-            var currentUniqueId = 1;
-            var i;
-            // Fill up the hash table for unique elements
-            for (i = 0; i < originalSequenceLength; i++) {
-                var originalElementHash = this.OriginalSequence.getElementHash(i);
-                if (!hasOwnProperty.call(hashTable, originalElementHash)) {
-                    // No entry in the hashtable so this is a new unique element.
-                    // Assign the element a new unique identifier and add it to the
-                    // hash table
-                    this.m_originalIds[i] = currentUniqueId++;
-                    hashTable[originalElementHash] = this.m_originalIds[i];
-                }
-                else {
-                    this.m_originalIds[i] = hashTable[originalElementHash];
-                }
-            }
-            // Now match up modified elements
-            for (i = 0; i < modifiedSequenceLength; i++) {
-                var modifiedElementHash = this.ModifiedSequence.getElementHash(i);
-                if (!hasOwnProperty.call(hashTable, modifiedElementHash)) {
-                    this.m_modifiedIds[i] = currentUniqueId++;
-                    hashTable[modifiedElementHash] = this.m_modifiedIds[i];
-                }
-                else {
-                    this.m_modifiedIds[i] = hashTable[modifiedElementHash];
-                }
-            }
-        };
-        LcsDiff.prototype.ElementsAreEqual = function (originalIndex, newIndex) {
-            return this.m_originalIds[originalIndex] === this.m_modifiedIds[newIndex];
-        };
-        LcsDiff.prototype.ComputeDiff = function () {
-            return this._ComputeDiff(0, this.OriginalSequence.getLength() - 1, 0, this.ModifiedSequence.getLength() - 1);
-        };
-        /**
-         * Computes the differences between the original and modified input
-         * sequences on the bounded range.
-         * @returns An array of the differences between the two input sequences.
-         */
-        LcsDiff.prototype._ComputeDiff = function (originalStart, originalEnd, modifiedStart, modifiedEnd) {
-            var quitEarlyArr = [false];
-            return this.ComputeDiffRecursive(originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr);
-        };
-        /**
-         * Private helper method which computes the differences on the bounded range
-         * recursively.
-         * @returns An array of the differences between the two input sequences.
-         */
-        LcsDiff.prototype.ComputeDiffRecursive = function (originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr) {
-            quitEarlyArr[0] = false;
-            // Find the start of the differences
-            while (originalStart <= originalEnd && modifiedStart <= modifiedEnd && this.ElementsAreEqual(originalStart, modifiedStart)) {
-                originalStart++;
-                modifiedStart++;
-            }
-            // Find the end of the differences
-            while (originalEnd >= originalStart && modifiedEnd >= modifiedStart && this.ElementsAreEqual(originalEnd, modifiedEnd)) {
-                originalEnd--;
-                modifiedEnd--;
-            }
-            // In the special case where we either have all insertions or all deletions or the sequences are identical
-            if (originalStart > originalEnd || modifiedStart > modifiedEnd) {
-                var changes = void 0;
-                if (modifiedStart <= modifiedEnd) {
-                    Debug.Assert(originalStart === originalEnd + 1, 'originalStart should only be one more than originalEnd');
-                    // All insertions
-                    changes = [
-                        new diffChange_1.DiffChange(originalStart, 0, modifiedStart, modifiedEnd - modifiedStart + 1)
-                    ];
-                }
-                else if (originalStart <= originalEnd) {
-                    Debug.Assert(modifiedStart === modifiedEnd + 1, 'modifiedStart should only be one more than modifiedEnd');
-                    // All deletions
-                    changes = [
-                        new diffChange_1.DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, 0)
-                    ];
-                }
-                else {
-                    Debug.Assert(originalStart === originalEnd + 1, 'originalStart should only be one more than originalEnd');
-                    Debug.Assert(modifiedStart === modifiedEnd + 1, 'modifiedStart should only be one more than modifiedEnd');
-                    // Identical sequences - No differences
-                    changes = [];
-                }
-                return changes;
-            }
-            // This problem can be solved using the Divide-And-Conquer technique.
-            var midOriginalArr = [0], midModifiedArr = [0];
-            var result = this.ComputeRecursionPoint(originalStart, originalEnd, modifiedStart, modifiedEnd, midOriginalArr, midModifiedArr, quitEarlyArr);
-            var midOriginal = midOriginalArr[0];
-            var midModified = midModifiedArr[0];
-            if (result !== null) {
-                // Result is not-null when there was enough memory to compute the changes while
-                // searching for the recursion point
-                return result;
-            }
-            else if (!quitEarlyArr[0]) {
-                // We can break the problem down recursively by finding the changes in the
-                // First Half:   (originalStart, modifiedStart) to (midOriginal, midModified)
-                // Second Half:  (midOriginal + 1, minModified + 1) to (originalEnd, modifiedEnd)
-                // NOTE: ComputeDiff() is inclusive, therefore the second range starts on the next point
-                var leftChanges = this.ComputeDiffRecursive(originalStart, midOriginal, modifiedStart, midModified, quitEarlyArr);
-                var rightChanges = [];
-                if (!quitEarlyArr[0]) {
-                    rightChanges = this.ComputeDiffRecursive(midOriginal + 1, originalEnd, midModified + 1, modifiedEnd, quitEarlyArr);
-                }
-                else {
-                    // We did't have time to finish the first half, so we don't have time to compute this half.
-                    // Consider the entire rest of the sequence different.
-                    rightChanges = [
-                        new diffChange_1.DiffChange(midOriginal + 1, originalEnd - (midOriginal + 1) + 1, midModified + 1, modifiedEnd - (midModified + 1) + 1)
-                    ];
-                }
-                return this.ConcatenateChanges(leftChanges, rightChanges);
-            }
-            // If we hit here, we quit early, and so can't return anything meaningful
-            return [
-                new diffChange_1.DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, modifiedEnd - modifiedStart + 1)
-            ];
-        };
-        LcsDiff.prototype.WALKTRACE = function (diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr) {
-            var forwardChanges = null, reverseChanges = null;
-            // First, walk backward through the forward diagonals history
-            var changeHelper = new DiffChangeHelper();
-            var diagonalMin = diagonalForwardStart;
-            var diagonalMax = diagonalForwardEnd;
-            var diagonalRelative = (midOriginalArr[0] - midModifiedArr[0]) - diagonalForwardOffset;
-            var lastOriginalIndex = Number.MIN_VALUE;
-            var historyIndex = this.m_forwardHistory.length - 1;
-            var diagonal;
-            do {
-                // Get the diagonal index from the relative diagonal number
-                diagonal = diagonalRelative + diagonalForwardBase;
-                // Figure out where we came from
-                if (diagonal === diagonalMin || (diagonal < diagonalMax && forwardPoints[diagonal - 1] < forwardPoints[diagonal + 1])) {
-                    // Vertical line (the element is an insert)
-                    originalIndex = forwardPoints[diagonal + 1];
-                    modifiedIndex = originalIndex - diagonalRelative - diagonalForwardOffset;
-                    if (originalIndex < lastOriginalIndex) {
-                        changeHelper.MarkNextChange();
-                    }
-                    lastOriginalIndex = originalIndex;
-                    changeHelper.AddModifiedElement(originalIndex + 1, modifiedIndex);
-                    diagonalRelative = (diagonal + 1) - diagonalForwardBase; //Setup for the next iteration
-                }
-                else {
-                    // Horizontal line (the element is a deletion)
-                    originalIndex = forwardPoints[diagonal - 1] + 1;
-                    modifiedIndex = originalIndex - diagonalRelative - diagonalForwardOffset;
-                    if (originalIndex < lastOriginalIndex) {
-                        changeHelper.MarkNextChange();
-                    }
-                    lastOriginalIndex = originalIndex - 1;
-                    changeHelper.AddOriginalElement(originalIndex, modifiedIndex + 1);
-                    diagonalRelative = (diagonal - 1) - diagonalForwardBase; //Setup for the next iteration
-                }
-                if (historyIndex >= 0) {
-                    forwardPoints = this.m_forwardHistory[historyIndex];
-                    diagonalForwardBase = forwardPoints[0]; //We stored this in the first spot
-                    diagonalMin = 1;
-                    diagonalMax = forwardPoints.length - 1;
-                }
-            } while (--historyIndex >= -1);
-            // Ironically, we get the forward changes as the reverse of the
-            // order we added them since we technically added them backwards
-            forwardChanges = changeHelper.getReverseChanges();
-            if (quitEarlyArr[0]) {
-                // TODO: Calculate a partial from the reverse diagonals.
-                //       For now, just assume everything after the midOriginal/midModified point is a diff
-                var originalStartPoint = midOriginalArr[0] + 1;
-                var modifiedStartPoint = midModifiedArr[0] + 1;
-                if (forwardChanges !== null && forwardChanges.length > 0) {
-                    var lastForwardChange = forwardChanges[forwardChanges.length - 1];
-                    originalStartPoint = Math.max(originalStartPoint, lastForwardChange.getOriginalEnd());
-                    modifiedStartPoint = Math.max(modifiedStartPoint, lastForwardChange.getModifiedEnd());
-                }
-                reverseChanges = [
-                    new diffChange_1.DiffChange(originalStartPoint, originalEnd - originalStartPoint + 1, modifiedStartPoint, modifiedEnd - modifiedStartPoint + 1)
-                ];
-            }
-            else {
-                // Now walk backward through the reverse diagonals history
-                changeHelper = new DiffChangeHelper();
-                diagonalMin = diagonalReverseStart;
-                diagonalMax = diagonalReverseEnd;
-                diagonalRelative = (midOriginalArr[0] - midModifiedArr[0]) - diagonalReverseOffset;
-                lastOriginalIndex = Number.MAX_VALUE;
-                historyIndex = (deltaIsEven) ? this.m_reverseHistory.length - 1 : this.m_reverseHistory.length - 2;
-                do {
-                    // Get the diagonal index from the relative diagonal number
-                    diagonal = diagonalRelative + diagonalReverseBase;
-                    // Figure out where we came from
-                    if (diagonal === diagonalMin || (diagonal < diagonalMax && reversePoints[diagonal - 1] >= reversePoints[diagonal + 1])) {
-                        // Horizontal line (the element is a deletion))
-                        originalIndex = reversePoints[diagonal + 1] - 1;
-                        modifiedIndex = originalIndex - diagonalRelative - diagonalReverseOffset;
-                        if (originalIndex > lastOriginalIndex) {
-                            changeHelper.MarkNextChange();
-                        }
-                        lastOriginalIndex = originalIndex + 1;
-                        changeHelper.AddOriginalElement(originalIndex + 1, modifiedIndex + 1);
-                        diagonalRelative = (diagonal + 1) - diagonalReverseBase; //Setup for the next iteration
-                    }
-                    else {
-                        // Vertical line (the element is an insertion)
-                        originalIndex = reversePoints[diagonal - 1];
-                        modifiedIndex = originalIndex - diagonalRelative - diagonalReverseOffset;
-                        if (originalIndex > lastOriginalIndex) {
-                            changeHelper.MarkNextChange();
-                        }
-                        lastOriginalIndex = originalIndex;
-                        changeHelper.AddModifiedElement(originalIndex + 1, modifiedIndex + 1);
-                        diagonalRelative = (diagonal - 1) - diagonalReverseBase; //Setup for the next iteration
-                    }
-                    if (historyIndex >= 0) {
-                        reversePoints = this.m_reverseHistory[historyIndex];
-                        diagonalReverseBase = reversePoints[0]; //We stored this in the first spot
-                        diagonalMin = 1;
-                        diagonalMax = reversePoints.length - 1;
-                    }
-                } while (--historyIndex >= -1);
-                // There are cases where the reverse history will find diffs that
-                // are correct, but not intuitive, so we need shift them.
-                reverseChanges = changeHelper.getChanges();
-            }
-            return this.ConcatenateChanges(forwardChanges, reverseChanges);
-        };
-        /**
-         * Given the range to compute the diff on, this method finds the point:
-         * (midOriginal, midModified)
-         * that exists in the middle of the LCS of the two sequences and
-         * is the point at which the LCS problem may be broken down recursively.
-         * This method will try to keep the LCS trace in memory. If the LCS recursion
-         * point is calculated and the full trace is available in memory, then this method
-         * will return the change list.
-         * @param originalStart The start bound of the original sequence range
-         * @param originalEnd The end bound of the original sequence range
-         * @param modifiedStart The start bound of the modified sequence range
-         * @param modifiedEnd The end bound of the modified sequence range
-         * @param midOriginal The middle point of the original sequence range
-         * @param midModified The middle point of the modified sequence range
-         * @returns The diff changes, if available, otherwise null
-         */
-        LcsDiff.prototype.ComputeRecursionPoint = function (originalStart, originalEnd, modifiedStart, modifiedEnd, midOriginalArr, midModifiedArr, quitEarlyArr) {
-            var originalIndex, modifiedIndex;
-            var diagonalForwardStart = 0, diagonalForwardEnd = 0;
-            var diagonalReverseStart = 0, diagonalReverseEnd = 0;
-            var numDifferences;
-            // To traverse the edit graph and produce the proper LCS, our actual
-            // start position is just outside the given boundary
-            originalStart--;
-            modifiedStart--;
-            // We set these up to make the compiler happy, but they will
-            // be replaced before we return with the actual recursion point
-            midOriginalArr[0] = 0;
-            midModifiedArr[0] = 0;
-            // Clear out the history
-            this.m_forwardHistory = [];
-            this.m_reverseHistory = [];
-            // Each cell in the two arrays corresponds to a diagonal in the edit graph.
-            // The integer value in the cell represents the originalIndex of the furthest
-            // reaching point found so far that ends in that diagonal.
-            // The modifiedIndex can be computed mathematically from the originalIndex and the diagonal number.
-            var maxDifferences = (originalEnd - originalStart) + (modifiedEnd - modifiedStart);
-            var numDiagonals = maxDifferences + 1;
-            var forwardPoints = new Array(numDiagonals);
-            var reversePoints = new Array(numDiagonals);
-            // diagonalForwardBase: Index into forwardPoints of the diagonal which passes through (originalStart, modifiedStart)
-            // diagonalReverseBase: Index into reversePoints of the diagonal which passes through (originalEnd, modifiedEnd)
-            var diagonalForwardBase = (modifiedEnd - modifiedStart);
-            var diagonalReverseBase = (originalEnd - originalStart);
-            // diagonalForwardOffset: Geometric offset which allows modifiedIndex to be computed from originalIndex and the
-            //    diagonal number (relative to diagonalForwardBase)
-            // diagonalReverseOffset: Geometric offset which allows modifiedIndex to be computed from originalIndex and the
-            //    diagonal number (relative to diagonalReverseBase)
-            var diagonalForwardOffset = (originalStart - modifiedStart);
-            var diagonalReverseOffset = (originalEnd - modifiedEnd);
-            // delta: The difference between the end diagonal and the start diagonal. This is used to relate diagonal numbers
-            //   relative to the start diagonal with diagonal numbers relative to the end diagonal.
-            // The Even/Oddn-ness of this delta is important for determining when we should check for overlap
-            var delta = diagonalReverseBase - diagonalForwardBase;
-            var deltaIsEven = (delta % 2 === 0);
-            // Here we set up the start and end points as the furthest points found so far
-            // in both the forward and reverse directions, respectively
-            forwardPoints[diagonalForwardBase] = originalStart;
-            reversePoints[diagonalReverseBase] = originalEnd;
-            // Remember if we quit early, and thus need to do a best-effort result instead of a real result.
-            quitEarlyArr[0] = false;
-            // A couple of points:
-            // --With this method, we iterate on the number of differences between the two sequences.
-            //   The more differences there actually are, the longer this will take.
-            // --Also, as the number of differences increases, we have to search on diagonals further
-            //   away from the reference diagonal (which is diagonalForwardBase for forward, diagonalReverseBase for reverse).
-            // --We extend on even diagonals (relative to the reference diagonal) only when numDifferences
-            //   is even and odd diagonals only when numDifferences is odd.
-            var diagonal, tempOriginalIndex;
-            for (numDifferences = 1; numDifferences <= (maxDifferences / 2) + 1; numDifferences++) {
-                var furthestOriginalIndex = 0;
-                var furthestModifiedIndex = 0;
-                // Run the algorithm in the forward direction
-                diagonalForwardStart = this.ClipDiagonalBound(diagonalForwardBase - numDifferences, numDifferences, diagonalForwardBase, numDiagonals);
-                diagonalForwardEnd = this.ClipDiagonalBound(diagonalForwardBase + numDifferences, numDifferences, diagonalForwardBase, numDiagonals);
-                for (diagonal = diagonalForwardStart; diagonal <= diagonalForwardEnd; diagonal += 2) {
-                    // STEP 1: We extend the furthest reaching point in the present diagonal
-                    // by looking at the diagonals above and below and picking the one whose point
-                    // is further away from the start point (originalStart, modifiedStart)
-                    if (diagonal === diagonalForwardStart || (diagonal < diagonalForwardEnd && forwardPoints[diagonal - 1] < forwardPoints[diagonal + 1])) {
-                        originalIndex = forwardPoints[diagonal + 1];
-                    }
-                    else {
-                        originalIndex = forwardPoints[diagonal - 1] + 1;
-                    }
-                    modifiedIndex = originalIndex - (diagonal - diagonalForwardBase) - diagonalForwardOffset;
-                    // Save the current originalIndex so we can test for false overlap in step 3
-                    tempOriginalIndex = originalIndex;
-                    // STEP 2: We can continue to extend the furthest reaching point in the present diagonal
-                    // so long as the elements are equal.
-                    while (originalIndex < originalEnd && modifiedIndex < modifiedEnd && this.ElementsAreEqual(originalIndex + 1, modifiedIndex + 1)) {
-                        originalIndex++;
-                        modifiedIndex++;
-                    }
-                    forwardPoints[diagonal] = originalIndex;
-                    if (originalIndex + modifiedIndex > furthestOriginalIndex + furthestModifiedIndex) {
-                        furthestOriginalIndex = originalIndex;
-                        furthestModifiedIndex = modifiedIndex;
-                    }
-                    // STEP 3: If delta is odd (overlap first happens on forward when delta is odd)
-                    // and diagonal is in the range of reverse diagonals computed for numDifferences-1
-                    // (the previous iteration; we haven't computed reverse diagonals for numDifferences yet)
-                    // then check for overlap.
-                    if (!deltaIsEven && Math.abs(diagonal - diagonalReverseBase) <= (numDifferences - 1)) {
-                        if (originalIndex >= reversePoints[diagonal]) {
-                            midOriginalArr[0] = originalIndex;
-                            midModifiedArr[0] = modifiedIndex;
-                            if (tempOriginalIndex <= reversePoints[diagonal] && MaxDifferencesHistory > 0 && numDifferences <= (MaxDifferencesHistory + 1)) {
-                                // BINGO! We overlapped, and we have the full trace in memory!
-                                return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
-                            }
-                            else {
-                                // Either false overlap, or we didn't have enough memory for the full trace
-                                // Just return the recursion point
-                                return null;
-                            }
-                        }
-                    }
-                }
-                // Check to see if we should be quitting early, before moving on to the next iteration.
-                var matchLengthOfLongest = ((furthestOriginalIndex - originalStart) + (furthestModifiedIndex - modifiedStart) - numDifferences) / 2;
-                if (this.ContinueProcessingPredicate !== null && !this.ContinueProcessingPredicate(furthestOriginalIndex, this.OriginalSequence, matchLengthOfLongest)) {
-                    // We can't finish, so skip ahead to generating a result from what we have.
-                    quitEarlyArr[0] = true;
-                    // Use the furthest distance we got in the forward direction.
-                    midOriginalArr[0] = furthestOriginalIndex;
-                    midModifiedArr[0] = furthestModifiedIndex;
-                    if (matchLengthOfLongest > 0 && MaxDifferencesHistory > 0 && numDifferences <= (MaxDifferencesHistory + 1)) {
-                        // Enough of the history is in memory to walk it backwards
-                        return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
-                    }
-                    else {
-                        // We didn't actually remember enough of the history.
-                        //Since we are quiting the diff early, we need to shift back the originalStart and modified start
-                        //back into the boundary limits since we decremented their value above beyond the boundary limit.
-                        originalStart++;
-                        modifiedStart++;
-                        return [
-                            new diffChange_1.DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, modifiedEnd - modifiedStart + 1)
-                        ];
-                    }
-                }
-                // Run the algorithm in the reverse direction
-                diagonalReverseStart = this.ClipDiagonalBound(diagonalReverseBase - numDifferences, numDifferences, diagonalReverseBase, numDiagonals);
-                diagonalReverseEnd = this.ClipDiagonalBound(diagonalReverseBase + numDifferences, numDifferences, diagonalReverseBase, numDiagonals);
-                for (diagonal = diagonalReverseStart; diagonal <= diagonalReverseEnd; diagonal += 2) {
-                    // STEP 1: We extend the furthest reaching point in the present diagonal
-                    // by looking at the diagonals above and below and picking the one whose point
-                    // is further away from the start point (originalEnd, modifiedEnd)
-                    if (diagonal === diagonalReverseStart || (diagonal < diagonalReverseEnd && reversePoints[diagonal - 1] >= reversePoints[diagonal + 1])) {
-                        originalIndex = reversePoints[diagonal + 1] - 1;
-                    }
-                    else {
-                        originalIndex = reversePoints[diagonal - 1];
-                    }
-                    modifiedIndex = originalIndex - (diagonal - diagonalReverseBase) - diagonalReverseOffset;
-                    // Save the current originalIndex so we can test for false overlap
-                    tempOriginalIndex = originalIndex;
-                    // STEP 2: We can continue to extend the furthest reaching point in the present diagonal
-                    // as long as the elements are equal.
-                    while (originalIndex > originalStart && modifiedIndex > modifiedStart && this.ElementsAreEqual(originalIndex, modifiedIndex)) {
-                        originalIndex--;
-                        modifiedIndex--;
-                    }
-                    reversePoints[diagonal] = originalIndex;
-                    // STEP 4: If delta is even (overlap first happens on reverse when delta is even)
-                    // and diagonal is in the range of forward diagonals computed for numDifferences
-                    // then check for overlap.
-                    if (deltaIsEven && Math.abs(diagonal - diagonalForwardBase) <= numDifferences) {
-                        if (originalIndex <= forwardPoints[diagonal]) {
-                            midOriginalArr[0] = originalIndex;
-                            midModifiedArr[0] = modifiedIndex;
-                            if (tempOriginalIndex >= forwardPoints[diagonal] && MaxDifferencesHistory > 0 && numDifferences <= (MaxDifferencesHistory + 1)) {
-                                // BINGO! We overlapped, and we have the full trace in memory!
-                                return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
-                            }
-                            else {
-                                // Either false overlap, or we didn't have enough memory for the full trace
-                                // Just return the recursion point
-                                return null;
-                            }
-                        }
-                    }
-                }
-                // Save current vectors to history before the next iteration
-                if (numDifferences <= MaxDifferencesHistory) {
-                    // We are allocating space for one extra int, which we fill with
-                    // the index of the diagonal base index
-                    var temp = new Array(diagonalForwardEnd - diagonalForwardStart + 2);
-                    temp[0] = diagonalForwardBase - diagonalForwardStart + 1;
-                    MyArray.Copy(forwardPoints, diagonalForwardStart, temp, 1, diagonalForwardEnd - diagonalForwardStart + 1);
-                    this.m_forwardHistory.push(temp);
-                    temp = new Array(diagonalReverseEnd - diagonalReverseStart + 2);
-                    temp[0] = diagonalReverseBase - diagonalReverseStart + 1;
-                    MyArray.Copy(reversePoints, diagonalReverseStart, temp, 1, diagonalReverseEnd - diagonalReverseStart + 1);
-                    this.m_reverseHistory.push(temp);
-                }
-            }
-            // If we got here, then we have the full trace in history. We just have to convert it to a change list
-            // NOTE: This part is a bit messy
-            return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
-        };
-        /**
-         * Concatenates the two input DiffChange lists and returns the resulting
-         * list.
-         * @param The left changes
-         * @param The right changes
-         * @returns The concatenated list
-         */
-        LcsDiff.prototype.ConcatenateChanges = function (left, right) {
-            var mergedChangeArr = [];
-            var result = null;
-            if (left.length === 0 || right.length === 0) {
-                return (right.length > 0) ? right : left;
-            }
-            else if (this.ChangesOverlap(left[left.length - 1], right[0], mergedChangeArr)) {
-                // Since we break the problem down recursively, it is possible that we
-                // might recurse in the middle of a change thereby splitting it into
-                // two changes. Here in the combining stage, we detect and fuse those
-                // changes back together
-                result = new Array(left.length + right.length - 1);
-                MyArray.Copy(left, 0, result, 0, left.length - 1);
-                result[left.length - 1] = mergedChangeArr[0];
-                MyArray.Copy(right, 1, result, left.length, right.length - 1);
-                return result;
-            }
-            else {
-                result = new Array(left.length + right.length);
-                MyArray.Copy(left, 0, result, 0, left.length);
-                MyArray.Copy(right, 0, result, left.length, right.length);
-                return result;
-            }
-        };
-        /**
-         * Returns true if the two changes overlap and can be merged into a single
-         * change
-         * @param left The left change
-         * @param right The right change
-         * @param mergedChange The merged change if the two overlap, null otherwise
-         * @returns True if the two changes overlap
-         */
-        LcsDiff.prototype.ChangesOverlap = function (left, right, mergedChangeArr) {
-            Debug.Assert(left.originalStart <= right.originalStart, 'Left change is not less than or equal to right change');
-            Debug.Assert(left.modifiedStart <= right.modifiedStart, 'Left change is not less than or equal to right change');
-            if (left.originalStart + left.originalLength >= right.originalStart || left.modifiedStart + left.modifiedLength >= right.modifiedStart) {
-                var originalStart = left.originalStart;
-                var originalLength = left.originalLength;
-                var modifiedStart = left.modifiedStart;
-                var modifiedLength = left.modifiedLength;
-                if (left.originalStart + left.originalLength >= right.originalStart) {
-                    originalLength = right.originalStart + right.originalLength - left.originalStart;
-                }
-                if (left.modifiedStart + left.modifiedLength >= right.modifiedStart) {
-                    modifiedLength = right.modifiedStart + right.modifiedLength - left.modifiedStart;
-                }
-                mergedChangeArr[0] = new diffChange_1.DiffChange(originalStart, originalLength, modifiedStart, modifiedLength);
-                return true;
-            }
-            else {
-                mergedChangeArr[0] = null;
-                return false;
-            }
-        };
-        /**
-         * Helper method used to clip a diagonal index to the range of valid
-         * diagonals. This also decides whether or not the diagonal index,
-         * if it exceeds the boundary, should be clipped to the boundary or clipped
-         * one inside the boundary depending on the Even/Odd status of the boundary
-         * and numDifferences.
-         * @param diagonal The index of the diagonal to clip.
-         * @param numDifferences The current number of differences being iterated upon.
-         * @param diagonalBaseIndex The base reference diagonal.
-         * @param numDiagonals The total number of diagonals.
-         * @returns The clipped diagonal index.
-         */
-        LcsDiff.prototype.ClipDiagonalBound = function (diagonal, numDifferences, diagonalBaseIndex, numDiagonals) {
-            if (diagonal >= 0 && diagonal < numDiagonals) {
-                // Nothing to clip, its in range
-                return diagonal;
-            }
-            // diagonalsBelow: The number of diagonals below the reference diagonal
-            // diagonalsAbove: The number of diagonals above the reference diagonal
-            var diagonalsBelow = diagonalBaseIndex;
-            var diagonalsAbove = numDiagonals - diagonalBaseIndex - 1;
-            var diffEven = (numDifferences % 2 === 0);
-            if (diagonal < 0) {
-                var lowerBoundEven = (diagonalsBelow % 2 === 0);
-                return (diffEven === lowerBoundEven) ? 0 : 1;
-            }
-            else {
-                var upperBoundEven = (diagonalsAbove % 2 === 0);
-                return (diffEven === upperBoundEven) ? numDiagonals - 1 : numDiagonals - 2;
-            }
-        };
-        return LcsDiff;
-    }());
-    exports.LcsDiff = LcsDiff;
-});
-
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[34/*vs/base/common/events*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[45/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1128,7 +366,7 @@ define(__m[34/*vs/base/common/events*/], __M([0/*require*/,1/*exports*/]), funct
     };
 });
 
-define(__m[41/*vs/base/common/idGenerator*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[31/*vs/base/common/idGenerator*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1157,7 +395,7 @@ define(__m[41/*vs/base/common/idGenerator*/], __M([0/*require*/,1/*exports*/]), 
 
 
 
-define(__m[24/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[24/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     'use strict';
     /**
      * A simple map to store value by a key object. Key can be any object that has toString() function to get
@@ -1423,12 +661,26 @@ define(__m[24/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function
             }
             node.element = element;
         };
+        TrieMap.prototype.lookUp = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            return node.element;
+        };
         TrieMap.prototype.findSubstr = function (path) {
             var parts = this._splitter(path);
             var lastNode;
             var children = this._root.children;
-            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
-                var part = parts_1[_i];
+            for (var _i = 0, parts_2 = parts; _i < parts_2.length; _i++) {
+                var part = parts_2[_i];
                 var node = children[part];
                 if (!node) {
                     break;
@@ -1444,13 +696,29 @@ define(__m[24/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function
                 return lastNode.element;
             }
         };
-        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/); };
+        TrieMap.prototype.findSuperstr = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_3 = parts; _i < parts_3.length; _i++) {
+                var part = parts_3[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            var result = new TrieMap(this._splitter);
+            result._root = node;
+            return result;
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/).filter(function (s) { return !!s; }); };
         return TrieMap;
     }());
     exports.TrieMap = TrieMap;
 });
 
-define(__m[11/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[9/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1548,7 +816,7 @@ define(__m[11/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), fun
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[9/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/platform*/,20/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
+define(__m[10/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,9/*vs/base/common/platform*/,20/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1894,7 +1162,7 @@ define(__m[9/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,11/*vs/bas
     exports.isAbsolute = isAbsolute;
 });
 
-define(__m[17/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,24/*vs/base/common/map*/]), function (require, exports, map_1) {
+define(__m[18/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/,24/*vs/base/common/map*/]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2462,7 +1730,7 @@ define(__m[17/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,24/*vs/
     exports.repeat = repeat;
 });
 
-define(__m[28/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,20/*vs/base/common/arrays*/,17/*vs/base/common/strings*/,9/*vs/base/common/paths*/,24/*vs/base/common/map*/]), function (require, exports, arrays, strings, paths, map_1) {
+define(__m[25/*vs/base/common/glob*/], __M([1/*require*/,0/*exports*/,20/*vs/base/common/arrays*/,18/*vs/base/common/strings*/,10/*vs/base/common/paths*/,24/*vs/base/common/map*/]), function (require, exports, arrays, strings, paths, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2470,6 +1738,7 @@ define(__m[28/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,20/*vs/bas
     'use strict';
     var PATH_REGEX = '[/\\\\]'; // any slash or backslash
     var NO_PATH_REGEX = '[^/\\\\]'; // any non-slash and non-backslash
+    var ALL_FORWARD_SLASHES = /\//g;
     function starsToRegExp(starCount) {
         switch (starCount) {
             case 0:
@@ -2723,7 +1992,7 @@ define(__m[28/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,20/*vs/bas
     }
     // common patterns: **/something/else just need endsWith check, something/else just needs and equals check
     function trivia4and5(path, pattern, matchPathEnds) {
-        var nativePath = path.replace(paths.sep, paths.nativeSep);
+        var nativePath = paths.nativeSep !== paths.sep ? path.replace(ALL_FORWARD_SLASHES, paths.nativeSep) : path;
         var nativePathEnd = paths.nativeSep + nativePath;
         var parsedPattern = matchPathEnds ? function (path, basename) {
             return path && (path === nativePath || strings.endsWith(path, nativePathEnd)) ? pattern : null;
@@ -2936,7 +2205,7 @@ define(__m[28/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,20/*vs/bas
     }
 });
 
-define(__m[8/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[8/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3104,7 +2373,7 @@ define(__m[8/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), functio
     exports.create = create;
 });
 
-define(__m[4/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/platform*/,8/*vs/base/common/types*/]), function (require, exports, platform, types) {
+define(__m[4/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,9/*vs/base/common/platform*/,8/*vs/base/common/types*/]), function (require, exports, platform, types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3148,6 +2417,10 @@ define(__m[4/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,11/*vs/ba
             this.unexpectedErrorHandler(e);
             this.emit(e);
         };
+        // For external errors, we don't want the listeners to be called
+        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
+            this.unexpectedErrorHandler(e);
+        };
         return ErrorHandler;
     }());
     exports.ErrorHandler = ErrorHandler;
@@ -3163,6 +2436,13 @@ define(__m[4/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,11/*vs/ba
         }
     }
     exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedExternalError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedExternalError(e);
+        }
+    }
+    exports.onUnexpectedExternalError = onUnexpectedExternalError;
     function onUnexpectedPromiseError(promise) {
         return promise.then(null, onUnexpectedError);
     }
@@ -3257,7 +2537,7 @@ define(__m[4/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,11/*vs/ba
     exports.getErrorMessage = getErrorMessage;
 });
 
-define(__m[26/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+define(__m[26/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/errors*/]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3346,7 +2626,7 @@ define(__m[26/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,4/
 
 
 
-define(__m[60/*vs/base/common/eventEmitter*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/]), function (require, exports, Errors) {
+define(__m[53/*vs/base/common/eventEmitter*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/errors*/]), function (require, exports, Errors) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3517,13 +2797,19 @@ define(__m[60/*vs/base/common/eventEmitter*/], __M([0/*require*/,1/*exports*/,4/
                 this._collectedEvents.push(emitterEvent);
             }
         };
-        EventEmitter.prototype.deferredEmit = function (callback) {
+        EventEmitter.prototype._beginDeferredEmit = function () {
             this._deferredCnt = this._deferredCnt + 1;
-            var result = safeInvokeNoArg(callback);
+        };
+        EventEmitter.prototype._endDeferredEmit = function () {
             this._deferredCnt = this._deferredCnt - 1;
             if (this._deferredCnt === 0) {
                 this._emitCollected();
             }
+        };
+        EventEmitter.prototype.deferredEmit = function (callback) {
+            this._beginDeferredEmit();
+            var result = safeInvokeNoArg(callback);
+            this._endDeferredEmit();
             return result;
         };
         EventEmitter.prototype._emitCollected = function () {
@@ -3601,7 +2887,7 @@ define(__m[60/*vs/base/common/eventEmitter*/], __M([0/*require*/,1/*exports*/,4/
 
 
 
-define(__m[23/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/types*/]), function (require, exports, types_1) {
+define(__m[23/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3668,9 +2954,40 @@ define(__m[23/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,8/*vs
         return Disposables;
     }(Disposable));
     exports.Disposables = Disposables;
+    var ReferenceCollection = (function () {
+        function ReferenceCollection() {
+            this.references = Object.create(null);
+        }
+        ReferenceCollection.prototype.acquire = function (key) {
+            var _this = this;
+            var reference = this.references[key];
+            if (!reference) {
+                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
+            }
+            var object = reference.object;
+            var dispose = function () {
+                if (--reference.counter === 0) {
+                    _this.destroyReferencedObject(reference.object);
+                    delete _this.references[key];
+                }
+            };
+            reference.counter++;
+            return { object: object, dispose: dispose };
+        };
+        return ReferenceCollection;
+    }());
+    exports.ReferenceCollection = ReferenceCollection;
+    var ImmortalReference = (function () {
+        function ImmortalReference(object) {
+            this.object = object;
+        }
+        ImmortalReference.prototype.dispose = function () { };
+        return ImmortalReference;
+    }());
+    exports.ImmortalReference = ImmortalReference;
 });
 
-define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,23/*vs/base/common/lifecycle*/,26/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
+define(__m[6/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,23/*vs/base/common/lifecycle*/,26/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4054,7 +3371,7 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,23/*vs/bas
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[22/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[22/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     var shortcutEvent = Object.freeze(function (callback, context) {
         var handle = setTimeout(callback.bind(context), 0);
@@ -4140,7 +3457,7 @@ define(__m[22/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,7/
     exports.CancellationTokenSource = CancellationTokenSource;
 });
 
-define(__m[19/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/types*/]), function (require, exports, Types) {
+define(__m[15/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/types*/]), function (require, exports, Types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4432,7 +3749,7 @@ define(__m[19/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,8/*vs/b
     exports.getOrDefault = getOrDefault;
 });
 
-define(__m[47/*vs/base/common/parsers*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/types*/]), function (require, exports, Types) {
+define(__m[77/*vs/base/common/parsers*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/types*/]), function (require, exports, Types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4612,7 +3929,7 @@ define(__m[47/*vs/base/common/parsers*/], __M([0/*require*/,1/*exports*/,8/*vs/b
     exports.AbstractSystemVariables = AbstractSystemVariables;
 });
 
-define(__m[6/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/platform*/]), function (require, exports, platform) {
+define(__m[7/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,9/*vs/base/common/platform*/]), function (require, exports, platform) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5002,7 +4319,7 @@ define(__m[6/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,11/*vs/base/
     exports.default = URI;
 });
 
-define(__m[29/*vs/base/common/marshalling*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+define(__m[32/*vs/base/common/marshalling*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/uri*/]), function (require, exports, uri_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5049,7 +4366,7 @@ define(__m[29/*vs/base/common/marshalling*/], __M([0/*require*/,1/*exports*/,6/*
 
 
 
-define(__m[52/*vs/base/common/uuid*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[44/*vs/base/common/uuid*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7226,7 +6543,7 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define(__m[3/*vs/base/common/winjs.base*/], __M([102/*vs/base/common/winjs.base.raw*/,4/*vs/base/common/errors*/]), function (winjs, __Errors__) {
+define(__m[3/*vs/base/common/winjs.base*/], __M([105/*vs/base/common/winjs.base.raw*/,4/*vs/base/common/errors*/]), function (winjs, __Errors__) {
 	'use strict';
 
 	var outstandingPromiseErrors = {};
@@ -7292,7 +6609,7 @@ define(__m[3/*vs/base/common/winjs.base*/], __M([102/*vs/base/common/winjs.base.
 
 
 
-define(__m[16/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/,11/*vs/base/common/platform*/,3/*vs/base/common/winjs.base*/,22/*vs/base/common/cancellation*/,23/*vs/base/common/lifecycle*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
+define(__m[17/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/errors*/,9/*vs/base/common/platform*/,3/*vs/base/common/winjs.base*/,22/*vs/base/common/cancellation*/,23/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -7620,13 +6937,13 @@ define(__m[16/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
      * Runs the provided list of promise factories in sequential order. The returned
      * promise will complete to an array of results from each promise.
      */
-    function sequence(promiseFactory) {
+    function sequence(promiseFactories) {
         var results = [];
         // reverse since we start with last element using pop()
-        promiseFactory = promiseFactory.reverse();
+        promiseFactories = promiseFactories.reverse();
         function next() {
-            if (promiseFactory.length) {
-                return promiseFactory.pop()();
+            if (promiseFactories.length) {
+                return promiseFactories.pop()();
             }
             return null;
         }
@@ -7643,6 +6960,25 @@ define(__m[16/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
         return winjs_base_1.TPromise.as(null).then(thenHandler);
     }
     exports.sequence = sequence;
+    function first(promiseFactories, shouldStop) {
+        if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
+        promiseFactories = promiseFactories.reverse().slice();
+        var loop = function () {
+            if (promiseFactories.length === 0) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            var factory = promiseFactories.pop();
+            var promise = factory();
+            return promise.then(function (result) {
+                if (shouldStop(result)) {
+                    return winjs_base_1.TPromise.as(result);
+                }
+                return loop();
+            });
+        };
+        return loop();
+    }
+    exports.first = first;
     function once(fn) {
         var _this = this;
         var didCall = false;
@@ -7666,7 +7002,15 @@ define(__m[16/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
             this.maxDegreeOfParalellism = maxDegreeOfParalellism;
             this.outstandingPromises = [];
             this.runningPromises = 0;
+            this._onFinished = new event_1.Emitter();
         }
+        Object.defineProperty(Limiter.prototype, "onFinished", {
+            get: function () {
+                return this._onFinished.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Limiter.prototype.queue = function (promiseFactory) {
             var _this = this;
             return new winjs_base_1.TPromise(function (c, e, p) {
@@ -7691,7 +7035,15 @@ define(__m[16/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
         };
         Limiter.prototype.consumed = function () {
             this.runningPromises--;
-            this.consume();
+            if (this.outstandingPromises.length > 0) {
+                this.consume();
+            }
+            else {
+                this._onFinished.fire();
+            }
+        };
+        Limiter.prototype.dispose = function () {
+            this._onFinished.dispose();
         };
         return Limiter;
     }());
@@ -7844,7 +7196,7 @@ define(__m[16/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[76/*vs/base/node/decoder*/], __M([0/*require*/,1/*exports*/,101/*string_decoder*/]), function (require, exports, sd) {
+define(__m[59/*vs/base/node/decoder*/], __M([1/*require*/,0/*exports*/,103/*string_decoder*/]), function (require, exports, sd) {
     'use strict';
     /**
      * Convenient way to iterate over output line by line. This helper accommodates for the fact that
@@ -7903,7 +7255,7 @@ define(__m[76/*vs/base/node/decoder*/], __M([0/*require*/,1/*exports*/,101/*stri
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[30/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,100/*assert*/]), function (require, exports, assert) {
+define(__m[66/*vs/base/node/flow*/], __M([1/*require*/,0/*exports*/,102/*assert*/]), function (require, exports, assert) {
     'use strict';
     /**
      * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
@@ -8046,7 +7398,7 @@ define(__m[30/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,100/*assert*
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[32/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,52/*vs/base/common/uuid*/,17/*vs/base/common/strings*/,11/*vs/base/common/platform*/,30/*vs/base/node/flow*/,21/*fs*/,18/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
+define(__m[74/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,44/*vs/base/common/uuid*/,18/*vs/base/common/strings*/,9/*vs/base/common/platform*/,66/*vs/base/node/flow*/,27/*fs*/,19/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
     'use strict';
     var loop = flow.loop;
     function readdirSync(path) {
@@ -8269,6 +7621,25 @@ define(__m[32/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,52/*vs/base
             }
         });
     }
+    function delSync(path) {
+        try {
+            var stat = fs.lstatSync(path);
+            if (stat.isDirectory() && !stat.isSymbolicLink()) {
+                readdirSync(path).forEach(function (child) { return delSync(paths.join(path, child)); });
+                fs.rmdirSync(path);
+            }
+            else {
+                fs.unlinkSync(path);
+            }
+        }
+        catch (err) {
+            if (err.code === 'ENOENT') {
+                return; // not found
+            }
+            throw err;
+        }
+    }
+    exports.delSync = delSync;
     function mv(source, target, callback) {
         if (source === target) {
             return callback(null);
@@ -8368,7 +7739,7 @@ define(__m[32/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,52/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[35/*vs/base/node/pfs*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/winjs.base*/,32/*vs/base/node/extfs*/,9/*vs/base/common/paths*/,18/*path*/,16/*vs/base/common/async*/,21/*fs*/]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs) {
+define(__m[30/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/winjs.base*/,74/*vs/base/node/extfs*/,10/*vs/base/common/paths*/,19/*path*/,17/*vs/base/common/async*/,27/*fs*/,9/*vs/base/common/platform*/,6/*vs/base/common/event*/]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs, platform, event_1) {
     'use strict';
     function readdir(path) {
         return async_1.nfcall(extfs.readdir, path);
@@ -8417,7 +7788,7 @@ define(__m[35/*vs/base/node/pfs*/], __M([0/*require*/,1/*exports*/,3/*vs/base/co
             }
         }, function (err) {
             if (err.code === 'ENOENT') {
-                return;
+                return void 0;
             }
             return winjs_base_1.TPromise.wrapError(err);
         });
@@ -8455,24 +7826,45 @@ define(__m[35/*vs/base/node/pfs*/], __M([0/*require*/,1/*exports*/,3/*vs/base/co
         return async_1.nfcall(fs.readlink, path);
     }
     exports.readlink = readlink;
-    function utimes(path, atime, mtime) {
-        return async_1.nfcall(fs.utimes, path, atime, mtime);
+    function touch(path) {
+        var now = Date.now() / 1000; // the value should be a Unix timestamp in seconds
+        return async_1.nfcall(fs.utimes, path, now, now);
     }
-    exports.utimes = utimes;
+    exports.touch = touch;
     function readFile(path, encoding) {
         return async_1.nfcall(fs.readFile, path, encoding);
     }
     exports.readFile = readFile;
+    // According to node.js docs (https://nodejs.org/docs/v6.5.0/api/fs.html#fs_fs_writefile_file_data_options_callback)
+    // it is not safe to call writeFile() on the same path multiple times without waiting for the callback to return.
+    // Therefor we use a Queue on the path that is given to us to sequentialize calls to the same path properly.
+    var writeFilePathQueue = Object.create(null);
     function writeFile(path, data, encoding) {
         if (encoding === void 0) { encoding = 'utf8'; }
-        return async_1.nfcall(fs.writeFile, path, data, encoding);
+        var queueKey = toQueueKey(path);
+        return ensureWriteFileQueue(queueKey).queue(function () { return async_1.nfcall(extfs.writeFileAndFlush, path, data, encoding); });
     }
     exports.writeFile = writeFile;
-    function writeFileAndFlush(path, data, encoding) {
-        if (encoding === void 0) { encoding = 'utf8'; }
-        return async_1.nfcall(extfs.writeFileAndFlush, path, data, encoding);
+    function toQueueKey(path) {
+        var queueKey = path;
+        if (platform.isWindows || platform.isMacintosh) {
+            queueKey = queueKey.toLowerCase(); // accomodate for case insensitive file systems
+        }
+        return queueKey;
     }
-    exports.writeFileAndFlush = writeFileAndFlush;
+    function ensureWriteFileQueue(queueKey) {
+        var writeFileQueue = writeFilePathQueue[queueKey];
+        if (!writeFileQueue) {
+            writeFileQueue = new async_1.Queue();
+            writeFilePathQueue[queueKey] = writeFileQueue;
+            var onFinish = event_1.once(writeFileQueue.onFinished);
+            onFinish(function () {
+                delete writeFilePathQueue[queueKey];
+                writeFileQueue.dispose();
+            });
+        }
+        return writeFileQueue;
+    }
     /**
     * Read a dir and return only subfolders
     */
@@ -8504,7 +7896,7 @@ define(__m[35/*vs/base/node/pfs*/], __M([0/*require*/,1/*exports*/,3/*vs/base/co
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[36/*vs/base/node/stdFork*/], __M([0/*require*/,1/*exports*/,18/*path*/,99/*os*/,98/*net*/,39/*child_process*/,6/*vs/base/common/uri*/]), function (require, exports, path, os, net, cp, uri_1) {
+define(__m[34/*vs/base/node/stdFork*/], __M([1/*require*/,0/*exports*/,19/*path*/,101/*os*/,100/*net*/,37/*child_process*/,7/*vs/base/common/uri*/]), function (require, exports, path, os, net, cp, uri_1) {
     'use strict';
     function makeRandomHexString(length) {
         var chars = ['0', '1', '2', '3', '4', '5', '6', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
@@ -8533,6 +7925,7 @@ define(__m[36/*vs/base/node/stdFork*/], __M([0/*require*/,1/*exports*/,18/*path*
         newEnv['STDOUT_PIPE_NAME'] = stdOutPipeName;
         newEnv['STDERR_PIPE_NAME'] = stdErrPipeName;
         newEnv['ELECTRON_RUN_AS_NODE'] = '1';
+        newEnv['ELECTRON_NO_ASAR'] = '1';
         return newEnv;
     }
     function fork(modulePath, args, options, callback) {
@@ -8607,7 +8000,7 @@ define(__m[36/*vs/base/node/stdFork*/], __M([0/*require*/,1/*exports*/,18/*path*
     exports.fork = fork;
 });
 
-define(__m[40/*vs/editor/common/model/wordHelper*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[38/*vs/editor/common/model/wordHelper*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -8683,11 +8076,75 @@ define(__m[40/*vs/editor/common/model/wordHelper*/], __M([0/*require*/,1/*export
     exports.getWordAtText = getWordAtText;
 });
 
+define(__m[39/*vs/editor/common/modes/languageConfiguration*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    /**
+     * Describes what to do with the indentation when pressing Enter.
+     */
+    (function (IndentAction) {
+        /**
+         * Insert new line and copy the previous line's indentation.
+         */
+        IndentAction[IndentAction["None"] = 0] = "None";
+        /**
+         * Insert new line and indent once (relative to the previous line's indentation).
+         */
+        IndentAction[IndentAction["Indent"] = 1] = "Indent";
+        /**
+         * Insert two new lines:
+         *  - the first one indented which will hold the cursor
+         *  - the second one at the same indentation level
+         */
+        IndentAction[IndentAction["IndentOutdent"] = 2] = "IndentOutdent";
+        /**
+         * Insert new line and outdent once (relative to the previous line's indentation).
+         */
+        IndentAction[IndentAction["Outdent"] = 3] = "Outdent";
+    })(exports.IndentAction || (exports.IndentAction = {}));
+    var IndentAction = exports.IndentAction;
+    /**
+     * @internal
+     */
+    var StandardAutoClosingPairConditional = (function () {
+        function StandardAutoClosingPairConditional(source) {
+            this.open = source.open;
+            this.close = source.close;
+            // initially allowed in all tokens
+            this._standardTokenMask = 0;
+            if (Array.isArray(source.notIn)) {
+                for (var i = 0, len = source.notIn.length; i < len; i++) {
+                    var notIn = source.notIn[i];
+                    switch (notIn) {
+                        case 'string':
+                            this._standardTokenMask |= 2 /* String */;
+                            break;
+                        case 'comment':
+                            this._standardTokenMask |= 1 /* Comment */;
+                            break;
+                        case 'regex':
+                            this._standardTokenMask |= 4 /* RegEx */;
+                            break;
+                    }
+                }
+            }
+        }
+        StandardAutoClosingPairConditional.prototype.isOK = function (standardToken) {
+            return (this._standardTokenMask & standardToken) === 0;
+        };
+        return StandardAutoClosingPairConditional;
+    }());
+    exports.StandardAutoClosingPairConditional = StandardAutoClosingPairConditional;
+});
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[25/*vs/editor/common/modes/languageSelector*/], __M([0/*require*/,1/*exports*/,28/*vs/base/common/glob*/]), function (require, exports, glob_1) {
+define(__m[40/*vs/editor/common/modes/languageSelector*/], __M([1/*require*/,0/*exports*/,25/*vs/base/common/glob*/]), function (require, exports, glob_1) {
     'use strict';
     function matches(selection, uri, language) {
         return score(selection, uri, language) > 0;
@@ -8757,424 +8214,7 @@ define(__m[25/*vs/editor/common/modes/languageSelector*/], __M([0/*require*/,1/*
     exports.score = score;
 });
 
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[42/*vs/editor/common/modes/languageFeatureRegistry*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/event*/,25/*vs/editor/common/modes/languageSelector*/]), function (require, exports, event_1, languageSelector_1) {
-    'use strict';
-    var LanguageFeatureRegistry = (function () {
-        function LanguageFeatureRegistry() {
-            this._clock = 0;
-            this._entries = [];
-            this._onDidChange = new event_1.Emitter();
-        }
-        Object.defineProperty(LanguageFeatureRegistry.prototype, "onDidChange", {
-            get: function () {
-                return this._onDidChange.event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        LanguageFeatureRegistry.prototype.register = function (selector, provider, isBuiltin) {
-            var _this = this;
-            if (isBuiltin === void 0) { isBuiltin = false; }
-            var entry = {
-                selector: selector,
-                provider: provider,
-                isBuiltin: isBuiltin,
-                _score: -1,
-                _time: this._clock++
-            };
-            this._entries.push(entry);
-            this._lastCandidate = undefined;
-            this._onDidChange.fire(this._entries.length);
-            return {
-                dispose: function () {
-                    if (entry) {
-                        var idx = _this._entries.indexOf(entry);
-                        if (idx >= 0) {
-                            _this._entries.splice(idx, 1);
-                            _this._lastCandidate = undefined;
-                            _this._onDidChange.fire(_this._entries.length);
-                            entry = undefined;
-                        }
-                    }
-                }
-            };
-        };
-        LanguageFeatureRegistry.prototype.has = function (model) {
-            return this.all(model).length > 0;
-        };
-        LanguageFeatureRegistry.prototype.all = function (model) {
-            if (!model || model.isTooLargeForHavingARichMode()) {
-                return [];
-            }
-            this._updateScores(model);
-            var result = [];
-            // from registry
-            for (var _i = 0, _a = this._entries; _i < _a.length; _i++) {
-                var entry = _a[_i];
-                if (entry._score > 0) {
-                    result.push(entry.provider);
-                }
-            }
-            return result;
-        };
-        LanguageFeatureRegistry.prototype.ordered = function (model) {
-            var result = [];
-            this._orderedForEach(model, function (entry) { return result.push(entry.provider); });
-            return result;
-        };
-        LanguageFeatureRegistry.prototype.orderedGroups = function (model) {
-            var result = [];
-            var lastBucket;
-            var lastBucketScore;
-            this._orderedForEach(model, function (entry) {
-                if (lastBucket && lastBucketScore === entry._score) {
-                    lastBucket.push(entry.provider);
-                }
-                else {
-                    lastBucketScore = entry._score;
-                    lastBucket = [entry.provider];
-                    result.push(lastBucket);
-                }
-            });
-            return result;
-        };
-        LanguageFeatureRegistry.prototype._orderedForEach = function (model, callback) {
-            if (!model || model.isTooLargeForHavingARichMode()) {
-                return;
-            }
-            this._updateScores(model);
-            for (var from = 0; from < this._entries.length; from++) {
-                var entry = this._entries[from];
-                if (entry._score > 0) {
-                    callback(entry);
-                }
-            }
-        };
-        LanguageFeatureRegistry.prototype._updateScores = function (model) {
-            var candidate = {
-                uri: model.uri.toString(),
-                language: model.getModeId()
-            };
-            if (this._lastCandidate
-                && this._lastCandidate.language === candidate.language
-                && this._lastCandidate.uri === candidate.uri) {
-                // nothing has changed
-                return;
-            }
-            this._lastCandidate = candidate;
-            for (var _i = 0, _a = this._entries; _i < _a.length; _i++) {
-                var entry = _a[_i];
-                entry._score = languageSelector_1.score(entry.selector, model.uri, model.getModeId());
-                if (entry.isBuiltin && entry._score > 0) {
-                    entry._score = .5;
-                    entry._time = -1;
-                }
-            }
-            // needs sorting
-            this._entries.sort(LanguageFeatureRegistry._compareByScoreAndTime);
-        };
-        LanguageFeatureRegistry._compareByScoreAndTime = function (a, b) {
-            if (a._score < b._score) {
-                return 1;
-            }
-            else if (a._score > b._score) {
-                return -1;
-            }
-            else if (a._time < b._time) {
-                return 1;
-            }
-            else if (a._time > b._time) {
-                return -1;
-            }
-            else {
-                return 0;
-            }
-        };
-        return LanguageFeatureRegistry;
-    }());
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = LanguageFeatureRegistry;
-});
-
-define(__m[43/*vs/editor/common/modes*/], __M([0/*require*/,1/*exports*/,42/*vs/editor/common/modes/languageFeatureRegistry*/,7/*vs/base/common/event*/]), function (require, exports, languageFeatureRegistry_1, event_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    /**
-     * A document highlight kind.
-     */
-    (function (DocumentHighlightKind) {
-        /**
-         * A textual occurrence.
-         */
-        DocumentHighlightKind[DocumentHighlightKind["Text"] = 0] = "Text";
-        /**
-         * Read-access of a symbol, like reading a variable.
-         */
-        DocumentHighlightKind[DocumentHighlightKind["Read"] = 1] = "Read";
-        /**
-         * Write-access of a symbol, like writing to a variable.
-         */
-        DocumentHighlightKind[DocumentHighlightKind["Write"] = 2] = "Write";
-    })(exports.DocumentHighlightKind || (exports.DocumentHighlightKind = {}));
-    var DocumentHighlightKind = exports.DocumentHighlightKind;
-    /**
-     * A symbol kind.
-     */
-    (function (SymbolKind) {
-        SymbolKind[SymbolKind["File"] = 0] = "File";
-        SymbolKind[SymbolKind["Module"] = 1] = "Module";
-        SymbolKind[SymbolKind["Namespace"] = 2] = "Namespace";
-        SymbolKind[SymbolKind["Package"] = 3] = "Package";
-        SymbolKind[SymbolKind["Class"] = 4] = "Class";
-        SymbolKind[SymbolKind["Method"] = 5] = "Method";
-        SymbolKind[SymbolKind["Property"] = 6] = "Property";
-        SymbolKind[SymbolKind["Field"] = 7] = "Field";
-        SymbolKind[SymbolKind["Constructor"] = 8] = "Constructor";
-        SymbolKind[SymbolKind["Enum"] = 9] = "Enum";
-        SymbolKind[SymbolKind["Interface"] = 10] = "Interface";
-        SymbolKind[SymbolKind["Function"] = 11] = "Function";
-        SymbolKind[SymbolKind["Variable"] = 12] = "Variable";
-        SymbolKind[SymbolKind["Constant"] = 13] = "Constant";
-        SymbolKind[SymbolKind["String"] = 14] = "String";
-        SymbolKind[SymbolKind["Number"] = 15] = "Number";
-        SymbolKind[SymbolKind["Boolean"] = 16] = "Boolean";
-        SymbolKind[SymbolKind["Array"] = 17] = "Array";
-        SymbolKind[SymbolKind["Object"] = 18] = "Object";
-        SymbolKind[SymbolKind["Key"] = 19] = "Key";
-        SymbolKind[SymbolKind["Null"] = 20] = "Null";
-    })(exports.SymbolKind || (exports.SymbolKind = {}));
-    var SymbolKind = exports.SymbolKind;
-    /**
-     * @internal
-     */
-    var SymbolKind;
-    (function (SymbolKind) {
-        /**
-         * @internal
-         */
-        function from(kind) {
-            switch (kind) {
-                case SymbolKind.Method:
-                    return 'method';
-                case SymbolKind.Function:
-                    return 'function';
-                case SymbolKind.Constructor:
-                    return 'constructor';
-                case SymbolKind.Variable:
-                    return 'variable';
-                case SymbolKind.Class:
-                    return 'class';
-                case SymbolKind.Interface:
-                    return 'interface';
-                case SymbolKind.Namespace:
-                    return 'namespace';
-                case SymbolKind.Package:
-                    return 'package';
-                case SymbolKind.Module:
-                    return 'module';
-                case SymbolKind.Property:
-                    return 'property';
-                case SymbolKind.Enum:
-                    return 'enum';
-                case SymbolKind.String:
-                    return 'string';
-                case SymbolKind.File:
-                    return 'file';
-                case SymbolKind.Array:
-                    return 'array';
-                case SymbolKind.Number:
-                    return 'number';
-                case SymbolKind.Boolean:
-                    return 'boolean';
-                case SymbolKind.Object:
-                    return 'object';
-                case SymbolKind.Key:
-                    return 'key';
-                case SymbolKind.Null:
-                    return 'null';
-            }
-            return 'property';
-        }
-        SymbolKind.from = from;
-        /**
-         * @internal
-         */
-        function to(type) {
-            switch (type) {
-                case 'method':
-                    return SymbolKind.Method;
-                case 'function':
-                    return SymbolKind.Function;
-                case 'constructor':
-                    return SymbolKind.Constructor;
-                case 'variable':
-                    return SymbolKind.Variable;
-                case 'class':
-                    return SymbolKind.Class;
-                case 'interface':
-                    return SymbolKind.Interface;
-                case 'namespace':
-                    return SymbolKind.Namespace;
-                case 'package':
-                    return SymbolKind.Package;
-                case 'module':
-                    return SymbolKind.Module;
-                case 'property':
-                    return SymbolKind.Property;
-                case 'enum':
-                    return SymbolKind.Enum;
-                case 'string':
-                    return SymbolKind.String;
-                case 'file':
-                    return SymbolKind.File;
-                case 'array':
-                    return SymbolKind.Array;
-                case 'number':
-                    return SymbolKind.Number;
-                case 'boolean':
-                    return SymbolKind.Boolean;
-                case 'object':
-                    return SymbolKind.Object;
-                case 'key':
-                    return SymbolKind.Key;
-                case 'null':
-                    return SymbolKind.Null;
-            }
-            return SymbolKind.Property;
-        }
-        SymbolKind.to = to;
-    })(SymbolKind = exports.SymbolKind || (exports.SymbolKind = {}));
-    /**
-     * Describes what to do with the indentation when pressing Enter.
-     */
-    (function (IndentAction) {
-        /**
-         * Insert new line and copy the previous line's indentation.
-         */
-        IndentAction[IndentAction["None"] = 0] = "None";
-        /**
-         * Insert new line and indent once (relative to the previous line's indentation).
-         */
-        IndentAction[IndentAction["Indent"] = 1] = "Indent";
-        /**
-         * Insert two new lines:
-         *  - the first one indented which will hold the cursor
-         *  - the second one at the same indentation level
-         */
-        IndentAction[IndentAction["IndentOutdent"] = 2] = "IndentOutdent";
-        /**
-         * Insert new line and outdent once (relative to the previous line's indentation).
-         */
-        IndentAction[IndentAction["Outdent"] = 3] = "Outdent";
-    })(exports.IndentAction || (exports.IndentAction = {}));
-    var IndentAction = exports.IndentAction;
-    // --- feature registries ------
-    /**
-     * @internal
-     */
-    exports.ReferenceProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.RenameProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.SuggestRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.SignatureHelpProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.HoverProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.DocumentSymbolProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.DocumentHighlightProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.DefinitionProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.CodeLensProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.CodeActionProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.DocumentFormattingEditProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.DocumentRangeFormattingEditProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.OnTypeFormattingEditProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    exports.LinkProviderRegistry = new languageFeatureRegistry_1.default();
-    /**
-     * @internal
-     */
-    var TokenizationRegistryImpl = (function () {
-        function TokenizationRegistryImpl() {
-            this._onDidChange = new event_1.Emitter();
-            this.onDidChange = this._onDidChange.event;
-            this._map = Object.create(null);
-        }
-        /**
-         * Fire a change event for a language.
-         * This is useful for languages that embed other languages.
-         */
-        TokenizationRegistryImpl.prototype.fire = function (languageId) {
-            this._onDidChange.fire({ languageId: languageId });
-        };
-        TokenizationRegistryImpl.prototype.register = function (languageId, support) {
-            var _this = this;
-            this._map[languageId] = support;
-            this.fire(languageId);
-            return {
-                dispose: function () {
-                    if (_this._map[languageId] !== support) {
-                        return;
-                    }
-                    delete _this._map[languageId];
-                    _this.fire(languageId);
-                }
-            };
-        };
-        TokenizationRegistryImpl.prototype.get = function (languageId) {
-            return (this._map[languageId] || null);
-        };
-        return TokenizationRegistryImpl;
-    }());
-    exports.TokenizationRegistryImpl = TokenizationRegistryImpl;
-    /**
-     * @internal
-     */
-    exports.TokenizationRegistry = new TokenizationRegistryImpl();
-});
-
-define(__m[44/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[41/*vs/editor/common/viewModel/prefixSumComputer*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9214,8 +8254,15 @@ define(__m[44/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*
             if (values.length === 0) {
                 return;
             }
-            this.values = this.values.slice(0, insertIndex).concat(values).concat(this.values.slice(insertIndex));
-            this.prefixSum = this.prefixSum.slice(0, insertIndex).concat(PrefixSumComputer._zeroArray(values.length)).concat(this.prefixSum.slice(insertIndex));
+            if (values.length === 1) {
+                // Fast path for one element
+                this.values.splice(insertIndex, 0, values[0]);
+                this.prefixSum.splice(insertIndex, 0, values[0]);
+            }
+            else {
+                this.values = this.values.slice(0, insertIndex).concat(values).concat(this.values.slice(insertIndex));
+                this.prefixSum = this.prefixSum.slice(0, insertIndex).concat(PrefixSumComputer._zeroArray(values.length)).concat(this.prefixSum.slice(insertIndex));
+            }
             if (insertIndex - 1 < this.prefixSumValidIndex) {
                 this.prefixSumValidIndex = insertIndex - 1;
             }
@@ -9304,7 +8351,7 @@ define(__m[44/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*
     exports.PrefixSumComputer = PrefixSumComputer;
 });
 
-define(__m[45/*vs/editor/common/model/mirrorModel2*/], __M([0/*require*/,1/*exports*/,44/*vs/editor/common/viewModel/prefixSumComputer*/]), function (require, exports, prefixSumComputer_1) {
+define(__m[42/*vs/editor/common/model/mirrorModel2*/], __M([1/*require*/,0/*exports*/,41/*vs/editor/common/viewModel/prefixSumComputer*/]), function (require, exports, prefixSumComputer_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9432,13 +8479,13 @@ define(__m[45/*vs/editor/common/model/mirrorModel2*/], __M([0/*require*/,1/*expo
     exports.MirrorModel2 = MirrorModel2;
 });
 
-define(__m[46/*vs/nls!vs/base/common/processes*/], __M([14/*vs/nls*/,13/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/base/common/processes", data); });
+define(__m[43/*vs/nls!vs/base/common/processes*/], __M([13/*vs/nls*/,12/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/base/common/processes", data); });
 
 
 
 
 
-define(__m[49/*vs/base/common/processes*/], __M([0/*require*/,1/*exports*/,46/*vs/nls!vs/base/common/processes*/,19/*vs/base/common/objects*/,11/*vs/base/common/platform*/,8/*vs/base/common/types*/,47/*vs/base/common/parsers*/]), function (require, exports, NLS, Objects, Platform, Types, parsers_1) {
+define(__m[46/*vs/base/common/processes*/], __M([1/*require*/,0/*exports*/,43/*vs/nls!vs/base/common/processes*/,15/*vs/base/common/objects*/,9/*vs/base/common/platform*/,8/*vs/base/common/types*/,77/*vs/base/common/parsers*/]), function (require, exports, NLS, Objects, Platform, Types, parsers_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9540,8 +8587,8 @@ define(__m[49/*vs/base/common/processes*/], __M([0/*require*/,1/*exports*/,46/*v
     exports.ExecutableParser = ExecutableParser;
 });
 
-define(__m[50/*vs/nls!vs/base/common/severity*/], __M([14/*vs/nls*/,13/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/base/common/severity", data); });
-define(__m[15/*vs/base/common/severity*/], __M([0/*require*/,1/*exports*/,50/*vs/nls!vs/base/common/severity*/,17/*vs/base/common/strings*/]), function (require, exports, nls, strings) {
+define(__m[47/*vs/nls!vs/base/common/severity*/], __M([13/*vs/nls*/,12/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/base/common/severity", data); });
+define(__m[16/*vs/base/common/severity*/], __M([1/*require*/,0/*exports*/,47/*vs/nls!vs/base/common/severity*/,18/*vs/base/common/strings*/]), function (require, exports, nls, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9594,13 +8641,13 @@ define(__m[15/*vs/base/common/severity*/], __M([0/*require*/,1/*exports*/,50/*vs
     exports.default = Severity;
 });
 
-define(__m[48/*vs/nls!vs/base/node/processes*/], __M([14/*vs/nls*/,13/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/base/node/processes", data); });
+define(__m[49/*vs/nls!vs/base/node/processes*/], __M([13/*vs/nls*/,12/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/base/node/processes", data); });
 
 
 
 
 
-define(__m[53/*vs/base/node/processes*/], __M([0/*require*/,1/*exports*/,18/*path*/,39/*child_process*/,97/*stream*/,36/*vs/base/node/stdFork*/,48/*vs/nls!vs/base/node/processes*/,3/*vs/base/common/winjs.base*/,8/*vs/base/common/types*/,6/*vs/base/common/uri*/,19/*vs/base/common/objects*/,9/*vs/base/common/paths*/,11/*vs/base/common/platform*/,76/*vs/base/node/decoder*/,49/*vs/base/common/processes*/]), function (require, exports, path, cp, stream_1, stdFork_1, nls, winjs_base_1, Types, uri_1, Objects, TPath, Platform, decoder_1, processes_1) {
+define(__m[50/*vs/base/node/processes*/], __M([1/*require*/,0/*exports*/,19/*path*/,37/*child_process*/,99/*stream*/,34/*vs/base/node/stdFork*/,49/*vs/nls!vs/base/node/processes*/,3/*vs/base/common/winjs.base*/,8/*vs/base/common/types*/,7/*vs/base/common/uri*/,15/*vs/base/common/objects*/,10/*vs/base/common/paths*/,9/*vs/base/common/platform*/,59/*vs/base/node/decoder*/,46/*vs/base/common/processes*/]), function (require, exports, path, cp, stream_1, stdFork_1, nls, winjs_base_1, Types, uri_1, Objects, TPath, Platform, decoder_1, processes_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10030,11 +9077,13 @@ define(__m[53/*vs/base/node/processes*/], __M([0/*require*/,1/*exports*/,18/*pat
     exports.createQueuedSender = createQueuedSender;
 });
 
-define(__m[55/*vs/nls!vs/platform/extensions/common/abstractExtensionService*/], __M([14/*vs/nls*/,13/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/abstractExtensionService", data); });
-define(__m[56/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/], __M([14/*vs/nls*/,13/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/extensionsRegistry", data); });
-define(__m[57/*vs/nls!vs/workbench/api/node/extHostDiagnostics*/], __M([14/*vs/nls*/,13/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/workbench/api/node/extHostDiagnostics", data); });
-define(__m[58/*vs/nls!vs/workbench/node/extensionHostMain*/], __M([14/*vs/nls*/,13/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/workbench/node/extensionHostMain", data); });
-define(__m[59/*vs/platform/extensions/common/ipcRemoteCom*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/winjs.base*/,29/*vs/base/common/marshalling*/,4/*vs/base/common/errors*/]), function (require, exports, winjs, marshalling, errors) {
+define(__m[52/*vs/nls!vs/platform/configuration/common/configurationRegistry*/], __M([13/*vs/nls*/,12/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/platform/configuration/common/configurationRegistry", data); });
+define(__m[82/*vs/nls!vs/platform/extensions/common/abstractExtensionService*/], __M([13/*vs/nls*/,12/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/abstractExtensionService", data); });
+define(__m[54/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/], __M([13/*vs/nls*/,12/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/extensionsRegistry", data); });
+define(__m[55/*vs/nls!vs/workbench/api/node/extHostDiagnostics*/], __M([13/*vs/nls*/,12/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/workbench/api/node/extHostDiagnostics", data); });
+define(__m[56/*vs/nls!vs/workbench/api/node/extHostTreeExplorers*/], __M([13/*vs/nls*/,12/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/workbench/api/node/extHostTreeExplorers", data); });
+define(__m[57/*vs/nls!vs/workbench/node/extensionHostMain*/], __M([13/*vs/nls*/,12/*vs/nls!vs/workbench/node/extensionHostProcess*/]), function(nls, data) { return nls.create("vs/workbench/node/extensionHostMain", data); });
+define(__m[58/*vs/platform/extensions/common/ipcRemoteCom*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/winjs.base*/,32/*vs/base/common/marshalling*/,4/*vs/base/common/errors*/]), function (require, exports, winjs, marshalling, errors) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10245,7 +9294,7 @@ define(__m[59/*vs/platform/extensions/common/ipcRemoteCom*/], __M([0/*require*/,
     exports.create = create;
 });
 
-define(__m[10/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[11/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10304,7 +9353,7 @@ define(__m[10/*vs/platform/instantiation/common/instantiation*/], __M([0/*requir
 
 
 
-define(__m[61/*vs/platform/contextkey/common/contextkey*/], __M([0/*require*/,1/*exports*/,10/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[60/*vs/platform/contextkey/common/contextkey*/], __M([1/*require*/,0/*exports*/,11/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10695,7 +9744,7 @@ define(__m[61/*vs/platform/contextkey/common/contextkey*/], __M([0/*require*/,1/
 
 
 
-define(__m[62/*vs/editor/common/editorCommon*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/types*/,61/*vs/platform/contextkey/common/contextkey*/]), function (require, exports, types, contextkey_1) {
+define(__m[61/*vs/editor/common/editorCommon*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/types*/,60/*vs/platform/contextkey/common/contextkey*/]), function (require, exports, types, contextkey_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10823,7 +9872,7 @@ define(__m[62/*vs/editor/common/editorCommon*/], __M([0/*require*/,1/*exports*/,
             this.renderWhitespace = source.renderWhitespace;
             this.renderControlCharacters = Boolean(source.renderControlCharacters);
             this.renderIndentGuides = Boolean(source.renderIndentGuides);
-            this.renderLineHighlight = Boolean(source.renderLineHighlight);
+            this.renderLineHighlight = source.renderLineHighlight;
             this.scrollbar = source.scrollbar.clone();
             this.fixedOverflowWidgets = Boolean(source.fixedOverflowWidgets);
         }
@@ -11840,7 +10889,6 @@ define(__m[62/*vs/editor/common/editorCommon*/], __M([0/*require*/,1/*exports*/,
         DeleteWordRight: 'deleteWordRight',
         DeleteWordStartRight: 'deleteWordStartRight',
         DeleteWordEndRight: 'deleteWordEndRight',
-        DeleteAllLeft: 'deleteAllLeft',
         DeleteAllRight: 'deleteAllRight',
         RemoveSecondaryCursors: 'removeSecondaryCursors',
         CancelSelection: 'cancelSelection',
@@ -12004,7 +11052,7 @@ define(__m[62/*vs/editor/common/editorCommon*/], __M([0/*require*/,1/*exports*/,
     exports.OverviewRulerZone = OverviewRulerZone;
 });
 
-define(__m[63/*vs/platform/editor/common/editor*/], __M([0/*require*/,1/*exports*/,10/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[62/*vs/platform/editor/common/editor*/], __M([1/*require*/,0/*exports*/,11/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12031,7 +11079,7 @@ define(__m[63/*vs/platform/editor/common/editor*/], __M([0/*require*/,1/*exports
     var Direction = exports.Direction;
 });
 
-define(__m[64/*vs/platform/extensions/common/extensions*/], __M([0/*require*/,1/*exports*/,10/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[63/*vs/platform/extensions/common/extensions*/], __M([1/*require*/,0/*exports*/,11/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12046,14 +11094,13 @@ define(__m[64/*vs/platform/extensions/common/extensions*/], __M([0/*require*/,1/
         return ExtensionPointContribution;
     }());
     exports.ExtensionPointContribution = ExtensionPointContribution;
-    exports.IExtensionsRuntimeService = instantiation_1.createDecorator('extensionsRuntimeService');
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[65/*vs/platform/package*/], __M([0/*require*/,1/*exports*/,18/*path*/,6/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
+define(__m[64/*vs/platform/package*/], __M([1/*require*/,0/*exports*/,19/*path*/,7/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
     "use strict";
     var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
     var packageJsonPath = path.join(rootPath, 'package.json');
@@ -12061,7 +11108,7 @@ define(__m[65/*vs/platform/package*/], __M([0/*require*/,1/*exports*/,18/*path*/
     exports.default = require.__$__nodeRequire(packageJsonPath);
 });
 
-define(__m[27/*vs/platform/platform*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/types*/,51/*vs/base/common/assert*/]), function (require, exports, Types, Assert) {
+define(__m[21/*vs/platform/platform*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/types*/,33/*vs/base/common/assert*/]), function (require, exports, Types, Assert) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12124,7 +11171,7 @@ define(__m[27/*vs/platform/platform*/], __M([0/*require*/,1/*exports*/,8/*vs/bas
     exports.BaseRegistry = BaseRegistry;
 });
 
-define(__m[67/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([0/*require*/,1/*exports*/,27/*vs/platform/platform*/,60/*vs/base/common/eventEmitter*/]), function (require, exports, platform, eventEmitter_1) {
+define(__m[28/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([1/*require*/,0/*exports*/,21/*vs/platform/platform*/,53/*vs/base/common/eventEmitter*/]), function (require, exports, platform, eventEmitter_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12162,7 +11209,7 @@ define(__m[67/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([
     platform.Registry.add(exports.Extensions.JSONContribution, jsonContributionRegistry);
 });
 
-define(__m[68/*vs/platform/extensions/common/extensionsRegistry*/], __M([0/*require*/,1/*exports*/,56/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/,4/*vs/base/common/errors*/,15/*vs/base/common/severity*/,67/*vs/platform/jsonschemas/common/jsonContributionRegistry*/,27/*vs/platform/platform*/,7/*vs/base/common/event*/]), function (require, exports, nls, errors_1, severity_1, jsonContributionRegistry_1, platform_1, event_1) {
+define(__m[29/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*require*/,0/*exports*/,54/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/,4/*vs/base/common/errors*/,16/*vs/base/common/severity*/,28/*vs/platform/jsonschemas/common/jsonContributionRegistry*/,21/*vs/platform/platform*/,6/*vs/base/common/event*/]), function (require, exports, nls, errors_1, severity_1, jsonContributionRegistry_1, platform_1, event_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12237,16 +11284,9 @@ define(__m[68/*vs/platform/extensions/common/extensionsRegistry*/], __M([0/*requ
     exports.ExtensionPoint = ExtensionPoint;
     var schemaId = 'vscode://schemas/vscode-extensions';
     var schema = {
-        default: {
-            'name': '{{name}}',
-            'description': '{{description}}',
-            'author': '{{author}}',
-            'version': '{{1.0.0}}',
-            'main': '{{pathToMain}}',
-            'dependencies': {}
-        },
         properties: {
             engines: {
+                type: 'object',
                 properties: {
                     'vscode': {
                         type: 'string',
@@ -12269,7 +11309,7 @@ define(__m[68/*vs/platform/extensions/common/extensionsRegistry*/], __M([0/*requ
                 uniqueItems: true,
                 items: {
                     type: 'string',
-                    enum: ['Languages', 'Snippets', 'Linters', 'Themes', 'Debuggers', 'Productivity', 'Other', 'Keymaps', 'Formatters']
+                    enum: ['Languages', 'Snippets', 'Linters', 'Themes', 'Debuggers', 'Other', 'Keymaps', 'Formatters']
                 }
             },
             galleryBanner: {
@@ -12302,7 +11342,7 @@ define(__m[68/*vs/platform/extensions/common/extensionsRegistry*/], __M([0/*requ
                 type: 'array',
                 items: {
                     type: 'string',
-                    defaultSnippets: [{ label: 'onLanguage', body: 'onLanguage:{{languageId}}' }, { label: 'onCommand', body: 'onCommand:{{commandId}}' }, { label: 'onDebug', body: 'onDebug:{{type}}' }, { label: 'workspaceContains', body: 'workspaceContains:{{fileName}}' }],
+                    defaultSnippets: [{ label: 'onLanguage', body: 'onLanguage:${1:languageId}' }, { label: 'onCommand', body: 'onCommand:${2:commandId}' }, { label: 'onDebug', body: 'onDebug:${3:type}' }, { label: 'workspaceContains', body: 'workspaceContains:${4:fileName}' }],
                 }
             },
             badges: {
@@ -12379,7 +11419,215 @@ define(__m[68/*vs/platform/extensions/common/extensionsRegistry*/], __M([0/*requ
     schemaRegistry.registerSchema(schemaId, schema);
 });
 
-define(__m[69/*vs/platform/extensions/common/abstractExtensionService*/], __M([0/*require*/,1/*exports*/,55/*vs/nls!vs/platform/extensions/common/abstractExtensionService*/,15/*vs/base/common/severity*/,3/*vs/base/common/winjs.base*/,64/*vs/platform/extensions/common/extensions*/,68/*vs/platform/extensions/common/extensionsRegistry*/]), function (require, exports, nls, severity_1, winjs_base_1, extensions_1, extensionsRegistry_1) {
+define(__m[68/*vs/platform/configuration/common/configurationRegistry*/], __M([1/*require*/,0/*exports*/,52/*vs/nls!vs/platform/configuration/common/configurationRegistry*/,6/*vs/base/common/event*/,21/*vs/platform/platform*/,15/*vs/base/common/objects*/,8/*vs/base/common/types*/,29/*vs/platform/extensions/common/extensionsRegistry*/,28/*vs/platform/jsonschemas/common/jsonContributionRegistry*/]), function (require, exports, nls, event_1, platform_1, objects, types, extensionsRegistry_1, jsonContributionRegistry_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.Extensions = {
+        Configuration: 'base.contributions.configuration'
+    };
+    var schemaId = 'vscode://schemas/settings';
+    var contributionRegistry = platform_1.Registry.as(jsonContributionRegistry_1.Extensions.JSONContribution);
+    var ConfigurationRegistry = (function () {
+        function ConfigurationRegistry() {
+            this.configurationContributors = [];
+            this.configurationSchema = { properties: {}, additionalProperties: false, errorMessage: 'Unknown configuration setting' };
+            this._onDidRegisterConfiguration = new event_1.Emitter();
+            this.configurationProperties = {};
+            contributionRegistry.registerSchema(schemaId, this.configurationSchema);
+        }
+        Object.defineProperty(ConfigurationRegistry.prototype, "onDidRegisterConfiguration", {
+            get: function () {
+                return this._onDidRegisterConfiguration.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ConfigurationRegistry.prototype.registerConfiguration = function (configuration) {
+            this.registerConfigurations([configuration]);
+        };
+        ConfigurationRegistry.prototype.registerConfigurations = function (configurations) {
+            var _this = this;
+            configurations.forEach(function (configuration) {
+                _this.registerProperties(configuration); // fills in defaults
+                _this.configurationContributors.push(configuration);
+                _this.registerJSONConfiguration(configuration);
+            });
+            this._onDidRegisterConfiguration.fire(this);
+        };
+        ConfigurationRegistry.prototype.registerProperties = function (configuration) {
+            var properties = configuration.properties;
+            if (properties) {
+                for (var key in properties) {
+                    // fill in default values
+                    var property = properties[key];
+                    var defaultValue = property.default;
+                    if (types.isUndefined(defaultValue)) {
+                        property.default = getDefaultValue(property.type);
+                    }
+                    // add to properties map
+                    this.configurationProperties[key] = properties[key];
+                }
+            }
+            var subNodes = configuration.allOf;
+            if (subNodes) {
+                for (var _i = 0, subNodes_1 = subNodes; _i < subNodes_1.length; _i++) {
+                    var node = subNodes_1[_i];
+                    this.registerProperties(node);
+                }
+            }
+        };
+        ConfigurationRegistry.prototype.getConfigurations = function () {
+            return this.configurationContributors;
+        };
+        ConfigurationRegistry.prototype.getConfigurationProperties = function () {
+            return this.configurationProperties;
+        };
+        ConfigurationRegistry.prototype.registerJSONConfiguration = function (configuration) {
+            var configurationSchema = this.configurationSchema;
+            function register(configuration) {
+                var properties = configuration.properties;
+                if (properties) {
+                    for (var key in properties) {
+                        configurationSchema.properties[key] = properties[key];
+                    }
+                }
+                var subNodes = configuration.allOf;
+                if (subNodes) {
+                    subNodes.forEach(register);
+                }
+            }
+            ;
+            register(configuration);
+            contributionRegistry.registerSchema(schemaId, configurationSchema);
+        };
+        return ConfigurationRegistry;
+    }());
+    function getDefaultValue(type) {
+        var t = Array.isArray(type) ? type[0] : type;
+        switch (t) {
+            case 'boolean':
+                return false;
+            case 'integer':
+            case 'number':
+                return 0;
+            case 'string':
+                return '';
+            case 'array':
+                return [];
+            case 'object':
+                return {};
+            default:
+                return null;
+        }
+    }
+    var configurationRegistry = new ConfigurationRegistry();
+    platform_1.Registry.add(exports.Extensions.Configuration, configurationRegistry);
+    var configurationExtPoint = extensionsRegistry_1.ExtensionsRegistry.registerExtensionPoint('configuration', [], {
+        description: nls.localize(0, null),
+        type: 'object',
+        defaultSnippets: [{ body: { title: '', properties: {} } }],
+        properties: {
+            title: {
+                description: nls.localize(1, null),
+                type: 'string'
+            },
+            properties: {
+                description: nls.localize(2, null),
+                type: 'object',
+                additionalProperties: {
+                    $ref: 'http://json-schema.org/draft-04/schema#'
+                }
+            }
+        }
+    });
+    configurationExtPoint.setHandler(function (extensions) {
+        var configurations = [];
+        for (var i = 0; i < extensions.length; i++) {
+            var configuration = extensions[i].value;
+            var collector = extensions[i].collector;
+            if (configuration.type && configuration.type !== 'object') {
+                collector.warn(nls.localize(3, null));
+            }
+            else {
+                configuration.type = 'object';
+            }
+            if (configuration.title && (typeof configuration.title !== 'string')) {
+                collector.error(nls.localize(4, null));
+            }
+            if (configuration.properties && (typeof configuration.properties !== 'object')) {
+                collector.error(nls.localize(5, null));
+                return;
+            }
+            var clonedConfiguration = objects.clone(configuration);
+            clonedConfiguration.id = extensions[i].description.id;
+            configurations.push(clonedConfiguration);
+        }
+        configurationRegistry.registerConfigurations(configurations);
+    });
+});
+
+define(__m[69/*vs/platform/configuration/common/model*/], __M([1/*require*/,0/*exports*/,21/*vs/platform/platform*/,68/*vs/platform/configuration/common/configurationRegistry*/]), function (require, exports, platform_1, configurationRegistry_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    function getDefaultValues() {
+        var valueTreeRoot = Object.create(null);
+        var properties = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurationProperties();
+        for (var key in properties) {
+            var value = properties[key].default;
+            addToValueTree(valueTreeRoot, key, value, function (message) { return console.error("Conflict in default settings: " + message); });
+        }
+        return valueTreeRoot;
+    }
+    exports.getDefaultValues = getDefaultValues;
+    function toValuesTree(properties, conflictReporter) {
+        var root = Object.create(null);
+        for (var key in properties) {
+            addToValueTree(root, key, properties[key], conflictReporter);
+        }
+        return root;
+    }
+    exports.toValuesTree = toValuesTree;
+    function addToValueTree(settingsTreeRoot, key, value, conflictReporter) {
+        var segments = key.split('.');
+        var last = segments.pop();
+        var curr = settingsTreeRoot;
+        for (var i = 0; i < segments.length; i++) {
+            var s = segments[i];
+            var obj = curr[s];
+            switch (typeof obj) {
+                case 'undefined':
+                    obj = curr[s] = Object.create(null);
+                    break;
+                case 'object':
+                    break;
+                default:
+                    conflictReporter("Ignoring " + key + " as " + segments.slice(0, i + 1).join('.') + " is " + JSON.stringify(obj));
+                    return;
+            }
+            curr = obj;
+        }
+        ;
+        if (typeof curr === 'object') {
+            curr[last] = value; // workaround https://github.com/Microsoft/vscode/issues/13606
+        }
+        else {
+            conflictReporter("Ignoring " + key + " as " + segments.join('.') + " is " + JSON.stringify(curr));
+        }
+    }
+    function getConfigurationKeys() {
+        var properties = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurationProperties();
+        return Object.keys(properties);
+    }
+    exports.getConfigurationKeys = getConfigurationKeys;
+});
+
+define(__m[70/*vs/platform/extensions/common/abstractExtensionService*/], __M([1/*require*/,0/*exports*/,82/*vs/nls!vs/platform/extensions/common/abstractExtensionService*/,16/*vs/base/common/severity*/,3/*vs/base/common/winjs.base*/,63/*vs/platform/extensions/common/extensions*/,29/*vs/platform/extensions/common/extensionsRegistry*/]), function (require, exports, nls, severity_1, winjs_base_1, extensions_1, extensionsRegistry_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12397,10 +11645,12 @@ define(__m[69/*vs/platform/extensions/common/abstractExtensionService*/], __M([0
         function AbstractExtensionService(isReadyByDefault) {
             var _this = this;
             if (isReadyByDefault) {
+                this._isReady = true;
                 this._onReady = winjs_base_1.TPromise.as(true);
                 this._onReadyC = function (v) { };
             }
             else {
+                this._isReady = false;
                 this._onReady = new winjs_base_1.TPromise(function (c, e, p) {
                     _this._onReadyC = c;
                 }, function () {
@@ -12412,6 +11662,7 @@ define(__m[69/*vs/platform/extensions/common/abstractExtensionService*/], __M([0
             this._registry = new ExtensionDescriptionRegistry();
         }
         AbstractExtensionService.prototype._triggerOnReady = function () {
+            this._isReady = true;
             this._onReadyC(true);
         };
         AbstractExtensionService.prototype.onReady = function () {
@@ -12431,7 +11682,7 @@ define(__m[69/*vs/platform/extensions/common/abstractExtensionService*/], __M([0
                 return result;
             });
         };
-        AbstractExtensionService.prototype.readExtensions = function () {
+        AbstractExtensionService.prototype.getExtensions = function () {
             var _this = this;
             return this.onReady().then(function () {
                 return _this._registry.getAllExtensionDescriptions();
@@ -12445,11 +11696,17 @@ define(__m[69/*vs/platform/extensions/common/abstractExtensionService*/], __M([0
         };
         AbstractExtensionService.prototype.activateByEvent = function (activationEvent) {
             var _this = this;
-            return this._onReady.then(function () {
-                extensionsRegistry_1.onWillActivate.fire(activationEvent);
-                var activateExtensions = _this._registry.getExtensionDescriptionsForActivationEvent(activationEvent);
-                return _this._activateExtensions(activateExtensions, 0);
-            });
+            if (this._isReady) {
+                return this._activateByEvent(activationEvent);
+            }
+            else {
+                return this._onReady.then(function () { return _this._activateByEvent(activationEvent); });
+            }
+        };
+        AbstractExtensionService.prototype._activateByEvent = function (activationEvent) {
+            extensionsRegistry_1.onWillActivate.fire(activationEvent);
+            var activateExtensions = this._registry.getExtensionDescriptionsForActivationEvent(activationEvent);
+            return this._activateExtensions(activateExtensions, 0);
         };
         AbstractExtensionService.prototype.activateById = function (extensionId) {
             var _this = this;
@@ -12611,7 +11868,7 @@ define(__m[69/*vs/platform/extensions/common/abstractExtensionService*/], __M([0
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[70/*vs/platform/product*/], __M([0/*require*/,1/*exports*/,18/*path*/,6/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
+define(__m[71/*vs/platform/product*/], __M([1/*require*/,0/*exports*/,19/*path*/,7/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
     "use strict";
     var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
     var productJsonPath = path.join(rootPath, 'product.json');
@@ -12629,7 +11886,7 @@ define(__m[70/*vs/platform/product*/], __M([0/*require*/,1/*exports*/,18/*path*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[71/*vs/platform/statusbar/common/statusbar*/], __M([0/*require*/,1/*exports*/,10/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[72/*vs/platform/statusbar/common/statusbar*/], __M([1/*require*/,0/*exports*/,11/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     'use strict';
     exports.IStatusbarService = instantiation_1.createDecorator('statusbarService');
     (function (StatusbarAlignment) {
@@ -12639,7 +11896,7 @@ define(__m[71/*vs/platform/statusbar/common/statusbar*/], __M([0/*require*/,1/*e
     var StatusbarAlignment = exports.StatusbarAlignment;
 });
 
-define(__m[72/*vs/platform/workspace/common/workspace*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/uri*/,10/*vs/platform/instantiation/common/instantiation*/,9/*vs/base/common/paths*/]), function (require, exports, uri_1, instantiation_1, paths) {
+define(__m[73/*vs/platform/workspace/common/workspace*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/uri*/,11/*vs/platform/instantiation/common/instantiation*/,10/*vs/base/common/paths*/]), function (require, exports, uri_1, instantiation_1, paths) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12681,7 +11938,7 @@ define(__m[72/*vs/platform/workspace/common/workspace*/], __M([0/*require*/,1/*e
 
 
 
-define(__m[5/*vs/workbench/api/node/extHostTypes*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/uri*/,4/*vs/base/common/errors*/]), function (require, exports, uri_1, errors_1) {
+define(__m[5/*vs/workbench/api/node/extHostTypes*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/uri*/,4/*vs/base/common/errors*/]), function (require, exports, uri_1, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -13191,6 +12448,66 @@ define(__m[5/*vs/workbench/api/node/extHostTypes*/], __M([0/*require*/,1/*export
         return WorkspaceEdit;
     }());
     exports.WorkspaceEdit = WorkspaceEdit;
+    var SnippetString = (function () {
+        function SnippetString(value) {
+            this._tabstop = 1;
+            this.value = value || '';
+        }
+        SnippetString._escape = function (value) {
+            return value.replace(/\$|}|\\/g, '\\$&');
+        };
+        SnippetString.prototype.appendText = function (string) {
+            this.value += SnippetString._escape(string);
+            return this;
+        };
+        SnippetString.prototype.appendTabstop = function (number) {
+            if (number === void 0) { number = this._tabstop++; }
+            this.value += '$';
+            this.value += number;
+            return this;
+        };
+        SnippetString.prototype.appendPlaceholder = function (value, number) {
+            if (number === void 0) { number = this._tabstop++; }
+            if (typeof value === 'function') {
+                var nested = new SnippetString();
+                nested._tabstop = this._tabstop;
+                value(nested);
+                this._tabstop = nested._tabstop;
+                value = nested.value;
+            }
+            else {
+                value = SnippetString._escape(value);
+            }
+            this.value += '${';
+            this.value += number;
+            this.value += ':';
+            this.value += value;
+            this.value += '}';
+            return this;
+        };
+        SnippetString.prototype.appendVariable = function (name, defaultValue) {
+            if (typeof defaultValue === 'function') {
+                var nested = new SnippetString();
+                nested._tabstop = this._tabstop;
+                defaultValue(nested);
+                this._tabstop = nested._tabstop;
+                defaultValue = nested.value;
+            }
+            else if (typeof defaultValue === 'string') {
+                defaultValue = defaultValue.replace(/\$|}/g, '\\$&');
+            }
+            this.value += '${';
+            this.value += name;
+            if (defaultValue) {
+                this.value += ':';
+                this.value += defaultValue;
+            }
+            this.value += '}';
+            return this;
+        };
+        return SnippetString;
+    }());
+    exports.SnippetString = SnippetString;
     (function (DiagnosticSeverity) {
         DiagnosticSeverity[DiagnosticSeverity["Hint"] = 3] = "Hint";
         DiagnosticSeverity[DiagnosticSeverity["Information"] = 2] = "Information";
@@ -13495,7 +12812,7 @@ define(__m[5/*vs/workbench/api/node/extHostTypes*/], __M([0/*require*/,1/*export
     exports.DocumentLink = DocumentLink;
 });
 
-define(__m[74/*vs/workbench/services/configuration/common/configurationEditing*/], __M([0/*require*/,1/*exports*/,10/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[75/*vs/workbench/services/configuration/common/configurationEditing*/], __M([1/*require*/,0/*exports*/,11/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -13543,7 +12860,7 @@ define(__m[74/*vs/workbench/services/configuration/common/configurationEditing*/
 
 
 
-define(__m[75/*vs/workbench/services/textfile/common/textfiles*/], __M([0/*require*/,1/*exports*/,10/*vs/platform/instantiation/common/instantiation*/,34/*vs/base/common/events*/]), function (require, exports, instantiation_1, events_1) {
+define(__m[76/*vs/workbench/services/textfile/common/textfiles*/], __M([1/*require*/,0/*exports*/,11/*vs/platform/instantiation/common/instantiation*/,45/*vs/base/common/events*/]), function (require, exports, instantiation_1, events_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -13616,6 +12933,7 @@ define(__m[75/*vs/workbench/services/textfile/common/textfiles*/], __M([0/*requi
         StateChange[StateChange["SAVED"] = 3] = "SAVED";
         StateChange[StateChange["REVERTED"] = 4] = "REVERTED";
         StateChange[StateChange["ENCODING"] = 5] = "ENCODING";
+        StateChange[StateChange["CONTENT_CHANGE"] = 6] = "CONTENT_CHANGE";
     })(exports.StateChange || (exports.StateChange = {}));
     var StateChange = exports.StateChange;
     var TextFileModelChangeEvent = (function () {
@@ -13659,7 +12977,7 @@ define(__m[75/*vs/workbench/services/textfile/common/textfiles*/], __M([0/*requi
     exports.ITextFileService = instantiation_1.createDecorator(exports.TEXT_FILE_SERVICE_ID);
 });
 
-define(__m[12/*vs/workbench/api/node/extHostTypeConverters*/], __M([0/*require*/,1/*exports*/,15/*vs/base/common/severity*/,33/*vs/base/common/diff/diff*/,5/*vs/workbench/api/node/extHostTypes*/,63/*vs/platform/editor/common/editor*/,6/*vs/base/common/uri*/,75/*vs/workbench/services/textfile/common/textfiles*/]), function (require, exports, severity_1, diff_1, types, editor_1, uri_1, textfiles_1) {
+define(__m[14/*vs/workbench/api/node/extHostTypeConverters*/], __M([1/*require*/,0/*exports*/,16/*vs/base/common/severity*/,5/*vs/workbench/api/node/extHostTypes*/,62/*vs/platform/editor/common/editor*/,7/*vs/base/common/uri*/,76/*vs/workbench/services/textfile/common/textfiles*/]), function (require, exports, severity_1, types, editor_1, uri_1, textfiles_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -13790,35 +13108,6 @@ define(__m[12/*vs/workbench/api/node/extHostTypeConverters*/], __M([0/*require*/
     }
     exports.fromRangeOrRangeWithMessage = fromRangeOrRangeWithMessage;
     exports.TextEdit = {
-        minimalEditOperations: function (edits, document, beforeDocumentVersion) {
-            // document has changed in the meantime and we shouldn't do
-            // offset math as it's likely to be all wrong
-            if (document.version !== beforeDocumentVersion) {
-                return edits.map(exports.TextEdit.from);
-            }
-            var result = [];
-            for (var _i = 0, edits_1 = edits; _i < edits_1.length; _i++) {
-                var edit = edits_1[_i];
-                var original = document.getText(edit.range);
-                var modified = edit.newText;
-                var changes = diff_1.stringDiff(original, modified);
-                if (changes.length <= 1) {
-                    result.push(exports.TextEdit.from(edit));
-                    continue;
-                }
-                var editOffset = document.offsetAt(edit.range.start);
-                for (var j = 0; j < changes.length; j++) {
-                    var _a = changes[j], originalStart = _a.originalStart, originalLength = _a.originalLength, modifiedStart = _a.modifiedStart, modifiedLength = _a.modifiedLength;
-                    var start = fromPosition(document.positionAt(editOffset + originalStart));
-                    var end = fromPosition(document.positionAt(editOffset + originalStart + originalLength));
-                    result.push({
-                        text: modified.substr(modifiedStart, modifiedLength),
-                        range: { startLineNumber: start.lineNumber, startColumn: start.column, endLineNumber: end.lineNumber, endColumn: end.column }
-                    });
-                }
-            }
-            return result;
-        },
         from: function (edit) {
             return {
                 text: edit.newText,
@@ -13921,21 +13210,9 @@ define(__m[12/*vs/workbench/api/node/extHostTypeConverters*/], __M([0/*require*/
             }
         }
     };
-    exports.Suggest = {
-        from: function (item) {
-            var suggestion = {
-                label: item.label || '<missing label>',
-                insertText: item.insertText || item.label,
-                type: exports.CompletionItemKind.from(item.kind),
-                detail: item.detail,
-                documentation: item.documentation,
-                sortText: item.sortText,
-                filterText: item.filterText,
-                additionalTextEdits: item.additionalTextEdits && item.additionalTextEdits.map(exports.TextEdit.from)
-            };
-            return suggestion;
-        },
-        to: function (position, suggestion) {
+    var Suggest;
+    (function (Suggest) {
+        function to(position, suggestion) {
             var result = new types.CompletionItem(suggestion.label);
             result.insertText = suggestion.insertText;
             result.kind = exports.CompletionItemKind.to(suggestion.type);
@@ -13943,16 +13220,28 @@ define(__m[12/*vs/workbench/api/node/extHostTypeConverters*/], __M([0/*require*/
             result.documentation = suggestion.documentation;
             result.sortText = suggestion.sortText;
             result.filterText = suggestion.filterText;
+            // 'overwrite[Before|After]'-logic
             var overwriteBefore = (typeof suggestion.overwriteBefore === 'number') ? suggestion.overwriteBefore : 0;
             var startPosition = new types.Position(position.line, Math.max(0, position.character - overwriteBefore));
             var endPosition = position;
             if (typeof suggestion.overwriteAfter === 'number') {
                 endPosition = new types.Position(position.line, position.character + suggestion.overwriteAfter);
             }
-            result.textEdit = types.TextEdit.replace(new types.Range(startPosition, endPosition), suggestion.insertText);
+            result.range = new types.Range(startPosition, endPosition);
+            // 'inserText'-logic
+            if (suggestion.snippetType === 'textmate') {
+                result.insertText = new types.SnippetString(suggestion.insertText);
+            }
+            else {
+                result.insertText = suggestion.insertText;
+                result.textEdit = new types.TextEdit(result.range, result.insertText);
+            }
+            // TODO additionalEdits, command
             return result;
         }
-    };
+        Suggest.to = to;
+    })(Suggest = exports.Suggest || (exports.Suggest = {}));
+    ;
     var SignatureHelp;
     (function (SignatureHelp) {
         function from(signatureHelp) {
@@ -13995,7 +13284,7 @@ define(__m[12/*vs/workbench/api/node/extHostTypeConverters*/], __M([0/*require*/
     })(TextDocumentSaveReason = exports.TextDocumentSaveReason || (exports.TextDocumentSaveReason = {}));
 });
 
-define(__m[77/*vs/workbench/api/node/extHostApiCommands*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/uri*/,3/*vs/base/common/winjs.base*/,12/*vs/workbench/api/node/extHostTypeConverters*/,5/*vs/workbench/api/node/extHostTypes*/]), function (require, exports, uri_1, winjs_base_1, typeConverters, types) {
+define(__m[78/*vs/workbench/api/node/extHostApiCommands*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/uri*/,3/*vs/base/common/winjs.base*/,14/*vs/workbench/api/node/extHostTypeConverters*/,5/*vs/workbench/api/node/extHostTypes*/]), function (require, exports, uri_1, winjs_base_1, typeConverters, types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -14141,11 +13430,11 @@ define(__m[77/*vs/workbench/api/node/extHostApiCommands*/], __M([0/*require*/,1/
                     { name: 'label', description: '(optional) An human readable string that is used as title for the preview.', constraint: function (v) { return typeof v === 'string' || typeof v === 'undefined'; } }
                 ]
             });
-            this._register('vscode.openFolder', function (uri, newWindow) {
+            this._register('vscode.openFolder', function (uri, forceNewWindow) {
                 if (!uri) {
-                    return _this._commands.executeCommand('_workbench.ipc', 'vscode:openFolderPicker', [newWindow]);
+                    return _this._commands.executeCommand('_files.openFolderPicker', forceNewWindow);
                 }
-                return _this._commands.executeCommand('_workbench.ipc', 'vscode:windowOpen', [[uri.fsPath], newWindow]);
+                return _this._commands.executeCommand('_files.windowOpen', [uri.fsPath], forceNewWindow);
             }, {
                 description: 'Open a folder in the current window or new window depending on the newWindow argument. Note that opening in the same window will shutdown the current extension host process and start a new one on the given folder unless the newWindow parameter is set to true.',
                 args: [
@@ -14376,7 +13665,7 @@ define(__m[77/*vs/workbench/api/node/extHostApiCommands*/], __M([0/*require*/,1/
     exports.ExtHostApiCommands = ExtHostApiCommands;
 });
 
-define(__m[78/*vs/workbench/services/thread/common/abstractThreadService*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[79/*vs/workbench/services/thread/common/abstractThreadService*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -14450,7 +13739,7 @@ define(__m[78/*vs/workbench/services/thread/common/abstractThreadService*/], __M
 
 
 
-define(__m[79/*vs/workbench/services/thread/common/extHostThreadService*/], __M([0/*require*/,1/*exports*/,78/*vs/workbench/services/thread/common/abstractThreadService*/]), function (require, exports, abstractThreadService_1) {
+define(__m[80/*vs/workbench/services/thread/common/extHostThreadService*/], __M([1/*require*/,0/*exports*/,79/*vs/workbench/services/thread/common/abstractThreadService*/]), function (require, exports, abstractThreadService_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -14471,7 +13760,7 @@ define(__m[79/*vs/workbench/services/thread/common/extHostThreadService*/], __M(
     exports.ExtHostThreadService = ExtHostThreadService;
 });
 
-define(__m[80/*vs/workbench/services/thread/common/threadService*/], __M([0/*require*/,1/*exports*/,10/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[81/*vs/workbench/services/thread/common/threadService*/], __M([1/*require*/,0/*exports*/,11/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -14502,7 +13791,7 @@ define(__m[80/*vs/workbench/services/thread/common/threadService*/], __M([0/*req
     exports.createExtHostContextProxyIdentifier = createExtHostContextProxyIdentifier;
 });
 
-define(__m[2/*vs/workbench/api/node/extHost.protocol*/], __M([0/*require*/,1/*exports*/,80/*vs/workbench/services/thread/common/threadService*/]), function (require, exports, threadService_1) {
+define(__m[2/*vs/workbench/api/node/extHost.protocol*/], __M([1/*require*/,0/*exports*/,81/*vs/workbench/services/thread/common/threadService*/]), function (require, exports, threadService_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -14597,6 +13886,13 @@ define(__m[2/*vs/workbench/api/node/extHost.protocol*/], __M([0/*require*/,1/*ex
         return MainThreadEditorsShape;
     }());
     exports.MainThreadEditorsShape = MainThreadEditorsShape;
+    var MainThreadTreeExplorersShape = (function () {
+        function MainThreadTreeExplorersShape() {
+        }
+        MainThreadTreeExplorersShape.prototype.$registerTreeExplorerNodeProvider = function (providerId) { throw ni(); };
+        return MainThreadTreeExplorersShape;
+    }());
+    exports.MainThreadTreeExplorersShape = MainThreadTreeExplorersShape;
     var MainThreadErrorsShape = (function () {
         function MainThreadErrorsShape() {
         }
@@ -14675,7 +13971,7 @@ define(__m[2/*vs/workbench/api/node/extHost.protocol*/], __M([0/*require*/,1/*ex
     var MainThreadStatusBarShape = (function () {
         function MainThreadStatusBarShape() {
         }
-        MainThreadStatusBarShape.prototype.$setEntry = function (id, text, tooltip, command, color, alignment, priority) { throw ni(); };
+        MainThreadStatusBarShape.prototype.$setEntry = function (id, extensionId, text, tooltip, command, color, alignment, priority) { throw ni(); };
         MainThreadStatusBarShape.prototype.$dispose = function (id) { throw ni(); };
         return MainThreadStatusBarShape;
     }());
@@ -14733,7 +14029,7 @@ define(__m[2/*vs/workbench/api/node/extHost.protocol*/], __M([0/*require*/,1/*ex
     var ExtHostConfigurationShape = (function () {
         function ExtHostConfigurationShape() {
         }
-        ExtHostConfigurationShape.prototype.$acceptConfigurationChanged = function (config) { throw ni(); };
+        ExtHostConfigurationShape.prototype.$acceptConfigurationChanged = function (values) { throw ni(); };
         return ExtHostConfigurationShape;
     }());
     exports.ExtHostConfigurationShape = ExtHostConfigurationShape;
@@ -14776,6 +14072,16 @@ define(__m[2/*vs/workbench/api/node/extHost.protocol*/], __M([0/*require*/,1/*ex
         return ExtHostEditorsShape;
     }());
     exports.ExtHostEditorsShape = ExtHostEditorsShape;
+    var ExtHostTreeExplorersShape = (function () {
+        function ExtHostTreeExplorersShape() {
+        }
+        ExtHostTreeExplorersShape.prototype.$provideRootNode = function (providerId) { throw ni(); };
+        ;
+        ExtHostTreeExplorersShape.prototype.$resolveChildren = function (providerId, node) { throw ni(); };
+        ExtHostTreeExplorersShape.prototype.$getInternalCommand = function (providerId, node) { throw ni(); };
+        return ExtHostTreeExplorersShape;
+    }());
+    exports.ExtHostTreeExplorersShape = ExtHostTreeExplorersShape;
     var ExtHostExtensionServiceShape = (function () {
         function ExtHostExtensionServiceShape() {
         }
@@ -14860,6 +14166,7 @@ define(__m[2/*vs/workbench/api/node/extHost.protocol*/], __M([0/*require*/,1/*ex
         MainThreadDocuments: threadService_1.createMainContextProxyIdentifier('MainThreadDocuments', MainThreadDocumentsShape),
         MainThreadEditors: threadService_1.createMainContextProxyIdentifier('MainThreadEditors', MainThreadEditorsShape),
         MainThreadErrors: threadService_1.createMainContextProxyIdentifier('MainThreadErrors', MainThreadErrorsShape),
+        MainThreadExplorers: threadService_1.createMainContextProxyIdentifier('MainThreadExplorers', MainThreadTreeExplorersShape),
         MainThreadLanguageFeatures: threadService_1.createMainContextProxyIdentifier('MainThreadLanguageFeatures', MainThreadLanguageFeaturesShape),
         MainThreadLanguages: threadService_1.createMainContextProxyIdentifier('MainThreadLanguages', MainThreadLanguagesShape),
         MainThreadMessageService: threadService_1.createMainContextProxyIdentifier('MainThreadMessageService', MainThreadMessageServiceShape),
@@ -14879,6 +14186,7 @@ define(__m[2/*vs/workbench/api/node/extHost.protocol*/], __M([0/*require*/,1/*ex
         ExtHostDocuments: threadService_1.createExtHostContextProxyIdentifier('ExtHostDocuments', ExtHostDocumentsShape),
         ExtHostDocumentSaveParticipant: threadService_1.createExtHostContextProxyIdentifier('ExtHostDocumentSaveParticipant', ExtHostDocumentSaveParticipantShape),
         ExtHostEditors: threadService_1.createExtHostContextProxyIdentifier('ExtHostEditors', ExtHostEditorsShape),
+        ExtHostExplorers: threadService_1.createExtHostContextProxyIdentifier('ExtHostExplorers', ExtHostTreeExplorersShape),
         ExtHostFileSystemEventService: threadService_1.createExtHostContextProxyIdentifier('ExtHostFileSystemEventService', ExtHostFileSystemEventServiceShape),
         ExtHostHeapService: threadService_1.createExtHostContextProxyIdentifier('ExtHostHeapMonitor', ExtHostHeapServiceShape),
         ExtHostLanguageFeatures: threadService_1.createExtHostContextProxyIdentifier('ExtHostLanguageFeatures', ExtHostLanguageFeaturesShape),
@@ -14893,7 +14201,7 @@ define(__m[2/*vs/workbench/api/node/extHost.protocol*/], __M([0/*require*/,1/*ex
 
 
 
-define(__m[82/*vs/workbench/api/node/extHostCommands*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/types*/,3/*vs/base/common/winjs.base*/,5/*vs/workbench/api/node/extHostTypes*/,12/*vs/workbench/api/node/extHostTypeConverters*/,19/*vs/base/common/objects*/,2/*vs/workbench/api/node/extHost.protocol*/,20/*vs/base/common/arrays*/]), function (require, exports, types_1, winjs_base_1, extHostTypes, extHostTypeConverter, objects_1, extHost_protocol_1, arrays_1) {
+define(__m[83/*vs/workbench/api/node/extHostCommands*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/types*/,3/*vs/base/common/winjs.base*/,5/*vs/workbench/api/node/extHostTypes*/,14/*vs/workbench/api/node/extHostTypeConverters*/,15/*vs/base/common/objects*/,2/*vs/workbench/api/node/extHost.protocol*/,20/*vs/base/common/arrays*/]), function (require, exports, types_1, winjs_base_1, extHostTypes, extHostTypeConverter, objects_1, extHost_protocol_1, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -15076,19 +14384,42 @@ define(__m[82/*vs/workbench/api/node/extHostCommands*/], __M([0/*require*/,1/*ex
 
 
 
-define(__m[83/*vs/workbench/api/node/extHostConfiguration*/], __M([0/*require*/,1/*exports*/,19/*vs/base/common/objects*/,7/*vs/base/common/event*/,2/*vs/workbench/api/node/extHost.protocol*/,74/*vs/workbench/services/configuration/common/configurationEditing*/]), function (require, exports, objects_1, event_1, extHost_protocol_1, configurationEditing_1) {
+define(__m[84/*vs/workbench/api/node/extHostConfiguration*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/objects*/,6/*vs/base/common/event*/,2/*vs/workbench/api/node/extHost.protocol*/,75/*vs/workbench/services/configuration/common/configurationEditing*/,69/*vs/platform/configuration/common/model*/]), function (require, exports, objects_1, event_1, extHost_protocol_1, configurationEditing_1, model_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    function lookUp(tree, key) {
+        if (key) {
+            var parts = key.split('.');
+            var node = tree;
+            for (var i = 0; node && i < parts.length; i++) {
+                node = node[parts[i]];
+            }
+            return node;
+        }
+    }
+    function createUsefulConfiguration(data) {
+        var valueMap = Object.create(null);
+        for (var key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                valueMap[key] = data[key].value;
+            }
+        }
+        var valueTree = model_1.toValuesTree(valueMap, function (message) { return console.error("Conflict in configuration settings: " + message); });
+        return {
+            data: data,
+            valueTree: valueTree
+        };
+    }
     var ExtHostConfiguration = (function (_super) {
         __extends(ExtHostConfiguration, _super);
-        function ExtHostConfiguration(proxy, configuration) {
+        function ExtHostConfiguration(proxy, data) {
             _super.call(this);
             this._onDidChangeConfiguration = new event_1.Emitter();
             this._proxy = proxy;
-            this._config = configuration;
+            this._configuration = createUsefulConfiguration(data);
         }
         Object.defineProperty(ExtHostConfiguration.prototype, "onDidChangeConfiguration", {
             get: function () {
@@ -15097,21 +14428,21 @@ define(__m[83/*vs/workbench/api/node/extHostConfiguration*/], __M([0/*require*/,
             enumerable: true,
             configurable: true
         });
-        ExtHostConfiguration.prototype.$acceptConfigurationChanged = function (config) {
-            this._config = config;
+        ExtHostConfiguration.prototype.$acceptConfigurationChanged = function (data) {
+            this._configuration = createUsefulConfiguration(data);
             this._onDidChangeConfiguration.fire(undefined);
         };
         ExtHostConfiguration.prototype.getConfiguration = function (section) {
             var _this = this;
             var config = section
-                ? ExtHostConfiguration._lookUp(section, this._config)
-                : this._config;
+                ? lookUp(this._configuration.valueTree, section)
+                : this._configuration.valueTree;
             var result = {
                 has: function (key) {
-                    return typeof ExtHostConfiguration._lookUp(key, config) !== 'undefined';
+                    return typeof lookUp(config, key) !== 'undefined';
                 },
                 get: function (key, defaultValue) {
-                    var result = ExtHostConfiguration._lookUp(key, config);
+                    var result = lookUp(config, key);
                     if (typeof result === 'undefined') {
                         result = defaultValue;
                     }
@@ -15127,23 +14458,24 @@ define(__m[83/*vs/workbench/api/node/extHostConfiguration*/], __M([0/*require*/,
                     else {
                         return _this._proxy.$removeConfigurationOption(target, key);
                     }
+                },
+                inspect: function (key) {
+                    key = section ? section + "." + key : key;
+                    var config = _this._configuration.data[key];
+                    if (config) {
+                        return {
+                            key: key,
+                            defaultValue: config.default,
+                            globalValue: config.user,
+                            workspaceValue: config.workspace
+                        };
+                    }
                 }
             };
             if (typeof config === 'object') {
                 objects_1.mixin(result, config, false);
             }
             return Object.freeze(result);
-        };
-        ExtHostConfiguration._lookUp = function (section, config) {
-            if (!section) {
-                return;
-            }
-            var parts = section.split('.');
-            var node = config;
-            while (node && parts.length) {
-                node = node[parts.shift()];
-            }
-            return node;
         };
         return ExtHostConfiguration;
     }(extHost_protocol_1.ExtHostConfigurationShape));
@@ -15155,7 +14487,7 @@ define(__m[83/*vs/workbench/api/node/extHostConfiguration*/], __M([0/*require*/,
 
 
 
-define(__m[84/*vs/workbench/api/node/extHostDiagnostics*/], __M([0/*require*/,1/*exports*/,57/*vs/nls!vs/workbench/api/node/extHostDiagnostics*/,6/*vs/base/common/uri*/,17/*vs/base/common/strings*/,15/*vs/base/common/severity*/,2/*vs/workbench/api/node/extHost.protocol*/,5/*vs/workbench/api/node/extHostTypes*/]), function (require, exports, nls_1, uri_1, strings_1, severity_1, extHost_protocol_1, extHostTypes_1) {
+define(__m[85/*vs/workbench/api/node/extHostDiagnostics*/], __M([1/*require*/,0/*exports*/,55/*vs/nls!vs/workbench/api/node/extHostDiagnostics*/,7/*vs/base/common/uri*/,16/*vs/base/common/severity*/,2/*vs/workbench/api/node/extHost.protocol*/,5/*vs/workbench/api/node/extHostTypes*/]), function (require, exports, nls_1, uri_1, severity_1, extHost_protocol_1, extHostTypes_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -15207,9 +14539,14 @@ define(__m[84/*vs/workbench/api/node/extHostDiagnostics*/], __M([0/*require*/,1/
                 // update many rows
                 toSync = [];
                 var lastUri = void 0;
-                for (var _i = 0, _a = first.slice(0).sort(DiagnosticCollection._compareTuplesByUri); _i < _a.length; _i++) {
-                    var entry = _a[_i];
-                    var uri = entry[0], diagnostics_1 = entry[1];
+                // ensure stable-sort: keep the original
+                // index for otherwise equal items
+                var sortedTuples = first
+                    .map(function (tuple, idx) { return ({ tuple: tuple, idx: idx }); })
+                    .sort(DiagnosticCollection._compareIndexedTuplesByUri);
+                for (var _i = 0, sortedTuples_1 = sortedTuples; _i < sortedTuples_1.length; _i++) {
+                    var tuple = sortedTuples_1[_i].tuple;
+                    var uri = tuple[0], diagnostics_1 = tuple[1];
                     if (!lastUri || uri.toString() !== lastUri.toString()) {
                         if (lastUri && this._data[lastUri.toString()].length === 0) {
                             delete this._data[lastUri.toString()];
@@ -15223,14 +14560,14 @@ define(__m[84/*vs/workbench/api/node/extHostDiagnostics*/], __M([0/*require*/,1/
                         this._data[uri.toString()].length = 0;
                     }
                     else {
-                        (_b = this._data[uri.toString()]).push.apply(_b, diagnostics_1);
+                        (_a = this._data[uri.toString()]).push.apply(_a, diagnostics_1);
                     }
                 }
             }
             // compute change and send to main side
             var entries = [];
-            for (var _c = 0, toSync_1 = toSync; _c < toSync_1.length; _c++) {
-                var uri = toSync_1[_c];
+            for (var _b = 0, toSync_1 = toSync; _b < toSync_1.length; _b++) {
+                var uri = toSync_1[_b];
                 var marker = void 0;
                 var diagnostics_2 = this._data[uri.toString()];
                 if (diagnostics_2) {
@@ -15239,8 +14576,8 @@ define(__m[84/*vs/workbench/api/node/extHostDiagnostics*/], __M([0/*require*/,1/
                         marker = [];
                         var order = [extHostTypes_1.DiagnosticSeverity.Error, extHostTypes_1.DiagnosticSeverity.Warning, extHostTypes_1.DiagnosticSeverity.Information, extHostTypes_1.DiagnosticSeverity.Hint];
                         orderLoop: for (var i = 0; i < 4; i++) {
-                            for (var _d = 0, diagnostics_3 = diagnostics_2; _d < diagnostics_3.length; _d++) {
-                                var diagnostic = diagnostics_3[_d];
+                            for (var _c = 0, diagnostics_3 = diagnostics_2; _c < diagnostics_3.length; _c++) {
+                                var diagnostic = diagnostics_3[_c];
                                 if (diagnostic.severity === order[i]) {
                                     var len = marker.push(DiagnosticCollection._toMarkerData(diagnostic));
                                     if (len === DiagnosticCollection._maxDiagnosticsPerFile) {
@@ -15266,7 +14603,7 @@ define(__m[84/*vs/workbench/api/node/extHostDiagnostics*/], __M([0/*require*/,1/
                 entries.push([uri, marker]);
             }
             this._proxy.$changeMany(this.name, entries);
-            var _b;
+            var _a;
         };
         DiagnosticCollection.prototype.delete = function (uri) {
             this._checkDisposed();
@@ -15323,8 +14660,22 @@ define(__m[84/*vs/workbench/api/node/extHostDiagnostics*/], __M([0/*require*/,1/
                 default: return severity_1.default.Error;
             }
         };
-        DiagnosticCollection._compareTuplesByUri = function (a, b) {
-            return strings_1.compare(a[0].toString(), b[0].toString());
+        DiagnosticCollection._compareIndexedTuplesByUri = function (a, b) {
+            if (a.tuple[0].toString() < b.tuple[0].toString()) {
+                return -1;
+            }
+            else if (a.tuple[0].toString() > b.tuple[0].toString()) {
+                return 1;
+            }
+            else if (a.idx < b.idx) {
+                return -1;
+            }
+            else if (a.idx > b.idx) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
         };
         DiagnosticCollection._maxDiagnosticsPerFile = 250;
         return DiagnosticCollection;
@@ -15373,7 +14724,7 @@ define(__m[84/*vs/workbench/api/node/extHostDiagnostics*/], __M([0/*require*/,1/
 
 
 
-define(__m[85/*vs/workbench/api/node/extHostDocumentSaveParticipant*/], __M([0/*require*/,1/*exports*/,26/*vs/base/common/callbackList*/,16/*vs/base/common/async*/,4/*vs/base/common/errors*/,3/*vs/base/common/winjs.base*/,2/*vs/workbench/api/node/extHost.protocol*/,5/*vs/workbench/api/node/extHostTypes*/,12/*vs/workbench/api/node/extHostTypeConverters*/]), function (require, exports, callbackList_1, async_1, errors_1, winjs_base_1, extHost_protocol_1, extHostTypes_1, extHostTypeConverters_1) {
+define(__m[86/*vs/workbench/api/node/extHostDocumentSaveParticipant*/], __M([1/*require*/,0/*exports*/,26/*vs/base/common/callbackList*/,17/*vs/base/common/async*/,4/*vs/base/common/errors*/,3/*vs/base/common/winjs.base*/,2/*vs/workbench/api/node/extHost.protocol*/,5/*vs/workbench/api/node/extHostTypes*/,14/*vs/workbench/api/node/extHostTypeConverters*/]), function (require, exports, callbackList_1, async_1, errors_1, winjs_base_1, extHost_protocol_1, extHostTypes_1, extHostTypeConverters_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -15513,7 +14864,7 @@ define(__m[85/*vs/workbench/api/node/extHostDocumentSaveParticipant*/], __M([0/*
 
 
 
-define(__m[86/*vs/workbench/api/node/extHostDocuments*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/,45/*vs/editor/common/model/mirrorModel2*/,7/*vs/base/common/event*/,5/*vs/workbench/api/node/extHostTypes*/,12/*vs/workbench/api/node/extHostTypeConverters*/,3/*vs/base/common/winjs.base*/,16/*vs/base/common/async*/,40/*vs/editor/common/model/wordHelper*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, errors_1, mirrorModel2_1, event_1, extHostTypes_1, TypeConverters, winjs_base_1, async_1, wordHelper_1, extHost_protocol_1) {
+define(__m[87/*vs/workbench/api/node/extHostDocuments*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/errors*/,18/*vs/base/common/strings*/,42/*vs/editor/common/model/mirrorModel2*/,6/*vs/base/common/event*/,5/*vs/workbench/api/node/extHostTypes*/,14/*vs/workbench/api/node/extHostTypeConverters*/,3/*vs/base/common/winjs.base*/,17/*vs/base/common/async*/,38/*vs/editor/common/model/wordHelper*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, errors_1, strings_1, mirrorModel2_1, event_1, extHostTypes_1, TypeConverters, winjs_base_1, async_1, wordHelper_1, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -15706,7 +15057,7 @@ define(__m[86/*vs/workbench/api/node/extHostDocuments*/], __M([0/*require*/,1/*e
                         positionAt: function (offset) { return data_1.positionAt(offset); },
                         validateRange: function (ran) { return data_1.validateRange(ran); },
                         validatePosition: function (pos) { return data_1.validatePosition(pos); },
-                        getWordRangeAtPosition: function (pos) { return data_1.getWordRangeAtPosition(pos); }
+                        getWordRangeAtPosition: function (pos, regexp) { return data_1.getWordRangeAtPosition(pos, regexp); }
                     };
                 }
                 return this._document;
@@ -15825,9 +15176,12 @@ define(__m[86/*vs/workbench/api/node/extHostDocuments*/], __M([0/*require*/,1/*e
             }
             return new extHostTypes_1.Position(line, character);
         };
-        ExtHostDocumentData.prototype.getWordRangeAtPosition = function (_position) {
+        ExtHostDocumentData.prototype.getWordRangeAtPosition = function (_position, regexp) {
             var position = this.validatePosition(_position);
-            var wordAtText = wordHelper_1.getWordAtText(position.character + 1, wordHelper_1.ensureValidWordDefinition(getWordDefinitionFor(this._languageId)), this._lines[position.line], 0);
+            if (!regexp || strings_1.regExpLeadsToEndlessLoop(regexp)) {
+                regexp = getWordDefinitionFor(this._languageId);
+            }
+            var wordAtText = wordHelper_1.getWordAtText(position.character + 1, wordHelper_1.ensureValidWordDefinition(regexp), this._lines[position.line], 0);
             if (wordAtText) {
                 return new extHostTypes_1.Range(position.line, wordAtText.startColumn - 1, position.line, wordAtText.endColumn - 1);
             }
@@ -15848,7 +15202,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(__m[87/*vs/workbench/api/node/extHostEditors*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/,20/*vs/base/common/arrays*/,41/*vs/base/common/idGenerator*/,7/*vs/base/common/event*/,3/*vs/base/common/winjs.base*/,5/*vs/workbench/api/node/extHostTypes*/,12/*vs/workbench/api/node/extHostTypeConverters*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, errors_1, arrays_1, idGenerator_1, event_1, winjs_base_1, extHostTypes_1, TypeConverters, extHost_protocol_1) {
+define(__m[88/*vs/workbench/api/node/extHostEditors*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/errors*/,20/*vs/base/common/arrays*/,31/*vs/base/common/idGenerator*/,6/*vs/base/common/event*/,3/*vs/base/common/winjs.base*/,5/*vs/workbench/api/node/extHostTypes*/,14/*vs/workbench/api/node/extHostTypeConverters*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, errors_1, arrays_1, idGenerator_1, event_1, winjs_base_1, extHostTypes_1, TypeConverters, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -16068,13 +15422,178 @@ define(__m[87/*vs/workbench/api/node/extHostEditors*/], __M([0/*require*/,1/*exp
             return descriptor;
         };
     }
+    var ExtHostTextEditorOptions = (function () {
+        function ExtHostTextEditorOptions(proxy, id, source) {
+            this._proxy = proxy;
+            this._id = id;
+            this._accept(source);
+        }
+        ExtHostTextEditorOptions.prototype._accept = function (source) {
+            this._tabSize = source.tabSize;
+            this._insertSpaces = source.insertSpaces;
+            this._cursorStyle = source.cursorStyle;
+            this._lineNumbers = source.lineNumbers;
+        };
+        Object.defineProperty(ExtHostTextEditorOptions.prototype, "tabSize", {
+            get: function () {
+                return this._tabSize;
+            },
+            set: function (value) {
+                var tabSize = this._validateTabSize(value);
+                if (tabSize === null) {
+                    // ignore invalid call
+                    return;
+                }
+                if (typeof tabSize === 'number') {
+                    if (this._tabSize === tabSize) {
+                        // nothing to do
+                        return;
+                    }
+                    // reflect the new tabSize value immediately
+                    this._tabSize = tabSize;
+                }
+                warnOnError(this._proxy.$trySetOptions(this._id, {
+                    tabSize: tabSize
+                }));
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ExtHostTextEditorOptions.prototype._validateTabSize = function (value) {
+            if (value === 'auto') {
+                return 'auto';
+            }
+            if (typeof value === 'number') {
+                var r = Math.floor(value);
+                return (r > 0 ? r : null);
+            }
+            if (typeof value === 'string') {
+                var r = parseInt(value, 10);
+                if (isNaN(r)) {
+                    return null;
+                }
+                return (r > 0 ? r : null);
+            }
+            return null;
+        };
+        Object.defineProperty(ExtHostTextEditorOptions.prototype, "insertSpaces", {
+            get: function () {
+                return this._insertSpaces;
+            },
+            set: function (value) {
+                var insertSpaces = this._validateInsertSpaces(value);
+                if (typeof insertSpaces === 'boolean') {
+                    if (this._insertSpaces === insertSpaces) {
+                        // nothing to do
+                        return;
+                    }
+                    // reflect the new insertSpaces value immediately
+                    this._insertSpaces = insertSpaces;
+                }
+                warnOnError(this._proxy.$trySetOptions(this._id, {
+                    insertSpaces: insertSpaces
+                }));
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ExtHostTextEditorOptions.prototype._validateInsertSpaces = function (value) {
+            if (value === 'auto') {
+                return 'auto';
+            }
+            return (value === 'false' ? false : Boolean(value));
+        };
+        Object.defineProperty(ExtHostTextEditorOptions.prototype, "cursorStyle", {
+            get: function () {
+                return this._cursorStyle;
+            },
+            set: function (value) {
+                if (this._cursorStyle === value) {
+                    // nothing to do
+                    return;
+                }
+                this._cursorStyle = value;
+                warnOnError(this._proxy.$trySetOptions(this._id, {
+                    cursorStyle: value
+                }));
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ExtHostTextEditorOptions.prototype, "lineNumbers", {
+            get: function () {
+                return this._lineNumbers;
+            },
+            set: function (value) {
+                if (this._lineNumbers === value) {
+                    // nothing to do
+                    return;
+                }
+                this._lineNumbers = value;
+                warnOnError(this._proxy.$trySetOptions(this._id, {
+                    lineNumbers: value
+                }));
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ExtHostTextEditorOptions.prototype.assign = function (newOptions) {
+            var bulkConfigurationUpdate = {};
+            var hasUpdate = false;
+            if (typeof newOptions.tabSize !== 'undefined') {
+                var tabSize = this._validateTabSize(newOptions.tabSize);
+                if (tabSize === 'auto') {
+                    hasUpdate = true;
+                    bulkConfigurationUpdate.tabSize = tabSize;
+                }
+                else if (typeof tabSize === 'number' && this._tabSize !== tabSize) {
+                    // reflect the new tabSize value immediately
+                    this._tabSize = tabSize;
+                    hasUpdate = true;
+                    bulkConfigurationUpdate.tabSize = tabSize;
+                }
+            }
+            if (typeof newOptions.insertSpaces !== 'undefined') {
+                var insertSpaces = this._validateInsertSpaces(newOptions.insertSpaces);
+                if (insertSpaces === 'auto') {
+                    hasUpdate = true;
+                    bulkConfigurationUpdate.insertSpaces = insertSpaces;
+                }
+                else if (this._insertSpaces !== insertSpaces) {
+                    // reflect the new insertSpaces value immediately
+                    this._insertSpaces = insertSpaces;
+                    hasUpdate = true;
+                    bulkConfigurationUpdate.insertSpaces = insertSpaces;
+                }
+            }
+            if (typeof newOptions.cursorStyle !== 'undefined') {
+                if (this._cursorStyle !== newOptions.cursorStyle) {
+                    this._cursorStyle = newOptions.cursorStyle;
+                    hasUpdate = true;
+                    bulkConfigurationUpdate.cursorStyle = newOptions.cursorStyle;
+                }
+            }
+            if (typeof newOptions.lineNumbers !== 'undefined') {
+                if (this._lineNumbers !== newOptions.lineNumbers) {
+                    this._lineNumbers = newOptions.lineNumbers;
+                    hasUpdate = true;
+                    bulkConfigurationUpdate.lineNumbers = newOptions.lineNumbers;
+                }
+            }
+            if (hasUpdate) {
+                warnOnError(this._proxy.$trySetOptions(this._id, bulkConfigurationUpdate));
+            }
+        };
+        return ExtHostTextEditorOptions;
+    }());
+    exports.ExtHostTextEditorOptions = ExtHostTextEditorOptions;
     var ExtHostTextEditor = (function () {
         function ExtHostTextEditor(proxy, id, document, selections, options, viewColumn) {
             this._proxy = proxy;
             this._id = id;
             this._documentData = document;
             this._selections = selections;
-            this._options = options;
+            this._options = new ExtHostTextEditorOptions(this._proxy, this._id, options);
             this._viewColumn = viewColumn;
         }
         ExtHostTextEditor.prototype.dispose = function () {
@@ -16103,17 +15622,13 @@ define(__m[87/*vs/workbench/api/node/extHostEditors*/], __M([0/*require*/,1/*exp
                 return this._options;
             },
             set: function (value) {
-                var _this = this;
-                this._options = value;
-                this._runOnProxy(function () {
-                    return _this._proxy.$trySetOptions(_this._id, _this._options);
-                }, true);
+                this._options.assign(value);
             },
             enumerable: true,
             configurable: true
         });
         ExtHostTextEditor.prototype._acceptOptions = function (options) {
-            this._options = options;
+            this._options._accept(options);
         };
         Object.defineProperty(ExtHostTextEditor.prototype, "viewColumn", {
             // ---- view column
@@ -16215,6 +15730,11 @@ define(__m[87/*vs/workbench/api/node/extHostEditors*/], __M([0/*require*/,1/*exp
         ], ExtHostTextEditor.prototype, "hide", null);
         return ExtHostTextEditor;
     }());
+    function warnOnError(promise) {
+        promise.then(null, function (err) {
+            console.warn(err);
+        });
+    }
 });
 
 
@@ -16222,7 +15742,7 @@ define(__m[87/*vs/workbench/api/node/extHostEditors*/], __M([0/*require*/,1/*exp
 
 
 
-define(__m[88/*vs/workbench/api/node/extHostFileSystemEventService*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/event*/,5/*vs/workbench/api/node/extHostTypes*/,28/*vs/base/common/glob*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, event_1, extHostTypes_1, glob_1, extHost_protocol_1) {
+define(__m[89/*vs/workbench/api/node/extHostFileSystemEventService*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/event*/,5/*vs/workbench/api/node/extHostTypes*/,25/*vs/base/common/glob*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, event_1, extHostTypes_1, glob_1, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -16342,7 +15862,7 @@ define(__m[88/*vs/workbench/api/node/extHostFileSystemEventService*/], __M([0/*r
 
 
 
-define(__m[89/*vs/workbench/api/node/extHostHeapService*/], __M([0/*require*/,1/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
+define(__m[90/*vs/workbench/api/node/extHostHeapService*/], __M([1/*require*/,0/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -16382,7 +15902,7 @@ define(__m[89/*vs/workbench/api/node/extHostHeapService*/], __M([0/*require*/,1/
 
 
 
-define(__m[90/*vs/workbench/api/node/extHostLanguageFeatures*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/winjs.base*/,12/*vs/workbench/api/node/extHostTypeConverters*/,5/*vs/workbench/api/node/extHostTypes*/,16/*vs/base/common/async*/,2/*vs/workbench/api/node/extHost.protocol*/,17/*vs/base/common/strings*/]), function (require, exports, winjs_base_1, TypeConverters, extHostTypes_1, async_1, extHost_protocol_1, strings_1) {
+define(__m[91/*vs/workbench/api/node/extHostLanguageFeatures*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/winjs.base*/,15/*vs/base/common/objects*/,14/*vs/workbench/api/node/extHostTypeConverters*/,5/*vs/workbench/api/node/extHostTypes*/,17/*vs/base/common/async*/,2/*vs/workbench/api/node/extHost.protocol*/,18/*vs/base/common/strings*/]), function (require, exports, winjs_base_1, objects_1, TypeConverters, extHostTypes_1, async_1, extHost_protocol_1, strings_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -16576,10 +16096,10 @@ define(__m[90/*vs/workbench/api/node/extHostLanguageFeatures*/], __M([0/*require
         }
         DocumentFormattingAdapter.prototype.provideDocumentFormattingEdits = function (resource, options) {
             var _this = this;
-            var _a = this._documents.getDocumentData(resource), document = _a.document, version = _a.version;
+            var document = this._documents.getDocumentData(resource).document;
             return async_1.asWinJsPromise(function (token) { return _this._provider.provideDocumentFormattingEdits(document, options, token); }).then(function (value) {
                 if (Array.isArray(value)) {
-                    return TypeConverters.TextEdit.minimalEditOperations(value, document, version);
+                    return value.map(TypeConverters.TextEdit.from);
                 }
             });
         };
@@ -16592,11 +16112,11 @@ define(__m[90/*vs/workbench/api/node/extHostLanguageFeatures*/], __M([0/*require
         }
         RangeFormattingAdapter.prototype.provideDocumentRangeFormattingEdits = function (resource, range, options) {
             var _this = this;
-            var _a = this._documents.getDocumentData(resource), document = _a.document, version = _a.version;
+            var document = this._documents.getDocumentData(resource).document;
             var ran = TypeConverters.toRange(range);
             return async_1.asWinJsPromise(function (token) { return _this._provider.provideDocumentRangeFormattingEdits(document, ran, options, token); }).then(function (value) {
                 if (Array.isArray(value)) {
-                    return TypeConverters.TextEdit.minimalEditOperations(value, document, version);
+                    return value.map(TypeConverters.TextEdit.from);
                 }
             });
         };
@@ -16610,11 +16130,11 @@ define(__m[90/*vs/workbench/api/node/extHostLanguageFeatures*/], __M([0/*require
         }
         OnTypeFormattingAdapter.prototype.provideOnTypeFormattingEdits = function (resource, position, ch, options) {
             var _this = this;
-            var _a = this._documents.getDocumentData(resource), document = _a.document, version = _a.version;
+            var document = this._documents.getDocumentData(resource).document;
             var pos = TypeConverters.toPosition(position);
             return async_1.asWinJsPromise(function (token) { return _this._provider.provideOnTypeFormattingEdits(document, pos, ch, options, token); }).then(function (value) {
                 if (Array.isArray(value)) {
-                    return TypeConverters.TextEdit.minimalEditOperations(value, document, version);
+                    return value.map(TypeConverters.TextEdit.from);
                 }
             });
         };
@@ -16707,9 +16227,6 @@ define(__m[90/*vs/workbench/api/node/extHostLanguageFeatures*/], __M([0/*require
                 var result = {
                     suggestions: [],
                 };
-                // the default text edit range
-                var wordRangeBeforePos = (doc.getWordRangeAtPosition(pos) || new extHostTypes_1.Range(pos, pos))
-                    .with({ end: pos });
                 var list;
                 if (!value) {
                     // undefined and null are valid results
@@ -16722,30 +16239,18 @@ define(__m[90/*vs/workbench/api/node/extHostLanguageFeatures*/], __M([0/*require
                     list = value;
                     result.incomplete = list.isIncomplete;
                 }
-                for (var i = 0; i < list.items.length; i++) {
-                    var item = list.items[i];
-                    var suggestion = TypeConverters.Suggest.from(item);
-                    suggestion.command = _this._commands.toInternal(item.command);
+                // the default text edit range
+                var wordRangeBeforePos = (doc.getWordRangeAtPosition(pos) || new extHostTypes_1.Range(pos, pos))
+                    .with({ end: pos });
+                for (var _i = 0, _a = list.items; _i < _a.length; _i++) {
+                    var item = _a[_i];
+                    var suggestion = _this._convertCompletionItem(item, pos, wordRangeBeforePos);
+                    // bad completion item
+                    if (!suggestion) {
+                        // converter did warn
+                        continue;
+                    }
                     extHost_protocol_1.ObjectIdentifier.mixin(suggestion, _this._heapService.keep(item));
-                    if (item.textEdit) {
-                        var editRange = item.textEdit.range;
-                        // invalid text edit
-                        if (!editRange.isSingleLine || editRange.start.line !== pos.line) {
-                            console.warn('INVALID text edit, must be single line and on the same line');
-                            continue;
-                        }
-                        // insert the text of the edit and create a dedicated
-                        // suggestion-container with overwrite[Before|After]
-                        suggestion.insertText = item.textEdit.newText;
-                        suggestion.overwriteBefore = pos.character - editRange.start.character;
-                        suggestion.overwriteAfter = editRange.end.character - pos.character;
-                    }
-                    else {
-                        // default text edit
-                        suggestion.overwriteBefore = pos.character - wordRangeBeforePos.start.character;
-                        suggestion.overwriteAfter = 0;
-                    }
-                    // store suggestion
                     result.suggestions.push(suggestion);
                 }
                 return result;
@@ -16762,11 +16267,72 @@ define(__m[90/*vs/workbench/api/node/extHostLanguageFeatures*/], __M([0/*require
                 return winjs_base_1.TPromise.as(suggestion);
             }
             return async_1.asWinJsPromise(function (token) { return _this._provider.resolveCompletionItem(item, token); }).then(function (resolvedItem) {
-                resolvedItem = resolvedItem || item;
-                var suggestion = TypeConverters.Suggest.from(resolvedItem);
-                suggestion.command = _this._commands.toInternal(resolvedItem.command);
+                if (!resolvedItem) {
+                    return suggestion;
+                }
+                var doc = _this._documents.getDocumentData(resource).document;
+                var pos = TypeConverters.toPosition(position);
+                var wordRangeBeforePos = (doc.getWordRangeAtPosition(pos) || new extHostTypes_1.Range(pos, pos)).with({ end: pos });
+                var newSuggestion = _this._convertCompletionItem(resolvedItem, pos, wordRangeBeforePos);
+                if (newSuggestion) {
+                    objects_1.mixin(suggestion, newSuggestion, true);
+                }
                 return suggestion;
             });
+        };
+        SuggestAdapter.prototype._convertCompletionItem = function (item, position, defaultRange) {
+            if (!item.label) {
+                console.warn('INVALID text edit -> must have at least a label');
+                return;
+            }
+            var result = {
+                //
+                label: item.label,
+                type: TypeConverters.CompletionItemKind.from(item.kind),
+                detail: item.detail,
+                documentation: item.documentation,
+                filterText: item.filterText,
+                sortText: item.sortText,
+                //
+                insertText: undefined,
+                additionalTextEdits: item.additionalTextEdits && item.additionalTextEdits.map(TypeConverters.TextEdit.from),
+                command: this._commands.toInternal(item.command)
+            };
+            // 'insertText'-logic
+            if (item.textEdit) {
+                result.insertText = item.textEdit.newText;
+                result.snippetType = 'internal';
+            }
+            else if (typeof item.insertText === 'string') {
+                result.insertText = item.insertText;
+                result.snippetType = 'internal';
+            }
+            else if (item.insertText instanceof extHostTypes_1.SnippetString) {
+                result.insertText = item.insertText.value;
+                result.snippetType = 'textmate';
+            }
+            else {
+                result.insertText = item.label;
+                result.snippetType = 'internal';
+            }
+            // 'overwrite[Before|After]'-logic
+            var range;
+            if (item.textEdit) {
+                range = item.textEdit.range;
+            }
+            else if (item.range) {
+                range = item.range;
+            }
+            else {
+                range = defaultRange;
+            }
+            result.overwriteBefore = position.character - range.start.character;
+            result.overwriteAfter = range.end.character - position.character;
+            if (!range.isSingleLine || range.start.line !== position.line) {
+                console.warn('INVALID text edit -> must be single line and on the same line');
+                return;
+            }
+            return result;
         };
         return SuggestAdapter;
     }());
@@ -17025,7 +16591,7 @@ define(__m[90/*vs/workbench/api/node/extHostLanguageFeatures*/], __M([0/*require
     exports.ExtHostLanguageFeatures = ExtHostLanguageFeatures;
 });
 
-define(__m[91/*vs/workbench/api/node/extHostLanguages*/], __M([0/*require*/,1/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
+define(__m[92/*vs/workbench/api/node/extHostLanguages*/], __M([1/*require*/,0/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -17043,7 +16609,7 @@ define(__m[91/*vs/workbench/api/node/extHostLanguages*/], __M([0/*require*/,1/*e
     exports.ExtHostLanguages = ExtHostLanguages;
 });
 
-define(__m[92/*vs/workbench/api/node/extHostMessageService*/], __M([0/*require*/,1/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
+define(__m[93/*vs/workbench/api/node/extHostMessageService*/], __M([1/*require*/,0/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -17079,7 +16645,7 @@ define(__m[92/*vs/workbench/api/node/extHostMessageService*/], __M([0/*require*/
     exports.ExtHostMessageService = ExtHostMessageService;
 });
 
-define(__m[93/*vs/workbench/api/node/extHostOutputService*/], __M([0/*require*/,1/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
+define(__m[94/*vs/workbench/api/node/extHostOutputService*/], __M([1/*require*/,0/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -17151,7 +16717,7 @@ define(__m[93/*vs/workbench/api/node/extHostOutputService*/], __M([0/*require*/,
 
 
 
-define(__m[94/*vs/workbench/api/node/extHostQuickOpen*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/winjs.base*/,16/*vs/base/common/async*/,22/*vs/base/common/cancellation*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, winjs_base_1, async_1, cancellation_1, extHost_protocol_1) {
+define(__m[95/*vs/workbench/api/node/extHostQuickOpen*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/winjs.base*/,17/*vs/base/common/async*/,22/*vs/base/common/cancellation*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, winjs_base_1, async_1, cancellation_1, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -17240,19 +16806,20 @@ define(__m[94/*vs/workbench/api/node/extHostQuickOpen*/], __M([0/*require*/,1/*e
     exports.ExtHostQuickOpen = ExtHostQuickOpen;
 });
 
-define(__m[95/*vs/workbench/api/node/extHostStatusBar*/], __M([0/*require*/,1/*exports*/,71/*vs/platform/statusbar/common/statusbar*/,5/*vs/workbench/api/node/extHostTypes*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, statusbar_1, extHostTypes_1, extHost_protocol_1) {
+define(__m[96/*vs/workbench/api/node/extHostStatusBar*/], __M([1/*require*/,0/*exports*/,72/*vs/platform/statusbar/common/statusbar*/,5/*vs/workbench/api/node/extHostTypes*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, statusbar_1, extHostTypes_1, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
     var ExtHostStatusBarEntry = (function () {
-        function ExtHostStatusBarEntry(proxy, alignment, priority) {
+        function ExtHostStatusBarEntry(proxy, extensionId, alignment, priority) {
             if (alignment === void 0) { alignment = extHostTypes_1.StatusBarAlignment.Left; }
             this._id = ExtHostStatusBarEntry.ID_GEN++;
             this._proxy = proxy;
             this._alignment = alignment;
             this._priority = priority;
+            this._extensionId = extensionId;
         }
         Object.defineProperty(ExtHostStatusBarEntry.prototype, "id", {
             get: function () {
@@ -17338,7 +16905,7 @@ define(__m[95/*vs/workbench/api/node/extHostStatusBar*/], __M([0/*require*/,1/*e
             this._timeoutHandle = setTimeout(function () {
                 _this._timeoutHandle = undefined;
                 // Set to status bar
-                _this._proxy.$setEntry(_this.id, _this.text, _this.tooltip, _this.command, _this.color, _this._alignment === extHostTypes_1.StatusBarAlignment.Left ? statusbar_1.StatusbarAlignment.LEFT : statusbar_1.StatusbarAlignment.RIGHT, _this._priority);
+                _this._proxy.$setEntry(_this.id, _this._extensionId, _this.text, _this.tooltip, _this.command, _this.color, _this._alignment === extHostTypes_1.StatusBarAlignment.Left ? statusbar_1.StatusbarAlignment.LEFT : statusbar_1.StatusbarAlignment.RIGHT, _this._priority);
             }, 0);
         };
         ExtHostStatusBarEntry.prototype.dispose = function () {
@@ -17352,7 +16919,7 @@ define(__m[95/*vs/workbench/api/node/extHostStatusBar*/], __M([0/*require*/,1/*e
     var StatusBarMessage = (function () {
         function StatusBarMessage(statusBar) {
             this._messages = [];
-            this._item = statusBar.createStatusBarEntry(extHostTypes_1.StatusBarAlignment.Left, Number.MIN_VALUE);
+            this._item = statusBar.createStatusBarEntry(void 0, extHostTypes_1.StatusBarAlignment.Left, Number.MIN_VALUE);
         }
         StatusBarMessage.prototype.dispose = function () {
             this._messages.length = 0;
@@ -17387,8 +16954,8 @@ define(__m[95/*vs/workbench/api/node/extHostStatusBar*/], __M([0/*require*/,1/*e
             this._proxy = threadService.get(extHost_protocol_1.MainContext.MainThreadStatusBar);
             this._statusMessage = new StatusBarMessage(this);
         }
-        ExtHostStatusBar.prototype.createStatusBarEntry = function (alignment, priority) {
-            return new ExtHostStatusBarEntry(this._proxy, alignment, priority);
+        ExtHostStatusBar.prototype.createStatusBarEntry = function (extensionId, alignment, priority) {
+            return new ExtHostStatusBarEntry(this._proxy, extensionId, alignment, priority);
         };
         ExtHostStatusBar.prototype.setStatusBarMessage = function (text, timeoutOrThenable) {
             var d = this._statusMessage.setMessage(text);
@@ -17409,7 +16976,7 @@ define(__m[95/*vs/workbench/api/node/extHostStatusBar*/], __M([0/*require*/,1/*e
     exports.ExtHostStatusBar = ExtHostStatusBar;
 });
 
-define(__m[96/*vs/workbench/api/node/extHostStorage*/], __M([0/*require*/,1/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
+define(__m[97/*vs/workbench/api/node/extHostStorage*/], __M([1/*require*/,0/*exports*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -17430,260 +16997,7 @@ define(__m[96/*vs/workbench/api/node/extHostStorage*/], __M([0/*require*/,1/*exp
     exports.ExtHostStorage = ExtHostStorage;
 });
 
-
-
-
-
-
-define(__m[54/*vs/workbench/api/node/extHostExtensionService*/], __M([0/*require*/,1/*exports*/,23/*vs/base/common/lifecycle*/,9/*vs/base/common/paths*/,15/*vs/base/common/severity*/,3/*vs/base/common/winjs.base*/,69/*vs/platform/extensions/common/abstractExtensionService*/,96/*vs/workbench/api/node/extHostStorage*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, lifecycle_1, paths, severity_1, winjs_base_1, abstractExtensionService_1, extHostStorage_1, extHost_protocol_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var hasOwnProperty = Object.hasOwnProperty;
-    var ExtHostExtension = (function (_super) {
-        __extends(ExtHostExtension, _super);
-        function ExtHostExtension(activationFailed, module, exports, subscriptions) {
-            _super.call(this, activationFailed);
-            this.module = module;
-            this.exports = exports;
-            this.subscriptions = subscriptions;
-        }
-        return ExtHostExtension;
-    }(abstractExtensionService_1.ActivatedExtension));
-    exports.ExtHostExtension = ExtHostExtension;
-    var ExtHostEmptyExtension = (function (_super) {
-        __extends(ExtHostEmptyExtension, _super);
-        function ExtHostEmptyExtension() {
-            _super.call(this, false, { activate: undefined, deactivate: undefined }, undefined, []);
-        }
-        return ExtHostEmptyExtension;
-    }(ExtHostExtension));
-    exports.ExtHostEmptyExtension = ExtHostEmptyExtension;
-    var ExtensionMemento = (function () {
-        function ExtensionMemento(id, global, storage) {
-            var _this = this;
-            this._id = id;
-            this._shared = global;
-            this._storage = storage;
-            this._init = this._storage.getValue(this._shared, this._id, Object.create(null)).then(function (value) {
-                _this._value = value;
-                return _this;
-            });
-        }
-        Object.defineProperty(ExtensionMemento.prototype, "whenReady", {
-            get: function () {
-                return this._init;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ExtensionMemento.prototype.get = function (key, defaultValue) {
-            var value = this._value[key];
-            if (typeof value === 'undefined') {
-                value = defaultValue;
-            }
-            return value;
-        };
-        ExtensionMemento.prototype.update = function (key, value) {
-            this._value[key] = value;
-            return this._storage
-                .setValue(this._shared, this._id, this._value)
-                .then(function () { return true; });
-        };
-        return ExtensionMemento;
-    }());
-    var ExtHostExtensionService = (function (_super) {
-        __extends(ExtHostExtensionService, _super);
-        /**
-         * This class is constructed manually because it is a service, so it doesn't use any ctor injection
-         */
-        function ExtHostExtensionService(availableExtensions, threadService, telemetryService, args) {
-            _super.call(this, true);
-            this._registry.registerExtensions(availableExtensions);
-            this._threadService = threadService;
-            this._storage = new extHostStorage_1.ExtHostStorage(threadService);
-            this._proxy = this._threadService.get(extHost_protocol_1.MainContext.MainProcessExtensionService);
-            this._telemetryService = telemetryService;
-            this._workspaceStoragePath = args.workspaceStoragePath;
-        }
-        ExtHostExtensionService.prototype.getAllExtensionDescriptions = function () {
-            return this._registry.getAllExtensionDescriptions();
-        };
-        ExtHostExtensionService.prototype.getExtensionDescription = function (extensionId) {
-            return this._registry.getExtensionDescription(extensionId);
-        };
-        ExtHostExtensionService.prototype.$localShowMessage = function (severity, msg) {
-            switch (severity) {
-                case severity_1.default.Error:
-                    console.error(msg);
-                    break;
-                case severity_1.default.Warning:
-                    console.warn(msg);
-                    break;
-                default:
-                    console.log(msg);
-            }
-        };
-        ExtHostExtensionService.prototype.get = function (extensionId) {
-            if (!hasOwnProperty.call(this._activatedExtensions, extensionId)) {
-                throw new Error('Extension `' + extensionId + '` is not known or not activated');
-            }
-            return this._activatedExtensions[extensionId].exports;
-        };
-        ExtHostExtensionService.prototype.deactivate = function (extensionId) {
-            var result = winjs_base_1.TPromise.as(void 0);
-            var extension = this._activatedExtensions[extensionId];
-            if (!extension) {
-                return result;
-            }
-            // call deactivate if available
-            try {
-                if (typeof extension.module.deactivate === 'function') {
-                    result = winjs_base_1.TPromise.wrap(extension.module.deactivate()).then(null, function (err) {
-                        // TODO: Do something with err if this is not the shutdown case
-                        return winjs_base_1.TPromise.as(void 0);
-                    });
-                }
-            }
-            catch (err) {
-            }
-            // clean up subscriptions
-            try {
-                lifecycle_1.dispose(extension.subscriptions);
-            }
-            catch (err) {
-            }
-            return result;
-        };
-        // -- overwriting AbstractExtensionService
-        ExtHostExtensionService.prototype._showMessage = function (severity, msg) {
-            this._proxy.$localShowMessage(severity, msg);
-            this.$localShowMessage(severity, msg);
-        };
-        ExtHostExtensionService.prototype._createFailedExtension = function () {
-            return new ExtHostExtension(true, { activate: undefined, deactivate: undefined }, undefined, []);
-        };
-        ExtHostExtensionService.prototype._loadExtensionContext = function (extensionDescription) {
-            var globalState = new ExtensionMemento(extensionDescription.id, true, this._storage);
-            var workspaceState = new ExtensionMemento(extensionDescription.id, false, this._storage);
-            var storagePath = this._workspaceStoragePath ? paths.normalize(paths.join(this._workspaceStoragePath, extensionDescription.id)) : undefined;
-            return winjs_base_1.TPromise.join([globalState.whenReady, workspaceState.whenReady]).then(function () {
-                return Object.freeze({
-                    globalState: globalState,
-                    workspaceState: workspaceState,
-                    subscriptions: [],
-                    get extensionPath() { return extensionDescription.extensionFolderPath; },
-                    storagePath: storagePath,
-                    asAbsolutePath: function (relativePath) { return paths.normalize(paths.join(extensionDescription.extensionFolderPath, relativePath), true); }
-                });
-            });
-        };
-        ExtHostExtensionService.prototype._actualActivateExtension = function (extensionDescription) {
-            var _this = this;
-            return this._doActualActivateExtension(extensionDescription).then(function (activatedExtension) {
-                _this._proxy.$onExtensionActivated(extensionDescription.id);
-                return activatedExtension;
-            }, function (err) {
-                _this._proxy.$onExtensionActivationFailed(extensionDescription.id);
-                throw err;
-            });
-        };
-        ExtHostExtensionService.prototype._doActualActivateExtension = function (extensionDescription) {
-            var _this = this;
-            var event = getTelemetryActivationEvent(extensionDescription);
-            this._telemetryService.publicLog('activatePlugin', event);
-            if (!extensionDescription.main) {
-                // Treat the extension as being empty => NOT AN ERROR CASE
-                return winjs_base_1.TPromise.as(new ExtHostEmptyExtension());
-            }
-            return loadCommonJSModule(extensionDescription.main).then(function (extensionModule) {
-                return _this._loadExtensionContext(extensionDescription).then(function (context) {
-                    return ExtHostExtensionService._callActivate(extensionModule, context);
-                });
-            });
-        };
-        ExtHostExtensionService._callActivate = function (extensionModule, context) {
-            // Make sure the extension's surface is not undefined
-            extensionModule = extensionModule || {
-                activate: undefined,
-                deactivate: undefined
-            };
-            return this._callActivateOptional(extensionModule, context).then(function (extensionExports) {
-                return new ExtHostExtension(false, extensionModule, extensionExports, context.subscriptions);
-            });
-        };
-        ExtHostExtensionService._callActivateOptional = function (extensionModule, context) {
-            if (typeof extensionModule.activate === 'function') {
-                try {
-                    return winjs_base_1.TPromise.as(extensionModule.activate.apply(global, [context]));
-                }
-                catch (err) {
-                    return winjs_base_1.TPromise.wrapError(err);
-                }
-            }
-            else {
-                // No activate found => the module is the extension's exports
-                return winjs_base_1.TPromise.as(extensionModule);
-            }
-        };
-        // -- called by main thread
-        ExtHostExtensionService.prototype.$activateExtension = function (extensionDescription) {
-            return this._activateExtension(extensionDescription);
-        };
-        return ExtHostExtensionService;
-    }(abstractExtensionService_1.AbstractExtensionService));
-    exports.ExtHostExtensionService = ExtHostExtensionService;
-    function loadCommonJSModule(modulePath) {
-        var r = null;
-        try {
-            r = require.__$__nodeRequire(modulePath);
-        }
-        catch (e) {
-            return winjs_base_1.TPromise.wrapError(e);
-        }
-        return winjs_base_1.TPromise.as(r);
-    }
-    function getTelemetryActivationEvent(extensionDescription) {
-        var event = {
-            id: extensionDescription.id,
-            name: extensionDescription.name,
-            publisherDisplayName: extensionDescription.publisher,
-            activationEvents: extensionDescription.activationEvents ? extensionDescription.activationEvents.join(',') : null,
-            isBuiltin: extensionDescription.isBuiltin
-        };
-        for (var contribution in extensionDescription.contributes) {
-            var contributionDetails = extensionDescription.contributes[contribution];
-            if (!contributionDetails) {
-                continue;
-            }
-            switch (contribution) {
-                case 'debuggers':
-                    var types = contributionDetails.reduce(function (p, c) { return p ? p + ',' + c['type'] : c['type']; }, '');
-                    event['contribution.debuggers'] = types;
-                    break;
-                case 'grammars':
-                    var grammers = contributionDetails.reduce(function (p, c) { return p ? p + ',' + c['language'] : c['language']; }, '');
-                    event['contribution.grammars'] = grammers;
-                    break;
-                case 'languages':
-                    var languages = contributionDetails.reduce(function (p, c) { return p ? p + ',' + c['id'] : c['id']; }, '');
-                    event['contribution.languages'] = languages;
-                    break;
-                case 'tmSnippets':
-                    var tmSnippets = contributionDetails.reduce(function (p, c) { return p ? p + ',' + c['languageId'] : c['languageId']; }, '');
-                    event['contribution.tmSnippets'] = tmSnippets;
-                    break;
-                default:
-                    event[("contribution." + contribution)] = true;
-            }
-        }
-        return event;
-    }
-});
-
-define(__m[38/*vs/workbench/api/node/extHostTelemetry*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/,3/*vs/base/common/winjs.base*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, errors_1, winjs_base_1, extHost_protocol_1) {
+define(__m[98/*vs/workbench/api/node/extHostTelemetry*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/errors*/,3/*vs/base/common/winjs.base*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, errors_1, winjs_base_1, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -17724,7 +17038,7 @@ define(__m[38/*vs/workbench/api/node/extHostTelemetry*/], __M([0/*require*/,1/*e
     exports.RemoteTelemetryService = RemoteTelemetryService;
 });
 
-define(__m[37/*vs/workbench/api/node/extHostTerminalService*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/winjs.base*/,7/*vs/base/common/event*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, winjs_base_1, event_1, extHost_protocol_1) {
+define(__m[51/*vs/workbench/api/node/extHostTerminalService*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/winjs.base*/,6/*vs/base/common/event*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, winjs_base_1, event_1, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -17863,7 +17177,101 @@ define(__m[37/*vs/workbench/api/node/extHostTerminalService*/], __M([0/*require*
     }());
 });
 
-define(__m[31/*vs/workbench/api/node/extHostWorkspace*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/paths*/,12/*vs/workbench/api/node/extHostTypeConverters*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, paths_1, extHostTypeConverters_1, extHost_protocol_1) {
+
+
+
+
+
+define(__m[36/*vs/workbench/api/node/extHostTreeExplorers*/], __M([1/*require*/,0/*exports*/,56/*vs/nls!vs/workbench/api/node/extHostTreeExplorers*/,31/*vs/base/common/idGenerator*/,3/*vs/base/common/winjs.base*/,5/*vs/workbench/api/node/extHostTypes*/,2/*vs/workbench/api/node/extHost.protocol*/,17/*vs/base/common/async*/]), function (require, exports, nls_1, idGenerator_1, winjs_base_1, extHostTypes_1, extHost_protocol_1, async_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var InternalTreeExplorerNodeImpl = (function () {
+        function InternalTreeExplorerNodeImpl(node, provider) {
+            this.id = idGenerator_1.defaultGenerator.nextId();
+            this.label = provider.getLabel ? provider.getLabel(node) : node.toString();
+            this.hasChildren = provider.getHasChildren ? provider.getHasChildren(node) : true;
+            this.clickCommand = provider.getClickCommand ? provider.getClickCommand(node) : null;
+        }
+        return InternalTreeExplorerNodeImpl;
+    }());
+    var ExtHostTreeExplorers = (function (_super) {
+        __extends(ExtHostTreeExplorers, _super);
+        function ExtHostTreeExplorers(threadService, commands) {
+            _super.call(this);
+            this.commands = commands;
+            this._proxy = threadService.get(extHost_protocol_1.MainContext.MainThreadExplorers);
+            this._extNodeProviders = Object.create(null);
+            this._extNodeMaps = Object.create(null);
+        }
+        ExtHostTreeExplorers.prototype.registerTreeExplorerNodeProvider = function (providerId, provider) {
+            var _this = this;
+            this._proxy.$registerTreeExplorerNodeProvider(providerId);
+            this._extNodeProviders[providerId] = provider;
+            return new extHostTypes_1.Disposable(function () {
+                delete _this._extNodeProviders[providerId];
+                delete _this._extNodeProviders[providerId];
+            });
+        };
+        ExtHostTreeExplorers.prototype.$provideRootNode = function (providerId) {
+            var _this = this;
+            var provider = this._extNodeProviders[providerId];
+            if (!provider) {
+                var errMessage = nls_1.localize(0, null, providerId);
+                return winjs_base_1.TPromise.wrapError(errMessage);
+            }
+            return async_1.asWinJsPromise(function () { return provider.provideRootNode(); }).then(function (extRootNode) {
+                var extNodeMap = Object.create(null);
+                var internalRootNode = new InternalTreeExplorerNodeImpl(extRootNode, provider);
+                extNodeMap[internalRootNode.id] = extRootNode;
+                _this._extNodeMaps[providerId] = extNodeMap;
+                return internalRootNode;
+            }, function (err) {
+                var errMessage = nls_1.localize(1, null, providerId);
+                return winjs_base_1.TPromise.wrapError(errMessage);
+            });
+        };
+        ExtHostTreeExplorers.prototype.$resolveChildren = function (providerId, mainThreadNode) {
+            var provider = this._extNodeProviders[providerId];
+            if (!provider) {
+                var errMessage = nls_1.localize(2, null, providerId);
+                return winjs_base_1.TPromise.wrapError(errMessage);
+            }
+            var extNodeMap = this._extNodeMaps[providerId];
+            var extNode = extNodeMap[mainThreadNode.id];
+            return async_1.asWinJsPromise(function () { return provider.resolveChildren(extNode); }).then(function (children) {
+                return children.map(function (extChild) {
+                    var internalChild = new InternalTreeExplorerNodeImpl(extChild, provider);
+                    extNodeMap[internalChild.id] = extChild;
+                    return internalChild;
+                });
+            }, function (err) {
+                var errMessage = nls_1.localize(3, null, providerId);
+                return winjs_base_1.TPromise.wrapError(errMessage);
+            });
+        };
+        // Convert the command on the ExtHost side so we can pass the original externalNode to the registered handler
+        ExtHostTreeExplorers.prototype.$getInternalCommand = function (providerId, mainThreadNode) {
+            var commandConverter = this.commands.converter;
+            if (mainThreadNode.clickCommand) {
+                var extNode = this._extNodeMaps[providerId][mainThreadNode.id];
+                var internalCommand = commandConverter.toInternal({
+                    title: '',
+                    command: mainThreadNode.clickCommand,
+                    arguments: [extNode]
+                });
+                return winjs_base_1.TPromise.wrap(internalCommand);
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        return ExtHostTreeExplorers;
+    }(extHost_protocol_1.ExtHostTreeExplorersShape));
+    exports.ExtHostTreeExplorers = ExtHostTreeExplorers;
+});
+
+define(__m[35/*vs/workbench/api/node/extHostWorkspace*/], __M([1/*require*/,0/*exports*/,10/*vs/base/common/paths*/,14/*vs/workbench/api/node/extHostTypeConverters*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, paths_1, extHostTypeConverters_1, extHost_protocol_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -17925,16 +17333,26 @@ define(__m[31/*vs/workbench/api/node/extHostWorkspace*/], __M([0/*require*/,1/*e
     exports.ExtHostWorkspace = ExtHostWorkspace;
 });
 
-define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/event*/,24/*vs/base/common/map*/,25/*vs/editor/common/modes/languageSelector*/,11/*vs/base/common/platform*/,4/*vs/base/common/errors*/,70/*vs/platform/product*/,65/*vs/platform/package*/,88/*vs/workbench/api/node/extHostFileSystemEventService*/,86/*vs/workbench/api/node/extHostDocuments*/,85/*vs/workbench/api/node/extHostDocumentSaveParticipant*/,83/*vs/workbench/api/node/extHostConfiguration*/,84/*vs/workbench/api/node/extHostDiagnostics*/,31/*vs/workbench/api/node/extHostWorkspace*/,94/*vs/workbench/api/node/extHostQuickOpen*/,89/*vs/workbench/api/node/extHostHeapService*/,95/*vs/workbench/api/node/extHostStatusBar*/,82/*vs/workbench/api/node/extHostCommands*/,93/*vs/workbench/api/node/extHostOutputService*/,37/*vs/workbench/api/node/extHostTerminalService*/,92/*vs/workbench/api/node/extHostMessageService*/,87/*vs/workbench/api/node/extHostEditors*/,91/*vs/workbench/api/node/extHostLanguages*/,90/*vs/workbench/api/node/extHostLanguageFeatures*/,77/*vs/workbench/api/node/extHostApiCommands*/,5/*vs/workbench/api/node/extHostTypes*/,43/*vs/editor/common/modes*/,6/*vs/base/common/uri*/,15/*vs/base/common/severity*/,62/*vs/editor/common/editorCommon*/,22/*vs/base/common/cancellation*/,9/*vs/base/common/paths*/,21/*fs*/,2/*vs/workbench/api/node/extHost.protocol*/]), function (require, exports, event_1, map_1, languageSelector_1, Platform, errors, product_1, package_1, extHostFileSystemEventService_1, extHostDocuments_1, extHostDocumentSaveParticipant_1, extHostConfiguration_1, extHostDiagnostics_1, extHostWorkspace_1, extHostQuickOpen_1, extHostHeapService_1, extHostStatusBar_1, extHostCommands_1, extHostOutputService_1, extHostTerminalService_1, extHostMessageService_1, extHostEditors_1, extHostLanguages_1, extHostLanguageFeatures_1, extHostApiCommands_1, extHostTypes, Modes, uri_1, severity_1, EditorCommon, cancellation_1, paths, fs_1, extHost_protocol_1) {
+define(__m[67/*vs/workbench/api/node/extHost.api.impl*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/event*/,24/*vs/base/common/map*/,40/*vs/editor/common/modes/languageSelector*/,9/*vs/base/common/platform*/,4/*vs/base/common/errors*/,71/*vs/platform/product*/,64/*vs/platform/package*/,89/*vs/workbench/api/node/extHostFileSystemEventService*/,87/*vs/workbench/api/node/extHostDocuments*/,86/*vs/workbench/api/node/extHostDocumentSaveParticipant*/,84/*vs/workbench/api/node/extHostConfiguration*/,85/*vs/workbench/api/node/extHostDiagnostics*/,36/*vs/workbench/api/node/extHostTreeExplorers*/,35/*vs/workbench/api/node/extHostWorkspace*/,95/*vs/workbench/api/node/extHostQuickOpen*/,90/*vs/workbench/api/node/extHostHeapService*/,96/*vs/workbench/api/node/extHostStatusBar*/,83/*vs/workbench/api/node/extHostCommands*/,94/*vs/workbench/api/node/extHostOutputService*/,51/*vs/workbench/api/node/extHostTerminalService*/,93/*vs/workbench/api/node/extHostMessageService*/,88/*vs/workbench/api/node/extHostEditors*/,92/*vs/workbench/api/node/extHostLanguages*/,91/*vs/workbench/api/node/extHostLanguageFeatures*/,78/*vs/workbench/api/node/extHostApiCommands*/,5/*vs/workbench/api/node/extHostTypes*/,7/*vs/base/common/uri*/,16/*vs/base/common/severity*/,61/*vs/editor/common/editorCommon*/,3/*vs/base/common/winjs.base*/,22/*vs/base/common/cancellation*/,10/*vs/base/common/paths*/,27/*fs*/,2/*vs/workbench/api/node/extHost.protocol*/,39/*vs/editor/common/modes/languageConfiguration*/]), function (require, exports, event_1, map_1, languageSelector_1, Platform, errors, product_1, package_1, extHostFileSystemEventService_1, extHostDocuments_1, extHostDocumentSaveParticipant_1, extHostConfiguration_1, extHostDiagnostics_1, extHostTreeExplorers_1, extHostWorkspace_1, extHostQuickOpen_1, extHostHeapService_1, extHostStatusBar_1, extHostCommands_1, extHostOutputService_1, extHostTerminalService_1, extHostMessageService_1, extHostEditors_1, extHostLanguages_1, extHostLanguageFeatures_1, extHostApiCommands_1, extHostTypes, uri_1, severity_1, EditorCommon, winjs_base_1, cancellation_1, paths, fs_1, extHost_protocol_1, languageConfiguration) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    function proposedApiFunction(extension, fn) {
+        if (extension.enableProposedApi) {
+            return fn;
+        }
+        else {
+            return (function () {
+                throw new Error(extension.id + " cannot access proposed api");
+            });
+        }
+    }
     /**
      * This method instantiates and returns the extension API surface
      */
-    function createApiFactory(initDataConfiguration, initTelemetryInfo, threadService, extensionService, contextService) {
+    function createApiFactory(initData, threadService, extensionService, contextService) {
         // Addressable instances
         var col = new extHost_protocol_1.InstanceCollection();
         var extHostHeapService = col.define(extHost_protocol_1.ExtHostContext.ExtHostHeapService).set(new extHostHeapService_1.ExtHostHeapService());
@@ -17942,7 +17360,8 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
         var extHostDocumentSaveParticipant = col.define(extHost_protocol_1.ExtHostContext.ExtHostDocumentSaveParticipant).set(new extHostDocumentSaveParticipant_1.ExtHostDocumentSaveParticipant(extHostDocuments, threadService.get(extHost_protocol_1.MainContext.MainThreadWorkspace)));
         var extHostEditors = col.define(extHost_protocol_1.ExtHostContext.ExtHostEditors).set(new extHostEditors_1.ExtHostEditors(threadService, extHostDocuments));
         var extHostCommands = col.define(extHost_protocol_1.ExtHostContext.ExtHostCommands).set(new extHostCommands_1.ExtHostCommands(threadService, extHostEditors, extHostHeapService));
-        var extHostConfiguration = col.define(extHost_protocol_1.ExtHostContext.ExtHostConfiguration).set(new extHostConfiguration_1.ExtHostConfiguration(threadService.get(extHost_protocol_1.MainContext.MainThreadConfiguration), initDataConfiguration));
+        var extHostExplorers = col.define(extHost_protocol_1.ExtHostContext.ExtHostExplorers).set(new extHostTreeExplorers_1.ExtHostTreeExplorers(threadService, extHostCommands));
+        var extHostConfiguration = col.define(extHost_protocol_1.ExtHostContext.ExtHostConfiguration).set(new extHostConfiguration_1.ExtHostConfiguration(threadService.get(extHost_protocol_1.MainContext.MainThreadConfiguration), initData.configuration));
         var extHostDiagnostics = col.define(extHost_protocol_1.ExtHostContext.ExtHostDiagnostics).set(new extHostDiagnostics_1.ExtHostDiagnostics(threadService));
         var languageFeatures = col.define(extHost_protocol_1.ExtHostContext.ExtHostLanguageFeatures).set(new extHostLanguageFeatures_1.ExtHostLanguageFeatures(threadService, extHostDocuments, extHostCommands, extHostHeapService, extHostDiagnostics));
         var extHostFileSystemEvent = col.define(extHost_protocol_1.ExtHostContext.ExtHostFileSystemEventService).set(new extHostFileSystemEventService_1.ExtHostFileSystemEventService());
@@ -17957,14 +17376,18 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
         var workspacePath = contextService.getWorkspace() ? contextService.getWorkspace().resource.fsPath : undefined;
         var extHostWorkspace = new extHostWorkspace_1.ExtHostWorkspace(threadService, workspacePath);
         var extHostLanguages = new extHostLanguages_1.ExtHostLanguages(threadService);
-        // Error forwarding
-        var mainThreadErrors = threadService.get(extHost_protocol_1.MainContext.MainThreadErrors);
-        errors.setUnexpectedErrorHandler(function (err) {
-            mainThreadErrors.onUnexpectedExtHostError(errors.transformErrorForSerialization(err));
-        });
         // Register API-ish commands
         extHostApiCommands_1.ExtHostApiCommands.register(extHostCommands);
         return function (extension) {
+            if (extension.enableProposedApi) {
+                if (!initData.environment.enableProposedApi) {
+                    extension.enableProposedApi = false;
+                    console.warn('PROPOSED API is only available when developing an extension');
+                }
+                else {
+                    console.warn(extension.name + " (" + extension.id + ") uses PROPOSED API which is subject to change and removal without notice");
+                }
+            }
             // namespace: commands
             var commands = {
                 registerCommand: function (id, command, thisArgs) {
@@ -18007,8 +17430,8 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
             };
             // namespace: env
             var env = Object.freeze({
-                get machineId() { return initTelemetryInfo.machineId; },
-                get sessionId() { return initTelemetryInfo.sessionId; },
+                get machineId() { return initData.telemetryInfo.machineId; },
+                get sessionId() { return initData.telemetryInfo.sessionId; },
                 get language() { return Platform.language; },
                 get appName() { return product_1.default.nameLong; }
             });
@@ -18110,7 +17533,9 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
                 createTextEditorDecorationType: function (options) {
                     return extHostEditors.createTextEditorDecorationType(options);
                 },
-                onDidChangeActiveTextEditor: extHostEditors.onDidChangeActiveTextEditor.bind(extHostEditors),
+                onDidChangeActiveTextEditor: function (listener, thisArg, disposables) {
+                    return extHostEditors.onDidChangeActiveTextEditor(listener, thisArg, disposables);
+                },
                 onDidChangeVisibleTextEditors: function (listener, thisArg, disposables) {
                     return extHostEditors.onDidChangeVisibleTextEditors(listener, thisArg, disposables);
                 },
@@ -18123,7 +17548,9 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
                 onDidChangeTextEditorViewColumn: function (listener, thisArg, disposables) {
                     return extHostEditors.onDidChangeTextEditorViewColumn(listener, thisArg, disposables);
                 },
-                onDidCloseTerminal: extHostTerminalService.onDidCloseTerminal.bind(extHostTerminalService),
+                onDidCloseTerminal: function (listener, thisArg, disposables) {
+                    return extHostTerminalService.onDidCloseTerminal(listener, thisArg, disposables);
+                },
                 showInformationMessage: function (message) {
                     var items = [];
                     for (var _i = 1; _i < arguments.length; _i++) {
@@ -18152,7 +17579,7 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
                     return extHostQuickOpen.showInput(options, token);
                 },
                 createStatusBarItem: function (position, priority) {
-                    return extHostStatusBar.createStatusBarEntry(position, priority);
+                    return extHostStatusBar.createStatusBarEntry(extension.id, position, priority);
                 },
                 setStatusBarMessage: function (text, timeoutOrThenable) {
                     return extHostStatusBar.setStatusBarMessage(text, timeoutOrThenable);
@@ -18162,7 +17589,14 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
                 },
                 createTerminal: function (name, shellPath, shellArgs) {
                     return extHostTerminalService.createTerminal(name, shellPath, shellArgs);
-                }
+                },
+                // proposed API
+                sampleFunction: proposedApiFunction(extension, function () {
+                    return extHostMessageService.showMessage(severity_1.default.Info, 'Hello Proposed Api!', []);
+                }),
+                registerTreeExplorerNodeProvider: proposedApiFunction(extension, function (providerId, provider) {
+                    return extHostExplorers.registerTreeExplorerNodeProvider(providerId, provider);
+                }),
             };
             // namespace: workspace
             var workspace = {
@@ -18244,41 +17678,42 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
                 window: window,
                 workspace: workspace,
                 // types
-                Uri: uri_1.default,
-                Location: extHostTypes.Location,
-                Diagnostic: extHostTypes.Diagnostic,
-                DiagnosticSeverity: extHostTypes.DiagnosticSeverity,
-                EventEmitter: event_1.Emitter,
-                Disposable: extHostTypes.Disposable,
-                TextEdit: extHostTypes.TextEdit,
-                WorkspaceEdit: extHostTypes.WorkspaceEdit,
-                Position: extHostTypes.Position,
-                Range: extHostTypes.Range,
-                Selection: extHostTypes.Selection,
                 CancellationTokenSource: cancellation_1.CancellationTokenSource,
-                Hover: extHostTypes.Hover,
-                SymbolKind: extHostTypes.SymbolKind,
-                SymbolInformation: extHostTypes.SymbolInformation,
-                DocumentHighlightKind: extHostTypes.DocumentHighlightKind,
-                DocumentHighlight: extHostTypes.DocumentHighlight,
                 CodeLens: extHostTypes.CodeLens,
-                ParameterInformation: extHostTypes.ParameterInformation,
-                SignatureInformation: extHostTypes.SignatureInformation,
-                SignatureHelp: extHostTypes.SignatureHelp,
                 CompletionItem: extHostTypes.CompletionItem,
                 CompletionItemKind: extHostTypes.CompletionItemKind,
                 CompletionList: extHostTypes.CompletionList,
+                Diagnostic: extHostTypes.Diagnostic,
+                DiagnosticSeverity: extHostTypes.DiagnosticSeverity,
+                Disposable: extHostTypes.Disposable,
+                DocumentHighlight: extHostTypes.DocumentHighlight,
+                DocumentHighlightKind: extHostTypes.DocumentHighlightKind,
                 DocumentLink: extHostTypes.DocumentLink,
-                ViewColumn: extHostTypes.ViewColumn,
-                StatusBarAlignment: extHostTypes.StatusBarAlignment,
-                IndentAction: Modes.IndentAction,
-                OverviewRulerLane: EditorCommon.OverviewRulerLane,
-                TextEditorRevealType: extHostTypes.TextEditorRevealType,
                 EndOfLine: extHostTypes.EndOfLine,
+                EventEmitter: event_1.Emitter,
+                Hover: extHostTypes.Hover,
+                IndentAction: languageConfiguration.IndentAction,
+                Location: extHostTypes.Location,
+                OverviewRulerLane: EditorCommon.OverviewRulerLane,
+                ParameterInformation: extHostTypes.ParameterInformation,
+                Position: extHostTypes.Position,
+                Range: extHostTypes.Range,
+                Selection: extHostTypes.Selection,
+                SignatureHelp: extHostTypes.SignatureHelp,
+                SignatureInformation: extHostTypes.SignatureInformation,
+                SnippetString: extHostTypes.SnippetString,
+                StatusBarAlignment: extHostTypes.StatusBarAlignment,
+                SymbolInformation: extHostTypes.SymbolInformation,
+                SymbolKind: extHostTypes.SymbolKind,
+                TextDocumentSaveReason: extHostTypes.TextDocumentSaveReason,
+                TextEdit: extHostTypes.TextEdit,
                 TextEditorCursorStyle: EditorCommon.TextEditorCursorStyle,
                 TextEditorLineNumbersStyle: extHostTypes.TextEditorLineNumbersStyle,
+                TextEditorRevealType: extHostTypes.TextEditorRevealType,
                 TextEditorSelectionChangeKind: extHostTypes.TextEditorSelectionChangeKind,
-                TextDocumentSaveReason: extHostTypes.TextDocumentSaveReason,
+                Uri: uri_1.default,
+                ViewColumn: extHostTypes.ViewColumn,
+                WorkspaceEdit: extHostTypes.WorkspaceEdit,
             };
         };
     }
@@ -18310,20 +17745,35 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
         };
         return Extension;
     }());
-    function defineAPI(factory, extensionService) {
+    function initializeExtensionApi(extensionService, apiFactory) {
+        return createExtensionPathIndex(extensionService).then(function (trie) { return defineAPI(apiFactory, trie); });
+    }
+    exports.initializeExtensionApi = initializeExtensionApi;
+    function createExtensionPathIndex(extensionService) {
+        // create trie to enable fast 'filename -> extension id' look up
+        var trie = new map_1.TrieMap(map_1.TrieMap.PathSplitter);
+        var extensions = extensionService.getAllExtensionDescriptions().map(function (ext) {
+            if (!ext.main) {
+                return;
+            }
+            return new winjs_base_1.TPromise(function (resolve, reject) {
+                fs_1.realpath(ext.extensionFolderPath, function (err, path) {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        trie.insert(path, ext);
+                        resolve(void 0);
+                    }
+                });
+            });
+        });
+        return winjs_base_1.TPromise.join(extensions).then(function () { return trie; });
+    }
+    function defineAPI(factory, extensionPaths) {
         // each extension is meant to get its own api implementation
         var extApiImpl = Object.create(null);
         var defaultApiImpl;
-        // create trie to enable fast 'filename -> extension id' look up
-        var trie = new map_1.TrieMap(map_1.TrieMap.PathSplitter);
-        var extensions = extensionService.getAllExtensionDescriptions();
-        for (var _i = 0, extensions_1 = extensions; _i < extensions_1.length; _i++) {
-            var ext = extensions_1[_i];
-            if (ext.name) {
-                var path = fs_1.realpathSync(ext.extensionFolderPath);
-                trie.insert(path, ext);
-            }
-        }
         var node_module = require.__$__nodeRequire('module');
         var original = node_module._load;
         node_module._load = function load(request, parent, isMain) {
@@ -18331,7 +17781,7 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
                 return original.apply(this, arguments);
             }
             // get extension id from filename and api for extension
-            var ext = trie.findSubstr(parent.filename);
+            var ext = extensionPaths.findSubstr(parent.filename);
             if (ext) {
                 var apiImpl = extApiImpl[ext.id];
                 if (!apiImpl) {
@@ -18341,19 +17791,339 @@ define(__m[81/*vs/workbench/api/node/extHost.api.impl*/], __M([0/*require*/,1/*e
             }
             // fall back to a default implementation
             if (!defaultApiImpl) {
-                defaultApiImpl = factory(undefined);
+                defaultApiImpl = factory(nullExtensionDescription);
             }
             return defaultApiImpl;
         };
     }
-    exports.defineAPI = defineAPI;
+    var nullExtensionDescription = {
+        id: 'nullExtensionDescription',
+        name: 'Null Extension Description',
+        publisher: 'vscode',
+        activationEvents: undefined,
+        contributes: undefined,
+        enableProposedApi: false,
+        engines: undefined,
+        extensionDependencies: undefined,
+        extensionFolderPath: undefined,
+        isBuiltin: false,
+        main: undefined,
+        version: undefined
+    };
+});
+
+
+
+
+
+
+define(__m[65/*vs/workbench/api/node/extHostExtensionService*/], __M([1/*require*/,0/*exports*/,23/*vs/base/common/lifecycle*/,10/*vs/base/common/paths*/,30/*vs/base/node/pfs*/,16/*vs/base/common/severity*/,3/*vs/base/common/winjs.base*/,70/*vs/platform/extensions/common/abstractExtensionService*/,97/*vs/workbench/api/node/extHostStorage*/,67/*vs/workbench/api/node/extHost.api.impl*/,2/*vs/workbench/api/node/extHost.protocol*/,104/*crypto*/]), function (require, exports, lifecycle_1, paths, pfs_1, severity_1, winjs_base_1, abstractExtensionService_1, extHostStorage_1, extHost_api_impl_1, extHost_protocol_1, crypto_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var hasOwnProperty = Object.hasOwnProperty;
+    var ExtHostExtension = (function (_super) {
+        __extends(ExtHostExtension, _super);
+        function ExtHostExtension(activationFailed, module, exports, subscriptions) {
+            _super.call(this, activationFailed);
+            this.module = module;
+            this.exports = exports;
+            this.subscriptions = subscriptions;
+        }
+        return ExtHostExtension;
+    }(abstractExtensionService_1.ActivatedExtension));
+    exports.ExtHostExtension = ExtHostExtension;
+    var ExtHostEmptyExtension = (function (_super) {
+        __extends(ExtHostEmptyExtension, _super);
+        function ExtHostEmptyExtension() {
+            _super.call(this, false, { activate: undefined, deactivate: undefined }, undefined, []);
+        }
+        return ExtHostEmptyExtension;
+    }(ExtHostExtension));
+    exports.ExtHostEmptyExtension = ExtHostEmptyExtension;
+    var ExtensionMemento = (function () {
+        function ExtensionMemento(id, global, storage) {
+            var _this = this;
+            this._id = id;
+            this._shared = global;
+            this._storage = storage;
+            this._init = this._storage.getValue(this._shared, this._id, Object.create(null)).then(function (value) {
+                _this._value = value;
+                return _this;
+            });
+        }
+        Object.defineProperty(ExtensionMemento.prototype, "whenReady", {
+            get: function () {
+                return this._init;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ExtensionMemento.prototype.get = function (key, defaultValue) {
+            var value = this._value[key];
+            if (typeof value === 'undefined') {
+                value = defaultValue;
+            }
+            return value;
+        };
+        ExtensionMemento.prototype.update = function (key, value) {
+            this._value[key] = value;
+            return this._storage
+                .setValue(this._shared, this._id, this._value)
+                .then(function () { return true; });
+        };
+        return ExtensionMemento;
+    }());
+    var ExtensionStoragePath = (function () {
+        function ExtensionStoragePath(contextService, environment) {
+            var _this = this;
+            this._contextService = contextService;
+            this._environment = environment;
+            this._ready = this._getOrCreateWorkspaceStoragePath().then(function (value) { return _this._value = value; });
+        }
+        Object.defineProperty(ExtensionStoragePath.prototype, "whenReady", {
+            get: function () {
+                return this._ready;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ExtensionStoragePath.prototype.value = function (extension) {
+            if (this._value) {
+                return paths.join(this._value, extension.id);
+            }
+        };
+        ExtensionStoragePath.prototype._getOrCreateWorkspaceStoragePath = function () {
+            var workspace = this._contextService.getWorkspace();
+            if (!workspace) {
+                return winjs_base_1.TPromise.as(undefined);
+            }
+            var storageName = crypto_1.createHash('md5')
+                .update(workspace.resource.fsPath)
+                .update(workspace.uid ? workspace.uid.toString() : '')
+                .digest('hex');
+            var storagePath = paths.join(this._environment.appSettingsHome, 'workspaceStorage', storageName);
+            return pfs_1.dirExists(storagePath).then(function (exists) {
+                if (exists) {
+                    return storagePath;
+                }
+                pfs_1.mkdirp(storagePath).then(function (success) {
+                    return storagePath;
+                }, function (err) {
+                    return undefined;
+                });
+            });
+        };
+        return ExtensionStoragePath;
+    }());
+    var ExtHostExtensionService = (function (_super) {
+        __extends(ExtHostExtensionService, _super);
+        /**
+         * This class is constructed manually because it is a service, so it doesn't use any ctor injection
+         */
+        function ExtHostExtensionService(initData, threadService, telemetryService, contextService) {
+            var _this = this;
+            _super.call(this, false);
+            this._registry.registerExtensions(initData.extensions);
+            this._threadService = threadService;
+            this._storage = new extHostStorage_1.ExtHostStorage(threadService);
+            this._storagePath = new ExtensionStoragePath(contextService, initData.environment);
+            this._proxy = this._threadService.get(extHost_protocol_1.MainContext.MainProcessExtensionService);
+            this._telemetryService = telemetryService;
+            this._contextService = contextService;
+            // initialize API first
+            var apiFactory = extHost_api_impl_1.createApiFactory(initData, threadService, this, this._contextService);
+            extHost_api_impl_1.initializeExtensionApi(this, apiFactory).then(function () { return _this._triggerOnReady(); });
+        }
+        ExtHostExtensionService.prototype.getAllExtensionDescriptions = function () {
+            return this._registry.getAllExtensionDescriptions();
+        };
+        ExtHostExtensionService.prototype.getExtensionDescription = function (extensionId) {
+            return this._registry.getExtensionDescription(extensionId);
+        };
+        ExtHostExtensionService.prototype.$localShowMessage = function (severity, msg) {
+            switch (severity) {
+                case severity_1.default.Error:
+                    console.error(msg);
+                    break;
+                case severity_1.default.Warning:
+                    console.warn(msg);
+                    break;
+                default:
+                    console.log(msg);
+            }
+        };
+        ExtHostExtensionService.prototype.get = function (extensionId) {
+            if (!hasOwnProperty.call(this._activatedExtensions, extensionId)) {
+                throw new Error('Extension `' + extensionId + '` is not known or not activated');
+            }
+            return this._activatedExtensions[extensionId].exports;
+        };
+        ExtHostExtensionService.prototype.deactivate = function (extensionId) {
+            var result = winjs_base_1.TPromise.as(void 0);
+            var extension = this._activatedExtensions[extensionId];
+            if (!extension) {
+                return result;
+            }
+            // call deactivate if available
+            try {
+                if (typeof extension.module.deactivate === 'function') {
+                    result = winjs_base_1.TPromise.wrap(extension.module.deactivate()).then(null, function (err) {
+                        // TODO: Do something with err if this is not the shutdown case
+                        return winjs_base_1.TPromise.as(void 0);
+                    });
+                }
+            }
+            catch (err) {
+            }
+            // clean up subscriptions
+            try {
+                lifecycle_1.dispose(extension.subscriptions);
+            }
+            catch (err) {
+            }
+            return result;
+        };
+        // -- overwriting AbstractExtensionService
+        ExtHostExtensionService.prototype._showMessage = function (severity, msg) {
+            this._proxy.$localShowMessage(severity, msg);
+            this.$localShowMessage(severity, msg);
+        };
+        ExtHostExtensionService.prototype._createFailedExtension = function () {
+            return new ExtHostExtension(true, { activate: undefined, deactivate: undefined }, undefined, []);
+        };
+        ExtHostExtensionService.prototype._loadExtensionContext = function (extensionDescription) {
+            var _this = this;
+            var globalState = new ExtensionMemento(extensionDescription.id, true, this._storage);
+            var workspaceState = new ExtensionMemento(extensionDescription.id, false, this._storage);
+            return winjs_base_1.TPromise.join([
+                globalState.whenReady,
+                workspaceState.whenReady,
+                this._storagePath.whenReady
+            ]).then(function () {
+                return Object.freeze({
+                    globalState: globalState,
+                    workspaceState: workspaceState,
+                    subscriptions: [],
+                    get extensionPath() { return extensionDescription.extensionFolderPath; },
+                    storagePath: _this._storagePath.value(extensionDescription),
+                    asAbsolutePath: function (relativePath) { return paths.normalize(paths.join(extensionDescription.extensionFolderPath, relativePath), true); }
+                });
+            });
+        };
+        ExtHostExtensionService.prototype._actualActivateExtension = function (extensionDescription) {
+            var _this = this;
+            return this._doActualActivateExtension(extensionDescription).then(function (activatedExtension) {
+                _this._proxy.$onExtensionActivated(extensionDescription.id);
+                return activatedExtension;
+            }, function (err) {
+                _this._proxy.$onExtensionActivationFailed(extensionDescription.id);
+                throw err;
+            });
+        };
+        ExtHostExtensionService.prototype._doActualActivateExtension = function (extensionDescription) {
+            var _this = this;
+            var event = getTelemetryActivationEvent(extensionDescription);
+            this._telemetryService.publicLog('activatePlugin', event);
+            if (!extensionDescription.main) {
+                // Treat the extension as being empty => NOT AN ERROR CASE
+                return winjs_base_1.TPromise.as(new ExtHostEmptyExtension());
+            }
+            return this.onReady().then(function () {
+                return winjs_base_1.TPromise.join([
+                    loadCommonJSModule(extensionDescription.main),
+                    _this._loadExtensionContext(extensionDescription)
+                ]).then(function (values) {
+                    return ExtHostExtensionService._callActivate(values[0], values[1]);
+                });
+            });
+        };
+        ExtHostExtensionService._callActivate = function (extensionModule, context) {
+            // Make sure the extension's surface is not undefined
+            extensionModule = extensionModule || {
+                activate: undefined,
+                deactivate: undefined
+            };
+            return this._callActivateOptional(extensionModule, context).then(function (extensionExports) {
+                return new ExtHostExtension(false, extensionModule, extensionExports, context.subscriptions);
+            });
+        };
+        ExtHostExtensionService._callActivateOptional = function (extensionModule, context) {
+            if (typeof extensionModule.activate === 'function') {
+                try {
+                    return winjs_base_1.TPromise.as(extensionModule.activate.apply(global, [context]));
+                }
+                catch (err) {
+                    return winjs_base_1.TPromise.wrapError(err);
+                }
+            }
+            else {
+                // No activate found => the module is the extension's exports
+                return winjs_base_1.TPromise.as(extensionModule);
+            }
+        };
+        // -- called by main thread
+        ExtHostExtensionService.prototype.$activateExtension = function (extensionDescription) {
+            return this._activateExtension(extensionDescription);
+        };
+        return ExtHostExtensionService;
+    }(abstractExtensionService_1.AbstractExtensionService));
+    exports.ExtHostExtensionService = ExtHostExtensionService;
+    function loadCommonJSModule(modulePath) {
+        var r = null;
+        try {
+            r = require.__$__nodeRequire(modulePath);
+        }
+        catch (e) {
+            return winjs_base_1.TPromise.wrapError(e);
+        }
+        return winjs_base_1.TPromise.as(r);
+    }
+    function getTelemetryActivationEvent(extensionDescription) {
+        var event = {
+            id: extensionDescription.id,
+            name: extensionDescription.name,
+            publisherDisplayName: extensionDescription.publisher,
+            activationEvents: extensionDescription.activationEvents ? extensionDescription.activationEvents.join(',') : null,
+            isBuiltin: extensionDescription.isBuiltin
+        };
+        for (var contribution in extensionDescription.contributes) {
+            var contributionDetails = extensionDescription.contributes[contribution];
+            if (!contributionDetails) {
+                continue;
+            }
+            switch (contribution) {
+                case 'debuggers':
+                    var types = contributionDetails.reduce(function (p, c) { return p ? p + ',' + c['type'] : c['type']; }, '');
+                    event['contribution.debuggers'] = types;
+                    break;
+                case 'grammars':
+                    var grammers = contributionDetails.reduce(function (p, c) { return p ? p + ',' + c['language'] : c['language']; }, '');
+                    event['contribution.grammars'] = grammers;
+                    break;
+                case 'languages':
+                    var languages = contributionDetails.reduce(function (p, c) { return p ? p + ',' + c['id'] : c['id']; }, '');
+                    event['contribution.languages'] = languages;
+                    break;
+                case 'tmSnippets':
+                    var tmSnippets = contributionDetails.reduce(function (p, c) { return p ? p + ',' + c['languageId'] : c['languageId']; }, '');
+                    event['contribution.tmSnippets'] = tmSnippets;
+                    break;
+                default:
+                    event[("contribution." + contribution)] = true;
+            }
+        }
+        return event;
+    }
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[66/*vs/workbench/node/extensionHostMain*/], __M([0/*require*/,1/*exports*/,21/*fs*/,103/*crypto*/,58/*vs/nls!vs/workbench/node/extensionHostMain*/,35/*vs/base/node/pfs*/,3/*vs/base/common/winjs.base*/,9/*vs/base/common/paths*/,81/*vs/workbench/api/node/extHost.api.impl*/,54/*vs/workbench/api/node/extHostExtensionService*/,79/*vs/workbench/services/thread/common/extHostThreadService*/,38/*vs/workbench/api/node/extHostTelemetry*/,72/*vs/platform/workspace/common/workspace*/,4/*vs/base/common/errors*/]), function (require, exports, fs, crypto, nls, pfs, winjs_base_1, paths, extHost_api_impl_1, extHostExtensionService_1, extHostThreadService_1, extHostTelemetry_1, workspace_1, errors) {
+define(__m[48/*vs/workbench/node/extensionHostMain*/], __M([1/*require*/,0/*exports*/,57/*vs/nls!vs/workbench/node/extensionHostMain*/,30/*vs/base/node/pfs*/,3/*vs/base/common/winjs.base*/,10/*vs/base/common/paths*/,65/*vs/workbench/api/node/extHostExtensionService*/,80/*vs/workbench/services/thread/common/extHostThreadService*/,98/*vs/workbench/api/node/extHostTelemetry*/,73/*vs/platform/workspace/common/workspace*/,2/*vs/workbench/api/node/extHost.protocol*/,4/*vs/base/common/errors*/]), function (require, exports, nls, pfs, winjs_base_1, paths, extHostExtensionService_1, extHostThreadService_1, extHostTelemetry_1, workspace_1, extHost_protocol_1, errors) {
     'use strict';
     var nativeExit = process.exit.bind(process);
     process.exit = function () {
@@ -18367,65 +18137,21 @@ define(__m[66/*vs/workbench/node/extensionHostMain*/], __M([0/*require*/,1/*expo
     var ExtensionHostMain = (function () {
         function ExtensionHostMain(remoteCom, initData) {
             this._isTerminating = false;
+            // services
             this._environment = initData.environment;
             this._contextService = new workspace_1.WorkspaceContextService(initData.contextService.workspace);
-            var workspaceStoragePath = this._getOrCreateWorkspaceStoragePath();
             var threadService = new extHostThreadService_1.ExtHostThreadService(remoteCom);
             var telemetryService = new extHostTelemetry_1.RemoteTelemetryService('pluginHostTelemetry', threadService);
-            this._extensionService = new extHostExtensionService_1.ExtHostExtensionService(initData.extensions, threadService, telemetryService, { _serviceBrand: 'optionalArgs', workspaceStoragePath: workspaceStoragePath });
-            // Create the ext host API
-            var factory = extHost_api_impl_1.createApiFactory(initData.configuration, initData.telemetryInfo, threadService, this._extensionService, this._contextService);
-            extHost_api_impl_1.defineAPI(factory, this._extensionService);
+            this._extensionService = new extHostExtensionService_1.ExtHostExtensionService(initData, threadService, telemetryService, this._contextService);
+            // Error forwarding
+            var mainThreadErrors = threadService.get(extHost_protocol_1.MainContext.MainThreadErrors);
+            errors.setUnexpectedErrorHandler(function (err) { return mainThreadErrors.onUnexpectedExtHostError(errors.transformErrorForSerialization(err)); });
         }
-        ExtensionHostMain.prototype._getOrCreateWorkspaceStoragePath = function () {
-            var workspaceStoragePath;
-            var workspace = this._contextService.getWorkspace();
-            function rmkDir(directory) {
-                try {
-                    fs.mkdirSync(directory);
-                    return true;
-                }
-                catch (err) {
-                    if (err.code === 'ENOENT') {
-                        if (rmkDir(paths.dirname(directory))) {
-                            fs.mkdirSync(directory);
-                            return true;
-                        }
-                    }
-                    else {
-                        return fs.statSync(directory).isDirectory();
-                    }
-                }
-            }
-            if (workspace) {
-                var hash = crypto.createHash('md5');
-                hash.update(workspace.resource.fsPath);
-                if (workspace.uid) {
-                    hash.update(workspace.uid.toString());
-                }
-                workspaceStoragePath = paths.join(this._environment.appSettingsHome, 'workspaceStorage', hash.digest('hex'));
-                if (!fs.existsSync(workspaceStoragePath)) {
-                    try {
-                        if (rmkDir(workspaceStoragePath)) {
-                            fs.writeFileSync(paths.join(workspaceStoragePath, 'meta.json'), JSON.stringify({
-                                workspacePath: workspace.resource.fsPath,
-                                uid: workspace.uid ? workspace.uid : null
-                            }, null, 4));
-                        }
-                        else {
-                            workspaceStoragePath = undefined;
-                        }
-                    }
-                    catch (err) {
-                        workspaceStoragePath = undefined;
-                    }
-                }
-            }
-            return workspaceStoragePath;
-        };
         ExtensionHostMain.prototype.start = function () {
             var _this = this;
-            return this.handleEagerExtensions().then(function () { return _this.handleExtensionTests(); });
+            return this._extensionService.onReady()
+                .then(function () { return _this.handleEagerExtensions(); })
+                .then(function () { return _this.handleExtensionTests(); });
         };
         ExtensionHostMain.prototype.terminate = function () {
             var _this = this;
@@ -18540,7 +18266,7 @@ define(__m[66/*vs/workbench/node/extensionHostMain*/], __M([0/*require*/,1/*expo
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[104/*vs/workbench/node/extensionHostProcess*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/,3/*vs/base/common/winjs.base*/,66/*vs/workbench/node/extensionHostMain*/,59/*vs/platform/extensions/common/ipcRemoteCom*/,29/*vs/base/common/marshalling*/,53/*vs/base/node/processes*/]), function (require, exports, errors_1, winjs_base_1, extensionHostMain_1, ipcRemoteCom_1, marshalling, processes_1) {
+define(__m[106/*vs/workbench/node/extensionHostProcess*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/errors*/,3/*vs/base/common/winjs.base*/,48/*vs/workbench/node/extensionHostMain*/,58/*vs/platform/extensions/common/ipcRemoteCom*/,32/*vs/base/common/marshalling*/,50/*vs/base/node/processes*/]), function (require, exports, errors_1, winjs_base_1, extensionHostMain_1, ipcRemoteCom_1, marshalling, processes_1) {
     'use strict';
     /**
      * Flag set when in shutdown phase to avoid communicating to the main process.
@@ -18619,6 +18345,10 @@ define(__m[104/*vs/workbench/node/extensionHostProcess*/], __M([0/*require*/,1/*
                     }
                     stats.length = 0;
                 }, 1000);
+                // Send heartbeat
+                setInterval(function () {
+                    queuedSender.send('__$heartbeat');
+                }, 250);
                 // Tell the outside that we are initialized
                 queuedSender.send('initialized');
                 c({ remoteCom: remoteCom, initData: msg });

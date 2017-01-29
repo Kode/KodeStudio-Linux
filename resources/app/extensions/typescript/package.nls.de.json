@@ -1,7 +1,7 @@
 {
 	"typescript.reloadProjects.title": "TypeScript-Projekt erneut laden",
 	"javascript.reloadProjects.title": "JavaScript-Projekt erneut laden",
-	"configuration.typescript": "TypeScript.",
+	"configuration.typescript": "TypeScript",
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "Vervollständigen Sie Funktionen mit deren Parametersignatur.",
 	"typescript.tsdk.desc": "Gibt den Ordnerpfad mit den zu verwendenden tsserver- und lib*.d.ts-Dateien an.",
 	"typescript.tsdk_version.desc": "Gibt die Version von tsserver an. Nur erforderlich, wenn der tsserver nicht mithilfe von npm installiert wird.",

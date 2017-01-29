@@ -214,20 +214,10 @@ function FlashDevelop(projectdir, options) {
     }
     let classpaths = [];
     for (let i = 0; i < options.sources.length; ++i) {
-        if (path.isAbsolute(options.sources[i])) {
-            classpaths.push(options.sources[i]);
-        }
-        else {
-            classpaths.push(path.relative(projectdir, path.resolve(options.from, options.sources[i])));
-        }
+        classpaths.push(path.relative(projectdir, path.resolve(options.from, options.sources[i])));
     }
     for (let i = 0; i < options.libraries.length; ++i) {
-        if (path.isAbsolute(options.libraries[i].libpath)) {
-            classpaths.push(options.libraries[i].libpath);
-        }
-        else {
-            classpaths.push(path.relative(projectdir, path.resolve(options.from, options.libraries[i].libpath)));
-        }
+        classpaths.push(path.relative(projectdir, path.resolve(options.from, options.libraries[i].libpath)));
     }
     let otheroptions = [
         {
@@ -386,4 +376,4 @@ function writeHaxeProject(projectdir, options) {
     IntelliJ(projectdir, options);
 }
 exports.writeHaxeProject = writeHaxeProject;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/HaxeProject.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/HaxeProject.js.map

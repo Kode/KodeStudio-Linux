@@ -20,7 +20,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-// This file is generated from mozilla/RTCRtpReceiver.webidl line 43:0. Do not edit!
+// This file is generated from mozilla\RTCRtpReceiver.webidl. Do not edit!
 
 package js.html.rtc;
 

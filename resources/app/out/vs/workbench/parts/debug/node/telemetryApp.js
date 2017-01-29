@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/common/winjs.base","vs/base/common/types","vs/base/common/event","vs/base/common/errors","vs/base/common/lifecycle","vs/base/common/platform","vs/base/common/objects","vs/base/parts/ipc/node/ipc.cp","vs/base/common/cancellation","vs/platform/telemetry/node/appInsightsAppender","vs/base/common/async","vs/base/node/event","vs/base/parts/ipc/common/ipc","vs/base/common/callbackList","vs/platform/telemetry/common/telemetryIpc","child_process","vs/base/common/winjs.base.raw","applicationinsights","vs/workbench/parts/debug/node/telemetryApp"];
+var __m = ["exports","require","vs/base/common/winjs.base","vs/base/common/event","vs/base/common/types","vs/base/common/errors","vs/base/common/lifecycle","vs/base/common/platform","vs/base/common/objects","vs/base/parts/ipc/node/ipc.cp","vs/base/common/cancellation","vs/platform/telemetry/node/appInsightsAppender","vs/base/common/async","vs/base/node/event","vs/base/parts/ipc/common/ipc","vs/base/common/callbackList","vs/platform/telemetry/common/telemetryIpc","child_process","vs/base/common/winjs.base.raw","applicationinsights","vs/workbench/parts/debug/node/telemetryApp"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -108,7 +108,7 @@ define(__m[7/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), func
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[3/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[4/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -276,7 +276,7 @@ define(__m[3/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), functio
     exports.create = create;
 });
 
-define(__m[5/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/platform*/,3/*vs/base/common/types*/]), function (require, exports, platform, types) {
+define(__m[5/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/platform*/,4/*vs/base/common/types*/]), function (require, exports, platform, types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -320,6 +320,10 @@ define(__m[5/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,7/*vs/bas
             this.unexpectedErrorHandler(e);
             this.emit(e);
         };
+        // For external errors, we don't want the listeners to be called
+        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
+            this.unexpectedErrorHandler(e);
+        };
         return ErrorHandler;
     }());
     exports.ErrorHandler = ErrorHandler;
@@ -335,6 +339,13 @@ define(__m[5/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,7/*vs/bas
         }
     }
     exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedExternalError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedExternalError(e);
+        }
+    }
+    exports.onUnexpectedExternalError = onUnexpectedExternalError;
     function onUnexpectedPromiseError(promise) {
         return promise.then(null, onUnexpectedError);
     }
@@ -518,7 +529,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[6/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/]), function (require, exports, types_1) {
+define(__m[6/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -585,9 +596,40 @@ define(__m[6/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,3/*vs/
         return Disposables;
     }(Disposable));
     exports.Disposables = Disposables;
+    var ReferenceCollection = (function () {
+        function ReferenceCollection() {
+            this.references = Object.create(null);
+        }
+        ReferenceCollection.prototype.acquire = function (key) {
+            var _this = this;
+            var reference = this.references[key];
+            if (!reference) {
+                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
+            }
+            var object = reference.object;
+            var dispose = function () {
+                if (--reference.counter === 0) {
+                    _this.destroyReferencedObject(reference.object);
+                    delete _this.references[key];
+                }
+            };
+            reference.counter++;
+            return { object: object, dispose: dispose };
+        };
+        return ReferenceCollection;
+    }());
+    exports.ReferenceCollection = ReferenceCollection;
+    var ImmortalReference = (function () {
+        function ImmortalReference(object) {
+            this.object = object;
+        }
+        ImmortalReference.prototype.dispose = function () { };
+        return ImmortalReference;
+    }());
+    exports.ImmortalReference = ImmortalReference;
 });
 
-define(__m[4/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/lifecycle*/,15/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
+define(__m[3/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/lifecycle*/,15/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -971,7 +1013,7 @@ define(__m[4/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[10/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[10/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     var shortcutEvent = Object.freeze(function (callback, context) {
         var handle = setTimeout(callback.bind(context), 0);
@@ -1057,7 +1099,7 @@ define(__m[10/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,4/
     exports.CancellationTokenSource = CancellationTokenSource;
 });
 
-define(__m[8/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/]), function (require, exports, Types) {
+define(__m[8/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/types*/]), function (require, exports, Types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3491,7 +3533,7 @@ define(__m[2/*vs/base/common/winjs.base*/], __M([18/*vs/base/common/winjs.base.r
 
 
 
-define(__m[12/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/errors*/,7/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,10/*vs/base/common/cancellation*/,6/*vs/base/common/lifecycle*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
+define(__m[12/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/errors*/,7/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,10/*vs/base/common/cancellation*/,6/*vs/base/common/lifecycle*/,3/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -3819,13 +3861,13 @@ define(__m[12/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,5/*vs/bas
      * Runs the provided list of promise factories in sequential order. The returned
      * promise will complete to an array of results from each promise.
      */
-    function sequence(promiseFactory) {
+    function sequence(promiseFactories) {
         var results = [];
         // reverse since we start with last element using pop()
-        promiseFactory = promiseFactory.reverse();
+        promiseFactories = promiseFactories.reverse();
         function next() {
-            if (promiseFactory.length) {
-                return promiseFactory.pop()();
+            if (promiseFactories.length) {
+                return promiseFactories.pop()();
             }
             return null;
         }
@@ -3842,6 +3884,25 @@ define(__m[12/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,5/*vs/bas
         return winjs_base_1.TPromise.as(null).then(thenHandler);
     }
     exports.sequence = sequence;
+    function first(promiseFactories, shouldStop) {
+        if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
+        promiseFactories = promiseFactories.reverse().slice();
+        var loop = function () {
+            if (promiseFactories.length === 0) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            var factory = promiseFactories.pop();
+            var promise = factory();
+            return promise.then(function (result) {
+                if (shouldStop(result)) {
+                    return winjs_base_1.TPromise.as(result);
+                }
+                return loop();
+            });
+        };
+        return loop();
+    }
+    exports.first = first;
     function once(fn) {
         var _this = this;
         var didCall = false;
@@ -3865,7 +3926,15 @@ define(__m[12/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,5/*vs/bas
             this.maxDegreeOfParalellism = maxDegreeOfParalellism;
             this.outstandingPromises = [];
             this.runningPromises = 0;
+            this._onFinished = new event_1.Emitter();
         }
+        Object.defineProperty(Limiter.prototype, "onFinished", {
+            get: function () {
+                return this._onFinished.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Limiter.prototype.queue = function (promiseFactory) {
             var _this = this;
             return new winjs_base_1.TPromise(function (c, e, p) {
@@ -3890,7 +3959,15 @@ define(__m[12/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,5/*vs/bas
         };
         Limiter.prototype.consumed = function () {
             this.runningPromises--;
-            this.consume();
+            if (this.outstandingPromises.length > 0) {
+                this.consume();
+            }
+            else {
+                this._onFinished.fire();
+            }
+        };
+        Limiter.prototype.dispose = function () {
+            this._onFinished.dispose();
         };
         return Limiter;
     }());
@@ -4043,9 +4120,10 @@ define(__m[12/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,5/*vs/bas
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[13/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[13/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     function fromEventEmitter(emitter, eventName, map) {
+        if (map === void 0) { map = function (id) { return id; }; }
         var fn = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -4066,7 +4144,7 @@ define(__m[13/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[14/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,6/*vs/base/common/lifecycle*/,4/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+define(__m[14/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,6/*vs/base/common/lifecycle*/,3/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
     'use strict';
     var MessageType;
     (function (MessageType) {
@@ -4281,6 +4359,99 @@ define(__m[14/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2
         return ChannelClient;
     }());
     exports.ChannelClient = ChannelClient;
+    /**
+     * An `IPCServer` is both a channel server and a routing channel
+     * client.
+     *
+     * As the owner of a protocol, you should extend both this
+     * and the `IPCClient` classes to get IPC implementations
+     * for your protocol.
+     */
+    var IPCServer = (function () {
+        function IPCServer(onDidClientConnect) {
+            var _this = this;
+            this.channels = Object.create(null);
+            this.channelClients = Object.create(null);
+            this.onClientAdded = new event_1.Emitter();
+            onDidClientConnect(function (_a) {
+                var protocol = _a.protocol, onDidClientDisconnect = _a.onDidClientDisconnect;
+                var onFirstMessage = event_1.once(protocol.onMessage);
+                onFirstMessage(function (id) {
+                    var channelServer = new ChannelServer(protocol);
+                    var channelClient = new ChannelClient(protocol);
+                    Object.keys(_this.channels)
+                        .forEach(function (name) { return channelServer.registerChannel(name, _this.channels[name]); });
+                    _this.channelClients[id] = channelClient;
+                    _this.onClientAdded.fire(id);
+                    onDidClientDisconnect(function () {
+                        channelServer.dispose();
+                        channelClient.dispose();
+                        delete _this.channelClients[id];
+                    });
+                });
+            });
+        }
+        IPCServer.prototype.getChannel = function (channelName, router) {
+            var _this = this;
+            var call = function (command, arg) {
+                var id = router.route(command, arg);
+                if (!id) {
+                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
+                }
+                return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
+            };
+            return { call: call };
+        };
+        IPCServer.prototype.registerChannel = function (channelName, channel) {
+            this.channels[channelName] = channel;
+        };
+        IPCServer.prototype.getClient = function (clientId) {
+            var _this = this;
+            var client = this.channelClients[clientId];
+            if (client) {
+                return winjs_base_1.TPromise.as(client);
+            }
+            return new winjs_base_1.TPromise(function (c) {
+                var onClient = event_1.once(event_1.filterEvent(_this.onClientAdded.event, function (id) { return id === clientId; }));
+                onClient(function () { return c(_this.channelClients[clientId]); });
+            });
+        };
+        IPCServer.prototype.dispose = function () {
+            this.channels = null;
+            this.channelClients = null;
+            this.onClientAdded.dispose();
+        };
+        return IPCServer;
+    }());
+    exports.IPCServer = IPCServer;
+    /**
+     * An `IPCClient` is both a channel client and a channel server.
+     *
+     * As the owner of a protocol, you should extend both this
+     * and the `IPCClient` classes to get IPC implementations
+     * for your protocol.
+     */
+    var IPCClient = (function () {
+        function IPCClient(protocol, id) {
+            protocol.send(id);
+            this.channelClient = new ChannelClient(protocol);
+            this.channelServer = new ChannelServer(protocol);
+        }
+        IPCClient.prototype.getChannel = function (channelName) {
+            return this.channelClient.getChannel(channelName);
+        };
+        IPCClient.prototype.registerChannel = function (channelName, channel) {
+            this.channelServer.registerChannel(channelName, channel);
+        };
+        IPCClient.prototype.dispose = function () {
+            this.channelClient.dispose();
+            this.channelClient = null;
+            this.channelServer.dispose();
+            this.channelServer = null;
+        };
+        return IPCClient;
+    }());
+    exports.IPCClient = IPCClient;
     function getDelayedChannel(promise) {
         var call = function (command, arg) { return promise.then(function (c) { return c.call(command, arg); }); };
         return { call: call };
@@ -4333,7 +4504,7 @@ define(__m[14/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2
 
 
 
-define(__m[9/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,17/*child_process*/,2/*vs/base/common/winjs.base*/,12/*vs/base/common/async*/,8/*vs/base/common/objects*/,4/*vs/base/common/event*/,13/*vs/base/node/event*/,14/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, child_process_1, winjs_base_1, async_1, objects_1, event_1, event_2, ipc_1) {
+define(__m[9/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,17/*child_process*/,2/*vs/base/common/winjs.base*/,12/*vs/base/common/async*/,8/*vs/base/common/objects*/,3/*vs/base/common/event*/,13/*vs/base/node/event*/,14/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, child_process_1, winjs_base_1, async_1, objects_1, event_1, event_2, ipc_1) {
     "use strict";
     var Server = (function (_super) {
         __extends(Server, _super);
@@ -4369,6 +4540,9 @@ define(__m[9/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,1
         };
         Client.prototype.request = function (channelName, name, arg) {
             var _this = this;
+            if (!this.disposeDelayer) {
+                return winjs_base_1.Promise.wrapError('disposed');
+            }
             this.disposeDelayer.cancel();
             var channel = this.channels[channelName] || (this.channels[channelName] = this.client.getChannel(channelName));
             var request = channel.call(name, arg);
@@ -4437,7 +4611,7 @@ define(__m[9/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,1
                             _this.activeRequests.forEach(function (req) { return req.cancel(); });
                             _this.activeRequests = [];
                         }
-                        if (code && signal !== 'SIGTERM') {
+                        if (code !== 0 && signal !== 'SIGTERM') {
                             console.warn('IPC "' + _this.options.serverName + '" crashed with exit code ' + code);
                             _this.disposeDelayer.cancel();
                             _this.disposeClient();
@@ -4501,7 +4675,7 @@ define(__m[16/*vs/platform/telemetry/common/telemetryIpc*/], __M([1/*require*/,0
     exports.TelemetryAppenderClient = TelemetryAppenderClient;
 });
 
-define(__m[11/*vs/platform/telemetry/node/appInsightsAppender*/], __M([1/*require*/,0/*exports*/,19/*applicationinsights*/,3/*vs/base/common/types*/,8/*vs/base/common/objects*/,2/*vs/base/common/winjs.base*/]), function (require, exports, appInsights, types_1, objects_1, winjs_base_1) {
+define(__m[11/*vs/platform/telemetry/node/appInsightsAppender*/], __M([1/*require*/,0/*exports*/,19/*applicationinsights*/,4/*vs/base/common/types*/,8/*vs/base/common/objects*/,2/*vs/base/common/winjs.base*/]), function (require, exports, appInsights, types_1, objects_1, winjs_base_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.

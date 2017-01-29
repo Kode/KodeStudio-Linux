@@ -11,8 +11,12 @@ var TypeScriptSignatureHelpProvider = (function () {
     }
     TypeScriptSignatureHelpProvider.prototype.provideSignatureHelp = function (document, position, token) {
         var _this = this;
+        var filepath = this.client.asAbsolutePath(document.uri);
+        if (!filepath) {
+            return Promise.resolve(null);
+        }
         var args = {
-            file: this.client.asAbsolutePath(document.uri),
+            file: filepath,
             line: position.line + 1,
             offset: position.character + 1
         };
@@ -30,6 +34,9 @@ var TypeScriptSignatureHelpProvider = (function () {
             if (info.items[info.selectedItemIndex].isVariadic) {
             }
             info.items.forEach(function (item, i) {
+                if (!info) {
+                    return;
+                }
                 // keep active parameter in bounds
                 if (i === info.selectedItemIndex && item.isVariadic) {
                     result.activeParameter = Math.min(info.argumentIndex, item.parameters.length - 1);
@@ -58,4 +65,4 @@ var TypeScriptSignatureHelpProvider = (function () {
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeScriptSignatureHelpProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/features/signatureHelpProvider.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/features/signatureHelpProvider.js.map

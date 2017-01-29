@@ -23,9 +23,6 @@ class XnaExporter extends CSharpExporter_1.CSharpExporter {
         super(options);
         this.images = [];
     }
-    sysdir() {
-        return 'xna';
-    }
     backend() {
         return 'XNA';
     }
@@ -259,4 +256,4 @@ class XnaExporter extends CSharpExporter_1.CSharpExporter {
     }
 }
 exports.XnaExporter = XnaExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/Exporters/XnaExporter.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/XnaExporter.js.map

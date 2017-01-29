@@ -51,7 +51,7 @@ namespace {
 	bool renderToBackbuffer;
 
 	bool depthTest = false;
-	bool depthMask = false;
+	bool depthMask = true;
 
 #if defined(OPENGLES) && defined(SYS_ANDROID) && SYS_ANDROID_API >= 18
 	void* glesDrawBuffers;
@@ -487,7 +487,8 @@ void Graphics::end(int windowId) {
 }
 
 void Graphics::clear(uint flags, uint color, float depth, int stencil) {
-	glClearColor(((color & 0x00ff0000) >> 16) / 255.0f, ((color & 0x0000ff00) >> 8) / 255.0f, (color & 0x000000ff) / 255.0f, (color & 0xff000000) / 255.0f);
+	glClearColor(((color & 0x00ff0000) >> 16) / 255.0f, ((color & 0x0000ff00) >> 8) / 255.0f, (color & 0x000000ff) / 255.0f,
+	             ((color & 0xff000000) >> 24) / 255.0f);
 	glCheckErrors();
 	if (flags & ClearDepthFlag) {
 		glEnable(GL_DEPTH_TEST);
@@ -865,6 +866,7 @@ bool Graphics::nonPow2TexturesSupported() {
 	return true;
 }
 
+#if defined(OPENGL) || (defined(SYS_ANDROID) && SYS_ANDROID_API >= 18)
 bool Graphics::initOcclusionQuery(uint* occlusionQuery) {
 	glGenQueries(1, occlusionQuery);
 	return true;
@@ -890,6 +892,7 @@ bool Graphics::isQueryResultsAvailable(uint occlusionQuery) {
 void Graphics::getQueryResults(uint occlusionQuery, uint* pixelCount) {
 	glGetQueryObjectuiv(occlusionQuery, GL_QUERY_RESULT, pixelCount);
 }
+#endif
 
 void Graphics::flush() {
 	glFlush();

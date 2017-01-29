@@ -19,7 +19,9 @@ var MyCompletionItem = (function (_super) {
         this.kind = MyCompletionItem.convertKind(entry.kind);
         if (entry.replacementSpan) {
             var span = entry.replacementSpan;
-            this.textEdit = vscode_1.TextEdit.replace(new vscode_1.Range(span.start.line, span.start.offset, span.end.line, span.end.offset), entry.name);
+            // The indexing for the range returned by the server uses 1-based indexing.
+            // We convert to 0-based indexing.
+            this.textEdit = vscode_1.TextEdit.replace(new vscode_1.Range(span.start.line - 1, span.start.offset - 1, span.end.line - 1, span.end.offset - 1), entry.name);
         }
     }
     MyCompletionItem.convertKind = function (kind) {
@@ -68,11 +70,16 @@ var TypeScriptCompletionItemProvider = (function () {
         this.config = { useCodeSnippetsOnMethodSuggest: false };
     }
     TypeScriptCompletionItemProvider.prototype.updateConfiguration = function (config) {
-        this.config.useCodeSnippetsOnMethodSuggest = config.get(Configuration.useCodeSnippetsOnMethodSuggest, false);
+        // Use shared setting for js and ts
+        var typeScriptConfig = vscode_1.workspace.getConfiguration('typescript');
+        this.config.useCodeSnippetsOnMethodSuggest = typeScriptConfig.get(Configuration.useCodeSnippetsOnMethodSuggest, false);
     };
     TypeScriptCompletionItemProvider.prototype.provideCompletionItems = function (document, position, token) {
         var _this = this;
         var filepath = this.client.asAbsolutePath(document.uri);
+        if (!filepath) {
+            return Promise.resolve([]);
+        }
         var args = {
             file: filepath,
             line: position.line + 1,
@@ -99,12 +106,14 @@ var TypeScriptCompletionItemProvider = (function () {
             // }
             var completionItems = [];
             var body = msg.body;
-            for (var i = 0; i < body.length; i++) {
-                var element = body[i];
-                var item = new MyCompletionItem(element);
-                item.document = document;
-                item.position = position;
-                completionItems.push(item);
+            if (body) {
+                for (var i = 0; i < body.length; i++) {
+                    var element = body[i];
+                    var item = new MyCompletionItem(element);
+                    item.document = document;
+                    item.position = position;
+                    completionItems.push(item);
+                }
             }
             return completionItems;
         }, function (err) {
@@ -115,8 +124,12 @@ var TypeScriptCompletionItemProvider = (function () {
     TypeScriptCompletionItemProvider.prototype.resolveCompletionItem = function (item, token) {
         var _this = this;
         if (item instanceof MyCompletionItem) {
+            var filepath = this.client.asAbsolutePath(item.document.uri);
+            if (!filepath) {
+                return null;
+            }
             var args = {
-                file: this.client.asAbsolutePath(item.document.uri),
+                file: filepath,
                 line: item.position.line + 1,
                 offset: item.position.character + 1,
                 entryNames: [item.label]
@@ -129,19 +142,19 @@ var TypeScriptCompletionItemProvider = (function () {
                     item.documentation = Previewer.plain(detail.documentation);
                     item.detail = Previewer.plain(detail.displayParts);
                 }
-                if (detail && _this.config.useCodeSnippetsOnMethodSuggest && item.kind === vscode_1.CompletionItemKind.Function) {
+                if (detail && _this.config.useCodeSnippetsOnMethodSuggest && (item.kind === vscode_1.CompletionItemKind.Function || item.kind === vscode_1.CompletionItemKind.Method)) {
                     var codeSnippet = detail.name;
                     var suggestionArgumentNames = void 0;
                     suggestionArgumentNames = detail.displayParts
                         .filter(function (part) { return part.kind === 'parameterName'; })
-                        .map(function (part) { return ("{{" + part.text + "}}"); });
+                        .map(function (part, i) { return ("${" + (i + 1) + ":" + part.text + "}"); });
                     if (suggestionArgumentNames.length > 0) {
-                        codeSnippet += '(' + suggestionArgumentNames.join(', ') + '){{}}';
+                        codeSnippet += '(' + suggestionArgumentNames.join(', ') + ')$0';
                     }
                     else {
                         codeSnippet += '()';
                     }
-                    item.insertText = codeSnippet;
+                    item.insertText = new vscode_1.SnippetString(codeSnippet);
                 }
                 return item;
             }, function (err) {
@@ -154,4 +167,4 @@ var TypeScriptCompletionItemProvider = (function () {
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeScriptCompletionItemProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/features/completionItemProvider.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/features/completionItemProvider.js.map

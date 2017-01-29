@@ -1,7 +1,7 @@
 {
 	"typescript.reloadProjects.title": "TypeScript 프로젝트 다시 로드",
 	"javascript.reloadProjects.title": "JavaScript 프로젝트 다시 로드",
-	"configuration.typescript": "TypeScript.",
+	"configuration.typescript": "TypeScript",
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "매개 변수 서명으로 함수를 완료하세요.",
 	"typescript.tsdk.desc": "사용할 tsserver 및 lib*.d.ts 파일이 들어 있는 폴더 경로를 지정합니다.",
 	"typescript.tsdk_version.desc": "tsserver의 버전을 지정합니다. tsserver가 npm을 사용하여 설치되지 않은 경우에만 필요합니다.",

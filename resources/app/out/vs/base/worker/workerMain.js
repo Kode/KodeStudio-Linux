@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["require","exports","vs/base/common/winjs.base","vs/base/common/platform","vs/base/common/errors","vs/editor/common/core/range","vs/base/common/lifecycle","vs/base/common/types","vs/base/common/strings","vs/base/common/event","vs/base/common/cancellation","vs/base/common/uri","vs/base/common/map","vs/editor/common/core/position","vs/base/common/diff/diffChange","vs/base/common/diff/diff","vs/base/common/callbackList","vs/editor/common/model/mirrorModel2","vs/base/common/async","vs/editor/common/viewModel/prefixSumComputer","vs/editor/common/core/characterClassifier","vs/base/common/keyCodes","vs/base/common/filters","vs/editor/common/core/selection","vs/editor/common/diff/diffComputer","vs/editor/common/model/wordHelper","vs/editor/common/modes/linkComputer","vs/editor/common/modes/supports/inplaceReplaceSupport","vs/editor/common/standalone/standaloneBase","vs/base/common/worker/simpleWorker","vs/base/common/winjs.base.raw","vs/editor/common/services/editorSimpleWorker"];
+var __m = ["require","exports","vs/base/common/errors","vs/base/common/winjs.base","vs/base/common/platform","vs/base/common/lifecycle","vs/base/common/event","vs/editor/common/core/position","vs/editor/common/core/range","vs/base/common/strings","vs/base/common/types","vs/base/common/map","vs/base/common/cancellation","vs/base/common/uri","vs/base/common/diff/diff","vs/base/common/callbackList","vs/base/common/filters","vs/editor/common/model/mirrorModel2","vs/base/common/async","vs/editor/common/viewModel/prefixSumComputer","vs/editor/common/core/characterClassifier","vs/base/common/keyCodes","vs/base/common/diff/diffChange","vs/editor/common/core/selection","vs/editor/common/diff/diffComputer","vs/editor/common/model/wordHelper","vs/editor/common/modes/linkComputer","vs/editor/common/modes/supports/inplaceReplaceSupport","vs/editor/common/standalone/standaloneBase","vs/base/common/worker/simpleWorker","vs/base/common/winjs.base.raw","vs/editor/common/services/editorSimpleWorker"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -202,6 +202,20 @@ var AMDLoader;
             }
             if (!Array.isArray(options.nodeModules)) {
                 options.nodeModules = [];
+            }
+            if (typeof options.nodeCachedDataWriteDelay !== 'number' || options.nodeCachedDataWriteDelay < 0) {
+                options.nodeCachedDataWriteDelay = 1000 * 7;
+            }
+            if (typeof options.onNodeCachedDataError !== 'function') {
+                options.onNodeCachedDataError = function (err) {
+                    if (err.errorCode === 'cachedDataRejected') {
+                        console.warn('Rejected cached data from file: ' + err.path);
+                    }
+                    else if (err.errorCode === 'unlink' || err.errorCode === 'writeFile') {
+                        console.error('Problems writing cached data file: ' + err.path);
+                        console.error(err.detail);
+                    }
+                };
             }
             return options;
         };
@@ -918,7 +932,6 @@ var AMDLoader;
             this._queuedDefineCalls = [];
             this._loadingScriptsCount = 0;
             this._resolvedScriptPaths = {};
-            this._checksums = {};
         }
         ModuleManager._findRelevantLocationInStack = function (needle, stack) {
             var normalize = function (str) { return str.replace(/\\/g, '/'); };
@@ -979,12 +992,6 @@ var AMDLoader;
         };
         ModuleManager.prototype.getLoaderEvents = function () {
             return this.getRecorder().getEvents();
-        };
-        ModuleManager.prototype.recordChecksum = function (scriptSrc, checksum) {
-            this._checksums[scriptSrc] = checksum;
-        };
-        ModuleManager.prototype.getChecksums = function () {
-            return this._checksums;
         };
         /**
          * Defines a module.
@@ -1308,9 +1315,6 @@ var AMDLoader;
             };
             result.getStats = function () {
                 return _this.getLoaderEvents();
-            };
-            result.getChecksums = function () {
-                return _this.getChecksums();
             };
             result.__$__nodeRequire = global.nodeRequire;
             return result;
@@ -1730,7 +1734,6 @@ var AMDLoader;
         NodeScriptLoader.prototype.load = function (scriptSrc, callback, errorback, recorder) {
             var _this = this;
             var opts = this._moduleManager.getConfigurationOptions();
-            var checksum = opts.checksum || false;
             var nodeRequire = (opts.nodeRequire || global.nodeRequire);
             var nodeInstrumenter = (opts.nodeInstrumenter || function (c) { return c; });
             this._init(nodeRequire);
@@ -1757,15 +1760,6 @@ var AMDLoader;
                         errorback(err);
                         return;
                     }
-                    if (checksum) {
-                        var hash = _this._crypto
-                            .createHash('md5')
-                            .update(data, 'utf8')
-                            .digest('base64')
-                            .replace(/=+$/, '');
-                        _this._moduleManager.recordChecksum(scriptSrc, hash);
-                    }
-                    recorder.record(LoaderEventType.NodeBeginEvaluatingScript, scriptSrc);
                     var vmScriptSrc = _this._path.normalize(scriptSrc);
                     // Make the script src friendly towards electron
                     if (isElectronRenderer) {
@@ -1783,18 +1777,73 @@ var AMDLoader;
                         contents = prefix + data + suffix;
                     }
                     contents = nodeInstrumenter(contents, vmScriptSrc);
-                    var r;
-                    if (/^v0\.12/.test(process.version)) {
-                        r = _this._vm.runInThisContext(contents, { filename: vmScriptSrc });
+                    if (!opts.nodeCachedDataDir) {
+                        _this._loadAndEvalScript(scriptSrc, vmScriptSrc, contents, { filename: vmScriptSrc }, recorder);
+                        callback();
                     }
                     else {
-                        r = _this._vm.runInThisContext(contents, vmScriptSrc);
+                        var cachedDataPath_1 = _this._getCachedDataPath(opts.nodeCachedDataDir, scriptSrc);
+                        _this._fs.readFile(cachedDataPath_1, function (err, data) {
+                            // create script options
+                            var scriptOptions = {
+                                filename: vmScriptSrc,
+                                produceCachedData: typeof data === 'undefined',
+                                cachedData: data
+                            };
+                            var script = _this._loadAndEvalScript(scriptSrc, vmScriptSrc, contents, scriptOptions, recorder);
+                            callback();
+                            // cached code after math
+                            if (script.cachedDataRejected) {
+                                // data rejected => delete cache file
+                                opts.onNodeCachedDataError({
+                                    errorCode: 'cachedDataRejected',
+                                    path: cachedDataPath_1
+                                });
+                                NodeScriptLoader._runSoon(function () { return _this._fs.unlink(cachedDataPath_1, function (err) {
+                                    if (err) {
+                                        _this._moduleManager.getConfigurationOptions().onNodeCachedDataError({
+                                            errorCode: 'unlink',
+                                            path: cachedDataPath_1,
+                                            detail: err
+                                        });
+                                    }
+                                }); }, opts.nodeCachedDataWriteDelay);
+                            }
+                            else if (script.cachedDataProduced) {
+                                // data produced => write cache file
+                                NodeScriptLoader._runSoon(function () { return _this._fs.writeFile(cachedDataPath_1, script.cachedData, function (err) {
+                                    if (err) {
+                                        _this._moduleManager.getConfigurationOptions().onNodeCachedDataError({
+                                            errorCode: 'writeFile',
+                                            path: cachedDataPath_1,
+                                            detail: err
+                                        });
+                                    }
+                                }); }, opts.nodeCachedDataWriteDelay);
+                            }
+                        });
                     }
-                    r.call(global, RequireFunc, DefineFunc, vmScriptSrc, _this._path.dirname(scriptSrc));
-                    recorder.record(LoaderEventType.NodeEndEvaluatingScript, scriptSrc);
-                    callback();
                 });
             }
+        };
+        NodeScriptLoader.prototype._loadAndEvalScript = function (scriptSrc, vmScriptSrc, contents, options, recorder) {
+            // create script, run script
+            recorder.record(LoaderEventType.NodeBeginEvaluatingScript, scriptSrc);
+            var script = new this._vm.Script(contents, options);
+            var r = script.runInThisContext(options);
+            r.call(global, RequireFunc, DefineFunc, vmScriptSrc, this._path.dirname(scriptSrc));
+            // signal done
+            recorder.record(LoaderEventType.NodeEndEvaluatingScript, scriptSrc);
+            return script;
+        };
+        NodeScriptLoader.prototype._getCachedDataPath = function (baseDir, filename) {
+            var hash = this._crypto.createHash('md5').update(filename, 'utf8').digest('hex');
+            var basename = this._path.basename(filename).replace(/\.js$/, '');
+            return this._path.join(baseDir, hash + "-" + basename + ".code");
+        };
+        NodeScriptLoader._runSoon = function (callback, minTimeout) {
+            var timeout = minTimeout + Math.ceil(Math.random() * minTimeout);
+            setTimeout(callback, timeout);
         };
         NodeScriptLoader._BOM = 0xFEFF;
         return NodeScriptLoader;
@@ -1873,12 +1922,6 @@ var AMDLoader;
          */
         RequireFunc.getStats = function () {
             return moduleManager.getLoaderEvents();
-        };
-        /**
-         * Non standard extension to fetch checksums
-         */
-        RequireFunc.getChecksums = function () {
-            return moduleManager.getChecksums();
         };
         return RequireFunc;
     }());
@@ -1981,7 +2024,7 @@ var AMDLoader;
     }
 })(AMDLoader || (AMDLoader = {}));
 
-define(__m[14/*vs/base/common/diff/diffChange*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[22/*vs/base/common/diff/diffChange*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2038,7 +2081,7 @@ define(__m[14/*vs/base/common/diff/diffChange*/], __M([0/*require*/,1/*exports*/
     exports.DiffChange = DiffChange;
 });
 
-define(__m[15/*vs/base/common/diff/diff*/], __M([0/*require*/,1/*exports*/,14/*vs/base/common/diff/diffChange*/]), function (require, exports, diffChange_1) {
+define(__m[14/*vs/base/common/diff/diff*/], __M([0/*require*/,1/*exports*/,22/*vs/base/common/diff/diffChange*/]), function (require, exports, diffChange_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3125,6 +3168,7 @@ define(__m[21/*vs/base/common/keyCodes*/], __M([0/*require*/,1/*exports*/]), fun
         BinaryKeybindingsMask[BinaryKeybindingsMask["Alt"] = 8192] = "Alt";
         BinaryKeybindingsMask[BinaryKeybindingsMask["WinCtrl"] = 4096] = "WinCtrl";
         BinaryKeybindingsMask[BinaryKeybindingsMask["KeyCode"] = 4095] = "KeyCode";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["ModifierMask"] = 61440] = "ModifierMask";
     })(BinaryKeybindingsMask || (BinaryKeybindingsMask = {}));
     (function (KeyMod) {
         KeyMod[KeyMod["CtrlCmd"] = 32768] = "CtrlCmd";
@@ -3161,12 +3205,50 @@ define(__m[21/*vs/base/common/keyCodes*/], __M([0/*require*/,1/*exports*/]), fun
         BinaryKeybindings.hasWinCtrl = function (keybinding) {
             return (keybinding & 4096 /* WinCtrl */ ? true : false);
         };
+        BinaryKeybindings.isModifierKey = function (keybinding) {
+            if ((keybinding & 61440 /* ModifierMask */) === keybinding) {
+                return true;
+            }
+            var keyCode = this.extractKeyCode(keybinding);
+            return (keyCode === 5 /* Ctrl */
+                || keyCode === 57 /* Meta */
+                || keyCode === 6 /* Alt */
+                || keyCode === 4 /* Shift */);
+        };
         BinaryKeybindings.extractKeyCode = function (keybinding) {
             return (keybinding & 4095 /* KeyCode */);
         };
         return BinaryKeybindings;
     }());
     exports.BinaryKeybindings = BinaryKeybindings;
+    var Keybinding = (function () {
+        function Keybinding(keybinding) {
+            this.value = keybinding;
+        }
+        Keybinding.prototype.equals = function (other) {
+            return this.value === other.value;
+        };
+        Keybinding.prototype.hasCtrlCmd = function () {
+            return BinaryKeybindings.hasCtrlCmd(this.value);
+        };
+        Keybinding.prototype.hasShift = function () {
+            return BinaryKeybindings.hasShift(this.value);
+        };
+        Keybinding.prototype.hasAlt = function () {
+            return BinaryKeybindings.hasAlt(this.value);
+        };
+        Keybinding.prototype.hasWinCtrl = function () {
+            return BinaryKeybindings.hasWinCtrl(this.value);
+        };
+        Keybinding.prototype.isModifierKey = function () {
+            return BinaryKeybindings.isModifierKey(this.value);
+        };
+        Keybinding.prototype.getKeyCode = function () {
+            return BinaryKeybindings.extractKeyCode(this.value);
+        };
+        return Keybinding;
+    }());
+    exports.Keybinding = Keybinding;
 });
 
 /*---------------------------------------------------------------------------------------------
@@ -3178,7 +3260,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[12/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[11/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     /**
      * A simple map to store value by a key object. Key can be any object that has toString() function to get
@@ -3444,12 +3526,26 @@ define(__m[12/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function
             }
             node.element = element;
         };
+        TrieMap.prototype.lookUp = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            return node.element;
+        };
         TrieMap.prototype.findSubstr = function (path) {
             var parts = this._splitter(path);
             var lastNode;
             var children = this._root.children;
-            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
-                var part = parts_1[_i];
+            for (var _i = 0, parts_2 = parts; _i < parts_2.length; _i++) {
+                var part = parts_2[_i];
                 var node = children[part];
                 if (!node) {
                     break;
@@ -3465,13 +3561,29 @@ define(__m[12/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function
                 return lastNode.element;
             }
         };
-        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/); };
+        TrieMap.prototype.findSuperstr = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_3 = parts; _i < parts_3.length; _i++) {
+                var part = parts_3[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            var result = new TrieMap(this._splitter);
+            result._root = node;
+            return result;
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/).filter(function (s) { return !!s; }); };
         return TrieMap;
     }());
     exports.TrieMap = TrieMap;
 });
 
-define(__m[3/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[4/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3569,7 +3681,7 @@ define(__m[3/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), func
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[8/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,12/*vs/base/common/map*/]), function (require, exports, map_1) {
+define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/map*/]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4137,7 +4249,7 @@ define(__m[8/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,12/*vs/b
     exports.repeat = repeat;
 });
 
-define(__m[22/*vs/base/common/filters*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/strings*/,12/*vs/base/common/map*/]), function (require, exports, strings, map_1) {
+define(__m[16/*vs/base/common/filters*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/strings*/,11/*vs/base/common/map*/]), function (require, exports, strings, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4456,7 +4568,7 @@ define(__m[22/*vs/base/common/filters*/], __M([0/*require*/,1/*exports*/,8/*vs/b
     exports.matchesFuzzy = matchesFuzzy;
 });
 
-define(__m[7/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[10/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4624,7 +4736,7 @@ define(__m[7/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), functio
     exports.create = create;
 });
 
-define(__m[4/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/platform*/,7/*vs/base/common/types*/]), function (require, exports, platform, types) {
+define(__m[2/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/platform*/,10/*vs/base/common/types*/]), function (require, exports, platform, types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4668,6 +4780,10 @@ define(__m[4/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,3/*vs/bas
             this.unexpectedErrorHandler(e);
             this.emit(e);
         };
+        // For external errors, we don't want the listeners to be called
+        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
+            this.unexpectedErrorHandler(e);
+        };
         return ErrorHandler;
     }());
     exports.ErrorHandler = ErrorHandler;
@@ -4683,6 +4799,13 @@ define(__m[4/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,3/*vs/bas
         }
     }
     exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedExternalError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedExternalError(e);
+        }
+    }
+    exports.onUnexpectedExternalError = onUnexpectedExternalError;
     function onUnexpectedPromiseError(promise) {
         return promise.then(null, onUnexpectedError);
     }
@@ -4777,7 +4900,7 @@ define(__m[4/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,3/*vs/bas
     exports.getErrorMessage = getErrorMessage;
 });
 
-define(__m[16/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+define(__m[15/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/errors*/]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4866,7 +4989,7 @@ define(__m[16/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,4/
 
 
 
-define(__m[6/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/types*/]), function (require, exports, types_1) {
+define(__m[5/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4933,9 +5056,40 @@ define(__m[6/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,7/*vs/
         return Disposables;
     }(Disposable));
     exports.Disposables = Disposables;
+    var ReferenceCollection = (function () {
+        function ReferenceCollection() {
+            this.references = Object.create(null);
+        }
+        ReferenceCollection.prototype.acquire = function (key) {
+            var _this = this;
+            var reference = this.references[key];
+            if (!reference) {
+                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
+            }
+            var object = reference.object;
+            var dispose = function () {
+                if (--reference.counter === 0) {
+                    _this.destroyReferencedObject(reference.object);
+                    delete _this.references[key];
+                }
+            };
+            reference.counter++;
+            return { object: object, dispose: dispose };
+        };
+        return ReferenceCollection;
+    }());
+    exports.ReferenceCollection = ReferenceCollection;
+    var ImmortalReference = (function () {
+        function ImmortalReference(object) {
+            this.object = object;
+        }
+        ImmortalReference.prototype.dispose = function () { };
+        return ImmortalReference;
+    }());
+    exports.ImmortalReference = ImmortalReference;
 });
 
-define(__m[9/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/lifecycle*/,16/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
+define(__m[6/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/lifecycle*/,15/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5319,7 +5473,7 @@ define(__m[9/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,6/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[10/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[12/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     var shortcutEvent = Object.freeze(function (callback, context) {
         var handle = setTimeout(callback.bind(context), 0);
@@ -5405,7 +5559,7 @@ define(__m[10/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,9/
     exports.CancellationTokenSource = CancellationTokenSource;
 });
 
-define(__m[11/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/platform*/]), function (require, exports, platform) {
+define(__m[13/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/platform*/]), function (require, exports, platform) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -7871,7 +8025,7 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define(__m[2/*vs/base/common/winjs.base*/], __M([30/*vs/base/common/winjs.base.raw*/,4/*vs/base/common/errors*/]), function (winjs, __Errors__) {
+define(__m[3/*vs/base/common/winjs.base*/], __M([30/*vs/base/common/winjs.base.raw*/,2/*vs/base/common/errors*/]), function (winjs, __Errors__) {
 	'use strict';
 
 	var outstandingPromiseErrors = {};
@@ -7937,7 +8091,7 @@ define(__m[2/*vs/base/common/winjs.base*/], __M([30/*vs/base/common/winjs.base.r
 
 
 
-define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/,3/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,10/*vs/base/common/cancellation*/,6/*vs/base/common/lifecycle*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
+define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/errors*/,4/*vs/base/common/platform*/,3/*vs/base/common/winjs.base*/,12/*vs/base/common/cancellation*/,5/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -8265,13 +8419,13 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
      * Runs the provided list of promise factories in sequential order. The returned
      * promise will complete to an array of results from each promise.
      */
-    function sequence(promiseFactory) {
+    function sequence(promiseFactories) {
         var results = [];
         // reverse since we start with last element using pop()
-        promiseFactory = promiseFactory.reverse();
+        promiseFactories = promiseFactories.reverse();
         function next() {
-            if (promiseFactory.length) {
-                return promiseFactory.pop()();
+            if (promiseFactories.length) {
+                return promiseFactories.pop()();
             }
             return null;
         }
@@ -8288,6 +8442,25 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
         return winjs_base_1.TPromise.as(null).then(thenHandler);
     }
     exports.sequence = sequence;
+    function first(promiseFactories, shouldStop) {
+        if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
+        promiseFactories = promiseFactories.reverse().slice();
+        var loop = function () {
+            if (promiseFactories.length === 0) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            var factory = promiseFactories.pop();
+            var promise = factory();
+            return promise.then(function (result) {
+                if (shouldStop(result)) {
+                    return winjs_base_1.TPromise.as(result);
+                }
+                return loop();
+            });
+        };
+        return loop();
+    }
+    exports.first = first;
     function once(fn) {
         var _this = this;
         var didCall = false;
@@ -8311,7 +8484,15 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
             this.maxDegreeOfParalellism = maxDegreeOfParalellism;
             this.outstandingPromises = [];
             this.runningPromises = 0;
+            this._onFinished = new event_1.Emitter();
         }
+        Object.defineProperty(Limiter.prototype, "onFinished", {
+            get: function () {
+                return this._onFinished.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Limiter.prototype.queue = function (promiseFactory) {
             var _this = this;
             return new winjs_base_1.TPromise(function (c, e, p) {
@@ -8336,7 +8517,15 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
         };
         Limiter.prototype.consumed = function () {
             this.runningPromises--;
-            this.consume();
+            if (this.outstandingPromises.length > 0) {
+                this.consume();
+            }
+            else {
+                this._onFinished.fire();
+            }
+        };
+        Limiter.prototype.dispose = function () {
+            this._onFinished.dispose();
         };
         return Limiter;
     }());
@@ -8490,7 +8679,7 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,4/*vs/bas
 
 
 
-define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/errors*/,6/*vs/base/common/lifecycle*/,2/*vs/base/common/winjs.base*/,18/*vs/base/common/async*/,3/*vs/base/common/platform*/]), function (require, exports, errors_1, lifecycle_1, winjs_base_1, async_1, platform_1) {
+define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/errors*/,5/*vs/base/common/lifecycle*/,3/*vs/base/common/winjs.base*/,18/*vs/base/common/async*/,4/*vs/base/common/platform*/]), function (require, exports, errors_1, lifecycle_1, winjs_base_1, async_1, platform_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -8636,14 +8825,14 @@ define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*expor
             this._protocol.setWorkerId(this._worker.getId());
             // Gather loader configuration
             var loaderConfiguration = null;
-            var globalRequire = window.require;
+            var globalRequire = self.require;
             if (typeof globalRequire.getConfig === 'function') {
                 // Get the configuration from the Monaco AMD Loader
                 loaderConfiguration = globalRequire.getConfig();
             }
-            else if (typeof window.requirejs !== 'undefined') {
+            else if (typeof self.requirejs !== 'undefined') {
                 // Get the configuration from requirejs
-                loaderConfiguration = window.requirejs.s.contexts._.config;
+                loaderConfiguration = self.requirejs.s.contexts._.config;
             }
             this._lazyProxy = new winjs_base_1.TPromise(function (c, e, p) {
                 lazyProxyFulfill = c;
@@ -8834,7 +9023,7 @@ define(__m[20/*vs/editor/common/core/characterClassifier*/], __M([0/*require*/,1
     exports.CharacterClassifier = CharacterClassifier;
 });
 
-define(__m[13/*vs/editor/common/core/position*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[7/*vs/editor/common/core/position*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -8942,7 +9131,7 @@ define(__m[13/*vs/editor/common/core/position*/], __M([0/*require*/,1/*exports*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[5/*vs/editor/common/core/range*/], __M([0/*require*/,1/*exports*/,13/*vs/editor/common/core/position*/]), function (require, exports, position_1) {
+define(__m[8/*vs/editor/common/core/range*/], __M([0/*require*/,1/*exports*/,7/*vs/editor/common/core/position*/]), function (require, exports, position_1) {
     'use strict';
     /**
      * A range in the editor. (startLineNumber,startColumn) is <= (endLineNumber,endColumn)
@@ -9248,7 +9437,7 @@ define(__m[5/*vs/editor/common/core/range*/], __M([0/*require*/,1/*exports*/,13/
 
 
 
-define(__m[23/*vs/editor/common/core/selection*/], __M([0/*require*/,1/*exports*/,5/*vs/editor/common/core/range*/]), function (require, exports, range_1) {
+define(__m[23/*vs/editor/common/core/selection*/], __M([0/*require*/,1/*exports*/,8/*vs/editor/common/core/range*/]), function (require, exports, range_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9391,7 +9580,7 @@ define(__m[23/*vs/editor/common/core/selection*/], __M([0/*require*/,1/*exports*
 
 
 
-define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*exports*/,15/*vs/base/common/diff/diff*/,8/*vs/base/common/strings*/]), function (require, exports, diff_1, strings) {
+define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*exports*/,14/*vs/base/common/diff/diff*/,9/*vs/base/common/strings*/]), function (require, exports, diff_1, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10024,7 +10213,7 @@ define(__m[27/*vs/editor/common/modes/supports/inplaceReplaceSupport*/], __M([0/
     exports.BasicInplaceReplace = BasicInplaceReplace;
 });
 
-define(__m[28/*vs/editor/common/standalone/standaloneBase*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/event*/,21/*vs/base/common/keyCodes*/,13/*vs/editor/common/core/position*/,5/*vs/editor/common/core/range*/,23/*vs/editor/common/core/selection*/,2/*vs/base/common/winjs.base*/,10/*vs/base/common/cancellation*/,11/*vs/base/common/uri*/]), function (require, exports, event_1, keyCodes_1, position_1, range_1, selection_1, winjs_base_1, cancellation_1, uri_1) {
+define(__m[28/*vs/editor/common/standalone/standaloneBase*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/event*/,21/*vs/base/common/keyCodes*/,7/*vs/editor/common/core/position*/,8/*vs/editor/common/core/range*/,23/*vs/editor/common/core/selection*/,3/*vs/base/common/winjs.base*/,12/*vs/base/common/cancellation*/,13/*vs/base/common/uri*/]), function (require, exports, event_1, keyCodes_1, position_1, range_1, selection_1, winjs_base_1, cancellation_1, uri_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10242,6 +10431,7 @@ define(__m[28/*vs/editor/common/standalone/standaloneBase*/], __M([0/*require*/,
             Emitter: event_1.Emitter,
             KeyCode: KeyCode,
             KeyMod: KeyMod,
+            Keybinding: keyCodes_1.Keybinding,
             Position: position_1.Position,
             Range: range_1.Range,
             Selection: selection_1.Selection,
@@ -10294,8 +10484,15 @@ define(__m[19/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*
             if (values.length === 0) {
                 return;
             }
-            this.values = this.values.slice(0, insertIndex).concat(values).concat(this.values.slice(insertIndex));
-            this.prefixSum = this.prefixSum.slice(0, insertIndex).concat(PrefixSumComputer._zeroArray(values.length)).concat(this.prefixSum.slice(insertIndex));
+            if (values.length === 1) {
+                // Fast path for one element
+                this.values.splice(insertIndex, 0, values[0]);
+                this.prefixSum.splice(insertIndex, 0, values[0]);
+            }
+            else {
+                this.values = this.values.slice(0, insertIndex).concat(values).concat(this.values.slice(insertIndex));
+                this.prefixSum = this.prefixSum.slice(0, insertIndex).concat(PrefixSumComputer._zeroArray(values.length)).concat(this.prefixSum.slice(insertIndex));
+            }
             if (insertIndex - 1 < this.prefixSumValidIndex) {
                 this.prefixSumValidIndex = insertIndex - 1;
             }
@@ -10521,7 +10718,7 @@ define(__m[17/*vs/editor/common/model/mirrorModel2*/], __M([0/*require*/,1/*expo
 
 
 
-define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/uri*/,2/*vs/base/common/winjs.base*/,5/*vs/editor/common/core/range*/,22/*vs/base/common/filters*/,24/*vs/editor/common/diff/diffComputer*/,17/*vs/editor/common/model/mirrorModel2*/,26/*vs/editor/common/modes/linkComputer*/,27/*vs/editor/common/modes/supports/inplaceReplaceSupport*/,25/*vs/editor/common/model/wordHelper*/,28/*vs/editor/common/standalone/standaloneBase*/]), function (require, exports, uri_1, winjs_base_1, range_1, filters_1, diffComputer_1, mirrorModel2_1, linkComputer_1, inplaceReplaceSupport_1, wordHelper_1, standaloneBase_1) {
+define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*/,1/*exports*/,13/*vs/base/common/uri*/,3/*vs/base/common/winjs.base*/,8/*vs/editor/common/core/range*/,16/*vs/base/common/filters*/,24/*vs/editor/common/diff/diffComputer*/,14/*vs/base/common/diff/diff*/,7/*vs/editor/common/core/position*/,17/*vs/editor/common/model/mirrorModel2*/,26/*vs/editor/common/modes/linkComputer*/,27/*vs/editor/common/modes/supports/inplaceReplaceSupport*/,25/*vs/editor/common/model/wordHelper*/,28/*vs/editor/common/standalone/standaloneBase*/]), function (require, exports, uri_1, winjs_base_1, range_1, filters_1, diffComputer_1, diff_1, position_1, mirrorModel2_1, linkComputer_1, inplaceReplaceSupport_1, wordHelper_1, standaloneBase_1) {
     'use strict';
     /**
      * @internal
@@ -10541,6 +10738,13 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
         Object.defineProperty(MirrorModel.prototype, "version", {
             get: function () {
                 return this._versionId;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MirrorModel.prototype, "eol", {
+            get: function () {
+                return this._eol;
             },
             enumerable: true,
             configurable: true
@@ -10631,9 +10835,59 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
             resultLines.push(this._lines[endLineIndex].substring(0, range.endColumn - 1));
             return resultLines.join(lineEnding);
         };
+        MirrorModel.prototype.offsetAt = function (position) {
+            position = this._validatePosition(position);
+            this._ensureLineStarts();
+            return this._lineStarts.getAccumulatedValue(position.lineNumber - 2) + (position.column - 1);
+        };
+        MirrorModel.prototype.positionAt = function (offset) {
+            offset = Math.floor(offset);
+            offset = Math.max(0, offset);
+            this._ensureLineStarts();
+            var out = this._lineStarts.getIndexOf(offset);
+            var lineLength = this._lines[out.index].length;
+            // Ensure we return a valid position
+            return {
+                lineNumber: 1 + out.index,
+                column: 1 + Math.min(out.remainder, lineLength)
+            };
+        };
+        MirrorModel.prototype._validatePosition = function (position) {
+            if (!position_1.Position.isIPosition(position)) {
+                throw new Error('bad position');
+            }
+            var lineNumber = position.lineNumber, column = position.column;
+            var hasChanged = false;
+            if (lineNumber < 1) {
+                lineNumber = 1;
+                column = 1;
+                hasChanged = true;
+            }
+            else if (lineNumber > this._lines.length) {
+                lineNumber = this._lines.length;
+                column = this._lines[lineNumber - 1].length + 1;
+                hasChanged = true;
+            }
+            else {
+                var maxCharacter = this._lines[lineNumber - 1].length + 1;
+                if (column < 1) {
+                    column = 1;
+                    hasChanged = true;
+                }
+                else if (column > maxCharacter) {
+                    column = maxCharacter;
+                    hasChanged = true;
+                }
+            }
+            if (!hasChanged) {
+                return position;
+            }
+            else {
+                return { lineNumber: lineNumber, column: column };
+            }
+        };
         return MirrorModel;
     }(mirrorModel2_1.MirrorModel2));
-    exports.MirrorModel = MirrorModel;
     /**
      * @internal
      */
@@ -10672,7 +10926,44 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
             });
             return winjs_base_1.TPromise.as(diffComputer.computeDiff());
         };
-        // ---- END diff --------------------------------------------------------------------------
+        BaseEditorSimpleWorker.prototype.computeMoreMinimalEdits = function (modelUrl, edits, ranges) {
+            var model = this._getModel(modelUrl);
+            if (!model) {
+                return winjs_base_1.TPromise.as(edits);
+            }
+            var result = [];
+            for (var _i = 0, edits_1 = edits; _i < edits_1.length; _i++) {
+                var _a = edits_1[_i], range = _a.range, text = _a.text;
+                var original = model.getValueInRange(range);
+                text = text.replace(/\r\n|\n|\r/g, model.eol);
+                if (original === text) {
+                    // noop
+                    continue;
+                }
+                // make sure diff won't take too long
+                if (Math.max(text.length, original.length) > BaseEditorSimpleWorker._diffLimit) {
+                    result.push({ range: range, text: text });
+                    continue;
+                }
+                // compute diff between original and edit.text
+                var changes = diff_1.stringDiff(original, text);
+                var editOffset = model.offsetAt(range_1.Range.lift(range).getStartPosition());
+                for (var _b = 0, changes_1 = changes; _b < changes_1.length; _b++) {
+                    var change = changes_1[_b];
+                    var start = model.positionAt(editOffset + change.originalStart);
+                    var end = model.positionAt(editOffset + change.originalStart + change.originalLength);
+                    var newEdit = {
+                        text: text.substr(change.modifiedStart, change.modifiedLength),
+                        range: { startLineNumber: start.lineNumber, startColumn: start.column, endLineNumber: end.lineNumber, endColumn: end.column }
+                    };
+                    if (model.getValueInRange(newEdit.range) !== newEdit.text) {
+                        result.push(newEdit);
+                    }
+                }
+            }
+            return winjs_base_1.TPromise.as(result);
+        };
+        // ---- END minimal edits ---------------------------------------------------------------
         BaseEditorSimpleWorker.prototype.computeLinks = function (modelUrl) {
             var model = this._getModel(modelUrl);
             if (!model) {
@@ -10771,6 +11062,9 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
                 return winjs_base_1.TPromise.wrapError(e);
             }
         };
+        // ---- END diff --------------------------------------------------------------------------
+        // ---- BEGIN minimal edits ---------------------------------------------------------------
+        BaseEditorSimpleWorker._diffLimit = 10000;
         return BaseEditorSimpleWorker;
     }());
     exports.BaseEditorSimpleWorker = BaseEditorSimpleWorker;

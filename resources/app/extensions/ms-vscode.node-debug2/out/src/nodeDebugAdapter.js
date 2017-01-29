@@ -11,6 +11,11 @@ const pathUtils = require('./pathUtils');
 const utils = require('./utils');
 const utils_1 = require('./utils');
 const errors = require('./errors');
+const DefaultSourceMapPathOverrides = {
+    'webpack:///./*': '${cwd}/*',
+    'webpack:///*': '*',
+    'meteor://💻app/*': '${cwd}/*',
+};
 class NodeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
     constructor() {
         super(...arguments);
@@ -25,6 +30,7 @@ class NodeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
         return super.initialize(args);
     }
     launch(args) {
+        args.sourceMapPathOverrides = getSourceMapPathOverrides(args.cwd, args.sourceMapPathOverrides);
         super.launch(args);
         const port = args.port || utils.random(3000, 50000);
         let runtimeExecutable = args.runtimeExecutable;
@@ -127,6 +133,7 @@ class NodeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
         });
     }
     attach(args) {
+        args.sourceMapPathOverrides = getSourceMapPathOverrides(args.cwd, args.sourceMapPathOverrides);
         this._restartMode = args.restart;
         return super.attach(args);
     }
@@ -159,7 +166,7 @@ class NodeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
         return new Promise((resolve, reject) => {
             this._nodeProcessId = nodeProcess.pid;
             nodeProcess.on('error', (error) => {
-                reject(errors.cannotLaunchDebugTarget(error));
+                reject(errors.cannotLaunchDebugTarget(errors.toString()));
                 const msg = `Node process error: ${error}`;
                 vscode_chrome_debug_core_1.logger.error(msg);
                 this.terminateSession(msg);
@@ -176,16 +183,16 @@ class NodeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
             });
             nodeProcess.stdout.on('data', (data) => {
                 let msg = data.toString();
-                vscode_chrome_debug_core_1.logger.write(msg, /*forceLog=*/ true);
+                this._session.sendEvent(new vscode_debugadapter_1.OutputEvent(msg, 'stdout'));
             });
             nodeProcess.stderr.on('data', (data) => {
                 // Print stderr, but chop off the Chrome-specific message
                 let msg = data.toString();
                 const chromeMsgIndex = msg.indexOf('To start debugging, open the following URL in Chrome:');
                 if (chromeMsgIndex >= 0) {
-                    msg = msg.substr(0, chromeMsgIndex).trim();
+                    msg = msg.substr(0, chromeMsgIndex);
                 }
-                vscode_chrome_debug_core_1.logger.write(msg, /*forceLog=*/ true, vscode_chrome_debug_core_1.logger.LogLevel.Error);
+                this._session.sendEvent(new vscode_debugadapter_1.OutputEvent(msg, 'stderr'));
             });
             resolve();
         });
@@ -437,5 +444,32 @@ NodeDebugAdapter.NODE = 'node';
 NodeDebugAdapter.RUNINTERMINAL_TIMEOUT = 5000;
 NodeDebugAdapter.NODE_TERMINATION_POLL_INTERVAL = 3000;
 exports.NodeDebugAdapter = NodeDebugAdapter;
+function getSourceMapPathOverrides(cwd, sourceMapPathOverrides) {
+    return sourceMapPathOverrides ? resolveCwdPattern(cwd, sourceMapPathOverrides, /*warnOnMissing=*/ true) :
+        resolveCwdPattern(cwd, DefaultSourceMapPathOverrides, /*warnOnMissing=*/ false);
+}
+/**
+ * Returns a copy of sourceMapPathOverrides with the ${cwd} pattern resolved in all entries.
+ */
+function resolveCwdPattern(cwd, sourceMapPathOverrides, warnOnMissing) {
+    const resolvedOverrides = {};
+    for (let pattern in sourceMapPathOverrides) {
+        const replacePattern = sourceMapPathOverrides[pattern];
+        resolvedOverrides[pattern] = replacePattern;
+        const cwdIndex = replacePattern.indexOf('${cwd}');
+        if (cwdIndex === 0) {
+            if (cwd) {
+                resolvedOverrides[pattern] = replacePattern.replace('${cwd}', cwd);
+            }
+            else if (warnOnMissing) {
+                vscode_chrome_debug_core_1.logger.log('Warning: sourceMapPathOverrides entry contains ${cwd}, but cwd is not set');
+            }
+        }
+        else if (cwdIndex > 0) {
+            vscode_chrome_debug_core_1.logger.log('Warning: in a sourceMapPathOverrides entry, ${cwd} is only valid at the beginning of the path');
+        }
+    }
+    return resolvedOverrides;
+}
 
 //# sourceMappingURL=nodeDebugAdapter.js.map

@@ -31,6 +31,7 @@ define("vs/code/node/sharedProcessMain.nls.fr", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"Extensions",
+		"Préférences",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"Extension introuvable",
@@ -102,7 +103,7 @@ define("vs/code/node/sharedProcessMain.nls.fr", {
 		"Plus tard",
 		"Annuler",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"Paramètre de proxy à utiliser. S\'il n\'est pas défini, il est récupéré à partir des variables d\'environnement http_proxy et https_proxy",
 		"Spécifie si le certificat de serveur proxy doit être vérifié par rapport à la liste des autorités de certification fournies.",

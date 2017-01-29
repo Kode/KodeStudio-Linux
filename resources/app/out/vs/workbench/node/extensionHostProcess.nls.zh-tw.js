@@ -16,6 +16,14 @@ define("vs/workbench/node/extensionHostProcess.nls.zh-tw", {
 	"vs/base/node/processes": [
 		"無法在 UNC 磁碟機上執行殼層命令。",
 	],
+	"vs/platform/configuration/common/configurationRegistry": [
+		"提供組態設定。",
+		"設定的摘要。此標籤將會在設定檔中作為分隔註解使用。",
+		"組態屬性的描述。",
+		"如果已設定，\'configuration.type\' 必須設定為物件",
+		"\'configuration.title\' 必須是字串",
+		"\'configuration.properties\' 必須是物件",
+	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"擴充功能 `{1}` 無法啟動。原因: 未知的相依性 `{0}`。",
 		"擴充功能 `{1}` 無法啟動。原因: 相依性 `{0}` 無法啟動。",
@@ -43,6 +51,12 @@ define("vs/workbench/node/extensionHostProcess.nls.zh-tw", {
 	],
 	"vs/workbench/api/node/extHostDiagnostics": [
 		"未顯示另外 {0} 個錯誤與警告。",
+	],
+	"vs/workbench/api/node/extHostTreeExplorers": [
+		"未註冊識別碼為 \'{0}\' 的 TreeExplorerNodeProvider。",
+		"TreeExplorerNodeProvider \'{0}\' 無法提供根節點。",
+		"未註冊識別碼為 \'{0}\' 的 TreeExplorerNodeProvider。",
+		"TreeExplorerNodeProvider \'{0}\' 無法 resolveChildren。",
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"路徑 {0} 並未指向有效的擴充功能測試執行器。",

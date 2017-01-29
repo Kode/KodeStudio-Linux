@@ -21,7 +21,7 @@ var TypeScriptWorkspaceSymbolProvider = (function () {
         // typescript wants to have a resource even when asking
         // general questions so we check the active editor. If this
         // doesn't match we take the first TS document.
-        var uri;
+        var uri = undefined;
         var editor = vscode_1.window.activeTextEditor;
         if (editor) {
             var document = editor.document;
@@ -42,8 +42,12 @@ var TypeScriptWorkspaceSymbolProvider = (function () {
         if (!uri) {
             return Promise.resolve([]);
         }
+        var filepath = this.client.asAbsolutePath(uri);
+        if (!filepath) {
+            return Promise.resolve([]);
+        }
         var args = {
-            file: this.client.asAbsolutePath(uri),
+            file: filepath,
             searchValue: search
         };
         if (!args.file) {
@@ -63,7 +67,7 @@ var TypeScriptWorkspaceSymbolProvider = (function () {
                     if (item.kind === 'method' || item.kind === 'function') {
                         label += '()';
                     }
-                    result.push(new vscode_1.SymbolInformation(label, _kindMapping[item.kind], item.containerName, new vscode_1.Location(_this.client.asUrl(item.file), range)));
+                    result.push(new vscode_1.SymbolInformation(label, _kindMapping[item.kind], item.containerName ? item.containerName : '', new vscode_1.Location(_this.client.asUrl(item.file), range)));
                 }
                 return result;
             }
@@ -79,4 +83,4 @@ var TypeScriptWorkspaceSymbolProvider = (function () {
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeScriptWorkspaceSymbolProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/features/workspaceSymbolProvider.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/features/workspaceSymbolProvider.js.map

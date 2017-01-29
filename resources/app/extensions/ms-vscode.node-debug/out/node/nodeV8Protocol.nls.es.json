@@ -1,5 +1,5 @@
 [
-	"no está conectado al runtime",
+	"no está conectado al entorno de ejecución",
 	"se canceló porque Node.js no responde",
 	"tiempo de espera agotado transcurridos {0} ms"
 ]

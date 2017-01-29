@@ -31,6 +31,7 @@ define("vs/code/node/sharedProcessMain.nls.ru", {
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"Расширения",
+		"Параметры",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
 		"Расширение не найдено",
@@ -102,7 +103,7 @@ define("vs/code/node/sharedProcessMain.nls.ru", {
 		"Позже",
 		"Отмена",
 	],
-	"vs/platform/request/common/request": [
+	"vs/platform/request/node/request": [
 		"HTTP",
 		"Используемый параметр прокси. Если он не задан, он будет взят из переменных среды http_proxy и https_proxy.",
 		"Должен ли сертификат прокси-сервера проверяться по списку предоставленных ЦС.",

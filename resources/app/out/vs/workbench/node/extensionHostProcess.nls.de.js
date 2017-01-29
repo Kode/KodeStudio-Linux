@@ -16,6 +16,14 @@ define("vs/workbench/node/extensionHostProcess.nls.de", {
 	"vs/base/node/processes": [
 		"Ein Shell-Befehl kann nicht auf einem UNC-Laufwerk ausgeführt werden.",
 	],
+	"vs/platform/configuration/common/configurationRegistry": [
+		"Trägt Konfigurationseigenschaften bei.",
+		"Eine Zusammenfassung der Einstellungen. Diese Bezeichnung wird in der Einstellungsdatei als trennender Kommentar verwendet.",
+		"Die Beschreibung der Konfigurationseigenschaften.",
+		"Wenn eine Festlegung erfolgt, muss \"configuration.type\" auf \"object\" festgelegt werden.",
+		"configuration.title muss eine Zeichenfolge sein.",
+		"\"configuration.properties\" muss ein Objekt sein.",
+	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"Fehler beim Aktivieren der Extension \"{1}\". Ursache: unbekannte Abhängigkeit \"{0}\".",
 		"Fehler beim Aktivieren der Extension \"{1}\". Ursache: Fehler beim Aktivieren der Extension \"{0}\".",
@@ -43,6 +51,12 @@ define("vs/workbench/node/extensionHostProcess.nls.de", {
 	],
 	"vs/workbench/api/node/extHostDiagnostics": [
 		"{0} weitere Fehler und Warnungen werden nicht angezeigt.",
+	],
+	"vs/workbench/api/node/extHostTreeExplorers": [
+		"Es ist kein TreeExplorerNodeProvider mit ID \"{0}\" registriert.",
+		"TreeExplorerNodeProvider \"{0}\" hat keinen Stammknoten bereitgestellt.",
+		"Es ist kein TreeExplorerNodeProvider mit ID \"{0}\" registriert.",
+		"TreeExplorerNodeProvider \"{0}\" hat \"resolveChildren\" nicht ausgeführt.",
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"Der Pfad \"{0}\" verweist nicht auf einen gültigen Test Runner für eine Extension.",

@@ -23,10 +23,10 @@ class WebGLImage extends Image {
 	private var myHeight: Int;
 	private var format: TextureFormat;
 	private var renderTarget: Bool;
-	public var frameBuffer: Dynamic;
-	public var renderBuffer: Dynamic;
-	public var texture: Dynamic;
-	public var depthTexture: Dynamic;
+	public var frameBuffer: Dynamic = null;
+	public var renderBuffer: Dynamic = null;
+	public var texture: Dynamic = null;
+	public var depthTexture: Dynamic = null;
 
 	private var graphics1: kha.graphics1.Graphics;
 	private var graphics2: kha.graphics2.Graphics;
@@ -35,12 +35,15 @@ class WebGLImage extends Image {
 	private var depthStencilFormat: DepthStencilFormat;
 
 	public static function init() {
-		var canvas: Dynamic = Browser.document.createElement("canvas");
-		if (canvas != null) {
-			context = canvas.getContext("2d");
-			canvas.width = 2048;
-			canvas.height = 2048;
-			context.globalCompositeOperation = "copy";
+		if (context == null) {
+			// create only once
+			var canvas: Dynamic = Browser.document.createElement("canvas");
+			if (canvas != null) {
+				context = canvas.getContext("2d");
+				canvas.width = 2048;
+				canvas.height = 2048;
+				context.globalCompositeOperation = "copy";
+			}
 		}
 	}
 
@@ -52,6 +55,7 @@ class WebGLImage extends Image {
 		image = null;
 		video = null;
 		this.depthStencilFormat = depthStencilFormat;
+		init();
 		if (renderTarget) createTexture();
 	}
 
@@ -157,7 +161,7 @@ class WebGLImage extends Image {
 			default:
 				SystemImpl.gl.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, realWidth, realHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, null);
 			}
-			
+
 			if (format == DEPTH16) {
 				SystemImpl.gl.framebufferTexture2D(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.TEXTURE_2D, texture, 0);
 				// OSX/Linux WebGL implementations throw incomplete framebuffer error, create color attachment
@@ -188,7 +192,12 @@ class WebGLImage extends Image {
 			case RGBA64:
 				SystemImpl.gl.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, myWidth, myHeight, 0, GL.RGBA, SystemImpl.halfFloat.HALF_FLOAT_OES, image);
 			case RGBA32:
-				SystemImpl.gl.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, GL.RGBA, GL.UNSIGNED_BYTE, image);
+				if (Std.is(image, Uint8Array)) {
+					SystemImpl.gl.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, myWidth, myHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, image);
+				}
+				else {
+					SystemImpl.gl.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, GL.RGBA, GL.UNSIGNED_BYTE, image);
+				}
 			case A32:
 				SystemImpl.gl.texImage2D(GL.TEXTURE_2D, 0, GL.ALPHA, myWidth, myHeight, 0, GL.ALPHA, GL.FLOAT, image);
 			case A16:
@@ -199,7 +208,7 @@ class WebGLImage extends Image {
 		}
 		SystemImpl.gl.bindTexture(GL.TEXTURE_2D, null);
 	}
-	
+
 	private function initDepthStencilBuffer(depthStencilFormat: DepthStencilFormat) {
 		switch (depthStencilFormat) {
 		case NoDepthAndStencil: {}
@@ -239,7 +248,7 @@ class WebGLImage extends Image {
 				SystemImpl.gl.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
 				SystemImpl.gl.bindFramebuffer(GL.FRAMEBUFFER, frameBuffer);
 				SystemImpl.gl.framebufferTexture2D(GL.FRAMEBUFFER, GL.DEPTH_STENCIL_ATTACHMENT, GL.TEXTURE_2D, depthTexture, 0);
-			} 
+			}
 		}
 	}
 
@@ -248,12 +257,12 @@ class WebGLImage extends Image {
 		SystemImpl.gl.bindTexture(GL.TEXTURE_2D, texture);
 		if (video != null) SystemImpl.gl.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, GL.RGBA, GL.UNSIGNED_BYTE, video);
 	}
-	
+
 	public function setDepth(stage: Int): Void {
 		SystemImpl.gl.activeTexture(GL.TEXTURE0 + stage);
 		SystemImpl.gl.bindTexture(GL.TEXTURE_2D, depthTexture);
 	}
-	
+
 	override public function setDepthStencilFrom(image: Image): Void {
 		SystemImpl.gl.bindFramebuffer(GL.FRAMEBUFFER, frameBuffer);
 		SystemImpl.gl.framebufferTexture2D(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.TEXTURE_2D, cast(image, WebGLImage).depthTexture, 0);
@@ -271,7 +280,7 @@ class WebGLImage extends Image {
 			default: 4;
 		}
 	}
-	
+
 	public function bytesToArray(bytes: Bytes): Dynamic {
 		return switch(format) {
 			case RGBA32, L8:
@@ -284,7 +293,7 @@ class WebGLImage extends Image {
 	}
 
 	public var bytes: Bytes;
-	
+
 	override public function lock(level: Int = 0): Bytes {
 		bytes = Bytes.alloc(formatByteSize(format) * width * height);
 		return bytes;
@@ -337,7 +346,10 @@ class WebGLImage extends Image {
 	}
 
 	override public function unload(): Void {
-
+		if (texture != null) SystemImpl.gl.deleteTexture(texture);
+		if (depthTexture != null) SystemImpl.gl.deleteTexture(depthTexture);
+		if (frameBuffer != null) SystemImpl.gl.deleteFramebuffer(frameBuffer);
+		if (renderBuffer != null) SystemImpl.gl.deleteRenderbuffer(renderBuffer);
 	}
 
 	override public function generateMipmaps(levels: Int): Void {

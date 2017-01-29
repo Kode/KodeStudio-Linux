@@ -1,7 +1,7 @@
 {
 	"typescript.reloadProjects.title": "Recharger le projet TypeScript",
 	"javascript.reloadProjects.title": "Recharger le projet JavaScript",
-	"configuration.typescript": "TypeScript.",
+	"configuration.typescript": "TypeScript",
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "Fonctions complètes avec leur signature de paramètre.",
 	"typescript.tsdk.desc": "Spécifie le chemin de dossier contenant les fichiers tsserver et lib*.d.ts à utiliser.",
 	"typescript.tsdk_version.desc": "Spécifie la version de tsserver. Uniquement nécessaire si tsserver n'est pas installé via npm.",

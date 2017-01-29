@@ -8,14 +8,6 @@ function defined(value) {
     return typeof value !== 'undefined';
 }
 exports.defined = defined;
-function undefined(value) {
-    return typeof value === 'undefined';
-}
-exports.undefined = undefined;
-function nil(value) {
-    return value === null;
-}
-exports.nil = nil;
 function boolean(value) {
     return value === true || value === false;
 }
@@ -23,25 +15,5 @@ exports.boolean = boolean;
 function string(value) {
     return toString.call(value) === '[object String]';
 }
-exports.string = string;
-function number(value) {
-    return toString.call(value) === '[object Number]';
-}
-exports.number = number;
-function error(value) {
-    return toString.call(value) === '[object Error]';
-}
-exports.error = error;
-function func(value) {
-    return toString.call(value) === '[object Function]';
-}
-exports.func = func;
-function array(value) {
-    return Array.isArray(value);
-}
-exports.array = array;
-function stringArray(value) {
-    return array(value) && value.every(function (elem) { return string(elem); });
-}
-exports.stringArray = stringArray;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/utils/is.js.map
+exports.string = string;
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/utils/is.js.map

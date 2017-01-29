@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 "use strict";
-var URL = require('url');
-var PathUtils = require('./pathUtilities');
+var URL = require("url");
+var PathUtils = require("./pathUtilities");
 function isWindows(absPath) {
     return /^[a-zA-Z]\:\\/.test(absPath);
 }
@@ -88,7 +88,7 @@ var URI = (function () {
     };
     URI.prototype.filePath = function () {
         var path = this._u.path;
-        path = decodeURI(this._u.path);
+        path = decodeURI(path);
         if (/^\/[a-zA-Z]\:\//.test(path)) {
             path = path.substr(1); // remove additional '/'
             path = path.replace(/\//g, '\\'); // convert slashes to backslashes

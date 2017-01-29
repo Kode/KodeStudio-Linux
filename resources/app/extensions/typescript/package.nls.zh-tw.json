@@ -1,7 +1,7 @@
 {
 	"typescript.reloadProjects.title": "重新載入 TypeScript 專案",
 	"javascript.reloadProjects.title": "重新載入 JavaScript 專案",
-	"configuration.typescript": "TypeScript。",
+	"configuration.typescript": "TypeScript",
 	"typescript.useCodeSnippetsOnMethodSuggest.dec": "使用其參數簽章完成函式。",
 	"typescript.tsdk.desc": "指定資料夾路徑，其中包含要使用的 tsserver 和 lib*.d.ts 檔案。",
 	"typescript.tsdk_version.desc": "指定 tsserver 版本。只有在未使用 npm 安裝 tsserver 時才需要。",

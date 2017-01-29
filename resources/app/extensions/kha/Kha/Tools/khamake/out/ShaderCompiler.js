@@ -238,7 +238,11 @@ class ShaderCompiler {
                             temp = to + '.temp';
                         }
                         let parameters = [this.type === 'hlsl' ? 'd3d9' : this.type, from, temp, this.temp, this.platform];
-                        if (this.platform === Platform_1.Platform.Krom && os.platform() === 'linux') {
+                        if (this.options.shaderversion) {
+                            parameters.push('--version');
+                            parameters.push(this.options.shaderversion);
+                        }
+                        else if (this.platform === Platform_1.Platform.Krom && os.platform() === 'linux') {
                             parameters.push('--version');
                             parameters.push('110');
                         }
@@ -326,4 +330,4 @@ class ShaderCompiler {
     }
 }
 exports.ShaderCompiler = ShaderCompiler;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/kha/Kha/Tools/khamake/out/ShaderCompiler.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/ShaderCompiler.js.map

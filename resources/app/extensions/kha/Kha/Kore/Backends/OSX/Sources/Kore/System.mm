@@ -5,6 +5,7 @@
 #import <Cocoa/Cocoa.h>
 
 #include <Kore/Graphics/Graphics.h>
+#include <Kore/Input/HIDManager.h>
 #include <Kore/Input/Keyboard.h>
 #include <Kore/Log.h>
 #include <Kore/System.h>
@@ -38,6 +39,7 @@ namespace {
 	//	NSWindow* window;
 	BasicOpenGLView* view;
 	MyAppDelegate* delegate;
+	HIDManager* hidManager;
 
 	struct KoreWindow : public KoreWindowBase {
 		NSWindow* handle;
@@ -88,7 +90,11 @@ bool System::handleMessages() {
 }
 
 void System::swapBuffers(int windowId) {
+#ifdef SYS_METAL
+	endGL();
+#else
 	[windows[windowId]->view switchBuffers];
+#endif
 }
 
 int Kore::System::windowCount() {
@@ -124,7 +130,7 @@ int Kore::System::initWindow(Kore::WindowOptions options) {
 }
 
 void Graphics::makeCurrent(int contextId) {
-	[[windows[contextId]->view openGLContext] makeCurrentContext];
+	//[[windows[contextId]->view openGLContext] makeCurrentContext];
 }
 
 int Kore::System::windowWidth(int id) {
@@ -199,6 +205,7 @@ extern "C"
 - (void)run {
 	@autoreleasepool {
 		[self finishLaunching];
+		hidManager = new HIDManager();
 		// try {
 		kore(argc, argv);
 		//}

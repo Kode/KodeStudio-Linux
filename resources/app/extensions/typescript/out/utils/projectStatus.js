@@ -6,36 +6,65 @@
 var vscode = require('vscode');
 var vscode_nls_1 = require('vscode-nls');
 var path_1 = require('path');
-var fs_1 = require('fs');
 var localize = vscode_nls_1.loadMessageBundle(__filename);
 var selector = ['javascript', 'javascriptreact'];
 var fileLimit = 500;
-function create(client, isOpen, memento) {
+var ExcludeHintItem = (function () {
+    function ExcludeHintItem(client) {
+        this._client = client;
+        this._item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, Number.MIN_VALUE);
+        this._item.command = 'js.projectStatus.command';
+    }
+    ExcludeHintItem.prototype.getCurrentHint = function () {
+        return this._currentHint;
+    };
+    ExcludeHintItem.prototype.hide = function () {
+        this._item.hide();
+    };
+    ExcludeHintItem.prototype.show = function (configFileName, largeRoots, onExecute) {
+        var _this = this;
+        this._currentHint = {
+            message: largeRoots.length > 0
+                ? localize(0, null, largeRoots)
+                : localize(1, null),
+            options: [{
+                    title: localize(2, null),
+                    execute: function () {
+                        _this._client.logTelemetry('js.hintProjectExcludes.accepted');
+                        onExecute();
+                        _this._item.hide();
+                        var configFileUri;
+                        if (vscode.workspace.rootPath && path_1.dirname(configFileName).indexOf(vscode.workspace.rootPath) === 0) {
+                            configFileUri = vscode.Uri.file(configFileName);
+                        }
+                        else {
+                            configFileUri = vscode.Uri.parse('untitled://' + path_1.join(vscode.workspace.rootPath || '', 'jsconfig.json'));
+                        }
+                        return vscode.workspace.openTextDocument(configFileName)
+                            .then(vscode.window.showTextDocument);
+                    }
+                }]
+        };
+        this._item.tooltip = this._currentHint.message;
+        this._item.text = localize(3, null);
+        this._item.tooltip = localize(4, null);
+        this._item.color = '#A5DF3B';
+        this._item.show();
+        this._client.logTelemetry('js.hintProjectExcludes');
+    };
+    return ExcludeHintItem;
+}());
+function createLargeProjectMonitorForProject(item, client, isOpen, memento) {
     var toDispose = [];
     var projectHinted = Object.create(null);
     var projectHintIgnoreList = memento.get('projectHintIgnoreList', []);
     for (var _i = 0, projectHintIgnoreList_1 = projectHintIgnoreList; _i < projectHintIgnoreList_1.length; _i++) {
         var path = projectHintIgnoreList_1[_i];
         if (path === null) {
-            path = undefined;
+            path = 'undefined';
         }
         projectHinted[path] = true;
     }
-    var currentHint;
-    var item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, Number.MIN_VALUE);
-    item.command = 'js.projectStatus.command';
-    toDispose.push(vscode.commands.registerCommand('js.projectStatus.command', function () {
-        var message = currentHint.message, options = currentHint.options;
-        return (_a = vscode.window).showInformationMessage.apply(_a, [message].concat(options)).then(function (selection) {
-            if (selection) {
-                return selection.execute();
-            }
-        });
-        var _a;
-    }));
-    toDispose.push(vscode.workspace.onDidChangeTextDocument(function (e) {
-        delete projectHinted[e.document.fileName];
-    }));
     function onEditor(editor) {
         if (!editor
             || !vscode.languages.match(selector, editor.document)
@@ -44,75 +73,26 @@ function create(client, isOpen, memento) {
             return;
         }
         var file = client.asAbsolutePath(editor.document.uri);
+        if (!file) {
+            return;
+        }
         isOpen(file).then(function (value) {
             if (!value) {
                 return;
             }
             return client.execute('projectInfo', { file: file, needFileNameList: true }).then(function (res) {
-                var _a = res.body, configFileName = _a.configFileName, fileNames = _a.fileNames;
-                if (projectHinted[configFileName] === true) {
+                if (!res.body) {
                     return;
                 }
-                if (!configFileName && vscode.workspace.rootPath) {
-                    fs_1.exists(path_1.join(vscode.workspace.rootPath, 'jsconfig.json'), function (exists) {
-                        // don't hint if there is a global jsconfig-file. We can get here due
-                        // to TypeScript bugs or jsconfig configurations
-                        if (exists) {
-                            return;
-                        }
-                        currentHint = {
-                            message: localize(0, null),
-                            options: [{
-                                    title: localize(1, null),
-                                    execute: function () {
-                                        client.logTelemetry('js.hintProjectCreation.ignored');
-                                        projectHinted[configFileName] = true;
-                                        projectHintIgnoreList.push(configFileName);
-                                        memento.update('projectHintIgnoreList', projectHintIgnoreList);
-                                        item.hide();
-                                    }
-                                }, {
-                                    title: localize(2, null),
-                                    execute: function () {
-                                        client.logTelemetry('js.hintProjectCreation.accepted');
-                                        projectHinted[configFileName] = true;
-                                        item.hide();
-                                        return vscode.workspace.openTextDocument(vscode.Uri.parse('untitled:' + encodeURIComponent(path_1.join(vscode.workspace.rootPath, 'jsconfig.json'))))
-                                            .then(function (doc) { return vscode.window.showTextDocument(doc, vscode.ViewColumn.Three); })
-                                            .then(function (editor) { return editor.edit(function (builder) { return builder.insert(new vscode.Position(0, 0), defaultConfig); }); });
-                                    }
-                                }]
-                        };
-                        item.text = '$(light-bulb)';
-                        item.tooltip = localize(3, null);
-                        item.color = '#A5DF3B';
-                        item.show();
-                        client.logTelemetry('js.hintProjectCreation');
-                    });
+                var _a = res.body, configFileName = _a.configFileName, fileNames = _a.fileNames;
+                if (projectHinted[configFileName] === true || !fileNames) {
+                    return;
                 }
-                else if (fileNames.length > fileLimit) {
+                if (fileNames.length > fileLimit || res.body.languageServiceDisabled) {
                     var largeRoots = computeLargeRoots(configFileName, fileNames).map(function (f) { return ("'/" + f + "/'"); }).join(', ');
-                    currentHint = {
-                        message: largeRoots.length > 0
-                            ? localize(4, null, largeRoots)
-                            : localize(5, null),
-                        options: [{
-                                title: localize(6, null),
-                                execute: function () {
-                                    client.logTelemetry('js.hintProjectExcludes.accepted');
-                                    projectHinted[configFileName] = true;
-                                    item.hide();
-                                    return vscode.workspace.openTextDocument(configFileName)
-                                        .then(vscode.window.showTextDocument);
-                                }
-                            }]
-                    };
-                    item.tooltip = currentHint.message;
-                    item.text = localize(7, null);
-                    item.tooltip = localize(8, null);
-                    item.color = '#A5DF3B';
-                    item.show();
-                    client.logTelemetry('js.hintProjectExcludes');
+                    item.show(configFileName, largeRoots, function () {
+                        projectHinted[configFileName] = true;
+                    });
                 }
                 else {
                     item.hide();
@@ -122,8 +102,41 @@ function create(client, isOpen, memento) {
             client.warn(err);
         });
     }
+    toDispose.push(vscode.workspace.onDidChangeTextDocument(function (e) {
+        delete projectHinted[e.document.fileName];
+    }));
     toDispose.push(vscode.window.onDidChangeActiveTextEditor(onEditor));
     onEditor(vscode.window.activeTextEditor);
+    return toDispose;
+}
+function createLargeProjectMonitorFromTypeScript(item, client) {
+    return client.onProjectLanguageServiceStateChanged(function (body) {
+        if (body.languageServiceEnabled) {
+            item.hide();
+        }
+        else {
+            item.show(body.projectName, '', function () { });
+        }
+    });
+}
+function create(client, isOpen, memento) {
+    var toDispose = [];
+    var item = new ExcludeHintItem(client);
+    toDispose.push(vscode.commands.registerCommand('js.projectStatus.command', function () {
+        var _a = item.getCurrentHint(), message = _a.message, options = _a.options;
+        return (_b = vscode.window).showInformationMessage.apply(_b, [message].concat(options)).then(function (selection) {
+            if (selection) {
+                return selection.execute();
+            }
+        });
+        var _b;
+    }));
+    if (client.apiVersion.has213Features()) {
+        toDispose.push(createLargeProjectMonitorFromTypeScript(item, client));
+    }
+    else {
+        toDispose.push.apply(toDispose, createLargeProjectMonitorForProject(item, client, isOpen, memento));
+    }
     return (_a = vscode.Disposable).from.apply(_a, toDispose);
     var _a;
 }
@@ -160,6 +173,5 @@ function computeLargeRoots(configFileName, fileNames) {
         }
     }
     return result;
-}
-var defaultConfig = "{\n\t" + localize(9, null) + "\n\t\"compilerOptions\": {\n\t\t\"target\": \"es6\",\n\t\t\"module\": \"commonjs\",\n\t\t\"allowSyntheticDefaultImports\": true\n\t},\n\t\"exclude\": [\n\t\t\"node_modules\",\n\t\t\"bower_components\",\n\t\t\"jspm_packages\",\n\t\t\"tmp\",\n\t\t\"temp\"\n\t]\n}\n";
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/7a90c381174c91af50b0a65fc8c20d61bb4f1be5/extensions/typescript/out/utils/projectStatus.js.map
+}
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/typescript/out/utils/projectStatus.js.map

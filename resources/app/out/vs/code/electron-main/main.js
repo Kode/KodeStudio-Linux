@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/common/winjs.base","vs/base/common/types","vs/platform/instantiation/common/instantiation","vs/base/common/platform","vs/base/common/event","path","vs/nls!vs/code/electron-main/main","vs/nls","vs/base/common/objects","vs/platform/product","vs/platform/environment/common/environment","vs/platform/configuration/common/configuration","electron","vs/base/common/errors","vs/base/common/uri","vs/base/common/lifecycle","vs/base/common/arrays","vs/platform/platform","vs/code/electron-main/log","vs/base/parts/ipc/common/ipc","vs/base/common/paths","vs/code/electron-main/storage","vs/code/electron-main/windows","fs","vs/base/common/strings","original-fs","vs/code/electron-main/lifecycle","events","vs/platform/request/common/request","vs/platform/configuration/common/configurationRegistry","vs/code/electron-main/update-manager","vs/base/node/event","os","vs/base/node/request","vs/base/node/extfs","vs/platform/environment/node/argv","vs/platform/jsonschemas/common/jsonContributionRegistry","vs/platform/instantiation/common/descriptors","vs/base/node/pfs","vs/code/electron-main/window","vs/base/common/assert","vs/base/common/async","vs/base/common/uuid","vs/code/electron-main/paths","vs/platform/url/common/url","child_process","vs/platform/instantiation/common/serviceCollection","vs/base/common/events","vs/nls!vs/base/common/json","vs/base/common/keyCodes","vs/platform/url/common/urlIpc","vs/base/common/json","vs/base/node/config","vs/base/common/callbackList","vs/base/common/keybinding","vs/nls!vs/base/common/severity","vs/base/common/severity","vs/nls!vs/code/electron-main/menus","vs/nls!vs/code/electron-main/windows","vs/nls!vs/platform/configuration/common/configurationRegistry","vs/nls!vs/platform/environment/node/argv","vs/nls!vs/platform/extensions/common/extensionsRegistry","vs/nls!vs/platform/request/common/request","vs/nls!vs/workbench/parts/git/electron-main/askpassService","vs/base/node/crypto","vs/base/common/eventEmitter","crypto","vs/base/common/graph","vs/base/node/flow","vs/code/common/windows","assert","vs/base/common/labels","vs/base/common/map","vs/base/node/paths","vs/platform/files/common/files","vs/nls!vs/base/common/keybinding","vs/platform/instantiation/common/instantiationService","vs/platform/package","vs/base/node/proxy","url","vs/platform/extensions/common/extensionsRegistry","vs/platform/request/node/requestService","vs/platform/configuration/common/model","vs/platform/configuration/node/configurationService","vs/code/electron-main/menus","vs/base/common/cancellation","vs/base/parts/ipc/common/ipc.electron","vs/base/parts/ipc/node/ipc.net","vs/code/electron-main/launch","vs/platform/environment/node/environmentService","vs/code/common/windowsIpc","vs/base/common/collections","vs/platform/url/electron-main/urlService","vs/workbench/parts/git/common/git","vs/workbench/parts/git/common/gitIpc","vs/workbench/parts/git/electron-main/askpassService","vs/base/common/decorators","vs/code/node/sharedProcess","vs/code/electron-main/auto-updater.win32","vs/code/electron-main/auto-updater.linux","zlib","http","https","minimist","net","https-proxy-agent","http-proxy-agent","vs/base/common/winjs.base.raw","vs/code/electron-main/main"];
+var __m = ["require","exports","vs/base/common/winjs.base","vs/platform/instantiation/common/instantiation","vs/base/common/event","vs/base/common/platform","vs/base/common/types","path","vs/base/common/objects","vs/nls!vs/code/electron-main/main","vs/nls","vs/platform/environment/common/environment","vs/platform/configuration/common/configuration","vs/base/common/lifecycle","electron","vs/platform/product","vs/base/common/strings","vs/base/common/arrays","vs/base/common/errors","vs/base/common/paths","vs/base/parts/ipc/common/ipc","vs/platform/platform","vs/base/common/uri","vs/code/electron-main/log","vs/code/electron-main/storage","fs","vs/base/node/event","vs/platform/configuration/common/configurationRegistry","original-fs","vs/platform/update/common/update","vs/base/common/uuid","os","vs/platform/telemetry/common/telemetry","vs/base/common/async","vs/code/electron-main/windows","vs/platform/package","vs/base/node/extfs","vs/base/node/request","crypto","vs/code/electron-main/lifecycle","vs/platform/request/node/request","vs/platform/url/common/url","vs/platform/jsonschemas/common/jsonContributionRegistry","vs/platform/instantiation/common/descriptors","vs/platform/backup/common/backup","vs/platform/environment/node/argv","child_process","vs/base/common/map","vs/code/electron-main/window","vs/code/electron-main/paths","vs/base/common/keyCodes","vs/base/node/pfs","vs/base/common/decorators","vs/base/common/assert","vs/platform/instantiation/common/serviceCollection","vs/platform/windows/common/windows","vs/nls!vs/base/common/json","vs/base/common/labels","vs/nls!vs/code/electron-main/menus","vs/base/common/json","vs/base/node/config","vs/nls!vs/base/common/keybinding","vs/base/common/keybinding","vs/nls!vs/base/common/severity","vs/base/common/severity","vs/base/common/glob","vs/nls!vs/code/electron-main/windows","vs/nls!vs/platform/configuration/common/configurationRegistry","vs/nls!vs/platform/environment/node/argv","vs/nls!vs/platform/extensions/common/extensionsRegistry","vs/nls!vs/platform/request/node/request","vs/nls!vs/platform/telemetry/common/telemetryService","vs/nls!vs/workbench/parts/git/electron-main/askpassService","vs/platform/backup/common/backupIpc","vs/base/node/flow","assert","vs/base/common/cancellation","vs/base/common/mime","vs/base/node/id","vs/platform/update/electron-main/auto-updater.win32","vs/base/common/events","vs/base/node/paths","vs/base/common/collections","vs/platform/backup/electron-main/backupMainService","vs/platform/files/common/files","vs/base/node/proxy","vs/platform/instantiation/common/instantiationService","vs/platform/keybinding/common/keybinding","vs/platform/lifecycle/common/lifecycle","url","vs/platform/environment/node/http","events","vs/platform/update/electron-main/auto-updater.linux","vs/platform/extensions/common/extensionsRegistry","vs/base/common/callbackList","vs/platform/configuration/common/model","vs/platform/configuration/node/configurationService","vs/base/parts/ipc/common/ipc.electron","vs/base/parts/ipc/electron-main/ipc.electron-main","vs/base/common/eventEmitter","vs/base/parts/ipc/node/ipc.net","vs/platform/environment/node/environmentService","vs/platform/request/node/requestService","vs/platform/update/electron-main/updateService","vs/platform/telemetry/common/telemetryIpc","vs/platform/telemetry/common/telemetryService","vs/platform/telemetry/node/commonProperties","vs/base/common/graph","vs/code/electron-main/menus","vs/platform/update/common/updateIpc","vs/code/node/sharedProcess","vs/code/electron-main/launch","vs/platform/url/electron-main/urlService","vs/base/node/crypto","vs/platform/url/common/urlIpc","vs/platform/windows/common/windowsIpc","vs/platform/windows/electron-main/windowsService","vs/workbench/parts/git/common/git","vs/workbench/parts/git/common/gitIpc","vs/workbench/parts/git/electron-main/askpassService","minimist","https","http","zlib","net","https-proxy-agent","http-proxy-agent","getmac","vs/base/common/winjs.base.raw","vs/code/electron-main/main"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,7 +10,7 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[18/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[17/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -290,7 +290,7 @@ define(__m[18/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), funct
     exports.insert = insert;
 });
 
-define(__m[42/*vs/base/common/assert*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[53/*vs/base/common/assert*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -307,7 +307,7 @@ define(__m[42/*vs/base/common/assert*/], __M([1/*require*/,0/*exports*/]), funct
     exports.ok = ok;
 });
 
-define(__m[93/*vs/base/common/collections*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[82/*vs/base/common/collections*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -400,7 +400,7 @@ define(__m[93/*vs/base/common/collections*/], __M([1/*require*/,0/*exports*/]), 
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[98/*vs/base/common/decorators*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[52/*vs/base/common/decorators*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     function memoize(target, key, descriptor) {
         var fnKey = null;
@@ -441,7 +441,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(__m[49/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[80/*vs/base/common/events*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -499,7 +499,7 @@ define(__m[49/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), funct
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[51/*vs/base/common/keyCodes*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[50/*vs/base/common/keyCodes*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     /**
      * Virtual Key Codes, the value does not hold any inherent meaning.
@@ -877,6 +877,7 @@ define(__m[51/*vs/base/common/keyCodes*/], __M([1/*require*/,0/*exports*/]), fun
         BinaryKeybindingsMask[BinaryKeybindingsMask["Alt"] = 8192] = "Alt";
         BinaryKeybindingsMask[BinaryKeybindingsMask["WinCtrl"] = 4096] = "WinCtrl";
         BinaryKeybindingsMask[BinaryKeybindingsMask["KeyCode"] = 4095] = "KeyCode";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["ModifierMask"] = 61440] = "ModifierMask";
     })(BinaryKeybindingsMask || (BinaryKeybindingsMask = {}));
     (function (KeyMod) {
         KeyMod[KeyMod["CtrlCmd"] = 32768] = "CtrlCmd";
@@ -913,12 +914,50 @@ define(__m[51/*vs/base/common/keyCodes*/], __M([1/*require*/,0/*exports*/]), fun
         BinaryKeybindings.hasWinCtrl = function (keybinding) {
             return (keybinding & 4096 /* WinCtrl */ ? true : false);
         };
+        BinaryKeybindings.isModifierKey = function (keybinding) {
+            if ((keybinding & 61440 /* ModifierMask */) === keybinding) {
+                return true;
+            }
+            var keyCode = this.extractKeyCode(keybinding);
+            return (keyCode === 5 /* Ctrl */
+                || keyCode === 57 /* Meta */
+                || keyCode === 6 /* Alt */
+                || keyCode === 4 /* Shift */);
+        };
         BinaryKeybindings.extractKeyCode = function (keybinding) {
             return (keybinding & 4095 /* KeyCode */);
         };
         return BinaryKeybindings;
     }());
     exports.BinaryKeybindings = BinaryKeybindings;
+    var Keybinding = (function () {
+        function Keybinding(keybinding) {
+            this.value = keybinding;
+        }
+        Keybinding.prototype.equals = function (other) {
+            return this.value === other.value;
+        };
+        Keybinding.prototype.hasCtrlCmd = function () {
+            return BinaryKeybindings.hasCtrlCmd(this.value);
+        };
+        Keybinding.prototype.hasShift = function () {
+            return BinaryKeybindings.hasShift(this.value);
+        };
+        Keybinding.prototype.hasAlt = function () {
+            return BinaryKeybindings.hasAlt(this.value);
+        };
+        Keybinding.prototype.hasWinCtrl = function () {
+            return BinaryKeybindings.hasWinCtrl(this.value);
+        };
+        Keybinding.prototype.isModifierKey = function () {
+            return BinaryKeybindings.isModifierKey(this.value);
+        };
+        Keybinding.prototype.getKeyCode = function () {
+            return BinaryKeybindings.extractKeyCode(this.value);
+        };
+        return Keybinding;
+    }());
+    exports.Keybinding = Keybinding;
 });
 
 /*---------------------------------------------------------------------------------------------
@@ -930,7 +969,7 @@ define(__m[51/*vs/base/common/keyCodes*/], __M([1/*require*/,0/*exports*/]), fun
 
 
 
-define(__m[74/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[47/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
     /**
      * A simple map to store value by a key object. Key can be any object that has toString() function to get
@@ -1196,12 +1235,26 @@ define(__m[74/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function
             }
             node.element = element;
         };
+        TrieMap.prototype.lookUp = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            return node.element;
+        };
         TrieMap.prototype.findSubstr = function (path) {
             var parts = this._splitter(path);
             var lastNode;
             var children = this._root.children;
-            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
-                var part = parts_1[_i];
+            for (var _i = 0, parts_2 = parts; _i < parts_2.length; _i++) {
+                var part = parts_2[_i];
                 var node = children[part];
                 if (!node) {
                     break;
@@ -1217,13 +1270,29 @@ define(__m[74/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function
                 return lastNode.element;
             }
         };
-        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/); };
+        TrieMap.prototype.findSuperstr = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_3 = parts; _i < parts_3.length; _i++) {
+                var part = parts_3[_i];
+                node = children[part];
+                if (!node) {
+                    return;
+                }
+                children = node.children;
+            }
+            var result = new TrieMap(this._splitter);
+            result._root = node;
+            return result;
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/).filter(function (s) { return !!s; }); };
         return TrieMap;
     }());
     exports.TrieMap = TrieMap;
 });
 
-define(__m[5/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[5/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1321,7 +1390,7 @@ define(__m[5/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), func
     exports.clearInterval = _globals.clearInterval.bind(_globals);
 });
 
-define(__m[22/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/platform*/,18/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
+define(__m[19/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/platform*/,17/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -1667,7 +1736,7 @@ define(__m[22/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,5/*vs/bas
     exports.isAbsolute = isAbsolute;
 });
 
-define(__m[26/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/,74/*vs/base/common/map*/]), function (require, exports, map_1) {
+define(__m[16/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,47/*vs/base/common/map*/]), function (require, exports, map_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2235,7 +2304,482 @@ define(__m[26/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/,74/*vs/
     exports.repeat = repeat;
 });
 
-define(__m[3/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[65/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,17/*vs/base/common/arrays*/,16/*vs/base/common/strings*/,19/*vs/base/common/paths*/,47/*vs/base/common/map*/]), function (require, exports, arrays, strings, paths, map_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    var PATH_REGEX = '[/\\\\]'; // any slash or backslash
+    var NO_PATH_REGEX = '[^/\\\\]'; // any non-slash and non-backslash
+    var ALL_FORWARD_SLASHES = /\//g;
+    function starsToRegExp(starCount) {
+        switch (starCount) {
+            case 0:
+                return '';
+            case 1:
+                return NO_PATH_REGEX + "*?"; // 1 star matches any number of characters except path separator (/ and \) - non greedy (?)
+            default:
+                // Matches:  (Path Sep OR Path Val followed by Path Sep OR Path Sep followed by Path Val) 0-many times
+                // Group is non capturing because we don't need to capture at all (?:...)
+                // Overall we use non-greedy matching because it could be that we match too much
+                return "(?:" + PATH_REGEX + "|" + NO_PATH_REGEX + "+" + PATH_REGEX + "|" + PATH_REGEX + NO_PATH_REGEX + "+)*?";
+        }
+    }
+    function splitGlobAware(pattern, splitChar) {
+        if (!pattern) {
+            return [];
+        }
+        var segments = [];
+        var inBraces = false;
+        var inBrackets = false;
+        var char;
+        var curVal = '';
+        for (var i = 0; i < pattern.length; i++) {
+            char = pattern[i];
+            switch (char) {
+                case splitChar:
+                    if (!inBraces && !inBrackets) {
+                        segments.push(curVal);
+                        curVal = '';
+                        continue;
+                    }
+                    break;
+                case '{':
+                    inBraces = true;
+                    break;
+                case '}':
+                    inBraces = false;
+                    break;
+                case '[':
+                    inBrackets = true;
+                    break;
+                case ']':
+                    inBrackets = false;
+                    break;
+            }
+            curVal += char;
+        }
+        // Tail
+        if (curVal) {
+            segments.push(curVal);
+        }
+        return segments;
+    }
+    exports.splitGlobAware = splitGlobAware;
+    function parseRegExp(pattern) {
+        if (!pattern) {
+            return '';
+        }
+        var regEx = '';
+        // Split up into segments for each slash found
+        var segments = splitGlobAware(pattern, '/');
+        // Special case where we only have globstars
+        if (segments.every(function (s) { return s === '**'; })) {
+            regEx = '.*';
+        }
+        else {
+            var previousSegmentWasGlobStar_1 = false;
+            segments.forEach(function (segment, index) {
+                // Globstar is special
+                if (segment === '**') {
+                    // if we have more than one globstar after another, just ignore it
+                    if (!previousSegmentWasGlobStar_1) {
+                        regEx += starsToRegExp(2);
+                        previousSegmentWasGlobStar_1 = true;
+                    }
+                    return;
+                }
+                // States
+                var inBraces = false;
+                var braceVal = '';
+                var inBrackets = false;
+                var bracketVal = '';
+                var char;
+                for (var i = 0; i < segment.length; i++) {
+                    char = segment[i];
+                    // Support brace expansion
+                    if (char !== '}' && inBraces) {
+                        braceVal += char;
+                        continue;
+                    }
+                    // Support brackets
+                    if (char !== ']' && inBrackets) {
+                        var res = void 0;
+                        switch (char) {
+                            case '-':
+                                res = char;
+                                break;
+                            case '^':
+                                res = char;
+                                break;
+                            default:
+                                res = strings.escapeRegExpCharacters(char);
+                        }
+                        bracketVal += res;
+                        continue;
+                    }
+                    switch (char) {
+                        case '{':
+                            inBraces = true;
+                            continue;
+                        case '[':
+                            inBrackets = true;
+                            continue;
+                        case '}':
+                            var choices = splitGlobAware(braceVal, ',');
+                            // Converts {foo,bar} => [foo|bar]
+                            var braceRegExp = "(?:" + choices.map(function (c) { return parseRegExp(c); }).join('|') + ")";
+                            regEx += braceRegExp;
+                            inBraces = false;
+                            braceVal = '';
+                            break;
+                        case ']':
+                            regEx += ('[' + bracketVal + ']');
+                            inBrackets = false;
+                            bracketVal = '';
+                            break;
+                        case '?':
+                            regEx += NO_PATH_REGEX; // 1 ? matches any single character except path separator (/ and \)
+                            continue;
+                        case '*':
+                            regEx += starsToRegExp(1);
+                            continue;
+                        default:
+                            regEx += strings.escapeRegExpCharacters(char);
+                    }
+                }
+                // Tail: Add the slash we had split on if there is more to come and the next one is not a globstar
+                if (index < segments.length - 1 && segments[index + 1] !== '**') {
+                    regEx += PATH_REGEX;
+                }
+                // reset state
+                previousSegmentWasGlobStar_1 = false;
+            });
+        }
+        return regEx;
+    }
+    // regexes to check for trival glob patterns that just check for String#endsWith
+    var T1 = /^\*\*\/\*\.[\w\.-]+$/; // **/*.something
+    var T2 = /^\*\*\/([\w\.-]+)\/?$/; // **/something
+    var T3 = /^{\*\*\/[\*\.]?[\w\.-]+\/?(,\*\*\/[\*\.]?[\w\.-]+\/?)*}$/; // {**/*.something,**/*.else} or {**/package.json,**/project.json}
+    var T3_2 = /^{\*\*\/[\*\.]?[\w\.-]+(\/(\*\*)?)?(,\*\*\/[\*\.]?[\w\.-]+(\/(\*\*)?)?)*}$/; // Like T3, with optional trailing /**
+    var T4 = /^\*\*((\/[\w\.-]+)+)\/?$/; // **/something/else
+    var T5 = /^([\w\.-]+(\/[\w\.-]+)*)\/?$/; // something/else
+    var CACHE = new map_1.BoundedLinkedMap(10000); // bounded to 10000 elements
+    var FALSE = function () {
+        return false;
+    };
+    var NULL = function () {
+        return null;
+    };
+    function parsePattern(pattern, options) {
+        if (!pattern) {
+            return NULL;
+        }
+        // Whitespace trimming
+        pattern = pattern.trim();
+        // Check cache
+        var patternKey = pattern + "_" + !!options.trimForExclusions;
+        var parsedPattern = CACHE.get(patternKey);
+        if (parsedPattern) {
+            return parsedPattern;
+        }
+        // Check for Trivias
+        var match;
+        if (T1.test(pattern)) {
+            var base_1 = pattern.substr(4); // '**/*'.length === 4
+            parsedPattern = function (path, basename) {
+                return path && strings.endsWith(path, base_1) ? pattern : null;
+            };
+        }
+        else if (match = T2.exec(trimForExclusions(pattern, options))) {
+            parsedPattern = trivia2(match[1], pattern);
+        }
+        else if ((options.trimForExclusions ? T3_2 : T3).test(pattern)) {
+            parsedPattern = trivia3(pattern, options);
+        }
+        else if (match = T4.exec(trimForExclusions(pattern, options))) {
+            parsedPattern = trivia4and5(match[1].substr(1), pattern, true);
+        }
+        else if (match = T5.exec(trimForExclusions(pattern, options))) {
+            parsedPattern = trivia4and5(match[1], pattern, false);
+        }
+        else {
+            parsedPattern = toRegExp(pattern);
+        }
+        // Cache
+        CACHE.set(patternKey, parsedPattern);
+        return parsedPattern;
+    }
+    function trimForExclusions(pattern, options) {
+        return options.trimForExclusions && strings.endsWith(pattern, '/**') ? pattern.substr(0, pattern.length - 2) : pattern; // dropping **, tailing / is dropped later
+    }
+    // common pattern: **/some.txt just need basename check
+    function trivia2(base, originalPattern) {
+        var slashBase = "/" + base;
+        var backslashBase = "\\" + base;
+        var parsedPattern = function (path, basename) {
+            if (!path) {
+                return null;
+            }
+            if (basename) {
+                return basename === base ? originalPattern : null;
+            }
+            return path === base || strings.endsWith(path, slashBase) || strings.endsWith(path, backslashBase) ? originalPattern : null;
+        };
+        var basenames = [base];
+        parsedPattern.basenames = basenames;
+        parsedPattern.patterns = [originalPattern];
+        parsedPattern.allBasenames = basenames;
+        return parsedPattern;
+    }
+    // repetition of common patterns (see above) {**/*.txt,**/*.png}
+    function trivia3(pattern, options) {
+        var parsedPatterns = aggregateBasenameMatches(pattern.slice(1, -1).split(',')
+            .map(function (pattern) { return parsePattern(pattern, options); })
+            .filter(function (pattern) { return pattern !== NULL; }), pattern);
+        var n = parsedPatterns.length;
+        if (!n) {
+            return NULL;
+        }
+        if (n === 1) {
+            return parsedPatterns[0];
+        }
+        var parsedPattern = function (path, basename) {
+            for (var i = 0, n_1 = parsedPatterns.length; i < n_1; i++) {
+                if (parsedPatterns[i](path, basename)) {
+                    return pattern;
+                }
+            }
+            return null;
+        };
+        var withBasenames = arrays.first(parsedPatterns, function (pattern) { return !!pattern.allBasenames; });
+        if (withBasenames) {
+            parsedPattern.allBasenames = withBasenames.allBasenames;
+        }
+        var allPaths = parsedPatterns.reduce(function (all, current) { return current.allPaths ? all.concat(current.allPaths) : all; }, []);
+        if (allPaths.length) {
+            parsedPattern.allPaths = allPaths;
+        }
+        return parsedPattern;
+    }
+    // common patterns: **/something/else just need endsWith check, something/else just needs and equals check
+    function trivia4and5(path, pattern, matchPathEnds) {
+        var nativePath = paths.nativeSep !== paths.sep ? path.replace(ALL_FORWARD_SLASHES, paths.nativeSep) : path;
+        var nativePathEnd = paths.nativeSep + nativePath;
+        var parsedPattern = matchPathEnds ? function (path, basename) {
+            return path && (path === nativePath || strings.endsWith(path, nativePathEnd)) ? pattern : null;
+        } : function (path, basename) {
+            return path && path === nativePath ? pattern : null;
+        };
+        parsedPattern.allPaths = [(matchPathEnds ? '*/' : './') + path];
+        return parsedPattern;
+    }
+    function toRegExp(pattern) {
+        try {
+            var regExp_1 = new RegExp("^" + parseRegExp(pattern) + "$");
+            return function (path, basename) {
+                regExp_1.lastIndex = 0; // reset RegExp to its initial state to reuse it!
+                return path && regExp_1.test(path) ? pattern : null;
+            };
+        }
+        catch (error) {
+            return NULL;
+        }
+    }
+    function match(arg1, path, siblingsFn) {
+        if (!arg1 || !path) {
+            return false;
+        }
+        return parse(arg1)(path, undefined, siblingsFn);
+    }
+    exports.match = match;
+    function parse(arg1, options) {
+        if (options === void 0) { options = {}; }
+        if (!arg1) {
+            return FALSE;
+        }
+        // Glob with String
+        if (typeof arg1 === 'string') {
+            var parsedPattern_1 = parsePattern(arg1, options);
+            if (parsedPattern_1 === NULL) {
+                return FALSE;
+            }
+            var resultPattern = function (path, basename) {
+                return !!parsedPattern_1(path, basename);
+            };
+            if (parsedPattern_1.allBasenames) {
+                resultPattern.allBasenames = parsedPattern_1.allBasenames;
+            }
+            if (parsedPattern_1.allPaths) {
+                resultPattern.allPaths = parsedPattern_1.allPaths;
+            }
+            return resultPattern;
+        }
+        // Glob with Expression
+        return parsedExpression(arg1, options);
+    }
+    exports.parse = parse;
+    function getBasenameTerms(patternOrExpression) {
+        return patternOrExpression.allBasenames || [];
+    }
+    exports.getBasenameTerms = getBasenameTerms;
+    function getPathTerms(patternOrExpression) {
+        return patternOrExpression.allPaths || [];
+    }
+    exports.getPathTerms = getPathTerms;
+    function parsedExpression(expression, options) {
+        var parsedPatterns = aggregateBasenameMatches(Object.getOwnPropertyNames(expression)
+            .map(function (pattern) { return parseExpressionPattern(pattern, expression[pattern], options); })
+            .filter(function (pattern) { return pattern !== NULL; }));
+        var n = parsedPatterns.length;
+        if (!n) {
+            return NULL;
+        }
+        if (!parsedPatterns.some(function (parsedPattern) { return parsedPattern.requiresSiblings; })) {
+            if (n === 1) {
+                return parsedPatterns[0];
+            }
+            var resultExpression_1 = function (path, basename, siblingsFn) {
+                for (var i = 0, n_2 = parsedPatterns.length; i < n_2; i++) {
+                    // Pattern matches path
+                    var result = parsedPatterns[i](path, basename);
+                    if (result) {
+                        return result;
+                    }
+                }
+                return null;
+            };
+            var withBasenames_1 = arrays.first(parsedPatterns, function (pattern) { return !!pattern.allBasenames; });
+            if (withBasenames_1) {
+                resultExpression_1.allBasenames = withBasenames_1.allBasenames;
+            }
+            var allPaths_1 = parsedPatterns.reduce(function (all, current) { return current.allPaths ? all.concat(current.allPaths) : all; }, []);
+            if (allPaths_1.length) {
+                resultExpression_1.allPaths = allPaths_1;
+            }
+            return resultExpression_1;
+        }
+        var resultExpression = function (path, basename, siblingsFn) {
+            var siblingsPattern;
+            var siblingsResolved = !siblingsFn;
+            function siblingsPatternFn() {
+                // Resolve siblings only once
+                if (!siblingsResolved) {
+                    siblingsResolved = true;
+                    var siblings = siblingsFn();
+                    if (siblings && siblings.length) {
+                        if (!basename) {
+                            basename = paths.basename(path);
+                        }
+                        var name_1 = basename.substr(0, basename.length - paths.extname(path).length);
+                        siblingsPattern = { siblings: siblings, name: name_1 };
+                    }
+                }
+                return siblingsPattern;
+            }
+            for (var i = 0, n_3 = parsedPatterns.length; i < n_3; i++) {
+                // Pattern matches path
+                var result = parsedPatterns[i](path, basename, siblingsPatternFn);
+                if (result) {
+                    return result;
+                }
+            }
+            return null;
+        };
+        var withBasenames = arrays.first(parsedPatterns, function (pattern) { return !!pattern.allBasenames; });
+        if (withBasenames) {
+            resultExpression.allBasenames = withBasenames.allBasenames;
+        }
+        var allPaths = parsedPatterns.reduce(function (all, current) { return current.allPaths ? all.concat(current.allPaths) : all; }, []);
+        if (allPaths.length) {
+            resultExpression.allPaths = allPaths;
+        }
+        return resultExpression;
+    }
+    function parseExpressionPattern(pattern, value, options) {
+        if (value === false) {
+            return NULL; // pattern is disabled
+        }
+        var parsedPattern = parsePattern(pattern, options);
+        if (parsedPattern === NULL) {
+            return NULL;
+        }
+        // Expression Pattern is <boolean>
+        if (typeof value === 'boolean') {
+            return parsedPattern;
+        }
+        // Expression Pattern is <SiblingClause>
+        if (value) {
+            var when_1 = value.when;
+            if (typeof when_1 === 'string') {
+                var result = function (path, basename, siblingsPatternFn) {
+                    if (!parsedPattern(path, basename)) {
+                        return null;
+                    }
+                    var siblingsPattern = siblingsPatternFn();
+                    if (!siblingsPattern) {
+                        return null; // pattern is malformed or we don't have siblings
+                    }
+                    var clausePattern = when_1.replace('$(basename)', siblingsPattern.name);
+                    if (siblingsPattern.siblings.indexOf(clausePattern) !== -1) {
+                        return pattern;
+                    }
+                    else {
+                        return null; // pattern does not match in the end because the when clause is not satisfied
+                    }
+                };
+                result.requiresSiblings = true;
+                return result;
+            }
+        }
+        // Expression is Anything
+        return parsedPattern;
+    }
+    function aggregateBasenameMatches(parsedPatterns, result) {
+        var basenamePatterns = parsedPatterns.filter(function (parsedPattern) { return !!parsedPattern.basenames; });
+        if (basenamePatterns.length < 2) {
+            return parsedPatterns;
+        }
+        var basenames = basenamePatterns.reduce(function (all, current) { return all.concat(current.basenames); }, []);
+        var patterns;
+        if (result) {
+            patterns = [];
+            for (var i = 0, n = basenames.length; i < n; i++) {
+                patterns.push(result);
+            }
+        }
+        else {
+            patterns = basenamePatterns.reduce(function (all, current) { return all.concat(current.patterns); }, []);
+        }
+        var aggregate = function (path, basename) {
+            if (!path) {
+                return null;
+            }
+            if (!basename) {
+                var i = void 0;
+                for (i = path.length; i > 0; i--) {
+                    var ch = path.charCodeAt(i - 1);
+                    if (ch === 47 /* Slash */ || ch === 92 /* Backslash */) {
+                        break;
+                    }
+                }
+                basename = path.substr(i);
+            }
+            var index = basenames.indexOf(basename);
+            return index !== -1 ? patterns[index] : null;
+        };
+        aggregate.basenames = basenames;
+        aggregate.patterns = patterns;
+        aggregate.allBasenames = basenames;
+        var aggregatedPatterns = parsedPatterns.filter(function (parsedPattern) { return !parsedPattern.basenames; });
+        aggregatedPatterns.push(aggregate);
+        return aggregatedPatterns;
+    }
+});
+
+define(__m[6/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2403,7 +2947,7 @@ define(__m[3/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), functio
     exports.create = create;
 });
 
-define(__m[15/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/platform*/,3/*vs/base/common/types*/]), function (require, exports, platform, types) {
+define(__m[18/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/platform*/,6/*vs/base/common/types*/]), function (require, exports, platform, types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2447,6 +2991,10 @@ define(__m[15/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,5/*vs/ba
             this.unexpectedErrorHandler(e);
             this.emit(e);
         };
+        // For external errors, we don't want the listeners to be called
+        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
+            this.unexpectedErrorHandler(e);
+        };
         return ErrorHandler;
     }());
     exports.ErrorHandler = ErrorHandler;
@@ -2462,6 +3010,13 @@ define(__m[15/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,5/*vs/ba
         }
     }
     exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedExternalError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedExternalError(e);
+        }
+    }
+    exports.onUnexpectedExternalError = onUnexpectedExternalError;
     function onUnexpectedPromiseError(promise) {
         return promise.then(null, onUnexpectedError);
     }
@@ -2556,7 +3111,7 @@ define(__m[15/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,5/*vs/ba
     exports.getErrorMessage = getErrorMessage;
 });
 
-define(__m[55/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+define(__m[94/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,18/*vs/base/common/errors*/]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2645,7 +3200,7 @@ define(__m[55/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,15
 
 
 
-define(__m[67/*vs/base/common/eventEmitter*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/errors*/]), function (require, exports, Errors) {
+define(__m[99/*vs/base/common/eventEmitter*/], __M([0/*require*/,1/*exports*/,18/*vs/base/common/errors*/]), function (require, exports, Errors) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2816,13 +3371,19 @@ define(__m[67/*vs/base/common/eventEmitter*/], __M([1/*require*/,0/*exports*/,15
                 this._collectedEvents.push(emitterEvent);
             }
         };
-        EventEmitter.prototype.deferredEmit = function (callback) {
+        EventEmitter.prototype._beginDeferredEmit = function () {
             this._deferredCnt = this._deferredCnt + 1;
-            var result = safeInvokeNoArg(callback);
+        };
+        EventEmitter.prototype._endDeferredEmit = function () {
             this._deferredCnt = this._deferredCnt - 1;
             if (this._deferredCnt === 0) {
                 this._emitCollected();
             }
+        };
+        EventEmitter.prototype.deferredEmit = function (callback) {
+            this._beginDeferredEmit();
+            var result = safeInvokeNoArg(callback);
+            this._endDeferredEmit();
             return result;
         };
         EventEmitter.prototype._emitCollected = function () {
@@ -2895,7 +3456,7 @@ define(__m[67/*vs/base/common/eventEmitter*/], __M([1/*require*/,0/*exports*/,15
     }
 });
 
-define(__m[69/*vs/base/common/graph*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/,93/*vs/base/common/collections*/]), function (require, exports, types_1, collections_1) {
+define(__m[107/*vs/base/common/graph*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/types*/,82/*vs/base/common/collections*/]), function (require, exports, types_1, collections_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -2984,7 +3545,7 @@ define(__m[69/*vs/base/common/graph*/], __M([1/*require*/,0/*exports*/,3/*vs/bas
     exports.Graph = Graph;
 });
 
-define(__m[73/*vs/base/common/labels*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/platform*/,3/*vs/base/common/types*/,26/*vs/base/common/strings*/,22/*vs/base/common/paths*/]), function (require, exports, platform, types, strings, paths) {
+define(__m[57/*vs/base/common/labels*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/platform*/,6/*vs/base/common/types*/,16/*vs/base/common/strings*/,19/*vs/base/common/paths*/]), function (require, exports, platform, types, strings, paths) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3038,7 +3599,7 @@ define(__m[73/*vs/base/common/labels*/], __M([1/*require*/,0/*exports*/,5/*vs/ba
 
 
 
-define(__m[17/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/]), function (require, exports, types_1) {
+define(__m[13/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/types*/]), function (require, exports, types_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3105,9 +3666,40 @@ define(__m[17/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,3/*vs
         return Disposables;
     }(Disposable));
     exports.Disposables = Disposables;
+    var ReferenceCollection = (function () {
+        function ReferenceCollection() {
+            this.references = Object.create(null);
+        }
+        ReferenceCollection.prototype.acquire = function (key) {
+            var _this = this;
+            var reference = this.references[key];
+            if (!reference) {
+                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
+            }
+            var object = reference.object;
+            var dispose = function () {
+                if (--reference.counter === 0) {
+                    _this.destroyReferencedObject(reference.object);
+                    delete _this.references[key];
+                }
+            };
+            reference.counter++;
+            return { object: object, dispose: dispose };
+        };
+        return ReferenceCollection;
+    }());
+    exports.ReferenceCollection = ReferenceCollection;
+    var ImmortalReference = (function () {
+        function ImmortalReference(object) {
+            this.object = object;
+        }
+        ImmortalReference.prototype.dispose = function () { };
+        return ImmortalReference;
+    }());
+    exports.ImmortalReference = ImmortalReference;
 });
 
-define(__m[6/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,17/*vs/base/common/lifecycle*/,55/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
+define(__m[4/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,13/*vs/base/common/lifecycle*/,94/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3491,7 +4083,7 @@ define(__m[6/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[87/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[76/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     var shortcutEvent = Object.freeze(function (callback, context) {
         var handle = setTimeout(callback.bind(context), 0);
@@ -3577,7 +4169,214 @@ define(__m[87/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,6/
     exports.CancellationTokenSource = CancellationTokenSource;
 });
 
-define(__m[10/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/]), function (require, exports, Types) {
+define(__m[77/*vs/base/common/mime*/], __M([0/*require*/,1/*exports*/,19/*vs/base/common/paths*/,6/*vs/base/common/types*/,16/*vs/base/common/strings*/,65/*vs/base/common/glob*/]), function (require, exports, paths, types, strings, glob_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.MIME_TEXT = 'text/plain';
+    exports.MIME_BINARY = 'application/octet-stream';
+    exports.MIME_UNKNOWN = 'application/unknown';
+    var registeredAssociations = [];
+    var nonUserRegisteredAssociations = [];
+    var userRegisteredAssociations = [];
+    /**
+     * Associate a text mime to the registry.
+     */
+    function registerTextMime(association) {
+        // Register
+        var associationItem = toTextMimeAssociationItem(association);
+        registeredAssociations.push(associationItem);
+        if (!associationItem.userConfigured) {
+            nonUserRegisteredAssociations.push(associationItem);
+        }
+        else {
+            userRegisteredAssociations.push(associationItem);
+        }
+        // Check for conflicts unless this is a user configured association
+        if (!associationItem.userConfigured) {
+            registeredAssociations.forEach(function (a) {
+                if (a.mime === associationItem.mime || a.userConfigured) {
+                    return; // same mime or userConfigured is ok
+                }
+                if (associationItem.extension && a.extension === associationItem.extension) {
+                    console.warn("Overwriting extension <<" + associationItem.extension + ">> to now point to mime <<" + associationItem.mime + ">>");
+                }
+                if (associationItem.filename && a.filename === associationItem.filename) {
+                    console.warn("Overwriting filename <<" + associationItem.filename + ">> to now point to mime <<" + associationItem.mime + ">>");
+                }
+                if (associationItem.filepattern && a.filepattern === associationItem.filepattern) {
+                    console.warn("Overwriting filepattern <<" + associationItem.filepattern + ">> to now point to mime <<" + associationItem.mime + ">>");
+                }
+                if (associationItem.firstline && a.firstline === associationItem.firstline) {
+                    console.warn("Overwriting firstline <<" + associationItem.firstline + ">> to now point to mime <<" + associationItem.mime + ">>");
+                }
+            });
+        }
+    }
+    exports.registerTextMime = registerTextMime;
+    function toTextMimeAssociationItem(association) {
+        return {
+            id: association.id,
+            mime: association.mime,
+            filename: association.filename,
+            extension: association.extension,
+            filepattern: association.filepattern,
+            firstline: association.firstline,
+            userConfigured: association.userConfigured,
+            filenameLowercase: association.filename ? association.filename.toLowerCase() : void 0,
+            extensionLowercase: association.extension ? association.extension.toLowerCase() : void 0,
+            filepatternLowercase: association.filepattern ? association.filepattern.toLowerCase() : void 0,
+            filepatternOnPath: association.filepattern ? association.filepattern.indexOf(paths.sep) >= 0 : false
+        };
+    }
+    /**
+     * Clear text mimes from the registry.
+     */
+    function clearTextMimes(onlyUserConfigured) {
+        if (!onlyUserConfigured) {
+            registeredAssociations = [];
+            nonUserRegisteredAssociations = [];
+            userRegisteredAssociations = [];
+        }
+        else {
+            registeredAssociations = registeredAssociations.filter(function (a) { return !a.userConfigured; });
+            userRegisteredAssociations = [];
+        }
+    }
+    exports.clearTextMimes = clearTextMimes;
+    /**
+     * Given a file, return the best matching mime type for it
+     */
+    function guessMimeTypes(path, firstLine) {
+        if (!path) {
+            return [exports.MIME_UNKNOWN];
+        }
+        path = path.toLowerCase();
+        var filename = paths.basename(path);
+        // 1.) User configured mappings have highest priority
+        var configuredMime = guessMimeTypeByPath(path, filename, userRegisteredAssociations);
+        if (configuredMime) {
+            return [configuredMime, exports.MIME_TEXT];
+        }
+        // 2.) Registered mappings have middle priority
+        var registeredMime = guessMimeTypeByPath(path, filename, nonUserRegisteredAssociations);
+        if (registeredMime) {
+            return [registeredMime, exports.MIME_TEXT];
+        }
+        // 3.) Firstline has lowest priority
+        if (firstLine) {
+            var firstlineMime = guessMimeTypeByFirstline(firstLine);
+            if (firstlineMime) {
+                return [firstlineMime, exports.MIME_TEXT];
+            }
+        }
+        return [exports.MIME_UNKNOWN];
+    }
+    exports.guessMimeTypes = guessMimeTypes;
+    function guessMimeTypeByPath(path, filename, associations) {
+        var filenameMatch;
+        var patternMatch;
+        var extensionMatch;
+        for (var i = 0; i < associations.length; i++) {
+            var association = associations[i];
+            // First exact name match
+            if (filename === association.filenameLowercase) {
+                filenameMatch = association;
+                break; // take it!
+            }
+            // Longest pattern match
+            if (association.filepattern) {
+                if (!patternMatch || association.filepattern.length > patternMatch.filepattern.length) {
+                    var target = association.filepatternOnPath ? path : filename; // match on full path if pattern contains path separator
+                    if (glob_1.match(association.filepatternLowercase, target)) {
+                        patternMatch = association;
+                    }
+                }
+            }
+            // Longest extension match
+            if (association.extension) {
+                if (!extensionMatch || association.extension.length > extensionMatch.extension.length) {
+                    if (strings.endsWith(filename, association.extensionLowercase)) {
+                        extensionMatch = association;
+                    }
+                }
+            }
+        }
+        // 1.) Exact name match has second highest prio
+        if (filenameMatch) {
+            return filenameMatch.mime;
+        }
+        // 2.) Match on pattern
+        if (patternMatch) {
+            return patternMatch.mime;
+        }
+        // 3.) Match on extension comes next
+        if (extensionMatch) {
+            return extensionMatch.mime;
+        }
+        return null;
+    }
+    function guessMimeTypeByFirstline(firstLine) {
+        if (strings.startsWithUTF8BOM(firstLine)) {
+            firstLine = firstLine.substr(1);
+        }
+        if (firstLine.length > 0) {
+            for (var i = 0; i < registeredAssociations.length; ++i) {
+                var association = registeredAssociations[i];
+                if (!association.firstline) {
+                    continue;
+                }
+                // Make sure the entire line matches, not just a subpart.
+                var matches = firstLine.match(association.firstline);
+                if (matches && matches.length > 0 && matches[0].length === firstLine.length) {
+                    return association.mime;
+                }
+            }
+        }
+        return null;
+    }
+    function isBinaryMime(mimes) {
+        if (!mimes) {
+            return false;
+        }
+        var mimeVals;
+        if (types.isArray(mimes)) {
+            mimeVals = mimes;
+        }
+        else {
+            mimeVals = mimes.split(',').map(function (mime) { return mime.trim(); });
+        }
+        return mimeVals.indexOf(exports.MIME_BINARY) >= 0;
+    }
+    exports.isBinaryMime = isBinaryMime;
+    function isUnspecific(mime) {
+        if (!mime) {
+            return true;
+        }
+        if (typeof mime === 'string') {
+            return mime === exports.MIME_BINARY || mime === exports.MIME_TEXT || mime === exports.MIME_UNKNOWN;
+        }
+        return mime.length === 1 && isUnspecific(mime[0]);
+    }
+    exports.isUnspecific = isUnspecific;
+    function suggestFilename(langId, prefix) {
+        for (var i = 0; i < registeredAssociations.length; i++) {
+            var association = registeredAssociations[i];
+            if (association.userConfigured) {
+                continue; // only support registered ones
+            }
+            if (association.id === langId && association.extension) {
+                return prefix + association.extension;
+            }
+        }
+        return prefix; // without any known extension, just return the prefix
+    }
+    exports.suggestFilename = suggestFilename;
+});
+
+define(__m[8/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/types*/]), function (require, exports, Types) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -3869,7 +4668,7 @@ define(__m[10/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,3/*vs/b
     exports.getOrDefault = getOrDefault;
 });
 
-define(__m[16/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/platform*/]), function (require, exports, platform) {
+define(__m[22/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/platform*/]), function (require, exports, platform) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4264,7 +5063,7 @@ define(__m[16/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,5/*vs/base/
 
 
 
-define(__m[44/*vs/base/common/uuid*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[30/*vs/base/common/uuid*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6441,7 +7240,7 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define(__m[2/*vs/base/common/winjs.base*/], __M([109/*vs/base/common/winjs.base.raw*/,15/*vs/base/common/errors*/]), function (winjs, __Errors__) {
+define(__m[2/*vs/base/common/winjs.base*/], __M([128/*vs/base/common/winjs.base.raw*/,18/*vs/base/common/errors*/]), function (winjs, __Errors__) {
 	'use strict';
 
 	var outstandingPromiseErrors = {};
@@ -6507,7 +7306,7 @@ define(__m[2/*vs/base/common/winjs.base*/], __M([109/*vs/base/common/winjs.base.
 
 
 
-define(__m[43/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/errors*/,5/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,87/*vs/base/common/cancellation*/,17/*vs/base/common/lifecycle*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1) {
+define(__m[33/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,18/*vs/base/common/errors*/,5/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,76/*vs/base/common/cancellation*/,13/*vs/base/common/lifecycle*/,4/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
     'use strict';
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
@@ -6835,13 +7634,13 @@ define(__m[43/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,15/*vs/ba
      * Runs the provided list of promise factories in sequential order. The returned
      * promise will complete to an array of results from each promise.
      */
-    function sequence(promiseFactory) {
+    function sequence(promiseFactories) {
         var results = [];
         // reverse since we start with last element using pop()
-        promiseFactory = promiseFactory.reverse();
+        promiseFactories = promiseFactories.reverse();
         function next() {
-            if (promiseFactory.length) {
-                return promiseFactory.pop()();
+            if (promiseFactories.length) {
+                return promiseFactories.pop()();
             }
             return null;
         }
@@ -6858,6 +7657,25 @@ define(__m[43/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,15/*vs/ba
         return winjs_base_1.TPromise.as(null).then(thenHandler);
     }
     exports.sequence = sequence;
+    function first(promiseFactories, shouldStop) {
+        if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
+        promiseFactories = promiseFactories.reverse().slice();
+        var loop = function () {
+            if (promiseFactories.length === 0) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            var factory = promiseFactories.pop();
+            var promise = factory();
+            return promise.then(function (result) {
+                if (shouldStop(result)) {
+                    return winjs_base_1.TPromise.as(result);
+                }
+                return loop();
+            });
+        };
+        return loop();
+    }
+    exports.first = first;
     function once(fn) {
         var _this = this;
         var didCall = false;
@@ -6881,7 +7699,15 @@ define(__m[43/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,15/*vs/ba
             this.maxDegreeOfParalellism = maxDegreeOfParalellism;
             this.outstandingPromises = [];
             this.runningPromises = 0;
+            this._onFinished = new event_1.Emitter();
         }
+        Object.defineProperty(Limiter.prototype, "onFinished", {
+            get: function () {
+                return this._onFinished.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Limiter.prototype.queue = function (promiseFactory) {
             var _this = this;
             return new winjs_base_1.TPromise(function (c, e, p) {
@@ -6906,7 +7732,15 @@ define(__m[43/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,15/*vs/ba
         };
         Limiter.prototype.consumed = function () {
             this.runningPromises--;
-            this.consume();
+            if (this.outstandingPromises.length > 0) {
+                this.consume();
+            }
+            else {
+                this._onFinished.fire();
+            }
+        };
+        Limiter.prototype.dispose = function () {
+            this._onFinished.dispose();
         };
         return Limiter;
     }());
@@ -7059,7 +7893,7 @@ define(__m[43/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,15/*vs/ba
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[66/*vs/base/node/crypto*/], __M([1/*require*/,0/*exports*/,25/*fs*/,68/*crypto*/,2/*vs/base/common/winjs.base*/,43/*vs/base/common/async*/]), function (require, exports, fs, crypto, winjs_base_1, async_1) {
+define(__m[113/*vs/base/node/crypto*/], __M([0/*require*/,1/*exports*/,25/*fs*/,38/*crypto*/,2/*vs/base/common/winjs.base*/,33/*vs/base/common/async*/]), function (require, exports, fs, crypto, winjs_base_1, async_1) {
     'use strict';
     function checksum(path, sha1hash) {
         var promise = new winjs_base_1.TPromise(function (c, e) {
@@ -7096,9 +7930,10 @@ define(__m[66/*vs/base/node/crypto*/], __M([1/*require*/,0/*exports*/,25/*fs*/,6
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[33/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[26/*vs/base/node/event*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/event*/]), function (require, exports, event_1) {
     'use strict';
     function fromEventEmitter(emitter, eventName, map) {
+        if (map === void 0) { map = function (id) { return id; }; }
         var fn = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -7119,7 +7954,7 @@ define(__m[33/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[70/*vs/base/node/flow*/], __M([1/*require*/,0/*exports*/,72/*assert*/]), function (require, exports, assert) {
+define(__m[74/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,75/*assert*/]), function (require, exports, assert) {
     'use strict';
     /**
      * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
@@ -7262,7 +8097,7 @@ define(__m[70/*vs/base/node/flow*/], __M([1/*require*/,0/*exports*/,72/*assert*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[36/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,44/*vs/base/common/uuid*/,26/*vs/base/common/strings*/,5/*vs/base/common/platform*/,70/*vs/base/node/flow*/,25/*fs*/,7/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
+define(__m[36/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,30/*vs/base/common/uuid*/,16/*vs/base/common/strings*/,5/*vs/base/common/platform*/,74/*vs/base/node/flow*/,25/*fs*/,7/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
     'use strict';
     var loop = flow.loop;
     function readdirSync(path) {
@@ -7485,6 +8320,25 @@ define(__m[36/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,44/*vs/base
             }
         });
     }
+    function delSync(path) {
+        try {
+            var stat = fs.lstatSync(path);
+            if (stat.isDirectory() && !stat.isSymbolicLink()) {
+                readdirSync(path).forEach(function (child) { return delSync(paths.join(path, child)); });
+                fs.rmdirSync(path);
+            }
+            else {
+                fs.unlinkSync(path);
+            }
+        }
+        catch (err) {
+            if (err.code === 'ENOENT') {
+                return; // not found
+            }
+            throw err;
+        }
+    }
+    exports.delSync = delSync;
     function mv(source, target, callback) {
         if (source === target) {
             return callback(null);
@@ -7584,7 +8438,67 @@ define(__m[36/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,44/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[75/*vs/base/node/paths*/], __M([1/*require*/,0/*exports*/,16/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+define(__m[78/*vs/base/node/id*/], __M([0/*require*/,1/*exports*/,127/*getmac*/,38/*crypto*/,2/*vs/base/common/winjs.base*/,18/*vs/base/common/errors*/,30/*vs/base/common/uuid*/,31/*os*/]), function (require, exports, getmac, crypto, winjs_base_1, errors, uuid, os_1) {
+    "use strict";
+    var mac = new (function () {
+        function class_1() {
+        }
+        Object.defineProperty(class_1.prototype, "value", {
+            get: function () {
+                if (this._value === void 0) {
+                    this._initValue();
+                }
+                return this._value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        class_1.prototype._initValue = function () {
+            this._value = null;
+            var interfaces = os_1.networkInterfaces();
+            for (var key in interfaces) {
+                for (var _i = 0, _a = interfaces[key]; _i < _a.length; _i++) {
+                    var i = _a[_i];
+                    if (!i.internal) {
+                        this._value = crypto.createHash('sha256').update(i.mac, 'utf8').digest('hex');
+                        return;
+                    }
+                }
+            }
+            this._value = "missing-" + uuid.generateUuid();
+        };
+        return class_1;
+    }());
+    function _futureMachineIdExperiment() {
+        return mac.value;
+    }
+    exports._futureMachineIdExperiment = _futureMachineIdExperiment;
+    function getMachineId() {
+        return new winjs_base_1.TPromise(function (resolve) {
+            try {
+                getmac.getMac(function (error, macAddress) {
+                    if (!error) {
+                        resolve(crypto.createHash('sha256').update(macAddress, 'utf8').digest('hex'));
+                    }
+                    else {
+                        resolve(uuid.generateUuid()); // fallback, generate a UUID
+                    }
+                });
+            }
+            catch (err) {
+                errors.onUnexpectedError(err);
+                resolve(uuid.generateUuid()); // fallback, generate a UUID
+            }
+        });
+    }
+    exports.getMachineId = getMachineId;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[81/*vs/base/node/paths*/], __M([0/*require*/,1/*exports*/,22/*vs/base/common/uri*/]), function (require, exports, uri_1) {
     "use strict";
     var pathsPath = uri_1.default.parse(require.toUrl('paths')).fsPath;
     var paths = require.__$__nodeRequire(pathsPath);
@@ -7596,7 +8510,7 @@ define(__m[75/*vs/base/node/paths*/], __M([1/*require*/,0/*exports*/,16/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[40/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,36/*vs/base/node/extfs*/,22/*vs/base/common/paths*/,7/*path*/,43/*vs/base/common/async*/,25/*fs*/]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs) {
+define(__m[51/*vs/base/node/pfs*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,36/*vs/base/node/extfs*/,19/*vs/base/common/paths*/,7/*path*/,33/*vs/base/common/async*/,25/*fs*/,5/*vs/base/common/platform*/,4/*vs/base/common/event*/]), function (require, exports, winjs_base_1, extfs, paths, path_1, async_1, fs, platform, event_1) {
     'use strict';
     function readdir(path) {
         return async_1.nfcall(extfs.readdir, path);
@@ -7645,7 +8559,7 @@ define(__m[40/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/co
             }
         }, function (err) {
             if (err.code === 'ENOENT') {
-                return;
+                return void 0;
             }
             return winjs_base_1.TPromise.wrapError(err);
         });
@@ -7683,24 +8597,45 @@ define(__m[40/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/co
         return async_1.nfcall(fs.readlink, path);
     }
     exports.readlink = readlink;
-    function utimes(path, atime, mtime) {
-        return async_1.nfcall(fs.utimes, path, atime, mtime);
+    function touch(path) {
+        var now = Date.now() / 1000; // the value should be a Unix timestamp in seconds
+        return async_1.nfcall(fs.utimes, path, now, now);
     }
-    exports.utimes = utimes;
+    exports.touch = touch;
     function readFile(path, encoding) {
         return async_1.nfcall(fs.readFile, path, encoding);
     }
     exports.readFile = readFile;
+    // According to node.js docs (https://nodejs.org/docs/v6.5.0/api/fs.html#fs_fs_writefile_file_data_options_callback)
+    // it is not safe to call writeFile() on the same path multiple times without waiting for the callback to return.
+    // Therefor we use a Queue on the path that is given to us to sequentialize calls to the same path properly.
+    var writeFilePathQueue = Object.create(null);
     function writeFile(path, data, encoding) {
         if (encoding === void 0) { encoding = 'utf8'; }
-        return async_1.nfcall(fs.writeFile, path, data, encoding);
+        var queueKey = toQueueKey(path);
+        return ensureWriteFileQueue(queueKey).queue(function () { return async_1.nfcall(extfs.writeFileAndFlush, path, data, encoding); });
     }
     exports.writeFile = writeFile;
-    function writeFileAndFlush(path, data, encoding) {
-        if (encoding === void 0) { encoding = 'utf8'; }
-        return async_1.nfcall(extfs.writeFileAndFlush, path, data, encoding);
+    function toQueueKey(path) {
+        var queueKey = path;
+        if (platform.isWindows || platform.isMacintosh) {
+            queueKey = queueKey.toLowerCase(); // accomodate for case insensitive file systems
+        }
+        return queueKey;
     }
-    exports.writeFileAndFlush = writeFileAndFlush;
+    function ensureWriteFileQueue(queueKey) {
+        var writeFileQueue = writeFilePathQueue[queueKey];
+        if (!writeFileQueue) {
+            writeFileQueue = new async_1.Queue();
+            writeFilePathQueue[queueKey] = writeFileQueue;
+            var onFinish = event_1.once(writeFileQueue.onFinished);
+            onFinish(function () {
+                delete writeFilePathQueue[queueKey];
+                writeFileQueue.dispose();
+            });
+        }
+        return writeFileQueue;
+    }
     /**
     * Read a dir and return only subfolders
     */
@@ -7732,7 +8667,7 @@ define(__m[40/*vs/base/node/pfs*/], __M([1/*require*/,0/*exports*/,2/*vs/base/co
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[80/*vs/base/node/proxy*/], __M([1/*require*/,0/*exports*/,81/*url*/,3/*vs/base/common/types*/,108/*http-proxy-agent*/,107/*https-proxy-agent*/]), function (require, exports, url_1, types_1, HttpProxyAgent, HttpsProxyAgent) {
+define(__m[85/*vs/base/node/proxy*/], __M([0/*require*/,1/*exports*/,89/*url*/,6/*vs/base/common/types*/,126/*http-proxy-agent*/,125/*https-proxy-agent*/]), function (require, exports, url_1, types_1, HttpProxyAgent, HttpsProxyAgent) {
     'use strict';
     function getSystemProxyURI(requestURL) {
         if (requestURL.protocol === 'http:') {
@@ -7769,7 +8704,7 @@ define(__m[80/*vs/base/node/proxy*/], __M([1/*require*/,0/*exports*/,81/*url*/,3
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[21/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,17/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,13/*vs/base/common/lifecycle*/,4/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
     'use strict';
     var MessageType;
     (function (MessageType) {
@@ -7984,6 +8919,99 @@ define(__m[21/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2
         return ChannelClient;
     }());
     exports.ChannelClient = ChannelClient;
+    /**
+     * An `IPCServer` is both a channel server and a routing channel
+     * client.
+     *
+     * As the owner of a protocol, you should extend both this
+     * and the `IPCClient` classes to get IPC implementations
+     * for your protocol.
+     */
+    var IPCServer = (function () {
+        function IPCServer(onDidClientConnect) {
+            var _this = this;
+            this.channels = Object.create(null);
+            this.channelClients = Object.create(null);
+            this.onClientAdded = new event_1.Emitter();
+            onDidClientConnect(function (_a) {
+                var protocol = _a.protocol, onDidClientDisconnect = _a.onDidClientDisconnect;
+                var onFirstMessage = event_1.once(protocol.onMessage);
+                onFirstMessage(function (id) {
+                    var channelServer = new ChannelServer(protocol);
+                    var channelClient = new ChannelClient(protocol);
+                    Object.keys(_this.channels)
+                        .forEach(function (name) { return channelServer.registerChannel(name, _this.channels[name]); });
+                    _this.channelClients[id] = channelClient;
+                    _this.onClientAdded.fire(id);
+                    onDidClientDisconnect(function () {
+                        channelServer.dispose();
+                        channelClient.dispose();
+                        delete _this.channelClients[id];
+                    });
+                });
+            });
+        }
+        IPCServer.prototype.getChannel = function (channelName, router) {
+            var _this = this;
+            var call = function (command, arg) {
+                var id = router.route(command, arg);
+                if (!id) {
+                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
+                }
+                return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
+            };
+            return { call: call };
+        };
+        IPCServer.prototype.registerChannel = function (channelName, channel) {
+            this.channels[channelName] = channel;
+        };
+        IPCServer.prototype.getClient = function (clientId) {
+            var _this = this;
+            var client = this.channelClients[clientId];
+            if (client) {
+                return winjs_base_1.TPromise.as(client);
+            }
+            return new winjs_base_1.TPromise(function (c) {
+                var onClient = event_1.once(event_1.filterEvent(_this.onClientAdded.event, function (id) { return id === clientId; }));
+                onClient(function () { return c(_this.channelClients[clientId]); });
+            });
+        };
+        IPCServer.prototype.dispose = function () {
+            this.channels = null;
+            this.channelClients = null;
+            this.onClientAdded.dispose();
+        };
+        return IPCServer;
+    }());
+    exports.IPCServer = IPCServer;
+    /**
+     * An `IPCClient` is both a channel client and a channel server.
+     *
+     * As the owner of a protocol, you should extend both this
+     * and the `IPCClient` classes to get IPC implementations
+     * for your protocol.
+     */
+    var IPCClient = (function () {
+        function IPCClient(protocol, id) {
+            protocol.send(id);
+            this.channelClient = new ChannelClient(protocol);
+            this.channelServer = new ChannelServer(protocol);
+        }
+        IPCClient.prototype.getChannel = function (channelName) {
+            return this.channelClient.getChannel(channelName);
+        };
+        IPCClient.prototype.registerChannel = function (channelName, channel) {
+            this.channelServer.registerChannel(channelName, channel);
+        };
+        IPCClient.prototype.dispose = function () {
+            this.channelClient.dispose();
+            this.channelClient = null;
+            this.channelServer.dispose();
+            this.channelServer = null;
+        };
+        return IPCClient;
+    }());
+    exports.IPCClient = IPCClient;
     function getDelayedChannel(promise) {
         var call = function (command, arg) { return promise.then(function (c) { return c.call(command, arg); }); };
         return { call: call };
@@ -8031,11 +9059,8 @@ define(__m[21/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,2
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[88/*vs/base/parts/ipc/common/ipc.electron*/], __M([1/*require*/,0/*exports*/,17/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/,33/*vs/base/node/event*/,21/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, lifecycle_1, event_1, event_2, ipc_1) {
+define(__m[97/*vs/base/parts/ipc/common/ipc.electron*/], __M([0/*require*/,1/*exports*/,13/*vs/base/common/lifecycle*/,4/*vs/base/common/event*/]), function (require, exports, lifecycle_1, event_1) {
     "use strict";
-    var Hello = 'ipc:hello';
-    var Goodbye = 'ipc:goodbye';
-    var Message = 'ipc:message';
     var Protocol = (function () {
         function Protocol(sender, onMessageEvent) {
             this.sender = sender;
@@ -8050,85 +9075,74 @@ define(__m[88/*vs/base/parts/ipc/common/ipc.electron*/], __M([1/*require*/,0/*ex
             configurable: true
         });
         Protocol.prototype.send = function (message) {
-            this.sender.send(Message, message);
+            try {
+                this.sender.send('ipc:message', message);
+            }
+            catch (e) {
+            }
         };
         Protocol.prototype.dispose = function () {
             this.listener = lifecycle_1.dispose(this.listener);
         };
         return Protocol;
     }());
-    var Server = (function () {
-        function Server(ipc) {
-            var _this = this;
-            this.ipc = ipc;
-            this.channels = Object.create(null);
-            ipc.on(Hello, function (_a) {
-                var sender = _a.sender;
-                return _this.onHello(sender);
-            });
-        }
-        Server.prototype.registerChannel = function (channelName, channel) {
-            this.channels[channelName] = channel;
-        };
-        Server.prototype.onHello = function (sender) {
-            var _this = this;
-            var senderId = sender.getId();
-            var onMessage = this.createScopedEvent(Message, senderId);
-            var protocol = new Protocol(sender, onMessage);
-            var ipcServer = new ipc_1.ChannelServer(protocol);
-            Object.keys(this.channels)
-                .forEach(function (name) { return ipcServer.registerChannel(name, _this.channels[name]); });
-            var onGoodbye = this.createScopedEvent(Goodbye, senderId);
-            var listener = onGoodbye(function () {
-                listener.dispose();
-                ipcServer.dispose();
-                protocol.dispose();
-            });
-        };
-        Server.prototype.createScopedEvent = function (eventName, senderId) {
-            return event_1.chain(event_2.fromEventEmitter(this.ipc, eventName, function (event, message) { return ({ event: event, message: message }); }))
-                .filter(function (_a) {
-                var event = _a.event;
-                return event.sender.getId() === senderId;
-            })
-                .map(function (_a) {
-                var message = _a.message;
-                return message;
-            })
-                .event;
-        };
-        Server.prototype.dispose = function () {
-            this.channels = null;
-        };
-        return Server;
-    }());
-    exports.Server = Server;
-    var Client = (function () {
-        function Client(ipc) {
-            this.ipc = ipc;
-            ipc.send(Hello);
-            var receiverEvent = event_2.fromEventEmitter(ipc, Message, function (_, message) { return message; });
-            this.protocol = new Protocol(ipc, receiverEvent);
-            this.ipcClient = new ipc_1.ChannelClient(this.protocol);
-        }
-        Client.prototype.getChannel = function (channelName) {
-            return this.ipcClient.getChannel(channelName);
-        };
-        Client.prototype.dispose = function () {
-            this.ipc.send(Goodbye);
-            this.ipcClient = lifecycle_1.dispose(this.ipcClient);
-            this.protocol = lifecycle_1.dispose(this.protocol);
-        };
-        return Client;
-    }());
-    exports.Client = Client;
+    exports.Protocol = Protocol;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[89/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/,106/*net*/,2/*vs/base/common/winjs.base*/,6/*vs/base/common/event*/,33/*vs/base/node/event*/,21/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, net_1, winjs_base_1, event_1, event_2, ipc_1) {
+
+
+
+
+
+define(__m[98/*vs/base/parts/ipc/electron-main/ipc.electron-main*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/event*/,26/*vs/base/node/event*/,20/*vs/base/parts/ipc/common/ipc*/,97/*vs/base/parts/ipc/common/ipc.electron*/,14/*electron*/]), function (require, exports, event_1, event_2, ipc_1, ipc_electron_1, electron_1) {
+    "use strict";
+    function createScopedOnMessageEvent(senderId) {
+        var onMessage = event_2.fromEventEmitter(electron_1.ipcMain, 'ipc:message', function (event, message) { return ({ event: event, message: message }); });
+        var onMessageFromSender = event_1.filterEvent(onMessage, function (_a) {
+            var event = _a.event;
+            return event.sender.getId() === senderId;
+        });
+        return event_1.mapEvent(onMessageFromSender, function (_a) {
+            var message = _a.message;
+            return message;
+        });
+    }
+    var Server = (function (_super) {
+        __extends(Server, _super);
+        function Server() {
+            _super.call(this, Server.getOnDidClientConnect());
+        }
+        Server.getOnDidClientConnect = function () {
+            var onHello = event_2.fromEventEmitter(electron_1.ipcMain, 'ipc:hello', function (_a) {
+                var sender = _a.sender;
+                return sender;
+            });
+            return event_1.mapEvent(onHello, function (webContents) {
+                var onMessage = createScopedOnMessageEvent(webContents.getId());
+                var protocol = new ipc_electron_1.Protocol(webContents, onMessage);
+                var onDidClientDisconnect = event_2.fromEventEmitter(webContents, 'destroyed');
+                return { protocol: protocol, onDidClientDisconnect: onDidClientDisconnect };
+            });
+        };
+        return Server;
+    }(ipc_1.IPCServer));
+    exports.Server = Server;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+define(__m[100/*vs/base/parts/ipc/node/ipc.net*/], __M([0/*require*/,1/*exports*/,124/*net*/,2/*vs/base/common/winjs.base*/,4/*vs/base/common/event*/,26/*vs/base/node/event*/,20/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, net_1, winjs_base_1, event_1, event_2, ipc_1) {
     'use strict';
     function bufferIndexOf(buffer, value, start) {
         if (start === void 0) { start = 0; }
@@ -8185,104 +9199,34 @@ define(__m[89/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/
         Protocol.Boundary = new Buffer([0]);
         return Protocol;
     }());
-    var RoutingChannelClient = (function () {
-        function RoutingChannelClient() {
-            this.onClientAdded = new event_1.Emitter();
-            this.ipcClients = Object.create(null);
-        }
-        RoutingChannelClient.prototype.add = function (id, client) {
-            this.ipcClients[id] = client;
-            this.onClientAdded.fire();
-        };
-        RoutingChannelClient.prototype.remove = function (id) {
-            delete this.ipcClients[id];
-        };
-        RoutingChannelClient.prototype.getClient = function (clientId) {
-            var _this = this;
-            var getClientFn = function (clientId, c) {
-                var client = _this.ipcClients[clientId];
-                if (client) {
-                    c(client);
-                    return true;
-                }
-                return false;
-            };
-            return new winjs_base_1.TPromise(function (c, e) {
-                if (!getClientFn(clientId, c)) {
-                    var disposable_1 = _this.onClientAdded.event(function () {
-                        if (getClientFn(clientId, c)) {
-                            disposable_1.dispose();
-                        }
-                    });
-                }
-            });
-        };
-        RoutingChannelClient.prototype.getChannel = function (channelName, router) {
-            var _this = this;
-            var call = function (command, arg) {
-                var id = router.routeCall(command, arg);
-                if (!id) {
-                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
-                }
-                return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
-            };
-            return { call: call };
-        };
-        RoutingChannelClient.prototype.dispose = function () {
-            this.ipcClients = null;
-            this.onClientAdded.dispose();
-        };
-        return RoutingChannelClient;
-    }());
-    // TODO@joao: move multi channel implementation down to ipc
-    var Server = (function () {
+    var Server = (function (_super) {
+        __extends(Server, _super);
         function Server(server) {
-            var _this = this;
+            _super.call(this, Server.toClientConnectionEvent(server));
             this.server = server;
-            this.channels = Object.create(null);
-            this.router = new RoutingChannelClient();
-            this.server.on('connection', function (socket) {
-                var protocol = new Protocol(socket);
-                var onFirstMessage = event_1.once(protocol.onMessage);
-                onFirstMessage(function (id) {
-                    var channelServer = new ipc_1.ChannelServer(protocol);
-                    Object.keys(_this.channels)
-                        .forEach(function (name) { return channelServer.registerChannel(name, _this.channels[name]); });
-                    var channelClient = new ipc_1.ChannelClient(protocol);
-                    _this.router.add(id, channelClient);
-                    socket.once('close', function () {
-                        channelClient.dispose();
-                        _this.router.remove(id);
-                        channelServer.dispose();
-                    });
-                });
-            });
         }
-        Server.prototype.getChannel = function (channelName, router) {
-            return this.router.getChannel(channelName, router);
-        };
-        Server.prototype.registerChannel = function (channelName, channel) {
-            this.channels[channelName] = channel;
+        Server.toClientConnectionEvent = function (server) {
+            var onConnection = event_2.fromEventEmitter(server, 'connection');
+            return event_1.mapEvent(onConnection, function (socket) { return ({
+                protocol: new Protocol(socket),
+                onDidClientDisconnect: event_1.once(event_2.fromEventEmitter(socket, 'close'))
+            }); });
         };
         Server.prototype.dispose = function () {
-            this.router.dispose();
-            this.router = null;
-            this.channels = null;
+            _super.prototype.dispose.call(this);
             this.server.close();
             this.server = null;
         };
         return Server;
-    }());
+    }(ipc_1.IPCServer));
     exports.Server = Server;
-    var Client = (function () {
+    var Client = (function (_super) {
+        __extends(Client, _super);
         function Client(socket, id) {
             var _this = this;
+            _super.call(this, new Protocol(socket), id);
             this.socket = socket;
             this._onClose = new event_1.Emitter();
-            var protocol = new Protocol(socket);
-            protocol.send(id);
-            this.channelClient = new ipc_1.ChannelClient(protocol);
-            this.channelServer = new ipc_1.ChannelServer(protocol);
             socket.once('close', function () { return _this._onClose.fire(); });
         }
         Object.defineProperty(Client.prototype, "onClose", {
@@ -8290,21 +9234,13 @@ define(__m[89/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/
             enumerable: true,
             configurable: true
         });
-        Client.prototype.getChannel = function (channelName) {
-            return this.channelClient.getChannel(channelName);
-        };
-        Client.prototype.registerChannel = function (channelName, channel) {
-            this.channelServer.registerChannel(channelName, channel);
-        };
         Client.prototype.dispose = function () {
+            _super.prototype.dispose.call(this);
             this.socket.end();
             this.socket = null;
-            this.channelClient = null;
-            this.channelServer.dispose();
-            this.channelServer = null;
         };
         return Client;
-    }());
+    }(ipc_1.IPCClient));
     exports.Client = Client;
     function serve(hook) {
         return new winjs_base_1.TPromise(function (c, e) {
@@ -8333,56 +9269,7 @@ define(__m[89/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[92/*vs/code/common/windowsIpc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,21/*vs/base/parts/ipc/common/ipc*/,6/*vs/base/common/event*/]), function (require, exports, winjs_base_1, ipc_1, event_1) {
-    'use strict';
-    var WindowEventChannel = (function () {
-        function WindowEventChannel(service) {
-            this.service = service;
-            this.onNewWindowOpen = event_1.buffer(service.onNewWindowOpen, true);
-            this.onWindowFocus = event_1.buffer(service.onWindowFocus, true);
-        }
-        WindowEventChannel.prototype.call = function (command, args) {
-            switch (command) {
-                case 'event:onNewWindowOpen':
-                    return ipc_1.eventToCall(this.onNewWindowOpen);
-                case 'event:onWindowFocus':
-                    return ipc_1.eventToCall(this.onWindowFocus);
-            }
-            return winjs_base_1.TPromise.wrapError('invalid command');
-        };
-        return WindowEventChannel;
-    }());
-    exports.WindowEventChannel = WindowEventChannel;
-    var WindowEventChannelClient = (function () {
-        function WindowEventChannelClient(channel) {
-            this.channel = channel;
-            this._onNewWindowOpen = ipc_1.eventFromCall(this.channel, 'event:onNewWindowOpen');
-            this._onWindowFocus = ipc_1.eventFromCall(this.channel, 'event:onWindowFocus');
-        }
-        Object.defineProperty(WindowEventChannelClient.prototype, "onNewWindowOpen", {
-            get: function () {
-                return this._onNewWindowOpen;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(WindowEventChannelClient.prototype, "onWindowFocus", {
-            get: function () {
-                return this._onWindowFocus;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return WindowEventChannelClient;
-    }());
-    exports.WindowEventChannelClient = WindowEventChannelClient;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[45/*vs/code/electron-main/paths*/], __M([1/*require*/,0/*exports*/,27/*original-fs*/,7/*path*/,18/*vs/base/common/arrays*/,26/*vs/base/common/strings*/,22/*vs/base/common/paths*/,5/*vs/base/common/platform*/,3/*vs/base/common/types*/]), function (require, exports, fs, path, arrays, strings, paths, platform, types) {
+define(__m[49/*vs/code/electron-main/paths*/], __M([0/*require*/,1/*exports*/,28/*original-fs*/,7/*path*/,17/*vs/base/common/arrays*/,16/*vs/base/common/strings*/,19/*vs/base/common/paths*/,5/*vs/base/common/platform*/,6/*vs/base/common/types*/]), function (require, exports, fs, path, arrays, strings, paths, platform, types) {
     'use strict';
     function validatePaths(args) {
         // Realpath/normalize paths and watch out for goto line mode
@@ -8486,13 +9373,14 @@ define(__m[45/*vs/code/electron-main/paths*/], __M([1/*require*/,0/*exports*/,27
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[99/*vs/code/node/sharedProcess*/], __M([1/*require*/,0/*exports*/,47/*child_process*/,16/*vs/base/common/uri*/,10/*vs/base/common/objects*/,2/*vs/base/common/winjs.base*/]), function (require, exports, cp, uri_1, objects_1, winjs_base_1) {
+define(__m[110/*vs/code/node/sharedProcess*/], __M([0/*require*/,1/*exports*/,46/*child_process*/,22/*vs/base/common/uri*/,8/*vs/base/common/objects*/,2/*vs/base/common/winjs.base*/]), function (require, exports, cp, uri_1, objects_1, winjs_base_1) {
     "use strict";
     var boostrapPath = uri_1.default.parse(require.toUrl('bootstrap')).fsPath;
     function _spawnSharedProcess(initData, options) {
         var execArgv = [];
         var env = objects_1.assign({}, process.env, {
-            AMD_ENTRYPOINT: 'vs/code/node/sharedProcessMain'
+            AMD_ENTRYPOINT: 'vs/code/node/sharedProcessMain',
+            ELECTRON_NO_ASAR: '1'
         });
         if (options.allowOutput) {
             env['VSCODE_ALLOW_IO'] = 'true';
@@ -8536,8 +9424,8 @@ define(__m[99/*vs/code/node/sharedProcess*/], __M([1/*require*/,0/*exports*/,47/
     exports.spawnSharedProcess = spawnSharedProcess;
 });
 
-define(__m[50/*vs/nls!vs/base/common/json*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/base/common/json", data); });
-define(__m[53/*vs/base/common/json*/], __M([1/*require*/,0/*exports*/,50/*vs/nls!vs/base/common/json*/]), function (require, exports, nls_1) {
+define(__m[56/*vs/nls!vs/base/common/json*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/base/common/json", data); });
+define(__m[59/*vs/base/common/json*/], __M([0/*require*/,1/*exports*/,56/*vs/nls!vs/base/common/json*/]), function (require, exports, nls_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -9586,7 +10474,7 @@ define(__m[53/*vs/base/common/json*/], __M([1/*require*/,0/*exports*/,50/*vs/nls
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[54/*vs/base/node/config*/], __M([1/*require*/,0/*exports*/,25/*fs*/,7/*path*/,10/*vs/base/common/objects*/,17/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/,53/*vs/base/common/json*/]), function (require, exports, fs, path, objects, lifecycle_1, event_1, json) {
+define(__m[60/*vs/base/node/config*/], __M([0/*require*/,1/*exports*/,25/*fs*/,7/*path*/,8/*vs/base/common/objects*/,13/*vs/base/common/lifecycle*/,4/*vs/base/common/event*/,59/*vs/base/common/json*/]), function (require, exports, fs, path, objects, lifecycle_1, event_1, json) {
     'use strict';
     /**
      * A simple helper to watch a configured file for changes and process its contents as JSON object.
@@ -9756,59 +10644,20 @@ define(__m[54/*vs/base/node/config*/], __M([1/*require*/,0/*exports*/,25/*fs*/,7
     exports.ConfigWatcher = ConfigWatcher;
 });
 
-define(__m[77/*vs/nls!vs/base/common/keybinding*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/base/common/keybinding", data); });
+define(__m[61/*vs/nls!vs/base/common/keybinding*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/base/common/keybinding", data); });
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[56/*vs/base/common/keybinding*/], __M([1/*require*/,0/*exports*/,77/*vs/nls!vs/base/common/keybinding*/,5/*vs/base/common/platform*/,51/*vs/base/common/keyCodes*/]), function (require, exports, nls, defaultPlatform, keyCodes_1) {
+define(__m[62/*vs/base/common/keybinding*/], __M([0/*require*/,1/*exports*/,61/*vs/nls!vs/base/common/keybinding*/,5/*vs/base/common/platform*/,50/*vs/base/common/keyCodes*/]), function (require, exports, nls, defaultPlatform, keyCodes_1) {
     'use strict';
-    var Keybinding = (function () {
-        function Keybinding(keybinding) {
-            this.value = keybinding;
+    var KeybindingLabels = (function () {
+        function KeybindingLabels() {
         }
         /**
-         * Format the binding to a format appropiate for rendering in the UI
+         * @internal
          */
-        Keybinding._toUSLabel = function (value, Platform) {
-            return _asString(value, (Platform.isMacintosh ? MacUIKeyLabelProvider.INSTANCE : ClassicUIKeyLabelProvider.INSTANCE), Platform);
-        };
-        /**
-         * Format the binding to a format appropiate for placing in an aria-label.
-         */
-        Keybinding._toUSAriaLabel = function (value, Platform) {
-            return _asString(value, AriaKeyLabelProvider.INSTANCE, Platform);
-        };
-        /**
-         * Format the binding to a format appropiate for rendering in the UI
-         */
-        Keybinding._toUSHTMLLabel = function (value, Platform) {
-            return _asHTML(value, (Platform.isMacintosh ? MacUIKeyLabelProvider.INSTANCE : ClassicUIKeyLabelProvider.INSTANCE), Platform);
-        };
-        /**
-         * Format the binding to a format appropiate for rendering in the UI
-         */
-        Keybinding._toCustomLabel = function (value, labelProvider, Platform) {
-            return _asString(value, labelProvider, Platform);
-        };
-        /**
-         * Format the binding to a format appropiate for rendering in the UI
-         */
-        Keybinding._toCustomHTMLLabel = function (value, labelProvider, Platform) {
-            return _asHTML(value, labelProvider, Platform);
-        };
-        /**
-         * This prints the binding in a format suitable for electron's accelerators.
-         * See https://github.com/electron/electron/blob/master/docs/api/accelerator.md
-         */
-        Keybinding._toElectronAccelerator = function (value, Platform) {
-            if (keyCodes_1.BinaryKeybindings.hasChord(value)) {
-                // Electron cannot handle chords
-                return null;
-            }
-            return _asString(value, ElectronAcceleratorLabelProvider.INSTANCE, Platform);
-        };
-        Keybinding.getUserSettingsKeybindingRegex = function () {
+        KeybindingLabels.getUserSettingsKeybindingRegex = function () {
             if (!this._cachedKeybindingRegex) {
                 var numpadKey = 'numpad(0|1|2|3|4|5|6|7|8|9|_multiply|_add|_subtract|_decimal|_divide|_separator)';
                 var oemKey = '`|\\-|=|\\[|\\]|\\\\\\\\|;|\'|,|\\.|\\/|oem_8|oem_102';
@@ -9823,8 +10672,9 @@ define(__m[56/*vs/base/common/keybinding*/], __M([1/*require*/,0/*exports*/,77/*
         };
         /**
          * Format the binding to a format appropiate for the user settings file.
+         * @internal
          */
-        Keybinding.toUserSettingsLabel = function (value, Platform) {
+        KeybindingLabels.toUserSettingsLabel = function (value, Platform) {
             if (Platform === void 0) { Platform = defaultPlatform; }
             var result = _asString(value, UserSettingsKeyLabelProvider.INSTANCE, Platform);
             result = result.toLowerCase();
@@ -9836,7 +10686,10 @@ define(__m[56/*vs/base/common/keybinding*/], __M([1/*require*/,0/*exports*/,77/*
             }
             return result;
         };
-        Keybinding.fromUserSettingsLabel = function (input, Platform) {
+        /**
+         * @internal
+         */
+        KeybindingLabels.fromUserSettingsLabel = function (input, Platform) {
             if (Platform === void 0) { Platform = defaultPlatform; }
             if (!input) {
                 return null;
@@ -9893,7 +10746,7 @@ define(__m[56/*vs/base/common/keybinding*/], __M([1/*require*/,0/*exports*/,77/*
             var firstSpaceIdx = input.indexOf(' ');
             if (firstSpaceIdx > 0) {
                 key = input.substring(0, firstSpaceIdx);
-                chord = Keybinding.fromUserSettingsLabel(input.substring(firstSpaceIdx), Platform);
+                chord = KeybindingLabels.fromUserSettingsLabel(input.substring(firstSpaceIdx), Platform);
             }
             else {
                 key = input;
@@ -9915,75 +10768,68 @@ define(__m[56/*vs/base/common/keybinding*/], __M([1/*require*/,0/*exports*/,77/*
             result |= keyCode;
             return keyCodes_1.KeyChord(result, chord);
         };
-        Keybinding.prototype.hasCtrlCmd = function () {
-            return keyCodes_1.BinaryKeybindings.hasCtrlCmd(this.value);
-        };
-        Keybinding.prototype.hasShift = function () {
-            return keyCodes_1.BinaryKeybindings.hasShift(this.value);
-        };
-        Keybinding.prototype.hasAlt = function () {
-            return keyCodes_1.BinaryKeybindings.hasAlt(this.value);
-        };
-        Keybinding.prototype.hasWinCtrl = function () {
-            return keyCodes_1.BinaryKeybindings.hasWinCtrl(this.value);
-        };
-        Keybinding.prototype.extractKeyCode = function () {
-            return keyCodes_1.BinaryKeybindings.extractKeyCode(this.value);
-        };
         /**
          * Format the binding to a format appropiate for rendering in the UI
+         * @internal
          */
-        Keybinding.prototype._toUSLabel = function (Platform) {
+        KeybindingLabels._toUSLabel = function (keybinding, Platform) {
             if (Platform === void 0) { Platform = defaultPlatform; }
-            return Keybinding._toUSLabel(this.value, Platform);
+            return _asString(keybinding.value, (Platform.isMacintosh ? MacUIKeyLabelProvider.INSTANCE : ClassicUIKeyLabelProvider.INSTANCE), Platform);
         };
         /**
          * Format the binding to a format appropiate for placing in an aria-label.
+         * @internal
          */
-        Keybinding.prototype._toUSAriaLabel = function (Platform) {
+        KeybindingLabels._toUSAriaLabel = function (keybinding, Platform) {
             if (Platform === void 0) { Platform = defaultPlatform; }
-            return Keybinding._toUSAriaLabel(this.value, Platform);
+            return _asString(keybinding.value, AriaKeyLabelProvider.INSTANCE, Platform);
         };
         /**
          * Format the binding to a format appropiate for rendering in the UI
+         * @internal
          */
-        Keybinding.prototype._toUSHTMLLabel = function (Platform) {
+        KeybindingLabels._toUSHTMLLabel = function (keybinding, Platform) {
             if (Platform === void 0) { Platform = defaultPlatform; }
-            return Keybinding._toUSHTMLLabel(this.value, Platform);
+            return _asHTML(keybinding.value, (Platform.isMacintosh ? MacUIKeyLabelProvider.INSTANCE : ClassicUIKeyLabelProvider.INSTANCE), Platform);
         };
         /**
          * Format the binding to a format appropiate for rendering in the UI
+         * @internal
          */
-        Keybinding.prototype.toCustomLabel = function (labelProvider, Platform) {
+        KeybindingLabels.toCustomLabel = function (keybinding, labelProvider, Platform) {
             if (Platform === void 0) { Platform = defaultPlatform; }
-            return Keybinding._toCustomLabel(this.value, labelProvider, Platform);
+            return _asString(keybinding.value, labelProvider, Platform);
         };
         /**
          * Format the binding to a format appropiate for rendering in the UI
+         * @internal
          */
-        Keybinding.prototype.toCustomHTMLLabel = function (labelProvider, Platform) {
+        KeybindingLabels.toCustomHTMLLabel = function (keybinding, labelProvider, Platform) {
             if (Platform === void 0) { Platform = defaultPlatform; }
-            return Keybinding._toCustomHTMLLabel(this.value, labelProvider, Platform);
+            return _asHTML(keybinding.value, labelProvider, Platform);
         };
         /**
          * This prints the binding in a format suitable for electron's accelerators.
          * See https://github.com/electron/electron/blob/master/docs/api/accelerator.md
+         * @internal
          */
-        Keybinding.prototype._toElectronAccelerator = function (Platform) {
+        KeybindingLabels._toElectronAccelerator = function (keybinding, Platform) {
             if (Platform === void 0) { Platform = defaultPlatform; }
-            return Keybinding._toElectronAccelerator(this.value, Platform);
+            if (keyCodes_1.BinaryKeybindings.hasChord(keybinding.value)) {
+                // Electron cannot handle chords
+                return null;
+            }
+            var keyCode = keyCodes_1.BinaryKeybindings.extractKeyCode(keybinding.value);
+            if (keyCode >= 93 /* NUMPAD_0 */ && keyCode <= 108 /* NUMPAD_DIVIDE */) {
+                // Electron cannot handle numpad keys
+                return null;
+            }
+            return _asString(keybinding.value, ElectronAcceleratorLabelProvider.INSTANCE, Platform);
         };
-        /**
-         * Format the binding to a format appropiate for the user settings file.
-         */
-        Keybinding.prototype.toUserSettingsLabel = function (Platform) {
-            if (Platform === void 0) { Platform = defaultPlatform; }
-            return Keybinding.toUserSettingsLabel(this.value, Platform);
-        };
-        Keybinding._cachedKeybindingRegex = null;
-        return Keybinding;
+        KeybindingLabels._cachedKeybindingRegex = null;
+        return KeybindingLabels;
     }());
-    exports.Keybinding = Keybinding;
+    exports.KeybindingLabels = KeybindingLabels;
     /**
      * Print for Electron
      */
@@ -10192,8 +11038,8 @@ define(__m[56/*vs/base/common/keybinding*/], __M([1/*require*/,0/*exports*/,77/*
     }
 });
 
-define(__m[57/*vs/nls!vs/base/common/severity*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/base/common/severity", data); });
-define(__m[58/*vs/base/common/severity*/], __M([1/*require*/,0/*exports*/,57/*vs/nls!vs/base/common/severity*/,26/*vs/base/common/strings*/]), function (require, exports, nls, strings) {
+define(__m[63/*vs/nls!vs/base/common/severity*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/base/common/severity", data); });
+define(__m[64/*vs/base/common/severity*/], __M([0/*require*/,1/*exports*/,63/*vs/nls!vs/base/common/severity*/,16/*vs/base/common/strings*/]), function (require, exports, nls, strings) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10246,25 +11092,55 @@ define(__m[58/*vs/base/common/severity*/], __M([1/*require*/,0/*exports*/,57/*vs
     exports.default = Severity;
 });
 
-
-define(__m[59/*vs/nls!vs/code/electron-main/menus*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/code/electron-main/menus", data); });
-define(__m[60/*vs/nls!vs/code/electron-main/windows*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/code/electron-main/windows", data); });
-define(__m[61/*vs/nls!vs/platform/configuration/common/configurationRegistry*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/configuration/common/configurationRegistry", data); });
-define(__m[62/*vs/nls!vs/platform/environment/node/argv*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/environment/node/argv", data); });
-define(__m[63/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/extensionsRegistry", data); });
-define(__m[64/*vs/nls!vs/platform/request/common/request*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/request/common/request", data); });
-define(__m[65/*vs/nls!vs/workbench/parts/git/electron-main/askpassService*/], __M([9/*vs/nls*/,8/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/workbench/parts/git/electron-main/askpassService", data); });
+define(__m[58/*vs/nls!vs/code/electron-main/menus*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/code/electron-main/menus", data); });
+define(__m[66/*vs/nls!vs/code/electron-main/windows*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/code/electron-main/windows", data); });
+define(__m[67/*vs/nls!vs/platform/configuration/common/configurationRegistry*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/configuration/common/configurationRegistry", data); });
+define(__m[68/*vs/nls!vs/platform/environment/node/argv*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/environment/node/argv", data); });
+define(__m[69/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/extensions/common/extensionsRegistry", data); });
+define(__m[70/*vs/nls!vs/platform/request/node/request*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/request/node/request", data); });
+define(__m[71/*vs/nls!vs/platform/telemetry/common/telemetryService*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/platform/telemetry/common/telemetryService", data); });
+define(__m[72/*vs/nls!vs/workbench/parts/git/electron-main/askpassService*/], __M([10/*vs/nls*/,9/*vs/nls!vs/code/electron-main/main*/]), function(nls, data) { return nls.create("vs/workbench/parts/git/electron-main/askpassService", data); });
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[37/*vs/platform/environment/node/argv*/], __M([1/*require*/,0/*exports*/,34/*os*/,105/*minimist*/,72/*assert*/,18/*vs/base/common/arrays*/,62/*vs/nls!vs/platform/environment/node/argv*/]), function (require, exports, os, minimist, assert, arrays_1, nls_1) {
+define(__m[73/*vs/platform/backup/common/backupIpc*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    'use strict';
+    var BackupChannel = (function () {
+        function BackupChannel(service) {
+            this.service = service;
+        }
+        BackupChannel.prototype.call = function (command, arg) {
+            switch (command) {
+                case 'getBackupPath': return this.service.getBackupPath(arg);
+            }
+        };
+        return BackupChannel;
+    }());
+    exports.BackupChannel = BackupChannel;
+    var BackupChannelClient = (function () {
+        function BackupChannelClient(channel) {
+            this.channel = channel;
+        }
+        BackupChannelClient.prototype.getBackupPath = function (windowId) {
+            return this.channel.call('getBackupPath', windowId);
+        };
+        return BackupChannelClient;
+    }());
+    exports.BackupChannelClient = BackupChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[45/*vs/platform/environment/node/argv*/], __M([0/*require*/,1/*exports*/,31/*os*/,120/*minimist*/,75/*assert*/,17/*vs/base/common/arrays*/,68/*vs/nls!vs/platform/environment/node/argv*/]), function (require, exports, os, minimist, assert, arrays_1, nls_1) {
     "use strict";
     var options = {
         string: [
             'locale',
             'user-data-dir',
-            'extensionHomePath',
+            'extensions-dir',
             'extensionDevelopmentPath',
             'extensionTestsPath',
             'install-extension',
@@ -10298,7 +11174,8 @@ define(__m[37/*vs/platform/environment/node/argv*/], __M([1/*require*/,0/*export
             'new-window': 'n',
             'reuse-window': 'r',
             performance: 'p',
-            'disable-extensions': 'disableExtensions'
+            'disable-extensions': 'disableExtensions',
+            'extensions-dir': 'extensionHomePath'
         }
     };
     function validate(args) {
@@ -10353,7 +11230,7 @@ define(__m[37/*vs/platform/environment/node/argv*/], __M([1/*require*/,0/*export
         '--user-data-dir <dir>': nls_1.localize(7, null),
         '--verbose': nls_1.localize(8, null),
         '-w, --wait': nls_1.localize(9, null),
-        '--extensionHomePath': nls_1.localize(10, null),
+        '--extensions-dir <dir>': nls_1.localize(10, null),
         '--list-extensions': nls_1.localize(11, null),
         '--show-versions': nls_1.localize(12, null),
         '--install-extension <ext>': nls_1.localize(13, null),
@@ -10409,7 +11286,7 @@ define(__m[37/*vs/platform/environment/node/argv*/], __M([1/*require*/,0/*export
 
 
 
-define(__m[39/*vs/platform/instantiation/common/descriptors*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+define(__m[43/*vs/platform/instantiation/common/descriptors*/], __M([0/*require*/,1/*exports*/,18/*vs/base/common/errors*/]), function (require, exports, errors_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10522,7 +11399,7 @@ define(__m[39/*vs/platform/instantiation/common/descriptors*/], __M([1/*require*
     exports.AsyncDescriptor = AsyncDescriptor;
 });
 
-define(__m[4/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[3/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10580,57 +11457,25 @@ define(__m[4/*vs/platform/instantiation/common/instantiation*/], __M([1/*require
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-define(__m[71/*vs/code/common/windows*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[44/*vs/platform/backup/common/backup*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     "use strict";
-    exports.IWindowEventService = instantiation_1.createDecorator('windowEventService');
-    var ActiveWindowManager = (function () {
-        function ActiveWindowManager(windowService) {
-            var _this = this;
-            this.windowService = windowService;
-            this.disposables = [];
-            this.disposables.push(this.windowService.onNewWindowOpen(function (windowId) { return _this.setActiveWindow(windowId); }));
-            this.disposables.push(this.windowService.onWindowFocus(function (windowId) { return _this.setActiveWindow(windowId); }));
-        }
-        ActiveWindowManager.prototype.setActiveWindow = function (windowId) {
-            this._activeWindowId = windowId;
-        };
-        Object.defineProperty(ActiveWindowManager.prototype, "activeClientId", {
-            get: function () {
-                return "window:" + this._activeWindowId;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ActiveWindowManager.prototype.dispose = function () {
-            for (var _i = 0, _a = this.disposables; _i < _a.length; _i++) {
-                var disposable = _a[_i];
-                disposable.dispose();
-            }
-        };
-        ActiveWindowManager = __decorate([
-            __param(0, exports.IWindowEventService)
-        ], ActiveWindowManager);
-        return ActiveWindowManager;
-    }());
-    exports.ActiveWindowManager = ActiveWindowManager;
+    exports.IBackupMainService = instantiation_1.createDecorator('backupMainService');
+    exports.IBackupService = instantiation_1.createDecorator('backupService');
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[13/*vs/platform/configuration/common/configuration*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[12/*vs/platform/configuration/common/configuration*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     "use strict";
     exports.IConfigurationService = instantiation_1.createDecorator('configurationService');
+    (function (ConfigurationSource) {
+        ConfigurationSource[ConfigurationSource["Default"] = 1] = "Default";
+        ConfigurationSource[ConfigurationSource["User"] = 2] = "User";
+        ConfigurationSource[ConfigurationSource["Workspace"] = 3] = "Workspace";
+    })(exports.ConfigurationSource || (exports.ConfigurationSource = {}));
+    var ConfigurationSource = exports.ConfigurationSource;
     /**
      * A helper function to get the configuration value with a specific settings path (e.g. config.some.setting)
      */
@@ -10639,7 +11484,7 @@ define(__m[13/*vs/platform/configuration/common/configuration*/], __M([1/*requir
             var current = config;
             for (var i = 0; i < path.length; i++) {
                 current = current[path[i]];
-                if (!current) {
+                if (typeof current === 'undefined') {
                     return undefined;
                 }
             }
@@ -10656,7 +11501,7 @@ define(__m[13/*vs/platform/configuration/common/configuration*/], __M([1/*requir
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[12/*vs/platform/environment/common/environment*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+define(__m[11/*vs/platform/environment/common/environment*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     "use strict";
     exports.IEnvironmentService = instantiation_1.createDecorator('environmentService');
 });
@@ -10665,16 +11510,16 @@ define(__m[12/*vs/platform/environment/common/environment*/], __M([1/*require*/,
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-define(__m[20/*vs/code/electron-main/log*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/,12/*vs/platform/environment/common/environment*/]), function (require, exports, instantiation_1, environment_1) {
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+define(__m[23/*vs/code/electron-main/log*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/,11/*vs/platform/environment/common/environment*/]), function (require, exports, instantiation_1, environment_1) {
     'use strict';
     exports.ILogService = instantiation_1.createDecorator('logService');
     var MainLogService = (function () {
@@ -10711,7 +11556,7 @@ define(__m[20/*vs/code/electron-main/log*/], __M([1/*require*/,0/*exports*/,4/*v
 
 
 
-define(__m[23/*vs/code/electron-main/storage*/], __M([1/*require*/,0/*exports*/,7/*path*/,27/*original-fs*/,12/*vs/platform/environment/common/environment*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, path, fs, environment_1, instantiation_1) {
+define(__m[24/*vs/code/electron-main/storage*/], __M([0/*require*/,1/*exports*/,7/*path*/,28/*original-fs*/,11/*vs/platform/environment/common/environment*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, path, fs, environment_1, instantiation_1) {
     'use strict';
     exports.IStorageService = instantiation_1.createDecorator('storageService');
     var StorageService = (function () {
@@ -10781,12 +11626,218 @@ define(__m[23/*vs/code/electron-main/storage*/], __M([1/*require*/,0/*exports*/,
     exports.StorageService = StorageService;
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 
 
 
 
-define(__m[76/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/,22/*vs/base/common/paths*/,49/*vs/base/common/events*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, paths, events, instantiation_1) {
+
+
+
+
+define(__m[83/*vs/platform/backup/electron-main/backupMainService*/], __M([0/*require*/,1/*exports*/,17/*vs/base/common/arrays*/,25/*fs*/,7/*path*/,38/*crypto*/,5/*vs/base/common/platform*/,36/*vs/base/node/extfs*/,11/*vs/platform/environment/common/environment*/,2/*vs/base/common/winjs.base*/]), function (require, exports, arrays, fs, path, crypto, platform, extfs, environment_1, winjs_base_1) {
+    "use strict";
+    var BackupMainService = (function () {
+        function BackupMainService(environmentService) {
+            this.backupHome = environmentService.backupHome;
+            this.workspacesJsonPath = environmentService.backupWorkspacesPath;
+            this.mapWindowToBackupFolder = Object.create(null);
+            this.loadSync();
+        }
+        BackupMainService.prototype.getWorkspaceBackupPaths = function () {
+            return this.backups.folderWorkspaces.slice(0); // return a copy
+        };
+        BackupMainService.prototype.getEmptyWorkspaceBackupPaths = function () {
+            return this.backups.emptyWorkspaces.slice(0); // return a copy
+        };
+        BackupMainService.prototype.getBackupPath = function (windowId) {
+            if (!this.mapWindowToBackupFolder[windowId]) {
+                throw new Error("Unknown backup workspace for window " + windowId);
+            }
+            return winjs_base_1.TPromise.as(path.join(this.backupHome, this.mapWindowToBackupFolder[windowId]));
+        };
+        BackupMainService.prototype.registerWindowForBackupsSync = function (windowId, isEmptyWorkspace, backupFolder, workspacePath) {
+            // Generate a new folder if this is a new empty workspace
+            if (isEmptyWorkspace && !backupFolder) {
+                backupFolder = this.getRandomEmptyWorkspaceId();
+            }
+            this.mapWindowToBackupFolder[windowId] = isEmptyWorkspace ? backupFolder : this.getWorkspaceHash(workspacePath);
+            this.pushBackupPathsSync(isEmptyWorkspace ? backupFolder : workspacePath, isEmptyWorkspace);
+        };
+        BackupMainService.prototype.pushBackupPathsSync = function (workspaceIdentifier, isEmptyWorkspace) {
+            var array = isEmptyWorkspace ? this.backups.emptyWorkspaces : this.backups.folderWorkspaces;
+            if (this.indexOf(workspaceIdentifier, isEmptyWorkspace) === -1) {
+                array.push(workspaceIdentifier);
+                this.saveSync();
+            }
+            return workspaceIdentifier;
+        };
+        BackupMainService.prototype.removeBackupPathSync = function (workspaceIdentifier, isEmptyWorkspace) {
+            var array = isEmptyWorkspace ? this.backups.emptyWorkspaces : this.backups.folderWorkspaces;
+            if (!array) {
+                return;
+            }
+            var index = this.indexOf(workspaceIdentifier, isEmptyWorkspace);
+            if (index === -1) {
+                return;
+            }
+            array.splice(index, 1);
+            this.saveSync();
+        };
+        BackupMainService.prototype.indexOf = function (workspaceIdentifier, isEmptyWorkspace) {
+            var _this = this;
+            var array = isEmptyWorkspace ? this.backups.emptyWorkspaces : this.backups.folderWorkspaces;
+            if (!array) {
+                return -1;
+            }
+            if (isEmptyWorkspace) {
+                return array.indexOf(workspaceIdentifier);
+            }
+            // for backup workspaces, sanitize the workspace identifier to accomodate for case insensitive file systems
+            var sanitizedWorkspaceIdentifier = this.sanitizePath(workspaceIdentifier);
+            return arrays.firstIndex(array, function (id) { return _this.sanitizePath(id) === sanitizedWorkspaceIdentifier; });
+        };
+        BackupMainService.prototype.loadSync = function () {
+            var backups;
+            try {
+                backups = JSON.parse(fs.readFileSync(this.workspacesJsonPath, 'utf8').toString()); // invalid JSON or permission issue can happen here
+            }
+            catch (error) {
+                backups = Object.create(null);
+            }
+            // Ensure folderWorkspaces is a string[]
+            if (backups.folderWorkspaces) {
+                var fws = backups.folderWorkspaces;
+                if (!Array.isArray(fws) || fws.some(function (f) { return typeof f !== 'string'; })) {
+                    backups.folderWorkspaces = [];
+                }
+            }
+            else {
+                backups.folderWorkspaces = [];
+            }
+            // Ensure emptyWorkspaces is a string[]
+            if (backups.emptyWorkspaces) {
+                var fws = backups.emptyWorkspaces;
+                if (!Array.isArray(fws) || fws.some(function (f) { return typeof f !== 'string'; })) {
+                    backups.emptyWorkspaces = [];
+                }
+            }
+            else {
+                backups.emptyWorkspaces = [];
+            }
+            this.backups = this.dedupeFolderWorkspaces(backups);
+            // Validate backup workspaces
+            this.validateBackupWorkspaces(backups);
+        };
+        BackupMainService.prototype.dedupeFolderWorkspaces = function (backups) {
+            var _this = this;
+            // De-duplicate folder workspaces, don't worry about cleaning them up any duplicates as
+            // they will be removed when there are no backups.
+            backups.folderWorkspaces = arrays.distinct(backups.folderWorkspaces, function (ws) { return _this.sanitizePath(ws); });
+            return backups;
+        };
+        BackupMainService.prototype.validateBackupWorkspaces = function (backups) {
+            var _this = this;
+            var staleBackupWorkspaces = [];
+            // Validate Folder Workspaces
+            backups.folderWorkspaces.forEach(function (workspacePath) {
+                var backupPath = path.join(_this.backupHome, _this.getWorkspaceHash(workspacePath));
+                var hasBackups = _this.hasBackupsSync(backupPath);
+                var missingWorkspace = hasBackups && !fs.existsSync(workspacePath);
+                // If the folder has no backups, make sure to delete it
+                // If the folder has backups, but the target workspace is missing, convert backups to empty ones
+                if (!hasBackups || missingWorkspace) {
+                    staleBackupWorkspaces.push({ workspaceIdentifier: workspacePath, backupPath: backupPath, isEmptyWorkspace: false });
+                    if (missingWorkspace) {
+                        var identifier = _this.pushBackupPathsSync(_this.getRandomEmptyWorkspaceId(), true /* is empty workspace */);
+                        var newEmptyWorkspaceBackupPath = path.join(path.dirname(backupPath), identifier);
+                        try {
+                            fs.renameSync(backupPath, newEmptyWorkspaceBackupPath);
+                        }
+                        catch (ex) {
+                            console.error("Backup: Could not rename backup folder for missing workspace: " + ex.toString());
+                            _this.removeBackupPathSync(identifier, true);
+                        }
+                    }
+                }
+            });
+            // Validate Empty Workspaces
+            backups.emptyWorkspaces.forEach(function (backupFolder) {
+                var backupPath = path.join(_this.backupHome, backupFolder);
+                if (!_this.hasBackupsSync(backupPath)) {
+                    staleBackupWorkspaces.push({ workspaceIdentifier: backupFolder, backupPath: backupPath, isEmptyWorkspace: true });
+                }
+            });
+            // Clean up stale backups
+            staleBackupWorkspaces.forEach(function (staleBackupWorkspace) {
+                var backupPath = staleBackupWorkspace.backupPath, workspaceIdentifier = staleBackupWorkspace.workspaceIdentifier, isEmptyWorkspace = staleBackupWorkspace.isEmptyWorkspace;
+                try {
+                    extfs.delSync(backupPath);
+                }
+                catch (ex) {
+                    console.error("Backup: Could not delete stale backup: " + ex.toString());
+                }
+                _this.removeBackupPathSync(workspaceIdentifier, isEmptyWorkspace);
+            });
+        };
+        BackupMainService.prototype.hasBackupsSync = function (backupPath) {
+            try {
+                var backupSchemas = extfs.readdirSync(backupPath);
+                if (backupSchemas.length === 0) {
+                    return false; // empty backups
+                }
+                return backupSchemas.some(function (backupSchema) {
+                    try {
+                        return extfs.readdirSync(path.join(backupPath, backupSchema)).length > 0;
+                    }
+                    catch (error) {
+                        return false; // invalid folder
+                    }
+                });
+            }
+            catch (error) {
+                return false; // backup path does not exist
+            }
+        };
+        BackupMainService.prototype.saveSync = function () {
+            try {
+                // The user data directory must exist so only the Backup directory needs to be checked.
+                if (!fs.existsSync(this.backupHome)) {
+                    fs.mkdirSync(this.backupHome);
+                }
+                fs.writeFileSync(this.workspacesJsonPath, JSON.stringify(this.backups));
+            }
+            catch (ex) {
+                console.error("Backup: Could not save workspaces.json: " + ex.toString());
+            }
+        };
+        BackupMainService.prototype.getRandomEmptyWorkspaceId = function () {
+            return (Date.now() + Math.round(Math.random() * 1000)).toString();
+        };
+        BackupMainService.prototype.sanitizePath = function (p) {
+            return platform.isLinux ? p : p.toLowerCase();
+        };
+        BackupMainService.prototype.getWorkspaceHash = function (workspacePath) {
+            return crypto.createHash('md5').update(this.sanitizePath(workspacePath)).digest('hex');
+        };
+        BackupMainService = __decorate([
+            __param(0, environment_1.IEnvironmentService)
+        ], BackupMainService);
+        return BackupMainService;
+    }());
+    exports.BackupMainService = BackupMainService;
+});
+
+
+
+
+
+
+define(__m[84/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/,19/*vs/base/common/paths*/,80/*vs/base/common/events*/,5/*vs/base/common/platform*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, paths, events, platform_1, instantiation_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -10833,36 +11884,15 @@ define(__m[76/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/
             if (!resource) {
                 return false;
             }
-            return this.containsAny([resource], type);
-        };
-        /**
-         * Returns true if this change event contains any of the provided files with the given change type. In case of
-         * type DELETED, this method will also return true if a folder got deleted that is the parent of any of the
-         * provided file paths.
-         */
-        FileChangesEvent.prototype.containsAny = function (resources, type) {
-            if (!resources || !resources.length) {
-                return false;
-            }
             return this._changes.some(function (change) {
                 if (change.type !== type) {
                     return false;
                 }
                 // For deleted also return true when deleted folder is parent of target path
                 if (type === FileChangeType.DELETED) {
-                    return resources.some(function (a) {
-                        if (!a) {
-                            return false;
-                        }
-                        return paths.isEqualOrParent(a.fsPath, change.resource.fsPath);
-                    });
+                    return isEqual(resource.fsPath, change.resource.fsPath) || isParent(resource.fsPath, change.resource.fsPath);
                 }
-                return resources.some(function (a) {
-                    if (!a) {
-                        return false;
-                    }
-                    return a.fsPath === change.resource.fsPath;
-                });
+                return isEqual(resource.fsPath, change.resource.fsPath);
             });
         };
         /**
@@ -10912,6 +11942,22 @@ define(__m[76/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/
         return FileChangesEvent;
     }(events.Event));
     exports.FileChangesEvent = FileChangesEvent;
+    function isEqual(path1, path2) {
+        var identityEquals = (path1 === path2);
+        if (platform_1.isLinux || identityEquals) {
+            return identityEquals;
+        }
+        return path1.toLowerCase() === path2.toLowerCase();
+    }
+    exports.isEqual = isEqual;
+    function isParent(path, candidate) {
+        if (!platform_1.isLinux) {
+            path = path.toLowerCase();
+            candidate = candidate.toLowerCase();
+        }
+        return path.indexOf(candidate + paths.nativeSep) === 0;
+    }
+    exports.isParent = isParent;
     (function (FileOperationResult) {
         FileOperationResult[FileOperationResult["FILE_IS_BINARY"] = 0] = "FILE_IS_BINARY";
         FileOperationResult[FileOperationResult["FILE_IS_DIRECTORY"] = 1] = "FILE_IS_DIRECTORY";
@@ -10931,6 +11977,7 @@ define(__m[76/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/
         ON_FOCUS_CHANGE: 'onFocusChange',
         ON_WINDOW_CHANGE: 'onWindowChange'
     };
+    exports.CONTENT_CHANGE_EVENT_BUFFER_DELAY = 1000;
     exports.SUPPORTED_ENCODINGS = {
         utf8: {
             labelLong: 'UTF-8',
@@ -11163,7 +12210,7 @@ define(__m[76/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/
     };
 });
 
-define(__m[48/*vs/platform/instantiation/common/serviceCollection*/], __M([1/*require*/,0/*exports*/,18/*vs/base/common/arrays*/]), function (require, exports, arrays_1) {
+define(__m[54/*vs/platform/instantiation/common/serviceCollection*/], __M([0/*require*/,1/*exports*/,17/*vs/base/common/arrays*/]), function (require, exports, arrays_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -11233,7 +12280,7 @@ define(__m[48/*vs/platform/instantiation/common/serviceCollection*/], __M([1/*re
     exports.ServiceCollection = ServiceCollection;
 });
 
-define(__m[78/*vs/platform/instantiation/common/instantiationService*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,15/*vs/base/common/errors*/,3/*vs/base/common/types*/,42/*vs/base/common/assert*/,69/*vs/base/common/graph*/,39/*vs/platform/instantiation/common/descriptors*/,4/*vs/platform/instantiation/common/instantiation*/,48/*vs/platform/instantiation/common/serviceCollection*/]), function (require, exports, winjs_base_1, errors_1, types_1, assert, graph_1, descriptors_1, instantiation_1, serviceCollection_1) {
+define(__m[86/*vs/platform/instantiation/common/instantiationService*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,18/*vs/base/common/errors*/,6/*vs/base/common/types*/,53/*vs/base/common/assert*/,107/*vs/base/common/graph*/,43/*vs/platform/instantiation/common/descriptors*/,3/*vs/platform/instantiation/common/instantiation*/,54/*vs/platform/instantiation/common/serviceCollection*/]), function (require, exports, winjs_base_1, errors_1, types_1, assert, graph_1, descriptors_1, instantiation_1, serviceCollection_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -11444,11 +12491,51 @@ define(__m[78/*vs/platform/instantiation/common/instantiationService*/], __M([1/
     exports.InstantiationService = InstantiationService;
 });
 
+define(__m[87/*vs/platform/keybinding/common/keybinding*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    (function (KeybindingSource) {
+        KeybindingSource[KeybindingSource["Default"] = 1] = "Default";
+        KeybindingSource[KeybindingSource["User"] = 2] = "User";
+    })(exports.KeybindingSource || (exports.KeybindingSource = {}));
+    var KeybindingSource = exports.KeybindingSource;
+    exports.IKeybindingService = instantiation_1.createDecorator('keybindingService');
+});
+
+define(__m[88/*vs/platform/lifecycle/common/lifecycle*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.ILifecycleService = instantiation_1.createDecorator('lifecycleService');
+    (function (ShutdownReason) {
+        /** Window is closed */
+        ShutdownReason[ShutdownReason["CLOSE"] = 0] = "CLOSE";
+        /** Application is quit */
+        ShutdownReason[ShutdownReason["QUIT"] = 1] = "QUIT";
+        /** Window is reloaded */
+        ShutdownReason[ShutdownReason["RELOAD"] = 2] = "RELOAD";
+        /** Other configuration loaded into window */
+        ShutdownReason[ShutdownReason["LOAD"] = 3] = "LOAD";
+    })(exports.ShutdownReason || (exports.ShutdownReason = {}));
+    var ShutdownReason = exports.ShutdownReason;
+    exports.NullLifecycleService = {
+        _serviceBrand: null,
+        willShutdown: false,
+        onWillShutdown: function () { return ({ dispose: function () { } }); },
+        onShutdown: function (reason) { return ({ dispose: function () { } }); }
+    };
+});
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[79/*vs/platform/package*/], __M([1/*require*/,0/*exports*/,7/*path*/,16/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
+define(__m[35/*vs/platform/package*/], __M([0/*require*/,1/*exports*/,7/*path*/,22/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
     "use strict";
     var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
     var packageJsonPath = path.join(rootPath, 'package.json');
@@ -11456,7 +12543,23 @@ define(__m[79/*vs/platform/package*/], __M([1/*require*/,0/*exports*/,7/*path*/,
     exports.default = require.__$__nodeRequire(packageJsonPath);
 });
 
-define(__m[19/*vs/platform/platform*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/types*/,42/*vs/base/common/assert*/]), function (require, exports, Types, Assert) {
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[90/*vs/platform/environment/node/http*/], __M([0/*require*/,1/*exports*/,78/*vs/base/node/id*/,35/*vs/platform/package*/]), function (require, exports, id_1, package_1) {
+    "use strict";
+    function getCommonHTTPHeaders() {
+        return id_1.getMachineId().then(function (machineId) { return ({
+            'X-Market-Client-Id': "VSCode " + package_1.default.version,
+            'User-Agent': "VSCode " + package_1.default.version,
+            'X-Market-User-Id': machineId
+        }); });
+    }
+    exports.getCommonHTTPHeaders = getCommonHTTPHeaders;
+});
+
+define(__m[21/*vs/platform/platform*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/types*/,53/*vs/base/common/assert*/]), function (require, exports, Types, Assert) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -11519,7 +12622,7 @@ define(__m[19/*vs/platform/platform*/], __M([1/*require*/,0/*exports*/,3/*vs/bas
     exports.BaseRegistry = BaseRegistry;
 });
 
-define(__m[38/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([1/*require*/,0/*exports*/,19/*vs/platform/platform*/,67/*vs/base/common/eventEmitter*/]), function (require, exports, platform, eventEmitter_1) {
+define(__m[42/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([0/*require*/,1/*exports*/,21/*vs/platform/platform*/,99/*vs/base/common/eventEmitter*/]), function (require, exports, platform, eventEmitter_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -11557,7 +12660,7 @@ define(__m[38/*vs/platform/jsonschemas/common/jsonContributionRegistry*/], __M([
     platform.Registry.add(exports.Extensions.JSONContribution, jsonContributionRegistry);
 });
 
-define(__m[82/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*require*/,0/*exports*/,63/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/,15/*vs/base/common/errors*/,58/*vs/base/common/severity*/,38/*vs/platform/jsonschemas/common/jsonContributionRegistry*/,19/*vs/platform/platform*/,6/*vs/base/common/event*/]), function (require, exports, nls, errors_1, severity_1, jsonContributionRegistry_1, platform_1, event_1) {
+define(__m[93/*vs/platform/extensions/common/extensionsRegistry*/], __M([0/*require*/,1/*exports*/,69/*vs/nls!vs/platform/extensions/common/extensionsRegistry*/,18/*vs/base/common/errors*/,64/*vs/base/common/severity*/,42/*vs/platform/jsonschemas/common/jsonContributionRegistry*/,21/*vs/platform/platform*/,4/*vs/base/common/event*/]), function (require, exports, nls, errors_1, severity_1, jsonContributionRegistry_1, platform_1, event_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -11632,16 +12735,9 @@ define(__m[82/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*requ
     exports.ExtensionPoint = ExtensionPoint;
     var schemaId = 'vscode://schemas/vscode-extensions';
     var schema = {
-        default: {
-            'name': '{{name}}',
-            'description': '{{description}}',
-            'author': '{{author}}',
-            'version': '{{1.0.0}}',
-            'main': '{{pathToMain}}',
-            'dependencies': {}
-        },
         properties: {
             engines: {
+                type: 'object',
                 properties: {
                     'vscode': {
                         type: 'string',
@@ -11664,7 +12760,7 @@ define(__m[82/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*requ
                 uniqueItems: true,
                 items: {
                     type: 'string',
-                    enum: ['Languages', 'Snippets', 'Linters', 'Themes', 'Debuggers', 'Productivity', 'Other', 'Keymaps', 'Formatters']
+                    enum: ['Languages', 'Snippets', 'Linters', 'Themes', 'Debuggers', 'Other', 'Keymaps', 'Formatters']
                 }
             },
             galleryBanner: {
@@ -11697,7 +12793,7 @@ define(__m[82/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*requ
                 type: 'array',
                 items: {
                     type: 'string',
-                    defaultSnippets: [{ label: 'onLanguage', body: 'onLanguage:{{languageId}}' }, { label: 'onCommand', body: 'onCommand:{{commandId}}' }, { label: 'onDebug', body: 'onDebug:{{type}}' }, { label: 'workspaceContains', body: 'workspaceContains:{{fileName}}' }],
+                    defaultSnippets: [{ label: 'onLanguage', body: 'onLanguage:${1:languageId}' }, { label: 'onCommand', body: 'onCommand:${2:commandId}' }, { label: 'onDebug', body: 'onDebug:${3:type}' }, { label: 'workspaceContains', body: 'workspaceContains:${4:fileName}' }],
                 }
             },
             badges: {
@@ -11774,7 +12870,7 @@ define(__m[82/*vs/platform/extensions/common/extensionsRegistry*/], __M([1/*requ
     schemaRegistry.registerSchema(schemaId, schema);
 });
 
-define(__m[31/*vs/platform/configuration/common/configurationRegistry*/], __M([1/*require*/,0/*exports*/,61/*vs/nls!vs/platform/configuration/common/configurationRegistry*/,6/*vs/base/common/event*/,19/*vs/platform/platform*/,10/*vs/base/common/objects*/,82/*vs/platform/extensions/common/extensionsRegistry*/,38/*vs/platform/jsonschemas/common/jsonContributionRegistry*/]), function (require, exports, nls, event_1, platform_1, objects, extensionsRegistry_1, jsonContributionRegistry_1) {
+define(__m[27/*vs/platform/configuration/common/configurationRegistry*/], __M([0/*require*/,1/*exports*/,67/*vs/nls!vs/platform/configuration/common/configurationRegistry*/,4/*vs/base/common/event*/,21/*vs/platform/platform*/,8/*vs/base/common/objects*/,6/*vs/base/common/types*/,93/*vs/platform/extensions/common/extensionsRegistry*/,42/*vs/platform/jsonschemas/common/jsonContributionRegistry*/]), function (require, exports, nls, event_1, platform_1, objects, types, extensionsRegistry_1, jsonContributionRegistry_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -11788,8 +12884,9 @@ define(__m[31/*vs/platform/configuration/common/configurationRegistry*/], __M([1
     var ConfigurationRegistry = (function () {
         function ConfigurationRegistry() {
             this.configurationContributors = [];
-            this.configurationSchema = { allOf: [] };
+            this.configurationSchema = { properties: {}, additionalProperties: false, errorMessage: 'Unknown configuration setting' };
             this._onDidRegisterConfiguration = new event_1.Emitter();
+            this.configurationProperties = {};
             contributionRegistry.registerSchema(schemaId, this.configurationSchema);
         }
         Object.defineProperty(ConfigurationRegistry.prototype, "onDidRegisterConfiguration", {
@@ -11800,20 +12897,83 @@ define(__m[31/*vs/platform/configuration/common/configurationRegistry*/], __M([1
             configurable: true
         });
         ConfigurationRegistry.prototype.registerConfiguration = function (configuration) {
-            this.configurationContributors.push(configuration);
-            this.registerJSONConfiguration(configuration);
+            this.registerConfigurations([configuration]);
+        };
+        ConfigurationRegistry.prototype.registerConfigurations = function (configurations) {
+            var _this = this;
+            configurations.forEach(function (configuration) {
+                _this.registerProperties(configuration); // fills in defaults
+                _this.configurationContributors.push(configuration);
+                _this.registerJSONConfiguration(configuration);
+            });
             this._onDidRegisterConfiguration.fire(this);
         };
+        ConfigurationRegistry.prototype.registerProperties = function (configuration) {
+            var properties = configuration.properties;
+            if (properties) {
+                for (var key in properties) {
+                    // fill in default values
+                    var property = properties[key];
+                    var defaultValue = property.default;
+                    if (types.isUndefined(defaultValue)) {
+                        property.default = getDefaultValue(property.type);
+                    }
+                    // add to properties map
+                    this.configurationProperties[key] = properties[key];
+                }
+            }
+            var subNodes = configuration.allOf;
+            if (subNodes) {
+                for (var _i = 0, subNodes_1 = subNodes; _i < subNodes_1.length; _i++) {
+                    var node = subNodes_1[_i];
+                    this.registerProperties(node);
+                }
+            }
+        };
         ConfigurationRegistry.prototype.getConfigurations = function () {
-            return this.configurationContributors.slice(0);
+            return this.configurationContributors;
+        };
+        ConfigurationRegistry.prototype.getConfigurationProperties = function () {
+            return this.configurationProperties;
         };
         ConfigurationRegistry.prototype.registerJSONConfiguration = function (configuration) {
-            var schema = objects.clone(configuration);
-            this.configurationSchema.allOf.push(schema);
-            contributionRegistry.registerSchema(schemaId, this.configurationSchema);
+            var configurationSchema = this.configurationSchema;
+            function register(configuration) {
+                var properties = configuration.properties;
+                if (properties) {
+                    for (var key in properties) {
+                        configurationSchema.properties[key] = properties[key];
+                    }
+                }
+                var subNodes = configuration.allOf;
+                if (subNodes) {
+                    subNodes.forEach(register);
+                }
+            }
+            ;
+            register(configuration);
+            contributionRegistry.registerSchema(schemaId, configurationSchema);
         };
         return ConfigurationRegistry;
     }());
+    function getDefaultValue(type) {
+        var t = Array.isArray(type) ? type[0] : type;
+        switch (t) {
+            case 'boolean':
+                return false;
+            case 'integer':
+            case 'number':
+                return 0;
+            case 'string':
+                return '';
+            case 'array':
+                return [];
+            case 'object':
+                return {};
+            default:
+                return null;
+        }
+    }
     var configurationRegistry = new ConfigurationRegistry();
     platform_1.Registry.add(exports.Extensions.Configuration, configurationRegistry);
     var configurationExtPoint = extensionsRegistry_1.ExtensionsRegistry.registerExtensionPoint('configuration', [], {
@@ -11835,6 +12995,7 @@ define(__m[31/*vs/platform/configuration/common/configurationRegistry*/], __M([1
         }
     });
     configurationExtPoint.setHandler(function (extensions) {
+        var configurations = [];
         for (var i = 0; i < extensions.length; i++) {
             var configuration = extensions[i].value;
             var collector = extensions[i].collector;
@@ -11853,22 +13014,42 @@ define(__m[31/*vs/platform/configuration/common/configurationRegistry*/], __M([1
             }
             var clonedConfiguration = objects.clone(configuration);
             clonedConfiguration.id = extensions[i].description.id;
-            configurationRegistry.registerConfiguration(clonedConfiguration);
+            configurations.push(clonedConfiguration);
         }
+        configurationRegistry.registerConfigurations(configurations);
     });
 });
 
-define(__m[84/*vs/platform/configuration/common/model*/], __M([1/*require*/,0/*exports*/,19/*vs/platform/platform*/,3/*vs/base/common/types*/,31/*vs/platform/configuration/common/configurationRegistry*/]), function (require, exports, platform_1, types, configurationRegistry_1) {
+define(__m[95/*vs/platform/configuration/common/model*/], __M([0/*require*/,1/*exports*/,21/*vs/platform/platform*/,27/*vs/platform/configuration/common/configurationRegistry*/]), function (require, exports, platform_1, configurationRegistry_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    function setNode(root, key, value) {
+    function getDefaultValues() {
+        var valueTreeRoot = Object.create(null);
+        var properties = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurationProperties();
+        for (var key in properties) {
+            var value = properties[key].default;
+            addToValueTree(valueTreeRoot, key, value, function (message) { return console.error("Conflict in default settings: " + message); });
+        }
+        return valueTreeRoot;
+    }
+    exports.getDefaultValues = getDefaultValues;
+    function toValuesTree(properties, conflictReporter) {
+        var root = Object.create(null);
+        for (var key in properties) {
+            addToValueTree(root, key, properties[key], conflictReporter);
+        }
+        return root;
+    }
+    exports.toValuesTree = toValuesTree;
+    function addToValueTree(settingsTreeRoot, key, value, conflictReporter) {
         var segments = key.split('.');
         var last = segments.pop();
-        var curr = root;
-        segments.forEach(function (s) {
+        var curr = settingsTreeRoot;
+        for (var i = 0; i < segments.length; i++) {
+            var s = segments[i];
             var obj = curr[s];
             switch (typeof obj) {
                 case 'undefined':
@@ -11877,148 +13058,22 @@ define(__m[84/*vs/platform/configuration/common/model*/], __M([1/*require*/,0/*e
                 case 'object':
                     break;
                 default:
-                    console.error("Conflicting configuration setting: " + key + " at " + s + " with " + JSON.stringify(obj));
+                    conflictReporter("Ignoring " + key + " as " + segments.slice(0, i + 1).join('.') + " is " + JSON.stringify(obj));
+                    return;
             }
             curr = obj;
-        });
+        }
+        ;
         if (typeof curr === 'object') {
             curr[last] = value; // workaround https://github.com/Microsoft/vscode/issues/13606
         }
-    }
-    exports.setNode = setNode;
-    function processDefaultValues(withConfig) {
-        var configurations = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurations();
-        var visit = function (config, level) {
-            var handled = withConfig(config, level === 0);
-            if (Array.isArray(config.allOf)) {
-                config.allOf.forEach(function (c) {
-                    // if the config node only contains an `allOf` we treat the `allOf` children as if they were at the top level
-                    visit(c, (!handled && level === 0) ? level : level + 1);
-                });
-            }
-        };
-        configurations.sort(function (c1, c2) {
-            if (typeof c1.order !== 'number') {
-                return 1;
-            }
-            if (typeof c2.order !== 'number') {
-                return -1;
-            }
-            if (c1.order === c2.order) {
-                var title1 = c1.title || '';
-                var title2 = c2.title || '';
-                return title1.localeCompare(title2);
-            }
-            return c1.order - c2.order;
-        }).forEach(function (config) {
-            visit(config, 0);
-        });
-    }
-    function getDefaultValues() {
-        var ret = Object.create(null);
-        var handleConfig = function (config, isTop) {
-            if (config.properties) {
-                Object.keys(config.properties).forEach(function (key) {
-                    var prop = config.properties[key];
-                    var value = prop.default;
-                    if (types.isUndefined(prop.default)) {
-                        value = getDefaultValue(prop.type);
-                    }
-                    setNode(ret, key, value);
-                });
-                return true;
-            }
-            return false;
-        };
-        processDefaultValues(handleConfig);
-        return ret;
-    }
-    exports.getDefaultValues = getDefaultValues;
-    function getDefaultValuesContent(indent) {
-        var lastEntry = -1;
-        var result = [];
-        result.push('{');
-        var handleConfig = function (config, isTop) {
-            var handled = false;
-            if (config.title) {
-                handled = true;
-                if (isTop) {
-                    result.push('');
-                    result.push('// ' + config.title);
-                }
-                else {
-                    result.push(indent + '// ' + config.title);
-                }
-                result.push('');
-            }
-            if (config.properties) {
-                handled = true;
-                Object.keys(config.properties).forEach(function (key) {
-                    var prop = config.properties[key];
-                    var defaultValue = prop.default;
-                    if (types.isUndefined(defaultValue)) {
-                        defaultValue = getDefaultValue(prop.type);
-                    }
-                    if (prop.description) {
-                        result.push(indent + '// ' + prop.description);
-                    }
-                    var valueString = JSON.stringify(defaultValue, null, indent);
-                    if (valueString && (typeof defaultValue === 'object')) {
-                        valueString = addIndent(valueString, indent);
-                    }
-                    if (lastEntry !== -1) {
-                        result[lastEntry] += ',';
-                    }
-                    lastEntry = result.length;
-                    result.push(indent + JSON.stringify(key) + ': ' + valueString);
-                    result.push('');
-                });
-            }
-            return handled;
-        };
-        processDefaultValues(handleConfig);
-        result.push('}');
-        return result.join('\n');
-    }
-    exports.getDefaultValuesContent = getDefaultValuesContent;
-    function addIndent(str, indent) {
-        return str.split('\n').join('\n' + indent);
-    }
-    function getDefaultValue(type) {
-        var t = Array.isArray(type) ? type[0] : type;
-        switch (t) {
-            case 'boolean':
-                return false;
-            case 'integer':
-            case 'number':
-                return 0;
-            case 'string':
-                return '';
-            case 'array':
-                return [];
-            case 'object':
-                return {};
-            default:
-                return null;
+        else {
+            conflictReporter("Ignoring " + key + " as " + segments.join('.') + " is " + JSON.stringify(curr));
         }
     }
-    function flatten(contents) {
-        var root = Object.create(null);
-        for (var key in contents) {
-            setNode(root, key, contents[key]);
-        }
-        return root;
-    }
-    exports.flatten = flatten;
     function getConfigurationKeys() {
-        var keys = [];
-        var configurations = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurations();
-        configurations.forEach(function (config) {
-            if (config.properties) {
-                keys.push.apply(keys, Object.keys(config.properties));
-            }
-        });
-        return keys;
+        var properties = platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).getConfigurationProperties();
+        return Object.keys(properties);
     }
     exports.getConfigurationKeys = getConfigurationKeys;
 });
@@ -12032,7 +13087,7 @@ define(__m[84/*vs/platform/configuration/common/model*/], __M([1/*require*/,0/*e
 
 
 
-define(__m[85/*vs/platform/configuration/node/configurationService*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,10/*vs/base/common/objects*/,84/*vs/platform/configuration/common/model*/,54/*vs/base/node/config*/,19/*vs/platform/platform*/,31/*vs/platform/configuration/common/configurationRegistry*/,17/*vs/base/common/lifecycle*/,13/*vs/platform/configuration/common/configuration*/,6/*vs/base/common/event*/,12/*vs/platform/environment/common/environment*/]), function (require, exports, winjs_base_1, objects, model_1, config_1, platform_1, configurationRegistry_1, lifecycle_1, configuration_1, event_1, environment_1) {
+define(__m[96/*vs/platform/configuration/node/configurationService*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,8/*vs/base/common/objects*/,95/*vs/platform/configuration/common/model*/,60/*vs/base/node/config*/,21/*vs/platform/platform*/,27/*vs/platform/configuration/common/configurationRegistry*/,13/*vs/base/common/lifecycle*/,12/*vs/platform/configuration/common/configuration*/,4/*vs/base/common/event*/,11/*vs/platform/environment/common/environment*/]), function (require, exports, winjs_base_1, objects, model_1, config_1, platform_1, configurationRegistry_1, lifecycle_1, configuration_1, event_1, environment_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -12047,17 +13102,17 @@ define(__m[85/*vs/platform/configuration/node/configurationService*/], __M([1/*r
             this.rawConfig = new config_1.ConfigWatcher(environmentService.appSettingsPath, { changeBufferDelay: 300, defaultConfig: Object.create(null) });
             this.disposables.push(lifecycle_1.toDisposable(function () { return _this.rawConfig.dispose(); }));
             // Listeners
-            this.disposables.push(this.rawConfig.onDidUpdateConfiguration(function (event) {
-                _this.onConfigurationChange();
-                if (_this._telemetryService) {
-                    _this._telemetryService.publicLog('updateUserConfiguration', { userConfigurationKeys: Object.keys(event.config) });
-                }
-            }));
-            this.disposables.push(platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).onDidRegisterConfiguration(function () { return _this.onConfigurationChange(); }));
+            this.disposables.push(this.rawConfig.onDidUpdateConfiguration(function () { return _this.onConfigurationChange(configuration_1.ConfigurationSource.User); }));
+            this.disposables.push(platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).onDidRegisterConfiguration(function () { return _this.onConfigurationChange(configuration_1.ConfigurationSource.Default); }));
         }
-        ConfigurationService.prototype.onConfigurationChange = function () {
+        ConfigurationService.prototype.onConfigurationChange = function (source) {
             this.cache = void 0; // reset our caches
-            this._onDidUpdateConfiguration.fire({ config: this.getConfiguration() });
+            var cache = this.getCache();
+            this._onDidUpdateConfiguration.fire({
+                config: this.getConfiguration(),
+                source: source,
+                sourceConfig: source === configuration_1.ConfigurationSource.Default ? cache.defaults : cache.user
+            });
         };
         Object.defineProperty(ConfigurationService.prototype, "onDidUpdateConfiguration", {
             get: function () {
@@ -12076,39 +13131,39 @@ define(__m[85/*vs/platform/configuration/node/configurationService*/], __M([1/*r
             });
         };
         ConfigurationService.prototype.getConfiguration = function (section) {
-            var consolidatedConfig = this.cache;
-            if (!consolidatedConfig) {
-                consolidatedConfig = this.getConsolidatedConfig();
-                this.cache = consolidatedConfig;
-            }
-            return section ? consolidatedConfig[section] : consolidatedConfig;
+            var cache = this.getCache();
+            return section ? cache.consolidated[section] : cache.consolidated;
+        };
+        ConfigurationService.prototype.getCache = function () {
+            return this.cache || (this.cache = this.consolidateConfigurations());
         };
         ConfigurationService.prototype.lookup = function (key) {
+            var cache = this.getCache();
             // make sure to clone the configuration so that the receiver does not tamper with the values
             return {
-                default: objects.clone(configuration_1.getConfigurationValue(model_1.getDefaultValues(), key)),
-                user: objects.clone(configuration_1.getConfigurationValue(model_1.flatten(this.rawConfig.getConfig()), key)),
-                value: objects.clone(configuration_1.getConfigurationValue(this.getConfiguration(), key))
+                default: objects.clone(configuration_1.getConfigurationValue(cache.defaults, key)),
+                user: objects.clone(configuration_1.getConfigurationValue(cache.user, key)),
+                value: objects.clone(configuration_1.getConfigurationValue(cache.consolidated, key))
             };
         };
-        ConfigurationService.prototype.getConsolidatedConfig = function () {
+        ConfigurationService.prototype.keys = function () {
+            return {
+                default: model_1.getConfigurationKeys(),
+                user: Object.keys(this.rawConfig.getConfig())
+            };
+        };
+        ConfigurationService.prototype.consolidateConfigurations = function () {
             var defaults = model_1.getDefaultValues(); // defaults coming from contributions to registries
-            var user = model_1.flatten(this.rawConfig.getConfig()); // user configured settings
-            return objects.mixin(objects.clone(defaults), // target: default values (but dont modify!)
+            var user = model_1.toValuesTree(this.rawConfig.getConfig(), function (message) { return console.error("Conflict in user settings: " + message); }); // user configured settings
+            var consolidated = objects.mixin(objects.clone(defaults), // target: default values (but dont modify!)
             user, // source: user settings
             true // overwrite
             );
+            return { defaults: defaults, user: user, consolidated: consolidated };
         };
         ConfigurationService.prototype.dispose = function () {
             this.disposables = lifecycle_1.dispose(this.disposables);
         };
-        Object.defineProperty(ConfigurationService.prototype, "telemetryService", {
-            set: function (value) {
-                this._telemetryService = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
         ConfigurationService = __decorate([
             __param(0, environment_1.IEnvironmentService)
         ], ConfigurationService);
@@ -12121,7 +13176,7 @@ define(__m[85/*vs/platform/configuration/node/configurationService*/], __M([1/*r
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[11/*vs/platform/product*/], __M([1/*require*/,0/*exports*/,7/*path*/,16/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
+define(__m[15/*vs/platform/product*/], __M([0/*require*/,1/*exports*/,7/*path*/,22/*vs/base/common/uri*/]), function (require, exports, path, uri_1) {
     "use strict";
     var rootPath = path.dirname(uri_1.default.parse(require.toUrl('')).fsPath);
     var productJsonPath = path.join(rootPath, 'product.json');
@@ -12148,7 +13203,7 @@ define(__m[11/*vs/platform/product*/], __M([1/*require*/,0/*exports*/,7/*path*/,
 
 
 
-define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7/*path*/,5/*vs/base/common/platform*/,10/*vs/base/common/objects*/,23/*vs/code/electron-main/storage*/,14/*electron*/,2/*vs/base/common/winjs.base*/,12/*vs/platform/environment/common/environment*/,20/*vs/code/electron-main/log*/,13/*vs/platform/configuration/common/configuration*/,37/*vs/platform/environment/node/argv*/,11/*vs/platform/product*/]), function (require, exports, path, platform, objects, storage_1, electron_1, winjs_base_1, environment_1, log_1, configuration_1, argv_1, product_1) {
+define(__m[48/*vs/code/electron-main/window*/], __M([0/*require*/,1/*exports*/,7/*path*/,5/*vs/base/common/platform*/,8/*vs/base/common/objects*/,24/*vs/code/electron-main/storage*/,14/*electron*/,2/*vs/base/common/winjs.base*/,11/*vs/platform/environment/common/environment*/,23/*vs/code/electron-main/log*/,12/*vs/platform/configuration/common/configuration*/,45/*vs/platform/environment/node/argv*/,15/*vs/platform/product*/,90/*vs/platform/environment/node/http*/]), function (require, exports, path, platform, objects, storage_1, electron_1, winjs_base_1, environment_1, log_1, configuration_1, argv_1, product_1, http_1) {
     'use strict';
     (function (WindowMode) {
         WindowMode[WindowMode["Maximized"] = 0] = "Maximized";
@@ -12186,6 +13241,7 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
     var ReadyState = exports.ReadyState;
     var VSCodeWindow = (function () {
         function VSCodeWindow(config, logService, environmentService, configurationService, storageService) {
+            var _this = this;
             this.logService = logService;
             this.environmentService = environmentService;
             this.configurationService = configurationService;
@@ -12198,10 +13254,9 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
             // Load window state
             this.restoreWindowState(config.state);
             // For VS theme we can show directly because background is white
-            var usesLightTheme = /vs($| )/.test(this.storageService.getItem(VSCodeWindow.colorThemeStorageKey));
-            if (!global.windowShow) {
-                global.windowShow = Date.now();
-            }
+            var themeId = this.storageService.getItem(VSCodeWindow.colorThemeStorageKey);
+            var usesLightTheme = /vs($| )/.test(themeId);
+            var usesHighContrastTheme = /hc-black($| )/.test(themeId) || (platform.isWindows && electron_1.systemPreferences.isInvertedColorScheme());
             // in case we are maximized or fullscreen, only show later after the call to maximize/fullscreen (see below)
             var isFullscreenOrMaximized = (this.currentWindowMode === WindowMode.Maximized || this.currentWindowMode === WindowMode.Fullscreen);
             var options = {
@@ -12209,7 +13264,7 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
                 height: this.windowState.height,
                 x: this.windowState.x,
                 y: this.windowState.y,
-                backgroundColor: usesLightTheme ? '#FFFFFF' : platform.isMacintosh ? '#171717' : '#1E1E1E',
+                backgroundColor: usesHighContrastTheme ? '#000000' : usesLightTheme ? '#FFFFFF' : platform.isMacintosh ? '#171717' : '#1E1E1E',
                 minWidth: VSCodeWindow.MIN_WIDTH,
                 minHeight: VSCodeWindow.MIN_HEIGHT,
                 show: !isFullscreenOrMaximized,
@@ -12221,9 +13276,28 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
             if (platform.isLinux) {
                 options.icon = path.join(this.environmentService.appRoot, 'resources/linux/code.png'); // Windows and Mac are better off using the embedded icon(s)
             }
+            if (platform.isMacintosh && (!this.options.titleBarStyle || this.options.titleBarStyle === 'custom')) {
+                var isDev = !this.environmentService.isBuilt || !!config.extensionDevelopmentPath;
+                if (!isDev) {
+                    options.titleBarStyle = 'hidden'; // not enabled when developing due to https://github.com/electron/electron/issues/3647
+                    this.hiddenTitleBarStyle = true;
+                }
+            }
             // Create the browser window.
             this._win = new electron_1.BrowserWindow(options);
             this._id = this._win.id;
+            // TODO@joao: hook this up to some initialization routine
+            // this causes a race between setting the headers and doing
+            // a request that needs them. chances are low
+            http_1.getCommonHTTPHeaders().done(function (headers) {
+                if (!_this._win) {
+                    return;
+                }
+                var urls = ['https://marketplace.visualstudio.com/*', 'https://*.vsassets.io/*'];
+                _this._win.webContents.session.webRequest.onBeforeSendHeaders({ urls: urls }, function (details, cb) {
+                    cb({ cancel: false, requestHeaders: objects.assign(details.requestHeaders, headers) });
+                });
+            });
             if (isFullscreenOrMaximized) {
                 this.win.maximize();
                 if (this.currentWindowMode === WindowMode.Fullscreen) {
@@ -12239,6 +13313,9 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
             }
             this.registerListeners();
         }
+        VSCodeWindow.prototype.hasHiddenTitleBarStyle = function () {
+            return this.hiddenTitleBarStyle;
+        };
         Object.defineProperty(VSCodeWindow.prototype, "isPluginDevelopmentHost", {
             get: function () {
                 return !!this._extensionDevelopmentPath;
@@ -12340,9 +13417,6 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
                 }
                 // To prevent flashing, we set the window visible after the page has finished to load but before VSCode is loaded
                 if (!_this.win.isVisible()) {
-                    if (!global.windowShow) {
-                        global.windowShow = Date.now();
-                    }
                     if (_this.currentWindowMode === WindowMode.Maximized) {
                         _this.win.maximize();
                     }
@@ -12380,6 +13454,17 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
             this._win.on('leave-full-screen', function () {
                 _this.sendWhenReady('vscode:leaveFullScreen');
             });
+            // React to HC color scheme changes (Windows)
+            if (platform.isWindows) {
+                electron_1.systemPreferences.on('inverted-color-scheme-changed', function () {
+                    if (electron_1.systemPreferences.isInvertedColorScheme()) {
+                        _this.sendWhenReady('vscode:enterHighContrast');
+                    }
+                    else {
+                        _this.sendWhenReady('vscode:leaveHighContrast');
+                    }
+                });
+            }
             // Window Failed to load
             this._win.webContents.on('did-fail-load', function (event, errorCode, errorDescription) {
                 console.warn('[electron event]: fail to load, ', errorDescription);
@@ -12434,8 +13519,9 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
                 configuration.verbose = cli.verbose;
                 configuration.debugPluginHost = cli.debugPluginHost;
                 configuration.debugBrkPluginHost = cli.debugBrkPluginHost;
-                configuration.extensionHomePath = cli.extensionHomePath;
+                configuration['extensions-dir'] = cli['extensions-dir'];
             }
+            configuration.isInitialStartup = false; // since this is a reload
             // Load config
             this.load(configuration);
         };
@@ -12447,6 +13533,14 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
             if (typeof zoomLevel === 'number') {
                 windowConfiguration.zoomLevel = zoomLevel;
             }
+            // Set fullscreen state
+            windowConfiguration.fullscreen = this._win.isFullScreen();
+            // Set Accessibility Config
+            windowConfiguration.highContrast = platform.isWindows && electron_1.systemPreferences.isInvertedColorScheme();
+            windowConfiguration.accessibilitySupport = electron_1.app.isAccessibilitySupportEnabled();
+            // Perf Counters
+            windowConfiguration.perfStartTime = global.perfStartTime;
+            windowConfiguration.perfWindowLoadTime = Date.now();
             // Config (combination of process.argv and window configuration)
             var environment = argv_1.parseArgs(process.argv);
             var config = objects.assign(environment, windowConfiguration);
@@ -12648,18 +13742,23 @@ define(__m[41/*vs/code/electron-main/window*/], __M([1/*require*/,0/*exports*/,7
 
 
 
-define(__m[28/*vs/code/electron-main/lifecycle*/], __M([1/*require*/,0/*exports*/,29/*events*/,14/*electron*/,2/*vs/base/common/winjs.base*/,41/*vs/code/electron-main/window*/,12/*vs/platform/environment/common/environment*/,4/*vs/platform/instantiation/common/instantiation*/,20/*vs/code/electron-main/log*/,23/*vs/code/electron-main/storage*/]), function (require, exports, events_1, electron_1, winjs_base_1, window_1, environment_1, instantiation_1, log_1, storage_1) {
+define(__m[39/*vs/code/electron-main/lifecycle*/], __M([0/*require*/,1/*exports*/,14/*electron*/,2/*vs/base/common/winjs.base*/,48/*vs/code/electron-main/window*/,11/*vs/platform/environment/common/environment*/,23/*vs/code/electron-main/log*/,24/*vs/code/electron-main/storage*/,4/*vs/base/common/event*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, electron_1, winjs_base_1, window_1, environment_1, log_1, storage_1, event_1, instantiation_1) {
     'use strict';
-    var EventTypes = {
-        BEFORE_QUIT: 'before-quit'
-    };
     exports.ILifecycleService = instantiation_1.createDecorator('lifecycleService');
+    (function (UnloadReason) {
+        UnloadReason[UnloadReason["CLOSE"] = 0] = "CLOSE";
+        UnloadReason[UnloadReason["QUIT"] = 1] = "QUIT";
+        UnloadReason[UnloadReason["RELOAD"] = 2] = "RELOAD";
+        UnloadReason[UnloadReason["LOAD"] = 3] = "LOAD";
+    })(exports.UnloadReason || (exports.UnloadReason = {}));
+    var UnloadReason = exports.UnloadReason;
     var LifecycleService = (function () {
         function LifecycleService(environmentService, logService, storageService) {
             this.environmentService = environmentService;
             this.logService = logService;
             this.storageService = storageService;
-            this.eventEmitter = new events_1.EventEmitter();
+            this._onBeforeQuit = new event_1.Emitter();
+            this.onBeforeQuit = this._onBeforeQuit.event;
             this.windowToCloseRequest = Object.create(null);
             this.quitRequested = false;
             this.oneTimeListenerTokenGenerator = 0;
@@ -12679,16 +13778,6 @@ define(__m[28/*vs/code/electron-main/lifecycle*/], __M([1/*require*/,0/*exports*
             enumerable: true,
             configurable: true
         });
-        /**
-         * Due to the way we handle lifecycle with eventing, the general app.on('before-quit')
-         * event cannot be used because it can be called twice on shutdown. Instead the onBeforeQuit
-         * handler in this module can be used and it is only called once on a shutdown sequence.
-         */
-        LifecycleService.prototype.onBeforeQuit = function (clb) {
-            var _this = this;
-            this.eventEmitter.addListener(EventTypes.BEFORE_QUIT, clb);
-            return function () { return _this.eventEmitter.removeListener(EventTypes.BEFORE_QUIT, clb); };
-        };
         LifecycleService.prototype.ready = function () {
             this.registerListeners();
         };
@@ -12698,7 +13787,7 @@ define(__m[28/*vs/code/electron-main/lifecycle*/], __M([1/*require*/,0/*exports*
             electron_1.app.on('before-quit', function (e) {
                 _this.logService.log('Lifecycle#before-quit');
                 if (!_this.quitRequested) {
-                    _this.eventEmitter.emit(EventTypes.BEFORE_QUIT); // only send this if this is the first quit request we have
+                    _this._onBeforeQuit.fire(); // only send this if this is the first quit request we have
                 }
                 _this.quitRequested = true;
             });
@@ -12727,7 +13816,7 @@ define(__m[28/*vs/code/electron-main/lifecycle*/], __M([1/*require*/,0/*exports*
                 }
                 // Otherwise prevent unload and handle it from window
                 e.preventDefault();
-                _this.unload(vscodeWindow).done(function (veto) {
+                _this.unload(vscodeWindow, UnloadReason.CLOSE).done(function (veto) {
                     if (!veto) {
                         _this.windowToCloseRequest[windowId] = true;
                         vscodeWindow.win.close();
@@ -12739,7 +13828,7 @@ define(__m[28/*vs/code/electron-main/lifecycle*/], __M([1/*require*/,0/*exports*
                 });
             });
         };
-        LifecycleService.prototype.unload = function (vscodeWindow) {
+        LifecycleService.prototype.unload = function (vscodeWindow, reason) {
             var _this = this;
             // Always allow to unload a window that is not yet ready
             if (vscodeWindow.readyState !== window_1.ReadyState.READY) {
@@ -12748,12 +13837,12 @@ define(__m[28/*vs/code/electron-main/lifecycle*/], __M([1/*require*/,0/*exports*
             this.logService.log('Lifecycle#unload()', vscodeWindow.id);
             return new winjs_base_1.TPromise(function (c) {
                 var oneTimeEventToken = _this.oneTimeListenerTokenGenerator++;
-                var oneTimeOkEvent = 'vscode:ok' + oneTimeEventToken;
-                var oneTimeCancelEvent = 'vscode:cancel' + oneTimeEventToken;
-                electron_1.ipcMain.once(oneTimeOkEvent, function () {
+                var okChannel = "vscode:ok" + oneTimeEventToken;
+                var cancelChannel = "vscode:cancel" + oneTimeEventToken;
+                electron_1.ipcMain.once(okChannel, function () {
                     c(false); // no veto
                 });
-                electron_1.ipcMain.once(oneTimeCancelEvent, function () {
+                electron_1.ipcMain.once(cancelChannel, function () {
                     // Any cancellation also cancels a pending quit if present
                     if (_this.pendingQuitPromiseComplete) {
                         _this.pendingQuitPromiseComplete(true /* veto */);
@@ -12762,7 +13851,7 @@ define(__m[28/*vs/code/electron-main/lifecycle*/], __M([1/*require*/,0/*exports*
                     }
                     c(true); // veto
                 });
-                vscodeWindow.send('vscode:beforeUnload', { okChannel: oneTimeOkEvent, cancelChannel: oneTimeCancelEvent });
+                vscodeWindow.send('vscode:beforeUnload', { okChannel: okChannel, cancelChannel: cancelChannel, reason: _this.quitRequested ? UnloadReason.QUIT : reason });
             });
         };
         /**
@@ -12812,1177 +13901,11 @@ define(__m[28/*vs/code/electron-main/lifecycle*/], __M([1/*require*/,0/*exports*
 
 
 
-define(__m[91/*vs/platform/environment/node/environmentService*/], __M([1/*require*/,0/*exports*/,68/*crypto*/,75/*vs/base/node/paths*/,34/*os*/,7/*path*/,16/*vs/base/common/uri*/,98/*vs/base/common/decorators*/,79/*vs/platform/package*/,11/*vs/platform/product*/]), function (require, exports, crypto, paths, os, path, uri_1, decorators_1, package_1, product_1) {
-    "use strict";
-    function getUniqueUserId() {
-        var username;
-        if (process.platform === 'win32') {
-            username = process.env.USERNAME;
-        }
-        else {
-            username = process.env.USER;
-        }
-        if (!username) {
-            return ''; // fail gracefully if there is no user name
-        }
-        // use sha256 to ensure the userid value can be used in filenames and are unique
-        return crypto.createHash('sha256').update(username).digest('hex').substr(0, 6);
-    }
-    function getIPCHandlePrefix() {
-        var name = package_1.default.name;
-        // Support to run VS Code multiple times as different user
-        // by making the socket unique over the logged in user
-        var userId = getUniqueUserId();
-        if (userId) {
-            name += "-" + userId;
-        }
-        if (process.platform === 'win32') {
-            return "\\\\.\\pipe\\" + name;
-        }
-        return path.join(os.tmpdir(), name);
-    }
-    function getIPCHandleSuffix() {
-        return process.platform === 'win32' ? '-sock' : '.sock';
-    }
-    var EnvironmentService = (function () {
-        function EnvironmentService(_args, _execPath) {
-            this._args = _args;
-            this._execPath = _execPath;
-        }
-        Object.defineProperty(EnvironmentService.prototype, "args", {
-            get: function () { return this._args; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "appRoot", {
-            get: function () { return path.dirname(uri_1.default.parse(require.toUrl('')).fsPath); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "execPath", {
-            get: function () { return this._execPath; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "userHome", {
-            get: function () { return path.join(os.homedir(), product_1.default.dataFolderName); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "userDataPath", {
-            get: function () { return parseUserDataDir(this._args, process); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "appSettingsHome", {
-            get: function () { return path.join(this.userDataPath, 'User'); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "appSettingsPath", {
-            get: function () { return path.join(this.appSettingsHome, 'settings.json'); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "appKeybindingsPath", {
-            get: function () { return path.join(this.appSettingsHome, 'keybindings.json'); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "extensionsPath", {
-            get: function () { return path.normalize(this._args.extensionHomePath || path.join(this.userHome, 'extensions')); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "extensionDevelopmentPath", {
-            get: function () { return this._args.extensionDevelopmentPath ? path.normalize(this._args.extensionDevelopmentPath) : this._args.extensionDevelopmentPath; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "extensionTestsPath", {
-            get: function () { return this._args.extensionTestsPath ? path.normalize(this._args.extensionTestsPath) : this._args.extensionTestsPath; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "disableExtensions", {
-            get: function () { return this._args['disable-extensions']; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "debugExtensionHost", {
-            get: function () { return parseExtensionHostPort(this._args, this.isBuilt); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "isBuilt", {
-            get: function () { return !process.env['VSCODE_DEV']; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "verbose", {
-            get: function () { return this._args.verbose; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "wait", {
-            get: function () { return this._args.wait; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "performance", {
-            get: function () { return this._args.performance; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "logExtensionHostCommunication", {
-            get: function () { return this._args.logExtensionHostCommunication; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "mainIPCHandle", {
-            get: function () { return getIPCHandlePrefix() + "-" + package_1.default.version + getIPCHandleSuffix(); },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EnvironmentService.prototype, "sharedIPCHandle", {
-            get: function () { return getIPCHandlePrefix() + "-" + package_1.default.version + "-shared" + getIPCHandleSuffix(); },
-            enumerable: true,
-            configurable: true
-        });
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "appRoot", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "userHome", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "userDataPath", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "appSettingsHome", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "appSettingsPath", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "appKeybindingsPath", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "extensionsPath", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "extensionDevelopmentPath", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "extensionTestsPath", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "debugExtensionHost", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "mainIPCHandle", null);
-        __decorate([
-            decorators_1.memoize
-        ], EnvironmentService.prototype, "sharedIPCHandle", null);
-        return EnvironmentService;
-    }());
-    exports.EnvironmentService = EnvironmentService;
-    function parseExtensionHostPort(args, isBuild) {
-        var portStr = args.debugBrkPluginHost || args.debugPluginHost;
-        var port = Number(portStr) || (!isBuild ? 5870 : null);
-        var brk = port ? Boolean(!!args.debugBrkPluginHost) : false;
-        return { port: port, break: brk };
-    }
-    exports.parseExtensionHostPort = parseExtensionHostPort;
-    function parseUserDataDir(args, process) {
-        var arg = args['user-data-dir'];
-        if (arg) {
-            // Determine if the arg is relative or absolute, if relative use the original CWD
-            // (VSCODE_CWD), not the potentially overridden one (process.cwd()).
-            var resolved = path.resolve(arg);
-            if (path.normalize(arg) === resolved) {
-                return resolved;
-            }
-            else {
-                return path.resolve(process.env['VSCODE_CWD'] || process.cwd(), arg);
-            }
-        }
-        return path.resolve(paths.getDefaultUserDataPath(process.platform));
-    }
-    exports.parseUserDataDir = parseUserDataDir;
-});
 
-define(__m[30/*vs/platform/request/common/request*/], __M([1/*require*/,0/*exports*/,64/*vs/nls!vs/platform/request/common/request*/,4/*vs/platform/instantiation/common/instantiation*/,31/*vs/platform/configuration/common/configurationRegistry*/,19/*vs/platform/platform*/]), function (require, exports, nls_1, instantiation_1, configurationRegistry_1, platform_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
+
+
+define(__m[34/*vs/code/electron-main/windows*/], __M([0/*require*/,1/*exports*/,7/*path*/,28/*original-fs*/,5/*vs/base/common/platform*/,66/*vs/nls!vs/code/electron-main/windows*/,19/*vs/base/common/paths*/,6/*vs/base/common/types*/,17/*vs/base/common/arrays*/,8/*vs/base/common/objects*/,44/*vs/platform/backup/common/backup*/,16/*vs/base/common/strings*/,11/*vs/platform/environment/common/environment*/,24/*vs/code/electron-main/storage*/,48/*vs/code/electron-main/window*/,14/*electron*/,49/*vs/code/electron-main/paths*/,39/*vs/code/electron-main/lifecycle*/,12/*vs/platform/configuration/common/configuration*/,23/*vs/code/electron-main/log*/,57/*vs/base/common/labels*/,3/*vs/platform/instantiation/common/instantiation*/,4/*vs/base/common/event*/,15/*vs/platform/product*/]), function (require, exports, path, fs, platform, nls, paths, types, arrays, objects_1, backup_1, strings_1, environment_1, storage_1, window_1, electron_1, paths_1, lifecycle_1, configuration_1, log_1, labels_1, instantiation_1, event_1, product_1) {
     'use strict';
-    exports.IRequestService = instantiation_1.createDecorator('requestService2');
-    platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration)
-        .registerConfiguration({
-        id: 'http',
-        order: 15,
-        title: nls_1.localize(0, null),
-        type: 'object',
-        properties: {
-            'http.proxy': {
-                type: 'string',
-                pattern: '^https?://([^:]*(:[^@]*)?@)?([^:]+)(:\\d+)?/?$|^$',
-                description: nls_1.localize(1, null)
-            },
-            'http.proxyStrictSSL': {
-                type: 'boolean',
-                default: true,
-                description: nls_1.localize(2, null)
-            },
-            'http.proxyAuthorization': {
-                type: ['null', 'string'],
-                default: null,
-                description: nls_1.localize(3, null)
-            }
-        }
-    });
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[46/*vs/platform/url/common/url*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
-    'use strict';
-    exports.ID = 'urlService';
-    exports.IURLService = instantiation_1.createDecorator(exports.ID);
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[94/*vs/platform/url/electron-main/urlService*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/event*/,33/*vs/base/node/event*/,11/*vs/platform/product*/,14/*electron*/,16/*vs/base/common/uri*/]), function (require, exports, event_1, event_2, product_1, electron_1, uri_1) {
-    'use strict';
-    var URLService = (function () {
-        function URLService(initial) {
-            if (initial === void 0) { initial = []; }
-            this.openUrlEmitter = new event_1.Emitter();
-            var globalBuffer = (global.getOpenUrls() || []);
-            var initialBuffer = (typeof initial === 'string' ? [initial] : initial).concat(globalBuffer);
-            electron_1.app.setAsDefaultProtocolClient(product_1.default.urlProtocol, process.execPath, ['--open-url']);
-            var rawOnOpenUrl = event_2.fromEventEmitter(electron_1.app, 'open-url', function (event, url) { return ({ event: event, url: url }); });
-            // always prevent default and return the url as string
-            var preventedOnOpenUrl = event_1.mapEvent(rawOnOpenUrl, function (_a) {
-                var event = _a.event, url = _a.url;
-                event.preventDefault();
-                return url;
-            });
-            // buffer all `onOpenUrl` events until someone starts listening
-            var bufferedOnOpenUrl = event_1.buffer(preventedOnOpenUrl, true, initialBuffer);
-            this.onOpenURL = event_1.chain(event_1.any(bufferedOnOpenUrl, this.openUrlEmitter.event))
-                .map(function (url) {
-                try {
-                    return uri_1.default.parse(url);
-                }
-                catch (e) {
-                    return null;
-                }
-            })
-                .filter(function (uri) { return !!uri; })
-                .event;
-        }
-        URLService.prototype.open = function (url) {
-            this.openUrlEmitter.fire(url);
-        };
-        return URLService;
-    }());
-    exports.URLService = URLService;
-});
-
-define(__m[95/*vs/workbench/parts/git/common/git*/], __M([1/*require*/,0/*exports*/,4/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    (function (RefType) {
-        RefType[RefType["Head"] = 0] = "Head";
-        RefType[RefType["RemoteHead"] = 1] = "RemoteHead";
-        RefType[RefType["Tag"] = 2] = "Tag";
-    })(exports.RefType || (exports.RefType = {}));
-    var RefType = exports.RefType;
-    // Model enums
-    (function (StatusType) {
-        StatusType[StatusType["INDEX"] = 0] = "INDEX";
-        StatusType[StatusType["WORKING_TREE"] = 1] = "WORKING_TREE";
-        StatusType[StatusType["MERGE"] = 2] = "MERGE";
-    })(exports.StatusType || (exports.StatusType = {}));
-    var StatusType = exports.StatusType;
-    (function (Status) {
-        Status[Status["INDEX_MODIFIED"] = 0] = "INDEX_MODIFIED";
-        Status[Status["INDEX_ADDED"] = 1] = "INDEX_ADDED";
-        Status[Status["INDEX_DELETED"] = 2] = "INDEX_DELETED";
-        Status[Status["INDEX_RENAMED"] = 3] = "INDEX_RENAMED";
-        Status[Status["INDEX_COPIED"] = 4] = "INDEX_COPIED";
-        Status[Status["MODIFIED"] = 5] = "MODIFIED";
-        Status[Status["DELETED"] = 6] = "DELETED";
-        Status[Status["UNTRACKED"] = 7] = "UNTRACKED";
-        Status[Status["IGNORED"] = 8] = "IGNORED";
-        Status[Status["ADDED_BY_US"] = 9] = "ADDED_BY_US";
-        Status[Status["ADDED_BY_THEM"] = 10] = "ADDED_BY_THEM";
-        Status[Status["DELETED_BY_US"] = 11] = "DELETED_BY_US";
-        Status[Status["DELETED_BY_THEM"] = 12] = "DELETED_BY_THEM";
-        Status[Status["BOTH_ADDED"] = 13] = "BOTH_ADDED";
-        Status[Status["BOTH_DELETED"] = 14] = "BOTH_DELETED";
-        Status[Status["BOTH_MODIFIED"] = 15] = "BOTH_MODIFIED";
-    })(exports.Status || (exports.Status = {}));
-    var Status = exports.Status;
-    // Model events
-    exports.ModelEvents = {
-        MODEL_UPDATED: 'ModelUpdated',
-        STATUS_MODEL_UPDATED: 'StatusModelUpdated',
-        HEAD_UPDATED: 'HEADUpdated',
-        REFS_UPDATED: 'RefsUpdated',
-        REMOTES_UPDATED: 'RemotesUpdated'
-    };
-    // Service enums
-    (function (ServiceState) {
-        ServiceState[ServiceState["NotInitialized"] = 0] = "NotInitialized";
-        ServiceState[ServiceState["NotARepo"] = 1] = "NotARepo";
-        ServiceState[ServiceState["NotAtRepoRoot"] = 2] = "NotAtRepoRoot";
-        ServiceState[ServiceState["OK"] = 3] = "OK";
-        ServiceState[ServiceState["Huge"] = 4] = "Huge";
-        ServiceState[ServiceState["NoGit"] = 5] = "NoGit";
-        ServiceState[ServiceState["Disabled"] = 6] = "Disabled";
-        ServiceState[ServiceState["NotAWorkspace"] = 7] = "NotAWorkspace";
-    })(exports.ServiceState || (exports.ServiceState = {}));
-    var ServiceState = exports.ServiceState;
-    (function (RawServiceState) {
-        RawServiceState[RawServiceState["OK"] = 0] = "OK";
-        RawServiceState[RawServiceState["GitNotFound"] = 1] = "GitNotFound";
-        RawServiceState[RawServiceState["Disabled"] = 2] = "Disabled";
-    })(exports.RawServiceState || (exports.RawServiceState = {}));
-    var RawServiceState = exports.RawServiceState;
-    exports.GitErrorCodes = {
-        BadConfigFile: 'BadConfigFile',
-        AuthenticationFailed: 'AuthenticationFailed',
-        NoUserNameConfigured: 'NoUserNameConfigured',
-        NoUserEmailConfigured: 'NoUserEmailConfigured',
-        NoRemoteRepositorySpecified: 'NoRemoteRepositorySpecified',
-        NotAGitRepository: 'NotAGitRepository',
-        NotAtRepositoryRoot: 'NotAtRepositoryRoot',
-        Conflict: 'Conflict',
-        UnmergedChanges: 'UnmergedChanges',
-        PushRejected: 'PushRejected',
-        RemoteConnectionError: 'RemoteConnectionError',
-        DirtyWorkTree: 'DirtyWorkTree',
-        CantOpenResource: 'CantOpenResource',
-        GitNotFound: 'GitNotFound',
-        CantCreatePipe: 'CantCreatePipe',
-        CantAccessRemote: 'CantAccessRemote',
-        RepositoryNotFound: 'RepositoryNotFound'
-    };
-    (function (AutoFetcherState) {
-        AutoFetcherState[AutoFetcherState["Disabled"] = 0] = "Disabled";
-        AutoFetcherState[AutoFetcherState["Inactive"] = 1] = "Inactive";
-        AutoFetcherState[AutoFetcherState["Active"] = 2] = "Active";
-        AutoFetcherState[AutoFetcherState["Fetching"] = 3] = "Fetching";
-    })(exports.AutoFetcherState || (exports.AutoFetcherState = {}));
-    var AutoFetcherState = exports.AutoFetcherState;
-    // Service events
-    exports.ServiceEvents = {
-        STATE_CHANGED: 'stateChanged',
-        REPO_CHANGED: 'repoChanged',
-        OPERATION_START: 'operationStart',
-        OPERATION_END: 'operationEnd',
-        OPERATION: 'operation',
-        ERROR: 'error',
-        DISPOSE: 'dispose'
-    };
-    // Service operations
-    exports.ServiceOperations = {
-        STATUS: 'status',
-        INIT: 'init',
-        ADD: 'add',
-        STAGE: 'stage',
-        BRANCH: 'branch',
-        CHECKOUT: 'checkout',
-        CLEAN: 'clean',
-        UNDO: 'undo',
-        RESET: 'reset',
-        REVERT: 'revert',
-        COMMIT: 'commit',
-        COMMAND: 'command',
-        BACKGROUND_FETCH: 'backgroundfetch',
-        PULL: 'pull',
-        PUSH: 'push',
-        SYNC: 'sync'
-    };
-    exports.GIT_SERVICE_ID = 'gitService';
-    exports.IGitService = instantiation_1.createDecorator(exports.GIT_SERVICE_ID);
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[96/*vs/workbench/parts/git/common/gitIpc*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,21/*vs/base/parts/ipc/common/ipc*/,95/*vs/workbench/parts/git/common/git*/]), function (require, exports, winjs_base_1, ipc_1, git_1) {
-    'use strict';
-    var RawFileStatusSerializer = {
-        to: function (a) { return [a.x, a.y, a.path, a.mimetype, a.rename]; },
-        from: function (b) { return ({ x: b[0], y: b[1], path: b[2], mimetype: b[3], rename: b[4] }); }
-    };
-    var BranchSerializer = {
-        to: function (a) { return [a.name, a.commit, a.type, a.remote, a.upstream, a.ahead, a.behind]; },
-        from: function (b) { return ({ name: b[0], commit: b[1], type: b[2], remote: b[3], upstream: b[4], ahead: b[5], behind: b[6] }); }
-    };
-    var RefSerializer = {
-        to: function (a) { return [a.name, a.commit, a.type, a.remote]; },
-        from: function (b) { return ({ name: b[0], commit: b[1], type: b[2], remote: b[3] }); }
-    };
-    var RemoteSerializer = {
-        to: function (a) { return [a.name, a.url]; },
-        from: function (b) { return ({ name: b[0], url: b[1] }); }
-    };
-    var RawStatusSerializer = {
-        to: function (a) { return !a ? null : [
-            a.repositoryRoot,
-            a.state,
-            a.status.map(RawFileStatusSerializer.to),
-            BranchSerializer.to(a.HEAD),
-            a.refs.map(RefSerializer.to),
-            a.remotes.map(RemoteSerializer.to)
-        ]; },
-        from: function (b) { return !b ? null : {
-            repositoryRoot: b[0],
-            state: b[1],
-            status: b[2].map(RawFileStatusSerializer.from),
-            HEAD: BranchSerializer.from(b[3]),
-            refs: b[4].map(RefSerializer.from),
-            remotes: b[5].map(RemoteSerializer.from)
-        }; }
-    };
-    var GitChannel = (function () {
-        function GitChannel(service) {
-            this.service = service;
-        }
-        GitChannel.prototype.call = function (command, args) {
-            switch (command) {
-                case 'getVersion': return this.service.then(function (s) { return s.getVersion(); });
-                case 'serviceState': return this.service.then(function (s) { return s.serviceState(); });
-                case 'statusCount': return this.service.then(function (s) { return s.statusCount(); });
-                case 'status': return this.service.then(function (s) { return s.status(); }).then(RawStatusSerializer.to);
-                case 'init': return this.service.then(function (s) { return s.init(); }).then(RawStatusSerializer.to);
-                case 'add': return this.service.then(function (s) { return s.add(args); }).then(RawStatusSerializer.to);
-                case 'stage': return this.service.then(function (s) { return s.stage(args[0], args[1]); }).then(RawStatusSerializer.to);
-                case 'branch': return this.service.then(function (s) { return s.branch(args[0], args[1]); }).then(RawStatusSerializer.to);
-                case 'checkout': return this.service.then(function (s) { return s.checkout(args[0], args[1]); }).then(RawStatusSerializer.to);
-                case 'clean': return this.service.then(function (s) { return s.clean(args); }).then(RawStatusSerializer.to);
-                case 'undo': return this.service.then(function (s) { return s.undo(); }).then(RawStatusSerializer.to);
-                case 'reset': return this.service.then(function (s) { return s.reset(args[0], args[1]); }).then(RawStatusSerializer.to);
-                case 'revertFiles': return this.service.then(function (s) { return s.revertFiles(args[0], args[1]); }).then(RawStatusSerializer.to);
-                case 'fetch': return this.service.then(function (s) { return s.fetch(); }).then(RawStatusSerializer.to);
-                case 'pull': return this.service.then(function (s) { return s.pull(args); }).then(RawStatusSerializer.to);
-                case 'push': return this.service.then(function (s) { return s.push(args[0], args[1], args[2]); }).then(RawStatusSerializer.to);
-                case 'sync': return this.service.then(function (s) { return s.sync(); }).then(RawStatusSerializer.to);
-                case 'commit': return this.service.then(function (s) { return s.commit(args[0], args[1], args[2], args[3]); }).then(RawStatusSerializer.to);
-                case 'detectMimetypes': return this.service.then(function (s) { return s.detectMimetypes(args[0], args[1]); });
-                case 'show': return this.service.then(function (s) { return s.show(args[0], args[1]); });
-                case 'onOutput': return this.service.then(function (s) { return ipc_1.eventToCall(s.onOutput); });
-                case 'getCommitTemplate': return this.service.then(function (s) { return s.getCommitTemplate(); });
-                case 'getCommit': return this.service.then(function (s) { return s.getCommit(args); });
-            }
-        };
-        return GitChannel;
-    }());
-    exports.GitChannel = GitChannel;
-    var UnavailableGitChannel = (function () {
-        function UnavailableGitChannel() {
-        }
-        UnavailableGitChannel.prototype.call = function (command) {
-            switch (command) {
-                case 'serviceState': return winjs_base_1.TPromise.as(git_1.RawServiceState.GitNotFound);
-                default: return winjs_base_1.TPromise.as(null);
-            }
-        };
-        return UnavailableGitChannel;
-    }());
-    exports.UnavailableGitChannel = UnavailableGitChannel;
-    var GitChannelClient = (function () {
-        function GitChannelClient(channel) {
-            this.channel = channel;
-            this._onOutput = ipc_1.eventFromCall(this.channel, 'onOutput');
-        }
-        Object.defineProperty(GitChannelClient.prototype, "onOutput", {
-            get: function () { return this._onOutput; },
-            enumerable: true,
-            configurable: true
-        });
-        GitChannelClient.prototype.getVersion = function () {
-            return this.channel.call('getVersion');
-        };
-        GitChannelClient.prototype.serviceState = function () {
-            return this.channel.call('serviceState');
-        };
-        GitChannelClient.prototype.statusCount = function () {
-            return this.channel.call('statusCount');
-        };
-        GitChannelClient.prototype.status = function () {
-            return this.channel.call('status').then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.init = function () {
-            return this.channel.call('init').then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.add = function (filesPaths) {
-            return this.channel.call('add', filesPaths).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.stage = function (filePath, content) {
-            return this.channel.call('stage', [filePath, content]).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.branch = function (name, checkout) {
-            return this.channel.call('branch', [name, checkout]).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.checkout = function (treeish, filePaths) {
-            return this.channel.call('checkout', [treeish, filePaths]).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.clean = function (filePaths) {
-            return this.channel.call('clean', filePaths).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.undo = function () {
-            return this.channel.call('undo').then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.reset = function (treeish, hard) {
-            return this.channel.call('reset', [treeish, hard]).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.revertFiles = function (treeish, filePaths) {
-            return this.channel.call('revertFiles', [treeish, filePaths]).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.fetch = function () {
-            return this.channel.call('fetch').then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.pull = function (rebase) {
-            return this.channel.call('pull', rebase).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.push = function (remote, name, options) {
-            return this.channel.call('push', [remote, name, options]).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.sync = function () {
-            return this.channel.call('sync').then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.commit = function (message, amend, stage, signoff) {
-            return this.channel.call('commit', [message, amend, stage, signoff]).then(RawStatusSerializer.from);
-        };
-        GitChannelClient.prototype.detectMimetypes = function (path, treeish) {
-            return this.channel.call('detectMimetypes', [path, treeish]);
-        };
-        GitChannelClient.prototype.show = function (path, treeish) {
-            return this.channel.call('show', [path, treeish]);
-        };
-        GitChannelClient.prototype.getCommitTemplate = function () {
-            return this.channel.call('getCommitTemplate');
-        };
-        GitChannelClient.prototype.getCommit = function (ref) {
-            return this.channel.call('getCommit', ref);
-        };
-        return GitChannelClient;
-    }());
-    exports.GitChannelClient = GitChannelClient;
-    var AskpassChannel = (function () {
-        function AskpassChannel(service) {
-            this.service = service;
-        }
-        AskpassChannel.prototype.call = function (command, args) {
-            switch (command) {
-                case 'askpass': return this.service.askpass(args[0], args[1], args[2]);
-            }
-        };
-        return AskpassChannel;
-    }());
-    exports.AskpassChannel = AskpassChannel;
-    var AskpassChannelClient = (function () {
-        function AskpassChannelClient(channel) {
-            this.channel = channel;
-        }
-        AskpassChannelClient.prototype.askpass = function (id, host, command) {
-            return this.channel.call('askpass', [id, host, command]);
-        };
-        return AskpassChannelClient;
-    }());
-    exports.AskpassChannelClient = AskpassChannelClient;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[97/*vs/workbench/parts/git/electron-main/askpassService*/], __M([1/*require*/,0/*exports*/,65/*vs/nls!vs/workbench/parts/git/electron-main/askpassService*/,14/*electron*/,5/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/]), function (require, exports, nls, electron_1, platform, winjs_base_1) {
-    "use strict";
-    var GitAskpassService = (function () {
-        function GitAskpassService() {
-            var _this = this;
-            this.askpassCache = Object.create(null);
-            electron_1.ipcMain.on('git:askpass', function (event, result) {
-                _this.askpassCache[result.id].credentials = result.credentials;
-            });
-        }
-        GitAskpassService.prototype.askpass = function (id, host, command) {
-            var _this = this;
-            return new winjs_base_1.TPromise(function (c, e) {
-                var cachedResult = _this.askpassCache[id];
-                if (typeof cachedResult !== 'undefined') {
-                    return c(cachedResult.credentials);
-                }
-                if (command === 'fetch') {
-                    return c({ username: '', password: '' });
-                }
-                var win = new electron_1.BrowserWindow({
-                    alwaysOnTop: true,
-                    skipTaskbar: true,
-                    resizable: false,
-                    width: 450,
-                    height: platform.isWindows ? 280 : 260,
-                    show: true,
-                    title: nls.localize(0, null)
-                });
-                win.setMenuBarVisibility(false);
-                _this.askpassCache[id] = {
-                    window: win,
-                    credentials: null
-                };
-                win.loadURL(require.toUrl('vs/workbench/parts/git/electron-main/index.html'));
-                win.webContents.executeJavaScript('init(' + JSON.stringify({ id: id, host: host, command: command }) + ')');
-                win.once('closed', function () {
-                    c(_this.askpassCache[id].credentials);
-                    setTimeout(function () { return delete _this.askpassCache[id]; }, 1000 * 10);
-                });
-            });
-        };
-        return GitAskpassService;
-    }());
-    exports.GitAskpassService = GitAskpassService;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[35/*vs/base/node/request*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/winjs.base*/,3/*vs/base/common/types*/,104/*https*/,103/*http*/,81/*url*/,25/*fs*/,10/*vs/base/common/objects*/,102/*zlib*/]), function (require, exports, winjs_base_1, types_1, https, http, url_1, fs_1, objects_1, zlib_1) {
-    'use strict';
-    function request(options) {
-        var req;
-        return new winjs_base_1.TPromise(function (c, e) {
-            var endpoint = url_1.parse(options.url);
-            var rawRequest = endpoint.protocol === 'https:' ? https.request : http.request;
-            var opts = {
-                hostname: endpoint.hostname,
-                port: endpoint.port ? parseInt(endpoint.port) : (endpoint.protocol === 'https:' ? 443 : 80),
-                path: endpoint.path,
-                method: options.type || 'GET',
-                headers: options.headers,
-                agent: options.agent,
-                rejectUnauthorized: types_1.isBoolean(options.strictSSL) ? options.strictSSL : true
-            };
-            if (options.user && options.password) {
-                opts.auth = options.user + ':' + options.password;
-            }
-            req = rawRequest(opts, function (res) {
-                var followRedirects = types_1.isNumber(options.followRedirects) ? options.followRedirects : 3;
-                if (res.statusCode >= 300 && res.statusCode < 400 && followRedirects > 0 && res.headers['location']) {
-                    request(objects_1.assign({}, options, {
-                        url: res.headers['location'],
-                        followRedirects: followRedirects - 1
-                    })).done(c, e);
-                }
-                else {
-                    var stream = res;
-                    if (res.headers['content-encoding'] === 'gzip') {
-                        stream = stream.pipe(zlib_1.createGunzip());
-                    }
-                    c({ req: req, res: res, stream: stream });
-                }
-            });
-            req.on('error', e);
-            if (options.timeout) {
-                req.setTimeout(options.timeout);
-            }
-            if (options.data) {
-                req.write(options.data);
-            }
-            req.end();
-        }, function () { return req && req.abort(); });
-    }
-    exports.request = request;
-    function isSuccess(context) {
-        return (context.res.statusCode >= 200 && context.res.statusCode < 300) || context.res.statusCode === 1223;
-    }
-    function hasNoContent(context) {
-        return context.res.statusCode === 204;
-    }
-    function download(filePath, context) {
-        return new winjs_base_1.TPromise(function (c, e) {
-            var out = fs_1.createWriteStream(filePath);
-            out.once('finish', function () { return c(null); });
-            context.stream.once('error', e);
-            context.stream.pipe(out);
-        });
-    }
-    exports.download = download;
-    function asText(context) {
-        return new winjs_base_1.Promise(function (c, e) {
-            if (!isSuccess(context)) {
-                return e('Server returned ' + context.res.statusCode);
-            }
-            if (hasNoContent(context)) {
-                return c(null);
-            }
-            var buffer = [];
-            context.stream.on('data', function (d) { return buffer.push(d); });
-            context.stream.on('end', function () { return c(buffer.join('')); });
-            context.stream.on('error', e);
-        });
-    }
-    exports.asText = asText;
-    function asJson(context) {
-        return new winjs_base_1.Promise(function (c, e) {
-            if (!isSuccess(context)) {
-                return e('Server returned ' + context.res.statusCode);
-            }
-            if (hasNoContent(context)) {
-                return c(null);
-            }
-            if (!/application\/json/.test(context.res.headers['content-type'])) {
-                return e('Response doesn\'t appear to be JSON');
-            }
-            var buffer = [];
-            context.stream.on('data', function (d) { return buffer.push(d); });
-            context.stream.on('end', function () { return c(JSON.parse(buffer.join(''))); });
-            context.stream.on('error', e);
-        });
-    }
-    exports.asJson = asJson;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-define(__m[101/*vs/code/electron-main/auto-updater.linux*/], __M([1/*require*/,0/*exports*/,29/*events*/,3/*vs/base/common/types*/,35/*vs/base/node/request*/,30/*vs/platform/request/common/request*/,11/*vs/platform/product*/]), function (require, exports, events_1, types_1, request_1, request_2, product_1) {
-    'use strict';
-    var LinuxAutoUpdaterImpl = (function (_super) {
-        __extends(LinuxAutoUpdaterImpl, _super);
-        function LinuxAutoUpdaterImpl(requestService) {
-            _super.call(this);
-            this.requestService = requestService;
-            this.url = null;
-            this.currentRequest = null;
-        }
-        LinuxAutoUpdaterImpl.prototype.setFeedURL = function (url) {
-            this.url = url;
-        };
-        LinuxAutoUpdaterImpl.prototype.checkForUpdates = function () {
-            var _this = this;
-            if (!this.url) {
-                throw new Error('No feed url set.');
-            }
-            if (this.currentRequest) {
-                return;
-            }
-            this.emit('checking-for-update');
-            this.currentRequest = this.requestService.request({ url: this.url })
-                .then(request_1.asJson)
-                .then(function (update) {
-                if (!update || !update.url || !update.version) {
-                    _this.emit('update-not-available');
-                }
-                else {
-                    _this.emit('update-available', null, product_1.default.downloadUrl, update.version);
-                }
-            })
-                .then(null, function (e) {
-                if (types_1.isString(e) && /^Server returned/.test(e)) {
-                    return;
-                }
-                _this.emit('update-not-available');
-                _this.emit('error', e);
-            })
-                .then(function () { return _this.currentRequest = null; });
-        };
-        LinuxAutoUpdaterImpl = __decorate([
-            __param(0, request_2.IRequestService)
-        ], LinuxAutoUpdaterImpl);
-        return LinuxAutoUpdaterImpl;
-    }(events_1.EventEmitter));
-    exports.LinuxAutoUpdaterImpl = LinuxAutoUpdaterImpl;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-define(__m[100/*vs/code/electron-main/auto-updater.win32*/], __M([1/*require*/,0/*exports*/,7/*path*/,40/*vs/base/node/pfs*/,66/*vs/base/node/crypto*/,29/*events*/,34/*os*/,47/*child_process*/,36/*vs/base/node/extfs*/,3/*vs/base/common/types*/,2/*vs/base/common/winjs.base*/,35/*vs/base/node/request*/,28/*vs/code/electron-main/lifecycle*/,30/*vs/platform/request/common/request*/,11/*vs/platform/product*/]), function (require, exports, path, pfs, crypto_1, events_1, os_1, child_process_1, extfs_1, types_1, winjs_base_1, request_1, lifecycle_1, request_2, product_1) {
-    'use strict';
-    var Win32AutoUpdaterImpl = (function (_super) {
-        __extends(Win32AutoUpdaterImpl, _super);
-        function Win32AutoUpdaterImpl(lifecycleService, requestService) {
-            _super.call(this);
-            this.lifecycleService = lifecycleService;
-            this.requestService = requestService;
-            this.url = null;
-            this.currentRequest = null;
-        }
-        Object.defineProperty(Win32AutoUpdaterImpl.prototype, "cachePath", {
-            get: function () {
-                var result = path.join(os_1.tmpdir(), 'vscode-update');
-                return new winjs_base_1.TPromise(function (c, e) { return extfs_1.mkdirp(result, null, function (err) { return err ? e(err) : c(result); }); });
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Win32AutoUpdaterImpl.prototype.setFeedURL = function (url) {
-            this.url = url;
-        };
-        Win32AutoUpdaterImpl.prototype.checkForUpdates = function () {
-            var _this = this;
-            if (!this.url) {
-                throw new Error('No feed url set.');
-            }
-            if (this.currentRequest) {
-                return;
-            }
-            this.emit('checking-for-update');
-            this.currentRequest = this.requestService.request({ url: this.url })
-                .then(request_1.asJson)
-                .then(function (update) {
-                if (!update || !update.url || !update.version) {
-                    _this.emit('update-not-available');
-                    return _this.cleanup();
-                }
-                _this.emit('update-available');
-                return _this.cleanup(update.version).then(function () {
-                    return _this.getUpdatePackagePath(update.version).then(function (updatePackagePath) {
-                        return pfs.exists(updatePackagePath).then(function (exists) {
-                            if (exists) {
-                                return winjs_base_1.TPromise.as(updatePackagePath);
-                            }
-                            var url = update.url;
-                            var hash = update.hash;
-                            var downloadPath = updatePackagePath + ".tmp";
-                            return _this.requestService.request({ url: url })
-                                .then(function (context) { return request_1.download(downloadPath, context); })
-                                .then(hash ? function () { return crypto_1.checksum(downloadPath, update.hash); } : function () { return null; })
-                                .then(function () { return pfs.rename(downloadPath, updatePackagePath); })
-                                .then(function () { return updatePackagePath; });
-                        });
-                    }).then(function (updatePackagePath) {
-                        _this.emit('update-downloaded', {}, update.releaseNotes, update.productVersion, new Date(), _this.url, function () { return _this.quitAndUpdate(updatePackagePath); });
-                    });
-                });
-            })
-                .then(null, function (e) {
-                if (types_1.isString(e) && /^Server returned/.test(e)) {
-                    return;
-                }
-                _this.emit('update-not-available');
-                _this.emit('error', e);
-            })
-                .then(function () { return _this.currentRequest = null; });
-        };
-        Win32AutoUpdaterImpl.prototype.getUpdatePackagePath = function (version) {
-            return this.cachePath.then(function (cachePath) { return path.join(cachePath, "CodeSetup-" + product_1.default.quality + "-" + version + ".exe"); });
-        };
-        Win32AutoUpdaterImpl.prototype.quitAndUpdate = function (updatePackagePath) {
-            this.lifecycleService.quit().done(function (vetod) {
-                if (vetod) {
-                    return;
-                }
-                child_process_1.spawn(updatePackagePath, ['/silent', '/mergetasks=runcode,!desktopicon,!quicklaunchicon'], {
-                    detached: true,
-                    stdio: ['ignore', 'ignore', 'ignore']
-                });
-            });
-        };
-        Win32AutoUpdaterImpl.prototype.cleanup = function (exceptVersion) {
-            if (exceptVersion === void 0) { exceptVersion = null; }
-            var filter = exceptVersion ? function (one) { return !(new RegExp(product_1.default.quality + "-" + exceptVersion + "\\.exe$").test(one)); } : function () { return true; };
-            return this.cachePath
-                .then(function (cachePath) { return pfs.readdir(cachePath)
-                .then(function (all) { return winjs_base_1.Promise.join(all
-                .filter(filter)
-                .map(function (one) { return pfs.unlink(path.join(cachePath, one)).then(null, function () { return null; }); })); }); });
-        };
-        Win32AutoUpdaterImpl = __decorate([
-            __param(0, lifecycle_1.ILifecycleService),
-            __param(1, request_2.IRequestService)
-        ], Win32AutoUpdaterImpl);
-        return Win32AutoUpdaterImpl;
-    }(events_1.EventEmitter));
-    exports.Win32AutoUpdaterImpl = Win32AutoUpdaterImpl;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-define(__m[32/*vs/code/electron-main/update-manager*/], __M([1/*require*/,0/*exports*/,27/*original-fs*/,7/*path*/,14/*electron*/,29/*events*/,13/*vs/platform/configuration/common/configuration*/,100/*vs/code/electron-main/auto-updater.win32*/,101/*vs/code/electron-main/auto-updater.linux*/,28/*vs/code/electron-main/lifecycle*/,4/*vs/platform/instantiation/common/instantiation*/,30/*vs/platform/request/common/request*/,11/*vs/platform/product*/]), function (require, exports, fs, path, electron, events_1, configuration_1, auto_updater_win32_1, auto_updater_linux_1, lifecycle_1, instantiation_1, request_1, product_1) {
-    'use strict';
-    (function (State) {
-        State[State["Uninitialized"] = 0] = "Uninitialized";
-        State[State["Idle"] = 1] = "Idle";
-        State[State["CheckingForUpdate"] = 2] = "CheckingForUpdate";
-        State[State["UpdateAvailable"] = 3] = "UpdateAvailable";
-        State[State["UpdateDownloaded"] = 4] = "UpdateDownloaded";
-    })(exports.State || (exports.State = {}));
-    var State = exports.State;
-    (function (ExplicitState) {
-        ExplicitState[ExplicitState["Implicit"] = 0] = "Implicit";
-        ExplicitState[ExplicitState["Explicit"] = 1] = "Explicit";
-    })(exports.ExplicitState || (exports.ExplicitState = {}));
-    var ExplicitState = exports.ExplicitState;
-    exports.IUpdateService = instantiation_1.createDecorator('updateService');
-    var UpdateManager = (function (_super) {
-        __extends(UpdateManager, _super);
-        function UpdateManager(instantiationService, lifecycleService, configurationService, requestService) {
-            _super.call(this);
-            this.lifecycleService = lifecycleService;
-            this.configurationService = configurationService;
-            this._state = State.Uninitialized;
-            this.explicitState = ExplicitState.Implicit;
-            this._availableUpdate = null;
-            this._lastCheckDate = null;
-            this._feedUrl = null;
-            this._channel = null;
-            if (process.platform === 'win32') {
-                this.raw = instantiationService.createInstance(auto_updater_win32_1.Win32AutoUpdaterImpl);
-            }
-            else if (process.platform === 'linux') {
-                this.raw = instantiationService.createInstance(auto_updater_linux_1.LinuxAutoUpdaterImpl);
-            }
-            else if (process.platform === 'darwin') {
-                this.raw = electron.autoUpdater;
-            }
-            if (this.raw) {
-                this.initRaw();
-            }
-        }
-        UpdateManager.prototype.initRaw = function () {
-            var _this = this;
-            this.raw.on('error', function (event, message) {
-                _this.emit('error', event, message);
-                _this.setState(State.Idle);
-            });
-            this.raw.on('checking-for-update', function () {
-                _this.emit('checking-for-update');
-                _this.setState(State.CheckingForUpdate);
-            });
-            this.raw.on('update-available', function (event, url, version) {
-                _this.emit('update-available', url, version);
-                var data = null;
-                if (url) {
-                    data = {
-                        releaseNotes: '',
-                        version: '',
-                        date: new Date(),
-                        quitAndUpdate: function () { return electron.shell.openExternal(url); }
-                    };
-                }
-                _this.setState(State.UpdateAvailable, data);
-            });
-            this.raw.on('update-not-available', function () {
-                _this.emit('update-not-available', _this.explicitState === ExplicitState.Explicit);
-                _this.setState(State.Idle);
-            });
-            this.raw.on('update-downloaded', function (event, releaseNotes, version, date, url, rawQuitAndUpdate) {
-                var data = {
-                    releaseNotes: releaseNotes,
-                    version: version,
-                    date: date,
-                    quitAndUpdate: function () { return _this.quitAndUpdate(rawQuitAndUpdate); }
-                };
-                _this.emit('update-downloaded', data);
-                _this.setState(State.UpdateDownloaded, data);
-            });
-        };
-        UpdateManager.prototype.quitAndUpdate = function (rawQuitAndUpdate) {
-            this.lifecycleService.quit(true /* from update */).done(function (vetod) {
-                if (vetod) {
-                    return;
-                }
-                // for some reason updating on Mac causes the local storage not to be flushed.
-                // we workaround this issue by forcing an explicit flush of the storage data.
-                // see also https://github.com/Microsoft/vscode/issues/172
-                if (process.platform === 'darwin') {
-                    electron.session.defaultSession.flushStorageData();
-                }
-                rawQuitAndUpdate();
-            });
-        };
-        Object.defineProperty(UpdateManager.prototype, "feedUrl", {
-            get: function () {
-                return this._feedUrl;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(UpdateManager.prototype, "channel", {
-            get: function () {
-                return this._channel;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        UpdateManager.prototype.initialize = function () {
-            var _this = this;
-            if (this.feedUrl) {
-                return; // already initialized
-            }
-            var channel = this.getUpdateChannel();
-            var feedUrl = this.getUpdateFeedUrl(channel);
-            if (!feedUrl) {
-                return; // updates not available
-            }
-            try {
-                this.raw.setFeedURL(feedUrl);
-            }
-            catch (e) {
-                return; // application not signed
-            }
-            this._channel = channel;
-            this._feedUrl = feedUrl;
-            this.setState(State.Idle);
-            // Check for updates on startup after 30 seconds
-            var timer = setTimeout(function () { return _this.checkForUpdates(); }, 30 * 1000);
-            // Clear timer when checking for update
-            this.on('error', function (error, message) { return console.error(error, message); });
-            // Clear timer when checking for update
-            this.on('checking-for-update', function () { return clearTimeout(timer); });
-            // If update not found, try again in 1 hour
-            this.on('update-not-available', function () {
-                timer = setTimeout(function () { return _this.checkForUpdates(); }, 60 * 60 * 1000);
-            });
-        };
-        Object.defineProperty(UpdateManager.prototype, "state", {
-            get: function () {
-                return this._state;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(UpdateManager.prototype, "availableUpdate", {
-            get: function () {
-                return this._availableUpdate;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(UpdateManager.prototype, "lastCheckDate", {
-            get: function () {
-                return this._lastCheckDate;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        UpdateManager.prototype.checkForUpdates = function (explicit) {
-            if (explicit === void 0) { explicit = false; }
-            this.explicitState = explicit ? ExplicitState.Explicit : ExplicitState.Implicit;
-            this._lastCheckDate = new Date();
-            this.raw.checkForUpdates();
-        };
-        UpdateManager.prototype.setState = function (state, availableUpdate) {
-            if (availableUpdate === void 0) { availableUpdate = null; }
-            this._state = state;
-            this._availableUpdate = availableUpdate;
-            this.emit('change');
-        };
-        UpdateManager.prototype.getUpdateChannel = function () {
-            var config = this.configurationService.getConfiguration('update');
-            var channel = config && config.channel;
-            return channel === 'none' ? null : product_1.default.quality;
-        };
-        UpdateManager.prototype.getUpdateFeedUrl = function (channel) {
-            if (!channel) {
-                return null;
-            }
-            if (process.platform === 'win32' && !fs.existsSync(path.join(path.dirname(process.execPath), 'unins000.exe'))) {
-                return null;
-            }
-            if (!product_1.default.updateUrl || !product_1.default.commit) {
-                return null;
-            }
-            var platform = process.platform === 'linux' ? "linux-" + process.arch : process.platform;
-            return product_1.default.updateUrl + "/api/update/" + platform + "/" + channel + "/" + product_1.default.commit;
-        };
-        UpdateManager = __decorate([
-            __param(0, instantiation_1.IInstantiationService),
-            __param(1, lifecycle_1.ILifecycleService),
-            __param(2, configuration_1.IConfigurationService),
-            __param(3, request_1.IRequestService)
-        ], UpdateManager);
-        return UpdateManager;
-    }(events_1.EventEmitter));
-    exports.UpdateManager = UpdateManager;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,7/*path*/,34/*os*/,27/*original-fs*/,5/*vs/base/common/platform*/,60/*vs/nls!vs/code/electron-main/windows*/,22/*vs/base/common/paths*/,3/*vs/base/common/types*/,18/*vs/base/common/arrays*/,10/*vs/base/common/objects*/,29/*events*/,12/*vs/platform/environment/common/environment*/,23/*vs/code/electron-main/storage*/,41/*vs/code/electron-main/window*/,14/*electron*/,45/*vs/code/electron-main/paths*/,28/*vs/code/electron-main/lifecycle*/,13/*vs/platform/configuration/common/configuration*/,32/*vs/code/electron-main/update-manager*/,20/*vs/code/electron-main/log*/,4/*vs/platform/instantiation/common/instantiation*/,6/*vs/base/common/event*/,11/*vs/platform/product*/]), function (require, exports, path, os, fs, platform, nls, paths, types, arrays, objects_1, events_1, environment_1, storage_1, window_1, electron_1, paths_1, lifecycle_1, configuration_1, update_manager_1, log_1, instantiation_1, event_1, product_1) {
-    'use strict';
-    var EventTypes = {
-        OPEN: 'open',
-        CLOSE: 'close',
-        READY: 'ready'
-    };
     var WindowError;
     (function (WindowError) {
         WindowError[WindowError["UNRESPONSIVE"] = 0] = "UNRESPONSIVE";
@@ -13993,65 +13916,30 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
         ONE: 'one',
         NONE: 'none'
     };
-    exports.IWindowsService = instantiation_1.createDecorator('windowsService');
-    var WindowEventService = (function () {
-        function WindowEventService(windowsService) {
-            this.windowsService = windowsService;
-        }
-        Object.defineProperty(WindowEventService.prototype, "onWindowFocus", {
-            get: function () {
-                return this.windowsService.onWindowFocus;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(WindowEventService.prototype, "onNewWindowOpen", {
-            get: function () {
-                return this.windowsService.onNewWindowOpen;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        WindowEventService = __decorate([
-            __param(0, exports.IWindowsService)
-        ], WindowEventService);
-        return WindowEventService;
-    }());
-    exports.WindowEventService = WindowEventService;
+    exports.IWindowsMainService = instantiation_1.createDecorator('windowsMainService');
     var WindowsManager = (function () {
-        function WindowsManager(instantiationService, logService, storageService, environmentService, lifecycleService, updateService, configurationService) {
+        function WindowsManager(instantiationService, logService, storageService, environmentService, lifecycleService, backupService, configurationService) {
             this.instantiationService = instantiationService;
             this.logService = logService;
             this.storageService = storageService;
             this.environmentService = environmentService;
             this.lifecycleService = lifecycleService;
-            this.updateService = updateService;
+            this.backupService = backupService;
             this.configurationService = configurationService;
-            this.eventEmitter = new events_1.EventEmitter();
-            this._onFocus = new event_1.Emitter();
-            this.onWindowFocus = this._onFocus.event;
-            this._onNewWindow = new event_1.Emitter();
-            this.onNewWindowOpen = this._onNewWindow.event;
+            this._onRecentPathsChange = new event_1.Emitter();
+            this.onRecentPathsChange = this._onRecentPathsChange.event;
+            this._onWindowReady = new event_1.Emitter();
+            this.onWindowReady = this._onWindowReady.event;
+            this._onWindowClose = new event_1.Emitter();
+            this.onWindowClose = this._onWindowClose.event;
+            this._onPathsOpen = new event_1.Emitter();
+            this.onPathsOpen = this._onPathsOpen.event;
         }
-        WindowsManager.prototype.onOpen = function (clb) {
-            var _this = this;
-            this.eventEmitter.addListener(EventTypes.OPEN, clb);
-            return function () { return _this.eventEmitter.removeListener(EventTypes.OPEN, clb); };
-        };
-        WindowsManager.prototype.onReady = function (clb) {
-            var _this = this;
-            this.eventEmitter.addListener(EventTypes.READY, clb);
-            return function () { return _this.eventEmitter.removeListener(EventTypes.READY, clb); };
-        };
-        WindowsManager.prototype.onClose = function (clb) {
-            var _this = this;
-            this.eventEmitter.addListener(EventTypes.CLOSE, clb);
-            return function () { return _this.eventEmitter.removeListener(EventTypes.CLOSE, clb); };
-        };
         WindowsManager.prototype.ready = function (initialUserEnv) {
             this.registerListeners();
             this.initialUserEnv = initialUserEnv;
             this.windowsState = this.storageService.getItem(WindowsManager.windowsStateStorageKey) || { openedFolders: [] };
+            this.updateWindowsJumpList();
         };
         WindowsManager.prototype.registerListeners = function () {
             var _this = this;
@@ -14081,159 +13969,14 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                     runningTimeout = null;
                 }, 100);
             });
-            electron_1.ipcMain.on('vscode:startCrashReporter', function (event, config) {
-                _this.logService.log('IPC#vscode:startCrashReporter');
-                electron_1.crashReporter.start(config);
-            });
-            electron_1.ipcMain.on('vscode:windowOpen', function (event, paths, forceNewWindow) {
-                _this.logService.log('IPC#vscode-windowOpen: ', paths);
-                if (paths && paths.length) {
-                    _this.open({ cli: _this.environmentService.args, pathsToOpen: paths, forceNewWindow: forceNewWindow });
-                }
-            });
             electron_1.ipcMain.on('vscode:workbenchLoaded', function (event, windowId) {
                 _this.logService.log('IPC#vscode-workbenchLoaded');
                 var win = _this.getWindowById(windowId);
                 if (win) {
                     win.setReady();
                     // Event
-                    _this.eventEmitter.emit(EventTypes.READY, win);
+                    _this._onWindowReady.fire(win);
                 }
-            });
-            electron_1.ipcMain.on('vscode:openFilePicker', function (event, forceNewWindow, path) {
-                _this.logService.log('IPC#vscode-openFilePicker');
-                _this.openFilePicker(forceNewWindow, path);
-            });
-            electron_1.ipcMain.on('vscode:openFolderPicker', function (event, forceNewWindow) {
-                _this.logService.log('IPC#vscode-openFolderPicker');
-                _this.openFolderPicker(forceNewWindow);
-            });
-            electron_1.ipcMain.on('vscode:openFileFolderPicker', function (event, forceNewWindow) {
-                _this.logService.log('IPC#vscode-openFileFolderPicker');
-                _this.openFileFolderPicker(forceNewWindow);
-            });
-            electron_1.ipcMain.on('vscode:closeFolder', function (event, windowId) {
-                _this.logService.log('IPC#vscode-closeFolder');
-                var win = _this.getWindowById(windowId);
-                if (win) {
-                    _this.open({ cli: _this.environmentService.args, forceEmpty: true, windowToUse: win });
-                }
-            });
-            electron_1.ipcMain.on('vscode:openNewWindow', function () {
-                _this.logService.log('IPC#vscode-openNewWindow');
-                _this.openNewWindow();
-            });
-            electron_1.ipcMain.on('vscode:reloadWindow', function (event, windowId) {
-                _this.logService.log('IPC#vscode:reloadWindow');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    _this.reload(vscodeWindow);
-                }
-            });
-            electron_1.ipcMain.on('vscode:toggleFullScreen', function (event, windowId) {
-                _this.logService.log('IPC#vscode:toggleFullScreen');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    vscodeWindow.toggleFullScreen();
-                }
-            });
-            electron_1.ipcMain.on('vscode:setFullScreen', function (event, windowId, fullscreen) {
-                _this.logService.log('IPC#vscode:setFullScreen');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    vscodeWindow.win.setFullScreen(fullscreen);
-                }
-            });
-            electron_1.ipcMain.on('vscode:toggleDevTools', function (event, windowId) {
-                _this.logService.log('IPC#vscode:toggleDevTools');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    vscodeWindow.win.webContents.toggleDevTools();
-                }
-            });
-            electron_1.ipcMain.on('vscode:openDevTools', function (event, windowId) {
-                _this.logService.log('IPC#vscode:openDevTools');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    vscodeWindow.win.webContents.openDevTools();
-                    vscodeWindow.win.show();
-                }
-            });
-            electron_1.ipcMain.on('vscode:setRepresentedFilename', function (event, windowId, fileName) {
-                _this.logService.log('IPC#vscode:setRepresentedFilename');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    vscodeWindow.win.setRepresentedFilename(fileName);
-                }
-            });
-            electron_1.ipcMain.on('vscode:setMenuBarVisibility', function (event, windowId, visibility) {
-                _this.logService.log('IPC#vscode:setMenuBarVisibility');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    vscodeWindow.win.setMenuBarVisibility(visibility);
-                }
-            });
-            electron_1.ipcMain.on('vscode:flashFrame', function (event, windowId) {
-                _this.logService.log('IPC#vscode:flashFrame');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    vscodeWindow.win.flashFrame(!vscodeWindow.win.isFocused());
-                }
-            });
-            electron_1.ipcMain.on('vscode:openRecent', function (event, windowId) {
-                _this.logService.log('IPC#vscode:openRecent');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    var recents = _this.getRecentPathsList(vscodeWindow.config.workspacePath, vscodeWindow.config.filesToOpen);
-                    vscodeWindow.send('vscode:openRecent', recents.files, recents.folders);
-                }
-            });
-            electron_1.ipcMain.on('vscode:focusWindow', function (event, windowId) {
-                _this.logService.log('IPC#vscode:focusWindow');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    vscodeWindow.win.focus();
-                }
-            });
-            electron_1.ipcMain.on('vscode:showWindow', function (event, windowId) {
-                _this.logService.log('IPC#vscode:showWindow');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow) {
-                    vscodeWindow.win.show();
-                }
-            });
-            electron_1.ipcMain.on('vscode:setDocumentEdited', function (event, windowId, edited) {
-                _this.logService.log('IPC#vscode:setDocumentEdited');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (vscodeWindow && vscodeWindow.win.isDocumentEdited() !== edited) {
-                    vscodeWindow.win.setDocumentEdited(edited);
-                }
-            });
-            electron_1.ipcMain.on('vscode:toggleMenuBar', function (event, windowId) {
-                _this.logService.log('IPC#vscode:toggleMenuBar');
-                // Update in settings
-                var menuBarHidden = _this.storageService.getItem(window_1.VSCodeWindow.menuBarHiddenKey, false);
-                var newMenuBarHidden = !menuBarHidden;
-                _this.storageService.setItem(window_1.VSCodeWindow.menuBarHiddenKey, newMenuBarHidden);
-                // Update across windows
-                WindowsManager.WINDOWS.forEach(function (w) { return w.setMenuBarVisibility(!newMenuBarHidden); });
-                // Inform user if menu bar is now hidden
-                if (newMenuBarHidden) {
-                    var vscodeWindow = _this.getWindowById(windowId);
-                    if (vscodeWindow) {
-                        vscodeWindow.send('vscode:showInfoMessage', nls.localize(0, null));
-                    }
-                }
-            });
-            electron_1.ipcMain.on('vscode:setHeaders', function (event, windowId, urls, headers) {
-                _this.logService.log('IPC#vscode:setHeaders');
-                var vscodeWindow = _this.getWindowById(windowId);
-                if (!vscodeWindow || !urls || !urls.length || !headers) {
-                    return;
-                }
-                vscodeWindow.win.webContents.session.webRequest.onBeforeSendHeaders({ urls: urls }, function (details, cb) {
-                    cb({ cancel: false, requestHeaders: objects_1.assign(details.requestHeaders, headers) });
-                });
             });
             electron_1.ipcMain.on('vscode:broadcast', function (event, windowId, target, broadcast) {
                 if (broadcast.channel && !types.isUndefinedOrNull(broadcast.payload)) {
@@ -14255,64 +13998,6 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                     }
                 }
             });
-            electron_1.ipcMain.on('vscode:log', function (event, logEntry) {
-                var args = [];
-                try {
-                    var parsed_1 = JSON.parse(logEntry.arguments);
-                    args.push.apply(args, Object.getOwnPropertyNames(parsed_1).map(function (o) { return parsed_1[o]; }));
-                }
-                catch (error) {
-                    args.push(logEntry.arguments);
-                }
-                console[logEntry.severity].apply(console, args);
-            });
-            electron_1.ipcMain.on('vscode:closeExtensionHostWindow', function (event, extensionDevelopmentPath) {
-                _this.logService.log('IPC#vscode:closeExtensionHostWindow', extensionDevelopmentPath);
-                var windowOnExtension = _this.findWindow(null, null, extensionDevelopmentPath);
-                if (windowOnExtension) {
-                    windowOnExtension.win.close();
-                }
-            });
-            electron_1.ipcMain.on('vscode:switchWindow', function (event, windowId) {
-                var windows = _this.getWindows();
-                var window = _this.getWindowById(windowId);
-                window.send('vscode:switchWindow', windows.map(function (w) {
-                    return { path: w.openedWorkspacePath, title: w.win.getTitle(), id: w.id };
-                }));
-            });
-            electron_1.ipcMain.on('vscode:showItemInFolder', function (event, path) {
-                _this.logService.log('IPC#vscode-showItemInFolder');
-                electron_1.shell.showItemInFolder(path);
-            });
-            electron_1.ipcMain.on('vscode:openExternal', function (event, url) {
-                _this.logService.log('IPC#vscode-openExternal');
-                electron_1.shell.openExternal(url);
-            });
-            this.updateService.on('update-downloaded', function (update) {
-                _this.sendToFocused('vscode:telemetry', { eventName: 'update:downloaded', data: { version: update.version } });
-                _this.sendToAll('vscode:update-downloaded', JSON.stringify({
-                    releaseNotes: update.releaseNotes,
-                    version: update.version,
-                    date: update.date
-                }));
-            });
-            electron_1.ipcMain.on('vscode:update-apply', function () {
-                _this.logService.log('IPC#vscode:update-apply');
-                if (_this.updateService.availableUpdate) {
-                    _this.updateService.availableUpdate.quitAndUpdate();
-                }
-            });
-            this.updateService.on('update-not-available', function (explicit) {
-                _this.sendToFocused('vscode:telemetry', { eventName: 'update:notAvailable', data: { explicit: explicit } });
-                if (explicit) {
-                    _this.sendToFocused('vscode:update-not-available', '');
-                }
-            });
-            this.updateService.on('update-available', function (url, version) {
-                if (url) {
-                    _this.sendToFocused('vscode:update-available', url, version);
-                }
-            });
             this.lifecycleService.onBeforeQuit(function () {
                 // 0-1 window open: Do not keep the list but just rely on the active window to be stored
                 if (WindowsManager.WINDOWS.length < 2) {
@@ -14330,29 +14015,8 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
             electron_1.app.on('will-quit', function () {
                 _this.storageService.setItem(WindowsManager.windowsStateStorageKey, _this.windowsState);
             });
-            var loggedStartupTimes = false;
-            this.onReady(function (window) {
-                if (loggedStartupTimes) {
-                    return; // only for the first window
-                }
-                loggedStartupTimes = true;
-                _this.logStartupTimes(window);
-            });
-        };
-        WindowsManager.prototype.logStartupTimes = function (window) {
-            var totalmem;
-            var cpus;
-            try {
-                totalmem = os.totalmem();
-                var rawCpus = os.cpus();
-                if (rawCpus && rawCpus.length > 0) {
-                    cpus = { count: rawCpus.length, speed: rawCpus[0].speed, model: rawCpus[0].model };
-                }
-            }
-            catch (error) {
-                this.logService.log(error); // be on the safe side with these hardware method calls
-            }
-            window.send('vscode:telemetry', { eventName: 'startupTime', data: { ellapsed: Date.now() - global.vscodeStart, totalmem: totalmem, cpus: cpus } });
+            // Update jump list when recent paths change
+            this.onRecentPathsChange(function () { return _this.updateWindowsJumpList(); });
         };
         WindowsManager.prototype.onBroadcast = function (event, payload) {
             // Theme changes
@@ -14362,7 +14026,7 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
         };
         WindowsManager.prototype.reload = function (win, cli) {
             // Only reload when the window has not vetoed this
-            this.lifecycleService.unload(win).done(function (veto) {
+            this.lifecycleService.unload(win, lifecycle_1.UnloadReason.RELOAD).done(function (veto) {
                 if (!veto) {
                     win.reload(cli);
                 }
@@ -14381,9 +14045,9 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                         var options = {
                             title: product_1.default.nameLong,
                             type: 'info',
-                            buttons: [nls.localize(1, null)],
-                            message: nls.localize(2, null),
-                            detail: nls.localize(3, null, pathToOpen),
+                            buttons: [nls.localize(0, null)],
+                            message: nls.localize(1, null),
+                            detail: nls.localize(2, null, pathToOpen),
                             noLink: true
                         };
                         var activeWindow = electron_1.BrowserWindow.getFocusedWindow();
@@ -14409,10 +14073,12 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                 var ignoreFileNotFound = openConfig.cli._.length > 0; // we assume the user wants to create this file from command line
                 iPathsToOpen = this.cliToPaths(openConfig.cli, ignoreFileNotFound);
             }
+            var foldersToOpen = arrays.distinct(iPathsToOpen.filter(function (iPath) { return iPath.workspacePath && !iPath.filePath; }).map(function (iPath) { return iPath.workspacePath; }), function (folder) { return platform.isLinux ? folder : folder.toLowerCase(); }); // prevent duplicates
+            var foldersToRestore = (openConfig.initialStartup && !openConfig.cli.extensionDevelopmentPath) ? this.backupService.getWorkspaceBackupPaths() : [];
             var filesToOpen = [];
             var filesToDiff = [];
-            var foldersToOpen = iPathsToOpen.filter(function (iPath) { return iPath.workspacePath && !iPath.filePath; });
             var emptyToOpen = iPathsToOpen.filter(function (iPath) { return !iPath.workspacePath && !iPath.filePath; });
+            var emptyToRestore = (openConfig.initialStartup && !openConfig.cli.extensionDevelopmentPath) ? this.backupService.getEmptyWorkspaceBackupPaths() : [];
             var filesToCreate = iPathsToOpen.filter(function (iPath) { return !!iPath.filePath && iPath.createFilePath; });
             // Diff mode needs special care
             var candidates = iPathsToOpen.filter(function (iPath) { return !!iPath.filePath && !iPath.createFilePath; });
@@ -14424,12 +14090,13 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                     emptyToOpen = [Object.create(null)]; // improper use of diffMode, open empty
                 }
                 foldersToOpen = []; // diff is always in empty workspace
+                foldersToRestore = []; // diff is always in empty workspace
                 filesToCreate = []; // diff ignores other files that do not exist
             }
             else {
                 filesToOpen = candidates;
             }
-            var configuration;
+            var openInNewWindow = openConfig.preferNewWindow || openConfig.forceNewWindow;
             // Handle files to open/diff or to create when we dont open a folder
             if (!foldersToOpen.length && (filesToOpen.length > 0 || filesToCreate.length > 0 || filesToDiff.length > 0)) {
                 // const the user settings override how files are open in a new window or same window unless we are forced
@@ -14456,17 +14123,21 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                     usedWindows.push(lastActiveWindow);
                 }
                 else {
-                    configuration = this.toConfiguration(this.getWindowUserEnv(openConfig), openConfig.cli, null, filesToOpen, filesToCreate, filesToDiff);
+                    var configuration = this.toConfiguration(openConfig, null, filesToOpen, filesToCreate, filesToDiff);
                     var browserWindow = this.openInBrowserWindow(configuration, true /* new window */);
                     usedWindows.push(browserWindow);
-                    openConfig.forceNewWindow = true; // any other folders to open must open in new window then
+                    openInNewWindow = true; // any other folders to open must open in new window then
                 }
+                // Reset these because we handled them
+                filesToOpen = [];
+                filesToCreate = [];
+                filesToDiff = [];
             }
-            // Handle folders to open
-            var openInNewWindow = openConfig.preferNewWindow || openConfig.forceNewWindow;
-            if (foldersToOpen.length > 0) {
+            // Handle folders to open (instructed and to restore)
+            var allFoldersToOpen = arrays.distinct(foldersToOpen.concat(foldersToRestore), function (folder) { return platform.isLinux ? folder : folder.toLowerCase(); }); // prevent duplicates
+            if (allFoldersToOpen.length > 0) {
                 // Check for existing instances
-                var windowsOnWorkspacePath_1 = arrays.coalesce(foldersToOpen.map(function (iPath) { return _this.findWindow(iPath.workspacePath); }));
+                var windowsOnWorkspacePath_1 = arrays.coalesce(allFoldersToOpen.map(function (folderToOpen) { return _this.findWindow(folderToOpen); }));
                 if (windowsOnWorkspacePath_1.length > 0) {
                     var browserWindow = windowsOnWorkspacePath_1[0];
                     browserWindow.focus(); // just focus one of them
@@ -14481,11 +14152,11 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                     openInNewWindow = true; // any other folders to open must open in new window then
                 }
                 // Open remaining ones
-                foldersToOpen.forEach(function (folderToOpen) {
-                    if (windowsOnWorkspacePath_1.some(function (win) { return _this.isPathEqual(win.openedWorkspacePath, folderToOpen.workspacePath); })) {
+                allFoldersToOpen.forEach(function (folderToOpen) {
+                    if (windowsOnWorkspacePath_1.some(function (win) { return _this.isPathEqual(win.openedWorkspacePath, folderToOpen); })) {
                         return; // ignore folders that are already open
                     }
-                    configuration = _this.toConfiguration(_this.getWindowUserEnv(openConfig), openConfig.cli, folderToOpen.workspacePath, filesToOpen, filesToCreate, filesToDiff);
+                    var configuration = _this.toConfiguration(openConfig, folderToOpen, filesToOpen, filesToCreate, filesToDiff);
                     var browserWindow = _this.openInBrowserWindow(configuration, openInNewWindow, openInNewWindow ? void 0 : openConfig.windowToUse);
                     usedWindows.push(browserWindow);
                     // Reset these because we handled them
@@ -14496,9 +14167,17 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                 });
             }
             // Handle empty
-            if (emptyToOpen.length > 0) {
+            if (emptyToRestore.length > 0) {
+                emptyToRestore.forEach(function (emptyWorkspaceBackupFolder) {
+                    var configuration = _this.toConfiguration(openConfig);
+                    var browserWindow = _this.openInBrowserWindow(configuration, true /* new window */, null, emptyWorkspaceBackupFolder);
+                    usedWindows.push(browserWindow);
+                    openInNewWindow = true; // any other folders to open must open in new window then
+                });
+            }
+            else if (emptyToOpen.length > 0) {
                 emptyToOpen.forEach(function () {
-                    var configuration = _this.toConfiguration(_this.getWindowUserEnv(openConfig), openConfig.cli);
+                    var configuration = _this.toConfiguration(openConfig);
                     var browserWindow = _this.openInBrowserWindow(configuration, openInNewWindow, openInNewWindow ? void 0 : openConfig.windowToUse);
                     usedWindows.push(browserWindow);
                     openInNewWindow = true; // any other folders to open must open in new window then
@@ -14507,50 +14186,75 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
             // Remember in recent document list (unless this opens for extension development)
             // Also do not add paths when files are opened for diffing, only if opened individually
             if (!usedWindows.some(function (w) { return w.isPluginDevelopmentHost; }) && !openConfig.cli.diff) {
+                var recentPaths_1 = [];
                 iPathsToOpen.forEach(function (iPath) {
                     if (iPath.filePath || iPath.workspacePath) {
                         electron_1.app.addRecentDocument(iPath.filePath || iPath.workspacePath);
-                        _this.addToRecentPathsList(iPath.filePath || iPath.workspacePath, !!iPath.filePath);
+                        recentPaths_1.push({ path: iPath.filePath || iPath.workspacePath, isFile: !!iPath.filePath });
                     }
                 });
+                if (recentPaths_1.length) {
+                    this.addToRecentPathsList(recentPaths_1);
+                }
             }
             // Emit events
-            iPathsToOpen.forEach(function (iPath) { return _this.eventEmitter.emit(EventTypes.OPEN, iPath); });
+            this._onPathsOpen.fire(iPathsToOpen);
             return arrays.distinct(usedWindows);
         };
-        WindowsManager.prototype.addToRecentPathsList = function (path, isFile) {
-            if (!path) {
+        WindowsManager.prototype.addToRecentPathsList = function (paths) {
+            if (!paths || !paths.length) {
                 return;
             }
             var mru = this.getRecentPathsList();
-            if (isFile) {
-                mru.files.unshift(path);
-                mru.files = arrays.distinct(mru.files, function (f) { return platform.isLinux ? f : f.toLowerCase(); });
+            paths.forEach(function (p) {
+                var path = p.path, isFile = p.isFile;
+                if (isFile) {
+                    mru.files.unshift(path);
+                    mru.files = arrays.distinct(mru.files, function (f) { return platform.isLinux ? f : f.toLowerCase(); });
+                }
+                else {
+                    mru.folders.unshift(path);
+                    mru.folders = arrays.distinct(mru.folders, function (f) { return platform.isLinux ? f : f.toLowerCase(); });
+                }
+                // Make sure its bounded
+                mru.folders = mru.folders.slice(0, WindowsManager.MAX_TOTAL_RECENT_ENTRIES);
+                mru.files = mru.files.slice(0, WindowsManager.MAX_TOTAL_RECENT_ENTRIES);
+            });
+            this.storageService.setItem(WindowsManager.recentPathsListStorageKey, mru);
+            this._onRecentPathsChange.fire();
+        };
+        WindowsManager.prototype.removeFromRecentPathsList = function (arg1) {
+            var paths;
+            if (Array.isArray(arg1)) {
+                paths = arg1;
             }
             else {
-                mru.folders.unshift(path);
-                mru.folders = arrays.distinct(mru.folders, function (f) { return platform.isLinux ? f : f.toLowerCase(); });
+                paths = [arg1];
             }
-            // Make sure its bounded
-            mru.folders = mru.folders.slice(0, WindowsManager.MAX_TOTAL_RECENT_ENTRIES);
-            mru.files = mru.files.slice(0, WindowsManager.MAX_TOTAL_RECENT_ENTRIES);
-            this.storageService.setItem(WindowsManager.recentPathsListStorageKey, mru);
-        };
-        WindowsManager.prototype.removeFromRecentPathsList = function (path) {
             var mru = this.getRecentPathsList();
-            var index = mru.files.indexOf(path);
-            if (index >= 0) {
-                mru.files.splice(index, 1);
+            var update = false;
+            paths.forEach(function (path) {
+                var index = mru.files.indexOf(path);
+                if (index >= 0) {
+                    mru.files.splice(index, 1);
+                    update = true;
+                }
+                index = mru.folders.indexOf(path);
+                if (index >= 0) {
+                    mru.folders.splice(index, 1);
+                    update = true;
+                }
+            });
+            if (update) {
+                this.storageService.setItem(WindowsManager.recentPathsListStorageKey, mru);
+                this._onRecentPathsChange.fire();
             }
-            index = mru.folders.indexOf(path);
-            if (index >= 0) {
-                mru.folders.splice(index, 1);
-            }
-            this.storageService.setItem(WindowsManager.recentPathsListStorageKey, mru);
         };
         WindowsManager.prototype.clearRecentPathsList = function () {
             this.storageService.setItem(WindowsManager.recentPathsListStorageKey, { folders: [], files: [] });
             electron_1.app.clearRecentDocuments();
+            // Event
+            this._onRecentPathsChange.fire();
         };
         WindowsManager.prototype.getRecentPathsList = function (workspacePath, filesToOpen) {
             var files;
@@ -14609,15 +14313,17 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
             // Open it
             this.open({ cli: openConfig.cli, forceNewWindow: true, forceEmpty: openConfig.cli._.length === 0 });
         };
-        WindowsManager.prototype.toConfiguration = function (userEnv, cli, workspacePath, filesToOpen, filesToCreate, filesToDiff) {
-            var configuration = objects_1.mixin({}, cli); // inherit all properties from CLI
+        WindowsManager.prototype.toConfiguration = function (config, workspacePath, filesToOpen, filesToCreate, filesToDiff) {
+            var configuration = objects_1.mixin({}, config.cli); // inherit all properties from CLI
             configuration.appRoot = this.environmentService.appRoot;
             configuration.execPath = process.execPath;
-            configuration.userEnv = userEnv;
+            configuration.userEnv = this.getWindowUserEnv(config);
+            configuration.isInitialStartup = config.initialStartup;
             configuration.workspacePath = workspacePath;
             configuration.filesToOpen = filesToOpen;
             configuration.filesToCreate = filesToCreate;
             configuration.filesToDiff = filesToDiff;
+            configuration.nodeCachedDataDir = this.environmentService.isBuilt && this.environmentService.nodeCachedDataDir;
             return configuration;
         };
         WindowsManager.prototype.toIPath = function (anyPath, ignoreFileNotFound, gotoLineMode) {
@@ -14643,6 +14349,7 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                 }
             }
             catch (error) {
+                this.removeFromRecentPathsList(candidate); // since file does not seem to exist anymore, remove from recent
                 if (ignoreFileNotFound) {
                     return { filePath: candidate, createFilePath: true }; // assume this is a file that does not yet exist
                 }
@@ -14687,7 +14394,7 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
             // No path provided, return empty to open empty
             return [Object.create(null)];
         };
-        WindowsManager.prototype.openInBrowserWindow = function (configuration, forceNewWindow, windowToUse) {
+        WindowsManager.prototype.openInBrowserWindow = function (configuration, forceNewWindow, windowToUse, emptyWorkspaceBackupFolder) {
             var _this = this;
             var vscodeWindow;
             if (!forceNewWindow) {
@@ -14702,7 +14409,8 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                 vscodeWindow = this.instantiationService.createInstance(window_1.VSCodeWindow, {
                     state: this.getNewWindowState(configuration),
                     extensionDevelopmentPath: configuration.extensionDevelopmentPath,
-                    allowFullscreen: this.lifecycleService.wasUpdated || (windowConfig && windowConfig.restoreFullscreen)
+                    allowFullscreen: this.lifecycleService.wasUpdated || (windowConfig && windowConfig.restoreFullscreen),
+                    titleBarStyle: windowConfig ? windowConfig.titleBarStyle : void 0
                 });
                 WindowsManager.WINDOWS.push(vscodeWindow);
                 // Window Events
@@ -14712,8 +14420,6 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                 vscodeWindow.win.on('unresponsive', function () { return _this.onWindowError(vscodeWindow, WindowError.UNRESPONSIVE); });
                 vscodeWindow.win.on('close', function () { return _this.onBeforeWindowClose(vscodeWindow); });
                 vscodeWindow.win.on('closed', function () { return _this.onWindowClosed(vscodeWindow); });
-                vscodeWindow.win.on('focus', function () { return _this._onFocus.fire(vscodeWindow.id); });
-                this._onNewWindow.fire(vscodeWindow.id);
                 // Lifecycle
                 this.lifecycleService.registerWindow(vscodeWindow);
             }
@@ -14726,11 +14432,14 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                     configuration.verbose = currentWindowConfig.verbose;
                     configuration.debugBrkPluginHost = currentWindowConfig.debugBrkPluginHost;
                     configuration.debugPluginHost = currentWindowConfig.debugPluginHost;
-                    configuration.extensionHomePath = currentWindowConfig.extensionHomePath;
+                    configuration['extensions-dir'] = currentWindowConfig['extensions-dir'];
                 }
             }
+            if (!configuration.extensionDevelopmentPath) {
+                this.backupService.registerWindowForBackupsSync(vscodeWindow.id, !configuration.workspacePath, emptyWorkspaceBackupFolder, configuration.workspacePath);
+            }
             // Only load when the window has not vetoed this
-            this.lifecycleService.unload(vscodeWindow).done(function (veto) {
+            this.lifecycleService.unload(vscodeWindow, lifecycle_1.UnloadReason.LOAD).done(function (veto) {
                 if (!veto) {
                     // Load it
                     vscodeWindow.load(configuration);
@@ -14800,11 +14509,11 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
         WindowsManager.prototype.openFileFolderPicker = function (forceNewWindow) {
             this.doPickAndOpen({ pickFolders: true, pickFiles: true, forceNewWindow: forceNewWindow });
         };
-        WindowsManager.prototype.openFilePicker = function (forceNewWindow, path) {
-            this.doPickAndOpen({ pickFiles: true, forceNewWindow: forceNewWindow, path: path });
+        WindowsManager.prototype.openFilePicker = function (forceNewWindow, path, window) {
+            this.doPickAndOpen({ pickFiles: true, forceNewWindow: forceNewWindow, path: path, window: window });
         };
-        WindowsManager.prototype.openFolderPicker = function (forceNewWindow) {
-            this.doPickAndOpen({ pickFolders: true, forceNewWindow: forceNewWindow });
+        WindowsManager.prototype.openFolderPicker = function (forceNewWindow, window) {
+            this.doPickAndOpen({ pickFolders: true, forceNewWindow: forceNewWindow, window: window });
         };
         WindowsManager.prototype.openAccessibilityOptions = function () {
             var win = new electron_1.BrowserWindow({
@@ -14814,7 +14523,7 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                 width: 450,
                 height: 300,
                 show: true,
-                title: nls.localize(4, null)
+                title: nls.localize(3, null)
             });
             win.setMenuBarVisibility(false);
             win.loadURL('chrome://accessibility');
@@ -14830,7 +14539,7 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
         WindowsManager.prototype.getFileOrFolderPaths = function (options, clb) {
             var _this = this;
             var workingDir = options.path || this.storageService.getItem(WindowsManager.workingDirPickerStorageKey);
-            var focussedWindow = this.getFocusedWindow();
+            var focussedWindow = options.window || this.getFocusedWindow();
             var pickerProperties;
             if (options.pickFiles && options.pickFolders) {
                 pickerProperties = ['multiSelections', 'openDirectory', 'openFile', 'createDirectory'];
@@ -14959,9 +14668,9 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                 electron_1.dialog.showMessageBox(vscodeWindow.win, {
                     title: product_1.default.nameLong,
                     type: 'warning',
-                    buttons: [nls.localize(5, null), nls.localize(6, null), nls.localize(7, null)],
-                    message: nls.localize(8, null),
-                    detail: nls.localize(9, null),
+                    buttons: [nls.localize(4, null), nls.localize(5, null), nls.localize(6, null)],
+                    message: nls.localize(7, null),
+                    detail: nls.localize(8, null),
                     noLink: true
                 }, function (result) {
                     if (result === 0) {
@@ -14977,9 +14686,9 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
                 electron_1.dialog.showMessageBox(vscodeWindow.win, {
                     title: product_1.default.nameLong,
                     type: 'warning',
-                    buttons: [nls.localize(10, null), nls.localize(11, null)],
-                    message: nls.localize(12, null),
-                    detail: nls.localize(13, null),
+                    buttons: [nls.localize(9, null), nls.localize(10, null)],
+                    message: nls.localize(11, null),
+                    detail: nls.localize(12, null),
                     noLink: true
                 }, function (result) {
                     if (result === 0) {
@@ -15018,7 +14727,7 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
             var index = WindowsManager.WINDOWS.indexOf(win);
             WindowsManager.WINDOWS.splice(index, 1);
             // Emit
-            this.eventEmitter.emit(EventTypes.CLOSE, win.id);
+            this._onWindowClose.fire(win.id);
         };
         WindowsManager.prototype.isPathEqual = function (pathA, pathB) {
             if (pathA === pathB) {
@@ -15038,6 +14747,89 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
             }
             return pathA === pathB;
         };
+        WindowsManager.prototype.toggleMenuBar = function (windowId) {
+            // Update in settings
+            var menuBarHidden = this.storageService.getItem(window_1.VSCodeWindow.menuBarHiddenKey, false);
+            var newMenuBarHidden = !menuBarHidden;
+            this.storageService.setItem(window_1.VSCodeWindow.menuBarHiddenKey, newMenuBarHidden);
+            // Update across windows
+            WindowsManager.WINDOWS.forEach(function (w) { return w.setMenuBarVisibility(!newMenuBarHidden); });
+            // Inform user if menu bar is now hidden
+            if (newMenuBarHidden) {
+                var vscodeWindow = this.getWindowById(windowId);
+                if (vscodeWindow) {
+                    vscodeWindow.send('vscode:showInfoMessage', nls.localize(13, null));
+                }
+            }
+        };
+        WindowsManager.prototype.updateWindowsJumpList = function () {
+            if (!platform.isWindows) {
+                return; // only on windows
+            }
+            var jumpList = [];
+            // Tasks
+            jumpList.push({
+                type: 'tasks',
+                items: [
+                    {
+                        type: 'task',
+                        title: nls.localize(14, null),
+                        description: nls.localize(15, null),
+                        program: process.execPath,
+                        args: '-n',
+                        iconPath: process.execPath,
+                        iconIndex: 0
+                    }
+                ]
+            });
+            // Recent Folders
+            if (this.getRecentPathsList().folders.length > 0) {
+                // The user might have meanwhile removed items from the jump list and we have to respect that
+                // so we need to update our list of recent paths with the choice of the user to not add them again
+                // Also: Windows will not show our custom category at all if there is any entry which was removed
+                // by the user! See https://github.com/Microsoft/vscode/issues/15052
+                this.removeFromRecentPathsList(electron_1.app.getJumpListSettings().removedItems.map(function (r) { return strings_1.trim(r.args, '"'); }));
+                // Add entries
+                jumpList.push({
+                    type: 'custom',
+                    name: nls.localize(16, null),
+                    items: this.getRecentPathsList().folders.slice(0, 7 /* limit number of entries here */).map(function (folder) {
+                        return {
+                            type: 'task',
+                            title: path.basename(folder) || folder,
+                            description: nls.localize(17, null, path.basename(folder), labels_1.getPathLabel(path.dirname(folder))),
+                            program: process.execPath,
+                            args: "\"" + folder + "\"",
+                            iconPath: 'explorer.exe',
+                            iconIndex: 0
+                        };
+                    }).filter(function (i) { return !!i; })
+                });
+            }
+            // Recent
+            jumpList.push({
+                type: 'recent' // this enables to show files in the "recent" category
+            });
+            try {
+                electron_1.app.setJumpList(jumpList);
+            }
+            catch (error) {
+                this.logService.log('#setJumpList', error); // since setJumpList is relatively new API, make sure to guard for errors
+            }
+        };
+        WindowsManager.prototype.quit = function () {
+            // If the user selected to exit from an extension development host window, do not quit, but just
+            // close the window unless this is the last window that is opened.
+            var vscodeWindow = this.getFocusedWindow();
+            if (vscodeWindow && vscodeWindow.isPluginDevelopmentHost && this.getWindowCount() > 1) {
+                vscodeWindow.win.close();
+            }
+            else {
+                setTimeout(function () {
+                    electron_1.app.quit();
+                }, 10 /* delay to unwind callback stack (IPC) */);
+            }
+        };
         WindowsManager.MAX_TOTAL_RECENT_ENTRIES = 100;
         WindowsManager.recentPathsListStorageKey = 'openedPathsList';
         WindowsManager.workingDirPickerStorageKey = 'pickerWorkingDir';
@@ -15049,7 +14841,7 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
             __param(2, storage_1.IStorageService),
             __param(3, environment_1.IEnvironmentService),
             __param(4, lifecycle_1.ILifecycleService),
-            __param(5, update_manager_1.IUpdateService),
+            __param(5, backup_1.IBackupMainService),
             __param(6, configuration_1.IConfigurationService)
         ], WindowsManager);
         return WindowsManager;
@@ -15067,11 +14859,1700 @@ define(__m[24/*vs/code/electron-main/windows*/], __M([1/*require*/,0/*exports*/,
 
 
 
+define(__m[101/*vs/platform/environment/node/environmentService*/], __M([0/*require*/,1/*exports*/,38/*crypto*/,81/*vs/base/node/paths*/,31/*os*/,7/*path*/,22/*vs/base/common/uri*/,52/*vs/base/common/decorators*/,35/*vs/platform/package*/,15/*vs/platform/product*/]), function (require, exports, crypto, paths, os, path, uri_1, decorators_1, package_1, product_1) {
+    "use strict";
+    function getUniqueUserId() {
+        var username;
+        if (process.platform === 'win32') {
+            username = process.env.USERNAME;
+        }
+        else {
+            username = process.env.USER;
+        }
+        if (!username) {
+            return ''; // fail gracefully if there is no user name
+        }
+        // use sha256 to ensure the userid value can be used in filenames and are unique
+        return crypto.createHash('sha256').update(username).digest('hex').substr(0, 6);
+    }
+    function getIPCHandlePrefix() {
+        var name = package_1.default.name;
+        // Support to run VS Code multiple times as different user
+        // by making the socket unique over the logged in user
+        var userId = getUniqueUserId();
+        if (userId) {
+            name += "-" + userId;
+        }
+        if (process.platform === 'win32') {
+            return "\\\\.\\pipe\\" + name;
+        }
+        return path.join(os.tmpdir(), name);
+    }
+    function getIPCHandleSuffix() {
+        return process.platform === 'win32' ? '-sock' : '.sock';
+    }
+    var EnvironmentService = (function () {
+        function EnvironmentService(_args, _execPath) {
+            this._args = _args;
+            this._execPath = _execPath;
+        }
+        Object.defineProperty(EnvironmentService.prototype, "args", {
+            get: function () { return this._args; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appRoot", {
+            get: function () { return path.dirname(uri_1.default.parse(require.toUrl('')).fsPath); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "execPath", {
+            get: function () { return this._execPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "userHome", {
+            get: function () { return os.homedir(); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "userProductHome", {
+            get: function () { return path.join(this.userHome, product_1.default.dataFolderName); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "userDataPath", {
+            get: function () { return parseUserDataDir(this._args, process); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appSettingsHome", {
+            get: function () { return path.join(this.userDataPath, 'User'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appSettingsPath", {
+            get: function () { return path.join(this.appSettingsHome, 'settings.json'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "appKeybindingsPath", {
+            get: function () { return path.join(this.appSettingsHome, 'keybindings.json'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "isExtensionDevelopment", {
+            get: function () { return !!this._args.extensionDevelopmentPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "backupHome", {
+            get: function () { return path.join(this.userDataPath, 'Backups'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "backupWorkspacesPath", {
+            get: function () { return path.join(this.backupHome, 'workspaces.json'); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "extensionsPath", {
+            get: function () { return path.normalize(this._args['extensions-dir'] || path.join(this.userProductHome, 'extensions')); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "extensionDevelopmentPath", {
+            get: function () { return this._args.extensionDevelopmentPath ? path.normalize(this._args.extensionDevelopmentPath) : this._args.extensionDevelopmentPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "extensionTestsPath", {
+            get: function () { return this._args.extensionTestsPath ? path.normalize(this._args.extensionTestsPath) : this._args.extensionTestsPath; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "disableExtensions", {
+            get: function () { return this._args['disable-extensions']; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "debugExtensionHost", {
+            get: function () { return parseExtensionHostPort(this._args, this.isBuilt); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "isBuilt", {
+            get: function () { return !process.env['VSCODE_DEV']; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "verbose", {
+            get: function () { return this._args.verbose; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "wait", {
+            get: function () { return this._args.wait; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "performance", {
+            get: function () { return this._args.performance; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "logExtensionHostCommunication", {
+            get: function () { return this._args.logExtensionHostCommunication; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "mainIPCHandle", {
+            get: function () { return getIPCHandlePrefix() + "-" + package_1.default.version + getIPCHandleSuffix(); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "sharedIPCHandle", {
+            get: function () { return getIPCHandlePrefix() + "-" + package_1.default.version + "-shared" + getIPCHandleSuffix(); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnvironmentService.prototype, "nodeCachedDataDir", {
+            get: function () { return path.join(this.userDataPath, 'CachedData', package_1.default.version); },
+            enumerable: true,
+            configurable: true
+        });
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appRoot", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "userHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "userProductHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "userDataPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appSettingsHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appSettingsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "appKeybindingsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "isExtensionDevelopment", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "backupHome", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "backupWorkspacesPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "extensionsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "extensionDevelopmentPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "extensionTestsPath", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "debugExtensionHost", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "mainIPCHandle", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "sharedIPCHandle", null);
+        __decorate([
+            decorators_1.memoize
+        ], EnvironmentService.prototype, "nodeCachedDataDir", null);
+        return EnvironmentService;
+    }());
+    exports.EnvironmentService = EnvironmentService;
+    function parseExtensionHostPort(args, isBuild) {
+        var portStr = args.debugBrkPluginHost || args.debugPluginHost;
+        var port = Number(portStr) || (!isBuild ? 5870 : null);
+        var brk = port ? Boolean(!!args.debugBrkPluginHost) : false;
+        return { port: port, break: brk };
+    }
+    exports.parseExtensionHostPort = parseExtensionHostPort;
+    function parseUserDataDir(args, process) {
+        var arg = args['user-data-dir'];
+        if (arg) {
+            // Determine if the arg is relative or absolute, if relative use the original CWD
+            // (VSCODE_CWD), not the potentially overridden one (process.cwd()).
+            var resolved = path.resolve(arg);
+            if (path.normalize(arg) === resolved) {
+                return resolved;
+            }
+            else {
+                return path.resolve(process.env['VSCODE_CWD'] || process.cwd(), arg);
+            }
+        }
+        return path.resolve(paths.getDefaultUserDataPath(process.platform));
+    }
+    exports.parseUserDataDir = parseUserDataDir;
+});
 
-
-
-define(__m[90/*vs/code/electron-main/launch*/], __M([1/*require*/,0/*exports*/,24/*vs/code/electron-main/windows*/,2/*vs/base/common/winjs.base*/,20/*vs/code/electron-main/log*/,46/*vs/platform/url/common/url*/]), function (require, exports, windows_1, winjs_base_1, log_1, url_1) {
+define(__m[40/*vs/platform/request/node/request*/], __M([0/*require*/,1/*exports*/,70/*vs/nls!vs/platform/request/node/request*/,3/*vs/platform/instantiation/common/instantiation*/,27/*vs/platform/configuration/common/configurationRegistry*/,21/*vs/platform/platform*/]), function (require, exports, nls_1, instantiation_1, configurationRegistry_1, platform_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
     'use strict';
+    exports.IRequestService = instantiation_1.createDecorator('requestService2');
+    platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration)
+        .registerConfiguration({
+        id: 'http',
+        order: 15,
+        title: nls_1.localize(0, null),
+        type: 'object',
+        properties: {
+            'http.proxy': {
+                type: 'string',
+                pattern: '^https?://([^:]*(:[^@]*)?@)?([^:]+)(:\\d+)?/?$|^$',
+                description: nls_1.localize(1, null)
+            },
+            'http.proxyStrictSSL': {
+                type: 'boolean',
+                default: true,
+                description: nls_1.localize(2, null)
+            },
+            'http.proxyAuthorization': {
+                type: ['null', 'string'],
+                default: null,
+                description: nls_1.localize(3, null)
+            }
+        }
+    });
+});
+
+define(__m[32/*vs/platform/telemetry/common/telemetry*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,77/*vs/base/common/mime*/,19/*vs/base/common/paths*/,12/*vs/platform/configuration/common/configuration*/,3/*vs/platform/instantiation/common/instantiation*/,87/*vs/platform/keybinding/common/keybinding*/,88/*vs/platform/lifecycle/common/lifecycle*/]), function (require, exports, winjs_base_1, mime_1, paths, configuration_1, instantiation_1, keybinding_1, lifecycle_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    exports.ITelemetryService = instantiation_1.createDecorator('telemetryService');
+    exports.defaultExperiments = {
+        showNewUserWatermark: false,
+        openUntitledFile: true
+    };
+    exports.NullTelemetryService = {
+        _serviceBrand: undefined,
+        _experiments: exports.defaultExperiments,
+        publicLog: function (eventName, data) {
+            return winjs_base_1.TPromise.as(null);
+        },
+        isOptedIn: true,
+        getTelemetryInfo: function () {
+            return winjs_base_1.TPromise.as({
+                instanceId: 'someValue.instanceId',
+                sessionId: 'someValue.sessionId',
+                machineId: 'someValue.machineId'
+            });
+        },
+        getExperiments: function () {
+            return this._experiments;
+        }
+    };
+    var beginGettingStartedExp = Date.UTC(2017, 0, 9);
+    var endGettingStartedExp = Date.UTC(2017, 0, 16);
+    function loadExperiments(contextService, storageService, configurationService) {
+        var key = 'experiments.randomness';
+        var valueString = storageService.get(key);
+        if (!valueString) {
+            valueString = Math.random().toString();
+            storageService.store(key, valueString);
+        }
+        var random1 = parseFloat(valueString);
+        var _a = splitRandom(random1), random2 = _a[0], showNewUserWatermark = _a[1];
+        var _b = splitRandom(random2), random3 = _b[0], openUntitledFile = _b[1];
+        var _c = splitRandom(random3), openGettingStarted = _c[1];
+        var newUserDuration = 24 * 60 * 60 * 1000;
+        var firstSessionDate = storageService.get('telemetry.firstSessionDate');
+        var isNewUser = !firstSessionDate || Date.now() - Date.parse(firstSessionDate) < newUserDuration;
+        if (!isNewUser || !!contextService.getWorkspace()) {
+            showNewUserWatermark = exports.defaultExperiments.showNewUserWatermark;
+            openUntitledFile = exports.defaultExperiments.openUntitledFile;
+        }
+        var isNewSession = !storageService.get('telemetry.lastSessionDate');
+        var now = Date.now();
+        if (!(isNewSession && now >= beginGettingStartedExp && now < endGettingStartedExp)) {
+            openGettingStarted = undefined;
+        }
+        return applyOverrides(configurationService, {
+            showNewUserWatermark: showNewUserWatermark,
+            openUntitledFile: openUntitledFile,
+            openGettingStarted: openGettingStarted
+        });
+    }
+    exports.loadExperiments = loadExperiments;
+    function applyOverrides(configurationService, experiments) {
+        var config = configurationService.getConfiguration('telemetry');
+        var experimentsConfig = config && config.experiments || {};
+        Object.keys(experiments).forEach(function (key) {
+            if (key in experimentsConfig) {
+                experiments[key] = experimentsConfig[key];
+            }
+        });
+        return experiments;
+    }
+    exports.applyOverrides = applyOverrides;
+    function splitRandom(random) {
+        var scaled = random * 2;
+        var i = Math.floor(scaled);
+        return [scaled - i, i === 1];
+    }
+    function combinedAppender() {
+        var appenders = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            appenders[_i - 0] = arguments[_i];
+        }
+        return { log: function (e, d) { return appenders.forEach(function (a) { return a.log(e, d); }); } };
+    }
+    exports.combinedAppender = combinedAppender;
+    exports.NullAppender = { log: function () { return null; } };
+    // --- util
+    function anonymize(input) {
+        if (!input) {
+            return input;
+        }
+        var r = '';
+        for (var i = 0; i < input.length; i++) {
+            var ch = input[i];
+            if (ch >= '0' && ch <= '9') {
+                r += '0';
+                continue;
+            }
+            if (ch >= 'a' && ch <= 'z') {
+                r += 'a';
+                continue;
+            }
+            if (ch >= 'A' && ch <= 'Z') {
+                r += 'A';
+                continue;
+            }
+            r += ch;
+        }
+        return r;
+    }
+    exports.anonymize = anonymize;
+    function telemetryURIDescriptor(uri) {
+        var fsPath = uri && uri.fsPath;
+        return fsPath ? { mimeType: mime_1.guessMimeTypes(fsPath).join(', '), ext: paths.extname(fsPath), path: anonymize(fsPath) } : {};
+    }
+    exports.telemetryURIDescriptor = telemetryURIDescriptor;
+    var configurationValueWhitelist = [
+        'window.zoomLevel',
+        'editor.fontSize',
+        'editor.fontFamily',
+        'editor.tabSize',
+        'files.autoSave',
+        'files.hotExit',
+        'typescript.check.tscVersion',
+        'editor.renderWhitespace',
+        'editor.cursorBlinking',
+        'editor.cursorStyle',
+        'files.associations',
+        'workbench.statusBar.visible',
+        'editor.wrappingColumn',
+        'editor.insertSpaces',
+        'editor.renderIndentGuides',
+        'files.trimTrailingWhitespace',
+        'git.confirmSync',
+        'editor.rulers',
+        'workbench.sideBar.location',
+        'editor.fontLigatures',
+        'editor.wordWrap',
+        'editor.lineHeight',
+        'editor.detectIndentation',
+        'editor.formatOnType',
+        'editor.formatOnSave',
+        'window.openFilesInNewWindow',
+        'javascript.validate.enable',
+        'editor.mouseWheelZoom',
+        'typescript.check.workspaceVersion',
+        'editor.fontWeight',
+        'editor.scrollBeyondLastLine',
+        'editor.lineNumbers',
+        'editor.wrappingIndent',
+        'editor.renderControlCharacters',
+        'editor.autoClosingBrackets',
+        'window.reopenFolders',
+        'extensions.autoUpdate',
+        'editor.tabCompletion',
+        'files.eol',
+        'explorer.openEditors.visible',
+        'workbench.editor.enablePreview',
+        'files.autoSaveDelay',
+        'editor.roundedSelection',
+        'editor.quickSuggestions',
+        'editor.acceptSuggestionOnEnter',
+        'workbench.editor.showTabs',
+        'files.encoding',
+        'editor.quickSuggestionsDelay',
+        'editor.snippetSuggestions',
+        'editor.selectionHighlight',
+        'editor.glyphMargin',
+        'php.validate.run',
+        'editor.wordSeparators',
+        'editor.mouseWheelScrollSensitivity',
+        'editor.suggestOnTriggerCharacters',
+        'git.enabled',
+        'http.proxyStrictSSL',
+        'terminal.integrated.fontFamily',
+        'editor.overviewRulerLanes',
+        'editor.wordBasedSuggestions',
+        'editor.hideCursorInOverviewRuler',
+        'editor.trimAutoWhitespace',
+        'editor.folding',
+        'workbench.editor.enablePreviewFromQuickOpen',
+        'php.validate.enable',
+        'editor.parameterHints',
+    ];
+    function configurationTelemetry(telemetryService, configurationService) {
+        return configurationService.onDidUpdateConfiguration(function (event) {
+            if (event.source !== configuration_1.ConfigurationSource.Default) {
+                telemetryService.publicLog('updateConfiguration', {
+                    configurationSource: configuration_1.ConfigurationSource[event.source],
+                    configurationKeys: flattenKeys(event.sourceConfig)
+                });
+                telemetryService.publicLog('updateConfigurationValues', {
+                    configurationSource: configuration_1.ConfigurationSource[event.source],
+                    configurationValues: flattenValues(event.sourceConfig, configurationValueWhitelist)
+                });
+            }
+        });
+    }
+    exports.configurationTelemetry = configurationTelemetry;
+    function lifecycleTelemetry(telemetryService, lifecycleService) {
+        return lifecycleService.onShutdown(function (event) {
+            telemetryService.publicLog('shutdown', { reason: lifecycle_1.ShutdownReason[event] });
+        });
+    }
+    exports.lifecycleTelemetry = lifecycleTelemetry;
+    function keybindingsTelemetry(telemetryService, keybindingService) {
+        return keybindingService.onDidUpdateKeybindings(function (event) {
+            if (event.source === keybinding_1.KeybindingSource.User && event.keybindings) {
+                telemetryService.publicLog('updateKeybindings', {
+                    bindings: event.keybindings.map(function (binding) { return ({
+                        key: binding.key,
+                        command: binding.command,
+                        when: binding.when,
+                        args: binding.args ? true : undefined
+                    }); })
+                });
+            }
+        });
+    }
+    exports.keybindingsTelemetry = keybindingsTelemetry;
+    function flattenKeys(value) {
+        if (!value) {
+            return [];
+        }
+        var result = [];
+        flatKeys(result, '', value);
+        return result;
+    }
+    function flatKeys(result, prefix, value) {
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+            Object.keys(value)
+                .forEach(function (key) { return flatKeys(result, prefix ? prefix + "." + key : key, value[key]); });
+        }
+        else {
+            result.push(prefix);
+        }
+    }
+    function flattenValues(value, keys) {
+        if (!value) {
+            return [];
+        }
+        return keys.reduce(function (array, key) {
+            var v = key.split('.')
+                .reduce(function (tmp, k) { return tmp && typeof tmp === 'object' ? tmp[k] : undefined; }, value);
+            if (typeof v !== 'undefined') {
+                array.push((_a = {}, _a[key] = v, _a));
+            }
+            return array;
+            var _a;
+        }, []);
+    }
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[104/*vs/platform/telemetry/common/telemetryIpc*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/]), function (require, exports, winjs_base_1) {
+    'use strict';
+    var TelemetryAppenderChannel = (function () {
+        function TelemetryAppenderChannel(appender) {
+            this.appender = appender;
+        }
+        TelemetryAppenderChannel.prototype.call = function (command, _a) {
+            var eventName = _a.eventName, data = _a.data;
+            this.appender.log(eventName, data);
+            return winjs_base_1.TPromise.as(null);
+        };
+        return TelemetryAppenderChannel;
+    }());
+    exports.TelemetryAppenderChannel = TelemetryAppenderChannel;
+    var TelemetryAppenderClient = (function () {
+        function TelemetryAppenderClient(channel) {
+            this.channel = channel;
+        }
+        TelemetryAppenderClient.prototype.log = function (eventName, data) {
+            return this.channel.call('log', { eventName: eventName, data: data });
+        };
+        TelemetryAppenderClient.prototype.dispose = function () {
+            // TODO
+        };
+        return TelemetryAppenderClient;
+    }());
+    exports.TelemetryAppenderClient = TelemetryAppenderClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+define(__m[105/*vs/platform/telemetry/common/telemetryService*/], __M([0/*require*/,1/*exports*/,71/*vs/nls!vs/platform/telemetry/common/telemetryService*/,16/*vs/base/common/strings*/,32/*vs/platform/telemetry/common/telemetry*/,3/*vs/platform/instantiation/common/instantiation*/,12/*vs/platform/configuration/common/configuration*/,27/*vs/platform/configuration/common/configurationRegistry*/,2/*vs/base/common/winjs.base*/,13/*vs/base/common/lifecycle*/,8/*vs/base/common/objects*/,21/*vs/platform/platform*/]), function (require, exports, nls_1, strings_1, telemetry_1, instantiation_1, configuration_1, configurationRegistry_1, winjs_base_1, lifecycle_1, objects_1, platform_1) {
+    'use strict';
+    var TelemetryService = (function () {
+        function TelemetryService(config, _configurationService) {
+            this._configurationService = _configurationService;
+            this._disposables = [];
+            this._cleanupPatterns = [];
+            this._appender = config.appender;
+            this._commonProperties = config.commonProperties || winjs_base_1.TPromise.as({});
+            this._piiPaths = config.piiPaths || [];
+            this._userOptIn = typeof config.userOptIn === 'undefined' ? true : config.userOptIn;
+            this._experiments = config.experiments || telemetry_1.defaultExperiments;
+            // static cleanup patterns for:
+            // #1 `file:///DANGEROUS/PATH/resources/app/Useful/Information`
+            // #2 // Any other file path that doesn't match the approved form above should be cleaned.
+            // #3 "Error: ENOENT; no such file or directory" is often followed with PII, clean it
+            this._cleanupPatterns.push([/file:\/\/\/.*?\/resources\/app\//gi, ''], [/file:\/\/\/.*/gi, ''], [/ENOENT: no such file or directory.*?\'([^\']+)\'/gi, 'ENOENT: no such file or directory']);
+            for (var _i = 0, _a = this._piiPaths; _i < _a.length; _i++) {
+                var piiPath = _a[_i];
+                this._cleanupPatterns.push([new RegExp(strings_1.escapeRegExpCharacters(piiPath), 'gi'), '']);
+            }
+            if (this._configurationService) {
+                this._updateUserOptIn();
+                this._configurationService.onDidUpdateConfiguration(this._updateUserOptIn, this, this._disposables);
+                this.publicLog('optInStatus', { optIn: this._userOptIn });
+            }
+        }
+        TelemetryService.prototype._updateUserOptIn = function () {
+            var config = this._configurationService.getConfiguration(TELEMETRY_SECTION_ID);
+            this._userOptIn = config ? config.enableTelemetry : this._userOptIn;
+        };
+        Object.defineProperty(TelemetryService.prototype, "isOptedIn", {
+            get: function () {
+                return this._userOptIn;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        TelemetryService.prototype.getExperiments = function () {
+            return this._experiments;
+        };
+        TelemetryService.prototype.getTelemetryInfo = function () {
+            return this._commonProperties.then(function (values) {
+                // well known properties
+                var sessionId = values['sessionID'];
+                var instanceId = values['common.instanceId'];
+                var machineId = values['common.machineId'];
+                return { sessionId: sessionId, instanceId: instanceId, machineId: machineId };
+            });
+        };
+        TelemetryService.prototype.dispose = function () {
+            this._disposables = lifecycle_1.dispose(this._disposables);
+        };
+        TelemetryService.prototype.publicLog = function (eventName, data) {
+            var _this = this;
+            // don't send events when the user is optout
+            if (!this._userOptIn) {
+                return winjs_base_1.TPromise.as(undefined);
+            }
+            return this._commonProperties.then(function (values) {
+                // (first) add common properties
+                data = objects_1.mixin(data, values);
+                // (last) remove all PII from data
+                data = objects_1.cloneAndChange(data, function (value) {
+                    if (typeof value === 'string') {
+                        return _this._cleanupInfo(value);
+                    }
+                });
+                _this._appender.log(eventName, data);
+            }, function (err) {
+                // unsure what to do now...
+                console.error(err);
+            });
+        };
+        TelemetryService.prototype._cleanupInfo = function (stack) {
+            // sanitize with configured cleanup patterns
+            for (var _i = 0, _a = this._cleanupPatterns; _i < _a.length; _i++) {
+                var tuple = _a[_i];
+                var regexp = tuple[0], replaceValue = tuple[1];
+                stack = stack.replace(regexp, replaceValue);
+            }
+            return stack;
+        };
+        TelemetryService.IDLE_START_EVENT_NAME = 'UserIdleStart';
+        TelemetryService.IDLE_STOP_EVENT_NAME = 'UserIdleStop';
+        TelemetryService = __decorate([
+            __param(1, instantiation_1.optional(configuration_1.IConfigurationService))
+        ], TelemetryService);
+        return TelemetryService;
+    }());
+    exports.TelemetryService = TelemetryService;
+    var TELEMETRY_SECTION_ID = 'telemetry';
+    platform_1.Registry.as(configurationRegistry_1.Extensions.Configuration).registerConfiguration({
+        'id': TELEMETRY_SECTION_ID,
+        'order': 110,
+        'type': 'object',
+        'title': nls_1.localize(0, null),
+        'properties': {
+            'telemetry.enableTelemetry': {
+                'type': 'boolean',
+                'description': nls_1.localize(1, null),
+                'default': false
+            }
+        }
+    });
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[106/*vs/platform/telemetry/node/commonProperties*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/platform*/,31/*os*/,2/*vs/base/common/winjs.base*/,30/*vs/base/common/uuid*/]), function (require, exports, Platform, os, winjs_base_1, uuid) {
+    "use strict";
+    function resolveCommonProperties(commit, version) {
+        var result = Object.create(null);
+        result['sessionID'] = uuid.generateUuid() + Date.now();
+        result['commitHash'] = commit;
+        result['version'] = version;
+        result['common.osVersion'] = os.release();
+        result['common.platform'] = Platform.Platform[Platform.platform];
+        // dynamic properties which value differs on each call
+        var seq = 0;
+        var startTime = Date.now();
+        Object.defineProperties(result, {
+            'timestamp': {
+                get: function () { return new Date(); },
+                enumerable: true
+            },
+            'common.timesincesessionstart': {
+                get: function () { return Date.now() - startTime; },
+                enumerable: true
+            },
+            'common.sequence': {
+                get: function () { return seq++; },
+                enumerable: true
+            }
+        });
+        return winjs_base_1.TPromise.as(result);
+    }
+    exports.resolveCommonProperties = resolveCommonProperties;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[29/*vs/platform/update/common/update*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    'use strict';
+    (function (State) {
+        State[State["Uninitialized"] = 0] = "Uninitialized";
+        State[State["Idle"] = 1] = "Idle";
+        State[State["CheckingForUpdate"] = 2] = "CheckingForUpdate";
+        State[State["UpdateAvailable"] = 3] = "UpdateAvailable";
+        State[State["UpdateDownloaded"] = 4] = "UpdateDownloaded";
+    })(exports.State || (exports.State = {}));
+    var State = exports.State;
+    (function (ExplicitState) {
+        ExplicitState[ExplicitState["Implicit"] = 0] = "Implicit";
+        ExplicitState[ExplicitState["Explicit"] = 1] = "Explicit";
+    })(exports.ExplicitState || (exports.ExplicitState = {}));
+    var ExplicitState = exports.ExplicitState;
+    exports.IUpdateService = instantiation_1.createDecorator('updateService');
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+define(__m[108/*vs/code/electron-main/menus*/], __M([0/*require*/,1/*exports*/,58/*vs/nls!vs/code/electron-main/menus*/,5/*vs/base/common/platform*/,17/*vs/base/common/arrays*/,11/*vs/platform/environment/common/environment*/,14/*electron*/,34/*vs/code/electron-main/windows*/,12/*vs/platform/configuration/common/configuration*/,24/*vs/code/electron-main/storage*/,84/*vs/platform/files/common/files*/,32/*vs/platform/telemetry/common/telemetry*/,29/*vs/platform/update/common/update*/,50/*vs/base/common/keyCodes*/,62/*vs/base/common/keybinding*/,15/*vs/platform/product*/,33/*vs/base/common/async*/]), function (require, exports, nls, platform, arrays, environment_1, electron_1, windows_1, configuration_1, storage_1, files_1, telemetry_1, update_1, keyCodes_1, keybinding_1, product_1, async_1) {
+    'use strict';
+    var VSCodeMenu = (function () {
+        function VSCodeMenu(storageService, updateService, configurationService, windowsService, environmentService, telemetryService) {
+            var _this = this;
+            this.storageService = storageService;
+            this.updateService = updateService;
+            this.configurationService = configurationService;
+            this.windowsService = windowsService;
+            this.environmentService = environmentService;
+            this.telemetryService = telemetryService;
+            this.actionIdKeybindingRequests = [];
+            this.extensionViewlets = [];
+            this.mapResolvedKeybindingToActionId = Object.create(null);
+            this.mapLastKnownKeybindingToActionId = this.storageService.getItem(VSCodeMenu.lastKnownKeybindingsMapStorageKey) || Object.create(null);
+            this.menuUpdater = new async_1.RunOnceScheduler(function () { return _this.doUpdateMenu(); }, 0);
+            this.onConfigurationUpdated(this.configurationService.getConfiguration());
+        }
+        VSCodeMenu.prototype.ready = function () {
+            this.registerListeners();
+            this.install();
+        };
+        VSCodeMenu.prototype.registerListeners = function () {
+            var _this = this;
+            // Keep flag when app quits
+            electron_1.app.on('will-quit', function () {
+                _this.isQuitting = true;
+            });
+            // Listen to some events from window service
+            this.windowsService.onPathsOpen(function (paths) { return _this.updateMenu(); });
+            this.windowsService.onRecentPathsChange(function (paths) { return _this.updateMenu(); });
+            this.windowsService.onWindowClose(function (_) { return _this.onClose(_this.windowsService.getWindowCount()); });
+            // Resolve keybindings when any first workbench is loaded
+            this.windowsService.onWindowReady(function (win) { return _this.resolveKeybindings(win); });
+            // Listen to resolved keybindings
+            electron_1.ipcMain.on('vscode:keybindingsResolved', function (event, rawKeybindings) {
+                var keybindings = [];
+                try {
+                    keybindings = JSON.parse(rawKeybindings);
+                }
+                catch (error) {
+                }
+                // Fill hash map of resolved keybindings
+                var needsMenuUpdate = false;
+                keybindings.forEach(function (keybinding) {
+                    var accelerator = keybinding_1.KeybindingLabels._toElectronAccelerator(new keyCodes_1.Keybinding(keybinding.binding));
+                    if (accelerator) {
+                        _this.mapResolvedKeybindingToActionId[keybinding.id] = accelerator;
+                        if (_this.mapLastKnownKeybindingToActionId[keybinding.id] !== accelerator) {
+                            needsMenuUpdate = true; // we only need to update when something changed!
+                        }
+                    }
+                });
+                // A keybinding might have been unassigned, so we have to account for that too
+                if (Object.keys(_this.mapLastKnownKeybindingToActionId).length !== Object.keys(_this.mapResolvedKeybindingToActionId).length) {
+                    needsMenuUpdate = true;
+                }
+                if (needsMenuUpdate) {
+                    _this.storageService.setItem(VSCodeMenu.lastKnownKeybindingsMapStorageKey, _this.mapResolvedKeybindingToActionId); // keep to restore instantly after restart
+                    _this.mapLastKnownKeybindingToActionId = _this.mapResolvedKeybindingToActionId; // update our last known map
+                    _this.updateMenu();
+                }
+            });
+            // Listen to extension viewlets
+            electron_1.ipcMain.on('vscode:extensionViewlets', function (event, rawExtensionViewlets) {
+                var extensionViewlets = [];
+                try {
+                    extensionViewlets = JSON.parse(rawExtensionViewlets);
+                }
+                catch (error) {
+                }
+                if (extensionViewlets.length) {
+                    _this.extensionViewlets = extensionViewlets;
+                    _this.updateMenu();
+                }
+            });
+            // Update when auto save config changes
+            this.configurationService.onDidUpdateConfiguration(function (e) { return _this.onConfigurationUpdated(e.config, true /* update menu if changed */); });
+            // Listen to update service
+            this.updateService.onStateChange(function () { return _this.updateMenu(); });
+        };
+        VSCodeMenu.prototype.onConfigurationUpdated = function (config, handleMenu) {
+            var updateMenu = false;
+            var newAutoSaveSetting = config && config.files && config.files.autoSave;
+            if (newAutoSaveSetting !== this.currentAutoSaveSetting) {
+                this.currentAutoSaveSetting = newAutoSaveSetting;
+                updateMenu = true;
+            }
+            var newSidebarLocation = config && config.workbench && config.workbench.sideBar && config.workbench.sideBar.location || 'left';
+            if (newSidebarLocation !== this.currentSidebarLocation) {
+                this.currentSidebarLocation = newSidebarLocation;
+                updateMenu = true;
+            }
+            var newStatusbarVisible = config && config.workbench && config.workbench.statusBar && config.workbench.statusBar.visible;
+            if (typeof newStatusbarVisible !== 'boolean') {
+                newStatusbarVisible = true;
+            }
+            if (newStatusbarVisible !== this.currentStatusbarVisible) {
+                this.currentStatusbarVisible = newStatusbarVisible;
+                updateMenu = true;
+            }
+            var newActivityBarVisible = config && config.workbench && config.workbench.activityBar && config.workbench.activityBar.visible;
+            if (typeof newActivityBarVisible !== 'boolean') {
+                newActivityBarVisible = true;
+            }
+            if (newActivityBarVisible !== this.currentActivityBarVisible) {
+                this.currentActivityBarVisible = newActivityBarVisible;
+                updateMenu = true;
+            }
+            if (handleMenu && updateMenu) {
+                this.updateMenu();
+            }
+        };
+        VSCodeMenu.prototype.resolveKeybindings = function (win) {
+            if (this.keybindingsResolved) {
+                return; // only resolve once
+            }
+            this.keybindingsResolved = true;
+            // Resolve keybindings when workbench window is up
+            if (this.actionIdKeybindingRequests.length) {
+                win.send('vscode:resolveKeybindings', JSON.stringify(this.actionIdKeybindingRequests));
+            }
+        };
+        VSCodeMenu.prototype.updateMenu = function () {
+            this.menuUpdater.schedule(); // buffer multiple attempts to update the menu
+        };
+        VSCodeMenu.prototype.doUpdateMenu = function () {
+            var _this = this;
+            // Due to limitations in Electron, it is not possible to update menu items dynamically. The suggested
+            // workaround from Electron is to set the application menu again.
+            // See also https://github.com/electron/electron/issues/846
+            //
+            // Run delayed to prevent updating menu while it is open
+            if (!this.isQuitting) {
+                setTimeout(function () {
+                    if (!_this.isQuitting) {
+                        _this.install();
+                    }
+                }, 10 /* delay this because there is an issue with updating a menu when it is open */);
+            }
+        };
+        VSCodeMenu.prototype.onClose = function (remainingWindowCount) {
+            if (remainingWindowCount === 0 && platform.isMacintosh) {
+                this.updateMenu();
+            }
+        };
+        VSCodeMenu.prototype.install = function () {
+            var _this = this;
+            // Menus
+            var menubar = new electron_1.Menu();
+            // Mac: Application
+            var macApplicationMenuItem;
+            if (platform.isMacintosh) {
+                var applicationMenu = new electron_1.Menu();
+                macApplicationMenuItem = new electron_1.MenuItem({ label: product_1.default.nameShort, submenu: applicationMenu });
+                this.setMacApplicationMenu(applicationMenu);
+            }
+            // File
+            var fileMenu = new electron_1.Menu();
+            var fileMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(0, null)), submenu: fileMenu });
+            this.setFileMenu(fileMenu);
+            // Edit
+            var editMenu = new electron_1.Menu();
+            var editMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(1, null)), submenu: editMenu });
+            this.setEditMenu(editMenu);
+            // Selection
+            var selectionMenu = new electron_1.Menu();
+            var selectionMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(2, null)), submenu: selectionMenu });
+            this.setSelectionMenu(selectionMenu);
+            // View
+            var viewMenu = new electron_1.Menu();
+            var viewMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(3, null)), submenu: viewMenu });
+            this.setViewMenu(viewMenu);
+            // Goto
+            var gotoMenu = new electron_1.Menu();
+            var gotoMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(4, null)), submenu: gotoMenu });
+            this.setGotoMenu(gotoMenu);
+            // Mac: Window
+            var macWindowMenuItem;
+            if (platform.isMacintosh) {
+                var windowMenu = new electron_1.Menu();
+                macWindowMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(5, null)), submenu: windowMenu, role: 'window' });
+                this.setMacWindowMenu(windowMenu);
+            }
+            // Help
+            var helpMenu = new electron_1.Menu();
+            var helpMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(6, null)), submenu: helpMenu, role: 'help' });
+            this.setHelpMenu(helpMenu);
+            // Menu Structure
+            if (macApplicationMenuItem) {
+                menubar.append(macApplicationMenuItem);
+            }
+            menubar.append(fileMenuItem);
+            menubar.append(editMenuItem);
+            menubar.append(selectionMenuItem);
+            menubar.append(viewMenuItem);
+            menubar.append(gotoMenuItem);
+            if (macWindowMenuItem) {
+                menubar.append(macWindowMenuItem);
+            }
+            menubar.append(helpMenuItem);
+            electron_1.Menu.setApplicationMenu(menubar);
+            // Dock Menu
+            if (platform.isMacintosh && !this.appMenuInstalled) {
+                this.appMenuInstalled = true;
+                var dockMenu = new electron_1.Menu();
+                dockMenu.append(new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(7, null)), click: function () { return _this.windowsService.openNewWindow(); } }));
+                electron_1.app.dock.setMenu(dockMenu);
+            }
+        };
+        VSCodeMenu.prototype.setMacApplicationMenu = function (macApplicationMenu) {
+            var _this = this;
+            var about = new electron_1.MenuItem({ label: nls.localize(8, null, product_1.default.nameLong), role: 'about' });
+            var checkForUpdates = this.getUpdateMenuItems();
+            var preferences = this.getPreferencesMenu();
+            var hide = new electron_1.MenuItem({ label: nls.localize(9, null, product_1.default.nameLong), role: 'hide', accelerator: 'Command+H' });
+            var hideOthers = new electron_1.MenuItem({ label: nls.localize(10, null), role: 'hideothers', accelerator: 'Command+Alt+H' });
+            var showAll = new electron_1.MenuItem({ label: nls.localize(11, null), role: 'unhide' });
+            var quit = new electron_1.MenuItem(this.likeAction('workbench.action.quit', { label: nls.localize(12, null, product_1.default.nameLong), click: function () { return _this.windowsService.quit(); }, accelerator: this.getAccelerator('workbench.action.quit', 'Command+Q') }));
+            var actions = [about];
+            actions.push.apply(actions, checkForUpdates);
+            actions.push.apply(actions, [
+                __separator__(),
+                preferences,
+                __separator__(),
+                hide,
+                hideOthers,
+                showAll,
+                __separator__(),
+                quit
+            ]);
+            actions.forEach(function (i) { return macApplicationMenu.append(i); });
+        };
+        VSCodeMenu.prototype.setFileMenu = function (fileMenu) {
+            var _this = this;
+            var hasNoWindows = (this.windowsService.getWindowCount() === 0);
+            var newFile;
+            if (hasNoWindows) {
+                newFile = new electron_1.MenuItem(this.likeAction('workbench.action.files.newUntitledFile', { label: mnemonicLabel(nls.localize(13, null)), click: function () { return _this.windowsService.openNewWindow(); } }));
+            }
+            else {
+                newFile = this.createMenuItem(nls.localize(14, null), 'workbench.action.files.newUntitledFile');
+            }
+            var open = new electron_1.MenuItem(this.likeAction('workbench.action.files.openFileFolder', { label: mnemonicLabel(nls.localize(15, null)), click: function () { return _this.windowsService.openFileFolderPicker(); } }));
+            var openFolder = new electron_1.MenuItem(this.likeAction('workbench.action.files.openFolder', { label: mnemonicLabel(nls.localize(16, null)), click: function () { return _this.windowsService.openFolderPicker(); } }));
+            var openFile;
+            if (hasNoWindows) {
+                openFile = new electron_1.MenuItem(this.likeAction('workbench.action.files.openFile', { label: mnemonicLabel(nls.localize(17, null)), click: function () { return _this.windowsService.openFilePicker(); } }));
+            }
+            else {
+                openFile = this.createMenuItem(nls.localize(18, null), 'workbench.action.files.openFile');
+            }
+            var openRecentMenu = new electron_1.Menu();
+            this.setOpenRecentMenu(openRecentMenu);
+            var openRecent = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(19, null)), submenu: openRecentMenu, enabled: openRecentMenu.items.length > 0 });
+            var saveFile = this.createMenuItem(nls.localize(20, null), 'workbench.action.files.save', this.windowsService.getWindowCount() > 0);
+            var saveFileAs = this.createMenuItem(nls.localize(21, null), 'workbench.action.files.saveAs', this.windowsService.getWindowCount() > 0);
+            var saveAllFiles = this.createMenuItem(nls.localize(22, null), 'workbench.action.files.saveAll', this.windowsService.getWindowCount() > 0);
+            var autoSaveEnabled = [files_1.AutoSaveConfiguration.AFTER_DELAY, files_1.AutoSaveConfiguration.ON_FOCUS_CHANGE, files_1.AutoSaveConfiguration.ON_WINDOW_CHANGE].some(function (s) { return _this.currentAutoSaveSetting === s; });
+            var autoSave = new electron_1.MenuItem(this.likeAction('vscode.toggleAutoSave', { label: mnemonicLabel(nls.localize(23, null)), type: 'checkbox', checked: autoSaveEnabled, enabled: this.windowsService.getWindowCount() > 0, click: function () { return _this.windowsService.sendToFocused('vscode.toggleAutoSave'); } }, false));
+            var preferences = this.getPreferencesMenu();
+            var newWindow = new electron_1.MenuItem(this.likeAction('workbench.action.newWindow', { label: mnemonicLabel(nls.localize(24, null)), click: function () { return _this.windowsService.openNewWindow(); } }));
+            var revertFile = this.createMenuItem(nls.localize(25, null), 'workbench.action.files.revert', this.windowsService.getWindowCount() > 0);
+            var closeWindow = new electron_1.MenuItem(this.likeAction('workbench.action.closeWindow', { label: mnemonicLabel(nls.localize(26, null)), click: function () { return _this.windowsService.getLastActiveWindow().win.close(); }, enabled: this.windowsService.getWindowCount() > 0 }));
+            var closeFolder = this.createMenuItem(nls.localize(27, null), 'workbench.action.closeFolder');
+            var closeEditor = this.createMenuItem(nls.localize(28, null), 'workbench.action.closeActiveEditor');
+            var exit = new electron_1.MenuItem(this.likeAction('workbench.action.quit', { label: mnemonicLabel(nls.localize(29, null)), click: function () { return _this.windowsService.quit(); } }));
+            arrays.coalesce([
+                newFile,
+                newWindow,
+                __separator__(),
+                platform.isMacintosh ? open : null,
+                !platform.isMacintosh ? openFile : null,
+                !platform.isMacintosh ? openFolder : null,
+                openRecent,
+                __separator__(),
+                saveFile,
+                saveFileAs,
+                saveAllFiles,
+                __separator__(),
+                autoSave,
+                __separator__(),
+                !platform.isMacintosh ? preferences : null,
+                !platform.isMacintosh ? __separator__() : null,
+                revertFile,
+                closeEditor,
+                closeFolder,
+                !platform.isMacintosh ? closeWindow : null,
+                !platform.isMacintosh ? __separator__() : null,
+                !platform.isMacintosh ? exit : null
+            ]).forEach(function (item) { return fileMenu.append(item); });
+        };
+        VSCodeMenu.prototype.getPreferencesMenu = function () {
+            var userSettings = this.createMenuItem(nls.localize(30, null), 'workbench.action.openGlobalSettings');
+            var workspaceSettings = this.createMenuItem(nls.localize(31, null), 'workbench.action.openWorkspaceSettings');
+            var kebindingSettings = this.createMenuItem(nls.localize(32, null), 'workbench.action.openGlobalKeybindings');
+            var keymapExtensions = this.createMenuItem(nls.localize(33, null), 'workbench.extensions.action.showRecommendedKeymapExtensions');
+            var snippetsSettings = this.createMenuItem(nls.localize(34, null), 'workbench.action.openSnippets');
+            var colorThemeSelection = this.createMenuItem(nls.localize(35, null), 'workbench.action.selectTheme');
+            var iconThemeSelection = this.createMenuItem(nls.localize(36, null), 'workbench.action.selectIconTheme');
+            var preferencesMenu = new electron_1.Menu();
+            preferencesMenu.append(userSettings);
+            preferencesMenu.append(workspaceSettings);
+            preferencesMenu.append(__separator__());
+            preferencesMenu.append(kebindingSettings);
+            preferencesMenu.append(keymapExtensions);
+            preferencesMenu.append(__separator__());
+            preferencesMenu.append(snippetsSettings);
+            preferencesMenu.append(__separator__());
+            preferencesMenu.append(colorThemeSelection);
+            preferencesMenu.append(iconThemeSelection);
+            return new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(37, null)), submenu: preferencesMenu });
+        };
+        VSCodeMenu.prototype.setOpenRecentMenu = function (openRecentMenu) {
+            var _this = this;
+            openRecentMenu.append(this.createMenuItem(nls.localize(38, null), 'workbench.action.reopenClosedEditor'));
+            var _a = this.windowsService.getRecentPathsList(), folders = _a.folders, files = _a.files;
+            // Folders
+            if (folders.length > 0) {
+                openRecentMenu.append(__separator__());
+                for (var i = 0; i < VSCodeMenu.MAX_MENU_RECENT_ENTRIES && i < folders.length; i++) {
+                    openRecentMenu.append(this.createOpenRecentMenuItem(folders[i], 'openRecentFolder'));
+                }
+            }
+            // Files
+            if (files.length > 0) {
+                openRecentMenu.append(__separator__());
+                for (var i = 0; i < VSCodeMenu.MAX_MENU_RECENT_ENTRIES && i < files.length; i++) {
+                    openRecentMenu.append(this.createOpenRecentMenuItem(files[i], 'openRecentFile'));
+                }
+            }
+            if (folders.length || files.length) {
+                openRecentMenu.append(__separator__());
+                openRecentMenu.append(new electron_1.MenuItem(this.likeAction('clearRecentlyOpened', { label: mnemonicLabel(nls.localize(39, null)), click: function () { return _this.windowsService.clearRecentPathsList(); } }, false)));
+            }
+        };
+        VSCodeMenu.prototype.createOpenRecentMenuItem = function (path, actionId) {
+            var _this = this;
+            return new electron_1.MenuItem(this.likeAction(actionId, {
+                label: unMnemonicLabel(path), click: function (menuItem, win, event) {
+                    var openInNewWindow = event && ((!platform.isMacintosh && event.ctrlKey) || (platform.isMacintosh && event.metaKey));
+                    var success = !!_this.windowsService.open({ cli: _this.environmentService.args, pathsToOpen: [path], forceNewWindow: openInNewWindow });
+                    if (!success) {
+                        _this.windowsService.removeFromRecentPathsList(path);
+                    }
+                }
+            }, false));
+        };
+        VSCodeMenu.prototype.createRoleMenuItem = function (label, actionId, role) {
+            var options = {
+                label: mnemonicLabel(label),
+                accelerator: this.getAccelerator(actionId),
+                role: role,
+                enabled: true
+            };
+            return new electron_1.MenuItem(options);
+        };
+        VSCodeMenu.prototype.setEditMenu = function (winLinuxEditMenu) {
+            var undo;
+            var redo;
+            var cut;
+            var copy;
+            var paste;
+            if (platform.isMacintosh) {
+                undo = this.createDevToolsAwareMenuItem(nls.localize(40, null), 'undo', function (devTools) { return devTools.undo(); });
+                redo = this.createDevToolsAwareMenuItem(nls.localize(41, null), 'redo', function (devTools) { return devTools.redo(); });
+                cut = this.createRoleMenuItem(nls.localize(42, null), 'editor.action.clipboardCutAction', 'cut');
+                copy = this.createRoleMenuItem(nls.localize(43, null), 'editor.action.clipboardCopyAction', 'copy');
+                paste = this.createRoleMenuItem(nls.localize(44, null), 'editor.action.clipboardPasteAction', 'paste');
+            }
+            else {
+                undo = this.createMenuItem(nls.localize(45, null), 'undo');
+                redo = this.createMenuItem(nls.localize(46, null), 'redo');
+                cut = this.createMenuItem(nls.localize(47, null), 'editor.action.clipboardCutAction');
+                copy = this.createMenuItem(nls.localize(48, null), 'editor.action.clipboardCopyAction');
+                paste = this.createMenuItem(nls.localize(49, null), 'editor.action.clipboardPasteAction');
+            }
+            var find = this.createMenuItem(nls.localize(50, null), 'actions.find');
+            var replace = this.createMenuItem(nls.localize(51, null), 'editor.action.startFindReplaceAction');
+            var findInFiles = this.createMenuItem(nls.localize(52, null), 'workbench.action.findInFiles');
+            var replaceInFiles = this.createMenuItem(nls.localize(53, null), 'workbench.action.replaceInFiles');
+            var emmetExpandAbbreviation = this.createMenuItem(nls.localize(54, null), 'editor.emmet.action.expandAbbreviation');
+            var showEmmetCommands = this.createMenuItem(nls.localize(55, null), 'workbench.action.showEmmetCommands');
+            var toggleLineComment = this.createMenuItem(nls.localize(56, null), 'editor.action.commentLine');
+            var toggleBlockComment = this.createMenuItem(nls.localize(57, null), 'editor.action.blockComment');
+            [
+                undo,
+                redo,
+                __separator__(),
+                cut,
+                copy,
+                paste,
+                __separator__(),
+                find,
+                replace,
+                __separator__(),
+                findInFiles,
+                replaceInFiles,
+                __separator__(),
+                toggleLineComment,
+                toggleBlockComment,
+                emmetExpandAbbreviation,
+                showEmmetCommands
+            ].forEach(function (item) { return winLinuxEditMenu.append(item); });
+        };
+        VSCodeMenu.prototype.setSelectionMenu = function (winLinuxEditMenu) {
+            var insertCursorAbove = this.createMenuItem(nls.localize(58, null), 'editor.action.insertCursorAbove');
+            var insertCursorBelow = this.createMenuItem(nls.localize(59, null), 'editor.action.insertCursorBelow');
+            var insertCursorAtEndOfEachLineSelected = this.createMenuItem(nls.localize(60, null), 'editor.action.insertCursorAtEndOfEachLineSelected');
+            var addSelectionToNextFindMatch = this.createMenuItem(nls.localize(61, null), 'editor.action.addSelectionToNextFindMatch');
+            var addSelectionToPreviousFindMatch = this.createMenuItem(nls.localize(62, null), 'editor.action.addSelectionToPreviousFindMatch');
+            var selectHighlights = this.createMenuItem(nls.localize(63, null), 'editor.action.selectHighlights');
+            var copyLinesUp = this.createMenuItem(nls.localize(64, null), 'editor.action.copyLinesUpAction');
+            var copyLinesDown = this.createMenuItem(nls.localize(65, null), 'editor.action.copyLinesDownAction');
+            var moveLinesUp = this.createMenuItem(nls.localize(66, null), 'editor.action.moveLinesUpAction');
+            var moveLinesDown = this.createMenuItem(nls.localize(67, null), 'editor.action.moveLinesDownAction');
+            var selectAll;
+            if (platform.isMacintosh) {
+                selectAll = this.createDevToolsAwareMenuItem(nls.localize(68, null), 'editor.action.selectAll', function (devTools) { return devTools.selectAll(); });
+            }
+            else {
+                selectAll = this.createMenuItem(nls.localize(69, null), 'editor.action.selectAll');
+            }
+            var smartSelectGrow = this.createMenuItem(nls.localize(70, null), 'editor.action.smartSelect.grow');
+            var smartSelectshrink = this.createMenuItem(nls.localize(71, null), 'editor.action.smartSelect.shrink');
+            [
+                selectAll,
+                smartSelectGrow,
+                smartSelectshrink,
+                __separator__(),
+                copyLinesUp,
+                copyLinesDown,
+                moveLinesUp,
+                moveLinesDown,
+                __separator__(),
+                insertCursorAbove,
+                insertCursorBelow,
+                insertCursorAtEndOfEachLineSelected,
+                addSelectionToNextFindMatch,
+                addSelectionToPreviousFindMatch,
+                selectHighlights,
+            ].forEach(function (item) { return winLinuxEditMenu.append(item); });
+        };
+        VSCodeMenu.prototype.setViewMenu = function (viewMenu) {
+            var _this = this;
+            var explorer = this.createMenuItem(nls.localize(72, null), 'workbench.view.explorer');
+            var search = this.createMenuItem(nls.localize(73, null), 'workbench.view.search');
+            var git = this.createMenuItem(nls.localize(74, null), 'workbench.view.git');
+            var debug = this.createMenuItem(nls.localize(75, null), 'workbench.view.debug');
+            var extensions = this.createMenuItem(nls.localize(76, null), 'workbench.view.extensions');
+            var output = this.createMenuItem(nls.localize(77, null), 'workbench.action.output.toggleOutput');
+            var debugConsole = this.createMenuItem(nls.localize(78, null), 'workbench.debug.action.toggleRepl');
+            var integratedTerminal = this.createMenuItem(nls.localize(79, null), 'workbench.action.terminal.toggleTerminal');
+            var problems = this.createMenuItem(nls.localize(80, null), 'workbench.actions.view.problems');
+            var additionalViewlets;
+            if (this.extensionViewlets.length) {
+                var additionalViewletsMenu_1 = new electron_1.Menu();
+                this.extensionViewlets.forEach(function (viewlet) {
+                    additionalViewletsMenu_1.append(_this.createMenuItem(viewlet.label, viewlet.id));
+                });
+                additionalViewlets = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(81, null)), submenu: additionalViewletsMenu_1, enabled: true });
+            }
+            var commands = this.createMenuItem(nls.localize(82, null), 'workbench.action.showCommands');
+            var fullscreen = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(83, null)), accelerator: this.getAccelerator('workbench.action.toggleFullScreen'), click: function () { return _this.windowsService.getLastActiveWindow().toggleFullScreen(); }, enabled: this.windowsService.getWindowCount() > 0 });
+            var toggleZenMode = this.createMenuItem(nls.localize(84, null), 'workbench.action.toggleZenMode', this.windowsService.getWindowCount() > 0);
+            var toggleMenuBar = this.createMenuItem(nls.localize(85, null), 'workbench.action.toggleMenuBar');
+            var splitEditor = this.createMenuItem(nls.localize(86, null), 'workbench.action.splitEditor');
+            var toggleEditorLayout = this.createMenuItem(nls.localize(87, null), 'workbench.action.toggleEditorGroupLayout');
+            var toggleSidebar = this.createMenuItem(nls.localize(88, null), 'workbench.action.toggleSidebarVisibility');
+            var moveSideBarLabel;
+            if (this.currentSidebarLocation !== 'right') {
+                moveSideBarLabel = nls.localize(89, null);
+            }
+            else {
+                moveSideBarLabel = nls.localize(90, null);
+            }
+            var moveSidebar = this.createMenuItem(moveSideBarLabel, 'workbench.action.toggleSidebarPosition');
+            var togglePanel = this.createMenuItem(nls.localize(91, null), 'workbench.action.togglePanel');
+            var statusBarLabel;
+            if (this.currentStatusbarVisible) {
+                statusBarLabel = nls.localize(92, null);
+            }
+            else {
+                statusBarLabel = nls.localize(93, null);
+            }
+            var toggleStatusbar = this.createMenuItem(statusBarLabel, 'workbench.action.toggleStatusbarVisibility');
+            var activityBarLabel;
+            if (this.currentActivityBarVisible) {
+                activityBarLabel = nls.localize(94, null);
+            }
+            else {
+                activityBarLabel = nls.localize(95, null);
+            }
+            var toggleActivtyBar = this.createMenuItem(activityBarLabel, 'workbench.action.toggleActivityBarVisibility');
+            var toggleWordWrap = this.createMenuItem(nls.localize(96, null), 'editor.action.toggleWordWrap');
+            var toggleRenderWhitespace = this.createMenuItem(nls.localize(97, null), 'editor.action.toggleRenderWhitespace');
+            var toggleRenderControlCharacters = this.createMenuItem(nls.localize(98, null), 'editor.action.toggleRenderControlCharacter');
+            var zoomIn = this.createMenuItem(nls.localize(99, null), 'workbench.action.zoomIn');
+            var zoomOut = this.createMenuItem(nls.localize(100, null), 'workbench.action.zoomOut');
+            var resetZoom = this.createMenuItem(nls.localize(101, null), 'workbench.action.zoomReset');
+            arrays.coalesce([
+                commands,
+                __separator__(),
+                explorer,
+                search,
+                git,
+                debug,
+                extensions,
+                additionalViewlets,
+                __separator__(),
+                output,
+                problems,
+                debugConsole,
+                integratedTerminal,
+                __separator__(),
+                fullscreen,
+                toggleZenMode,
+                platform.isWindows || platform.isLinux ? toggleMenuBar : void 0,
+                __separator__(),
+                splitEditor,
+                toggleEditorLayout,
+                moveSidebar,
+                toggleSidebar,
+                togglePanel,
+                toggleStatusbar,
+                toggleActivtyBar,
+                __separator__(),
+                toggleWordWrap,
+                toggleRenderWhitespace,
+                toggleRenderControlCharacters,
+                __separator__(),
+                zoomIn,
+                zoomOut,
+                resetZoom
+            ]).forEach(function (item) { return viewMenu.append(item); });
+        };
+        VSCodeMenu.prototype.setGotoMenu = function (gotoMenu) {
+            var back = this.createMenuItem(nls.localize(102, null), 'workbench.action.navigateBack');
+            var forward = this.createMenuItem(nls.localize(103, null), 'workbench.action.navigateForward');
+            var switchEditorMenu = new electron_1.Menu();
+            var nextEditor = this.createMenuItem(nls.localize(104, null), 'workbench.action.nextEditor');
+            var previousEditor = this.createMenuItem(nls.localize(105, null), 'workbench.action.previousEditor');
+            var nextEditorInGroup = this.createMenuItem(nls.localize(106, null), 'workbench.action.openNextRecentlyUsedEditorInGroup');
+            var previousEditorInGroup = this.createMenuItem(nls.localize(107, null), 'workbench.action.openPreviousRecentlyUsedEditorInGroup');
+            [
+                nextEditor,
+                previousEditor,
+                __separator__(),
+                nextEditorInGroup,
+                previousEditorInGroup
+            ].forEach(function (item) { return switchEditorMenu.append(item); });
+            var switchEditor = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(108, null)), submenu: switchEditorMenu, enabled: true });
+            var switchGroupMenu = new electron_1.Menu();
+            var focusFirstGroup = this.createMenuItem(nls.localize(109, null), 'workbench.action.focusFirstEditorGroup');
+            var focusSecondGroup = this.createMenuItem(nls.localize(110, null), 'workbench.action.focusSecondEditorGroup');
+            var focusThirdGroup = this.createMenuItem(nls.localize(111, null), 'workbench.action.focusThirdEditorGroup');
+            var nextGroup = this.createMenuItem(nls.localize(112, null), 'workbench.action.focusNextGroup');
+            var previousGroup = this.createMenuItem(nls.localize(113, null), 'workbench.action.focusPreviousGroup');
+            [
+                focusFirstGroup,
+                focusSecondGroup,
+                focusThirdGroup,
+                __separator__(),
+                nextGroup,
+                previousGroup
+            ].forEach(function (item) { return switchGroupMenu.append(item); });
+            var switchGroup = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(114, null)), submenu: switchGroupMenu, enabled: true });
+            var gotoFile = this.createMenuItem(nls.localize(115, null), 'workbench.action.quickOpen');
+            var gotoSymbolInFile = this.createMenuItem(nls.localize(116, null), 'workbench.action.gotoSymbol');
+            var gotoSymbolInWorkspace = this.createMenuItem(nls.localize(117, null), 'workbench.action.showAllSymbols');
+            var gotoDefinition = this.createMenuItem(nls.localize(118, null), 'editor.action.goToDeclaration');
+            var gotoLine = this.createMenuItem(nls.localize(119, null), 'workbench.action.gotoLine');
+            [
+                back,
+                forward,
+                __separator__(),
+                switchEditor,
+                switchGroup,
+                __separator__(),
+                gotoFile,
+                gotoSymbolInFile,
+                gotoSymbolInWorkspace,
+                gotoDefinition,
+                gotoLine
+            ].forEach(function (item) { return gotoMenu.append(item); });
+        };
+        VSCodeMenu.prototype.setMacWindowMenu = function (macWindowMenu) {
+            var minimize = new electron_1.MenuItem({ label: nls.localize(120, null), role: 'minimize', accelerator: 'Command+M', enabled: this.windowsService.getWindowCount() > 0 });
+            var close = new electron_1.MenuItem({ label: nls.localize(121, null), role: 'close', accelerator: 'Command+W', enabled: this.windowsService.getWindowCount() > 0 });
+            var bringAllToFront = new electron_1.MenuItem({ label: nls.localize(122, null), role: 'front', enabled: this.windowsService.getWindowCount() > 0 });
+            [
+                minimize,
+                close,
+                __separator__(),
+                bringAllToFront
+            ].forEach(function (item) { return macWindowMenu.append(item); });
+        };
+        VSCodeMenu.prototype.toggleDevTools = function () {
+            var w = this.windowsService.getFocusedWindow();
+            if (w && w.win) {
+                var contents = w.win.webContents;
+                if (w.hasHiddenTitleBarStyle() && !w.win.isFullScreen() && !contents.isDevToolsOpened()) {
+                    contents.openDevTools({ mode: 'undocked' }); // due to https://github.com/electron/electron/issues/3647
+                }
+                else {
+                    contents.toggleDevTools();
+                }
+            }
+        };
+        VSCodeMenu.prototype.setHelpMenu = function (helpMenu) {
+            var _this = this;
+            var toggleDevToolsItem = new electron_1.MenuItem(this.likeAction('workbench.action.toggleDevTools', {
+                label: mnemonicLabel(nls.localize(123, null)),
+                click: function () { return _this.toggleDevTools(); },
+                enabled: (this.windowsService.getWindowCount() > 0)
+            }));
+            var showAccessibilityOptions = new electron_1.MenuItem(this.likeAction('accessibilityOptions', {
+                label: mnemonicLabel(nls.localize(124, null)),
+                accelerator: null,
+                click: function () {
+                    _this.windowsService.openAccessibilityOptions();
+                }
+            }, false));
+            var reportIssuesItem = null;
+            if (product_1.default.reportIssueUrl) {
+                var label = nls.localize(125, null);
+                if (this.windowsService.getWindowCount() > 0) {
+                    reportIssuesItem = this.createMenuItem(label, 'workbench.action.reportIssues');
+                }
+                else {
+                    reportIssuesItem = new electron_1.MenuItem({ label: mnemonicLabel(label), click: function () { return _this.openUrl(product_1.default.reportIssueUrl, 'openReportIssues'); } });
+                }
+            }
+            var keyboardShortcutsUrl = platform.isLinux ? product_1.default.keyboardShortcutsUrlLinux : platform.isMacintosh ? product_1.default.keyboardShortcutsUrlMac : product_1.default.keyboardShortcutsUrlWin;
+            arrays.coalesce([
+                product_1.default.documentationUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(126, null)), click: function () { return _this.openUrl(product_1.default.documentationUrl, 'openDocumentationUrl'); } }) : null,
+                product_1.default.releaseNotesUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(127, null)), click: function () { return _this.windowsService.sendToFocused('vscode:runAction', 'update.showCurrentReleaseNotes'); } }) : null,
+                (product_1.default.documentationUrl || product_1.default.releaseNotesUrl) ? __separator__() : null,
+                keyboardShortcutsUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(128, null)), click: function () { return _this.windowsService.sendToFocused('vscode:runAction', 'workbench.action.keybindingsReference'); } }) : null,
+                product_1.default.introductoryVideosUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(129, null)), click: function () { return _this.openUrl(product_1.default.introductoryVideosUrl, 'openIntroductoryVideosUrl'); } }) : null,
+                (product_1.default.introductoryVideosUrl || keyboardShortcutsUrl) ? __separator__() : null,
+                product_1.default.twitterUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(130, null)), click: function () { return _this.openUrl(product_1.default.twitterUrl, 'openTwitterUrl'); } }) : null,
+                product_1.default.requestFeatureUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(131, null)), click: function () { return _this.openUrl(product_1.default.requestFeatureUrl, 'openUserVoiceUrl'); } }) : null,
+                reportIssuesItem,
+                (product_1.default.twitterUrl || product_1.default.requestFeatureUrl || product_1.default.reportIssueUrl) ? __separator__() : null,
+                product_1.default.licenseUrl ? new electron_1.MenuItem({
+                    label: mnemonicLabel(nls.localize(132, null)), click: function () {
+                        if (platform.language) {
+                            var queryArgChar = product_1.default.licenseUrl.indexOf('?') > 0 ? '&' : '?';
+                            _this.openUrl("" + product_1.default.licenseUrl + queryArgChar + "lang=" + platform.language, 'openLicenseUrl');
+                        }
+                        else {
+                            _this.openUrl(product_1.default.licenseUrl, 'openLicenseUrl');
+                        }
+                    }
+                }) : null,
+                product_1.default.privacyStatementUrl ? new electron_1.MenuItem({
+                    label: mnemonicLabel(nls.localize(133, null)), click: function () {
+                        if (platform.language) {
+                            var queryArgChar = product_1.default.licenseUrl.indexOf('?') > 0 ? '&' : '?';
+                            _this.openUrl("" + product_1.default.privacyStatementUrl + queryArgChar + "lang=" + platform.language, 'openPrivacyStatement');
+                        }
+                        else {
+                            _this.openUrl(product_1.default.privacyStatementUrl, 'openPrivacyStatement');
+                        }
+                    }
+                }) : null,
+                (product_1.default.licenseUrl || product_1.default.privacyStatementUrl) ? __separator__() : null,
+                toggleDevToolsItem,
+                platform.isWindows && product_1.default.quality !== 'stable' ? showAccessibilityOptions : null
+            ]).forEach(function (item) { return helpMenu.append(item); });
+            if (!platform.isMacintosh) {
+                var updateMenuItems = this.getUpdateMenuItems();
+                if (updateMenuItems.length) {
+                    helpMenu.append(__separator__());
+                    updateMenuItems.forEach(function (i) { return helpMenu.append(i); });
+                }
+                helpMenu.append(__separator__());
+                helpMenu.append(new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(134, null)), click: function () { return _this.openAboutDialog(); } }));
+            }
+        };
+        VSCodeMenu.prototype.getUpdateMenuItems = function () {
+            var _this = this;
+            switch (this.updateService.state) {
+                case update_1.State.Uninitialized:
+                    return [];
+                case update_1.State.UpdateDownloaded:
+                    return [new electron_1.MenuItem({
+                            label: nls.localize(135, null), click: function () {
+                                _this.reportMenuActionTelemetry('RestartToUpdate');
+                                _this.updateService.quitAndInstall();
+                            }
+                        })];
+                case update_1.State.CheckingForUpdate:
+                    return [new electron_1.MenuItem({ label: nls.localize(136, null), enabled: false })];
+                case update_1.State.UpdateAvailable:
+                    if (platform.isLinux) {
+                        return [new electron_1.MenuItem({
+                                label: nls.localize(137, null), click: function () {
+                                    _this.updateService.quitAndInstall();
+                                }
+                            })];
+                    }
+                    var updateAvailableLabel = platform.isWindows
+                        ? nls.localize(138, null)
+                        : nls.localize(139, null);
+                    return [new electron_1.MenuItem({ label: updateAvailableLabel, enabled: false })];
+                default:
+                    var result = [new electron_1.MenuItem({
+                            label: nls.localize(140, null), click: function () { return setTimeout(function () {
+                                _this.reportMenuActionTelemetry('CheckForUpdate');
+                                _this.updateService.checkForUpdates(true);
+                            }, 0); }
+                        })];
+                    return result;
+            }
+        };
+        VSCodeMenu.prototype.createMenuItem = function (arg1, arg2, arg3, arg4) {
+            var _this = this;
+            var label = mnemonicLabel(arg1);
+            var click = (typeof arg2 === 'function') ? arg2 : function () { return _this.windowsService.sendToFocused('vscode:runAction', arg2); };
+            var enabled = typeof arg3 === 'boolean' ? arg3 : this.windowsService.getWindowCount() > 0;
+            var checked = typeof arg4 === 'boolean' ? arg4 : false;
+            var actionId;
+            if (typeof arg2 === 'string') {
+                actionId = arg2;
+            }
+            var options = {
+                label: label,
+                accelerator: this.getAccelerator(actionId),
+                click: click,
+                enabled: enabled
+            };
+            if (checked) {
+                options['type'] = 'checkbox';
+                options['checked'] = checked;
+            }
+            return new electron_1.MenuItem(options);
+        };
+        VSCodeMenu.prototype.createDevToolsAwareMenuItem = function (label, actionId, devToolsFocusedFn) {
+            var _this = this;
+            return new electron_1.MenuItem({
+                label: mnemonicLabel(label),
+                accelerator: this.getAccelerator(actionId),
+                enabled: this.windowsService.getWindowCount() > 0,
+                click: function () {
+                    var windowInFocus = _this.windowsService.getFocusedWindow();
+                    if (!windowInFocus) {
+                        return;
+                    }
+                    if (windowInFocus.win.webContents.isDevToolsFocused()) {
+                        devToolsFocusedFn(windowInFocus.win.webContents.devToolsWebContents);
+                    }
+                    else {
+                        _this.windowsService.sendToFocused('vscode:runAction', actionId);
+                    }
+                }
+            });
+        };
+        VSCodeMenu.prototype.likeAction = function (actionId, options, setAccelerator) {
+            var _this = this;
+            if (setAccelerator === void 0) { setAccelerator = !options.accelerator; }
+            if (setAccelerator) {
+                options.accelerator = this.getAccelerator(actionId);
+            }
+            var originalClick = options.click;
+            options.click = function (item, window, event) {
+                _this.reportMenuActionTelemetry(actionId);
+                if (originalClick) {
+                    originalClick(item, window, event);
+                }
+            };
+            return options;
+        };
+        VSCodeMenu.prototype.getAccelerator = function (actionId, fallback) {
+            if (actionId) {
+                var resolvedKeybinding = this.mapResolvedKeybindingToActionId[actionId];
+                if (resolvedKeybinding) {
+                    return resolvedKeybinding; // keybinding is fully resolved
+                }
+                if (!this.keybindingsResolved) {
+                    this.actionIdKeybindingRequests.push(actionId); // keybinding needs to be resolved
+                }
+                var lastKnownKeybinding = this.mapLastKnownKeybindingToActionId[actionId];
+                if (lastKnownKeybinding) {
+                    return lastKnownKeybinding; // return the last known keybining (chance of mismatch is very low unless it changed)
+                }
+            }
+            return fallback;
+        };
+        VSCodeMenu.prototype.openAboutDialog = function () {
+            var lastActiveWindow = this.windowsService.getFocusedWindow() || this.windowsService.getLastActiveWindow();
+            electron_1.dialog.showMessageBox(lastActiveWindow && lastActiveWindow.win, {
+                title: product_1.default.nameLong,
+                type: 'info',
+                message: product_1.default.nameLong,
+                detail: nls.localize(141, null, product_1.default.kodeStudioVersion, product_1.default.commit || 'Unknown', product_1.default.date || 'Unknown', process.versions['electron'], process.versions['chrome'], process.versions['node']),
+                buttons: [nls.localize(142, null)],
+                noLink: true
+            }, function (result) { return null; });
+            this.reportMenuActionTelemetry('showAboutDialog');
+        };
+        VSCodeMenu.prototype.openUrl = function (url, id) {
+            electron_1.shell.openExternal(url);
+            this.reportMenuActionTelemetry(id);
+        };
+        VSCodeMenu.prototype.reportMenuActionTelemetry = function (id) {
+            this.telemetryService.publicLog('workbenchActionExecuted', { id: id, from: 'menu' });
+        };
+        VSCodeMenu.lastKnownKeybindingsMapStorageKey = 'lastKnownKeybindings';
+        VSCodeMenu.MAX_MENU_RECENT_ENTRIES = 10;
+        VSCodeMenu = __decorate([
+            __param(0, storage_1.IStorageService),
+            __param(1, update_1.IUpdateService),
+            __param(2, configuration_1.IConfigurationService),
+            __param(3, windows_1.IWindowsMainService),
+            __param(4, environment_1.IEnvironmentService),
+            __param(5, telemetry_1.ITelemetryService)
+        ], VSCodeMenu);
+        return VSCodeMenu;
+    }());
+    exports.VSCodeMenu = VSCodeMenu;
+    function __separator__() {
+        return new electron_1.MenuItem({ type: 'separator' });
+    }
+    function mnemonicLabel(label) {
+        if (platform.isMacintosh) {
+            return label.replace(/\(&&\w\)|&&/g, ''); // no mnemonic support on mac
+        }
+        return label.replace(/&&/g, '&');
+    }
+    function unMnemonicLabel(label) {
+        if (platform.isMacintosh) {
+            return label; // no mnemonic support on mac
+        }
+        return label.replace(/&/g, '&&');
+    }
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[109/*vs/platform/update/common/updateIpc*/], __M([0/*require*/,1/*exports*/,20/*vs/base/parts/ipc/common/ipc*/,29/*vs/platform/update/common/update*/]), function (require, exports, ipc_1, update_1) {
+    'use strict';
+    var UpdateChannel = (function () {
+        function UpdateChannel(service) {
+            this.service = service;
+        }
+        UpdateChannel.prototype.call = function (command, arg) {
+            switch (command) {
+                case 'event:onError': return ipc_1.eventToCall(this.service.onError);
+                case 'event:onUpdateAvailable': return ipc_1.eventToCall(this.service.onUpdateAvailable);
+                case 'event:onUpdateNotAvailable': return ipc_1.eventToCall(this.service.onUpdateNotAvailable);
+                case 'event:onUpdateReady': return ipc_1.eventToCall(this.service.onUpdateReady);
+                case 'event:onStateChange': return ipc_1.eventToCall(this.service.onStateChange);
+                case 'checkForUpdates': return this.service.checkForUpdates(arg);
+                case 'quitAndInstall': return this.service.quitAndInstall();
+            }
+        };
+        return UpdateChannel;
+    }());
+    exports.UpdateChannel = UpdateChannel;
+    var UpdateChannelClient = (function () {
+        function UpdateChannelClient(channel) {
+            var _this = this;
+            this.channel = channel;
+            this._onError = ipc_1.eventFromCall(this.channel, 'event:onError');
+            this._onUpdateAvailable = ipc_1.eventFromCall(this.channel, 'event:onUpdateAvailable');
+            this._onUpdateNotAvailable = ipc_1.eventFromCall(this.channel, 'event:onUpdateNotAvailable');
+            this._onUpdateReady = ipc_1.eventFromCall(this.channel, 'event:onUpdateReady');
+            this._onStateChange = ipc_1.eventFromCall(this.channel, 'event:onStateChange');
+            this._state = update_1.State.Uninitialized;
+            this.onStateChange(function (state) { return _this._state = state; });
+        }
+        Object.defineProperty(UpdateChannelClient.prototype, "onError", {
+            get: function () { return this._onError; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateChannelClient.prototype, "onUpdateAvailable", {
+            get: function () { return this._onUpdateAvailable; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateChannelClient.prototype, "onUpdateNotAvailable", {
+            get: function () { return this._onUpdateNotAvailable; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateChannelClient.prototype, "onUpdateReady", {
+            get: function () { return this._onUpdateReady; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateChannelClient.prototype, "onStateChange", {
+            get: function () { return this._onStateChange; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateChannelClient.prototype, "state", {
+            get: function () { return this._state; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        UpdateChannelClient.prototype.checkForUpdates = function (explicit) {
+            return this.channel.call('checkForUpdates', explicit);
+        };
+        UpdateChannelClient.prototype.quitAndInstall = function () {
+            return this.channel.call('quitAndInstall');
+        };
+        return UpdateChannelClient;
+    }());
+    exports.UpdateChannelClient = UpdateChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[41/*vs/platform/url/common/url*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    'use strict';
+    exports.ID = 'urlService';
+    exports.IURLService = instantiation_1.createDecorator(exports.ID);
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+define(__m[111/*vs/code/electron-main/launch*/], __M([0/*require*/,1/*exports*/,34/*vs/code/electron-main/windows*/,2/*vs/base/common/winjs.base*/,23/*vs/code/electron-main/log*/,41/*vs/platform/url/common/url*/,3/*vs/platform/instantiation/common/instantiation*/,4/*vs/base/common/event*/]), function (require, exports, windows_1, winjs_base_1, log_1, url_1, instantiation_1, event_1) {
+    'use strict';
+    exports.ID = 'launchService';
+    exports.ILaunchService = instantiation_1.createDecorator(exports.ID);
     var LaunchChannel = (function () {
         function LaunchChannel(service) {
             this.service = service;
@@ -15141,9 +16622,9 @@ define(__m[90/*vs/code/electron-main/launch*/], __M([1/*require*/,0/*exports*/,2
             if (args.wait && usedWindows && usedWindows.length === 1 && usedWindows[0]) {
                 var windowId_1 = usedWindows[0].id;
                 return new winjs_base_1.TPromise(function (c, e) {
-                    var unbind = _this.windowsService.onClose(function (id) {
+                    var onceWindowClose = event_1.once(_this.windowsService.onWindowClose);
+                    onceWindowClose(function (id) {
                         if (id === windowId_1) {
-                            unbind();
                             c(null);
                         }
                     });
@@ -15157,7 +16638,7 @@ define(__m[90/*vs/code/electron-main/launch*/], __M([1/*require*/,0/*exports*/,2
         };
         LaunchService = __decorate([
             __param(0, log_1.ILogService),
-            __param(1, windows_1.IWindowsService),
+            __param(1, windows_1.IWindowsMainService),
             __param(2, url_1.IURLService)
         ], LaunchService);
         return LaunchService;
@@ -15169,803 +16650,52 @@ define(__m[90/*vs/code/electron-main/launch*/], __M([1/*require*/,0/*exports*/,2
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-
-
-define(__m[86/*vs/code/electron-main/menus*/], __M([1/*require*/,0/*exports*/,59/*vs/nls!vs/code/electron-main/menus*/,5/*vs/base/common/platform*/,18/*vs/base/common/arrays*/,12/*vs/platform/environment/common/environment*/,14/*electron*/,24/*vs/code/electron-main/windows*/,13/*vs/platform/configuration/common/configuration*/,23/*vs/code/electron-main/storage*/,76/*vs/platform/files/common/files*/,32/*vs/code/electron-main/update-manager*/,56/*vs/base/common/keybinding*/,11/*vs/platform/product*/]), function (require, exports, nls, platform, arrays, environment_1, electron_1, windows_1, configuration_1, storage_1, files_1, update_manager_1, keybinding_1, product_1) {
+define(__m[112/*vs/platform/url/electron-main/urlService*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/event*/,26/*vs/base/node/event*/,15/*vs/platform/product*/,14/*electron*/,22/*vs/base/common/uri*/]), function (require, exports, event_1, event_2, product_1, electron_1, uri_1) {
     'use strict';
-    var VSCodeMenu = (function () {
-        function VSCodeMenu(storageService, updateService, configurationService, windowsService, environmentService) {
-            this.storageService = storageService;
-            this.updateService = updateService;
-            this.configurationService = configurationService;
-            this.windowsService = windowsService;
-            this.environmentService = environmentService;
-            this.actionIdKeybindingRequests = [];
-            this.mapResolvedKeybindingToActionId = Object.create(null);
-            this.mapLastKnownKeybindingToActionId = this.storageService.getItem(VSCodeMenu.lastKnownKeybindingsMapStorageKey) || Object.create(null);
-            this.onConfigurationUpdated(this.configurationService.getConfiguration());
-        }
-        VSCodeMenu.prototype.ready = function () {
-            this.registerListeners();
-            this.install();
-        };
-        VSCodeMenu.prototype.registerListeners = function () {
-            var _this = this;
-            // Keep flag when app quits
-            electron_1.app.on('will-quit', function () {
-                _this.isQuitting = true;
+    var URLService = (function () {
+        function URLService(initial) {
+            if (initial === void 0) { initial = []; }
+            this.openUrlEmitter = new event_1.Emitter();
+            var globalBuffer = (global.getOpenUrls() || []);
+            var initialBuffer = (typeof initial === 'string' ? [initial] : initial).concat(globalBuffer);
+            electron_1.app.setAsDefaultProtocolClient(product_1.default.urlProtocol, process.execPath, ['--open-url']);
+            var rawOnOpenUrl = event_2.fromEventEmitter(electron_1.app, 'open-url', function (event, url) { return ({ event: event, url: url }); });
+            // always prevent default and return the url as string
+            var preventedOnOpenUrl = event_1.mapEvent(rawOnOpenUrl, function (_a) {
+                var event = _a.event, url = _a.url;
+                event.preventDefault();
+                return url;
             });
-            // Listen to "open" & "close" event from window service
-            this.windowsService.onOpen(function (paths) { return _this.onOpen(paths); });
-            this.windowsService.onClose(function (_) { return _this.onClose(_this.windowsService.getWindowCount()); });
-            // Resolve keybindings when any first workbench is loaded
-            this.windowsService.onReady(function (win) { return _this.resolveKeybindings(win); });
-            // Listen to resolved keybindings
-            electron_1.ipcMain.on('vscode:keybindingsResolved', function (event, rawKeybindings) {
-                var keybindings = [];
+            // buffer all `onOpenUrl` events until someone starts listening
+            var bufferedOnOpenUrl = event_1.buffer(preventedOnOpenUrl, true, initialBuffer);
+            this.onOpenURL = event_1.chain(event_1.any(bufferedOnOpenUrl, this.openUrlEmitter.event))
+                .map(function (url) {
                 try {
-                    keybindings = JSON.parse(rawKeybindings);
+                    return uri_1.default.parse(url);
                 }
-                catch (error) {
+                catch (e) {
+                    return null;
                 }
-                // Fill hash map of resolved keybindings
-                var needsMenuUpdate = false;
-                keybindings.forEach(function (keybinding) {
-                    var accelerator = new keybinding_1.Keybinding(keybinding.binding)._toElectronAccelerator();
-                    if (accelerator) {
-                        _this.mapResolvedKeybindingToActionId[keybinding.id] = accelerator;
-                        if (_this.mapLastKnownKeybindingToActionId[keybinding.id] !== accelerator) {
-                            needsMenuUpdate = true; // we only need to update when something changed!
-                        }
-                    }
-                });
-                // A keybinding might have been unassigned, so we have to account for that too
-                if (Object.keys(_this.mapLastKnownKeybindingToActionId).length !== Object.keys(_this.mapResolvedKeybindingToActionId).length) {
-                    needsMenuUpdate = true;
-                }
-                if (needsMenuUpdate) {
-                    _this.storageService.setItem(VSCodeMenu.lastKnownKeybindingsMapStorageKey, _this.mapResolvedKeybindingToActionId); // keep to restore instantly after restart
-                    _this.mapLastKnownKeybindingToActionId = _this.mapResolvedKeybindingToActionId; // update our last known map
-                    _this.updateMenu();
-                }
-            });
-            // Update when auto save config changes
-            this.configurationService.onDidUpdateConfiguration(function (e) { return _this.onConfigurationUpdated(e.config, true /* update menu if changed */); });
-            // Listen to update service
-            this.updateService.on('change', function () { return _this.updateMenu(); });
+            })
+                .filter(function (uri) { return !!uri; })
+                .event;
+        }
+        URLService.prototype.open = function (url) {
+            this.openUrlEmitter.fire(url);
         };
-        VSCodeMenu.prototype.onConfigurationUpdated = function (config, handleMenu) {
-            var updateMenu = false;
-            var newAutoSaveSetting = config && config.files && config.files.autoSave;
-            if (newAutoSaveSetting !== this.currentAutoSaveSetting) {
-                this.currentAutoSaveSetting = newAutoSaveSetting;
-                updateMenu = true;
-            }
-            if (config && config.workbench) {
-                var newSidebarLocation = config.workbench.sideBar && config.workbench.sideBar.location || 'left';
-                if (newSidebarLocation !== this.currentSidebarLocation) {
-                    this.currentSidebarLocation = newSidebarLocation;
-                    updateMenu = true;
-                }
-                var newStatusbarVisible = config.workbench.statusBar && config.workbench.statusBar.visible;
-                if (typeof newStatusbarVisible !== 'boolean') {
-                    newStatusbarVisible = true;
-                }
-                if (newStatusbarVisible !== this.currentStatusbarVisible) {
-                    this.currentStatusbarVisible = newStatusbarVisible;
-                    updateMenu = true;
-                }
-            }
-            if (handleMenu && updateMenu) {
-                this.updateMenu();
-            }
-        };
-        VSCodeMenu.prototype.resolveKeybindings = function (win) {
-            if (this.keybindingsResolved) {
-                return; // only resolve once
-            }
-            this.keybindingsResolved = true;
-            // Resolve keybindings when workbench window is up
-            if (this.actionIdKeybindingRequests.length) {
-                win.send('vscode:resolveKeybindings', JSON.stringify(this.actionIdKeybindingRequests));
-            }
-        };
-        VSCodeMenu.prototype.updateMenu = function () {
-            var _this = this;
-            // Due to limitations in Electron, it is not possible to update menu items dynamically. The suggested
-            // workaround from Electron is to set the application menu again.
-            // See also https://github.com/electron/electron/issues/846
-            //
-            // Run delayed to prevent updating menu while it is open
-            if (!this.isQuitting) {
-                setTimeout(function () {
-                    if (!_this.isQuitting) {
-                        _this.install();
-                    }
-                }, 10 /* delay this because there is an issue with updating a menu when it is open */);
-            }
-        };
-        VSCodeMenu.prototype.onOpen = function (path) {
-            this.updateMenu();
-        };
-        VSCodeMenu.prototype.onClose = function (remainingWindowCount) {
-            if (remainingWindowCount === 0 && platform.isMacintosh) {
-                this.updateMenu();
-            }
-        };
-        VSCodeMenu.prototype.install = function () {
-            var _this = this;
-            // Menus
-            var menubar = new electron_1.Menu();
-            // Mac: Application
-            var macApplicationMenuItem;
-            if (platform.isMacintosh) {
-                var applicationMenu = new electron_1.Menu();
-                macApplicationMenuItem = new electron_1.MenuItem({ label: product_1.default.nameShort, submenu: applicationMenu });
-                this.setMacApplicationMenu(applicationMenu);
-            }
-            // File
-            var fileMenu = new electron_1.Menu();
-            var fileMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(0, null)), submenu: fileMenu });
-            this.setFileMenu(fileMenu);
-            // Edit
-            var editMenu = new electron_1.Menu();
-            var editMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(1, null)), submenu: editMenu });
-            this.setEditMenu(editMenu);
-            // View
-            var viewMenu = new electron_1.Menu();
-            var viewMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(2, null)), submenu: viewMenu });
-            this.setViewMenu(viewMenu);
-            // Goto
-            var gotoMenu = new electron_1.Menu();
-            var gotoMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(3, null)), submenu: gotoMenu });
-            this.setGotoMenu(gotoMenu);
-            // Mac: Window
-            var macWindowMenuItem;
-            if (platform.isMacintosh) {
-                var windowMenu = new electron_1.Menu();
-                macWindowMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(4, null)), submenu: windowMenu, role: 'window' });
-                this.setMacWindowMenu(windowMenu);
-            }
-            // Help
-            var helpMenu = new electron_1.Menu();
-            var helpMenuItem = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(5, null)), submenu: helpMenu, role: 'help' });
-            this.setHelpMenu(helpMenu);
-            // Menu Structure
-            if (macApplicationMenuItem) {
-                menubar.append(macApplicationMenuItem);
-            }
-            menubar.append(fileMenuItem);
-            menubar.append(editMenuItem);
-            menubar.append(viewMenuItem);
-            menubar.append(gotoMenuItem);
-            if (macWindowMenuItem) {
-                menubar.append(macWindowMenuItem);
-            }
-            menubar.append(helpMenuItem);
-            electron_1.Menu.setApplicationMenu(menubar);
-            // Dock Menu
-            if (platform.isMacintosh && !this.appMenuInstalled) {
-                this.appMenuInstalled = true;
-                var dockMenu = new electron_1.Menu();
-                dockMenu.append(new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(6, null)), click: function () { return _this.windowsService.openNewWindow(); } }));
-                electron_1.app.dock.setMenu(dockMenu);
-            }
-        };
-        VSCodeMenu.prototype.setMacApplicationMenu = function (macApplicationMenu) {
-            var _this = this;
-            var about = new electron_1.MenuItem({ label: nls.localize(7, null, product_1.default.nameLong), role: 'about' });
-            var checkForUpdates = this.getUpdateMenuItems();
-            var preferences = this.getPreferencesMenu();
-            var hide = new electron_1.MenuItem({ label: nls.localize(8, null, product_1.default.nameLong), role: 'hide', accelerator: 'Command+H' });
-            var hideOthers = new electron_1.MenuItem({ label: nls.localize(9, null), role: 'hideothers', accelerator: 'Command+Alt+H' });
-            var showAll = new electron_1.MenuItem({ label: nls.localize(10, null), role: 'unhide' });
-            var quit = new electron_1.MenuItem({ label: nls.localize(11, null, product_1.default.nameLong), click: function () { return _this.quit(); }, accelerator: 'Command+Q' });
-            var actions = [about];
-            actions.push.apply(actions, checkForUpdates);
-            actions.push.apply(actions, [
-                __separator__(),
-                preferences,
-                __separator__(),
-                hide,
-                hideOthers,
-                showAll,
-                __separator__(),
-                quit
-            ]);
-            actions.forEach(function (i) { return macApplicationMenu.append(i); });
-        };
-        VSCodeMenu.prototype.setFileMenu = function (fileMenu) {
-            var _this = this;
-            var hasNoWindows = (this.windowsService.getWindowCount() === 0);
-            var newFile;
-            if (hasNoWindows) {
-                newFile = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(12, null)), accelerator: this.getAccelerator('workbench.action.files.newUntitledFile'), click: function () { return _this.windowsService.openNewWindow(); } });
-            }
-            else {
-                newFile = this.createMenuItem(nls.localize(13, null), 'workbench.action.files.newUntitledFile');
-            }
-            var open = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(14, null)), accelerator: this.getAccelerator('workbench.action.files.openFileFolder'), click: function () { return _this.windowsService.openFileFolderPicker(); } });
-            var openFolder = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(15, null)), accelerator: this.getAccelerator('workbench.action.files.openFolder'), click: function () { return _this.windowsService.openFolderPicker(); } });
-            var openFile;
-            if (hasNoWindows) {
-                openFile = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(16, null)), accelerator: this.getAccelerator('workbench.action.files.openFile'), click: function () { return _this.windowsService.openFilePicker(); } });
-            }
-            else {
-                openFile = this.createMenuItem(nls.localize(17, null), 'workbench.action.files.openFile');
-            }
-            var openRecentMenu = new electron_1.Menu();
-            this.setOpenRecentMenu(openRecentMenu);
-            var openRecent = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(18, null)), submenu: openRecentMenu, enabled: openRecentMenu.items.length > 0 });
-            var saveFile = this.createMenuItem(nls.localize(19, null), 'workbench.action.files.save', this.windowsService.getWindowCount() > 0);
-            var saveFileAs = this.createMenuItem(nls.localize(20, null), 'workbench.action.files.saveAs', this.windowsService.getWindowCount() > 0);
-            var saveAllFiles = this.createMenuItem(nls.localize(21, null), 'workbench.action.files.saveAll', this.windowsService.getWindowCount() > 0);
-            var autoSaveEnabled = [files_1.AutoSaveConfiguration.AFTER_DELAY, files_1.AutoSaveConfiguration.ON_FOCUS_CHANGE, files_1.AutoSaveConfiguration.ON_WINDOW_CHANGE].some(function (s) { return _this.currentAutoSaveSetting === s; });
-            var autoSave = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(22, null)), type: 'checkbox', checked: autoSaveEnabled, enabled: this.windowsService.getWindowCount() > 0, click: function () { return _this.windowsService.sendToFocused('vscode.toggleAutoSave'); } });
-            var preferences = this.getPreferencesMenu();
-            var newWindow = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(23, null)), accelerator: this.getAccelerator('workbench.action.newWindow'), click: function () { return _this.windowsService.openNewWindow(); } });
-            var revertFile = this.createMenuItem(nls.localize(24, null), 'workbench.action.files.revert', this.windowsService.getWindowCount() > 0);
-            var closeWindow = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(25, null)), accelerator: this.getAccelerator('workbench.action.closeWindow'), click: function () { return _this.windowsService.getLastActiveWindow().win.close(); }, enabled: this.windowsService.getWindowCount() > 0 });
-            var closeFolder = this.createMenuItem(nls.localize(26, null), 'workbench.action.closeFolder');
-            var closeEditor = this.createMenuItem(nls.localize(27, null), 'workbench.action.closeActiveEditor');
-            var exit = this.createMenuItem(nls.localize(28, null), function () { return _this.quit(); });
-            arrays.coalesce([
-                newFile,
-                newWindow,
-                __separator__(),
-                platform.isMacintosh ? open : null,
-                !platform.isMacintosh ? openFile : null,
-                !platform.isMacintosh ? openFolder : null,
-                openRecent,
-                __separator__(),
-                saveFile,
-                saveFileAs,
-                saveAllFiles,
-                __separator__(),
-                autoSave,
-                __separator__(),
-                !platform.isMacintosh ? preferences : null,
-                !platform.isMacintosh ? __separator__() : null,
-                revertFile,
-                closeEditor,
-                closeFolder,
-                !platform.isMacintosh ? closeWindow : null,
-                !platform.isMacintosh ? __separator__() : null,
-                !platform.isMacintosh ? exit : null
-            ]).forEach(function (item) { return fileMenu.append(item); });
-        };
-        VSCodeMenu.prototype.getPreferencesMenu = function () {
-            var userSettings = this.createMenuItem(nls.localize(29, null), 'workbench.action.openGlobalSettings');
-            var workspaceSettings = this.createMenuItem(nls.localize(30, null), 'workbench.action.openWorkspaceSettings');
-            var kebindingSettings = this.createMenuItem(nls.localize(31, null), 'workbench.action.openGlobalKeybindings');
-            var snippetsSettings = this.createMenuItem(nls.localize(32, null), 'workbench.action.openSnippets');
-            var colorThemeSelection = this.createMenuItem(nls.localize(33, null), 'workbench.action.selectTheme');
-            var iconThemeSelection = this.createMenuItem(nls.localize(34, null), 'workbench.action.selectIconTheme');
-            var preferencesMenu = new electron_1.Menu();
-            preferencesMenu.append(userSettings);
-            preferencesMenu.append(workspaceSettings);
-            preferencesMenu.append(__separator__());
-            preferencesMenu.append(kebindingSettings);
-            preferencesMenu.append(__separator__());
-            preferencesMenu.append(snippetsSettings);
-            preferencesMenu.append(__separator__());
-            preferencesMenu.append(colorThemeSelection);
-            preferencesMenu.append(iconThemeSelection);
-            return new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(35, null)), submenu: preferencesMenu });
-        };
-        VSCodeMenu.prototype.quit = function () {
-            var _this = this;
-            // If the user selected to exit from an extension development host window, do not quit, but just
-            // close the window unless this is the last window that is opened.
-            var vscodeWindow = this.windowsService.getFocusedWindow();
-            if (vscodeWindow && vscodeWindow.isPluginDevelopmentHost && this.windowsService.getWindowCount() > 1) {
-                vscodeWindow.win.close();
-            }
-            else {
-                setTimeout(function () {
-                    _this.isQuitting = true;
-                    electron_1.app.quit();
-                }, 10 /* delay this because there is an issue with quitting while the menu is open */);
-            }
-        };
-        VSCodeMenu.prototype.setOpenRecentMenu = function (openRecentMenu) {
-            var _this = this;
-            openRecentMenu.append(this.createMenuItem(nls.localize(36, null), 'workbench.action.reopenClosedEditor'));
-            var _a = this.windowsService.getRecentPathsList(), folders = _a.folders, files = _a.files;
-            // Folders
-            if (folders.length > 0) {
-                openRecentMenu.append(__separator__());
-                for (var i = 0; i < VSCodeMenu.MAX_MENU_RECENT_ENTRIES && i < folders.length; i++) {
-                    openRecentMenu.append(this.createOpenRecentMenuItem(folders[i]));
-                }
-            }
-            // Files
-            if (files.length > 0) {
-                openRecentMenu.append(__separator__());
-                for (var i = 0; i < VSCodeMenu.MAX_MENU_RECENT_ENTRIES && i < files.length; i++) {
-                    openRecentMenu.append(this.createOpenRecentMenuItem(files[i]));
-                }
-            }
-            if (folders.length || files.length) {
-                openRecentMenu.append(__separator__());
-                openRecentMenu.append(new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(37, null)), click: function () { _this.windowsService.clearRecentPathsList(); _this.updateMenu(); } }));
-            }
-        };
-        VSCodeMenu.prototype.createOpenRecentMenuItem = function (path) {
-            var _this = this;
-            return new electron_1.MenuItem({
-                label: unMnemonicLabel(path), click: function (menuItem, win, event) {
-                    var openInNewWindow = event && ((!platform.isMacintosh && event.ctrlKey) || (platform.isMacintosh && event.metaKey));
-                    var success = !!_this.windowsService.open({ cli: _this.environmentService.args, pathsToOpen: [path], forceNewWindow: openInNewWindow });
-                    if (!success) {
-                        _this.windowsService.removeFromRecentPathsList(path);
-                        _this.updateMenu();
-                    }
-                }
-            });
-        };
-        VSCodeMenu.prototype.createRoleMenuItem = function (label, actionId, role) {
-            var options = {
-                label: mnemonicLabel(label),
-                accelerator: this.getAccelerator(actionId),
-                role: role,
-                enabled: true
-            };
-            return new electron_1.MenuItem(options);
-        };
-        VSCodeMenu.prototype.setEditMenu = function (winLinuxEditMenu) {
-            var undo;
-            var redo;
-            var cut;
-            var copy;
-            var paste;
-            var selectAll;
-            if (platform.isMacintosh) {
-                undo = this.createDevToolsAwareMenuItem(nls.localize(38, null), 'undo', function (devTools) { return devTools.undo(); });
-                redo = this.createDevToolsAwareMenuItem(nls.localize(39, null), 'redo', function (devTools) { return devTools.redo(); });
-                cut = this.createRoleMenuItem(nls.localize(40, null), 'editor.action.clipboardCutAction', 'cut');
-                copy = this.createRoleMenuItem(nls.localize(41, null), 'editor.action.clipboardCopyAction', 'copy');
-                paste = this.createRoleMenuItem(nls.localize(42, null), 'editor.action.clipboardPasteAction', 'paste');
-                selectAll = this.createDevToolsAwareMenuItem(nls.localize(43, null), 'editor.action.selectAll', function (devTools) { return devTools.selectAll(); });
-            }
-            else {
-                undo = this.createMenuItem(nls.localize(44, null), 'undo');
-                redo = this.createMenuItem(nls.localize(45, null), 'redo');
-                cut = this.createMenuItem(nls.localize(46, null), 'editor.action.clipboardCutAction');
-                copy = this.createMenuItem(nls.localize(47, null), 'editor.action.clipboardCopyAction');
-                paste = this.createMenuItem(nls.localize(48, null), 'editor.action.clipboardPasteAction');
-                selectAll = this.createMenuItem(nls.localize(49, null), 'editor.action.selectAll');
-            }
-            var find = this.createMenuItem(nls.localize(50, null), 'actions.find');
-            var replace = this.createMenuItem(nls.localize(51, null), 'editor.action.startFindReplaceAction');
-            var findInFiles = this.createMenuItem(nls.localize(52, null), 'workbench.action.findInFiles');
-            var replaceInFiles = this.createMenuItem(nls.localize(53, null), 'workbench.action.replaceInFiles');
-            [
-                undo,
-                redo,
-                __separator__(),
-                cut,
-                copy,
-                paste,
-                selectAll,
-                __separator__(),
-                find,
-                replace,
-                __separator__(),
-                findInFiles,
-                replaceInFiles
-            ].forEach(function (item) { return winLinuxEditMenu.append(item); });
-        };
-        VSCodeMenu.prototype.setViewMenu = function (viewMenu) {
-            var _this = this;
-            var explorer = this.createMenuItem(nls.localize(54, null), 'workbench.view.explorer');
-            var search = this.createMenuItem(nls.localize(55, null), 'workbench.view.search');
-            var git = this.createMenuItem(nls.localize(56, null), 'workbench.view.git');
-            var debug = this.createMenuItem(nls.localize(57, null), 'workbench.view.debug');
-            var extensions = this.createMenuItem(nls.localize(58, null), 'workbench.view.extensions');
-            var output = this.createMenuItem(nls.localize(59, null), 'workbench.action.output.toggleOutput');
-            var debugConsole = this.createMenuItem(nls.localize(60, null), 'workbench.debug.action.toggleRepl');
-            var integratedTerminal = this.createMenuItem(nls.localize(61, null), 'workbench.action.terminal.toggleTerminal');
-            var problems = this.createMenuItem(nls.localize(62, null), 'workbench.actions.view.problems');
-            var commands = this.createMenuItem(nls.localize(63, null), 'workbench.action.showCommands');
-            var fullscreen = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(64, null)), accelerator: this.getAccelerator('workbench.action.toggleFullScreen'), click: function () { return _this.windowsService.getLastActiveWindow().toggleFullScreen(); }, enabled: this.windowsService.getWindowCount() > 0 });
-            var toggleMenuBar = this.createMenuItem(nls.localize(65, null), 'workbench.action.toggleMenuBar');
-            var splitEditor = this.createMenuItem(nls.localize(66, null), 'workbench.action.splitEditor');
-            var toggleEditorLayout = this.createMenuItem(nls.localize(67, null), 'workbench.action.toggleEditorGroupLayout');
-            var toggleSidebar = this.createMenuItem(nls.localize(68, null), 'workbench.action.toggleSidebarVisibility');
-            var moveSideBarLabel;
-            if (this.currentSidebarLocation !== 'right') {
-                moveSideBarLabel = nls.localize(69, null);
-            }
-            else {
-                moveSideBarLabel = nls.localize(70, null);
-            }
-            var moveSidebar = this.createMenuItem(moveSideBarLabel, 'workbench.action.toggleSidebarPosition');
-            var togglePanel = this.createMenuItem(nls.localize(71, null), 'workbench.action.togglePanel');
-            var statusBarLabel;
-            if (this.currentStatusbarVisible) {
-                statusBarLabel = nls.localize(72, null);
-            }
-            else {
-                statusBarLabel = nls.localize(73, null);
-            }
-            var toggleStatusbar = this.createMenuItem(statusBarLabel, 'workbench.action.toggleStatusbarVisibility');
-            var toggleWordWrap = this.createMenuItem(nls.localize(74, null), 'editor.action.toggleWordWrap');
-            var toggleRenderWhitespace = this.createMenuItem(nls.localize(75, null), 'editor.action.toggleRenderWhitespace');
-            var toggleRenderControlCharacters = this.createMenuItem(nls.localize(76, null), 'editor.action.toggleRenderControlCharacter');
-            var zoomIn = this.createMenuItem(nls.localize(77, null), 'workbench.action.zoomIn');
-            var zoomOut = this.createMenuItem(nls.localize(78, null), 'workbench.action.zoomOut');
-            var resetZoom = this.createMenuItem(nls.localize(79, null), 'workbench.action.zoomReset');
-            arrays.coalesce([
-                commands,
-                __separator__(),
-                explorer,
-                search,
-                git,
-                debug,
-                extensions,
-                __separator__(),
-                output,
-                problems,
-                debugConsole,
-                integratedTerminal,
-                __separator__(),
-                fullscreen,
-                platform.isWindows || platform.isLinux ? toggleMenuBar : void 0,
-                __separator__(),
-                splitEditor,
-                toggleEditorLayout,
-                moveSidebar,
-                toggleSidebar,
-                togglePanel,
-                toggleStatusbar,
-                __separator__(),
-                toggleWordWrap,
-                toggleRenderWhitespace,
-                toggleRenderControlCharacters,
-                __separator__(),
-                zoomIn,
-                zoomOut,
-                resetZoom
-            ]).forEach(function (item) { return viewMenu.append(item); });
-        };
-        VSCodeMenu.prototype.setGotoMenu = function (gotoMenu) {
-            var back = this.createMenuItem(nls.localize(80, null), 'workbench.action.navigateBack');
-            var forward = this.createMenuItem(nls.localize(81, null), 'workbench.action.navigateForward');
-            var switchEditorMenu = new electron_1.Menu();
-            var nextEditor = this.createMenuItem(nls.localize(82, null), 'workbench.action.nextEditor');
-            var previousEditor = this.createMenuItem(nls.localize(83, null), 'workbench.action.previousEditor');
-            var nextEditorInGroup = this.createMenuItem(nls.localize(84, null), 'workbench.action.openNextRecentlyUsedEditorInGroup');
-            var previousEditorInGroup = this.createMenuItem(nls.localize(85, null), 'workbench.action.openPreviousRecentlyUsedEditorInGroup');
-            [
-                nextEditor,
-                previousEditor,
-                __separator__(),
-                nextEditorInGroup,
-                previousEditorInGroup
-            ].forEach(function (item) { return switchEditorMenu.append(item); });
-            var switchEditor = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(86, null)), submenu: switchEditorMenu, enabled: true });
-            var switchGroupMenu = new electron_1.Menu();
-            var focusFirstGroup = this.createMenuItem(nls.localize(87, null), 'workbench.action.focusFirstEditorGroup');
-            var focusSecondGroup = this.createMenuItem(nls.localize(88, null), 'workbench.action.focusSecondEditorGroup');
-            var focusThirdGroup = this.createMenuItem(nls.localize(89, null), 'workbench.action.focusThirdEditorGroup');
-            var nextGroup = this.createMenuItem(nls.localize(90, null), 'workbench.action.focusNextGroup');
-            var previousGroup = this.createMenuItem(nls.localize(91, null), 'workbench.action.focusPreviousGroup');
-            [
-                focusFirstGroup,
-                focusSecondGroup,
-                focusThirdGroup,
-                __separator__(),
-                nextGroup,
-                previousGroup
-            ].forEach(function (item) { return switchGroupMenu.append(item); });
-            var switchGroup = new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(92, null)), submenu: switchGroupMenu, enabled: true });
-            var gotoFile = this.createMenuItem(nls.localize(93, null), 'workbench.action.quickOpen');
-            var gotoSymbolInFile = this.createMenuItem(nls.localize(94, null), 'workbench.action.gotoSymbol');
-            var gotoSymbolInWorkspace = this.createMenuItem(nls.localize(95, null), 'workbench.action.showAllSymbols');
-            var gotoDefinition = this.createMenuItem(nls.localize(96, null), 'editor.action.goToDeclaration');
-            var gotoLine = this.createMenuItem(nls.localize(97, null), 'workbench.action.gotoLine');
-            [
-                back,
-                forward,
-                __separator__(),
-                switchEditor,
-                switchGroup,
-                __separator__(),
-                gotoFile,
-                gotoSymbolInFile,
-                gotoSymbolInWorkspace,
-                gotoDefinition,
-                gotoLine
-            ].forEach(function (item) { return gotoMenu.append(item); });
-        };
-        VSCodeMenu.prototype.setMacWindowMenu = function (macWindowMenu) {
-            var minimize = new electron_1.MenuItem({ label: nls.localize(98, null), role: 'minimize', accelerator: 'Command+M', enabled: this.windowsService.getWindowCount() > 0 });
-            var close = new electron_1.MenuItem({ label: nls.localize(99, null), role: 'close', accelerator: 'Command+W', enabled: this.windowsService.getWindowCount() > 0 });
-            var bringAllToFront = new electron_1.MenuItem({ label: nls.localize(100, null), role: 'front', enabled: this.windowsService.getWindowCount() > 0 });
-            [
-                minimize,
-                close,
-                __separator__(),
-                bringAllToFront
-            ].forEach(function (item) { return macWindowMenu.append(item); });
-        };
-        VSCodeMenu.prototype.toggleDevTools = function () {
-            var w = this.windowsService.getFocusedWindow();
-            if (w && w.win) {
-                w.win.webContents.toggleDevTools();
-            }
-        };
-        VSCodeMenu.prototype.setHelpMenu = function (helpMenu) {
-            var _this = this;
-            var toggleDevToolsItem = new electron_1.MenuItem({
-                label: mnemonicLabel(nls.localize(101, null)),
-                accelerator: this.getAccelerator('workbench.action.toggleDevTools'),
-                click: function () { return _this.toggleDevTools(); },
-                enabled: (this.windowsService.getWindowCount() > 0)
-            });
-            var showAccessibilityOptions = new electron_1.MenuItem({
-                label: mnemonicLabel(nls.localize(102, null)),
-                accelerator: null,
-                click: function () {
-                    _this.windowsService.openAccessibilityOptions();
-                }
-            });
-            var reportIssuesItem = null;
-            if (product_1.default.reportIssueUrl) {
-                var label = nls.localize(103, null);
-                if (this.windowsService.getWindowCount() > 0) {
-                    reportIssuesItem = this.createMenuItem(label, 'workbench.action.reportIssues');
-                }
-                else {
-                    reportIssuesItem = new electron_1.MenuItem({ label: mnemonicLabel(label), click: function () { return _this.openUrl(product_1.default.reportIssueUrl, 'openReportIssues'); } });
-                }
-            }
-            var keyboardShortcutsUrl = platform.isLinux ? product_1.default.keyboardShortcutsUrlLinux : platform.isMacintosh ? product_1.default.keyboardShortcutsUrlMac : product_1.default.keyboardShortcutsUrlWin;
-            arrays.coalesce([
-                product_1.default.documentationUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(104, null)), click: function () { return _this.openUrl(product_1.default.documentationUrl, 'openDocumentationUrl'); } }) : null,
-                product_1.default.releaseNotesUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(105, null)), click: function () { return _this.windowsService.sendToFocused('vscode:runAction', 'update.showCurrentReleaseNotes'); } }) : null,
-                (product_1.default.documentationUrl || product_1.default.releaseNotesUrl) ? __separator__() : null,
-                keyboardShortcutsUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(106, null)), click: function () { return _this.openUrl(keyboardShortcutsUrl, 'openKeyboardShortcutsUrl'); } }) : null,
-                product_1.default.introductoryVideosUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(107, null)), click: function () { return _this.openUrl(product_1.default.introductoryVideosUrl, 'openIntroductoryVideosUrl'); } }) : null,
-                (product_1.default.introductoryVideosUrl || keyboardShortcutsUrl) ? __separator__() : null,
-                product_1.default.twitterUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(108, null)), click: function () { return _this.openUrl(product_1.default.twitterUrl, 'openTwitterUrl'); } }) : null,
-                product_1.default.requestFeatureUrl ? new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(109, null)), click: function () { return _this.openUrl(product_1.default.requestFeatureUrl, 'openUserVoiceUrl'); } }) : null,
-                reportIssuesItem,
-                (product_1.default.twitterUrl || product_1.default.requestFeatureUrl || product_1.default.reportIssueUrl) ? __separator__() : null,
-                product_1.default.licenseUrl ? new electron_1.MenuItem({
-                    label: mnemonicLabel(nls.localize(110, null)), click: function () {
-                        if (platform.language) {
-                            var queryArgChar = product_1.default.licenseUrl.indexOf('?') > 0 ? '&' : '?';
-                            _this.openUrl("" + product_1.default.licenseUrl + queryArgChar + "lang=" + platform.language, 'openLicenseUrl');
-                        }
-                        else {
-                            _this.openUrl(product_1.default.licenseUrl, 'openLicenseUrl');
-                        }
-                    }
-                }) : null,
-                product_1.default.privacyStatementUrl ? new electron_1.MenuItem({
-                    label: mnemonicLabel(nls.localize(111, null)), click: function () {
-                        if (platform.language) {
-                            var queryArgChar = product_1.default.licenseUrl.indexOf('?') > 0 ? '&' : '?';
-                            _this.openUrl("" + product_1.default.privacyStatementUrl + queryArgChar + "lang=" + platform.language, 'openPrivacyStatement');
-                        }
-                        else {
-                            _this.openUrl(product_1.default.privacyStatementUrl, 'openPrivacyStatement');
-                        }
-                    }
-                }) : null,
-                (product_1.default.licenseUrl || product_1.default.privacyStatementUrl) ? __separator__() : null,
-                toggleDevToolsItem,
-                platform.isWindows && product_1.default.quality !== 'stable' ? showAccessibilityOptions : null
-            ]).forEach(function (item) { return helpMenu.append(item); });
-            if (!platform.isMacintosh) {
-                var updateMenuItems = this.getUpdateMenuItems();
-                if (updateMenuItems.length) {
-                    helpMenu.append(__separator__());
-                    updateMenuItems.forEach(function (i) { return helpMenu.append(i); });
-                }
-                helpMenu.append(__separator__());
-                helpMenu.append(new electron_1.MenuItem({ label: mnemonicLabel(nls.localize(112, null)), click: function () { return _this.openAboutDialog(); } }));
-            }
-        };
-        VSCodeMenu.prototype.getUpdateMenuItems = function () {
-            var _this = this;
-            switch (this.updateService.state) {
-                case update_manager_1.State.Uninitialized:
-                    return [];
-                case update_manager_1.State.UpdateDownloaded:
-                    var update_1 = this.updateService.availableUpdate;
-                    return [new electron_1.MenuItem({
-                            label: nls.localize(113, null), click: function () {
-                                _this.reportMenuActionTelemetry('RestartToUpdate');
-                                update_1.quitAndUpdate();
-                            }
-                        })];
-                case update_manager_1.State.CheckingForUpdate:
-                    return [new electron_1.MenuItem({ label: nls.localize(114, null), enabled: false })];
-                case update_manager_1.State.UpdateAvailable:
-                    if (platform.isLinux) {
-                        var update_2 = this.updateService.availableUpdate;
-                        return [new electron_1.MenuItem({
-                                label: nls.localize(115, null), click: function () {
-                                    update_2.quitAndUpdate();
-                                }
-                            })];
-                    }
-                    var updateAvailableLabel = platform.isWindows
-                        ? nls.localize(116, null)
-                        : nls.localize(117, null);
-                    return [new electron_1.MenuItem({ label: updateAvailableLabel, enabled: false })];
-                default:
-                    var result = [new electron_1.MenuItem({
-                            label: nls.localize(118, null), click: function () { return setTimeout(function () {
-                                _this.reportMenuActionTelemetry('CheckForUpdate');
-                                _this.updateService.checkForUpdates(true);
-                            }, 0); }
-                        })];
-                    return result;
-            }
-        };
-        VSCodeMenu.prototype.createMenuItem = function (arg1, arg2, arg3, arg4) {
-            var _this = this;
-            var label = mnemonicLabel(arg1);
-            var click = (typeof arg2 === 'function') ? arg2 : function () { return _this.windowsService.sendToFocused('vscode:runAction', arg2); };
-            var enabled = typeof arg3 === 'boolean' ? arg3 : this.windowsService.getWindowCount() > 0;
-            var checked = typeof arg4 === 'boolean' ? arg4 : false;
-            var actionId;
-            if (typeof arg2 === 'string') {
-                actionId = arg2;
-            }
-            var options = {
-                label: label,
-                accelerator: this.getAccelerator(actionId),
-                click: click,
-                enabled: enabled
-            };
-            if (checked) {
-                options['type'] = 'checkbox';
-                options['checked'] = checked;
-            }
-            return new electron_1.MenuItem(options);
-        };
-        VSCodeMenu.prototype.createDevToolsAwareMenuItem = function (label, actionId, devToolsFocusedFn) {
-            var _this = this;
-            return new electron_1.MenuItem({
-                label: mnemonicLabel(label),
-                accelerator: this.getAccelerator(actionId),
-                enabled: this.windowsService.getWindowCount() > 0,
-                click: function () {
-                    var windowInFocus = _this.windowsService.getFocusedWindow();
-                    if (!windowInFocus) {
-                        return;
-                    }
-                    if (windowInFocus.win.webContents.isDevToolsFocused()) {
-                        devToolsFocusedFn(windowInFocus.win.webContents.devToolsWebContents);
-                    }
-                    else {
-                        _this.windowsService.sendToFocused('vscode:runAction', actionId);
-                    }
-                }
-            });
-        };
-        VSCodeMenu.prototype.getAccelerator = function (actionId) {
-            if (actionId) {
-                var resolvedKeybinding = this.mapResolvedKeybindingToActionId[actionId];
-                if (resolvedKeybinding) {
-                    return resolvedKeybinding; // keybinding is fully resolved
-                }
-                if (!this.keybindingsResolved) {
-                    this.actionIdKeybindingRequests.push(actionId); // keybinding needs to be resolved
-                }
-                var lastKnownKeybinding = this.mapLastKnownKeybindingToActionId[actionId];
-                return lastKnownKeybinding; // return the last known keybining (chance of mismatch is very low unless it changed)
-            }
-            return void (0);
-        };
-        VSCodeMenu.prototype.openAboutDialog = function () {
-            var lastActiveWindow = this.windowsService.getFocusedWindow() || this.windowsService.getLastActiveWindow();
-            electron_1.dialog.showMessageBox(lastActiveWindow && lastActiveWindow.win, {
-                title: product_1.default.nameLong,
-                type: 'info',
-                message: product_1.default.nameLong,
-                detail: nls.localize(119, null, product_1.default.kodeStudioVersion, product_1.default.commit || 'Unknown', product_1.default.date || 'Unknown', process.versions['electron'], process.versions['chrome'], process.versions['node']),
-                buttons: [nls.localize(120, null)],
-                noLink: true
-            }, function (result) { return null; });
-            this.reportMenuActionTelemetry('showAboutDialog');
-        };
-        VSCodeMenu.prototype.openUrl = function (url, id) {
-            electron_1.shell.openExternal(url);
-            this.reportMenuActionTelemetry(id);
-        };
-        VSCodeMenu.prototype.reportMenuActionTelemetry = function (id) {
-            this.windowsService.sendToFocused('vscode:telemetry', { eventName: 'workbenchActionExecuted', data: { id: id, from: 'menu' } });
-        };
-        VSCodeMenu.lastKnownKeybindingsMapStorageKey = 'lastKnownKeybindings';
-        VSCodeMenu.MAX_MENU_RECENT_ENTRIES = 10;
-        VSCodeMenu = __decorate([
-            __param(0, storage_1.IStorageService),
-            __param(1, update_manager_1.IUpdateService),
-            __param(2, configuration_1.IConfigurationService),
-            __param(3, windows_1.IWindowsService),
-            __param(4, environment_1.IEnvironmentService)
-        ], VSCodeMenu);
-        return VSCodeMenu;
+        return URLService;
     }());
-    exports.VSCodeMenu = VSCodeMenu;
-    function __separator__() {
-        return new electron_1.MenuItem({ type: 'separator' });
-    }
-    function mnemonicLabel(label) {
-        if (platform.isMacintosh) {
-            return label.replace(/\(&&\w\)|&&/g, ''); // no mnemonic support on mac
-        }
-        return label.replace(/&&/g, '&');
-    }
-    function unMnemonicLabel(label) {
-        if (platform.isMacintosh) {
-            return label; // no mnemonic support on mac
-        }
-        return label.replace(/&/g, '&&');
-    }
+    exports.URLService = URLService;
 });
 
-
-
-
-
-
-
-
-
-
-define(__m[83/*vs/platform/request/node/requestService*/], __M([1/*require*/,0/*exports*/,10/*vs/base/common/objects*/,35/*vs/base/node/request*/,80/*vs/base/node/proxy*/,13/*vs/platform/configuration/common/configuration*/]), function (require, exports, objects_1, request_1, proxy_1, configuration_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[55/*vs/platform/windows/common/windows*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
     'use strict';
-    /**
-     * This service exposes the `request` API, while using the global
-     * or configured proxy settings.
-     */
-    var RequestService = (function () {
-        function RequestService(configurationService) {
-            this.disposables = [];
-            this.configure(configurationService.getConfiguration());
-            configurationService.onDidUpdateConfiguration(this.onDidUpdateConfiguration, this, this.disposables);
-        }
-        RequestService.prototype.onDidUpdateConfiguration = function (e) {
-            this.configure(e.config);
-        };
-        RequestService.prototype.configure = function (config) {
-            this.proxyUrl = config.http && config.http.proxy;
-            this.strictSSL = config.http && config.http.proxyStrictSSL;
-            this.authorization = config.http && config.http.proxyAuthorization;
-        };
-        RequestService.prototype.request = function (options) {
-            var _a = this, proxyUrl = _a.proxyUrl, strictSSL = _a.strictSSL;
-            options.agent = options.agent || proxy_1.getProxyAgent(options.url, { proxyUrl: proxyUrl, strictSSL: strictSSL });
-            options.strictSSL = strictSSL;
-            if (this.authorization) {
-                options.headers = objects_1.assign(options.headers || {}, { 'Proxy-Authorization': this.authorization });
-            }
-            return request_1.request(options);
-        };
-        RequestService = __decorate([
-            __param(0, configuration_1.IConfigurationService)
-        ], RequestService);
-        return RequestService;
-    }());
-    exports.RequestService = RequestService;
+    exports.IWindowsService = instantiation_1.createDecorator('windowsService');
+    exports.IWindowService = instantiation_1.createDecorator('windowService');
 });
 
 /*---------------------------------------------------------------------------------------------
@@ -15981,14 +16711,15 @@ define(__m[83/*vs/platform/request/node/requestService*/], __M([1/*require*/,0/*
 
 
 
-define(__m[52/*vs/platform/url/common/urlIpc*/], __M([1/*require*/,0/*exports*/,21/*vs/base/parts/ipc/common/ipc*/,6/*vs/base/common/event*/,24/*vs/code/electron-main/windows*/,16/*vs/base/common/uri*/]), function (require, exports, ipc_1, event_1, windows_1, uri_1) {
+define(__m[114/*vs/platform/url/common/urlIpc*/], __M([0/*require*/,1/*exports*/,20/*vs/base/parts/ipc/common/ipc*/,4/*vs/base/common/event*/,55/*vs/platform/windows/common/windows*/,22/*vs/base/common/uri*/]), function (require, exports, ipc_1, event_1, windows_1, uri_1) {
     'use strict';
     var URISerializer = function (uri) { return uri.toJSON(); };
     var URIDeserializer = function (raw) { return uri_1.default.revive(raw); };
     var URLChannel = (function () {
         function URLChannel(service, windowsService) {
+            var _this = this;
             this.service = service;
-            this.windowsService = windowsService;
+            windowsService.onWindowFocus(function (id) { return _this.focusedWindowId = id; });
         }
         URLChannel.prototype.call = function (command, arg) {
             var _this = this;
@@ -16005,8 +16736,7 @@ define(__m[52/*vs/platform/url/common/urlIpc*/], __M([1/*require*/,0/*exports*/,
          * and fire it only to the focused window.
          */
         URLChannel.prototype.isWindowFocused = function (windowID) {
-            var window = this.windowsService.getFocusedWindow() || this.windowsService.getLastActiveWindow();
-            return window ? window.id === windowID : false;
+            return this.focusedWindowId === windowID;
         };
         URLChannel = __decorate([
             __param(1, windows_1.IWindowsService)
@@ -16037,7 +16767,1368 @@ define(__m[52/*vs/platform/url/common/urlIpc*/], __M([1/*require*/,0/*exports*/,
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[110/*vs/code/electron-main/main*/], __M([1/*require*/,0/*exports*/,8/*vs/nls!vs/code/electron-main/main*/,14/*electron*/,10/*vs/base/common/objects*/,5/*vs/base/common/platform*/,37/*vs/platform/environment/node/argv*/,40/*vs/base/node/pfs*/,45/*vs/code/electron-main/paths*/,24/*vs/code/electron-main/windows*/,71/*vs/code/common/windows*/,92/*vs/code/common/windowsIpc*/,28/*vs/code/electron-main/lifecycle*/,86/*vs/code/electron-main/menus*/,32/*vs/code/electron-main/update-manager*/,88/*vs/base/parts/ipc/common/ipc.electron*/,89/*vs/base/parts/ipc/node/ipc.net*/,2/*vs/base/common/winjs.base*/,96/*vs/workbench/parts/git/common/gitIpc*/,97/*vs/workbench/parts/git/electron-main/askpassService*/,99/*vs/code/node/sharedProcess*/,90/*vs/code/electron-main/launch*/,4/*vs/platform/instantiation/common/instantiation*/,78/*vs/platform/instantiation/common/instantiationService*/,48/*vs/platform/instantiation/common/serviceCollection*/,39/*vs/platform/instantiation/common/descriptors*/,20/*vs/code/electron-main/log*/,23/*vs/code/electron-main/storage*/,12/*vs/platform/environment/common/environment*/,91/*vs/platform/environment/node/environmentService*/,13/*vs/platform/configuration/common/configuration*/,85/*vs/platform/configuration/node/configurationService*/,30/*vs/platform/request/common/request*/,83/*vs/platform/request/node/requestService*/,44/*vs/base/common/uuid*/,73/*vs/base/common/labels*/,46/*vs/platform/url/common/url*/,52/*vs/platform/url/common/urlIpc*/,94/*vs/platform/url/electron-main/urlService*/,11/*vs/platform/product*/,27/*original-fs*/,47/*child_process*/,7/*path*/]), function (require, exports, nls, electron_1, objects_1, platform, argv_1, pfs_1, paths_1, windows_1, windows_2, windowsIpc_1, lifecycle_1, menus_1, update_manager_1, ipc_electron_1, ipc_net_1, winjs_base_1, gitIpc_1, askpassService_1, sharedProcess_1, launch_1, instantiation_1, instantiationService_1, serviceCollection_1, descriptors_1, log_1, storage_1, environment_1, environmentService_1, configuration_1, configurationService_1, request_1, requestService_1, uuid_1, labels_1, url_1, urlIpc_1, urlService_1, product_1, fs, cp, path) {
+define(__m[115/*vs/platform/windows/common/windowsIpc*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/event*/,20/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, event_1, ipc_1) {
+    'use strict';
+    var WindowsChannel = (function () {
+        function WindowsChannel(service) {
+            this.service = service;
+            this.onWindowOpen = event_1.buffer(service.onWindowOpen, true);
+            this.onWindowFocus = event_1.buffer(service.onWindowFocus, true);
+        }
+        WindowsChannel.prototype.call = function (command, arg) {
+            switch (command) {
+                case 'event:onWindowOpen': return ipc_1.eventToCall(this.onWindowOpen);
+                case 'event:onWindowFocus': return ipc_1.eventToCall(this.onWindowFocus);
+                case 'openFileFolderPicker': return this.service.openFileFolderPicker(arg[0], arg[1]);
+                case 'openFilePicker': return this.service.openFilePicker(arg[0], arg[1], arg[2]);
+                case 'openFolderPicker': return this.service.openFolderPicker(arg[0], arg[1]);
+                case 'reloadWindow': return this.service.reloadWindow(arg);
+                case 'openDevTools': return this.service.openDevTools(arg);
+                case 'toggleDevTools': return this.service.toggleDevTools(arg);
+                case 'closeFolder': return this.service.closeFolder(arg);
+                case 'toggleFullScreen': return this.service.toggleFullScreen(arg);
+                case 'setRepresentedFilename': return this.service.setRepresentedFilename(arg[0], arg[1]);
+                case 'addToRecentlyOpen': return this.service.addToRecentlyOpen(arg);
+                case 'removeFromRecentlyOpen': return this.service.removeFromRecentlyOpen(arg);
+                case 'getRecentlyOpen': return this.service.getRecentlyOpen(arg);
+                case 'focusWindow': return this.service.focusWindow(arg);
+                case 'isMaximized': return this.service.isMaximized(arg);
+                case 'maximizeWindow': return this.service.maximizeWindow(arg);
+                case 'unmaximizeWindow': return this.service.unmaximizeWindow(arg);
+                case 'setDocumentEdited': return this.service.setDocumentEdited(arg[0], arg[1]);
+                case 'toggleMenuBar': return this.service.toggleMenuBar(arg);
+                case 'windowOpen': return this.service.windowOpen(arg[0], arg[1]);
+                case 'openNewWindow': return this.service.openNewWindow();
+                case 'showWindow': return this.service.showWindow(arg);
+                case 'getWindows': return this.service.getWindows();
+                case 'getWindowCount': return this.service.getWindowCount();
+                case 'quit': return this.service.quit();
+                case 'log': return this.service.log(arg[0], arg[1]);
+                case 'closeExtensionHostWindow': return this.service.closeExtensionHostWindow(arg);
+                case 'showItemInFolder': return this.service.showItemInFolder(arg);
+                case 'openExternal': return this.service.openExternal(arg);
+                case 'startCrashReporter': return this.service.startCrashReporter(arg);
+            }
+        };
+        return WindowsChannel;
+    }());
+    exports.WindowsChannel = WindowsChannel;
+    var WindowsChannelClient = (function () {
+        function WindowsChannelClient(channel) {
+            this.channel = channel;
+            this._onWindowOpen = ipc_1.eventFromCall(this.channel, 'event:onWindowOpen');
+            this._onWindowFocus = ipc_1.eventFromCall(this.channel, 'event:onWindowFocus');
+        }
+        Object.defineProperty(WindowsChannelClient.prototype, "onWindowOpen", {
+            get: function () { return this._onWindowOpen; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WindowsChannelClient.prototype, "onWindowFocus", {
+            get: function () { return this._onWindowFocus; },
+            enumerable: true,
+            configurable: true
+        });
+        WindowsChannelClient.prototype.openFileFolderPicker = function (windowId, forceNewWindow) {
+            return this.channel.call('openFileFolderPicker', [windowId, forceNewWindow]);
+        };
+        WindowsChannelClient.prototype.openFilePicker = function (windowId, forceNewWindow, path) {
+            return this.channel.call('openFilePicker', [windowId, forceNewWindow, path]);
+        };
+        WindowsChannelClient.prototype.openFolderPicker = function (windowId, forceNewWindow) {
+            return this.channel.call('openFolderPicker', [windowId, forceNewWindow]);
+        };
+        WindowsChannelClient.prototype.reloadWindow = function (windowId) {
+            return this.channel.call('reloadWindow', windowId);
+        };
+        WindowsChannelClient.prototype.openDevTools = function (windowId) {
+            return this.channel.call('openDevTools', windowId);
+        };
+        WindowsChannelClient.prototype.toggleDevTools = function (windowId) {
+            return this.channel.call('toggleDevTools', windowId);
+        };
+        WindowsChannelClient.prototype.closeFolder = function (windowId) {
+            return this.channel.call('closeFolder', windowId);
+        };
+        WindowsChannelClient.prototype.toggleFullScreen = function (windowId) {
+            return this.channel.call('toggleFullScreen', windowId);
+        };
+        WindowsChannelClient.prototype.setRepresentedFilename = function (windowId, fileName) {
+            return this.channel.call('setRepresentedFilename', [windowId, fileName]);
+        };
+        WindowsChannelClient.prototype.addToRecentlyOpen = function (paths) {
+            return this.channel.call('addToRecentlyOpen', paths);
+        };
+        WindowsChannelClient.prototype.removeFromRecentlyOpen = function (paths) {
+            return this.channel.call('removeFromRecentlyOpen', paths);
+        };
+        WindowsChannelClient.prototype.getRecentlyOpen = function (windowId) {
+            return this.channel.call('getRecentlyOpen', windowId);
+        };
+        WindowsChannelClient.prototype.focusWindow = function (windowId) {
+            return this.channel.call('focusWindow', windowId);
+        };
+        WindowsChannelClient.prototype.isMaximized = function (windowId) {
+            return this.channel.call('isMaximized', windowId);
+        };
+        WindowsChannelClient.prototype.maximizeWindow = function (windowId) {
+            return this.channel.call('maximizeWindow', windowId);
+        };
+        WindowsChannelClient.prototype.unmaximizeWindow = function (windowId) {
+            return this.channel.call('unmaximizeWindow', windowId);
+        };
+        WindowsChannelClient.prototype.setDocumentEdited = function (windowId, flag) {
+            return this.channel.call('setDocumentEdited', [windowId, flag]);
+        };
+        WindowsChannelClient.prototype.toggleMenuBar = function (windowId) {
+            return this.channel.call('toggleMenuBar', windowId);
+        };
+        WindowsChannelClient.prototype.quit = function () {
+            return this.channel.call('quit');
+        };
+        WindowsChannelClient.prototype.windowOpen = function (paths, forceNewWindow) {
+            return this.channel.call('windowOpen', [paths, forceNewWindow]);
+        };
+        WindowsChannelClient.prototype.openNewWindow = function () {
+            return this.channel.call('openNewWindow');
+        };
+        WindowsChannelClient.prototype.showWindow = function (windowId) {
+            return this.channel.call('showWindow', windowId);
+        };
+        WindowsChannelClient.prototype.getWindows = function () {
+            return this.channel.call('getWindows');
+        };
+        WindowsChannelClient.prototype.getWindowCount = function () {
+            return this.channel.call('getWindowCount');
+        };
+        WindowsChannelClient.prototype.log = function (severity) {
+            var messages = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                messages[_i - 1] = arguments[_i];
+            }
+            return this.channel.call('log', [severity, messages]);
+        };
+        WindowsChannelClient.prototype.closeExtensionHostWindow = function (extensionDevelopmentPath) {
+            return this.channel.call('closeExtensionHostWindow', extensionDevelopmentPath);
+        };
+        WindowsChannelClient.prototype.showItemInFolder = function (path) {
+            return this.channel.call('showItemInFolder', path);
+        };
+        WindowsChannelClient.prototype.openExternal = function (url) {
+            return this.channel.call('openExternal', url);
+        };
+        WindowsChannelClient.prototype.startCrashReporter = function (config) {
+            return this.channel.call('startCrashReporter', config);
+        };
+        return WindowsChannelClient;
+    }());
+    exports.WindowsChannelClient = WindowsChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+define(__m[116/*vs/platform/windows/electron-main/windowsService*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,13/*vs/base/common/lifecycle*/,8/*vs/base/common/objects*/,11/*vs/platform/environment/common/environment*/,14/*electron*/,4/*vs/base/common/event*/,26/*vs/base/node/event*/,41/*vs/platform/url/common/url*/,34/*vs/code/electron-main/windows*/]), function (require, exports, winjs_base_1, lifecycle_1, objects_1, environment_1, electron_1, event_1, event_2, url_1, windows_1) {
+    'use strict';
+    var WindowsService = (function () {
+        function WindowsService(windowsMainService, environmentService, urlService) {
+            this.windowsMainService = windowsMainService;
+            this.environmentService = environmentService;
+            this.disposables = [];
+            this.onWindowOpen = event_2.fromEventEmitter(electron_1.app, 'browser-window-created', function (_, w) { return w.id; });
+            this.onWindowFocus = event_2.fromEventEmitter(electron_1.app, 'browser-window-focus', function (_, w) { return w.id; });
+            event_1.chain(urlService.onOpenURL)
+                .filter(function (uri) { return uri.authority === 'file' && !!uri.path; })
+                .map(function (uri) { return uri.path; })
+                .on(this.openFileForURI, this, this.disposables);
+        }
+        WindowsService.prototype.openFileFolderPicker = function (windowId, forceNewWindow) {
+            this.windowsMainService.openFileFolderPicker(forceNewWindow);
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.openFilePicker = function (windowId, forceNewWindow, path) {
+            this.windowsMainService.openFilePicker(forceNewWindow, path);
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.openFolderPicker = function (windowId, forceNewWindow) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            this.windowsMainService.openFolderPicker(forceNewWindow, vscodeWindow);
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.reloadWindow = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                this.windowsMainService.reload(vscodeWindow);
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.openDevTools = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                vscodeWindow.win.webContents.openDevTools();
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.toggleDevTools = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                var contents = vscodeWindow.win.webContents;
+                if (vscodeWindow.hasHiddenTitleBarStyle() && !vscodeWindow.win.isFullScreen() && !contents.isDevToolsOpened()) {
+                    contents.openDevTools({ mode: 'undocked' }); // due to https://github.com/electron/electron/issues/3647
+                }
+                else {
+                    contents.toggleDevTools();
+                }
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.closeFolder = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                this.windowsMainService.open({ cli: this.environmentService.args, forceEmpty: true, windowToUse: vscodeWindow });
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.toggleFullScreen = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                vscodeWindow.toggleFullScreen();
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.setRepresentedFilename = function (windowId, fileName) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                vscodeWindow.win.setRepresentedFilename(fileName);
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.addToRecentlyOpen = function (paths) {
+            this.windowsMainService.addToRecentPathsList(paths);
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.removeFromRecentlyOpen = function (paths) {
+            this.windowsMainService.removeFromRecentPathsList(paths);
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.getRecentlyOpen = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                var _a = this.windowsMainService.getRecentPathsList(vscodeWindow.config.workspacePath, vscodeWindow.config.filesToOpen), files = _a.files, folders = _a.folders;
+                return winjs_base_1.TPromise.as({ files: files, folders: folders });
+            }
+            return winjs_base_1.TPromise.as({ files: [], folders: [] });
+        };
+        WindowsService.prototype.focusWindow = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                vscodeWindow.win.focus();
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.isMaximized = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                return winjs_base_1.TPromise.as(vscodeWindow.win.isMaximized());
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.maximizeWindow = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                vscodeWindow.win.maximize();
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.unmaximizeWindow = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                vscodeWindow.win.unmaximize();
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.setDocumentEdited = function (windowId, flag) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow && vscodeWindow.win.isDocumentEdited() !== flag) {
+                vscodeWindow.win.setDocumentEdited(flag);
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.toggleMenuBar = function (windowId) {
+            this.windowsMainService.toggleMenuBar(windowId);
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.windowOpen = function (paths, forceNewWindow) {
+            if (!paths || !paths.length) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            this.windowsMainService.open({ cli: this.environmentService.args, pathsToOpen: paths, forceNewWindow: forceNewWindow });
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.openNewWindow = function () {
+            this.windowsMainService.openNewWindow();
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.showWindow = function (windowId) {
+            var vscodeWindow = this.windowsMainService.getWindowById(windowId);
+            if (vscodeWindow) {
+                vscodeWindow.win.show();
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.getWindows = function () {
+            var windows = this.windowsMainService.getWindows();
+            var result = windows.map(function (w) { return ({ path: w.openedWorkspacePath, title: w.win.getTitle(), id: w.id }); });
+            return winjs_base_1.TPromise.as(result);
+        };
+        WindowsService.prototype.getWindowCount = function () {
+            return winjs_base_1.TPromise.as(this.windowsMainService.getWindows().length);
+        };
+        WindowsService.prototype.log = function (severity) {
+            var messages = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                messages[_i - 1] = arguments[_i];
+            }
+            (_a = console[severity]).apply.apply(_a, [console].concat(messages));
+            return winjs_base_1.TPromise.as(null);
+            var _a;
+        };
+        WindowsService.prototype.closeExtensionHostWindow = function (extensionDevelopmentPath) {
+            var windowOnExtension = this.windowsMainService.findWindow(null, null, extensionDevelopmentPath);
+            if (windowOnExtension) {
+                windowOnExtension.win.close();
+            }
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.showItemInFolder = function (path) {
+            electron_1.shell.showItemInFolder(path);
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.openExternal = function (url) {
+            electron_1.shell.openExternal(url);
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.startCrashReporter = function (config) {
+            electron_1.crashReporter.start(config);
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.quit = function () {
+            this.windowsMainService.quit();
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.openFileForURI = function (filePath) {
+            var cli = objects_1.assign(Object.create(null), this.environmentService.args, { goto: true });
+            var pathsToOpen = [filePath];
+            this.windowsMainService.open({ cli: cli, pathsToOpen: pathsToOpen });
+            return winjs_base_1.TPromise.as(null);
+        };
+        WindowsService.prototype.dispose = function () {
+            this.disposables = lifecycle_1.dispose(this.disposables);
+        };
+        WindowsService = __decorate([
+            __param(0, windows_1.IWindowsMainService),
+            __param(1, environment_1.IEnvironmentService),
+            __param(2, url_1.IURLService)
+        ], WindowsService);
+        return WindowsService;
+    }());
+    exports.WindowsService = WindowsService;
+});
+
+define(__m[117/*vs/workbench/parts/git/common/git*/], __M([0/*require*/,1/*exports*/,3/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, instantiation_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    (function (RefType) {
+        RefType[RefType["Head"] = 0] = "Head";
+        RefType[RefType["RemoteHead"] = 1] = "RemoteHead";
+        RefType[RefType["Tag"] = 2] = "Tag";
+    })(exports.RefType || (exports.RefType = {}));
+    var RefType = exports.RefType;
+    // Model enums
+    (function (StatusType) {
+        StatusType[StatusType["INDEX"] = 0] = "INDEX";
+        StatusType[StatusType["WORKING_TREE"] = 1] = "WORKING_TREE";
+        StatusType[StatusType["MERGE"] = 2] = "MERGE";
+    })(exports.StatusType || (exports.StatusType = {}));
+    var StatusType = exports.StatusType;
+    (function (Status) {
+        Status[Status["INDEX_MODIFIED"] = 0] = "INDEX_MODIFIED";
+        Status[Status["INDEX_ADDED"] = 1] = "INDEX_ADDED";
+        Status[Status["INDEX_DELETED"] = 2] = "INDEX_DELETED";
+        Status[Status["INDEX_RENAMED"] = 3] = "INDEX_RENAMED";
+        Status[Status["INDEX_COPIED"] = 4] = "INDEX_COPIED";
+        Status[Status["MODIFIED"] = 5] = "MODIFIED";
+        Status[Status["DELETED"] = 6] = "DELETED";
+        Status[Status["UNTRACKED"] = 7] = "UNTRACKED";
+        Status[Status["IGNORED"] = 8] = "IGNORED";
+        Status[Status["ADDED_BY_US"] = 9] = "ADDED_BY_US";
+        Status[Status["ADDED_BY_THEM"] = 10] = "ADDED_BY_THEM";
+        Status[Status["DELETED_BY_US"] = 11] = "DELETED_BY_US";
+        Status[Status["DELETED_BY_THEM"] = 12] = "DELETED_BY_THEM";
+        Status[Status["BOTH_ADDED"] = 13] = "BOTH_ADDED";
+        Status[Status["BOTH_DELETED"] = 14] = "BOTH_DELETED";
+        Status[Status["BOTH_MODIFIED"] = 15] = "BOTH_MODIFIED";
+    })(exports.Status || (exports.Status = {}));
+    var Status = exports.Status;
+    // Model events
+    exports.ModelEvents = {
+        MODEL_UPDATED: 'ModelUpdated',
+        STATUS_MODEL_UPDATED: 'StatusModelUpdated',
+        HEAD_UPDATED: 'HEADUpdated',
+        REFS_UPDATED: 'RefsUpdated',
+        REMOTES_UPDATED: 'RemotesUpdated'
+    };
+    // Service enums
+    (function (ServiceState) {
+        ServiceState[ServiceState["NotInitialized"] = 0] = "NotInitialized";
+        ServiceState[ServiceState["NotARepo"] = 1] = "NotARepo";
+        ServiceState[ServiceState["NotAtRepoRoot"] = 2] = "NotAtRepoRoot";
+        ServiceState[ServiceState["OK"] = 3] = "OK";
+        ServiceState[ServiceState["Huge"] = 4] = "Huge";
+        ServiceState[ServiceState["NoGit"] = 5] = "NoGit";
+        ServiceState[ServiceState["Disabled"] = 6] = "Disabled";
+        ServiceState[ServiceState["NotAWorkspace"] = 7] = "NotAWorkspace";
+    })(exports.ServiceState || (exports.ServiceState = {}));
+    var ServiceState = exports.ServiceState;
+    (function (RawServiceState) {
+        RawServiceState[RawServiceState["OK"] = 0] = "OK";
+        RawServiceState[RawServiceState["GitNotFound"] = 1] = "GitNotFound";
+        RawServiceState[RawServiceState["Disabled"] = 2] = "Disabled";
+    })(exports.RawServiceState || (exports.RawServiceState = {}));
+    var RawServiceState = exports.RawServiceState;
+    exports.GitErrorCodes = {
+        BadConfigFile: 'BadConfigFile',
+        AuthenticationFailed: 'AuthenticationFailed',
+        NoUserNameConfigured: 'NoUserNameConfigured',
+        NoUserEmailConfigured: 'NoUserEmailConfigured',
+        NoRemoteRepositorySpecified: 'NoRemoteRepositorySpecified',
+        NotAGitRepository: 'NotAGitRepository',
+        NotAtRepositoryRoot: 'NotAtRepositoryRoot',
+        Conflict: 'Conflict',
+        UnmergedChanges: 'UnmergedChanges',
+        PushRejected: 'PushRejected',
+        RemoteConnectionError: 'RemoteConnectionError',
+        DirtyWorkTree: 'DirtyWorkTree',
+        CantOpenResource: 'CantOpenResource',
+        GitNotFound: 'GitNotFound',
+        CantCreatePipe: 'CantCreatePipe',
+        CantAccessRemote: 'CantAccessRemote',
+        RepositoryNotFound: 'RepositoryNotFound'
+    };
+    (function (AutoFetcherState) {
+        AutoFetcherState[AutoFetcherState["Disabled"] = 0] = "Disabled";
+        AutoFetcherState[AutoFetcherState["Inactive"] = 1] = "Inactive";
+        AutoFetcherState[AutoFetcherState["Active"] = 2] = "Active";
+        AutoFetcherState[AutoFetcherState["Fetching"] = 3] = "Fetching";
+    })(exports.AutoFetcherState || (exports.AutoFetcherState = {}));
+    var AutoFetcherState = exports.AutoFetcherState;
+    // Service events
+    exports.ServiceEvents = {
+        STATE_CHANGED: 'stateChanged',
+        REPO_CHANGED: 'repoChanged',
+        OPERATION_START: 'operationStart',
+        OPERATION_END: 'operationEnd',
+        OPERATION: 'operation',
+        ERROR: 'error',
+        DISPOSE: 'dispose'
+    };
+    // Service operations
+    exports.ServiceOperations = {
+        STATUS: 'status',
+        INIT: 'init',
+        ADD: 'add',
+        STAGE: 'stage',
+        BRANCH: 'branch',
+        CHECKOUT: 'checkout',
+        CLEAN: 'clean',
+        UNDO: 'undo',
+        RESET: 'reset',
+        REVERT: 'revert',
+        COMMIT: 'commit',
+        COMMAND: 'command',
+        BACKGROUND_FETCH: 'backgroundfetch',
+        PULL: 'pull',
+        PUSH: 'push',
+        SYNC: 'sync'
+    };
+    exports.GIT_SERVICE_ID = 'gitService';
+    exports.IGitService = instantiation_1.createDecorator(exports.GIT_SERVICE_ID);
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[118/*vs/workbench/parts/git/common/gitIpc*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,20/*vs/base/parts/ipc/common/ipc*/,117/*vs/workbench/parts/git/common/git*/]), function (require, exports, winjs_base_1, ipc_1, git_1) {
+    'use strict';
+    var RawFileStatusSerializer = {
+        to: function (a) { return [a.x, a.y, a.path, a.mimetype, a.rename]; },
+        from: function (b) { return ({ x: b[0], y: b[1], path: b[2], mimetype: b[3], rename: b[4] }); }
+    };
+    var BranchSerializer = {
+        to: function (a) { return [a.name, a.commit, a.type, a.remote, a.upstream, a.ahead, a.behind]; },
+        from: function (b) { return ({ name: b[0], commit: b[1], type: b[2], remote: b[3], upstream: b[4], ahead: b[5], behind: b[6] }); }
+    };
+    var RefSerializer = {
+        to: function (a) { return [a.name, a.commit, a.type, a.remote]; },
+        from: function (b) { return ({ name: b[0], commit: b[1], type: b[2], remote: b[3] }); }
+    };
+    var RemoteSerializer = {
+        to: function (a) { return [a.name, a.url]; },
+        from: function (b) { return ({ name: b[0], url: b[1] }); }
+    };
+    var RawStatusSerializer = {
+        to: function (a) { return !a ? null : [
+            a.repositoryRoot,
+            a.state,
+            a.status.map(RawFileStatusSerializer.to),
+            BranchSerializer.to(a.HEAD),
+            a.refs.map(RefSerializer.to),
+            a.remotes.map(RemoteSerializer.to)
+        ]; },
+        from: function (b) { return !b ? null : {
+            repositoryRoot: b[0],
+            state: b[1],
+            status: b[2].map(RawFileStatusSerializer.from),
+            HEAD: BranchSerializer.from(b[3]),
+            refs: b[4].map(RefSerializer.from),
+            remotes: b[5].map(RemoteSerializer.from)
+        }; }
+    };
+    var GitChannel = (function () {
+        function GitChannel(service) {
+            this.service = service;
+        }
+        GitChannel.prototype.call = function (command, args) {
+            switch (command) {
+                case 'getVersion': return this.service.then(function (s) { return s.getVersion(); });
+                case 'serviceState': return this.service.then(function (s) { return s.serviceState(); });
+                case 'statusCount': return this.service.then(function (s) { return s.statusCount(); });
+                case 'status': return this.service.then(function (s) { return s.status(); }).then(RawStatusSerializer.to);
+                case 'init': return this.service.then(function (s) { return s.init(); }).then(RawStatusSerializer.to);
+                case 'add': return this.service.then(function (s) { return s.add(args); }).then(RawStatusSerializer.to);
+                case 'stage': return this.service.then(function (s) { return s.stage(args[0], args[1]); }).then(RawStatusSerializer.to);
+                case 'branch': return this.service.then(function (s) { return s.branch(args[0], args[1]); }).then(RawStatusSerializer.to);
+                case 'checkout': return this.service.then(function (s) { return s.checkout(args[0], args[1]); }).then(RawStatusSerializer.to);
+                case 'clean': return this.service.then(function (s) { return s.clean(args); }).then(RawStatusSerializer.to);
+                case 'undo': return this.service.then(function (s) { return s.undo(); }).then(RawStatusSerializer.to);
+                case 'reset': return this.service.then(function (s) { return s.reset(args[0], args[1]); }).then(RawStatusSerializer.to);
+                case 'revertFiles': return this.service.then(function (s) { return s.revertFiles(args[0], args[1]); }).then(RawStatusSerializer.to);
+                case 'fetch': return this.service.then(function (s) { return s.fetch(); }).then(RawStatusSerializer.to);
+                case 'pull': return this.service.then(function (s) { return s.pull(args); }).then(RawStatusSerializer.to);
+                case 'push': return this.service.then(function (s) { return s.push(args[0], args[1], args[2]); }).then(RawStatusSerializer.to);
+                case 'sync': return this.service.then(function (s) { return s.sync(); }).then(RawStatusSerializer.to);
+                case 'commit': return this.service.then(function (s) { return s.commit(args[0], args[1], args[2], args[3]); }).then(RawStatusSerializer.to);
+                case 'detectMimetypes': return this.service.then(function (s) { return s.detectMimetypes(args[0], args[1]); });
+                case 'show': return this.service.then(function (s) { return s.show(args[0], args[1]); });
+                case 'clone': return this.service.then(function (s) { return s.clone(args[0], args[1]); });
+                case 'onOutput': return this.service.then(function (s) { return ipc_1.eventToCall(s.onOutput); });
+                case 'getCommitTemplate': return this.service.then(function (s) { return s.getCommitTemplate(); });
+                case 'getCommit': return this.service.then(function (s) { return s.getCommit(args); });
+            }
+        };
+        return GitChannel;
+    }());
+    exports.GitChannel = GitChannel;
+    var UnavailableGitChannel = (function () {
+        function UnavailableGitChannel() {
+        }
+        UnavailableGitChannel.prototype.call = function (command) {
+            switch (command) {
+                case 'serviceState': return winjs_base_1.TPromise.as(git_1.RawServiceState.GitNotFound);
+                default: return winjs_base_1.TPromise.as(null);
+            }
+        };
+        return UnavailableGitChannel;
+    }());
+    exports.UnavailableGitChannel = UnavailableGitChannel;
+    var GitChannelClient = (function () {
+        function GitChannelClient(channel) {
+            this.channel = channel;
+            this._onOutput = ipc_1.eventFromCall(this.channel, 'onOutput');
+        }
+        Object.defineProperty(GitChannelClient.prototype, "onOutput", {
+            get: function () { return this._onOutput; },
+            enumerable: true,
+            configurable: true
+        });
+        GitChannelClient.prototype.getVersion = function () {
+            return this.channel.call('getVersion');
+        };
+        GitChannelClient.prototype.serviceState = function () {
+            return this.channel.call('serviceState');
+        };
+        GitChannelClient.prototype.statusCount = function () {
+            return this.channel.call('statusCount');
+        };
+        GitChannelClient.prototype.status = function () {
+            return this.channel.call('status').then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.init = function () {
+            return this.channel.call('init').then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.add = function (filesPaths) {
+            return this.channel.call('add', filesPaths).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.stage = function (filePath, content) {
+            return this.channel.call('stage', [filePath, content]).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.branch = function (name, checkout) {
+            return this.channel.call('branch', [name, checkout]).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.checkout = function (treeish, filePaths) {
+            return this.channel.call('checkout', [treeish, filePaths]).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.clean = function (filePaths) {
+            return this.channel.call('clean', filePaths).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.undo = function () {
+            return this.channel.call('undo').then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.reset = function (treeish, hard) {
+            return this.channel.call('reset', [treeish, hard]).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.revertFiles = function (treeish, filePaths) {
+            return this.channel.call('revertFiles', [treeish, filePaths]).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.fetch = function () {
+            return this.channel.call('fetch').then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.pull = function (rebase) {
+            return this.channel.call('pull', rebase).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.push = function (remote, name, options) {
+            return this.channel.call('push', [remote, name, options]).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.sync = function () {
+            return this.channel.call('sync').then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.commit = function (message, amend, stage, signoff) {
+            return this.channel.call('commit', [message, amend, stage, signoff]).then(RawStatusSerializer.from);
+        };
+        GitChannelClient.prototype.detectMimetypes = function (path, treeish) {
+            return this.channel.call('detectMimetypes', [path, treeish]);
+        };
+        GitChannelClient.prototype.show = function (path, treeish) {
+            return this.channel.call('show', [path, treeish]);
+        };
+        GitChannelClient.prototype.clone = function (url, parentPath) {
+            return this.channel.call('clone', [url, parentPath]);
+        };
+        GitChannelClient.prototype.getCommitTemplate = function () {
+            return this.channel.call('getCommitTemplate');
+        };
+        GitChannelClient.prototype.getCommit = function (ref) {
+            return this.channel.call('getCommit', ref);
+        };
+        return GitChannelClient;
+    }());
+    exports.GitChannelClient = GitChannelClient;
+    var AskpassChannel = (function () {
+        function AskpassChannel(service) {
+            this.service = service;
+        }
+        AskpassChannel.prototype.call = function (command, args) {
+            switch (command) {
+                case 'askpass': return this.service.askpass(args[0], args[1], args[2]);
+            }
+        };
+        return AskpassChannel;
+    }());
+    exports.AskpassChannel = AskpassChannel;
+    var AskpassChannelClient = (function () {
+        function AskpassChannelClient(channel) {
+            this.channel = channel;
+        }
+        AskpassChannelClient.prototype.askpass = function (id, host, command) {
+            return this.channel.call('askpass', [id, host, command]);
+        };
+        return AskpassChannelClient;
+    }());
+    exports.AskpassChannelClient = AskpassChannelClient;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[119/*vs/workbench/parts/git/electron-main/askpassService*/], __M([0/*require*/,1/*exports*/,72/*vs/nls!vs/workbench/parts/git/electron-main/askpassService*/,14/*electron*/,5/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/]), function (require, exports, nls, electron_1, platform, winjs_base_1) {
+    "use strict";
+    var GitAskpassService = (function () {
+        function GitAskpassService() {
+            var _this = this;
+            this.askpassCache = Object.create(null);
+            electron_1.ipcMain.on('git:askpass', function (event, result) {
+                _this.askpassCache[result.id].credentials = result.credentials;
+            });
+        }
+        GitAskpassService.prototype.askpass = function (id, host, command) {
+            var _this = this;
+            return new winjs_base_1.TPromise(function (c, e) {
+                var cachedResult = _this.askpassCache[id];
+                if (typeof cachedResult !== 'undefined') {
+                    return c(cachedResult.credentials);
+                }
+                if (command === 'fetch') {
+                    return c({ username: '', password: '' });
+                }
+                var win = new electron_1.BrowserWindow({
+                    alwaysOnTop: true,
+                    skipTaskbar: true,
+                    resizable: false,
+                    width: 450,
+                    height: platform.isWindows ? 280 : 260,
+                    show: true,
+                    title: nls.localize(0, null)
+                });
+                win.setMenuBarVisibility(false);
+                _this.askpassCache[id] = {
+                    window: win,
+                    credentials: null
+                };
+                win.loadURL(require.toUrl('vs/workbench/parts/git/electron-main/index.html'));
+                win.webContents.executeJavaScript('init(' + JSON.stringify({ id: id, host: host, command: command }) + ')');
+                win.once('closed', function () {
+                    c(_this.askpassCache[id].credentials);
+                    setTimeout(function () { return delete _this.askpassCache[id]; }, 1000 * 10);
+                });
+            });
+        };
+        return GitAskpassService;
+    }());
+    exports.GitAskpassService = GitAskpassService;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[37/*vs/base/node/request*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/winjs.base*/,6/*vs/base/common/types*/,121/*https*/,122/*http*/,89/*url*/,25/*fs*/,8/*vs/base/common/objects*/,123/*zlib*/]), function (require, exports, winjs_base_1, types_1, https, http, url_1, fs_1, objects_1, zlib_1) {
+    'use strict';
+    function request(options) {
+        var req;
+        return new winjs_base_1.TPromise(function (c, e) {
+            var endpoint = url_1.parse(options.url);
+            var rawRequest = endpoint.protocol === 'https:' ? https.request : http.request;
+            var opts = {
+                hostname: endpoint.hostname,
+                port: endpoint.port ? parseInt(endpoint.port) : (endpoint.protocol === 'https:' ? 443 : 80),
+                path: endpoint.path,
+                method: options.type || 'GET',
+                headers: options.headers,
+                agent: options.agent,
+                rejectUnauthorized: types_1.isBoolean(options.strictSSL) ? options.strictSSL : true
+            };
+            if (options.user && options.password) {
+                opts.auth = options.user + ':' + options.password;
+            }
+            req = rawRequest(opts, function (res) {
+                var followRedirects = types_1.isNumber(options.followRedirects) ? options.followRedirects : 3;
+                if (res.statusCode >= 300 && res.statusCode < 400 && followRedirects > 0 && res.headers['location']) {
+                    request(objects_1.assign({}, options, {
+                        url: res.headers['location'],
+                        followRedirects: followRedirects - 1
+                    })).done(c, e);
+                }
+                else {
+                    var stream = res;
+                    if (res.headers['content-encoding'] === 'gzip') {
+                        stream = stream.pipe(zlib_1.createGunzip());
+                    }
+                    c({ res: res, stream: stream });
+                }
+            });
+            req.on('error', e);
+            if (options.timeout) {
+                req.setTimeout(options.timeout);
+            }
+            if (options.data) {
+                req.write(options.data);
+            }
+            req.end();
+        }, function () { return req && req.abort(); });
+    }
+    exports.request = request;
+    function isSuccess(context) {
+        return (context.res.statusCode >= 200 && context.res.statusCode < 300) || context.res.statusCode === 1223;
+    }
+    function hasNoContent(context) {
+        return context.res.statusCode === 204;
+    }
+    function download(filePath, context) {
+        return new winjs_base_1.TPromise(function (c, e) {
+            var out = fs_1.createWriteStream(filePath);
+            out.once('finish', function () { return c(null); });
+            context.stream.once('error', e);
+            context.stream.pipe(out);
+        });
+    }
+    exports.download = download;
+    function asText(context) {
+        return new winjs_base_1.Promise(function (c, e) {
+            if (!isSuccess(context)) {
+                return e('Server returned ' + context.res.statusCode);
+            }
+            if (hasNoContent(context)) {
+                return c(null);
+            }
+            var buffer = [];
+            context.stream.on('data', function (d) { return buffer.push(d); });
+            context.stream.on('end', function () { return c(buffer.join('')); });
+            context.stream.on('error', e);
+        });
+    }
+    exports.asText = asText;
+    function asJson(context) {
+        return new winjs_base_1.Promise(function (c, e) {
+            if (!isSuccess(context)) {
+                return e('Server returned ' + context.res.statusCode);
+            }
+            if (hasNoContent(context)) {
+                return c(null);
+            }
+            if (!/application\/json/.test(context.res.headers['content-type'])) {
+                return e('Response doesn\'t appear to be JSON');
+            }
+            var buffer = [];
+            context.stream.on('data', function (d) { return buffer.push(d); });
+            context.stream.on('end', function () { return c(JSON.parse(buffer.join(''))); });
+            context.stream.on('error', e);
+        });
+    }
+    exports.asJson = asJson;
+});
+
+
+
+
+
+
+
+
+
+
+define(__m[102/*vs/platform/request/node/requestService*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/objects*/,37/*vs/base/node/request*/,85/*vs/base/node/proxy*/,12/*vs/platform/configuration/common/configuration*/]), function (require, exports, objects_1, request_1, proxy_1, configuration_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    /**
+     * This service exposes the `request` API, while using the global
+     * or configured proxy settings.
+     */
+    var RequestService = (function () {
+        function RequestService(configurationService) {
+            this.disposables = [];
+            this.configure(configurationService.getConfiguration());
+            configurationService.onDidUpdateConfiguration(this.onDidUpdateConfiguration, this, this.disposables);
+        }
+        RequestService.prototype.onDidUpdateConfiguration = function (e) {
+            this.configure(e.config);
+        };
+        RequestService.prototype.configure = function (config) {
+            this.proxyUrl = config.http && config.http.proxy;
+            this.strictSSL = config.http && config.http.proxyStrictSSL;
+            this.authorization = config.http && config.http.proxyAuthorization;
+        };
+        RequestService.prototype.request = function (options, requestFn) {
+            if (requestFn === void 0) { requestFn = request_1.request; }
+            var _a = this, proxyUrl = _a.proxyUrl, strictSSL = _a.strictSSL;
+            options.agent = options.agent || proxy_1.getProxyAgent(options.url, { proxyUrl: proxyUrl, strictSSL: strictSSL });
+            options.strictSSL = strictSSL;
+            if (this.authorization) {
+                options.headers = objects_1.assign(options.headers || {}, { 'Proxy-Authorization': this.authorization });
+            }
+            return requestFn(options);
+        };
+        RequestService = __decorate([
+            __param(0, configuration_1.IConfigurationService)
+        ], RequestService);
+        return RequestService;
+    }());
+    exports.RequestService = RequestService;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[92/*vs/platform/update/electron-main/auto-updater.linux*/], __M([0/*require*/,1/*exports*/,91/*events*/,6/*vs/base/common/types*/,37/*vs/base/node/request*/,40/*vs/platform/request/node/request*/,15/*vs/platform/product*/]), function (require, exports, events_1, types_1, request_1, request_2, product_1) {
+    'use strict';
+    var LinuxAutoUpdaterImpl = (function (_super) {
+        __extends(LinuxAutoUpdaterImpl, _super);
+        function LinuxAutoUpdaterImpl(requestService) {
+            _super.call(this);
+            this.requestService = requestService;
+            this.url = null;
+            this.currentRequest = null;
+        }
+        LinuxAutoUpdaterImpl.prototype.setFeedURL = function (url) {
+            this.url = url;
+        };
+        LinuxAutoUpdaterImpl.prototype.checkForUpdates = function () {
+            var _this = this;
+            if (!this.url) {
+                throw new Error('No feed url set.');
+            }
+            if (this.currentRequest) {
+                return;
+            }
+            this.emit('checking-for-update');
+            this.currentRequest = this.requestService.request({ url: this.url })
+                .then(request_1.asJson)
+                .then(function (update) {
+                if (!update || !update.url || !update.version || !update.productVersion) {
+                    _this.emit('update-not-available');
+                }
+                else {
+                    _this.emit('update-available', null, product_1.default.downloadUrl, update.productVersion);
+                }
+            })
+                .then(null, function (e) {
+                if (types_1.isString(e) && /^Server returned/.test(e)) {
+                    return;
+                }
+                _this.emit('update-not-available');
+                _this.emit('error', e);
+            })
+                .then(function () { return _this.currentRequest = null; });
+        };
+        LinuxAutoUpdaterImpl.prototype.quitAndInstall = function () {
+            // noop
+        };
+        LinuxAutoUpdaterImpl = __decorate([
+            __param(0, request_2.IRequestService)
+        ], LinuxAutoUpdaterImpl);
+        return LinuxAutoUpdaterImpl;
+    }(events_1.EventEmitter));
+    exports.LinuxAutoUpdaterImpl = LinuxAutoUpdaterImpl;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[79/*vs/platform/update/electron-main/auto-updater.win32*/], __M([0/*require*/,1/*exports*/,7/*path*/,51/*vs/base/node/pfs*/,113/*vs/base/node/crypto*/,91/*events*/,31/*os*/,46/*child_process*/,36/*vs/base/node/extfs*/,6/*vs/base/common/types*/,2/*vs/base/common/winjs.base*/,37/*vs/base/node/request*/,40/*vs/platform/request/node/request*/,15/*vs/platform/product*/]), function (require, exports, path, pfs, crypto_1, events_1, os_1, child_process_1, extfs_1, types_1, winjs_base_1, request_1, request_2, product_1) {
+    'use strict';
+    var Win32AutoUpdaterImpl = (function (_super) {
+        __extends(Win32AutoUpdaterImpl, _super);
+        function Win32AutoUpdaterImpl(requestService) {
+            _super.call(this);
+            this.requestService = requestService;
+            this.url = null;
+            this.currentRequest = null;
+            this.updatePackagePath = null;
+        }
+        Object.defineProperty(Win32AutoUpdaterImpl.prototype, "cachePath", {
+            get: function () {
+                var result = path.join(os_1.tmpdir(), 'vscode-update');
+                return new winjs_base_1.TPromise(function (c, e) { return extfs_1.mkdirp(result, null, function (err) { return err ? e(err) : c(result); }); });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Win32AutoUpdaterImpl.prototype.setFeedURL = function (url) {
+            this.url = url;
+        };
+        Win32AutoUpdaterImpl.prototype.checkForUpdates = function () {
+            var _this = this;
+            if (!this.url) {
+                throw new Error('No feed url set.');
+            }
+            if (this.currentRequest) {
+                return;
+            }
+            this.emit('checking-for-update');
+            this.currentRequest = this.requestService.request({ url: this.url })
+                .then(request_1.asJson)
+                .then(function (update) {
+                if (!update || !update.url || !update.version) {
+                    _this.emit('update-not-available');
+                    return _this.cleanup();
+                }
+                _this.emit('update-available');
+                return _this.cleanup(update.version).then(function () {
+                    return _this.getUpdatePackagePath(update.version).then(function (updatePackagePath) {
+                        return pfs.exists(updatePackagePath).then(function (exists) {
+                            if (exists) {
+                                return winjs_base_1.TPromise.as(updatePackagePath);
+                            }
+                            var url = update.url;
+                            var hash = update.hash;
+                            var downloadPath = updatePackagePath + ".tmp";
+                            return _this.requestService.request({ url: url })
+                                .then(function (context) { return request_1.download(downloadPath, context); })
+                                .then(hash ? function () { return crypto_1.checksum(downloadPath, update.hash); } : function () { return null; })
+                                .then(function () { return pfs.rename(downloadPath, updatePackagePath); })
+                                .then(function () { return updatePackagePath; });
+                        });
+                    }).then(function (updatePackagePath) {
+                        _this.updatePackagePath = updatePackagePath;
+                        _this.emit('update-downloaded', {}, update.releaseNotes, update.productVersion, new Date(), _this.url);
+                    });
+                });
+            })
+                .then(null, function (e) {
+                if (types_1.isString(e) && /^Server returned/.test(e)) {
+                    return;
+                }
+                _this.emit('update-not-available');
+                _this.emit('error', e);
+            })
+                .then(function () { return _this.currentRequest = null; });
+        };
+        Win32AutoUpdaterImpl.prototype.getUpdatePackagePath = function (version) {
+            return this.cachePath.then(function (cachePath) { return path.join(cachePath, "CodeSetup-" + product_1.default.quality + "-" + version + ".exe"); });
+        };
+        Win32AutoUpdaterImpl.prototype.cleanup = function (exceptVersion) {
+            if (exceptVersion === void 0) { exceptVersion = null; }
+            var filter = exceptVersion ? function (one) { return !(new RegExp(product_1.default.quality + "-" + exceptVersion + "\\.exe$").test(one)); } : function () { return true; };
+            return this.cachePath
+                .then(function (cachePath) { return pfs.readdir(cachePath)
+                .then(function (all) { return winjs_base_1.Promise.join(all
+                .filter(filter)
+                .map(function (one) { return pfs.unlink(path.join(cachePath, one)).then(null, function () { return null; }); })); }); });
+        };
+        Win32AutoUpdaterImpl.prototype.quitAndInstall = function () {
+            if (!this.updatePackagePath) {
+                return;
+            }
+            child_process_1.spawn(this.updatePackagePath, ['/silent', '/mergetasks=runcode,!desktopicon,!quicklaunchicon'], {
+                detached: true,
+                stdio: ['ignore', 'ignore', 'ignore']
+            });
+        };
+        Win32AutoUpdaterImpl = __decorate([
+            __param(0, request_2.IRequestService)
+        ], Win32AutoUpdaterImpl);
+        return Win32AutoUpdaterImpl;
+    }(events_1.EventEmitter));
+    exports.Win32AutoUpdaterImpl = Win32AutoUpdaterImpl;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+define(__m[103/*vs/platform/update/electron-main/updateService*/], __M([0/*require*/,1/*exports*/,28/*original-fs*/,7/*path*/,14/*electron*/,13/*vs/base/common/lifecycle*/,4/*vs/base/common/event*/,33/*vs/base/common/async*/,52/*vs/base/common/decorators*/,26/*vs/base/node/event*/,12/*vs/platform/configuration/common/configuration*/,79/*vs/platform/update/electron-main/auto-updater.win32*/,92/*vs/platform/update/electron-main/auto-updater.linux*/,39/*vs/code/electron-main/lifecycle*/,3/*vs/platform/instantiation/common/instantiation*/,15/*vs/platform/product*/,2/*vs/base/common/winjs.base*/,29/*vs/platform/update/common/update*/,32/*vs/platform/telemetry/common/telemetry*/]), function (require, exports, fs, path, electron, lifecycle_1, event_1, async_1, decorators_1, event_2, configuration_1, auto_updater_win32_1, auto_updater_linux_1, lifecycle_2, instantiation_1, product_1, winjs_base_1, update_1, telemetry_1) {
+    'use strict';
+    var UpdateService = (function () {
+        function UpdateService(instantiationService, lifecycleService, configurationService, telemetryService) {
+            this.lifecycleService = lifecycleService;
+            this.configurationService = configurationService;
+            this.telemetryService = telemetryService;
+            this._state = update_1.State.Uninitialized;
+            this._availableUpdate = null;
+            this.throttler = new async_1.Throttler();
+            this._onError = new event_1.Emitter();
+            this._onCheckForUpdate = new event_1.Emitter();
+            this._onUpdateAvailable = new event_1.Emitter();
+            this._onUpdateNotAvailable = new event_1.Emitter();
+            this._onUpdateReady = new event_1.Emitter();
+            this._onStateChange = new event_1.Emitter();
+            if (process.platform === 'win32') {
+                this.raw = instantiationService.createInstance(auto_updater_win32_1.Win32AutoUpdaterImpl);
+            }
+            else if (process.platform === 'linux') {
+                this.raw = instantiationService.createInstance(auto_updater_linux_1.LinuxAutoUpdaterImpl);
+            }
+            else if (process.platform === 'darwin') {
+                this.raw = electron.autoUpdater;
+            }
+            else {
+                return;
+            }
+            var channel = this.getUpdateChannel();
+            var feedUrl = this.getUpdateFeedUrl(channel);
+            if (!feedUrl) {
+                return; // updates not available
+            }
+            try {
+                this.raw.setFeedURL(feedUrl);
+            }
+            catch (e) {
+                return; // application not signed
+            }
+            this.state = update_1.State.Idle;
+            // Start checking for updates after 30 seconds
+            this.scheduleCheckForUpdates(30 * 1000)
+                .done(null, function (err) { return console.error(err); });
+        }
+        Object.defineProperty(UpdateService.prototype, "onError", {
+            get: function () { return this._onError.event; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "onCheckForUpdate", {
+            get: function () { return this._onCheckForUpdate.event; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "onUpdateAvailable", {
+            get: function () { return this._onUpdateAvailable.event; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "onUpdateNotAvailable", {
+            get: function () { return this._onUpdateNotAvailable.event; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "onUpdateReady", {
+            get: function () { return this._onUpdateReady.event; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "onStateChange", {
+            get: function () { return this._onStateChange.event; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "onRawError", {
+            get: function () {
+                return event_2.fromEventEmitter(this.raw, 'error', function (_, message) { return message; });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "onRawUpdateNotAvailable", {
+            get: function () {
+                return event_2.fromEventEmitter(this.raw, 'update-not-available');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "onRawUpdateAvailable", {
+            get: function () {
+                return event_1.filterEvent(event_2.fromEventEmitter(this.raw, 'update-available', function (_, url, version) { return ({ url: url, version: version }); }), function (_a) {
+                    var url = _a.url;
+                    return !!url;
+                });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "onRawUpdateDownloaded", {
+            get: function () {
+                return event_2.fromEventEmitter(this.raw, 'update-downloaded', function (_, releaseNotes, version, date, url) { return ({ releaseNotes: releaseNotes, version: version, date: date }); });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "state", {
+            get: function () {
+                return this._state;
+            },
+            set: function (state) {
+                this._state = state;
+                this._onStateChange.fire(state);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UpdateService.prototype, "availableUpdate", {
+            get: function () {
+                return this._availableUpdate;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        UpdateService.prototype.scheduleCheckForUpdates = function (delay) {
+            var _this = this;
+            if (delay === void 0) { delay = 60 * 60 * 1000; }
+            return winjs_base_1.TPromise.timeout(delay)
+                .then(function () { return _this.checkForUpdates(); })
+                .then(function (update) {
+                if (update) {
+                    // Update found, no need to check more
+                    return winjs_base_1.TPromise.as(null);
+                }
+                // Check again after 1 hour
+                return _this.scheduleCheckForUpdates(60 * 60 * 1000);
+            });
+        };
+        UpdateService.prototype.checkForUpdates = function (explicit) {
+            var _this = this;
+            if (explicit === void 0) { explicit = false; }
+            return this.throttler.queue(function () { return _this._checkForUpdates(explicit); })
+                .then(null, function (err) { return _this._onError.fire(err); });
+        };
+        UpdateService.prototype._checkForUpdates = function (explicit) {
+            var _this = this;
+            if (this.state !== update_1.State.Idle) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            this._onCheckForUpdate.fire();
+            this.state = update_1.State.CheckingForUpdate;
+            var listeners = [];
+            var result = new winjs_base_1.TPromise(function (c, e) {
+                event_1.once(_this.onRawError)(e, null, listeners);
+                event_1.once(_this.onRawUpdateNotAvailable)(function () { return c(null); }, null, listeners);
+                event_1.once(_this.onRawUpdateAvailable)(function (_a) {
+                    var url = _a.url, version = _a.version;
+                    return url && c({ url: url, version: version });
+                }, null, listeners);
+                event_1.once(_this.onRawUpdateDownloaded)(function (_a) {
+                    var version = _a.version, date = _a.date, releaseNotes = _a.releaseNotes;
+                    return c({ version: version, date: date, releaseNotes: releaseNotes });
+                }, null, listeners);
+                _this.raw.checkForUpdates();
+            }).then(function (update) {
+                if (!update) {
+                    _this._onUpdateNotAvailable.fire(explicit);
+                    _this.state = update_1.State.Idle;
+                    _this.telemetryService.publicLog('update:notAvailable', { explicit: explicit });
+                }
+                else if (update.url) {
+                    var data = {
+                        url: update.url,
+                        releaseNotes: '',
+                        version: update.version,
+                        date: new Date()
+                    };
+                    _this._availableUpdate = data;
+                    _this._onUpdateAvailable.fire({ url: update.url, version: update.version });
+                    _this.state = update_1.State.UpdateAvailable;
+                }
+                else {
+                    var data = {
+                        releaseNotes: update.releaseNotes,
+                        version: update.version,
+                        date: update.date
+                    };
+                    _this._availableUpdate = data;
+                    _this._onUpdateReady.fire(data);
+                    _this.state = update_1.State.UpdateDownloaded;
+                    _this.telemetryService.publicLog('update:downloaded', { version: update.version });
+                }
+                return update;
+            }, function (err) {
+                _this.state = update_1.State.Idle;
+                return winjs_base_1.TPromise.wrapError(err);
+            });
+            return async_1.always(result, function () { return lifecycle_1.dispose(listeners); });
+        };
+        UpdateService.prototype.getUpdateChannel = function () {
+            var config = this.configurationService.getConfiguration('update');
+            var channel = config && config.channel;
+            return channel === 'none' ? null : product_1.default.quality;
+        };
+        UpdateService.prototype.getUpdateFeedUrl = function (channel) {
+            if (!channel) {
+                return null;
+            }
+            if (process.platform === 'win32' && !fs.existsSync(path.join(path.dirname(process.execPath), 'unins000.exe'))) {
+                return null;
+            }
+            if (!product_1.default.updateUrl || !product_1.default.commit) {
+                return null;
+            }
+            var platform = process.platform === 'linux' ? "linux-" + process.arch : process.platform;
+            return product_1.default.updateUrl + "/api/update/" + platform + "/" + channel + "/" + product_1.default.commit;
+        };
+        UpdateService.prototype.quitAndInstall = function () {
+            var _this = this;
+            if (!this._availableUpdate) {
+                return winjs_base_1.TPromise.as(null);
+            }
+            if (this._availableUpdate.url) {
+                electron.shell.openExternal(this._availableUpdate.url);
+                return winjs_base_1.TPromise.as(null);
+            }
+            this.lifecycleService.quit(true /* from update */).done(function (vetod) {
+                if (vetod) {
+                    return;
+                }
+                // for some reason updating on Mac causes the local storage not to be flushed.
+                // we workaround this issue by forcing an explicit flush of the storage data.
+                // see also https://github.com/Microsoft/vscode/issues/172
+                if (process.platform === 'darwin') {
+                    electron.session.defaultSession.flushStorageData();
+                }
+                _this.raw.quitAndInstall();
+            });
+            return winjs_base_1.TPromise.as(null);
+        };
+        __decorate([
+            decorators_1.memoize
+        ], UpdateService.prototype, "onRawError", null);
+        __decorate([
+            decorators_1.memoize
+        ], UpdateService.prototype, "onRawUpdateNotAvailable", null);
+        __decorate([
+            decorators_1.memoize
+        ], UpdateService.prototype, "onRawUpdateAvailable", null);
+        __decorate([
+            decorators_1.memoize
+        ], UpdateService.prototype, "onRawUpdateDownloaded", null);
+        UpdateService = __decorate([
+            __param(0, instantiation_1.IInstantiationService),
+            __param(1, lifecycle_2.ILifecycleService),
+            __param(2, configuration_1.IConfigurationService),
+            __param(3, telemetry_1.ITelemetryService)
+        ], UpdateService);
+        return UpdateService;
+    }());
+    exports.UpdateService = UpdateService;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[129/*vs/code/electron-main/main*/], __M([0/*require*/,1/*exports*/,14/*electron*/,8/*vs/base/common/objects*/,5/*vs/base/common/platform*/,45/*vs/platform/environment/node/argv*/,51/*vs/base/node/pfs*/,49/*vs/code/electron-main/paths*/,34/*vs/code/electron-main/windows*/,55/*vs/platform/windows/common/windows*/,115/*vs/platform/windows/common/windowsIpc*/,116/*vs/platform/windows/electron-main/windowsService*/,39/*vs/code/electron-main/lifecycle*/,108/*vs/code/electron-main/menus*/,29/*vs/platform/update/common/update*/,109/*vs/platform/update/common/updateIpc*/,103/*vs/platform/update/electron-main/updateService*/,98/*vs/base/parts/ipc/electron-main/ipc.electron-main*/,100/*vs/base/parts/ipc/node/ipc.net*/,2/*vs/base/common/winjs.base*/,118/*vs/workbench/parts/git/common/gitIpc*/,119/*vs/workbench/parts/git/electron-main/askpassService*/,110/*vs/code/node/sharedProcess*/,111/*vs/code/electron-main/launch*/,3/*vs/platform/instantiation/common/instantiation*/,86/*vs/platform/instantiation/common/instantiationService*/,54/*vs/platform/instantiation/common/serviceCollection*/,43/*vs/platform/instantiation/common/descriptors*/,23/*vs/code/electron-main/log*/,24/*vs/code/electron-main/storage*/,44/*vs/platform/backup/common/backup*/,73/*vs/platform/backup/common/backupIpc*/,83/*vs/platform/backup/electron-main/backupMainService*/,11/*vs/platform/environment/common/environment*/,101/*vs/platform/environment/node/environmentService*/,12/*vs/platform/configuration/common/configuration*/,96/*vs/platform/configuration/node/configurationService*/,40/*vs/platform/request/node/request*/,102/*vs/platform/request/node/requestService*/,30/*vs/base/common/uuid*/,41/*vs/platform/url/common/url*/,114/*vs/platform/url/common/urlIpc*/,112/*vs/platform/url/electron-main/urlService*/,32/*vs/platform/telemetry/common/telemetry*/,104/*vs/platform/telemetry/common/telemetryIpc*/,105/*vs/platform/telemetry/common/telemetryService*/,106/*vs/platform/telemetry/node/commonProperties*/,20/*vs/base/parts/ipc/common/ipc*/,15/*vs/platform/product*/,35/*vs/platform/package*/,28/*original-fs*/,46/*child_process*/]), function (require, exports, electron_1, objects_1, platform, argv_1, pfs_1, paths_1, windows_1, windows_2, windowsIpc_1, windowsService_1, lifecycle_1, menus_1, update_1, updateIpc_1, updateService_1, ipc_electron_main_1, ipc_net_1, winjs_base_1, gitIpc_1, askpassService_1, sharedProcess_1, launch_1, instantiation_1, instantiationService_1, serviceCollection_1, descriptors_1, log_1, storage_1, backup_1, backupIpc_1, backupMainService_1, environment_1, environmentService_1, configuration_1, configurationService_1, request_1, requestService_1, uuid_1, url_1, urlIpc_1, urlService_1, telemetry_1, telemetryIpc_1, telemetryService_1, commonProperties_1, ipc_1, product_1, package_1, fs, cp) {
     'use strict';
     function quit(accessor, arg) {
         var logService = accessor.get(log_1.ILogService);
@@ -16056,16 +18147,14 @@ define(__m[110/*vs/code/electron-main/main*/], __M([1/*require*/,0/*exports*/,8/
         }
         process.exit(exitCode); // in main, process.exit === app.exit
     }
+    // TODO@Joao wow this is huge, clean up!
     function main(accessor, mainIpcServer, userEnv) {
         var instantiationService = accessor.get(instantiation_1.IInstantiationService);
         var logService = accessor.get(log_1.ILogService);
         var environmentService = accessor.get(environment_1.IEnvironmentService);
-        var windowsService = accessor.get(windows_1.IWindowsService);
-        var windowEventService = accessor.get(windows_2.IWindowEventService);
         var lifecycleService = accessor.get(lifecycle_1.ILifecycleService);
-        var updateService = accessor.get(update_manager_1.IUpdateService);
         var configurationService = accessor.get(configuration_1.IConfigurationService);
-        var windowEventChannel = new windowsIpc_1.WindowEventChannel(windowEventService);
+        var windowsMainService;
         // We handle uncaught exceptions here to prevent electron from opening a dialog to the user
         process.on('uncaughtException', function (err) {
             if (err) {
@@ -16075,7 +18164,9 @@ define(__m[110/*vs/code/electron-main/main*/], __M([1/*require*/,0/*exports*/,8/
                     stack: err.stack
                 };
                 // handle on client side
-                windowsService.sendToFocused('vscode:reportError', JSON.stringify(friendlyError));
+                if (windowsMainService) {
+                    windowsMainService.sendToFocused('vscode:reportError', JSON.stringify(friendlyError));
+                }
             }
             console.error('[uncaught exception in main]: ' + err);
             if (err.stack) {
@@ -16096,18 +18187,11 @@ define(__m[110/*vs/code/electron-main/main*/], __M([1/*require*/,0/*exports*/,8/
             }
         }
         // Register Main IPC services
-        var launchService = instantiationService.createInstance(launch_1.LaunchService);
-        var launchChannel = new launch_1.LaunchChannel(launchService);
-        mainIpcServer.registerChannel('launch', launchChannel);
         var askpassService = new askpassService_1.GitAskpassService();
         var askpassChannel = new gitIpc_1.AskpassChannel(askpassService);
         mainIpcServer.registerChannel('askpass', askpassChannel);
         // Create Electron IPC Server
-        var electronIpcServer = new ipc_electron_1.Server(electron_1.ipcMain);
-        // Register Electron IPC services
-        var urlService = accessor.get(url_1.IURLService);
-        var urlChannel = instantiationService.createInstance(urlIpc_1.URLChannel, urlService);
-        electronIpcServer.registerChannel('url', urlChannel);
+        var electronIpcServer = new ipc_electron_main_1.Server();
         // Spawn shared process
         var initData = { args: environmentService.args };
         var options = {
@@ -16115,111 +18199,100 @@ define(__m[110/*vs/code/electron-main/main*/], __M([1/*require*/,0/*exports*/,8/
             debugPort: environmentService.isBuilt ? null : 5871
         };
         var sharedProcessDisposable;
-        sharedProcess_1.spawnSharedProcess(initData, options).done(function (disposable) {
+        var sharedProcess = sharedProcess_1.spawnSharedProcess(initData, options).then(function (disposable) {
             sharedProcessDisposable = disposable;
-            var sharedProcessConnect = ipc_net_1.connect(environmentService.sharedIPCHandle, 'main');
-            sharedProcessConnect.done(function (client) {
-                client.registerChannel('windowEvent', windowEventChannel);
-            });
+            return ipc_net_1.connect(environmentService.sharedIPCHandle, 'main');
         });
-        // Make sure we associate the program with the app user model id
-        // This will help Windows to associate the running program with
-        // any shortcut that is pinned to the taskbar and prevent showing
-        // two icons in the taskbar for the same app.
-        if (platform.isWindows && product_1.default.win32AppUserModelId) {
-            electron_1.app.setAppUserModelId(product_1.default.win32AppUserModelId);
-        }
-        function dispose() {
-            if (mainIpcServer) {
-                mainIpcServer.dispose();
-                mainIpcServer = null;
-            }
-            if (sharedProcessDisposable) {
-                sharedProcessDisposable.dispose();
-            }
-            if (windowsMutex) {
-                windowsMutex.release();
-            }
-            configurationService.dispose();
-        }
-        // Dispose on app quit
-        electron_1.app.on('will-quit', function () {
-            logService.log('App#will-quit: disposing resources');
-            dispose();
-        });
-        // Dispose on vscode:exit
-        electron_1.ipcMain.on('vscode:exit', function (event, code) {
-            logService.log('IPC#vscode:exit', code);
-            dispose();
-            process.exit(code); // in main, process.exit === app.exit
-        });
-        // Lifecycle
-        lifecycleService.ready();
-        // Propagate to clients
-        windowsService.ready(userEnv);
-        // Install Menu
-        var menu = instantiationService.createInstance(menus_1.VSCodeMenu);
-        menu.ready();
-        // Install JumpList on Windows
-        if (platform.isWindows) {
-            var jumpList = [];
-            // Tasks
-            jumpList.push({
-                type: 'tasks',
-                items: [
-                    {
-                        type: 'task',
-                        title: nls.localize(0, null),
-                        description: nls.localize(1, null),
-                        program: process.execPath,
-                        args: '-n',
-                        iconPath: process.execPath,
-                        iconIndex: 0
-                    }
-                ]
-            });
-            // Recent Folders
-            var folders = windowsService.getRecentPathsList().folders;
-            if (folders.length > 0) {
-                jumpList.push({
-                    type: 'custom',
-                    name: 'Recent Folders',
-                    items: windowsService.getRecentPathsList().folders.slice(0, 7 /* limit number of entries here */).map(function (folder) {
-                        return {
-                            type: 'task',
-                            title: labels_1.getPathLabel(folder),
-                            description: nls.localize(2, null, path.basename(folder), labels_1.getPathLabel(path.dirname(folder))),
-                            program: process.execPath,
-                            args: folder,
-                            iconPath: 'explorer.exe',
-                            iconIndex: 0
-                        };
-                    })
-                });
-            }
-            // Recent
-            jumpList.push({
-                type: 'recent' // this enables to show files in the "recent" category
-            });
-            try {
-                electron_1.app.setJumpList(jumpList);
-            }
-            catch (error) {
-                logService.log('#setJumpList', error); // since setJumpList is relatively new API, make sure to guard for errors
-            }
-        }
-        // Setup auto update
-        updateService.initialize();
-        // Open our first window
-        if (environmentService.args['new-window'] && environmentService.args._.length === 0) {
-            windowsService.open({ cli: environmentService.args, forceNewWindow: true, forceEmpty: true }); // new window if "-n" was used without paths
-        }
-        else if (global.macOpenFiles && global.macOpenFiles.length && (!environmentService.args._ || !environmentService.args._.length)) {
-            windowsService.open({ cli: environmentService.args, pathsToOpen: global.macOpenFiles }); // mac: open-file event received on startup
+        // Create a new service collection, because the telemetry service
+        // requires a connection to shared process, which was only established
+        // now.
+        var services = new serviceCollection_1.ServiceCollection();
+        services.set(update_1.IUpdateService, new descriptors_1.SyncDescriptor(updateService_1.UpdateService));
+        services.set(windows_1.IWindowsMainService, new descriptors_1.SyncDescriptor(windows_1.WindowsManager));
+        services.set(windows_2.IWindowsService, new descriptors_1.SyncDescriptor(windowsService_1.WindowsService));
+        services.set(launch_1.ILaunchService, new descriptors_1.SyncDescriptor(launch_1.LaunchService));
+        if (environmentService.isBuilt && !environmentService.isExtensionDevelopment && !!product_1.default.enableTelemetry) {
+            var channel = ipc_1.getDelayedChannel(sharedProcess.then(function (c) { return c.getChannel('telemetryAppender'); }));
+            var appender = new telemetryIpc_1.TelemetryAppenderClient(channel);
+            var commonProperties = commonProperties_1.resolveCommonProperties(product_1.default.commit, package_1.default.version);
+            var piiPaths = [environmentService.appRoot, environmentService.extensionsPath];
+            var config = { appender: appender, commonProperties: commonProperties, piiPaths: piiPaths };
+            services.set(telemetry_1.ITelemetryService, new descriptors_1.SyncDescriptor(telemetryService_1.TelemetryService, config));
         }
         else {
-            windowsService.open({ cli: environmentService.args, forceNewWindow: environmentService.args['new-window'], diffMode: environmentService.args.diff }); // default: read paths from cli
+            services.set(telemetry_1.ITelemetryService, telemetry_1.NullTelemetryService);
         }
+        var instantiationService2 = instantiationService.createChild(services);
+        instantiationService2.invokeFunction(function (accessor) {
+            // TODO@Joao: unfold this
+            windowsMainService = accessor.get(windows_1.IWindowsMainService);
+            // Register more Main IPC services
+            var launchService = accessor.get(launch_1.ILaunchService);
+            var launchChannel = new launch_1.LaunchChannel(launchService);
+            mainIpcServer.registerChannel('launch', launchChannel);
+            // Register more Electron IPC services
+            var updateService = accessor.get(update_1.IUpdateService);
+            var updateChannel = new updateIpc_1.UpdateChannel(updateService);
+            electronIpcServer.registerChannel('update', updateChannel);
+            var urlService = accessor.get(url_1.IURLService);
+            var urlChannel = instantiationService2.createInstance(urlIpc_1.URLChannel, urlService);
+            electronIpcServer.registerChannel('url', urlChannel);
+            var backupService = accessor.get(backup_1.IBackupMainService);
+            var backupChannel = instantiationService2.createInstance(backupIpc_1.BackupChannel, backupService);
+            electronIpcServer.registerChannel('backup', backupChannel);
+            var windowsService = accessor.get(windows_2.IWindowsService);
+            var windowsChannel = new windowsIpc_1.WindowsChannel(windowsService);
+            electronIpcServer.registerChannel('windows', windowsChannel);
+            sharedProcess.done(function (client) { return client.registerChannel('windows', windowsChannel); });
+            // Make sure we associate the program with the app user model id
+            // This will help Windows to associate the running program with
+            // any shortcut that is pinned to the taskbar and prevent showing
+            // two icons in the taskbar for the same app.
+            if (platform.isWindows && product_1.default.win32AppUserModelId) {
+                electron_1.app.setAppUserModelId(product_1.default.win32AppUserModelId);
+            }
+            function dispose() {
+                if (mainIpcServer) {
+                    mainIpcServer.dispose();
+                    mainIpcServer = null;
+                }
+                if (sharedProcessDisposable) {
+                    sharedProcessDisposable.dispose();
+                }
+                if (windowsMutex) {
+                    windowsMutex.release();
+                }
+                configurationService.dispose();
+            }
+            // Dispose on app quit
+            electron_1.app.on('will-quit', function () {
+                logService.log('App#will-quit: disposing resources');
+                dispose();
+            });
+            // Dispose on vscode:exit
+            electron_1.ipcMain.on('vscode:exit', function (event, code) {
+                logService.log('IPC#vscode:exit', code);
+                dispose();
+                process.exit(code); // in main, process.exit === app.exit
+            });
+            // Lifecycle
+            lifecycleService.ready();
+            // Propagate to clients
+            windowsMainService.ready(userEnv);
+            // Install Menu
+            var menu = instantiationService2.createInstance(menus_1.VSCodeMenu);
+            menu.ready();
+            // Open our first window
+            if (environmentService.args['new-window'] && environmentService.args._.length === 0) {
+                windowsMainService.open({ cli: environmentService.args, forceNewWindow: true, forceEmpty: true, initialStartup: true }); // new window if "-n" was used without paths
+            }
+            else if (global.macOpenFiles && global.macOpenFiles.length && (!environmentService.args._ || !environmentService.args._.length)) {
+                windowsMainService.open({ cli: environmentService.args, pathsToOpen: global.macOpenFiles, initialStartup: true }); // mac: open-file event received on startup
+            }
+            else {
+                windowsMainService.open({ cli: environmentService.args, forceNewWindow: environmentService.args['new-window'], diffMode: environmentService.args.diff, initialStartup: true }); // default: read paths from cli
+            }
+        });
     }
     function setupIPC(accessor) {
         var logService = accessor.get(log_1.ILogService);
@@ -16355,8 +18428,25 @@ define(__m[110/*vs/code/electron-main/main*/], __M([1/*require*/,0/*exports*/,8/
         return getUnixShellEnvironment();
     }
     function createPaths(environmentService) {
-        var paths = [environmentService.appSettingsHome, environmentService.userHome, environmentService.extensionsPath];
+        var paths = [
+            environmentService.appSettingsHome,
+            environmentService.userProductHome,
+            environmentService.extensionsPath,
+            environmentService.nodeCachedDataDir
+        ];
         return winjs_base_1.TPromise.join(paths.map(function (p) { return pfs_1.mkdirp(p); }));
+    }
+    function createServices(args) {
+        var services = new serviceCollection_1.ServiceCollection();
+        services.set(environment_1.IEnvironmentService, new descriptors_1.SyncDescriptor(environmentService_1.EnvironmentService, args, process.execPath));
+        services.set(log_1.ILogService, new descriptors_1.SyncDescriptor(log_1.MainLogService));
+        services.set(lifecycle_1.ILifecycleService, new descriptors_1.SyncDescriptor(lifecycle_1.LifecycleService));
+        services.set(storage_1.IStorageService, new descriptors_1.SyncDescriptor(storage_1.StorageService));
+        services.set(configuration_1.IConfigurationService, new descriptors_1.SyncDescriptor(configurationService_1.ConfigurationService));
+        services.set(request_1.IRequestService, new descriptors_1.SyncDescriptor(requestService_1.RequestService));
+        services.set(url_1.IURLService, new descriptors_1.SyncDescriptor(urlService_1.URLService, args['open-url']));
+        services.set(backup_1.IBackupMainService, new descriptors_1.SyncDescriptor(backupMainService_1.BackupMainService));
+        return new instantiationService_1.InstantiationService(services, true);
     }
     function start() {
         var args;
@@ -16369,19 +18459,7 @@ define(__m[110/*vs/code/electron-main/main*/], __M([1/*require*/,0/*exports*/,8/
             process.exit(1);
             return;
         }
-        // TODO: isolate
-        var services = new serviceCollection_1.ServiceCollection();
-        services.set(environment_1.IEnvironmentService, new descriptors_1.SyncDescriptor(environmentService_1.EnvironmentService, args, process.execPath));
-        services.set(log_1.ILogService, new descriptors_1.SyncDescriptor(log_1.MainLogService));
-        services.set(windows_1.IWindowsService, new descriptors_1.SyncDescriptor(windows_1.WindowsManager));
-        services.set(windows_2.IWindowEventService, new descriptors_1.SyncDescriptor(windows_1.WindowEventService));
-        services.set(lifecycle_1.ILifecycleService, new descriptors_1.SyncDescriptor(lifecycle_1.LifecycleService));
-        services.set(storage_1.IStorageService, new descriptors_1.SyncDescriptor(storage_1.StorageService));
-        services.set(configuration_1.IConfigurationService, new descriptors_1.SyncDescriptor(configurationService_1.ConfigurationService));
-        services.set(request_1.IRequestService, new descriptors_1.SyncDescriptor(requestService_1.RequestService));
-        services.set(update_manager_1.IUpdateService, new descriptors_1.SyncDescriptor(update_manager_1.UpdateManager));
-        services.set(url_1.IURLService, new descriptors_1.SyncDescriptor(urlService_1.URLService, args['open-url']));
-        var instantiationService = new instantiationService_1.InstantiationService(services);
+        var instantiationService = createServices(args);
         // On some platforms we need to manually read from the global environment variables
         // and assign them to the process environment (e.g. when doubleclick app on Mac)
         return getShellEnvironment().then(function (shellEnv) {

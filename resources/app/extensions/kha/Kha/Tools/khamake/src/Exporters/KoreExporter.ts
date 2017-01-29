@@ -17,12 +17,6 @@ export class KoreExporter extends KhaExporter {
 		// Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
 	}
 
-	sysdir() {
-		if (this.options.target === 'android') return 'android-native';
-		else if (this.options.target === 'html5') return 'html5-native';
-		return this.options.target;
-	}
-
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('no-compilation');
 		defines.push('sys_' + this.options.target);
@@ -88,7 +82,7 @@ export class KoreExporter extends KhaExporter {
 		 exportImage(from, this.directory.resolve(this.sysdir()).resolve(to), asset, 'astc', true, callback);
 		 }*/
 		else {
-			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, undefined /*'snappy'*/, true);
+			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, 'lz4', true);
 			return [to + '.' + format];
 		}
 	}

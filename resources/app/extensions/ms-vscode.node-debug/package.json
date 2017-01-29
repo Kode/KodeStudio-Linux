@@ -1,7 +1,7 @@
 {
 	"name": "node-debug",
 	"displayName": "Node Debug",
-	"version": "1.7.9",
+	"version": "1.8.15",
 	"publisher": "ms-vscode",
 	"description": "%extension.description%",
 	"icon": "images/node-debug-icon.svg",
@@ -21,16 +21,17 @@
 		"postinstall": "node ./node_modules/vscode/bin/install"
 	},
 	"engines": {
-		"vscode": "^1.6.0",
-		"node": "^5.10.0"
+		"vscode": "^1.8.0",
+		"node": "^6.3.0"
 	},
 	"dependencies": {
-		"vscode-debugprotocol": "^1.14.0",
-		"vscode-debugadapter": "^1.14.0",
-		"source-map": "^0.5.3",
+		"vscode-debugprotocol": "^1.15.0",
+		"vscode-debugadapter": "^1.15.0",
+		"source-map": "0.5.6",
 		"vscode-nls": "^2.0.1",
 		"request-light": "^0.1.0",
-		"glob": "^7.0.6"
+		"glob": "7.1.1",
+		"minimatch": "3.0.3"
 	},
 	"repository": {
 		"type": "git",
@@ -41,30 +42,30 @@
 	},
 	"devDependencies": {
 		"@types/es6-collections": "^0.5.29",
-		"@types/es6-promise": "0.0.32",
-		"@types/mocha": "^2.2.32",
-		"@types/node": "^6.0.39",
-		"@types/source-map": "^0.1.27",
+		"@types/es6-promise": "^0.0.32",
+		"@types/mocha": "^2.2.33",
+		"@types/node": "^6.0.50",
+		"@types/source-map": "^0.5.0",
 		"gulp": "^3.9.1",
 		"gulp-util": "^3.0.7",
-		"gulp-typescript": "^2.14.0",
-		"gulp-tsb": "^2.0.0",
-		"gulp-sourcemaps": "^2.1.1",
-		"gulp-filter": "^3.0.1",
+		"gulp-typescript": "^3.1.3",
+		"gulp-tsb": "^2.0.2",
+		"gulp-sourcemaps": "^1.9.1",
+		"gulp-filter": "^4.0.0",
 		"gulp-tslint": "^6.1.1",
 		"gulp-uglify": "^2.0.0",
 		"tslint-microsoft-contrib": "^2.0.10",
-		"del": "*",
-		"run-sequence": "*",
-		"mocha": "^2.4.5",
+		"del": "^2.2.2",
+		"run-sequence": "^1.2.2",
+		"mocha": "^3.1.2",
 		"tslint": "^3.15.1",
-		"typescript": "^2.0.3",
-		"vscode": "^0.11.18",
+		"typescript": "^2.0.10",
+		"vscode": "^1.0.3",
 		"vscode-nls-dev": "^2.0.1",
-		"vscode-debugadapter-testsupport": "^1.14.0",
+		"vscode-debugadapter-testsupport": "^1.15.0",
 		"event-stream": "^3.3.4",
-		"nodemon": "^1.10.2",
-		"vsce": "^1.15.0"
+		"nodemon": "^1.11.0",
+		"vsce": "^1.17.0"
 	},
 	"main": "./out/node/extension",
 	"activationEvents": [
@@ -79,7 +80,7 @@
 		}],
 		"debuggers": [{
 			"type": "node",
-			"label": "Node.js",
+			"label": "%node.label%",
 			"program": "./out/node/nodeDebug.js",
 			"runtime": "node",
 			"variables": {
@@ -87,6 +88,26 @@
 			},
 			"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
 			"initialConfigurations": "extension.node-debug.provideInitialConfigurations",
+			"configurationSnippets": [{
+				"label": "%node.snippet.launch.label%",
+				"description": "%node.snippet.launch.description%",
+				"body": {
+					"type": "node",
+					"request": "launch",
+					"name": "${2:Launch Program}",
+					"program": "^\"\\${workspaceRoot}/${1:app.js}\"",
+					"cwd": "^\"\\${workspaceRoot}\""
+				}
+			}, {
+				"label": "%node.snippet.attach.label%",
+				"description": "%node.snippet.attach.description%",
+				"body": {
+					"type": "node",
+					"request": "attach",
+					"name": "${2:Attach to Port}",
+					"port": 5858
+				}
+			}],
 			"configurationAttributes": {
 				"launch": {
 					"required": [
@@ -104,10 +125,8 @@
 						},
 						"externalConsole": {
 							"type": "boolean",
-							"description": "%node.launch.externalConsole.description%",
-							"default": true,
-							"errorMessage": "%node.launch.externalConsole.error%",
-							"enum": []
+							"deprecationMessage": "%node.launch.externalConsole.deprecationMessage%",
+							"default": true
 						},
 						"console": {
 							"enum": [
@@ -120,7 +139,7 @@
 						},
 						"args": {
 							"type": "array",
-							"description": "%node.launch.args.description%",
+							"description": "%launch.args.description%",
 							"items": {
 								"type": "string"
 							},
@@ -155,6 +174,11 @@
 							"description": "%node.launch.env.description%",
 							"default": {}
 						},
+						"envFile": {
+							"type": "string",
+							"description": "%node.launch.envFile.description%",
+							"default": "${workspaceRoot}/.env"
+						},
 						"sourceMaps": {
 							"type": "boolean",
 							"description": "%node.sourceMaps.description%",
@@ -165,12 +189,12 @@
 								"string",
 								"null"
 							],
-							"description": "%node.outDir.description%",
+							"deprecationMessage": "%outDir.deprecationMessage%",
 							"default": null
 						},
 						"outFiles": {
 							"type": "array",
-							"description": "%node.outFiles.description%",
+							"description": "%outFiles.description%",
 							"items": {
 								"type": "string"
 							},
@@ -193,8 +217,16 @@
 						},
 						"smartStep": {
 							"type": "boolean",
-							"description": "%node.smartStep.description%",
+							"description": "%smartStep.description%",
 							"default": true
+						},
+						"skipFiles": {
+							"type": "array",
+							"description": "%skipFiles.description%",
+							"items": {
+								"type": "string"
+							},
+							"default": []
 						}
 					}
 				},
@@ -235,12 +267,12 @@
 								"string",
 								"null"
 							],
-							"description": "%node.outDir.description%",
+							"deprecationMessage": "%outDir.deprecationMessage%",
 							"default": null
 						},
 						"outFiles": {
 							"type": "array",
-							"description": "%node.outFiles.description%",
+							"description": "%outFiles.description%",
 							"items": {
 								"type": "string"
 							},
@@ -269,8 +301,16 @@
 						},
 						"smartStep": {
 							"type": "boolean",
-							"description": "%node.smartStep.description%",
+							"description": "%smartStep.description%",
 							"default": true
+						},
+						"skipFiles": {
+							"type": "array",
+							"description": "%skipFiles.description%",
+							"items": {
+								"type": "string"
+							},
+							"default": []
 						}
 					}
 				}
@@ -282,9 +322,9 @@
 			"runtime": "node",
 			"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
 			"initialConfigurations": [{
-				"name": "%extensionHost.launch.config.name%",
 				"type": "extensionHost",
 				"request": "launch",
+				"name": "%extensionHost.launch.config.name%",
 				"runtimeExecutable": "${execPath}",
 				"args": [
 					"--extensionDevelopmentPath=${workspaceRoot}"
@@ -312,7 +352,7 @@
 						},
 						"args": {
 							"type": "array",
-							"description": "%extensionHost.launch.args.description%",
+							"description": "%launch.args.description%",
 							"items": {
 								"type": "string"
 							},
@@ -335,21 +375,31 @@
 								"string",
 								"null"
 							],
-							"description": "%extensionHost.launch.outDir.description%",
-							"default": "out"
+							"deprecationMessage": "%outDir.deprecationMessage%",
+							"default": "${workspaceRoot}/out"
 						},
 						"outFiles": {
 							"type": "array",
-							"description": "%extensionHost.launch.outFiles.description%",
+							"description": "%outFiles.description%",
+							"items": {
+								"type": "string"
+							},
+							"default": [
+								"${workspaceRoot}/out/**/*.js"
+							]
+						},
+						"smartStep": {
+							"type": "boolean",
+							"description": "%smartStep.description%",
+							"default": true
+						},
+						"skipFiles": {
+							"type": "array",
+							"description": "%skipFiles.description%",
 							"items": {
 								"type": "string"
 							},
 							"default": []
-						},
-						"smartStep": {
-							"type": "boolean",
-							"description": "%extensionHost.smartStep.description%",
-							"default": true
 						}
 					}
 				}
