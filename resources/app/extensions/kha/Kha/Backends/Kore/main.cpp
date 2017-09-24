@@ -1,13 +1,12 @@
 #include <Kore/pch.h>
 //#include <Kore/Application.h>
-#include <Kore/Graphics/Graphics.h>
+#include <Kore/Graphics4/Graphics.h>
 #include <Kore/Input/Gamepad.h>
 #include <Kore/Input/Keyboard.h>
 #include <Kore/Input/Mouse.h>
 #include <Kore/Input/Sensor.h>
 #include <Kore/Input/Surface.h>
-#include <Kore/Audio/Audio.h>
-#include <Kore/Audio/Mixer.h>
+#include <Kore/Audio2/Audio.h>
 #include <Kore/IO/FileReader.h>
 #include <Kore/Log.h>
 #include <Kore/Threads/Mutex.h>
@@ -22,7 +21,7 @@
 #include <stdlib.h>
 
 #ifdef ANDROID
-	#include <Kore/Vr/VrInterface.h>
+	//#include <Kore/Vr/VrInterface.h>
 #endif
 
 extern "C" const char* hxRunLibrary();
@@ -36,108 +35,16 @@ namespace {
 	Kore::Mutex mutex;
 	bool shift = false;
 	
-	void keyDown(Kore::KeyCode code, wchar_t character) {
-		switch (code) {
-		case Kore::Key_Up:
-			SystemImpl_obj::pushUp();
-			break;
-		case Kore::Key_Down:
-			SystemImpl_obj::pushDown();
-			break;
-		case Kore::Key_Left:
-			SystemImpl_obj::pushLeft();
-			break;
-		case Kore::Key_Right:
-			SystemImpl_obj::pushRight();
-			break;
-		case Kore::Key_Space:
-			SystemImpl_obj::pushChar(' ');
-			break;
-		case Kore::Key_Shift:
-			SystemImpl_obj::pushShift();
-			shift = true;
-			break;
-		case Kore::Key_Backspace:
-			SystemImpl_obj::pushBackspace();
-			break;
-		case Kore::Key_Tab:
-			SystemImpl_obj::pushTab();
-			break;
-		case Kore::Key_Enter:
-		case Kore::Key_Return:
-			SystemImpl_obj::pushEnter();
-			break;
-		case Kore::Key_Control:
-			SystemImpl_obj::pushControl();
-			break;
-		case Kore::Key_Alt:
-			SystemImpl_obj::pushAlt();
-			break;
-		case Kore::Key_Escape:
-			SystemImpl_obj::pushEscape();
-			break;
-		case Kore::Key_Delete:
-			SystemImpl_obj::pushDelete();
-			break;
-		case Kore::Key_Back:
-			SystemImpl_obj::pushBack();
-			break;
-		default:
-			SystemImpl_obj::pushChar(character);
-			break;
-		}
+	void keyDown(Kore::KeyCode code) {
+		SystemImpl_obj::keyDown((int)code);
 	}
 
-	void keyUp(Kore::KeyCode code, wchar_t character) {
-		switch (code) {
-		case Kore::Key_Up:
-			SystemImpl_obj::releaseUp();
-			break;
-		case Kore::Key_Down:
-			SystemImpl_obj::releaseDown();
-			break;
-		case Kore::Key_Left:
-			SystemImpl_obj::releaseLeft();
-			break;
-		case Kore::Key_Right:
-			SystemImpl_obj::releaseRight();
-			break;
-		case Kore::Key_Space:
-			SystemImpl_obj::releaseChar(' ');
-			break;
-		case Kore::Key_Shift:
-			SystemImpl_obj::releaseShift();
-			shift = false;
-			break;
-		case Kore::Key_Backspace:
-			SystemImpl_obj::releaseBackspace();
-			break;
-		case Kore::Key_Tab:
-			SystemImpl_obj::releaseTab();
-			break;
-		case Kore::Key_Enter:
-		case Kore::Key_Return:
-			SystemImpl_obj::releaseEnter();
-			break;
-		case Kore::Key_Control:
-			SystemImpl_obj::releaseControl();
-			break;
-		case Kore::Key_Alt:
-			SystemImpl_obj::releaseAlt();
-			break;
-		case Kore::Key_Escape:
-			SystemImpl_obj::releaseEscape();
-			break;
-		case Kore::Key_Delete:
-			SystemImpl_obj::releaseDelete();
-			break;
-		case Kore::Key_Back:
-			SystemImpl_obj::releaseBack();
-			break;
-		default:
-			SystemImpl_obj::releaseChar(character);
-			break;
-		}
+	void keyUp(Kore::KeyCode code) {
+		SystemImpl_obj::keyUp((int)code);
+	}
+
+	void keyPress(wchar_t character) {
+		SystemImpl_obj::keyPress(character);
 	}
 
 	void mouseDown(int windowId, int button, int x, int y) {
@@ -217,14 +124,14 @@ namespace {
 
 	void update() {
 		if (paused) return;
-		Kore::Audio::update();
+		Kore::Audio2::update();
 
 		int windowCount = Kore::System::windowCount();
 
 		for (int windowIndex = 0; windowIndex < windowCount; ++windowIndex) {
 			if (visible) {
 				#ifndef VR_RIFT
-				Kore::Graphics::begin(windowIndex);
+				Kore::Graphics4::begin(windowIndex);
                 #endif
 			
 				// Google Cardboard: Update the Distortion mesh
@@ -235,7 +142,7 @@ namespace {
                 SystemImpl_obj::frame(windowIndex);
 
 				#ifndef VR_RIFT
-                Kore::Graphics::end(windowIndex);
+                Kore::Graphics4::end(windowIndex);
 				#endif
 			
 				// Google Cardboard: Call the DistortionMesh Renderer
@@ -244,7 +151,10 @@ namespace {
 				#endif
 
 				#ifndef VR_RIFT
-				Kore::Graphics::swapBuffers(windowIndex);
+				if (!Kore::Graphics4::swapBuffers(windowIndex)) {
+					Kore::log(Kore::Error, "Graphics context lost.");
+					break;
+				}
 				#endif
 			}
 		}
@@ -272,6 +182,10 @@ namespace {
 	
 	void shutdown() {
 		SystemImpl_obj::shutdown();
+	}
+
+	void dropFiles(wchar_t* filePath) {
+		SystemImpl_obj::dropFiles(String(filePath));
 	}
 	
 	void orientation(Kore::Orientation orientation) {
@@ -309,14 +223,14 @@ namespace {
 
 		for (int i = 0; i < samples; ++i) {
 			float value = ::kha::audio2::Audio_obj::_readSample();
-			*(float*)&Audio::buffer.data[Audio::buffer.writeLocation] = value;
-			Audio::buffer.writeLocation += 4;
-			if (Audio::buffer.writeLocation >= Audio::buffer.dataSize) Audio::buffer.writeLocation = 0;
+			*(float*)&Audio2::buffer.data[Audio2::buffer.writeLocation] = value;
+			Audio2::buffer.writeLocation += 4;
+			if (Audio2::buffer.writeLocation >= Audio2::buffer.dataSize) Audio2::buffer.writeLocation = 0;
 		}
 	}
 }
 
-void init_kore_impl(bool ex, const char* name, int width, int height, int x, int y, int display, Kore::WindowMode windowMode, int antialiasing) {
+void init_kore_impl(bool ex, const char* name, int width, int height, int x, int y, int display, Kore::WindowMode windowMode, int antialiasing, bool vSync, bool resizable, bool maximizable, bool minimizable) {
 	Kore::log(Kore::Info, "Starting Kore");
 
 	Kore::Random::init(static_cast<int>(Kore::System::timestamp() % std::numeric_limits<int>::max()));
@@ -324,7 +238,9 @@ void init_kore_impl(bool ex, const char* name, int width, int height, int x, int
 	Kore::System::setup();
 
 	if (ex) {
-	} else {
+
+	}
+	else {
 		width = Kore::min(width, Kore::System::desktopWidth());
 		height = Kore::min(height, Kore::System::desktopHeight());
 
@@ -334,8 +250,12 @@ void init_kore_impl(bool ex, const char* name, int width, int height, int x, int
 		options.height = height;
 		options.x = x;
 		options.y = y;
+		options.vSync = vSync;
 		options.targetDisplay = display;
 		options.mode = windowMode;
+		options.resizable = resizable;
+		options.maximizable = maximizable;
+		options.minimizable = minimizable;
 		options.rendererOptions.depthBufferBits = 16;
 		options.rendererOptions.stencilBufferBits = 8;
 		options.rendererOptions.textureFormat = 0;
@@ -358,10 +278,12 @@ void init_kore_impl(bool ex, const char* name, int width, int height, int x, int
 	Kore::System::setPauseCallback(pause);
 	Kore::System::setBackgroundCallback(background);
 	Kore::System::setShutdownCallback(shutdown);
+	Kore::System::setDropFilesCallback(dropFiles);
 	Kore::System::setCallback(update);
 
 	Kore::Keyboard::the()->KeyDown = keyDown;
 	Kore::Keyboard::the()->KeyUp = keyUp;
+	Kore::Keyboard::the()->KeyPress = keyPress;
 	Kore::Mouse::the()->Press = mouseDown;
 	Kore::Mouse::the()->Release = mouseUp;
 	Kore::Mouse::the()->Move = mouseMove;
@@ -388,24 +310,24 @@ void init_kore_impl(bool ex, const char* name, int width, int height, int x, int
 //#endif
 }
 
-void init_kore(const char* name, int width, int height, int antialiasing) {
-	init_kore_impl(false, name, width, height, -1, -1, -1, Kore::WindowModeWindow, antialiasing);
+const char* getGamepadId(int index) {
+	return Kore::Gamepad::get(index)->productName;
 }
 
-void init_kore_ex( const char * name ) {
-	init_kore_impl(true, name, -1, -1, -1, -1, -1, Kore::WindowModeWindow, 0);
+void init_kore(const char* name, int width, int height, int antialiasing, bool vSync, int windowMode, bool resizable, bool maximizable, bool minimizable) {
+	init_kore_impl(false, name, width, height, -1, -1, -1, (Kore::WindowMode)windowMode, antialiasing, vSync, resizable, maximizable, minimizable);
+}
+
+void init_kore_ex(const char* name) {
+	init_kore_impl(true, name, -1, -1, -1, -1, -1, Kore::WindowModeWindow, 0, false, false, false, true);
 }
 
 void post_kore_init() {
 	// (DK) make main window context current, all assets bind to it and are shared
 	Kore::System::makeCurrent(0);
 
-#ifndef VR_RIFT
-	Kore::Graphics::setRenderState(Kore::DepthTest, false);
-#endif
-
-	Kore::Audio::audioCallback = mix;
-	Kore::Audio::init();
+	Kore::Audio2::audioCallback = mix;
+	Kore::Audio2::init();
 
 #ifdef VR_GEAR_VR
 	// Enter VR mode
@@ -421,6 +343,7 @@ void run_kore() {
 	Kore::log(Kore::Info, "Starting application");
 	Kore::System::start();
 	Kore::log(Kore::Info, "Application stopped");
+	Kore::System::stop();
 }
 
 int kore(int argc, char** argv) {

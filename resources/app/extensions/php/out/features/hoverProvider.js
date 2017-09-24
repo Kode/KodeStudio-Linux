@@ -3,13 +3,18 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
-var vscode_1 = require('vscode');
-var phpGlobals = require('./phpGlobals');
-var markedTextUtil_1 = require('./utils/markedTextUtil');
+Object.defineProperty(exports, "__esModule", { value: true });
+var vscode_1 = require("vscode");
+var phpGlobals = require("./phpGlobals");
+var markedTextUtil_1 = require("./utils/markedTextUtil");
 var PHPHoverProvider = (function () {
     function PHPHoverProvider() {
     }
     PHPHoverProvider.prototype.provideHover = function (document, position, token) {
+        var enable = vscode_1.workspace.getConfiguration('php').get('suggest.basic', true);
+        if (!enable) {
+            return null;
+        }
         var wordRange = document.getWordRangeAtPosition(position);
         if (!wordRange) {
             return;
@@ -24,6 +29,5 @@ var PHPHoverProvider = (function () {
     };
     return PHPHoverProvider;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = PHPHoverProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/php/out/features/hoverProvider.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/php/out/features/hoverProvider.js.map

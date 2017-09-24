@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -67,7 +67,7 @@ enum Constant {
 	CString( s : String );
 
 	/**
-		Represents an indentifier.
+		Represents an identifier.
 	**/
 	CIdent( s : String );
 
@@ -819,7 +819,7 @@ typedef TypeDefinition = {
 	@:optional var meta : Metadata;
 
 	/**
-		The paramater type declarations of the type definition.
+		The parameter type declarations of the type definition.
 	**/
 	@:optional var params : Array<TypeParamDecl>;
 

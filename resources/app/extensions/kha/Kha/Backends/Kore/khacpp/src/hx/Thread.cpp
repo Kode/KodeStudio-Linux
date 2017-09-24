@@ -168,6 +168,8 @@ Dynamic __hxcpp_deque_pop(Dynamic q,bool block)
 class hxThreadInfo : public hx::Object
 {
 public:
+   HX_IS_INSTANCE_OF enum { _hx_ClassId = hx::clsIdThreadInfo };
+
 	hxThreadInfo(Dynamic inFunction, int inThreadNumber)
         : mFunction(inFunction), mThreadNumber(inThreadNumber), mTLS(0,0)
 	{
@@ -237,9 +239,9 @@ THREAD_FUNC_TYPE hxThreadFunc( void *inInfo )
    info[0] = (hxThreadInfo *)inInfo;
    info[1] = 0;
 
-	hx::SetTopOfStack((int *)&info[1], true);
-
 	tlsCurrentThread = info[0];
+
+	hx::SetTopOfStack((int *)&info[1], true);
 
 	// Release the creation function
 	info[0]->mSemaphore->Set();
@@ -263,7 +265,7 @@ THREAD_FUNC_TYPE hxThreadFunc( void *inInfo )
 	THREAD_FUNC_RET
 }
 
-#ifdef SYS_CONSOLE
+#ifdef KORE_CONSOLE
 Dynamic __hxcpp_thread_create(Dynamic inStart)
 {
 	return hx::Throw(HX_CSTRING("Threads are not yet supported on consoles"));
@@ -401,6 +403,8 @@ public:
 		mFinalizer->mFinalizer = clean;
 	}
 
+   HX_IS_INSTANCE_OF enum { _hx_ClassId = hx::clsIdMutex };
+
 	void __Mark(hx::MarkContext *__inCtx) { mFinalizer->Mark(); }
 
    #ifdef HXCPP_VISIT_ALLOCS
@@ -478,6 +482,8 @@ public:
 		mFinalizer->mFinalizer = clean;
 	}
 
+   HX_IS_INSTANCE_OF enum { _hx_ClassId = hx::clsIdLock };
+
 	void __Mark(hx::MarkContext *__inCtx) { mFinalizer->Mark(); }
 
    #ifdef HXCPP_VISIT_ALLOCS
@@ -486,7 +492,7 @@ public:
 
 	hx::InternalFinalizer *mFinalizer;
 
-	#if defined(HX_WINDOWS) || defined(__SNC__) || defined(SYS_CONSOLE)
+	#if defined(HX_WINDOWS) || defined(__SNC__) || defined(KORE_CONSOLE)
 	double Now()
 	{
 		return 0;

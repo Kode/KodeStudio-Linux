@@ -2,17 +2,6 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 define("vs/code/node/cliProcessMain.nls.es", {
-	"vs/base/common/json": [
-		"Símbolo no válido",
-		"Formato de número no válido",
-		"Se esperaba el nombre de la propiedad",
-		"Se esperaba un valor",
-		"Se esperaban dos puntos",
-		"Se esperaba una coma",
-		"Se esperaba una llave de cierre",
-		"Se esperaba un corchete de cierre",
-		"Se esperaba un fin de archivo",
-	],
 	"vs/base/common/severity": [
 		"Error",
 		"Advertencia",
@@ -34,12 +23,11 @@ define("vs/code/node/cliProcessMain.nls.es", {
 		"La extensión \'{0}\' se desinstaló correctamente.",
 	],
 	"vs/platform/configuration/common/configurationRegistry": [
-		"Aporta opciones de configuración.",
-		"Resumen de la configuración. Esta etiqueta se usará en el archivo de configuración como comentario divisor.",
-		"Descripción de las propiedades de configuración.",
-		"si se establece, \"configuration.type\" debe establecerse en \"object\"",
-		"configuration.title debe ser una cadena",
-		"configuration.properties debe ser un objeto",
+		"La configuración predeterminada se reemplaza",
+		"Establecer los valores de configuración que se reemplazarán para el lenguaje {0}.",
+		"Establecer los valores de configuración que se reemplazarán para un lenguaje.",
+		"No se puede registrar \"{0}\". Coincide con el patrón de propiedad \'\\\\[.*\\\\]$\' para describir la configuración del editor específica del lenguaje. Utilice la contribución \"configurationDefaults\".",
+		"No se puede registrar \"{0}\". Esta propiedad ya está registrada.",
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"Extensiones",
@@ -51,9 +39,6 @@ define("vs/code/node/cliProcessMain.nls.es", {
 	],
 	"vs/platform/extensionManagement/node/extensionManagementService": [
 		"Extensión no válida: package.json no es un archivo JSON.",
-		"Extensión no válida: el nombre del manifiesto no coincide.",
-		"Extensión no válida: el publicador del manifiesto no coincide.",
-		"Extensión no válida: la versión del manifiesto no coincide.",
 		"Reinicie Code antes de volver a instalar {0}.",
 		"Reinicie Code antes de volver a instalar {0}.",
 		"Al instalar \'{0}\', se instalan también sus dependencias. ¿Quiere continuar?",
@@ -71,25 +56,6 @@ define("vs/code/node/cliProcessMain.nls.es", {
 		"No se puede desinstalar la extensión \'{0}\'. Las extensiones \'{1}\' y \'{2}\' dependen de esta.",
 		"No se puede desinstalar la extensión \'{0}\'. Las extensiones \'{1}\' y \'{2}\', entre otras, dependen de esta.",
 		"No se encontró la extensión.",
-	],
-	"vs/platform/extensions/common/extensionsRegistry": [
-		"Para las extensiones de VS Code, especifica la versión de VS Code con la que la extensión es compatible. No puede ser *. Por ejemplo: ^0.10.5 indica compatibilidad con una versión de VS Code mínima de 0.10.5.",
-		"El publicador de la extensión VS Code.",
-		"Nombre para mostrar de la extensión que se usa en la galería de VS Code.",
-		"Categorías que usa la galería de VS Code para clasificar la extensión.",
-		"Banner usado en VS Code Marketplace.",
-		"Color del banner en el encabezado de página de VS Code Marketplace.",
-		"Tema de color de la fuente que se usa en el banner.",
-		"Todas las contribuciones de la extensión VS Code representadas por este paquete.",
-		"Establece la extensión que debe marcarse como versión preliminar en Marketplace.",
-		"Eventos de activación de la extensión VS Code.",
-		"Matriz de distintivos que se muestran en la barra lateral de la página de extensiones de Marketplace.",
-		"URL de la imagen del distintivo.",
-		"Vínculo del distintivo.",
-		"Descripción del distintivo.",
-		"Dependencias a otras extensiones. El identificador de una extensión siempre es ${publisher}.${name}. Por ejemplo: vscode.csharp.",
-		"Script que se ejecuta antes de publicar el paquete como extensión VS Code.",
-		"Ruta de acceso a un icono de 128 x 128 píxeles.",
 	],
 	"vs/platform/extensions/node/extensionValidator": [
 		"No se pudo analizar el valor {0} de \"engines.vscode\". Por ejemplo, use: ^0.10.0, ^1.2.3, ^0.11.0, ^0.10.x, etc.",

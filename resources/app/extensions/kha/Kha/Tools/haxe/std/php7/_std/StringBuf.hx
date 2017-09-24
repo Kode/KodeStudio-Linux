@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -41,6 +41,8 @@ import php.Syntax;
 			Syntax.binop(b, '.=', 'null');
 		} else if( Global.is_bool(x) ) {
 			Syntax.binop(b, '.=', ((x:Dynamic) ? 'true' : 'false'));
+		} else if( Global.is_string(x) ) {
+			Syntax.binop(b, '.=', x);
 		} else {
 			b += x;
 		}

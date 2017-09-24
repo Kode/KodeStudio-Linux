@@ -1,9 +1,10 @@
 "use strict";
-const Exporter_1 = require('./Exporter');
-const Project_1 = require('../Project');
-const Icon = require('../Icon');
-const fs = require('fs-extra');
-const path = require('path');
+Object.defineProperty(exports, "__esModule", { value: true });
+const Exporter_1 = require("./Exporter");
+const Project_1 = require("../Project");
+const Icon = require("../Icon");
+const fs = require("fs-extra");
+const path = require("path");
 class AndroidExporter extends Exporter_1.Exporter {
     constructor() {
         super();
@@ -48,7 +49,7 @@ class AndroidExporter extends Exporter_1.Exporter {
         for (let dir of project.getJavaDirs()) {
             javasources += '\'' + path.relative(path.join(outdir, 'app'), path.resolve(from, dir)).replace(/\\/g, '/') + '\', ';
         }
-        javasources += '\'' + path.relative(path.join(outdir, 'app'), path.join(Project_1.Project.koreDir.toString(), 'Backends', 'Android', 'Java-Sources')).replace(/\\/g, '/') + '\'';
+        javasources += '\'' + path.relative(path.join(outdir, 'app'), path.join(Project_1.Project.koreDir.toString(), 'Backends', 'System', 'Android', 'Java-Sources')).replace(/\\/g, '/') + '\'';
         gradle = gradle.replace(/{javasources}/g, javasources);
         fs.writeFileSync(path.join(outdir, 'app', 'build.gradle'), gradle, { encoding: 'utf8' });
         let cmake = fs.readFileSync(path.join(indir, 'app', 'CMakeLists.txt'), { encoding: 'utf8' });
@@ -100,21 +101,18 @@ class AndroidExporter extends Exporter_1.Exporter {
         Icon.exportPng(path.resolve(to, safename, 'app', 'src', 'main', 'res', 'mipmap-xhdpi', 'ic_launcher.png'), 96, 96, undefined, from);
         fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi'));
         Icon.exportPng(path.resolve(to, safename, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi', 'ic_launcher.png'), 144, 144, undefined, from);
-        fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi'));
+        fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xxxhdpi'));
         Icon.exportPng(path.resolve(to, safename, 'app', 'src', 'main', 'res', 'mipmap-xxxhdpi', 'ic_launcher.png'), 192, 192, undefined, from);
         fs.copySync(path.join(indir, 'gradle', 'wrapper', 'gradle-wrapper.jar'), path.join(outdir, 'gradle', 'wrapper', 'gradle-wrapper.jar'));
         fs.copySync(path.join(indir, 'gradle', 'wrapper', 'gradle-wrapper.properties'), path.join(outdir, 'gradle', 'wrapper', 'gradle-wrapper.properties'));
         fs.copySync(path.join(indir, 'idea', 'compiler.xml'), path.join(outdir, '.idea', 'compiler.xml'));
         fs.copySync(path.join(indir, 'idea', 'gradle.xml'), path.join(outdir, '.idea', 'gradle.xml'));
         fs.copySync(path.join(indir, 'idea', 'misc.xml'), path.join(outdir, '.idea', 'misc.xml'));
-        let modules = fs.readFileSync(path.join(indir, 'idea', 'modules.xml'), { encoding: 'utf8' });
-        modules = modules.replace(/{name}/g, safename);
-        fs.writeFileSync(path.join(outdir, '.idea', 'modules.xml'), modules, { encoding: 'utf8' });
         fs.copySync(path.join(indir, 'idea', 'runConfigurations.xml'), path.join(outdir, '.idea', 'runConfigurations.xml'));
         fs.copySync(path.join(indir, 'idea', 'copyright', 'profiles_settings.xml'), path.join(outdir, '.idea', 'copyright', 'profiles_settings.xml'));
         if (project.getDebugDir().length > 0)
             fs.copySync(path.resolve(from, project.getDebugDir()), path.resolve(to, safename, 'app', 'src', 'main', 'assets'));
     }
 }
-exports.AndroidExporter = AndroidExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/Exporters/AndroidExporter.js.map
+exports.AndroidExporter = AndroidExporter;
+//# sourceMappingURL=AndroidExporter.js.map

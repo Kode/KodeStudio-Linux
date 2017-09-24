@@ -16,5 +16,14 @@ define("vs/workbench/services/search/node/searchApp.nls.es", {
 		"Se ha producido un error desconocido. Consulte el registro para obtener más detalles.",
 		"{0} ({1} errores en total)",
 		"Se ha producido un error desconocido. Consulte el registro para obtener más detalles.",
+	],
+	"vs/base/common/processes": [
+		"Error: La información del ejecutable debe definir un comando de tipo cadena.",
+		"Advertencia: isShellCommand debe ser de tipo booleano. Se ignora el valor {0}.",
+		"Advertencia: Los argumentos deben ser de tipo \"string[]\". Se ignora el valor {0}.",
+		"Advertencia: options.cwd debe ser de tipo cadena. Se ignora el valor {0}.",
+	],
+	"vs/base/node/processes": [
+		"No se puede ejecutar un comando shell en una unidad UNC.",
 	]
 });

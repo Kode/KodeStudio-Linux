@@ -3,22 +3,25 @@ import * as path from 'path';
 import {KhaExporter} from './KhaExporter';
 import {convert} from '../Converter';
 import {executeHaxe} from '../Haxe';
+import {GraphicsApi} from '../GraphicsApi';
 import {Platform} from '../Platform';
 import {exportImage} from '../ImageTool';
 import {Options} from '../Options';
 import {Library} from '../Project';
 
 export class KoreExporter extends KhaExporter {
-	parameters: Array<string>;
-
 	constructor(options: Options) {
 		super(options);
-		this.addSourceDirectory(path.join(options.kha, 'Backends', 'Kore'));
 		// Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
+	}
+
+	backend(): string {
+		return 'Kore';
 	}
 
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('no-compilation');
+
 		defines.push('sys_' + this.options.target);
 		defines.push('sys_kore');
 		defines.push('sys_g1');
@@ -27,6 +30,18 @@ export class KoreExporter extends KhaExporter {
 		defines.push('sys_g4');
 		defines.push('sys_a1');
 		defines.push('sys_a2');
+
+		defines.push('kha_cpp');
+		defines.push('kha_' + this.options.target);
+		defines.push('kha_' + this.options.target + '_cpp');
+		defines.push('kha_' + this.options.graphics);
+		defines.push('kha_kore');
+		defines.push('kha_g1');
+		defines.push('kha_g2');
+		defines.push('kha_g3');
+		defines.push('kha_g4');
+		defines.push('kha_a1');
+		defines.push('kha_a2');
 
 		if (this.options.vr === 'gearvr') {
 			defines.push('vr_gearvr');
@@ -50,7 +65,8 @@ export class KoreExporter extends KhaExporter {
 			language: 'cpp',
 			width: this.width,
 			height: this.height,
-			name: name
+			name: name,
+			main: this.options.main,
 		};
 	}
 
@@ -65,36 +81,39 @@ export class KoreExporter extends KhaExporter {
 			return [to + '.ogg'];
 		}
 		else {
-			fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { clobber: true });
+			fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { overwrite: true });
 			return [to + '.wav'];
 		}
 	}
 
-	async copyImage(platform: string, from: string, to: string, options: any) {
+	async copyImage(platform: string, from: string, to: string, options: any, cache: any) {
 		if (platform === Platform.iOS && options.quality < 1) {
-			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, 'pvr', true);
+			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, 'pvr', true, false, cache);
 			return [to + '.' + format];
 		}
-		/*else if (platform === Platform.Android && asset.compressed) {
-		 var index = to.toString().lastIndexOf('.');
-		 to = to.toString().substr(0, index) + '.astc';
-		 asset.file = to.toString().replace(/\\/g, '/');
-		 exportImage(from, this.directory.resolve(this.sysdir()).resolve(to), asset, 'astc', true, callback);
-		 }*/
+		else if (platform === Platform.Windows && options.quality < 1 && (this.options.graphics === GraphicsApi.OpenGL || this.options.graphics === GraphicsApi.Vulkan)) {
+			// let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, 'ASTC', true, false, cache);
+			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, 'DXT5', true, false, cache);
+			return [to + '.' + format];
+		}
 		else {
-			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, 'lz4', true);
+			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, 'lz4', true, false, cache);
 			return [to + '.' + format];
 		}
 	}
 
 	async copyBlob(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { clobber: true });
+		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { overwrite: true });
 		return [to];
 	}
 
 	async copyVideo(platform: string, from: string, to: string) {
 		fs.ensureDirSync(path.join(this.options.to, this.sysdir(), path.dirname(to)));
-		if (platform === Platform.iOS) {
+		if (platform === Platform.Windows) {
+			await convert(from, path.join(this.options.to, this.sysdir(), to + '.avi'), this.options.h264);
+			return [to + '.avi'];
+		}
+		else if (platform === Platform.iOS || platform === Platform.OSX) {
 			await convert(from, path.join(this.options.to, this.sysdir(), to + '.mp4'), this.options.h264);
 			return [to + '.mp4'];
 		}

@@ -1,0 +1,8 @@
+[
+	"Você permite {0} (definido como uma configuração do espaço de trabalho) a ser executado para lint de arquivos PHP?",
+	"Permitir",
+	"Não permitir",
+	"Não é possível validar {0} pois não é um executável php válido. Use a configuração 'php.validate.executablePath' para configurar o executável do PHP.",
+	"Não é possível validar porque nenhum executável PHP está definido. Use a configuração 'php.validate.executablePath' para configurar o executável do PHP.",
+	"Falha ao executar o php usando o caminho: {0}. O motivo é desconhecido."
+]

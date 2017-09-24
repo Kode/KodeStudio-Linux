@@ -1,0 +1,3 @@
+{
+	"config.grunt.autoDetect": "Grunt görevlerinin otomatik olarak algılanıp algılanmayacağını denetler. Varsayılan olarak açıktır."
+}

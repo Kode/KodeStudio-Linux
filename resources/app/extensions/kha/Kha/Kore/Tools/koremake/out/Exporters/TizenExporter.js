@@ -1,14 +1,15 @@
 "use strict";
-const Exporter_1 = require('./Exporter');
-const fs = require('fs-extra');
-const path = require('path');
+Object.defineProperty(exports, "__esModule", { value: true });
+const Exporter_1 = require("./Exporter");
+const fs = require("fs-extra");
+const path = require("path");
 class TizenExporter extends Exporter_1.Exporter {
     constructor() {
         super();
     }
     exportSolution(project, from, to, platform) {
         if (project.getDebugDir() !== '')
-            fs.copySync(path.resolve(from, project.getDebugDir()), path.resolve(to, 'data'), { clobber: true });
+            fs.copySync(path.resolve(from, project.getDebugDir()), path.resolve(to, 'data'), { overwrite: true });
         let dotcproject = fs.readFileSync(path.resolve(__dirname, 'Data', 'tizen', '.cproject'), 'utf8');
         dotcproject = dotcproject.replace(/{ProjectName}/g, project.getName());
         let includes = '';
@@ -31,9 +32,9 @@ class TizenExporter extends Exporter_1.Exporter {
         for (let file of project.getFiles()) {
             let target = path.resolve(to, 'CopiedSources', file);
             fs.ensureDirSync(path.join(target.substr(0, target.lastIndexOf('/'))));
-            fs.copySync(path.resolve(from, file), target, { clobber: true });
+            fs.copySync(path.resolve(from, file), target, { overwrite: true });
         }
     }
 }
-exports.TizenExporter = TizenExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/Exporters/TizenExporter.js.map
+exports.TizenExporter = TizenExporter;
+//# sourceMappingURL=TizenExporter.js.map

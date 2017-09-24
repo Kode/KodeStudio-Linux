@@ -5,17 +5,6 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 define("vs/code/node/cliProcessMain.nls", {
-	"vs/base/common/json": [
-		"Invalid symbol",
-		"Invalid number format",
-		"Property name expected",
-		"Value expected",
-		"Colon expected",
-		"Comma expected",
-		"Closing brace expected",
-		"Closing bracket expected",
-		"End of file expected"
-	],
 	"vs/base/common/severity": [
 		"Error",
 		"Warning",
@@ -37,12 +26,11 @@ define("vs/code/node/cliProcessMain.nls", {
 		"Extension '{0}' was successfully uninstalled!"
 	],
 	"vs/platform/configuration/common/configurationRegistry": [
-		"Contributes configuration settings.",
-		"A summary of the settings. This label will be used in the settings file as separating comment.",
-		"Description of the configuration properties.",
-		"if set, 'configuration.type' must be set to 'object",
-		"'configuration.title' must be a string",
-		"'configuration.properties' must be an object"
+		"Default Configuration Overrides",
+		"Configure editor settings to be overridden for {0} language.",
+		"Configure editor settings to be overridden for a language.",
+		"Cannot register '{0}'. This matches property pattern '\\\\[.*\\\\]$' for describing language specific editor settings. Use 'configurationDefaults' contribution.",
+		"Cannot register '{0}'. This property is already registered."
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"Extensions",
@@ -54,9 +42,6 @@ define("vs/code/node/cliProcessMain.nls", {
 	],
 	"vs/platform/extensionManagement/node/extensionManagementService": [
 		"Extension invalid: package.json is not a JSON file.",
-		"Extension invalid: manifest name mismatch.",
-		"Extension invalid: manifest publisher mismatch.",
-		"Extension invalid: manifest version mismatch.",
 		"Please restart Code before reinstalling {0}.",
 		"Please restart Code before reinstalling {0}.",
 		"Installing '{0}' also installs its dependencies. Would you like to continue?",
@@ -68,31 +53,12 @@ define("vs/code/node/cliProcessMain.nls", {
 		"All",
 		"Cancel",
 		"Are you sure you want to uninstall '{0}'?",
-		"Ok",
+		"OK",
 		"Cancel",
 		"Cannot uninstall extension '{0}'. Extension '{1}' depends on this.",
 		"Cannot uninstall extension '{0}'. Extensions '{1}' and '{2}' depend on this.",
 		"Cannot uninstall extension '{0}'. Extensions '{1}', '{2}' and others depend on this.",
 		"Could not find extension"
-	],
-	"vs/platform/extensions/common/extensionsRegistry": [
-		"For VS Code extensions, specifies the VS Code version that the extension is compatible with. Cannot be *. For example: ^0.10.5 indicates compatibility with a minimum VS Code version of 0.10.5.",
-		"The publisher of the VS Code extension.",
-		"The display name for the extension used in the VS Code gallery.",
-		"The categories used by the VS Code gallery to categorize the extension.",
-		"Banner used in the VS Code marketplace.",
-		"The banner color on the VS Code marketplace page header.",
-		"The color theme for the font used in the banner.",
-		"All contributions of the VS Code extension represented by this package.",
-		"Sets the extension to be flagged as a Preview in the Marketplace.",
-		"Activation events for the VS Code extension.",
-		"Array of badges to display in the sidebar of the Marketplace's extension page.",
-		"Badge image URL.",
-		"Badge link.",
-		"Badge description.",
-		"Dependencies to other extensions. The identifier of an extension is always ${publisher}.${name}. For example: vscode.csharp.",
-		"Script executed before the package is published as a VS Code extension.",
-		"The path to a 128x128 pixel icon."
 	],
 	"vs/platform/extensions/node/extensionValidator": [
 		"Could not parse `engines.vscode` value {0}. Please use, for example: ^0.10.0, ^1.2.3, ^0.11.0, ^0.10.x, etc.",

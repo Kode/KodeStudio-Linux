@@ -1,0 +1,22 @@
+{
+	"messages": [
+		"Strict",
+		"Only load secure content",
+		"Allow insecure content",
+		"Enable loading content over http",
+		"Disable",
+		"Allow all content and script execution. Not recommended",
+		"More Information",
+		"Select security settings for Markdown previews in this workspace"
+	],
+	"keys": [
+		"strict.title",
+		"strict.description",
+		"insecureContent.title",
+		"insecureContent.description",
+		"disable.title",
+		"disable.description",
+		"moreInfo.title",
+		"preview.showPreviewSecuritySelector.title"
+	]
+}

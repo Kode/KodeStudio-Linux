@@ -3,12 +3,13 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
-var vscode_languageserver_1 = require('vscode-languageserver');
-var vscode_css_languageservice_1 = require('vscode-css-languageservice');
-var languageModelCache_1 = require('./languageModelCache');
+Object.defineProperty(exports, "__esModule", { value: true });
+var vscode_languageserver_1 = require("vscode-languageserver");
+var vscode_css_languageservice_1 = require("vscode-css-languageservice");
+var languageModelCache_1 = require("./languageModelCache");
 var ColorSymbolRequest;
 (function (ColorSymbolRequest) {
-    ColorSymbolRequest.type = { get method() { return 'css/colorSymbols'; }, _: null };
+    ColorSymbolRequest.type = new vscode_languageserver_1.RequestType('css/colorSymbols');
 })(ColorSymbolRequest || (ColorSymbolRequest = {}));
 // Create a connection for the server.
 var connection = vscode_languageserver_1.createConnection();
@@ -30,11 +31,12 @@ connection.onShutdown(function () {
 // After the server has started the client sends an initilize request. The server receives
 // in the passed params the rootPath of the workspace plus the client capabilities.
 connection.onInitialize(function (params) {
+    var snippetSupport = params.capabilities && params.capabilities.textDocument && params.capabilities.textDocument.completion && params.capabilities.textDocument.completion.completionItem && params.capabilities.textDocument.completion.completionItem.snippetSupport;
     return {
         capabilities: {
             // Tell the client that the server works in FULL text document sync mode
             textDocumentSync: documents.syncKind,
-            completionProvider: { resolveProvider: false },
+            completionProvider: snippetSupport ? { resolveProvider: false } : null,
             hoverProvider: true,
             documentSymbolProvider: true,
             referencesProvider: true,
@@ -151,4 +153,4 @@ connection.onRenameRequest(function (renameParameters) {
 });
 // Listen on the connection
 connection.listen();
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/css/server/out/cssServerMain.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/css/server/out/cssServerMain.js.map

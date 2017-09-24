@@ -1,21 +1,18 @@
 "use strict";
-const Exporter_1 = require('./Exporter');
-const GraphicsApi_1 = require('../GraphicsApi');
-const Icon = require('../Icon');
-const Platform_1 = require('../Platform');
-const Project_1 = require('../Project');
-const Options_1 = require('../Options');
-const VisualStudioVersion_1 = require('../VisualStudioVersion');
-const ClCompile_1 = require('../ClCompile');
-const Configuration_1 = require('../Configuration');
-const fs = require('fs-extra');
-const path = require('path');
+Object.defineProperty(exports, "__esModule", { value: true });
+const Exporter_1 = require("./Exporter");
+const GraphicsApi_1 = require("../GraphicsApi");
+const Icon = require("../Icon");
+const Platform_1 = require("../Platform");
+const Project_1 = require("../Project");
+const Options_1 = require("../Options");
+const VisualStudioVersion_1 = require("../VisualStudioVersion");
+const Configuration_1 = require("../Configuration");
+const fs = require("fs-extra");
+const path = require("path");
 const uuid = require('uuid');
 let standardconfs = []; // = new String[]{"Debug", "Release"};
-let xboxconfs = []; // = new String[]{"CodeAnalysis", "Debug", "Profile_FastCap", "Profile", "Release_LTCG", "Release"};
 let windows8systems = []; // = new String[]{"ARM", "Win32", "x64"};
-let xboxsystems = []; // = new String[]{"Xbox 360"};
-let ps3systems = []; // = new String[]{"PS3"};
 let windowssystems = []; // = new String[]{"Win32", "x64"};
 function getDir(file) {
     if (file.file.indexOf('/') >= 0) {
@@ -49,7 +46,7 @@ function valueOf(str) {
     throw 'Unknown configuration';
 }
 function getShaderLang() {
-    if (Options_1.Options.graphicsApi === GraphicsApi_1.GraphicsApi.OpenGL || Options_1.Options.graphicsApi === GraphicsApi_1.GraphicsApi.OpenGL2)
+    if (Options_1.Options.graphicsApi === GraphicsApi_1.GraphicsApi.OpenGL)
         return 'glsl';
     if (Options_1.Options.graphicsApi === GraphicsApi_1.GraphicsApi.Direct3D11 || Options_1.Options.graphicsApi === GraphicsApi_1.GraphicsApi.Direct3D12)
         return 'd3d11';
@@ -60,6 +57,12 @@ function getShaderLang() {
 class VisualStudioExporter extends Exporter_1.Exporter {
     constructor() {
         super();
+        if (this.overrideVisualStudioVersion() !== null) {
+            Options_1.Options.visualStudioVersion = this.overrideVisualStudioVersion();
+        }
+    }
+    overrideVisualStudioVersion() {
+        return null;
     }
     exportUserFile(from, to, project, platform) {
         if (project.getDebugDir() === '')
@@ -78,10 +81,8 @@ class VisualStudioExporter extends Exporter_1.Exporter {
         if (platform === Platform_1.Platform.Windows) {
             this.p('<LocalDebuggerWorkingDirectory>' + debugDir + '</LocalDebuggerWorkingDirectory>', 2);
             this.p('<DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>', 2);
-        }
-        else if (platform === Platform_1.Platform.PlayStation3) {
-            this.p('<LocalDebuggerFileServingDirectory>' + debugDir + '</LocalDebuggerFileServingDirectory>', 2);
-            this.p('<DebuggerFlavor>PS3Debugger</DebuggerFlavor>', 2);
+            // java.io.File baseDir = new File(project.getBasedir());
+            // p("<LocalDebuggerCommandArguments>\"SOURCEDIR=" + baseDir.getAbsolutePath() + "\" \"KTSOURCEDIR=" + baseDir.getAbsolutePath() + "\\Kt\"</LocalDebuggerCommandArguments>", 2);
         }
         this.p('</PropertyGroup>', 1);
         this.p('</Project>');
@@ -101,18 +102,11 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             this.writeProjectDeclarations(proj, solutionUuid);
     }
     getConfigs(platform) {
-        if (platform === Platform_1.Platform.Xbox360)
-            return xboxconfs;
-        else
-            return standardconfs;
+        return standardconfs;
     }
     getSystems(platform) {
         if (platform === Platform_1.Platform.WindowsApp)
             return windows8systems;
-        if (platform === Platform_1.Platform.PlayStation3)
-            return ps3systems;
-        else if (platform === Platform_1.Platform.Xbox360)
-            return xboxsystems;
         else
             return windowssystems;
     }
@@ -132,42 +126,37 @@ class VisualStudioExporter extends Exporter_1.Exporter {
         for (let proj of project.getSubProjects())
             this.writeProjectBuilds(proj, platform);
     }
-    exportSolution(project, from, to, platform, vrApi, nokrafix, options) {
+    exportSolution(project, from, to, platform, vrApi, options) {
         standardconfs = [];
         standardconfs.push('Debug');
         standardconfs.push('Release');
-        xboxconfs = [];
-        xboxconfs.push('CodeAnalysis');
-        xboxconfs.push('Debug');
-        xboxconfs.push('Profile_FastCap');
-        xboxconfs.push('Profile');
-        xboxconfs.push('Release_LTCG');
-        xboxconfs.push('Release');
         windows8systems = [];
         windows8systems.push('ARM');
         windows8systems.push('Win32');
         windows8systems.push('x64');
-        xboxsystems = [];
-        xboxsystems.push('Xbox 360');
-        ps3systems = [];
-        ps3systems.push('PS3');
         windowssystems = [];
         windowssystems.push('Win32');
         windowssystems.push('x64');
         this.writeFile(path.resolve(to, project.getName() + '.sln'));
-        if (platform === Platform_1.Platform.WindowsApp || Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2015) {
+        if (Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2017) {
             this.p('Microsoft Visual Studio Solution File, Format Version 12.00');
-            this.p('# Visual Studio 14');
-            this.p('VisualStudioVersion = 14.0.23107.0');
+            this.p('# Visual Studio 15');
+            this.p('VisualStudioVersion = 15.0.26228.4');
             this.p('MinimumVisualStudioVersion = 10.0.40219.1');
         }
-        else if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2013) {
+        else if (Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2015) {
+            this.p('Microsoft Visual Studio Solution File, Format Version 12.00');
+            this.p('# Visual Studio 14');
+            this.p('VisualStudioVersion = 14.0.25420.1');
+            this.p('MinimumVisualStudioVersion = 10.0.40219.1');
+        }
+        else if (Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2013) {
             this.p('Microsoft Visual Studio Solution File, Format Version 12.00');
             this.p('# Visual Studio 2013');
             this.p('VisualStudioVersion = 12.0.21005.1');
             this.p('MinimumVisualStudioVersion = 10.0.40219.1');
         }
-        else if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2012) {
+        else if (Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2012) {
             this.p('Microsoft Visual Studio Solution File, Format Version 12.00');
             this.p('# Visual Studio 2012');
         }
@@ -191,16 +180,19 @@ class VisualStudioExporter extends Exporter_1.Exporter {
         this.p('GlobalSection(SolutionProperties) = preSolution', 1);
         this.p('HideSolutionNode = FALSE', 2);
         this.p('EndGlobalSection', 1);
+        this.postSolution();
         this.p('EndGlobal');
         this.closeFile();
-        this.exportProject(from, to, project, platform, project.isCmd(), nokrafix, options.noshaders);
+        this.exportProject(from, to, project, platform, project.isCmd(), options.noshaders);
         this.exportFilters(from, to, project, platform);
         this.exportUserFile(from, to, project, platform);
         if (platform === Platform_1.Platform.WindowsApp) {
             this.exportManifest(to, project);
+            const indir = path.join(__dirname, '..', '..', 'Data', 'windowsapp');
+            fs.copySync(path.join(indir, 'TemporaryKey.pfx'), path.join(to, 'TemporaryKey.pfx'));
             const white = 0xffffffff;
             Icon.exportPng(path.resolve(to, 'Logo.scale-100.png'), 150, 150, white, from);
-            Icon.exportPng(path.resolve(to, 'SmallLogo.scale-100.png'), 30, 30, white, from);
+            Icon.exportPng(path.resolve(to, 'SmallLogo.scale-100.png'), 44, 44, white, from);
             Icon.exportPng(path.resolve(to, 'StoreLogo.scale-100.png'), 50, 50, white, from);
             Icon.exportPng(path.resolve(to, 'SplashScreen.scale-100.png'), 620, 300, white, from);
             Icon.exportPng(path.resolve(to, 'WideLogo.scale-100.png'), 310, 150, white, from);
@@ -209,6 +201,13 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             this.exportResourceScript(to);
             Icon.exportIco(path.resolve(to, 'icon.ico'), from);
         }
+        else {
+            this.additionalFiles(fs, Icon, from, to);
+        }
+    }
+    postSolution() {
+    }
+    additionalFiles(fs, Icon, from, to) {
     }
     exportManifest(to, project) {
         this.writeFile(path.resolve(to, 'Package.appxmanifest'));
@@ -229,7 +228,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
         this.p('</Resources>', 1);
         this.p('<Applications>', 1);
         this.p('<Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="' + project.getName() + '.App">', 2);
-        this.p('<uap:VisualElements DisplayName="' + project.getName() + '" Square150x150Logo="Assets\Logo.png" Square44x44Logo="Assets\SmallLogo.png" Description="' + project.getName() + '" BackgroundColor="#464646">', 3);
+        this.p('<uap:VisualElements DisplayName="' + project.getName() + '" Square150x150Logo="Logo.png" Square44x44Logo="SmallLogo.png" Description="' + project.getName() + '" BackgroundColor="#464646">', 3);
         this.p('<uap:SplashScreen Image="SplashScreen.png" />', 4);
         this.p('</uap:VisualElements>', 3);
         this.p('</Application>', 2);
@@ -316,7 +315,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             if (dir !== lastdir)
                 lastdir = dir;
             if (file.file.endsWith('.h') || file.file.endsWith('.hpp')) {
-                this.p('<ClInclude Include="' + path.resolve(from, file.file) + '">', 2);
+                this.p('<ClInclude Include="' + this.nicePath(from, to, file.file) + '">', 2);
                 this.p('<Filter>' + dir.replace(/\//g, '\\') + '</Filter>', 3);
                 this.p('</ClInclude>', 2);
             }
@@ -329,7 +328,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             if (dir !== lastdir)
                 lastdir = dir;
             if (file.file.endsWith('.cpp') || file.file.endsWith('.c') || file.file.endsWith('.cc') || file.file.endsWith('.cxx')) {
-                this.p('<ClCompile Include="' + path.resolve(from, file.file) + '">', 2);
+                this.p('<ClCompile Include="' + this.nicePath(from, to, file.file) + '">', 2);
                 this.p('<Filter>' + dir.replace(/\//g, '\\') + '</Filter>', 3);
                 this.p('</ClCompile>', 2);
             }
@@ -342,7 +341,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             if (dir !== lastdir)
                 lastdir = dir;
             if (file.file.endsWith('.cg') || file.file.endsWith('.hlsl')) {
-                this.p('<CustomBuild Include="' + path.resolve(from, file.file) + '">', 2);
+                this.p('<CustomBuild Include="' + this.nicePath(from, to, file.file) + '">', 2);
                 this.p('<Filter>' + dir.replace(/\//g, '\\') + '</Filter>', 3);
                 this.p('</CustomBuild>', 2);
             }
@@ -355,7 +354,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             if (dir !== lastdir)
                 lastdir = dir;
             if (file.file.endsWith('.asm')) {
-                this.p('<CustomBuild Include="' + path.resolve(from, file.file) + '">', 2);
+                this.p('<CustomBuild Include="' + this.nicePath(from, to, file.file) + '">', 2);
                 this.p('<Filter>' + dir.replace(/\//g, '\\') + '</Filter>', 3);
                 this.p('</CustomBuild>', 2);
             }
@@ -369,7 +368,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                     let dir = file.substr(0, file.lastIndexOf('/'));
                     if (dir !== lastdir)
                         lastdir = dir;
-                    this.p('<None Include="' + path.resolve(from, file) + '">', 2);
+                    this.p('<None Include="' + this.nicePath(from, to, file) + '">', 2);
                     this.p('<Filter>' + dir.replace(/\//g, '\\') + '</Filter>', 3);
                     this.p('</None>', 2);
                 }
@@ -404,55 +403,80 @@ class VisualStudioExporter extends Exporter_1.Exporter {
         this.p('<UseDebugLibraries>' + (debug ? 'true' : 'false') + '</UseDebugLibraries>', 2);
         if (!debug)
             this.p('<WholeProgramOptimization>true</WholeProgramOptimization>', 2);
-        this.p('<PlatformToolset>v140</PlatformToolset>', 2);
+        if (Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2017) {
+            this.p('<PlatformToolset>v141</PlatformToolset>', 2);
+        }
+        else {
+            this.p('<PlatformToolset>v140</PlatformToolset>', 2);
+        }
         if (!debug)
             this.p('<UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>', 2);
         this.p('</PropertyGroup>', 1);
     }
-    addItemDefinitionGroup(incstring, defines, buildType, warningLevel, prefast, optimization, functionLevelLinking, stringPooling, favorSize, release, profile, nocomdatfolding, ignoreXapilib, optimizeReferences, checksum, fastCap, comdatfolding, ltcg, platform) {
-        this.p('<ItemDefinitionGroup Condition="\'$(Configuration)|$(Platform)\'==\'' + buildType + '|' + this.GetSys(platform) + '\'">', 1);
-        let compile = new ClCompile_1.ClCompile(this.out, 2, Platform_1.Platform.Xbox360, valueOf(buildType), incstring.split(';'), defines.split(';'));
-        compile.print();
-        this.p('<Link>', 2);
-        this.p('<GenerateDebugInformation>true</GenerateDebugInformation>', 3);
-        if (nocomdatfolding)
-            this.p('<EnableCOMDATFolding>false</EnableCOMDATFolding>', 3);
-        if (comdatfolding)
-            this.p('<EnableCOMDATFolding>true</EnableCOMDATFolding>', 3);
-        if (ignoreXapilib)
-            this.p('<IgnoreSpecificDefaultLibraries>xapilib.lib</IgnoreSpecificDefaultLibraries>', 3);
-        if (optimizeReferences)
-            this.p('<OptimizeReferences>true</OptimizeReferences>', 3);
-        this.p('<ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>', 3);
-        if (checksum)
-            this.p('<SetChecksum>true</SetChecksum>', 3);
-        if (profile)
-            this.p('<AdditionalDependencies>xapilibi.lib;d3d9i.lib;d3dx9.lib;xgraphics.lib;xboxkrnl.lib;xnet.lib;xaudio2.lib;xact3i.lib;x3daudioi.lib;xmcorei.lib;xbdm.lib;vcomp.lib</AdditionalDependencies>', 3);
-        else if (ltcg)
-            this.p('<AdditionalDependencies>xapilib.lib;d3d9ltcg.lib;d3dx9.lib;xgraphics.lib;xboxkrnl.lib;xnet.lib;xaudio2.lib;xact3ltcg.lib;x3daudioltcg.lib;xmcoreltcg.lib;vcomp.lib</AdditionalDependencies>', 3);
-        else if (release)
-            this.p('<AdditionalDependencies>xapilib.lib;d3d9.lib;d3dx9.lib;xgraphics.lib;xboxkrnl.lib;xnet.lib;xaudio2.lib;xact3.lib;x3daudio.lib;xmcore.lib;vcomp.lib</AdditionalDependencies>', 3);
-        else
-            this.p('<AdditionalDependencies>xapilibd.lib;d3d9d.lib;d3dx9d.lib;xgraphicsd.lib;xboxkrnl.lib;xnetd.lib;xaudiod2.lib;xactd3.lib;x3daudiod.lib;xmcored.lib;xbdm.lib;vcompd.lib</AdditionalDependencies>', 3);
-        this.p('</Link>', 2);
-        this.p('</ItemDefinitionGroup>', 1);
+    configuration(config, system, indent) {
+    }
+    propertySheet(config, system, indent) {
+    }
+    addOns(config, system, indent) {
+    }
+    itemDefinition(config, system, includes, defines, indent) {
+    }
+    additionalItemGroups(indent) {
     }
     // private void addWinMD(String name) {
     //     p("<Reference Include=\"" + name + ".winmd\">", 2);
     //     p("<IsWinMDFile>true</IsWinMDFile>", 3);
     //     p("</Reference>", 2);
     // }
-    exportProject(from, to, project, platform, cmd, nokrafix, noshaders) {
+    toolsVersion() {
+        switch (Options_1.Options.visualStudioVersion) {
+            case VisualStudioVersion_1.VisualStudioVersion.VS2017:
+                return '15.0';
+            case VisualStudioVersion_1.VisualStudioVersion.VS2015:
+                return '14.0';
+            case VisualStudioVersion_1.VisualStudioVersion.VS2013:
+                return '12.0';
+            default:
+                return '4.0';
+        }
+    }
+    globals(platform, indent) {
+        const windowsTargetVersion = Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2017 ? '10.0.15063.0' : '10.0.14393.0';
+        if (Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2017) {
+            this.p('<VCProjectVersion>15.0</VCProjectVersion>', indent);
+            this.p('<WindowsTargetPlatformVersion>' + windowsTargetVersion + '</WindowsTargetPlatformVersion>', indent);
+        }
+        if (platform === Platform_1.Platform.WindowsApp) {
+            this.p('<DefaultLanguage>en-US</DefaultLanguage>', indent);
+            this.p('<MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>', indent);
+            this.p('<AppContainerApplication>true</AppContainerApplication>', indent);
+            this.p('<ApplicationType>Windows Store</ApplicationType>', indent);
+            this.p('<ApplicationTypeRevision>8.2</ApplicationTypeRevision>', indent);
+            this.p('<WindowsTargetPlatformVersion>' + windowsTargetVersion + '</WindowsTargetPlatformVersion>', indent);
+            this.p('<WindowsTargetPlatformMinVersion>' + windowsTargetVersion + '</WindowsTargetPlatformMinVersion>', indent);
+            this.p('<ApplicationTypeRevision>10.0</ApplicationTypeRevision>', indent);
+            this.p('<EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>', indent);
+        }
+        else if (Options_1.Options.graphicsApi === GraphicsApi_1.GraphicsApi.Direct3D12) {
+            this.p('<WindowsTargetPlatformVersion>' + windowsTargetVersion + '</WindowsTargetPlatformVersion>', indent);
+        }
+    }
+    customItemGroups(indent) {
+    }
+    additionalPropertyGroups(indent) {
+    }
+    extensionSettings(indent) {
+    }
+    additionalImportGroups(indent) {
+    }
+    extensionTargets(indent) {
+    }
+    exportProject(from, to, project, platform, cmd, noshaders) {
         for (let proj of project.getSubProjects())
-            this.exportProject(from, to, proj, platform, cmd, nokrafix, noshaders);
+            this.exportProject(from, to, proj, platform, cmd, noshaders);
         this.writeFile(path.resolve(to, project.getName() + '.vcxproj'));
         this.p('<?xml version="1.0" encoding="utf-8"?>');
-        if (Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2015)
-            this.p('<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">');
-        else if (Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2013)
-            this.p('<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">');
-        else
-            this.p('<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">');
+        this.p('<Project DefaultTargets="Build" ToolsVersion="' + this.toolsVersion() + '" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">');
         this.p('<ItemGroup Label="ProjectConfigurations">', 1);
         for (let system of this.getSystems(platform)) {
             for (let config of this.getConfigs(platform)) {
@@ -463,35 +487,15 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             }
         }
         this.p('</ItemGroup>', 1);
+        this.customItemGroups(1);
         this.p('<PropertyGroup Label="Globals">', 1);
         this.p('<ProjectGuid>{' + project.getUuid().toString().toUpperCase() + '}</ProjectGuid>', 2);
         // p("<Keyword>Win32Proj</Keyword>", 2);
         // p("<RootNamespace>" + project.Name + "</RootNamespace>", 2);
-        if (platform === Platform_1.Platform.WindowsApp) {
-            this.p('<DefaultLanguage>en-US</DefaultLanguage>', 2);
-            this.p('<MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>', 2);
-            this.p('<AppContainerApplication>true</AppContainerApplication>', 2);
-            this.p('<ApplicationType>Windows Store</ApplicationType>', 2);
-            this.p('<ApplicationTypeRevision>8.2</ApplicationTypeRevision>', 2);
-            this.p('<WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>', 2);
-            this.p('<WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>', 2);
-            this.p('<ApplicationTypeRevision>10.0</ApplicationTypeRevision>', 2);
-            this.p('<EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>', 2);
-        }
-        else if (Options_1.Options.graphicsApi === GraphicsApi_1.GraphicsApi.Direct3D12) {
-            this.p('<WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>', 2);
-        }
+        this.globals(platform, 2);
         this.p('</PropertyGroup>', 1);
         this.p('<Import Project="$(VCTargetsPath)\\Microsoft.Cpp.Default.props" />', 1);
-        if (platform === Platform_1.Platform.Xbox360) {
-            this.addPropertyGroup('CodeAnalysis', false, platform);
-            this.addPropertyGroup('Debug', false, platform);
-            this.addPropertyGroup('Profile', false, platform);
-            this.addPropertyGroup('Profile_FastCap', false, platform);
-            this.addPropertyGroup('Release', false, platform);
-            this.addPropertyGroup('Release_LTCG', true, platform);
-        }
-        else if (platform === Platform_1.Platform.WindowsApp) {
+        if (platform === Platform_1.Platform.WindowsApp) {
             this.addWin8PropertyGroup(true, 'Win32');
             this.addWin8PropertyGroup(true, 'ARM');
             this.addWin8PropertyGroup(true, 'x64');
@@ -499,11 +503,14 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             this.addWin8PropertyGroup(false, 'ARM');
             this.addWin8PropertyGroup(false, 'x64');
         }
-        else {
+        else if (platform === Platform_1.Platform.Windows) {
             this.p('<PropertyGroup Condition="\'$(Configuration)\'==\'Debug\'" Label="Configuration">', 1);
             this.p('<ConfigurationType>Application</ConfigurationType>', 2);
             this.p('<UseDebugLibraries>true</UseDebugLibraries>', 2);
-            if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2015) {
+            if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2017) {
+                this.p('<PlatformToolset>v141</PlatformToolset>', 2);
+            }
+            else if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2015) {
                 this.p('<PlatformToolset>v140</PlatformToolset>', 2);
             }
             else if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2013) {
@@ -515,15 +522,14 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             if (platform === Platform_1.Platform.Windows) {
                 this.p('<CharacterSet>Unicode</CharacterSet>', 2);
             }
-            else if (platform === Platform_1.Platform.PlayStation3) {
-                this.p('<PlatformToolset>SNC</PlatformToolset>', 2);
-                this.p('<ExceptionsAndRtti>WithExceptsWithRtti</ExceptionsAndRtti>', 2);
-            }
             this.p('</PropertyGroup>', 1);
             this.p('<PropertyGroup Condition="\'$(Configuration)\'==\'Release\'" Label="Configuration">', 1);
             this.p('<ConfigurationType>Application</ConfigurationType>', 2);
             this.p('<UseDebugLibraries>false</UseDebugLibraries>', 2);
-            if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2015) {
+            if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2017) {
+                this.p('<PlatformToolset>v141</PlatformToolset>', 2);
+            }
+            else if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2015) {
                 this.p('<PlatformToolset>v140</PlatformToolset>', 2);
             }
             else if (platform === Platform_1.Platform.Windows && Options_1.Options.visualStudioVersion === VisualStudioVersion_1.VisualStudioVersion.VS2013) {
@@ -536,15 +542,30 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                 this.p('<WholeProgramOptimization>true</WholeProgramOptimization>', 2);
                 this.p('<CharacterSet>Unicode</CharacterSet>', 2);
             }
-            else if (platform === Platform_1.Platform.PlayStation3) {
-                this.p('<PlatformToolset>SNC</PlatformToolset>', 2);
-                this.p('<ExceptionsAndRtti>WithExceptsWithRtti</ExceptionsAndRtti>', 2);
-            }
             this.p('</PropertyGroup>', 1);
         }
+        else {
+            for (let config of this.getConfigs(platform)) {
+                for (let system of this.getSystems(platform)) {
+                    this.configuration(config, system, 1);
+                }
+            }
+        }
         this.p('<Import Project="$(VCTargetsPath)\\Microsoft.Cpp.props" />', 1);
+        this.additionalPropertyGroups(1);
         this.p('<ImportGroup Label="ExtensionSettings">', 1);
+        this.extensionSettings(2);
         this.p('</ImportGroup>', 1);
+        this.additionalImportGroups(1);
+        if (platform === Platform_1.Platform.WindowsApp) {
+            this.p('<PropertyGroup Label="UserMacros">', 1);
+            this.p('<PackageCertificateThumbprint>70D2DCD9F41CDDD92BA2862FF58A54240AFD2A23</PackageCertificateThumbprint>', 2);
+            this.p('<PackageCertificateKeyFile>TemporaryKey.pfx</PackageCertificateKeyFile>', 2);
+            this.p('</PropertyGroup>', 1);
+        }
+        else {
+            this.p('<PropertyGroup Label="UserMacros" />', 1);
+        }
         if (platform === Platform_1.Platform.WindowsApp) {
             const configurations = ['Debug', 'Release'];
             for (let configuration of configurations) {
@@ -555,35 +576,24 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                 }
             }
         }
-        else {
+        else if (platform === Platform_1.Platform.Windows) {
             for (let system of this.getSystems(platform)) {
                 this.p('<ImportGroup Label="PropertySheets" Condition="\'$(Platform)\'==\'' + system + '\'">', 1);
                 this.p('<Import Project="$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props" Condition="exists(\'$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props\')" Label="LocalAppDataPlatform" />', 2);
                 this.p('</ImportGroup>', 1);
             }
         }
-        this.p('<PropertyGroup Label="UserMacros" />', 1);
-        if (platform === Platform_1.Platform.WindowsApp) {
-        }
-        if (platform === Platform_1.Platform.Windows || platform === Platform_1.Platform.Xbox360) {
-            for (let system of this.getSystems(platform)) {
-                for (let config of this.getConfigs(platform)) {
-                    this.p('<PropertyGroup Condition="\'$(Configuration)|$(Platform)\'==\'' + config + '|' + system + '\'">', 1);
-                    if (system === 'Win32') {
-                        if (Options_1.Options.intermediateDrive === '')
-                            this.p('<IntDir>$(Configuration)\\' + project.getName() + '\\</IntDir>', 2);
-                        else
-                            this.p('<IntDir>' + Options_1.Options.intermediateDrive + ':\\$(projectname)\\$(Configuration)\\' + project.getName() + '\\</IntDir>', 2);
-                    }
-                    else
-                        this.p('<IntDir>$(Platform)\\$(Configuration)\\' + project.getName() + '\\</IntDir>', 2);
-                    this.p('<LinkIncremental>' + ((config === 'Debug' || config === 'CodeAnalysis') ? 'true' : 'false') + '</LinkIncremental>', 2);
-                    this.p('</PropertyGroup>', 1);
+        else {
+            for (let config of this.getConfigs(platform)) {
+                for (let system of this.getSystems(platform)) {
+                    this.propertySheet(config, system, 1);
                 }
             }
         }
-        else if (platform === Platform_1.Platform.PlayStation3) {
-            this.p('<PropertyGroup />', 1);
+        for (let config of this.getConfigs(platform)) {
+            for (let system of this.getSystems(platform)) {
+                this.addOns(config, system, 1);
+            }
         }
         let defines = '';
         for (let define of project.getDefines())
@@ -617,15 +627,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             else
                 releaselibs += lib + '.lib;';
         }
-        if (platform === Platform_1.Platform.Xbox360) {
-            this.addItemDefinitionGroup(incstring, defines, 'Debug', 3, false, false, false, false, false, false, false, false, false, false, false, false, false, false, platform);
-            this.addItemDefinitionGroup(incstring, defines, 'CodeAnalysis', 4, true, false, false, false, false, false, false, false, false, false, false, false, false, false, platform);
-            this.addItemDefinitionGroup(incstring, defines, 'Profile', 3, false, true, true, true, true, true, true, true, true, true, true, false, false, false, platform);
-            this.addItemDefinitionGroup(incstring, defines, 'Profile_FastCap', 3, false, true, true, true, true, true, true, true, false, true, true, true, false, false, platform);
-            this.addItemDefinitionGroup(incstring, defines, 'Release', 3, false, true, true, true, true, true, false, false, false, true, true, false, true, false, platform);
-            this.addItemDefinitionGroup(incstring, defines, 'Release_LTCG', 3, false, true, true, true, true, true, false, false, false, true, true, false, true, true, platform);
-        }
-        else if (platform === Platform_1.Platform.WindowsApp) {
+        if (platform === Platform_1.Platform.WindowsApp) {
             /*this.p("<ItemDefinitionGroup>", 1);
              this.p("<Link>", 2);
              this.p("<AdditionalDependencies>MMDevAPI.lib;MFuuid.lib;MFReadWrite.lib;MFplat.lib;d2d1.lib;d3d11.lib;dxgi.lib;ole32.lib;windowscodecs.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>", 3);
@@ -673,7 +675,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                 this.p('</ItemDefinitionGroup>', 1);
             }
         }
-        else {
+        else if (platform === Platform_1.Platform.Windows) {
             for (let system of this.getSystems(platform)) {
                 this.p('<ItemDefinitionGroup Condition="\'$(Configuration)|$(Platform)\'==\'Debug|' + system + '\'">', 1);
                 this.p('<ClCompile>', 2);
@@ -690,11 +692,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                     this.p('<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>', 3);
                     this.p('<MultiProcessorCompilation>true</MultiProcessorCompilation>', 3);
                     this.p('<MinimalRebuild>false</MinimalRebuild>', 3);
-                }
-                else if (platform === Platform_1.Platform.PlayStation3) {
-                    this.p('<UserPreprocessorDefinitions>' + defines + '_DEBUG;__CELL_ASSERT__;%(UserPreprocessorDefinitions);</UserPreprocessorDefinitions>', 3);
-                    this.p('<GenerateDebugInformation>true</GenerateDebugInformation>', 3);
-                    this.p('<PreprocessorDefinitions>%(UserPreprocessorDefinitions);$(BuiltInDefines);__INTELLISENSE__;%(PreprocessorDefinitions);</PreprocessorDefinitions>', 3);
+                    // if (Options.visualStudioVersion == VisualStudioVersion.VS2013) this.p("<SDLCheck>true</SDLCheck>", 3);
                 }
                 this.p('</ClCompile>', 2);
                 if (platform === Platform_1.Platform.Windows) {
@@ -703,7 +701,8 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                         this.p('<SubSystem>Console</SubSystem>', 3);
                     else
                         this.p('<SubSystem>Windows</SubSystem>', 3);
-                    this.p('<GenerateDebugInformation>true</GenerateDebugInformation>', 3);
+                    if (Options_1.Options.visualStudioVersion !== VisualStudioVersion_1.VisualStudioVersion.VS2017)
+                        this.p('<GenerateDebugInformation>true</GenerateDebugInformation>', 3);
                     let libs = debuglibs;
                     for (let lib of project.getLibsFor('debug_' + system)) {
                         if (fs.existsSync(path.resolve(from, lib + '.lib')))
@@ -726,11 +725,6 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                     this.p('<AdditionalDependencies>' + libs + 'kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>', 3);
                     this.p('</Link>', 2);
                 }
-                else if (platform === Platform_1.Platform.PlayStation3) {
-                    this.p('<Link>', 2);
-                    this.p('<AdditionalDependencies>libgcm_cmd.a;libgcm_sys_stub.a;libsysmodule_stub.a;libsysutil_stub.a;%(AdditionalDependencies)</AdditionalDependencies>', 3);
-                    this.p('</Link>', 2);
-                }
                 this.p('</ItemDefinitionGroup>', 1);
                 this.p('<ItemDefinitionGroup Condition="\'$(Configuration)|$(Platform)\'==\'Release|' + system + '\'">', 1);
                 this.p('<ClCompile>', 2);
@@ -749,11 +743,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                     this.p('<RuntimeLibrary>MultiThreaded</RuntimeLibrary>', 3);
                     this.p('<MultiProcessorCompilation>true</MultiProcessorCompilation>', 3);
                     this.p('<MinimalRebuild>false</MinimalRebuild>', 3);
-                }
-                else if (platform === Platform_1.Platform.PlayStation3) {
-                    this.p('<UserPreprocessorDefinitions>' + defines + 'NDEBUG;%(UserPreprocessorDefinitions);</UserPreprocessorDefinitions>', 3);
-                    this.p('<OptimizationLevel>Level2</OptimizationLevel>', 3);
-                    this.p('<PreprocessorDefinitions>%(UserPreprocessorDefinitions);$(BuiltInDefines);__INTELLISENSE__;%(PreprocessorDefinitions);</PreprocessorDefinitions>');
+                    // if (Options.visualStudioVersion === VisualStudioVersion.VS2013) this.p("<SDLCheck>true</SDLCheck>", 3);
                 }
                 this.p('</ClCompile>', 2);
                 if (platform === Platform_1.Platform.Windows) {
@@ -762,7 +752,8 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                         this.p('<SubSystem>Console</SubSystem>', 3);
                     else
                         this.p('<SubSystem>Windows</SubSystem>', 3);
-                    this.p('<GenerateDebugInformation>true</GenerateDebugInformation>', 3);
+                    if (Options_1.Options.visualStudioVersion !== VisualStudioVersion_1.VisualStudioVersion.VS2017)
+                        this.p('<GenerateDebugInformation>true</GenerateDebugInformation>', 3);
                     this.p('<EnableCOMDATFolding>true</EnableCOMDATFolding>', 3);
                     this.p('<OptimizeReferences>true</OptimizeReferences>', 3);
                     let libs = releaselibs;
@@ -787,18 +778,20 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                     this.p('<AdditionalDependencies>' + libs + 'kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>', 3);
                     this.p('</Link>', 2);
                 }
-                else if (platform === Platform_1.Platform.PlayStation3) {
-                    this.p('<Link>', 2);
-                    this.p('<AdditionalDependencies>libgcm_cmd.a;libgcm_sys_stub.a;libsysmodule_stub.a;libsysutil_stub.a;%(AdditionalDependencies)</AdditionalDependencies>', 3);
-                    this.p('</Link>', 2);
-                }
                 this.p('</ItemDefinitionGroup>', 1);
+            }
+        }
+        else {
+            for (let config of this.getConfigs(platform)) {
+                for (let system of this.getSystems(platform)) {
+                    this.itemDefinition(config, system, incstring, defines, 2);
+                }
             }
         }
         this.p('<ItemGroup>', 1);
         for (let file of project.getFiles()) {
             if (file.file.endsWith('.h') || file.file.endsWith('.hpp'))
-                this.p('<ClInclude Include="' + path.resolve(from, file.file) + '" />', 2);
+                this.p('<ClInclude Include="' + this.nicePath(from, to, file.file) + '" />', 2);
         }
         this.p('</ItemGroup>', 1);
         if (platform === Platform_1.Platform.WindowsApp) {
@@ -812,7 +805,10 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             this.p('<AppxManifest Include="Package.appxmanifest" />', 2);
             this.p('</ItemGroup>', 1);
             this.p('<ItemGroup>', 1);
-            this.exportAssetPath(path.resolve(from, project.getDebugDir()));
+            this.p('<None Include="TemporaryKey.pfx" />', 2);
+            this.p('</ItemGroup>', 1);
+            this.p('<ItemGroup>', 1);
+            this.exportAssetPath(from, path.resolve(from, project.getDebugDir()));
             this.p('</ItemGroup>', 1);
         }
         this.p('<ItemGroup>', 1);
@@ -845,19 +841,19 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                         this.p('</ClCompile>', 2);
                     }
                     else if (platform === Platform_1.Platform.WindowsApp && !file.endsWith('.winrt.cpp')) {
-                        this.p('<ClCompile Include="' + path.resolve(from, file) + '">', 2);
+                        this.p('<ClCompile Include="' + this.nicePath(from, to, file) + '">', 2);
                         this.p('<CompileAsWinRT>false</CompileAsWinRT>', 3);
                         this.p('</ClCompile>', 2);
                     }
                     else {
                         if (fileobject.options && fileobject.options.pch) {
-                            this.p('<ClCompile Include="' + path.resolve(from, file) + '">', 2);
+                            this.p('<ClCompile Include="' + this.nicePath(from, to, file) + '">', 2);
                             this.p('<PrecompiledHeader>Use</PrecompiledHeader>', 3);
                             this.p('<PrecompiledHeaderFile>' + fileobject.options.pch + '</PrecompiledHeaderFile>', 3);
                             this.p('</ClCompile>', 2);
                         }
                         else {
-                            this.p('<ClCompile Include="' + path.resolve(from, file) + '" />', 2);
+                            this.p('<ClCompile Include="' + this.nicePath(from, to, file) + '" />', 2);
                         }
                     }
                     objects[name] = true;
@@ -866,7 +862,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
                     while (objects[name]) {
                         name = name + '_';
                     }
-                    this.p('<ClCompile Include="' + path.resolve(from, file) + '">', 2);
+                    this.p('<ClCompile Include="' + this.nicePath(from, to, file) + '">', 2);
                     this.p('<ObjectFileName>$(IntDir)\\' + name + '.obj</ObjectFileName>', 3);
                     if (platform === Platform_1.Platform.WindowsApp && !file.endsWith('.winrt.cpp')) {
                         this.p('<CompileAsWinRT>false</CompileAsWinRT>', 3);
@@ -877,31 +873,11 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             }
         }
         this.p('</ItemGroup>', 1);
-        if (platform === Platform_1.Platform.PlayStation3) {
-            this.p('<ItemGroup>', 1);
-            for (let file of project.getFiles()) {
-                if (file.file.endsWith('.vp.cg')) {
-                    this.p('<CustomBuild Include="' + path.resolve(from, file.file) + '">', 2);
-                    this.p('<FileType>Document</FileType>', 2);
-                    this.p('<Command>$(SCE_PS3_ROOT)\\host-win32\\Cg\\bin\\sce-cgc -quiet -profile sce_vp_rsx -o "%(Filename).vpo" "%(FullPath)"\n$(SCE_PS3_ROOT)\\host-win32\\ppu\\bin\\ppu-lv2-objcopy -I binary -O elf64-powerpc-celloslv2 -B powerpc "%(Filename).vpo" "%(Filename).ppu.o"</Command>', 2);
-                    this.p('<Outputs>%(Filename).vpo;%(Filename).ppu.o;%(Outputs)</Outputs>', 2);
-                    this.p('</CustomBuild>', 2);
-                }
-                else if (file.file.endsWith('.fp.cg')) {
-                    this.p('<CustomBuild Include="' + path.resolve(from, file.file) + '">', 2);
-                    this.p('<FileType>Document</FileType>', 2);
-                    this.p('<Command>$(SCE_PS3_ROOT)\\host-win32\\Cg\\bin\\sce-cgc -quiet -profile sce_fp_rsx -o "%(Filename).fpo" "%(FullPath)"\n$(SCE_PS3_ROOT)\\host-win32\\ppu\\bin\\ppu-lv2-objcopy -I binary -O elf64-powerpc-celloslv2 -B powerpc "%(Filename).fpo" "%(Filename).ppu.o"</Command>', 2);
-                    this.p('<Outputs>%(Filename).fpo;%(Filename).ppu.o;%(Outputs)</Outputs>', 2);
-                    this.p('</CustomBuild>', 2);
-                }
-            }
-            this.p('</ItemGroup>', 1);
-        }
         if (platform === Platform_1.Platform.Windows) {
             this.p('<ItemGroup>', 1);
             for (let file of project.getFiles()) {
                 if (file.file.endsWith('.cg')) {
-                    this.p('<CustomBuild Include="' + path.resolve(from, file.file) + '">', 2);
+                    this.p('<CustomBuild Include="' + this.nicePath(from, to, file.file) + '">', 2);
                     this.p('<FileType>Document</FileType>', 2);
                     this.p('<Command>..\\Kt\\Tools\\ShaderCompiler.exe ' + getShaderLang() + ' \"%(FullPath)" ' + path.resolve(from, project.getDebugDir()).replace(/\//g, '\\') + '\\Shaders\\%(Filename)</Command>', 2);
                     this.p('<Outputs>' + path.resolve(from, project.getDebugDir()).replace(/\//g, '\\') + '\\Shaders\\%(Filename)' + getShaderLang() + ';%(Outputs)</Outputs>', 2);
@@ -912,12 +888,9 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             this.p('<ItemGroup>', 1);
             for (let file of project.getFiles()) {
                 if (Project_1.Project.koreDir && Project_1.Project.koreDir.toString() !== '' && !noshaders && file.file.endsWith('.glsl')) {
-                    this.p('<CustomBuild Include="' + path.resolve(from, file.file) + '">', 2);
+                    this.p('<CustomBuild Include="' + this.nicePath(from, to, file.file) + '">', 2);
                     this.p('<FileType>Document</FileType>', 2);
-                    if (nokrafix)
-                        this.p('<Command>"' + path.resolve(from, Project_1.Project.koreDir).replace(/\//g, '\\') + '\\Tools\\kfx\\kfx.exe" ' + getShaderLang() + ' \"%(FullPath)" ..\\' + project.getDebugDir().replace(/\//g, '\\') + '\\%(Filename) ..\\build</Command>', 2);
-                    else
-                        this.p('<Command>"' + path.resolve(from, Project_1.Project.koreDir).replace(/\//g, '\\') + '\\Tools\\krafix\\krafix.exe" ' + getShaderLang() + ' "%(FullPath)" ..\\' + project.getDebugDir().replace(/\//g, '\\') + '\\%(Filename) ..\\build ' + platform + '</Command>', 2);
+                    this.p('<Command>"' + path.resolve(from, Project_1.Project.koreDir).replace(/\//g, '\\') + '\\Tools\\krafix\\krafix.exe" ' + getShaderLang() + ' "%(FullPath)" ..\\' + project.getDebugDir().replace(/\//g, '\\') + '\\%(Filename) ..\\build ' + platform + ' --quiet</Command>', 2);
                     this.p('<Outputs>' + path.resolve(from, project.getDebugDir()).replace(/\//g, '\\') + '\\%(Filename);%(Outputs)</Outputs>', 2);
                     this.p('<Message>Compiling %(FullPath)</Message>', 2);
                     this.p('</CustomBuild>', 2);
@@ -927,7 +900,7 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             this.p('<ItemGroup>', 1);
             for (let file of project.getFiles()) {
                 if (Project_1.Project.koreDir && Project_1.Project.koreDir.toString() !== '' && file.file.endsWith('.asm')) {
-                    this.p('<CustomBuild Include="' + path.resolve(from, file.file) + '">', 2);
+                    this.p('<CustomBuild Include="' + this.nicePath(from, to, file.file) + '">', 2);
                     this.p('<FileType>Document</FileType>', 2);
                     this.p('<Command>' + path.resolve(from, Project_1.Project.koreDir).replace(/\//g, '\\') + '\\Tools\\yasm-1.2.0-win32.exe -Xvc -f Win32 -g cv8 -o $(OutDir)\\%(Filename).obj -I ..\\Kt\\WebM\\src -I ..\\Kt\\WebM\\build -rnasm -pnasm "%(FullPath)"</Command>', 2);
                     this.p('<Outputs>$(OutDir)\\%(Filename).obj</Outputs>', 2);
@@ -943,28 +916,27 @@ class VisualStudioExporter extends Exporter_1.Exporter {
             this.p('<ResourceCompile Include="resources.rc" />', 2);
             this.p('</ItemGroup>', 1);
         }
-        if (platform === Platform_1.Platform.PlayStation3) {
-            this.p('<Import Condition="\'$(ConfigurationType)\' == \'Makefile\' and Exists(\'$(VCTargetsPath)\\Platforms\\$(Platform)\\SCE.Makefile.$(Platform).targets\')" Project="$(VCTargetsPath)\\Platforms\\$(Platform)\\SCE.Makefile.$(Platform).targets" />', 1);
-        }
+        this.additionalItemGroups(1);
         this.p('<Import Project="$(VCTargetsPath)\\Microsoft.Cpp.targets" />', 1);
-        this.p('<ImportGroup Label="ExtensionTargets">', 2);
+        this.p('<ImportGroup Label="ExtensionTargets">', 1);
+        this.extensionTargets(2);
         this.p('</ImportGroup>', 1);
         this.p('</Project>');
         this.closeFile();
     }
-    exportAssetPath(assetPath) {
+    exportAssetPath(from, assetPath) {
         let paths = fs.readdirSync(assetPath);
         for (let p of paths) {
             if (fs.statSync(path.join(assetPath, p)).isDirectory()) {
-                this.exportAssetPath(path.join(assetPath, p));
+                this.exportAssetPath(from, path.join(assetPath, p));
             }
             else {
-                this.p('<None Include="../windowsapp/' + path.join(assetPath, p) + '">', 2);
+                this.p('<None Include="' + path.resolve(from, path.join(assetPath, p)).replace(/\//g, '\\') + '">', 2);
                 this.p('<DeploymentContent>true</DeploymentContent>', 3);
                 this.p('</None>', 2);
             }
         }
     }
 }
-exports.VisualStudioExporter = VisualStudioExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/Exporters/VisualStudioExporter.js.map
+exports.VisualStudioExporter = VisualStudioExporter;
+//# sourceMappingURL=VisualStudioExporter.js.map

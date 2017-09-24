@@ -3,12 +3,13 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
-var vscode_html_languageservice_1 = require('vscode-html-languageservice');
-var languageModelCache_1 = require('../languageModelCache');
-var embeddedSupport_1 = require('./embeddedSupport');
-var cssMode_1 = require('./cssMode');
-var javascriptMode_1 = require('./javascriptMode');
-var htmlMode_1 = require('./htmlMode');
+Object.defineProperty(exports, "__esModule", { value: true });
+var vscode_html_languageservice_1 = require("vscode-html-languageservice");
+var languageModelCache_1 = require("../languageModelCache");
+var embeddedSupport_1 = require("./embeddedSupport");
+var cssMode_1 = require("./cssMode");
+var javascriptMode_1 = require("./javascriptMode");
+var htmlMode_1 = require("./htmlMode");
 function getLanguageModes(supportedLanguages) {
     var htmlLanguageService = vscode_html_languageservice_1.getLanguageService();
     var documentRegions = languageModelCache_1.getLanguageModelCache(10, 60, function (document) { return embeddedSupport_1.getDocumentRegions(htmlLanguageService, document); });
@@ -25,7 +26,6 @@ function getLanguageModes(supportedLanguages) {
     return {
         getModeAtPosition: function (document, position) {
             var languageId = documentRegions.get(document).getLanguageAtPosition(position);
-            ;
             if (languageId) {
                 return modes[languageId];
             }
@@ -82,4 +82,4 @@ function getLanguageModes(supportedLanguages) {
     };
 }
 exports.getLanguageModes = getLanguageModes;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/html/server/out/modes/languageModes.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/html/server/out/modes/languageModes.js.map

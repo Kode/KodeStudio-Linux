@@ -28,5 +28,20 @@ abstract Float32Array(FloatBuffer) {
 	
 	public inline function data(): FloatBuffer {
 		return this;
-	}	
+	}
+	
+	@:arrayAccess
+	public inline function arrayRead(index: Int): FastFloat {
+		return this.get(index);
+	}
+
+	@:arrayAccess
+	public inline function arrayWrite(index: Int, value: FastFloat): FastFloat {
+		this.put(index, value);
+		return value;
+	}
+
+	//public inline function subarray(start: Int, ?end: Int): Float32Array {
+	//	return cast this.subarray(start, end);
+	//}
 }

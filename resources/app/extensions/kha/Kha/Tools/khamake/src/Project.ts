@@ -124,6 +124,9 @@ export class Project {
 		this.addDefine(library);
 		let self = this;
 		function findLibraryDirectory(name: string) {
+			if (path.isAbsolute(name)) {
+				return { libpath: name, libroot: name };
+			}
 			// Tries to load the default library from inside the kha project.
 			// e.g. 'Libraries/wyngine'
 			let libpath = path.join(self.scriptdir, self.localLibraryPath, name);

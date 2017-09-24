@@ -1,6 +1,7 @@
 "use strict";
-const child_process = require('child_process');
-const fs = require('fs');
+Object.defineProperty(exports, "__esModule", { value: true });
+const child_process = require("child_process");
+const fs = require("fs");
 function convert(inFilename, outFilename, encoder, args = null) {
     return new Promise((resolve, reject) => {
         if (fs.existsSync(outFilename.toString()) && fs.statSync(outFilename.toString()).mtime.getTime() > fs.statSync(inFilename.toString()).mtime.getTime()) {
@@ -43,5 +44,5 @@ function convert(inFilename, outFilename, encoder, args = null) {
     });
 }
 exports.convert = convert;
-;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Converter.js.map
+;
+//# sourceMappingURL=Converter.js.map

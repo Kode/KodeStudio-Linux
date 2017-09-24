@@ -1,7 +1,8 @@
 "use strict";
-const fs = require('fs-extra');
-const path = require('path');
-const XmlWriter_1 = require('./XmlWriter');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
+const path = require("path");
+const XmlWriter_1 = require("./XmlWriter");
 function copyAndReplace(from, to, names, values) {
     let data = fs.readFileSync(from, { encoding: 'utf8' });
     for (let i = 0; i < names.length; ++i) {
@@ -69,15 +70,15 @@ function IntelliJ(projectdir, options) {
             target = 'JavaScript';
             break;
     }
-    fs.copySync(path.join(indir, 'name.iml'), path.join(outdir, options.name + '.iml'), { clobber: true });
+    fs.copySync(path.join(indir, 'name.iml'), path.join(outdir, options.name + '.iml'), { overwrite: true });
     copyAndReplace(path.join(indir, 'name.iml'), path.join(outdir, options.name + '.iml'), ['{name}', '{sources}', '{libraries}', '{target}', '{system}', '{args}'], [options.safeName, sources, libraries, target, options.system, args]);
-    fs.copySync(path.join(indir, 'idea', 'compiler.xml'), path.join(outdir, '.idea', 'compiler.xml'), { clobber: true });
+    fs.copySync(path.join(indir, 'idea', 'compiler.xml'), path.join(outdir, '.idea', 'compiler.xml'), { overwrite: true });
     copyAndReplace(path.join(indir, 'idea', 'haxe.xml'), path.join(outdir, '.idea', 'haxe.xml'), ['{defines}'], [defines]);
-    fs.copySync(path.join(indir, 'idea', 'misc.xml'), path.join(outdir, '.idea', 'misc.xml'), { clobber: true });
+    fs.copySync(path.join(indir, 'idea', 'misc.xml'), path.join(outdir, '.idea', 'misc.xml'), { overwrite: true });
     copyAndReplace(path.join(indir, 'idea', 'modules.xml'), path.join(outdir, '.idea', 'modules.xml'), ['{name}'], [options.name]);
-    fs.copySync(path.join(indir, 'idea', 'vcs.xml'), path.join(outdir, '.idea', 'vcs.xml'), { clobber: true });
+    fs.copySync(path.join(indir, 'idea', 'vcs.xml'), path.join(outdir, '.idea', 'vcs.xml'), { overwrite: true });
     copyAndReplace(path.join(indir, 'idea', 'name'), path.join(outdir, '.idea', '.name'), ['{name}'], [options.name]);
-    fs.copySync(path.join(indir, 'idea', 'copyright', 'profiles_settings.xml'), path.join(outdir, '.idea', 'copyright', 'profiles_settings.xml'), { clobber: true });
+    fs.copySync(path.join(indir, 'idea', 'copyright', 'profiles_settings.xml'), path.join(outdir, '.idea', 'copyright', 'profiles_settings.xml'), { overwrite: true });
 }
 function hxml(projectdir, options) {
     let data = '';
@@ -134,7 +135,8 @@ function hxml(projectdir, options) {
     for (let param of options.parameters) {
         data += param + '\n';
     }
-    data += '-main Main' + '\n';
+    const entrypoint = options ? options.main ? options.main : 'Main' : 'Main';
+    data += '-main ' + entrypoint + '\n';
     fs.outputFileSync(path.join(projectdir, 'project-' + options.system + '.hxml'), data);
 }
 function FlashDevelop(projectdir, options) {
@@ -225,7 +227,7 @@ function FlashDevelop(projectdir, options) {
             showHiddenPaths: 'False'
         }
     ];
-    if (options.language === 'cpp') {
+    if (options.language === 'cpp' || options.system === 'krom') {
         otheroptions.push({
             n: 'option',
             testMovie: 'Custom'
@@ -375,5 +377,5 @@ function writeHaxeProject(projectdir, options) {
     FlashDevelop(projectdir, options);
     IntelliJ(projectdir, options);
 }
-exports.writeHaxeProject = writeHaxeProject;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/HaxeProject.js.map
+exports.writeHaxeProject = writeHaxeProject;
+//# sourceMappingURL=HaxeProject.js.map

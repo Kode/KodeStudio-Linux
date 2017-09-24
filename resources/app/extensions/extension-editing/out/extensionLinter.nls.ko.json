@@ -1,0 +1,9 @@
+[
+	"이미지는 HTTPS 프로토콜을 사용해야 합니다.",
+	"SVG는 올바른 이미지 소스가 아닙니다.",
+	"내장 SVG는 올바른 이미지 소스가 아닙니다.",
+	"데이터 URL은 올바른 이미지 소스가 아닙니다.",
+	"Relative image URLs require a repository with HTTPS protocol to be specified in the package.json.",
+	"An icon requires a repository with HTTPS protocol to be specified in this package.json.",
+	"Relative badge URLs require a repository with HTTPS protocol to be specified in this package.json."
+]

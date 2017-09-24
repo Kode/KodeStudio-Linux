@@ -1,0 +1,13 @@
+[
+	"{0} yolu geçerli bir tsserver kurulumuna işaret etmiyor. Paketlenmiş TypeScript sürümüne geri dönülüyor.",
+	"TypeScript dil sunucusu başlatılamadı. Hata mesajı: {0}",
+	"TS Sunucu günlüğü için TS 2.2.2+ gerekiyor",
+	"TS Sunucu günlüğü kapalı. Lütfen `typescript.tsserver.log` ögesini ayarlayın ve günlüğe yazmayı etkinleştirmek için TS sunucusunu yeniden başlatın",
+	"Günlüğe yazmayı etkinleştir ve TS sunucusunu yeniden başlat",
+	"TS sunucu günlüğe yazmaya başlamadı.",
+	"TS Sunucu günlük dosyası açılamadı",
+	"TypeScript dil hizmeti, başladıktan hemen sonra 5 kez kapandı. Hizmet yeniden başlatılmayacaktır.",
+	"Sorun Bildir",
+	"TypeScript dil hizmeti, son 5 dakikada 5 kez beklenmedik şekilde kapandı.",
+	"Sorun Bildir"
+]

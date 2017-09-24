@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -51,6 +51,7 @@ class EReg {
 	}
 
 	public function match( s : String ) : Bool {
+		if (s == null) return false;
 		this.m = lua.TableTools.pack(r.exec(s));
 		this.s = s;
 		return  m[1] != null;
@@ -120,7 +121,7 @@ class EReg {
 	}
 
 	public function replace( s : String, by : String ) : String {
-		by = Rex.gsub(by, "\\$(\\d)", "%%1"); // convert dollar sign matched groups to Rex equivalent
+		by = Rex.gsub(by, "\\$(\\d)", "%%%1"); // convert dollar sign matched groups to Rex equivalent
 		by = Rex.gsub(by, "\\${2}", "$"); // escape double dollar signs
 		return Rex.gsub(s,r,by, global ? null : 1);
 	}

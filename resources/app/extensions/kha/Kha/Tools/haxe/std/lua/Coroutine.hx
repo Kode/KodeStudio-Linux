@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -64,7 +64,7 @@ extern class Coroutine<T:Function> extends Thread {
 		The coroutine cannot be running a C function, a metamethod, or an iterator.
 		Any arguments to `yield` are passed as extra results to `resume`.
 	**/
-	public static function yield(args : Rest<Dynamic>) : Dynamic;
+	public static function yield<T>(args : Rest<T>) : T;
 
 	/**
 		Creates a new coroutine, with body `f`.

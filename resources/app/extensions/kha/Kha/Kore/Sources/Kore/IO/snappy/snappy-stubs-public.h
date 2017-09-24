@@ -38,7 +38,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#ifndef SYS_WINDOWS
+#if defined(KORE_POSIX)
 #include <sys/uio.h>
 #endif
 

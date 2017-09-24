@@ -2,15 +2,18 @@ package kha.graphics4;
 
 class VertexStructure {
 	public var elements: Array<VertexElement>;
+	public var instanced: Bool;
 	
 	public function new() {
 		elements = new Array<VertexElement>();
+		instanced = false;
 	}
 	
 	public function add(name: String, data: VertexData) {
 		elements.push(new VertexElement(name, data));
 	}
 	
+	@:keep
 	public function size(): Int {
 		return elements.length;
 	}
@@ -41,6 +44,7 @@ class VertexStructure {
 		return 0;
 	}
 	
+	@:keep
 	public function get(index: Int): VertexElement {
 		return elements[index];
 	}

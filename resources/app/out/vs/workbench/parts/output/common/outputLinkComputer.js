@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["vs/base/common/arrays","require","exports","vs/base/common/paths","vs/base/common/platform","vs/workbench/parts/output/common/outputLinkComputer","vs/base/common/winjs.base","vs/base/common/uri","vs/base/common/strings","vs/editor/common/core/range"];
+var __m = ["vs/base/common/arrays","require","exports","vs/base/common/paths","vs/base/common/strings","vs/base/common/platform","vs/workbench/parts/output/common/outputLinkComputer","vs/base/common/winjs.base","vs/base/common/uri","vs/editor/common/core/range"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -16,30 +16,17 @@ define(__m[0/*vs/base/common/arrays*/], __M([1/*require*/,2/*exports*/]), functi
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Returns the last element of an array.
      * @param array The array.
-     * @param n Which element from the end (default ist zero).
+     * @param n Which element from the end (default is zero).
      */
     function tail(array, n) {
         if (n === void 0) { n = 0; }
         return array[array.length - (1 + n)];
     }
     exports.tail = tail;
-    /**
-     * Iterates the provided array and allows to remove
-     * elements while iterating.
-     */
-    function forEach(array, callback) {
-        for (var i = 0, len = array.length; i < len; i++) {
-            callback(array[i], function () {
-                array.splice(i, 1);
-                i--;
-                len--;
-            });
-        }
-    }
-    exports.forEach = forEach;
     function equals(one, other, itemEquals) {
         if (itemEquals === void 0) { itemEquals = function (a, b) { return a === b; }; }
         if (one.length !== other.length) {
@@ -94,6 +81,105 @@ define(__m[0/*vs/base/common/arrays*/], __M([1/*require*/,2/*exports*/]), functi
     }
     exports.findFirst = findFirst;
     /**
+     * Like `Array#sort` but always stable. Usually runs a little slower `than Array#sort`
+     * so only use this when actually needing stable sort.
+     */
+    function mergeSort(data, compare) {
+        _divideAndMerge(data, compare);
+        return data;
+    }
+    exports.mergeSort = mergeSort;
+    function _divideAndMerge(data, compare) {
+        if (data.length <= 1) {
+            // sorted
+            return;
+        }
+        var p = (data.length / 2) | 0;
+        var left = data.slice(0, p);
+        var right = data.slice(p);
+        _divideAndMerge(left, compare);
+        _divideAndMerge(right, compare);
+        var leftIdx = 0;
+        var rightIdx = 0;
+        var i = 0;
+        while (leftIdx < left.length && rightIdx < right.length) {
+            var ret = compare(left[leftIdx], right[rightIdx]);
+            if (ret <= 0) {
+                // smaller_equal -> take left to preserve order
+                data[i++] = left[leftIdx++];
+            }
+            else {
+                // greater -> take right
+                data[i++] = right[rightIdx++];
+            }
+        }
+        while (leftIdx < left.length) {
+            data[i++] = left[leftIdx++];
+        }
+        while (rightIdx < right.length) {
+            data[i++] = right[rightIdx++];
+        }
+    }
+    function groupBy(data, compare) {
+        var result = [];
+        var currentGroup;
+        for (var _i = 0, _a = data.slice(0).sort(compare); _i < _a.length; _i++) {
+            var element = _a[_i];
+            if (!currentGroup || compare(currentGroup[0], element) !== 0) {
+                currentGroup = [element];
+                result.push(currentGroup);
+            }
+            else {
+                currentGroup.push(element);
+            }
+        }
+        return result;
+    }
+    exports.groupBy = groupBy;
+    /**
+     * Takes two *sorted* arrays and computes their delta (removed, added elements).
+     * Finishes in `Math.min(before.length, after.length)` steps.
+     * @param before
+     * @param after
+     * @param compare
+     */
+    function delta(before, after, compare) {
+        var removed = [];
+        var added = [];
+        var beforeIdx = 0;
+        var afterIdx = 0;
+        while (true) {
+            if (beforeIdx === before.length) {
+                added.push.apply(added, after.slice(afterIdx));
+                break;
+            }
+            if (afterIdx === after.length) {
+                removed.push.apply(removed, before.slice(beforeIdx));
+                break;
+            }
+            var beforeElement = before[beforeIdx];
+            var afterElement = after[afterIdx];
+            var n = compare(beforeElement, afterElement);
+            if (n === 0) {
+                // equal
+                beforeIdx += 1;
+                afterIdx += 1;
+            }
+            else if (n < 0) {
+                // beforeElement is smaller -> before element removed
+                removed.push(beforeElement);
+                beforeIdx += 1;
+            }
+            else if (n > 0) {
+                // beforeElement is greater -> after element added
+                added.push(afterElement);
+                afterIdx += 1;
+            }
+        }
+        return { removed: removed, added: added };
+    }
+    exports.delta = delta;
+    /**
      * Returns the top N elements from the array.
      *
      * Faster than sorting the entire array when the array is a lot larger than N.
@@ -108,7 +194,7 @@ define(__m[0/*vs/base/common/arrays*/], __M([1/*require*/,2/*exports*/]), functi
             return [];
         }
         var result = array.slice(0, n).sort(compare);
-        var _loop_1 = function(i, m) {
+        var _loop_1 = function (i, m) {
             var element = array[i];
             if (compare(element, result[n - 1]) < 0) {
                 result.pop();
@@ -122,28 +208,6 @@ define(__m[0/*vs/base/common/arrays*/], __M([1/*require*/,2/*exports*/]), functi
         return result;
     }
     exports.top = top;
-    function merge(arrays, hashFn) {
-        var result = new Array();
-        if (!hashFn) {
-            for (var i = 0, len = arrays.length; i < len; i++) {
-                result.push.apply(result, arrays[i]);
-            }
-        }
-        else {
-            var map = {};
-            for (var i = 0; i < arrays.length; i++) {
-                for (var j = 0; j < arrays[i].length; j++) {
-                    var element = arrays[i][j], hash = hashFn(element);
-                    if (!map.hasOwnProperty(hash)) {
-                        map[hash] = true;
-                        result.push(element);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-    exports.merge = merge;
     /**
      * @returns a new array with all undefined or null values removed. The original array is not modified at all.
      */
@@ -154,23 +218,6 @@ define(__m[0/*vs/base/common/arrays*/], __M([1/*require*/,2/*exports*/]), functi
         return array.filter(function (e) { return !!e; });
     }
     exports.coalesce = coalesce;
-    /**
-     * @returns true if the given item is contained in the array.
-     */
-    function contains(array, item) {
-        return array.indexOf(item) >= 0;
-    }
-    exports.contains = contains;
-    /**
-     * Swaps the elements in the array for the provided positions.
-     */
-    function swap(array, pos1, pos2) {
-        var element1 = array[pos1];
-        var element2 = array[pos2];
-        array[pos1] = element2;
-        array[pos2] = element1;
-    }
-    exports.swap = swap;
     /**
      * Moves the element in the array for the provided positions.
      */
@@ -288,14 +335,25 @@ define(__m[0/*vs/base/common/arrays*/], __M([1/*require*/,2/*exports*/]), functi
         };
     }
     exports.insert = insert;
+    /**
+     * Insert `insertArr` inside `target` at `insertIndex`.
+     * Please don't touch unless you understand https://jsperf.com/inserting-an-array-within-an-array
+     */
+    function arrayInsert(target, insertIndex, insertArr) {
+        var before = target.slice(0, insertIndex);
+        var after = target.slice(insertIndex);
+        return before.concat(insertArr, after);
+    }
+    exports.arrayInsert = arrayInsert;
 });
 
-define(__m[3/*vs/base/common/paths*/], __M([1/*require*/,2/*exports*/,4/*vs/base/common/platform*/,0/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
+define(__m[3/*vs/base/common/paths*/], __M([1/*require*/,2/*exports*/,5/*vs/base/common/platform*/,0/*vs/base/common/arrays*/,4/*vs/base/common/strings*/]), function (require, exports, platform_1, arrays_1, strings_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The forward slash path separator.
      */
@@ -305,8 +363,9 @@ define(__m[3/*vs/base/common/paths*/], __M([1/*require*/,2/*exports*/,4/*vs/base
      */
     exports.nativeSep = platform_1.isWindows ? '\\' : '/';
     function relative(from, to) {
-        var originalNormalizedFrom = normalize(from);
-        var originalNormalizedTo = normalize(to);
+        // ignore trailing slashes
+        var originalNormalizedFrom = strings_1.rtrim(normalize(from), exports.sep);
+        var originalNormalizedTo = strings_1.rtrim(normalize(to), exports.sep);
         // we're assuming here that any non=linux OS is case insensitive
         // so we must compare each part in its lowercase form
         var normalizedFrom = platform_1.isLinux ? originalNormalizedFrom : originalNormalizedFrom.toLowerCase();
@@ -335,7 +394,11 @@ define(__m[3/*vs/base/common/paths*/], __M([1/*require*/,2/*exports*/,4/*vs/base
             return path[0];
         }
         else {
-            return path.substring(0, ~idx);
+            var res = path.substring(0, ~idx);
+            if (platform_1.isWindows && res[res.length - 1] === ':') {
+                res += exports.nativeSep; // make sure drive letters end with backslash
+            }
+            return res;
         }
     }
     exports.dirname = dirname;
@@ -562,43 +625,6 @@ define(__m[3/*vs/base/common/paths*/], __M([1/*require*/,2/*exports*/,4/*vs/base
         return true;
     }
     exports.isUNC = isUNC;
-    function isPosixAbsolute(path) {
-        return path && path[0] === '/';
-    }
-    function makePosixAbsolute(path) {
-        return isPosixAbsolute(normalize(path)) ? path : exports.sep + path;
-    }
-    exports.makePosixAbsolute = makePosixAbsolute;
-    function isEqualOrParent(path, candidate) {
-        if (path === candidate) {
-            return true;
-        }
-        path = normalize(path);
-        candidate = normalize(candidate);
-        var candidateLen = candidate.length;
-        var lastCandidateChar = candidate.charCodeAt(candidateLen - 1);
-        if (lastCandidateChar === 47 /* Slash */) {
-            candidate = candidate.substring(0, candidateLen - 1);
-            candidateLen -= 1;
-        }
-        if (path === candidate) {
-            return true;
-        }
-        if (!platform_1.isLinux) {
-            // case insensitive
-            path = path.toLowerCase();
-            candidate = candidate.toLowerCase();
-        }
-        if (path === candidate) {
-            return true;
-        }
-        if (path.indexOf(candidate) !== 0) {
-            return false;
-        }
-        var char = path.charCodeAt(candidateLen);
-        return char === 47 /* Slash */;
-    }
-    exports.isEqualOrParent = isEqualOrParent;
     // Reference: https://en.wikipedia.org/wiki/Filename
     var INVALID_FILE_CHARS = platform_1.isWindows ? /[\\/:\*\?"<>\|]/g : /[\\/]/g;
     var WINDOWS_FORBIDDEN_NAMES = /^(con|prn|aux|clock\$|nul|lpt[0-9]|com[0-9])$/i;
@@ -625,31 +651,107 @@ define(__m[3/*vs/base/common/paths*/], __M([1/*require*/,2/*exports*/,4/*vs/base
         return true;
     }
     exports.isValidBasename = isValidBasename;
-    exports.isAbsoluteRegex = /^((\/|[a-zA-Z]:\\)[^\(\)<>\\'\"\[\]]+)/;
+    function isEqual(pathA, pathB, ignoreCase) {
+        var identityEquals = (pathA === pathB);
+        if (!ignoreCase || identityEquals) {
+            return identityEquals;
+        }
+        if (!pathA || !pathB) {
+            return false;
+        }
+        return strings_1.equalsIgnoreCase(pathA, pathB);
+    }
+    exports.isEqual = isEqual;
+    function isEqualOrParent(path, candidate, ignoreCase) {
+        if (path === candidate) {
+            return true;
+        }
+        if (!path || !candidate) {
+            return false;
+        }
+        if (candidate.length > path.length) {
+            return false;
+        }
+        if (ignoreCase) {
+            var beginsWith = strings_1.beginsWithIgnoreCase(path, candidate);
+            if (!beginsWith) {
+                return false;
+            }
+            if (candidate.length === path.length) {
+                return true; // same path, different casing
+            }
+            var sepOffset = candidate.length;
+            if (candidate.charAt(candidate.length - 1) === exports.nativeSep) {
+                sepOffset--; // adjust the expected sep offset in case our candidate already ends in separator character
+            }
+            return path.charAt(sepOffset) === exports.nativeSep;
+        }
+        if (candidate.charAt(candidate.length - 1) !== exports.nativeSep) {
+            candidate += exports.nativeSep;
+        }
+        return path.indexOf(candidate) === 0;
+    }
+    exports.isEqualOrParent = isEqualOrParent;
     /**
-     * If you have access to node, it is recommended to use node's path.isAbsolute().
-     * This is a simple regex based approach.
+     * Adapted from Node's path.isAbsolute functions
      */
     function isAbsolute(path) {
-        return exports.isAbsoluteRegex.test(path);
+        return platform_1.isWindows ?
+            isAbsolute_win32(path) :
+            isAbsolute_posix(path);
     }
     exports.isAbsolute = isAbsolute;
+    function isAbsolute_win32(path) {
+        if (!path) {
+            return false;
+        }
+        var char0 = path.charCodeAt(0);
+        if (char0 === 47 /* Slash */ || char0 === 92 /* Backslash */) {
+            return true;
+        }
+        else if ((char0 >= 65 /* A */ && char0 <= 90 /* Z */) || (char0 >= 97 /* a */ && char0 <= 122 /* z */)) {
+            if (path.length > 2 && path.charCodeAt(1) === 58 /* Colon */) {
+                var char2 = path.charCodeAt(2);
+                if (char2 === 47 /* Slash */ || char2 === 92 /* Backslash */) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    exports.isAbsolute_win32 = isAbsolute_win32;
+    function isAbsolute_posix(path) {
+        return path && path.charCodeAt(0) === 47 /* Slash */;
+    }
+    exports.isAbsolute_posix = isAbsolute_posix;
 });
 
-define(__m[5/*vs/workbench/parts/output/common/outputLinkComputer*/], __M([1/*require*/,2/*exports*/,6/*vs/base/common/winjs.base*/,7/*vs/base/common/uri*/,3/*vs/base/common/paths*/,8/*vs/base/common/strings*/,0/*vs/base/common/arrays*/,9/*vs/editor/common/core/range*/]), function (require, exports, winjs_base_1, uri_1, paths, strings, arrays, range_1) {
+define(__m[6/*vs/workbench/parts/output/common/outputLinkComputer*/], __M([1/*require*/,2/*exports*/,7/*vs/base/common/winjs.base*/,8/*vs/base/common/uri*/,3/*vs/base/common/paths*/,4/*vs/base/common/strings*/,0/*vs/base/common/arrays*/,9/*vs/editor/common/core/range*/]), function (require, exports, winjs_base_1, uri_1, paths, strings, arrays, range_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var OutputLinkComputer = (function () {
         function OutputLinkComputer(ctx, createData) {
-            this._ctx = ctx;
-            this._workspaceResource = uri_1.default.parse(createData.workspaceResourceUri);
-            this._patterns = OutputLinkComputer.createPatterns(this._workspaceResource);
+            this.ctx = ctx;
+            this.patterns = new Map();
+            this.computePatterns(createData);
         }
-        OutputLinkComputer.prototype._getModel = function (uri) {
-            var models = this._ctx.getMirrorModels();
+        OutputLinkComputer.prototype.computePatterns = function (createData) {
+            var _this = this;
+            // Produce patterns for each workspace root we are configured with
+            // This means that we will be able to detect links for paths that
+            // contain any of the workspace roots as segments.
+            var workspaceFolders = createData.workspaceFolders.map(function (r) { return uri_1.default.parse(r); });
+            workspaceFolders.forEach(function (workspaceFolder) {
+                var patterns = OutputLinkComputer.createPatterns(workspaceFolder);
+                _this.patterns.set(workspaceFolder.fsPath, patterns);
+            });
+        };
+        OutputLinkComputer.prototype.getModel = function (uri) {
+            var models = this.ctx.getMirrorModels();
             for (var i = 0; i < models.length; i++) {
                 var model = models[i];
                 if (model.uri.toString() === uri) {
@@ -659,67 +761,69 @@ define(__m[5/*vs/workbench/parts/output/common/outputLinkComputer*/], __M([1/*re
             return null;
         };
         OutputLinkComputer.prototype.computeLinks = function (uri) {
-            var _this = this;
-            var model = this._getModel(uri);
+            var model = this.getModel(uri);
             if (!model) {
-                return;
+                return void 0;
             }
             var links = [];
-            var resourceCreator = {
-                toResource: function (workspaceRelativePath) {
-                    if (typeof workspaceRelativePath === 'string') {
-                        return uri_1.default.file(paths.join(_this._workspaceResource.fsPath, workspaceRelativePath));
-                    }
-                    return null;
-                }
-            };
             var lines = model.getValue().split(/\r\n|\r|\n/);
-            for (var i = 0, len = lines.length; i < len; i++) {
-                links.push.apply(links, OutputLinkComputer.detectLinks(lines[i], i + 1, this._patterns, resourceCreator));
-            }
+            // For each workspace root patterns
+            this.patterns.forEach(function (folderPatterns, folderPath) {
+                var resourceCreator = {
+                    toResource: function (folderRelativePath) {
+                        if (typeof folderRelativePath === 'string') {
+                            return uri_1.default.file(paths.join(folderPath, folderRelativePath));
+                        }
+                        return null;
+                    }
+                };
+                for (var i = 0, len = lines.length; i < len; i++) {
+                    links.push.apply(links, OutputLinkComputer.detectLinks(lines[i], i + 1, folderPatterns, resourceCreator));
+                }
+            });
             return winjs_base_1.TPromise.as(links);
         };
-        OutputLinkComputer.createPatterns = function (workspaceResource) {
+        OutputLinkComputer.createPatterns = function (workspaceFolder) {
             var patterns = [];
-            var workspaceRootVariants = arrays.distinct([
-                paths.normalize(workspaceResource.fsPath, true),
-                paths.normalize(workspaceResource.fsPath, false)
+            var workspaceFolderVariants = arrays.distinct([
+                paths.normalize(workspaceFolder.fsPath, true),
+                paths.normalize(workspaceFolder.fsPath, false)
             ]);
-            workspaceRootVariants.forEach(function (workspaceRoot) {
-                // Example: C:\Users\someone\AppData\Local\Temp\_monacodata_9888\workspaces\express\server.js on line 8, column 13
-                patterns.push(new RegExp(strings.escapeRegExpCharacters(workspaceRoot) + '(\\S*) on line ((\\d+)(, column (\\d+))?)', 'gi'));
-                // Example: C:\Users\someone\AppData\Local\Temp\_monacodata_9888\workspaces\express\server.js:line 8, column 13
-                patterns.push(new RegExp(strings.escapeRegExpCharacters(workspaceRoot) + '(\\S*):line ((\\d+)(, column (\\d+))?)', 'gi'));
-                // Example: C:\Users\someone\AppData\Local\Temp\_monacodata_9888\workspaces\mankala\Features.ts(45): error
-                // Example: C:\Users\someone\AppData\Local\Temp\_monacodata_9888\workspaces\mankala\Features.ts (45): error
-                // Example: C:\Users\someone\AppData\Local\Temp\_monacodata_9888\workspaces\mankala\Features.ts(45,18): error
-                // Example: C:\Users\someone\AppData\Local\Temp\_monacodata_9888\workspaces\mankala\Features.ts (45,18): error
-                patterns.push(new RegExp(strings.escapeRegExpCharacters(workspaceRoot) + '([^\\s\\(\\)]*)(\\s?\\((\\d+)(,(\\d+))?)\\)', 'gi'));
-                // Example: at C:\Users\someone\AppData\Local\Temp\_monacodata_9888\workspaces\mankala\Game.ts
-                // Example: at C:\Users\someone\AppData\Local\Temp\_monacodata_9888\workspaces\mankala\Game.ts:336
-                // Example: at C:\Users\someone\AppData\Local\Temp\_monacodata_9888\workspaces\mankala\Game.ts:336:9
-                patterns.push(new RegExp(strings.escapeRegExpCharacters(workspaceRoot) + '([^:\\s\\(\\)<>\'\"\\[\\]]*)(:(\\d+))?(:(\\d+))?', 'gi'));
+            workspaceFolderVariants.forEach(function (workspaceFolderVariant) {
+                // Example: /workspaces/express/server.js on line 8, column 13
+                patterns.push(new RegExp(strings.escapeRegExpCharacters(workspaceFolderVariant) + '(\\S*) on line ((\\d+)(, column (\\d+))?)', 'gi'));
+                // Example: /workspaces/express/server.js:line 8, column 13
+                patterns.push(new RegExp(strings.escapeRegExpCharacters(workspaceFolderVariant) + '(\\S*):line ((\\d+)(, column (\\d+))?)', 'gi'));
+                // Example: /workspaces/mankala/Features.ts(45): error
+                // Example: /workspaces/mankala/Features.ts (45): error
+                // Example: /workspaces/mankala/Features.ts(45,18): error
+                // Example: /workspaces/mankala/Features.ts (45,18): error
+                patterns.push(new RegExp(strings.escapeRegExpCharacters(workspaceFolderVariant) + '([^\\s\\(\\)]*)(\\s?\\((\\d+)(,(\\d+))?)\\)', 'gi'));
+                // Example: at /workspaces/mankala/Game.ts
+                // Example: at /workspaces/mankala/Game.ts:336
+                // Example: at /workspaces/mankala/Game.ts:336:9
+                patterns.push(new RegExp(strings.escapeRegExpCharacters(workspaceFolderVariant) + '([^:\\s\\(\\)<>\'\"\\[\\]]*)(:(\\d+))?(:(\\d+))?', 'gi'));
             });
             return patterns;
         };
         /**
          * Detect links. Made public static to allow for tests.
          */
-        OutputLinkComputer.detectLinks = function (line, lineIndex, patterns, contextService) {
+        OutputLinkComputer.detectLinks = function (line, lineIndex, patterns, resourceCreator) {
             var links = [];
             patterns.forEach(function (pattern) {
                 pattern.lastIndex = 0; // the holy grail of software development
                 var match;
                 var offset = 0;
-                while ((match = pattern.exec(line)) !== null) {
+                var _loop_1 = function () {
                     // Convert the relative path information to a resource that we can use in links
-                    var workspaceRelativePath = strings.rtrim(match[1], '.').replace(/\\/g, '/'); // remove trailing "." that likely indicate end of sentence
+                    var folderRelativePath = strings.rtrim(match[1], '.').replace(/\\/g, '/'); // remove trailing "." that likely indicate end of sentence
                     var resource = void 0;
                     try {
-                        resource = contextService.toResource(workspaceRelativePath).toString();
+                        resource = resourceCreator.toResource(folderRelativePath).toString();
                     }
                     catch (error) {
-                        continue; // we might find an invalid URI and then we dont want to loose all other links
+                        return "continue";
                     }
                     // Append line/col information to URI if matching
                     if (match[3]) {
@@ -742,12 +846,17 @@ define(__m[5/*vs/workbench/parts/output/common/outputLinkComputer*/], __M([1/*re
                         endLineNumber: lineIndex
                     };
                     if (links.some(function (link) { return range_1.Range.areIntersectingOrTouching(link.range, linkRange); })) {
-                        return; // Do not detect duplicate links
+                        return { value: void 0 };
                     }
                     links.push({
                         range: linkRange,
                         url: resource
                     });
+                };
+                while ((match = pattern.exec(line)) !== null) {
+                    var state_1 = _loop_1();
+                    if (typeof state_1 === "object")
+                        return state_1.value;
                 }
             });
             return links;

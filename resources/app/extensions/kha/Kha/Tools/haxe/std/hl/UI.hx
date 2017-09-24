@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,6 +28,10 @@ abstract Sentinel(SentinelHandle) {
 	public function new( timeout, callback ) {
 		this = create_sentinel(timeout,callback);
 	}
+	
+	public function setPause( p : Bool ) {
+		_pause(this, p);
+	}
 
 	public function tick() {
 		_tick(this);
@@ -38,6 +42,7 @@ abstract Sentinel(SentinelHandle) {
 	}
 
 	@:hlNative("ui","ui_sentinel_tick") static function _tick( h : SentinelHandle ) : Void {}
+	@:hlNative("ui","ui_sentinel_pause") static function _pause( h : SentinelHandle, b : Bool ) : Void {}
 
 }
 
@@ -153,4 +158,8 @@ class UI {
 	public static function stopLoop() : Void {
 	}
 
+	@:hlNative("ui","ui_close_console")
+	public static function closeConsole() : Void {
+	}
+	
 }

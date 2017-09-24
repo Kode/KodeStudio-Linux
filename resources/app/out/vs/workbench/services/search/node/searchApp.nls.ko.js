@@ -16,5 +16,14 @@ define("vs/workbench/services/search/node/searchApp.nls.ko", {
 		"알 수 없는 오류가 발생했습니다. 자세한 내용은 로그를 참조하세요.",
 		"{0}(총 {1}개의 오류)",
 		"알 수 없는 오류가 발생했습니다. 자세한 내용은 로그를 참조하세요.",
+	],
+	"vs/base/common/processes": [
+		"오류: 실행 파일 정보에서는 문자열 형식의 명령을 정의해야 합니다.",
+		"경고: isShellCommand는 boolean 형식이어야 합니다. {0} 값을 무시합니다.",
+		"경고: args는 string[] 형식이어야 합니다. {0} 값을 무시합니다.",
+		"경고: options.cwd는 string 형식이어야 합니다. {0} 값을 무시합니다.",
+	],
+	"vs/base/node/processes": [
+		"UNC 드라이브에서 셸 명령을 실행할 수 없습니다.",
 	]
 });

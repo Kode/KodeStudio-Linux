@@ -1,4 +1,4 @@
-// Called from entry point, e.g. Kha/make.js
+﻿// Called from entry point, e.g. Kha/make.js
 // This is where options are processed:
 // e.g. '-t html5 --server'
 
@@ -20,14 +20,18 @@ if (version < 6) {
 }
 
 let defaultTarget: string;
+let defaultGraphics: string;
 if (os.platform() === 'linux') {
 	defaultTarget = Platform.Linux;
+	defaultGraphics = GraphicsApi.OpenGL;
 }
 else if (os.platform() === 'win32') {
 	defaultTarget = Platform.Windows;
+	defaultGraphics = GraphicsApi.Direct3D11;
 }
 else {
 	defaultTarget = Platform.OSX;
+	defaultGraphics = GraphicsApi.OpenGL;
 }
 
 let options: Array<any> = [
@@ -63,6 +67,12 @@ let options: Array<any> = [
 		default: VrApi.None
 	},
 	{
+		full: 'main',
+		value: true,
+		description: 'Entrypoint for the haxe code (-main argument), defaults to "Main".',
+		default: 'Main'
+	},
+	{
 		full: 'intermediate',
 		description: 'Intermediate location for object files.',
 		value: true,
@@ -74,14 +84,14 @@ let options: Array<any> = [
 		short: 'g',
 		description: 'Graphics api to use. Possible parameters are direct3d9, direct3d11, direct3d12, metal and opengl.',
 		value: true,
-		default: GraphicsApi.Direct3D9
+		default: defaultGraphics
 	},
 	{
 		full: 'visualstudio',
 		short: 'v',
 		description: 'Version of Visual Studio to use. Possible parameters are vs2010, vs2012, vs2013 and vs2015.',
 		value: true,
-		default: VisualStudioVersion.VS2015
+		default: VisualStudioVersion.VS2017
 	},
 	{
 		full: 'kha',
@@ -261,17 +271,30 @@ for (let i = 2; i < args.length; ++i) {
 	}
 }
 
-if (parsedOptions.graphics === GraphicsApi.OpenGL) {
-	parsedOptions.graphics = GraphicsApi.OpenGL2;
-}
-
 if (parsedOptions.run) {
 	parsedOptions.compile = true;
 }
 
 async function runKhamake() {
 	try {
-		await require('./main.js').run(parsedOptions, { info: console.log, error: console.log }, function (name: string) { });
+		let logInfo = function (text: string, newline: boolean) {
+			if (newline) {
+				console.log(text);
+			}
+			else {
+				process.stdout.write(text);
+			}
+		};
+
+		let logError = function (text: string, newline: boolean) {
+			if (newline) {
+				console.error(text);
+			}
+			else {
+				process.stderr.write(text);
+			}
+		};
+		await require('./main.js').run(parsedOptions, { info: logInfo, error: logError }, (name: string) => { });
 	}
 	catch (error) {
 		console.log(error);

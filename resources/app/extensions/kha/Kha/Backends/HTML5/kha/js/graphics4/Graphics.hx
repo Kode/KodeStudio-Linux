@@ -22,6 +22,7 @@ import kha.graphics4.VertexBuffer;
 import kha.graphics4.VertexStructure;
 import kha.graphics4.VertexShader;
 import kha.Image;
+import kha.math.FastMatrix3;
 import kha.math.FastMatrix4;
 import kha.math.FastVector2;
 import kha.math.FastVector3;
@@ -35,16 +36,45 @@ import kha.WebGLImage;
 class Graphics implements kha.graphics4.Graphics {
 	private var depthTest: Bool = false;
 	private var depthMask: Bool = false;
-	private var framebuffer: Dynamic;
+	private var colorMaskRed: Bool = true;
+	private var colorMaskGreen: Bool = true;
+	private var colorMaskBlue: Bool = true;
+	private var colorMaskAlpha: Bool = true;
 	private var indicesCount: Int;
-	private var renderTarget: WebGLImage;
+	private var renderTarget: Canvas;
+	private var renderTargetFrameBuffer: Dynamic;
+	private var renderTargetTexture: Dynamic;
+	private var isCubeMap: Bool = false;
+	private var isDepthAttachment: Bool = false;
 	private var instancedExtension: Dynamic;
 	private var blendMinMaxExtension: Dynamic;
 
-	public function new(renderTarget: WebGLImage = null) {
+	public function new(renderTarget: Canvas = null) {
 		this.renderTarget = renderTarget;
-		instancedExtension = SystemImpl.gl.getExtension("ANGLE_instanced_arrays");
-		blendMinMaxExtension = SystemImpl.gl.getExtension("EXT_blend_minmax");
+		init();
+		if (SystemImpl.gl2) {
+			instancedExtension = true;
+		}
+		else {
+			instancedExtension = SystemImpl.gl.getExtension("ANGLE_instanced_arrays");
+			blendMinMaxExtension = SystemImpl.gl.getExtension("EXT_blend_minmax");
+		}
+	}
+
+	private function init() {
+		if (renderTarget == null) return;
+		isCubeMap = Std.is(renderTarget, CubeMap);
+		if (isCubeMap) {
+			var cubeMap: CubeMap = cast(renderTarget, CubeMap);
+			renderTargetFrameBuffer = cubeMap.frameBuffer;
+			renderTargetTexture = cubeMap.texture;
+			isDepthAttachment = cubeMap.isDepthAttachment;
+		}
+		else {
+			var image: WebGLImage = cast(renderTarget, WebGLImage);
+			renderTargetFrameBuffer = image.frameBuffer;
+			renderTargetTexture = image.texture;
+		}
 	}
 
 	public function begin(additionalRenderTargets: Array<Canvas> = null): Void {
@@ -55,10 +85,11 @@ class Graphics implements kha.graphics4.Graphics {
 			SystemImpl.gl.viewport(0, 0, System.windowWidth(), System.windowHeight());
 		}
 		else {
-			SystemImpl.gl.bindFramebuffer(GL.FRAMEBUFFER, renderTarget.frameBuffer);
+			SystemImpl.gl.bindFramebuffer(GL.FRAMEBUFFER, renderTargetFrameBuffer);
+			// if (isCubeMap) SystemImpl.gl.framebufferTexture(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_CUBE_MAP, renderTargetTexture, 0); // Layered
 			SystemImpl.gl.viewport(0, 0, renderTarget.width, renderTarget.height);
 			if (additionalRenderTargets != null) {
-				SystemImpl.gl.framebufferTexture2D(GL.FRAMEBUFFER, SystemImpl.drawBuffers.COLOR_ATTACHMENT0_WEBGL, GL.TEXTURE_2D, renderTarget.texture, 0);
+				SystemImpl.gl.framebufferTexture2D(GL.FRAMEBUFFER, SystemImpl.drawBuffers.COLOR_ATTACHMENT0_WEBGL, GL.TEXTURE_2D, renderTargetTexture, 0);
 				for (i in 0...additionalRenderTargets.length) {
 					SystemImpl.gl.framebufferTexture2D(GL.FRAMEBUFFER, SystemImpl.drawBuffers.COLOR_ATTACHMENT0_WEBGL + i + 1, GL.TEXTURE_2D, cast(additionalRenderTargets[i], WebGLImage).texture, 0);
 				}
@@ -66,13 +97,50 @@ class Graphics implements kha.graphics4.Graphics {
 				for (i in 0...additionalRenderTargets.length) {
 					attachments.push(SystemImpl.drawBuffers.COLOR_ATTACHMENT0_WEBGL + i + 1);
 				}
-				SystemImpl.drawBuffers.drawBuffersWEBGL(attachments);
+				SystemImpl.gl2 ? untyped SystemImpl.gl.drawBuffers(attachments) : SystemImpl.drawBuffers.drawBuffersWEBGL(attachments);
 			}
 		}
 	}
 
-	public function end(): Void {
+	public function beginFace(face: Int): Void {
+		SystemImpl.gl.enable(GL.BLEND);
+		SystemImpl.gl.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
+		SystemImpl.gl.bindFramebuffer(GL.FRAMEBUFFER, renderTargetFrameBuffer);
+		SystemImpl.gl.framebufferTexture2D(GL.FRAMEBUFFER, isDepthAttachment ? GL.DEPTH_ATTACHMENT : GL.COLOR_ATTACHMENT0, GL.TEXTURE_CUBE_MAP_POSITIVE_X + face, renderTargetTexture, 0);
+		SystemImpl.gl.viewport(0, 0, renderTarget.width, renderTarget.height);
+	}
 
+	public function beginEye(eye: Int): Void {
+		SystemImpl.gl.enable(GL.BLEND);
+		SystemImpl.gl.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
+		SystemImpl.gl.bindFramebuffer(GL.FRAMEBUFFER, null);
+		if (eye == 0) {
+			SystemImpl.gl.viewport(0, 0, Std.int(System.windowWidth() * 0.5), System.windowHeight());
+		} else {
+			SystemImpl.gl.viewport(Std.int(System.windowWidth() * 0.5), 0, Std.int(System.windowWidth() * 0.5), System.windowHeight());
+		}
+	}
+
+	public function end(): Void {
+		var error = SystemImpl.gl.getError();
+		switch (error) {
+			case GL.NO_ERROR:
+				
+			case GL.INVALID_ENUM:
+				trace("WebGL error: Invalid enum");
+			case GL.INVALID_VALUE:
+				trace("WebGL error: Invalid value");
+			case GL.INVALID_OPERATION:
+				trace("WebGL error: Invalid operation");
+			case GL.INVALID_FRAMEBUFFER_OPERATION:
+				trace("WebGL error: Invalid framebuffer operation");
+			case GL.OUT_OF_MEMORY:
+				trace("WebGL error: Out of memory");
+			case GL.CONTEXT_LOST_WEBGL:
+				trace("WebGL error: Context lost");
+			default:
+				trace("Unknown WebGL error");
+		}
 	}
 
 	public function flush(): Void {
@@ -91,6 +159,7 @@ class Graphics implements kha.graphics4.Graphics {
 		var clearMask: Int = 0;
 		if (color != null) {
 			clearMask |= GL.COLOR_BUFFER_BIT;
+			SystemImpl.gl.colorMask(true, true, true, true);
 			SystemImpl.gl.clearColor(color.R, color.G, color.B, color.A);
 		}
 		if (depth != null) {
@@ -106,6 +175,7 @@ class Graphics implements kha.graphics4.Graphics {
 			SystemImpl.gl.clearStencil(stencil);
 		}
 		SystemImpl.gl.clear(clearMask);
+		SystemImpl.gl.colorMask(colorMaskRed, colorMaskGreen, colorMaskBlue, colorMaskAlpha);
 		if (depthTest) {
 			SystemImpl.gl.enable(GL.DEPTH_TEST);
 		}
@@ -243,10 +313,6 @@ class Graphics implements kha.graphics4.Graphics {
 	//	return false;
 	//}
 
-	public function createCubeMap(size: Int, format: TextureFormat, usage: Usage, canRead: Bool = false): CubeMap {
-		return null;
-	}
-
 	public function setTexture(stage: kha.graphics4.TextureUnit, texture: kha.Image): Void {
 		if (texture == null) {
 			SystemImpl.gl.activeTexture(GL.TEXTURE0 + cast(stage, TextureUnit).value);
@@ -260,6 +326,10 @@ class Graphics implements kha.graphics4.Graphics {
 	public function setTextureDepth(stage: kha.graphics4.TextureUnit, texture: kha.Image): Void {
 		cast(texture, WebGLImage).setDepth(cast(stage, TextureUnit).value);
 	}
+	
+	public function setTextureArray(unit: kha.graphics4.TextureUnit, texture: kha.Image): Void {
+		//not implemented yet.
+	}
 
 	public function setVideoTexture(unit: kha.graphics4.TextureUnit, texture: kha.Video): Void {
 		if (texture == null) {
@@ -269,6 +339,10 @@ class Graphics implements kha.graphics4.Graphics {
 		else {
 			cast(cast(texture, kha.js.Video).texture, WebGLImage).set(cast(unit, TextureUnit).value);
 		}
+	}
+
+	public function setImageTexture(unit: kha.graphics4.TextureUnit, texture: kha.Image): Void {
+
 	}
 
 	public function setTextureParameters(texunit: kha.graphics4.TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void {
@@ -324,6 +398,24 @@ class Graphics implements kha.graphics4.Graphics {
 		}
 	}
 
+	public function setTexture3DParameters(texunit: kha.graphics4.TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, wAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void {
+	
+	}
+
+	public function setCubeMap(stage: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		if (cubeMap == null) {
+			SystemImpl.gl.activeTexture(GL.TEXTURE0 + cast(stage, TextureUnit).value);
+			SystemImpl.gl.bindTexture(GL.TEXTURE_CUBE_MAP, null);
+		}
+		else {
+			cubeMap.set(cast(stage, TextureUnit).value);
+		}
+	}
+	
+	public function setCubeMapDepth(stage: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		cubeMap.setDepth(cast(stage, TextureUnit).value);
+	}
+
 	public function setCullMode(mode: CullMode): Void {
 		switch (mode) {
 		case None:
@@ -343,6 +435,10 @@ class Graphics implements kha.graphics4.Graphics {
 		setStencilParameters(pipe.stencilMode, pipe.stencilBothPass, pipe.stencilDepthFail, pipe.stencilFail, pipe.stencilReferenceValue, pipe.stencilReadMask, pipe.stencilWriteMask);
 		setBlendingMode(pipe.blendSource, pipe.blendDestination, pipe.blendOperation, pipe.alphaBlendSource, pipe.alphaBlendDestination, pipe.alphaBlendOperation);
 		pipe.set();
+		colorMaskRed = pipe.colorWriteMaskRed;
+		colorMaskGreen = pipe.colorWriteMaskGreen;
+		colorMaskBlue = pipe.colorWriteMaskBlue;
+		colorMaskAlpha = pipe.colorWriteMaskAlpha;
 	}
 
 	public function setBool(location: kha.graphics4.ConstantLocation, value: Bool): Void {
@@ -370,7 +466,17 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 
 	public function setFloats(location: kha.graphics4.ConstantLocation, values: Vector<FastFloat>): Void {
-		SystemImpl.gl.uniform1fv(cast(location, ConstantLocation).value, cast values);
+		var webglLocation = cast(location, ConstantLocation);
+		switch (webglLocation.type) {
+			case GL.FLOAT_VEC2:
+				SystemImpl.gl.uniform2fv(webglLocation.value, cast values);
+			case GL.FLOAT_VEC3:
+				SystemImpl.gl.uniform3fv(webglLocation.value, cast values);
+			case GL.FLOAT_VEC4:
+				SystemImpl.gl.uniform4fv(webglLocation.value, cast values);
+			default:
+				SystemImpl.gl.uniform1fv(webglLocation.value, cast values);
+		}
 	}
 
 	public function setVector2(location: kha.graphics4.ConstantLocation, value: FastVector2): Void {
@@ -395,9 +501,19 @@ class Graphics implements kha.graphics4.Graphics {
 		SystemImpl.gl.uniformMatrix4fv(cast(location, ConstantLocation).value, false, matrixCache.toData());
 	}
 
+	private var matrix3Cache = new Vector<Float>(9);
+
+	public inline function setMatrix3(location: kha.graphics4.ConstantLocation, matrix: FastMatrix3): Void {
+		matrix3Cache[0] = matrix._00; matrix3Cache[1] = matrix._01; matrix3Cache[2] = matrix._02;
+		matrix3Cache[3] = matrix._10; matrix3Cache[4] = matrix._11; matrix3Cache[5] = matrix._12;
+		matrix3Cache[6] = matrix._20; matrix3Cache[7] = matrix._21; matrix3Cache[8] = matrix._22;
+		SystemImpl.gl.uniformMatrix3fv(cast(location, ConstantLocation).value, false, matrix3Cache.toData());
+	}
+
 	public function drawIndexedVertices(start: Int = 0, count: Int = -1): Void {
 		var type = SystemImpl.elementIndexUint == null ? GL.UNSIGNED_SHORT : GL.UNSIGNED_INT;
-		SystemImpl.gl.drawElements(GL.TRIANGLES, count == -1 ? indicesCount : count, type, start * 2);
+		var size = type == GL.UNSIGNED_SHORT ? 2 : 4;
+		SystemImpl.gl.drawElements(GL.TRIANGLES, count == -1 ? indicesCount : count, type, start * size);
 	}
 
 	private function convertStencilAction(action: StencilAction) {
@@ -455,8 +571,12 @@ class Graphics implements kha.graphics4.Graphics {
 
 	public function scissor(x: Int, y: Int, width: Int, height: Int): Void {
 		SystemImpl.gl.enable(GL.SCISSOR_TEST);
-		var h: Int = renderTarget == null ? System.windowHeight(0) : renderTarget.height;
-		SystemImpl.gl.scissor(x, h - y - height, width, height);
+		if (renderTarget == null) {
+			SystemImpl.gl.scissor(x, System.windowHeight(0) - y - height, width, height);
+		}
+		else {
+			SystemImpl.gl.scissor(x, y, width, height);
+		}
 	}
 
 	public function disableScissor(): Void {
@@ -470,7 +590,13 @@ class Graphics implements kha.graphics4.Graphics {
 	public function drawIndexedVerticesInstanced(instanceCount : Int, start: Int = 0, count: Int = -1) {
 		if (instancedRenderingAvailable()) {
 			var type = SystemImpl.elementIndexUint == null ? GL.UNSIGNED_SHORT : GL.UNSIGNED_INT;
-			instancedExtension.drawElementsInstancedANGLE(GL.TRIANGLES, count == -1 ? indicesCount : count, type, start * 2, instanceCount);
+			var typeSize = SystemImpl.elementIndexUint == null ? 2 : 4;
+			if (SystemImpl.gl2) {
+				untyped SystemImpl.gl.drawElementsInstanced(GL.TRIANGLES, count == -1 ? indicesCount : count, type, start * typeSize, instanceCount);
+			}
+			else {
+				instancedExtension.drawElementsInstancedANGLE(GL.TRIANGLES, count == -1 ? indicesCount : count, type, start * typeSize, instanceCount);
+			}
 		}
 	}
 

@@ -29,6 +29,12 @@ class Matrix3 {
 		return y * width + x;
 	}*/
 
+	@:extern public inline function setFrom(m: Matrix3): Void {
+		this._00 = m._00; this._10 = m._10; this._20 = m._20;
+		this._01 = m._01; this._11 = m._11; this._21 = m._21;
+		this._02 = m._02; this._12 = m._12; this._22 = m._22;
+	}
+
 	@:extern public static inline function translation(x: Float, y: Float): Matrix3 {
 		return new Matrix3(
 			1, 0, x,
@@ -121,7 +127,7 @@ class Matrix3 {
 		return new Vector2(x, y);
 	}
 
-    @:extern public inline function cofactor(m0: Float, m1: Float, m2: Float, m3: Float): Float {
+	@:extern public inline function cofactor(m0: Float, m1: Float, m2: Float, m3: Float): Float {
 		return m0 * m3 - m1 * m2;
 	}
 
@@ -152,9 +158,9 @@ class Matrix3 {
 
 		var invdet: Float = 1.0 / det;
 		return new Matrix3(
-			 c00 * invdet, -c01 * invdet,  c02 * invdet,
+			c00 * invdet,  -c01 * invdet,  c02 * invdet,
 			-c10 * invdet,  c11 * invdet, -c12 * invdet,
-			 c20 * invdet, -c21 * invdet,  c22 * invdet
+			c20 * invdet,  -c21 * invdet,  c22 * invdet
 		);
 	}
 }

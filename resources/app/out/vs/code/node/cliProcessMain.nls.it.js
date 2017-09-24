@@ -2,17 +2,6 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 define("vs/code/node/cliProcessMain.nls.it", {
-	"vs/base/common/json": [
-		"Simbolo non valido",
-		"Formato di numero non valido",
-		"È previsto un nome di proprietà",
-		"È previsto un valore",
-		"Sono previsti i due punti",
-		"È prevista la virgola",
-		"È prevista la parentesi graffa di chiusura",
-		"È prevista la parentesi quadra di chiusura",
-		"È prevista la fine del file",
-	],
 	"vs/base/common/severity": [
 		"Errore",
 		"Avviso",
@@ -34,12 +23,11 @@ define("vs/code/node/cliProcessMain.nls.it", {
 		"L\'estensione \'{0}\' è stata disinstallata.",
 	],
 	"vs/platform/configuration/common/configurationRegistry": [
-		"Impostazioni di configurazione di contributes.",
-		"Riepilogo delle impostazioni. Questa etichetta verrà usata nel file di impostazioni come commento di separazione.",
-		"Descrizione delle proprietà di configurazione.",
-		"se impostato, \'configuration.type\' deve essere impostato su \'object",
-		"\'configuration.title\' deve essere una stringa",
-		"\'configuration.properties\' deve essere un oggetto",
+		"Override configurazione predefinita",
+		"Consente di configurare le impostazioni dell\'editor di cui eseguire l\'override per il linguaggio {0}.",
+		"Consente di configurare le impostazioni dell\'editor di cui eseguire l\'override per un linguaggio.",
+		"Non è possibile registrare \'{0}\'. Corrisponde al criterio di proprietà \'\\\\[.*\\\\]$\' per la descrizione delle impostazioni dell\'editor specifiche del linguaggio. Usare il contributo \'configurationDefaults\'.",
+		"Non è possibile registrare \'{0}\'. Questa proprietà è già registrata.",
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"Estensioni",
@@ -51,9 +39,6 @@ define("vs/code/node/cliProcessMain.nls.it", {
 	],
 	"vs/platform/extensionManagement/node/extensionManagementService": [
 		"Estensione non valida: package.json non è un file JSON.",
-		"Estensione non valida: il nome del manifesto non corrisponde.",
-		"Estensione non valida: l\'editore del manifesto non corrisponde.",
-		"Estensione non valida: la versione del manifesto non corrisponde.",
 		"Riavviare Code prima di reinstallare {0}.",
 		"Riavviare Code prima di reinstallare {0}.",
 		"Se si installa \'{0}\', verranno installate anche le relative dipendenze. Continuare?",
@@ -71,25 +56,6 @@ define("vs/code/node/cliProcessMain.nls.it", {
 		"Non è possibile disinstallare l\'estensione \'{0}\'. Le estensioni \'{1}\' e \'{2}\' dipendono da tale estensione.",
 		"Non è possibile disinstallare l\'estensione \'{0}\'. Alcune estensioni, tra cui \'{1}\' e \'{2}\' dipendono da tale estensione.",
 		"L\'estensione non è stata trovata",
-	],
-	"vs/platform/extensions/common/extensionsRegistry": [
-		"Per le estensioni di Visual Studio Code consente di specificare la versione di Visual Studio Code con cui è compatibile l\'estensione. Non può essere *. Ad esempio: ^0.10.5 indica la compatibilità con la versione minima 0.10.5 di Visual Studio Code.",
-		"Editore dell\'estensione Visual Studio Code.",
-		"Nome visualizzato per l\'estensione usato nella raccolta di Visual Studio Code.",
-		"Categorie usate dalla raccolta di Visual Studio Code per definire la categoria dell\'estensione.",
-		"Banner usato nel marketplace di Visual Studio Code.",
-		"Colore del banner nell\'intestazione pagina del marketplace di Visual Studio Code.",
-		"Tema colori per il tipo di carattere usato nel banner.",
-		"Tutti i contributi dell\'estensione Visual Studio Code rappresentati da questo pacchetto.",
-		"Imposta l\'estensione in modo che venga contrassegnata come Anteprima nel Marketplace.",
-		"Eventi di attivazione per l\'estensione Visual Studio Code.",
-		"Matrice di notifiche da visualizzare nella barra laterale della pagina delle estensioni del Marketplace.",
-		"URL di immagine della notifica.",
-		"Collegamento della notifica.",
-		"Descrizione della notifica.",
-		"Dipendenze ad altre estensioni. L\'identificatore di un\'estensione è sempre ${publisher}.${name}. Ad esempio: vscode.csharp.",
-		"Script eseguito prima che il pacchetto venga pubblicato come estensione Visual Studio Code.",
-		"Percorso di un\'icona da 128x128 pixel.",
 	],
 	"vs/platform/extensions/node/extensionValidator": [
 		"Non è stato possibile analizzare il valore {0} di `engines.vscode`. Usare ad esempio: ^0.10.0, ^1.2.3, ^0.11.0, ^0.10.x e così via.",

@@ -8,6 +8,7 @@ import kha.android.Keyboard;
 import kha.graphics4.Graphics2;
 import android.view.KeyEvent;
 import kha.input.Mouse;
+import kha.input.KeyCode;
 import kha.input.Surface;
 import kha.System;
 
@@ -135,6 +136,10 @@ class SystemImpl {
 		var g2 = new Graphics2(framebuffer);
 		framebuffer.init(g1, g2, graphics);
 
+		//if (kha.audio2.Audio._init()) {
+			//kha.audio2.Audio1._init();
+		//}
+		
 		Scheduler.start();
 
 		done();
@@ -235,22 +240,15 @@ class SystemImpl {
 		switch (code) {
 		case 0x00000120:
 			shift = true;
-			keyboard.sendDownEvent(Key.SHIFT, " ");
+			keyboard.sendDownEvent(KeyCode.Shift);
 		case 0x00000103:
-			keyboard.sendDownEvent(Key.BACKSPACE, " ");
+			keyboard.sendDownEvent(KeyCode.Backspace);
 		case 0x00000104:
-			keyboard.sendDownEvent(Key.ENTER, " ");
-		case 0x00000004: // KeyEvent.KEYCODE_BACK
-			keyboard.sendDownEvent(Key.BACK, " ");
+			keyboard.sendDownEvent(KeyCode.Return);
+		case 0x00000004:
+			keyboard.sendDownEvent(KeyCode.Back);
 		default:
-			var char: String;
-			if (shift) {
-				char = String.fromCharCode(code);
-			}
-			else {
-				char = String.fromCharCode(code + "a".charCodeAt(0) - "A".charCodeAt(0));
-			}
-			keyboard.sendDownEvent(Key.CHAR, char);
+
 		}
 	}
 
@@ -258,22 +256,15 @@ class SystemImpl {
 		switch (code) {
 		case 0x00000120:
 			shift = false;
-			keyboard.sendUpEvent(Key.SHIFT, " ");
+			keyboard.sendUpEvent(KeyCode.Shift);
 		case 0x00000103:
-			keyboard.sendUpEvent(Key.BACKSPACE, " ");
+			keyboard.sendUpEvent(KeyCode.Backspace);
 		case 0x00000104:
-			keyboard.sendUpEvent(Key.ENTER, " ");
-		case 0x00000004: // KeyEvent.KEYCODE_BACK
-			keyboard.sendUpEvent(Key.BACK, " ");
+			keyboard.sendUpEvent(KeyCode.Return);
+		case 0x00000004:
+			keyboard.sendUpEvent(KeyCode.Back);
 		default:
-			var char: String;
-			if (shift) {
-				char = String.fromCharCode(code);
-			}
-			else {
-				char = String.fromCharCode(code + "a".charCodeAt(0) - "A".charCodeAt(0));
-			}
-			keyboard.sendUpEvent(Key.CHAR, char);
+
 		}
 	}
 
@@ -310,5 +301,9 @@ class SystemImpl {
 	public static function loadUrl(url: String): Void {
 		var i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		KhaActivity.the().startActivity(i);
+	}
+
+	public static function getGamepadId(index: Int): String {
+		return "unkown";
 	}
 }

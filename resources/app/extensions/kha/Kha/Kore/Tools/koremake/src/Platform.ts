@@ -1,30 +1,31 @@
-export interface PC {
+export interface PlatformType {
 	Windows: string;
 	WindowsApp: string;
-	PlayStation3: string;
 	iOS: string;
 	OSX: string;
 	Android: string;
-	Xbox360: string;
 	Linux: string;
 	HTML5: string;
 	Tizen: string;
 	Pi: string;
 	tvOS: string;
-	[key: string]: string;
+	PS4: string;
+	XboxOne: string;
+	Switch: string;
 };
 
-export let Platform: PC = {
+export let Platform: PlatformType = {
 	Windows: 'windows',
 	WindowsApp: 'windowsapp',
-	PlayStation3: 'ps3',
 	iOS: 'ios',
 	OSX: 'osx',
 	Android: 'android',
-	Xbox360: 'xbox360',
 	Linux: 'linux',
 	HTML5: 'html5',
 	Tizen: 'tizen',
 	Pi: 'pi',
-	tvOS: 'tvos'
+	tvOS: 'tvos',
+	PS4: 'ps4',
+	XboxOne: 'xboxone',
+	Switch: 'switch'
 };

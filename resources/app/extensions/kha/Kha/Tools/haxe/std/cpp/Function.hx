@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,6 +21,7 @@
  */
 package cpp;
 
+@:callable
 typedef FunctionData<T,ABI> = T;
 
 
@@ -30,8 +31,8 @@ extern abstract Function<T, ABI:cpp.abi.Abi>( FunctionData<T,ABI> )
    inline public function new(inValue:T) this = inValue;
 
    // Legacy Api
-   public var call(get,never):T;
-   inline function get_call():T return this;
+   public var call(get,never):FunctionData<T,ABI>;
+   inline function get_call():FunctionData<T,ABI> return this;
 
 
    @:native("::cpp::Function_obj::getProcAddress")

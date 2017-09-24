@@ -1,9 +1,10 @@
 "use strict";
-const cp = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const log = require('./log');
-const exec = require('./exec');
+Object.defineProperty(exports, "__esModule", { value: true });
+const cp = require("child_process");
+const fs = require("fs");
+const path = require("path");
+const log = require("./log");
+const exec = require("./exec");
 function run(from, to, width, height, format, background, callback) {
     const exe = 'kraffiti' + exec.sys();
     let params = ['from=' + from, 'to=' + to, 'format=' + format, 'keepaspect'];
@@ -46,5 +47,5 @@ exports.exportIcns = exportIcns;
 function exportPng(to, width, height, background, from) {
     run(findIcon(from.toString()), to.toString(), width, height, 'png', background, function () { });
 }
-exports.exportPng = exportPng;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/Icon.js.map
+exports.exportPng = exportPng;
+//# sourceMappingURL=Icon.js.map

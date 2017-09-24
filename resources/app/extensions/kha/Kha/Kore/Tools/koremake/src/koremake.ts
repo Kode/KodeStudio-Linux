@@ -59,19 +59,14 @@ let options = [
 		short: 'g',
 		description: 'Graphics api to use',
 		value: true,
-		default: GraphicsApi.Direct3D9
+		default: GraphicsApi.Direct3D11
 	},
 	{
 		full: 'visualstudio',
 		short: 'v',
 		description: 'Version of Visual Studio to use',
 		value: true,
-		default: VisualStudioVersion.VS2015
-	},
-	{
-		full: 'nokrafix',
-		description: 'Switch off the new shader compiler',
-		value: false
+		default: VisualStudioVersion.VS2017
 	},
 	{
 		full: 'compile',
@@ -104,6 +99,23 @@ let options = [
 		description: 'Location of Kore directory',
 		value: true,
 		default: ''
+	},
+	{
+		full: 'init',
+		description: 'Init a Kore project inside the current directory',
+		value: false
+	},
+	{
+		full: 'name',
+		description: 'Project name to use when initializing a project',
+		value: true,
+		default: 'Project'
+	},
+	{
+		full: 'projectfile',
+		value: true,
+		description: 'Name of your project file, defaults to "korefile.js"',
+		default: 'korefile.js'
 	}
 ];
 
@@ -143,9 +155,11 @@ for (let i = 2; i < args.length; ++i) {
 				printHelp();
 				process.exit(0);
 			}
+			let found = false;
 			for (let o in options) {
 				let option: any = options[o];
 				if (arg.substr(2) === option.full) {
+					found = true;
 					if (option.value) {
 						++i;
 						parsedOptions[option.full] = args[i];
@@ -155,15 +169,19 @@ for (let i = 2; i < args.length; ++i) {
 					}
 				}
 			}
+			if (!found) throw 'Option ' + arg + ' not found.';
 		}
 		else {
 			if (arg[1] === 'h') {
 				printHelp();
 				process.exit(0);
 			}
+			if (arg.length !== 2) throw 'Wrong syntax for option ' + arg + ' (maybe try -' + arg + ' instead).';
+			let found = false;
 			for (let o in options) {
 				let option: any = options[o];
 				if (option.short && arg[1] === option.short) {
+					found = true;
 					if (option.value) {
 						++i;
 						parsedOptions[option.full] = args[i];
@@ -173,6 +191,7 @@ for (let i = 2; i < args.length; ++i) {
 					}
 				}
 			}
+			if (!found) throw 'Option ' + arg + ' not found.';
 		}
 	}
 	else {
@@ -180,23 +199,41 @@ for (let i = 2; i < args.length; ++i) {
 	}
 }
 
-if (parsedOptions.graphics === GraphicsApi.OpenGL) {
-	parsedOptions.graphics = GraphicsApi.OpenGL2;
-}
-
 if (parsedOptions.run) {
 	parsedOptions.compile = true;
 }
 
-if (parsedOptions.update) {
+if (parsedOptions.init) {
+	console.log('Initializing Kore project.\n');
+	require('./init').run(parsedOptions.name, parsedOptions.from, parsedOptions.projectfile);
+}
+else if (parsedOptions.update) {
 	console.log('Updating everything...');
 	require('child_process').spawnSync('git', ['submodule', 'foreach', '--recursive', 'git', 'pull', 'origin', 'master'], { stdio: 'inherit', stderr: 'inherit' });	
-	process.exit(0);
 }
+else {
+	let logInfo = function (text: string, newline: boolean) {
+		if (newline) {
+			console.log(text);
+		}
+		else {
+			process.stdout.write(text);
+		}
+	};
 
-require('./main.js').run(
-	parsedOptions,
-{
-	info: console.log,
-	error: console.log
-}, function () { });
+	let logError = function (text: string, newline: boolean) {
+		if (newline) {
+			console.error(text);
+		}
+		else {
+			process.stderr.write(text);
+		}
+	};
+
+	require('./main.js').run(
+		parsedOptions,
+	{
+		info: logInfo,
+		error: logError
+	}, function () { });
+}

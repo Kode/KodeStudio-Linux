@@ -2,26 +2,32 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const fs = require('fs-extra');
-const path = require('path');
-const KhaExporter_1 = require('./KhaExporter');
-const Converter_1 = require('../Converter');
-const ImageTool_1 = require('../ImageTool');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
+const path = require("path");
+const KhaExporter_1 = require("./KhaExporter");
+const Converter_1 = require("../Converter");
+const ImageTool_1 = require("../ImageTool");
 class Html5Exporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
-        this.addSourceDirectory(path.join(options.kha, 'Backends', 'HTML5'));
+    }
+    backend() {
+        return 'HTML5';
     }
     isDebugHtml5() {
         return this.sysdir() === 'debug-html5';
     }
     isNode() {
         return this.sysdir() === 'node';
+    }
+    isHtml5Worker() {
+        return this.sysdir() === 'html5worker';
     }
     haxeOptions(name, targetOptions, defines) {
         defines.push('sys_g1');
@@ -30,28 +36,46 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
         defines.push('sys_g4');
         defines.push('sys_a1');
         defines.push('sys_a2');
+        defines.push('kha_js');
+        defines.push('kha_g1');
+        defines.push('kha_g2');
+        defines.push('kha_g3');
+        defines.push('kha_g4');
+        defines.push('kha_a1');
+        defines.push('kha_a2');
+        if (targetOptions.html5.noKeyboard) {
+            defines.push('kha_no_keyboard');
+        }
         let canvasId = targetOptions.html5.canvasId == null ? 'khanvas' : targetOptions.html5.canvasId;
         defines.push('canvas_id=' + canvasId);
-        let scriptName = 'kha';
+        let scriptName = this.isHtml5Worker() ? 'khaworker' : 'kha';
         if (targetOptions.html5.scriptName != null && !(this.isNode() || this.isDebugHtml5())) {
             scriptName = targetOptions.html5.scriptName;
         }
         defines.push('script_name=' + scriptName);
         let webgl = targetOptions.html5.webgl == null ? true : targetOptions.html5.webgl;
         if (webgl) {
-            defines.push('webgl');
+            defines.push('kha_webgl');
         }
         if (this.isNode()) {
+            defines.push('nodejs');
             defines.push('sys_node');
             defines.push('sys_server');
-            defines.push('nodejs');
+            defines.push('kha_node');
+            defines.push('kha_server');
         }
         else {
             defines.push('sys_' + this.options.target);
+            defines.push('kha_' + this.options.target);
+            defines.push('kha_' + this.options.target + '_js');
         }
         if (this.isDebugHtml5()) {
-            defines.push('sys_debug_html5');
             this.parameters.push('-debug');
+            defines.push('sys_debug_html5');
+            defines.push('kha_debug_html5');
+        }
+        if (this.isHtml5Worker()) {
+            defines.push('js-classic');
         }
         return {
             from: this.options.from.toString(),
@@ -65,14 +89,15 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
             language: 'js',
             width: this.width,
             height: this.height,
-            name: name
+            name: name,
+            main: this.options.main,
         };
     }
     export(name, _targetOptions, haxeOptions) {
         return __awaiter(this, void 0, void 0, function* () {
             let targetOptions = {
                 canvasId: 'khanvas',
-                scriptName: 'kha'
+                scriptName: this.isHtml5Worker() ? 'khaworker' : 'kha'
             };
             if (_targetOptions != null && _targetOptions.html5 != null) {
                 let userOptions = _targetOptions.html5;
@@ -111,7 +136,7 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
                 let protoserver = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'node', 'server.js'), 'utf8');
                 fs.writeFileSync(path.join(this.options.to, this.sysdir(), 'server.js'), protoserver);
             }
-            else {
+            else if (!this.isHtml5Worker()) {
                 let index = path.join(this.options.to, this.sysdir(), 'index.html');
                 if (!fs.existsSync(index)) {
                     let protoindex = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'html5', 'index.html'), { encoding: 'utf8' });
@@ -152,15 +177,15 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
             return files;
         });
     }
-    copyImage(platform, from, to, options) {
+    copyImage(platform, from, to, options, cache) {
         return __awaiter(this, void 0, void 0, function* () {
-            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, undefined, false);
+            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, undefined, false, false, cache);
             return [to + '.' + format];
         });
     }
     copyBlob(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { clobber: true });
+            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { overwrite: true });
             return [to];
         });
     }
@@ -181,5 +206,5 @@ class Html5Exporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.Html5Exporter = Html5Exporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/Html5Exporter.js.map
+exports.Html5Exporter = Html5Exporter;
+//# sourceMappingURL=Html5Exporter.js.map

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -55,6 +55,7 @@ class HostClasses
    "cpp.vm.WeakRef",
    "cpp.Object",
    "cpp.Int64",
+   "cpp.Finalizable",
    "Std",
    "StringBuf",
    "sys.db.Mysql",

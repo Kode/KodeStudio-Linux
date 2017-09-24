@@ -3,11 +3,17 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
-var vscode = require('vscode');
-var ts = require('typescript');
+Object.defineProperty(exports, "__esModule", { value: true });
+var vscode = require("vscode");
+var ts = require("typescript");
+var packageDocumentHelper_1 = require("./packageDocumentHelper");
+var extensionLinter_1 = require("./extensionLinter");
 function activate(context) {
     var registration = vscode.languages.registerDocumentLinkProvider({ language: 'typescript', pattern: '**/vscode.d.ts' }, _linkProvider);
     context.subscriptions.push(registration);
+    //package.json suggestions
+    context.subscriptions.push(registerPackageDocumentCompletions());
+    context.subscriptions.push(new extensionLinter_1.ExtensionLinter(context));
 }
 exports.activate = activate;
 var _linkProvider = new (function () {
@@ -15,10 +21,10 @@ var _linkProvider = new (function () {
         this._linkPattern = /[^!]\[.*?\]\(#(.*?)\)/g;
     }
     class_1.prototype.provideDocumentLinks = function (document, token) {
-        var version = document.version;
-        if (!this._cachedResult || this._cachedResult.version !== version) {
+        var key = document.uri.toString() + "@" + document.version;
+        if (!this._cachedResult || this._cachedResult.key !== key) {
             var links = this._computeDocumentLinks(document);
-            this._cachedResult = { version: version, links: links };
+            this._cachedResult = { key: key, links: links };
         }
         return this._cachedResult.links;
     };
@@ -80,5 +86,12 @@ var ast;
         };
     }
     ast.createNamedNodeLookUp = createNamedNodeLookUp;
-})(ast || (ast = {}));
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/extension-editing/out/extension.js.map
+})(ast || (ast = {}));
+function registerPackageDocumentCompletions() {
+    return vscode.languages.registerCompletionItemProvider({ language: 'json', pattern: '**/package.json' }, {
+        provideCompletionItems: function (document, position, token) {
+            return new packageDocumentHelper_1.PackageDocument(document).provideCompletionItems(position, token);
+        }
+    });
+}
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/extension-editing/out/extension.js.map

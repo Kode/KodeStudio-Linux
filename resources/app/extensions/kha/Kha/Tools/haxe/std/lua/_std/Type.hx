@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -192,7 +192,7 @@ enum ValueType {
 	}
 
 	public inline static function enumParameters( e : EnumValue ) : Array<Dynamic> {
-		return untyped e.slice(2);
+		return (cast e : Array<Dynamic>).slice(2);
 	}
 
 	public inline static function enumIndex( e : EnumValue ) : Int {

@@ -8,13 +8,15 @@ import {exportImage} from '../ImageTool';
 import {Library} from '../Project';
 
 export class Html5Exporter extends KhaExporter {
-	parameters: Array<string>;
 	width: number;
 	height: number;
 
 	constructor(options: Options) {
 		super(options);
-		this.addSourceDirectory(path.join(options.kha, 'Backends', 'HTML5'));
+	}
+
+	backend(): string {
+		return 'HTML5';
 	}
 
 	isDebugHtml5() {
@@ -25,6 +27,10 @@ export class Html5Exporter extends KhaExporter {
 		return this.sysdir() === 'node';
 	}
 
+	isHtml5Worker() {
+		return this.sysdir() === 'html5worker';
+	}
+
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('sys_g1');
 		defines.push('sys_g2');
@@ -33,11 +39,23 @@ export class Html5Exporter extends KhaExporter {
 		defines.push('sys_a1');
 		defines.push('sys_a2');
 
+		defines.push('kha_js');
+		defines.push('kha_g1');
+		defines.push('kha_g2');
+		defines.push('kha_g3');
+		defines.push('kha_g4');
+		defines.push('kha_a1');
+		defines.push('kha_a2');
+
+		if (targetOptions.html5.noKeyboard) {
+			defines.push('kha_no_keyboard');
+		}
+
 		let canvasId = targetOptions.html5.canvasId == null ? 'khanvas' : targetOptions.html5.canvasId;
 		
 		defines.push('canvas_id=' + canvasId);
 
-		let scriptName = 'kha';
+		let scriptName = this.isHtml5Worker() ? 'khaworker' : 'kha';
 		if (targetOptions.html5.scriptName != null && !(this.isNode() || this.isDebugHtml5())) {
 			scriptName = targetOptions.html5.scriptName;
 		}
@@ -47,21 +65,35 @@ export class Html5Exporter extends KhaExporter {
 		let webgl = targetOptions.html5.webgl == null ? true : targetOptions.html5.webgl;
 
 		if (webgl) {
-			defines.push('webgl');
+			defines.push('kha_webgl');
 		}
 
 		if (this.isNode()) {
+			defines.push('nodejs');
+
 			defines.push('sys_node');
 			defines.push('sys_server');
-			defines.push('nodejs');
+
+			defines.push('kha_node');
+			defines.push('kha_server');
 		}
 		else {
 			defines.push('sys_' + this.options.target);
+
+			defines.push('kha_' + this.options.target);
+			defines.push('kha_' + this.options.target + '_js');
 		}
 
 		if (this.isDebugHtml5()) {
-			defines.push('sys_debug_html5');
 			this.parameters.push('-debug');
+			
+			defines.push('sys_debug_html5');
+
+			defines.push('kha_debug_html5');
+		}
+
+		if (this.isHtml5Worker()) {
+			defines.push('js-classic');
 		}
 
 		return {
@@ -76,14 +108,15 @@ export class Html5Exporter extends KhaExporter {
 			language: 'js',
 			width: this.width,
 			height: this.height,
-			name: name
+			name: name,
+			main: this.options.main,
 		};
 	}
 
 	async export(name: string, _targetOptions: any, haxeOptions: any): Promise<void> {
 		let targetOptions = {
 			canvasId: 'khanvas',
-			scriptName: 'kha'
+			scriptName: this.isHtml5Worker() ? 'khaworker' : 'kha'
 		};
 
 		if (_targetOptions != null && _targetOptions.html5 != null) {
@@ -126,7 +159,7 @@ export class Html5Exporter extends KhaExporter {
 			let protoserver = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'node', 'server.js'), 'utf8');
 			fs.writeFileSync(path.join(this.options.to, this.sysdir(), 'server.js'), protoserver);
 		}
-		else {
+		else if (!this.isHtml5Worker()) {
 			let index = path.join(this.options.to, this.sysdir(), 'index.html');
 			if (!fs.existsSync(index)) {
 				let protoindex = fs.readFileSync(path.join(__dirname, '..', '..', 'Data', 'html5', 'index.html'), {encoding: 'utf8'});
@@ -165,13 +198,13 @@ export class Html5Exporter extends KhaExporter {
 		return files;
 	}
 
-	async copyImage(platform: string, from: string, to: string, options: any) {
-		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, undefined, false);
+	async copyImage(platform: string, from: string, to: string, options: any, cache: any) {
+		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), options, undefined, false, false, cache);
 		return [to + '.' + format];
 	}
 
 	async copyBlob(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { clobber: true });
+		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { overwrite: true });
 		return [to];
 	}
 

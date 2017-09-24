@@ -1,5 +1,6 @@
 "use strict";
-const fs = require('fs');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
 class Block {
     constructor(out, indentation) {
         this.out = out;
@@ -32,5 +33,5 @@ class Block {
         fs.writeSync(this.out, data, 0, data.length, null);
     }
 }
-exports.Block = Block;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/Block.js.map
+exports.Block = Block;
+//# sourceMappingURL=Block.js.map

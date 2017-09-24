@@ -1,0 +1,5 @@
+[
+	"Bir JavaScript dosyasının anlamsal kontrolünü etkinleştirir. Bir dosyanın en üstünde olmalıdır.",
+	"Bir JavaScript dosyasının anlamsal kontrolünü devre dışı bırakır. Bir dosyanın en üstünde olmalıdır.",
+	"Bir dosyanın sonraki satırında @ts-check hatalarını bastırır."
+]

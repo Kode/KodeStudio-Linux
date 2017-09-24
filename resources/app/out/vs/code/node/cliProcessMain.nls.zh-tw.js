@@ -2,17 +2,6 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 define("vs/code/node/cliProcessMain.nls.zh-tw", {
-	"vs/base/common/json": [
-		"符號無效",
-		"數字格式無效",
-		"必須有屬性名稱",
-		"必須有值",
-		"必須為冒號",
-		"必須為逗號",
-		"必須為右大括號",
-		"必須為右中括號",
-		"必須為檔案結尾",
-	],
 	"vs/base/common/severity": [
 		"錯誤",
 		"警告",
@@ -34,15 +23,14 @@ define("vs/code/node/cliProcessMain.nls.zh-tw", {
 		"已成功將擴充功能 \'{0}\' 解除安裝!",
 	],
 	"vs/platform/configuration/common/configurationRegistry": [
-		"提供組態設定。",
-		"設定的摘要。此標籤將會在設定檔中作為分隔註解使用。",
-		"組態屬性的描述。",
-		"如果已設定，\'configuration.type\' 必須設定為物件",
-		"\'configuration.title\' 必須是字串",
-		"\'configuration.properties\' 必須是物件",
+		"預設組態覆寫",
+		"設定要針對 {0} 語言覆寫的編輯器設定。",
+		"設定要針對語言覆寫的編輯器設定。",
+		"無法註冊 \'{0}\'。這符合用於描述語言專用編輯器設定的屬性模式 \'\\\\[.*\\\\]$\'。請使用 \'configurationDefaults\' 貢獻。",
+		"無法註冊 \'{0}\'。此屬性已經註冊。",
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
-		"擴充功能",
+		"延伸模組",
 		"喜好設定",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
@@ -51,9 +39,6 @@ define("vs/code/node/cliProcessMain.nls.zh-tw", {
 	],
 	"vs/platform/extensionManagement/node/extensionManagementService": [
 		"擴充功能無效: package.json 不是 JSON 檔案。",
-		"擴充功能無效: 資訊清單名稱不相符。",
-		"擴充功能無效: 資訊清單發行者不相符。",
-		"擴充功能無效: 資訊清單版本不相符。",
 		"請先重新啟動 Code，再重新安裝 {0}。",
 		"請先重新啟動 Code，再重新安裝 {0}。",
 		"安裝 \'{0}\' 也會安裝其相依性。要繼續嗎?",
@@ -71,25 +56,6 @@ define("vs/code/node/cliProcessMain.nls.zh-tw", {
 		"無法將延伸模組 \'{0}\' 解除安裝。其為延伸模組 \'{1}\' 及 \'{2}\' 的相依對象。",
 		"無法將延伸模組 \'{0}\' 解除安裝。其為 \'{1}\'、\'{2}\' 及其他延伸模組的相依對象。",
 		"找不到擴充功能",
-	],
-	"vs/platform/extensions/common/extensionsRegistry": [
-		"若是 VS Code 延伸模組，則指定與延伸模組相容的 VS Code 版本。不得為 *。例如: ^0.10.5 表示與最低 VS Code 版本 0.10.5 相容。",
-		"VS Code 擴充功能的發行者。",
-		"VS Code 資源庫中使用的擴充功能顯示名稱。",
-		"VS Code 資源庫用來將擴充功能歸類的分類。",
-		"用於 VS Code Marketplace 的橫幅。",
-		"VS Code Marketplace 頁首的橫幅色彩。",
-		"橫幅中使用的字型色彩佈景主題。",
-		"此封裝所代表的所有 VS Code 擴充功能比重。",
-		"將延伸模組設為在 Marketplace 中標幟為 [預覽]。",
-		"VS Code 擴充功能的啟動事件。",
-		"要顯示於 Marketplace 擴充頁面資訊看板的徽章陣列。",
-		"徽章映像 URL。",
-		"徽章連結。",
-		"徽章描述。",
-		"其它擴充功能的相依性。擴充功能的識別碼一律為 ${publisher}.${name}。例如: vscode.csharp。",
-		"在封裝作為 VS Code 擴充功能發行前所執行的指令碼。",
-		"128 x 128 像素圖示的路徑。",
 	],
 	"vs/platform/extensions/node/extensionValidator": [
 		"無法剖析 \'engines.vscode` 值 {0}。例如，請使用：^0.10.0、^1.2.3、^0.11.0、^0.10.x 等。",

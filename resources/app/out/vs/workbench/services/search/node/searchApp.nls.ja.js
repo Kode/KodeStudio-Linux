@@ -16,5 +16,14 @@ define("vs/workbench/services/search/node/searchApp.nls.ja", {
 		"不明なエラーが発生しました。ログで詳細を確認してください。",
 		"{0} (合計 {1} エラー)",
 		"不明なエラーが発生しました。ログで詳細を確認してください。",
+	],
+	"vs/base/common/processes": [
+		"エラー: 実行可能ファイルの情報は、型 string のコマンドを定義する必要があります。",
+		"警告: isShellCommand は、型ブール値でなければなりません。値 {0} を無視します。",
+		"警告: 引数は、型 string[] でなければなりません。値 {0} を無視します。",
+		"警告: options.cwd は、型 string でなければなりません。値 {0} を無視します。",
+	],
+	"vs/base/node/processes": [
+		"UNC ドライブでシェル コマンドを実行できません。",
 	]
 });

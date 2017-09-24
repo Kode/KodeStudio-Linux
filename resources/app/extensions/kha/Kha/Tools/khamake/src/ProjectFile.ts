@@ -4,13 +4,36 @@ import * as log from './log';
 import {Platform} from './Platform';
 import {Project} from './Project';
 
-export async function loadProject(from: string, projectfile: string, platform: string): Promise<Project> {
-	return new Promise<Project>((resolve, reject) => {
-		fs.readFile(path.join(from, projectfile), { encoding: 'utf8' }, (err, data) => {
+export class ProjectData {
+	project: Project;
+	preAssetConversion: () => void;
+	preShaderCompilation: () => void;
+	preHaxeCompilation: () => void;
+	postHaxeCompilation: () => void;
+	postCppCompilation: () => void;
+}
+
+export async function loadProject(from: string, projectfile: string, platform: string): Promise<ProjectData> {
+	return new Promise<ProjectData>((resolve, reject) => {
+		fs.readFile(path.join(from, projectfile), 'utf8', (err, data) => {
 			let resolved = false;
+			let callbacks = {
+				preAssetConversion: () => {},
+				preShaderCompilation: () => {},
+				preHaxeCompilation: () => {},
+				postHaxeCompilation: () => {},
+				postCppCompilation: () => {}
+			};
 			let resolver = (project: Project) => {
 				resolved = true;
-				resolve(project);
+				resolve({
+					preAssetConversion: callbacks.preAssetConversion,
+					preShaderCompilation: callbacks.preShaderCompilation,
+					preHaxeCompilation: callbacks.preHaxeCompilation,
+					postHaxeCompilation: callbacks.postHaxeCompilation,
+					postCppCompilation: callbacks.postCppCompilation,
+					project: project
+				});
 			};
 
 			process.on('exit', (code: number) => {
@@ -21,7 +44,8 @@ export async function loadProject(from: string, projectfile: string, platform: s
 	
 			Project.scriptdir = from;
 			try {
-				new Function('Project', 'Platform', 'platform', 'require', 'resolve', 'reject', data)(Project, Platform, platform, require, resolver, reject);
+				new Function('Project', 'Platform', 'platform', 'require', 'resolve', 'reject', 'callbacks', data)
+					(Project, Platform, platform, require, resolver, reject, callbacks);
 			}
 			catch (error) {
 				reject(error);

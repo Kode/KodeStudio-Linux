@@ -4,49 +4,17 @@ import * as log from './log';
 import {GraphicsApi} from './GraphicsApi';
 import {Options} from './Options';
 import {Platform} from './Platform';
+import {VrApi} from './VrApi';
 const uuid = require('uuid');
 
 function getDefines(platform: string, rotated: boolean) {
 	let defines: string[] = [];
 	switch (platform) {
-		case Platform.Windows:
-			defines.push('_CRT_SECURE_NO_WARNINGS');
-			defines.push('SYS_WINDOWS');
-			break;
-		case Platform.WindowsApp:
-			defines.push('_CRT_SECURE_NO_WARNINGS');
-			defines.push('SYS_WINDOWSAPP');
-			break;
-		case Platform.PlayStation3:
-			defines.push('SYS_PS3');
-			break;
 		case Platform.iOS:
 			if (rotated) defines.push('ROTATE90');
-			defines.push('SYS_IOS');
-			break;
-		case Platform.tvOS:
-			defines.push('SYS_TVOS');
-			break;
-		case Platform.OSX:
-			defines.push('SYS_OSX');
-			defines.push('SYS_64BIT');
 			break;
 		case Platform.Android:
 			if (rotated) defines.push('ROTATE90');
-			defines.push('SYS_ANDROID');
-			break;
-		case Platform.Xbox360:
-			defines.push('_CRT_SECURE_NO_WARNINGS');
-			defines.push('SYS_XBOX360');
-			break;
-		case Platform.HTML5:
-			defines.push('SYS_HTML5');
-			break;
-		case Platform.Linux:
-			defines.push('SYS_LINUX');
-			break;
-		case Platform.Tizen:
-			defines.push('SYS_TIZEN');
 			break;
 	}
 	return defines;
@@ -76,6 +44,7 @@ export interface File {
 export class Project {
 	static platform: string;
 	static koreDir: string;
+	static root: string;
 	name: string;
 	debugDir: string;
 	basedir: string;
@@ -95,6 +64,7 @@ export class Project {
 	cmd: boolean;
 
 	constructor(name: string, basedir: string) {
+		if (basedir === undefined) throw 'Please pass __dirname to the Project';
 		this.name = name;
 		this.debugDir = '';
 		this.basedir = basedir;
@@ -125,7 +95,11 @@ export class Project {
 
 			for (let d of sub.defines) if (!contains(this.defines, d)) this.defines.push(d);
 			for (let file of sub.files) {
-				this.files.push({file: path.join(subbasedir, file.file).replace(/\\/g, '/'), options: file.options, projectDir: subbasedir, projectName: sub.name });
+				let absolute = file.file;
+				if (!path.isAbsolute(absolute)) {
+					absolute = path.join(subbasedir, file.file);
+				}
+				this.files.push({file: absolute.replace(/\\/g, '/'), options: file.options, projectDir: subbasedir, projectName: sub.name });
 			}
 			for (let i of sub.includeDirs) if (!contains(this.includeDirs, path.resolve(subbasedir, i))) this.includeDirs.push(path.resolve(subbasedir, i));
 			for (let j of sub.javadirs) if (!contains(this.javadirs, path.resolve(subbasedir, j))) this.javadirs.push(path.resolve(subbasedir, j));
@@ -399,21 +373,28 @@ export class Project {
 			try {
 				let file = fs.readFileSync(path.resolve(scriptdir, 'korefile.js'), 'utf8');
 				let project = new Function(
+					'log',
 					'Project',
 					'Platform',
 					'platform',
 					'GraphicsApi',
 					'graphics',
+					'VrApi',
+					'vr',
 					'require',
 					'resolve',
 					'reject',
 					'__dirname',
 					file)
-				(Project,
+				(
+					log,
+					Project,
 					Platform,
 					Project.platform,
 					GraphicsApi,
 					Options.graphicsApi,
+					VrApi,
+					Options.vrApi,
 					require,
 					resolver,
 					reject,
@@ -428,6 +409,7 @@ export class Project {
 
 	static async create(directory: string, platform: string) {
 		Project.platform = platform;
+		Project.root = path.resolve(directory);
 		let project = await Project.createProject('.', directory);
 		let defines = getDefines(platform, project.isRotated());
 		for (let define of defines) {

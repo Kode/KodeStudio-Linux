@@ -16,16 +16,16 @@
 	"main": "./extension",
 	"contributes": {
 		"configuration": {
-            "type": "object",
-            "title": "Krom configuration",
-            "properties": {
-                "krom.kromPath": {
+			"type": "object",
+			"title": "Krom configuration",
+			"properties": {
+				"krom.kromPath": {
 					"type": "string",
 					"default": "",
 					"description": "Points to a Krom directory."
-                }
-            }
-        }
+				}
+			}
+		}
 	},
 	"devDependencies": {
 		"vscode": "0.10.x"

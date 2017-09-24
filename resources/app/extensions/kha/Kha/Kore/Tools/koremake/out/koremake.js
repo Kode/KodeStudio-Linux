@@ -1,9 +1,10 @@
 "use strict";
-const os = require('os');
-const Platform_1 = require('./Platform');
-const GraphicsApi_1 = require('./GraphicsApi');
-const VisualStudioVersion_1 = require('./VisualStudioVersion');
-const VrApi_1 = require('./VrApi');
+Object.defineProperty(exports, "__esModule", { value: true });
+const os = require("os");
+const Platform_1 = require("./Platform");
+const GraphicsApi_1 = require("./GraphicsApi");
+const VisualStudioVersion_1 = require("./VisualStudioVersion");
+const VrApi_1 = require("./VrApi");
 let defaultTarget;
 if (os.platform() === 'linux') {
     defaultTarget = Platform_1.Platform.Linux;
@@ -57,19 +58,14 @@ let options = [
         short: 'g',
         description: 'Graphics api to use',
         value: true,
-        default: GraphicsApi_1.GraphicsApi.Direct3D9
+        default: GraphicsApi_1.GraphicsApi.Direct3D11
     },
     {
         full: 'visualstudio',
         short: 'v',
         description: 'Version of Visual Studio to use',
         value: true,
-        default: VisualStudioVersion_1.VisualStudioVersion.VS2015
-    },
-    {
-        full: 'nokrafix',
-        description: 'Switch off the new shader compiler',
-        value: false
+        default: VisualStudioVersion_1.VisualStudioVersion.VS2017
     },
     {
         full: 'compile',
@@ -102,6 +98,23 @@ let options = [
         description: 'Location of Kore directory',
         value: true,
         default: ''
+    },
+    {
+        full: 'init',
+        description: 'Init a Kore project inside the current directory',
+        value: false
+    },
+    {
+        full: 'name',
+        description: 'Project name to use when initializing a project',
+        value: true,
+        default: 'Project'
+    },
+    {
+        full: 'projectfile',
+        value: true,
+        description: 'Name of your project file, defaults to "korefile.js"',
+        default: 'korefile.js'
     }
 ];
 let parsedOptions = {};
@@ -137,9 +150,11 @@ for (let i = 2; i < args.length; ++i) {
                 printHelp();
                 process.exit(0);
             }
+            let found = false;
             for (let o in options) {
                 let option = options[o];
                 if (arg.substr(2) === option.full) {
+                    found = true;
                     if (option.value) {
                         ++i;
                         parsedOptions[option.full] = args[i];
@@ -149,15 +164,21 @@ for (let i = 2; i < args.length; ++i) {
                     }
                 }
             }
+            if (!found)
+                throw 'Option ' + arg + ' not found.';
         }
         else {
             if (arg[1] === 'h') {
                 printHelp();
                 process.exit(0);
             }
+            if (arg.length !== 2)
+                throw 'Wrong syntax for option ' + arg + ' (maybe try -' + arg + ' instead).';
+            let found = false;
             for (let o in options) {
                 let option = options[o];
                 if (option.short && arg[1] === option.short) {
+                    found = true;
                     if (option.value) {
                         ++i;
                         parsedOptions[option.full] = args[i];
@@ -167,25 +188,45 @@ for (let i = 2; i < args.length; ++i) {
                     }
                 }
             }
+            if (!found)
+                throw 'Option ' + arg + ' not found.';
         }
     }
     else {
         parsedOptions.target = arg;
     }
 }
-if (parsedOptions.graphics === GraphicsApi_1.GraphicsApi.OpenGL) {
-    parsedOptions.graphics = GraphicsApi_1.GraphicsApi.OpenGL2;
-}
 if (parsedOptions.run) {
     parsedOptions.compile = true;
 }
-if (parsedOptions.update) {
+if (parsedOptions.init) {
+    console.log('Initializing Kore project.\n');
+    require('./init').run(parsedOptions.name, parsedOptions.from, parsedOptions.projectfile);
+}
+else if (parsedOptions.update) {
     console.log('Updating everything...');
     require('child_process').spawnSync('git', ['submodule', 'foreach', '--recursive', 'git', 'pull', 'origin', 'master'], { stdio: 'inherit', stderr: 'inherit' });
-    process.exit(0);
 }
-require('./main.js').run(parsedOptions, {
-    info: console.log,
-    error: console.log
-}, function () { });
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/koremake.js.map
+else {
+    let logInfo = function (text, newline) {
+        if (newline) {
+            console.log(text);
+        }
+        else {
+            process.stdout.write(text);
+        }
+    };
+    let logError = function (text, newline) {
+        if (newline) {
+            console.error(text);
+        }
+        else {
+            process.stderr.write(text);
+        }
+    };
+    require('./main.js').run(parsedOptions, {
+        info: logInfo,
+        error: logError
+    }, function () { });
+}
+//# sourceMappingURL=koremake.js.map

@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 function _encode(ch) {
     return '%' + ch.charCodeAt(0).toString(16).toUpperCase();
 }
@@ -314,6 +315,5 @@ var URI = (function () {
     URI._upperCaseDrive = /^(\/)?([A-Z]:)/;
     return URI;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = URI;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/json/server/out/utils/uri.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/json/server/out/utils/uri.js.map

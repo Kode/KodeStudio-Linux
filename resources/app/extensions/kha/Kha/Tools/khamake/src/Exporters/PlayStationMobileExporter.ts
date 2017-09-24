@@ -144,22 +144,22 @@ export class PlayStationMobileExporter extends CSharpExporter {
 	}*/
 
 	async copySound(platform: string, from: string, to: string) {
-		return [];
+		return [''];
 	}
 
-	async copyImage(platform: string, from: string, to: string, asset: any) {
+	async copyImage(platform: string, from: string, to: string, asset: any, cache: any) {
 		this.files.push(asset['file']);
-		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false);
+		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false, false, cache);
 		return [to + '.' + format];
 	}
 
 	async copyBlob(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { clobber: true });
+		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { overwrite: true });
 		this.files.push(to);
 		return [to];
 	}
 
 	async copyVideo(platform: string, from: string, to: string) {
-		return [];
+		return [''];
 	}
 }

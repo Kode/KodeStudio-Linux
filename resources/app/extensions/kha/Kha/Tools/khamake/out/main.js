@@ -2,38 +2,39 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const child_process = require('child_process');
-const fs = require('fs-extra');
-const path = require('path');
-const exec_1 = require('./exec');
-const korepath = require('./korepath');
-const log = require('./log');
-const Platform_1 = require('./Platform');
-const ProjectFile_1 = require('./ProjectFile');
-const AssetConverter_1 = require('./AssetConverter');
-const HaxeCompiler_1 = require('./HaxeCompiler');
-const ShaderCompiler_1 = require('./ShaderCompiler');
-const AndroidExporter_1 = require('./Exporters/AndroidExporter');
-const DebugHtml5Exporter_1 = require('./Exporters/DebugHtml5Exporter');
-const EmptyExporter_1 = require('./Exporters/EmptyExporter');
-const FlashExporter_1 = require('./Exporters/FlashExporter');
-const Html5Exporter_1 = require('./Exporters/Html5Exporter');
-const Html5WorkerExporter_1 = require('./Exporters/Html5WorkerExporter');
-const JavaExporter_1 = require('./Exporters/JavaExporter');
-const KoreExporter_1 = require('./Exporters/KoreExporter');
-const KoreHLExporter_1 = require('./Exporters/KoreHLExporter');
-const KromExporter_1 = require('./Exporters/KromExporter');
-const NodeExporter_1 = require('./Exporters/NodeExporter');
-const PlayStationMobileExporter_1 = require('./Exporters/PlayStationMobileExporter');
-const WpfExporter_1 = require('./Exporters/WpfExporter');
-const XnaExporter_1 = require('./Exporters/XnaExporter');
-const UnityExporter_1 = require('./Exporters/UnityExporter');
-const HaxeProject_1 = require('./HaxeProject');
+Object.defineProperty(exports, "__esModule", { value: true });
+const child_process = require("child_process");
+const fs = require("fs-extra");
+const path = require("path");
+const exec_1 = require("./exec");
+const korepath = require("./korepath");
+const log = require("./log");
+const Platform_1 = require("./Platform");
+const ProjectFile_1 = require("./ProjectFile");
+const AssetConverter_1 = require("./AssetConverter");
+const HaxeCompiler_1 = require("./HaxeCompiler");
+const ShaderCompiler_1 = require("./ShaderCompiler");
+const AndroidExporter_1 = require("./Exporters/AndroidExporter");
+const DebugHtml5Exporter_1 = require("./Exporters/DebugHtml5Exporter");
+const EmptyExporter_1 = require("./Exporters/EmptyExporter");
+const FlashExporter_1 = require("./Exporters/FlashExporter");
+const Html5Exporter_1 = require("./Exporters/Html5Exporter");
+const Html5WorkerExporter_1 = require("./Exporters/Html5WorkerExporter");
+const JavaExporter_1 = require("./Exporters/JavaExporter");
+const KoreExporter_1 = require("./Exporters/KoreExporter");
+const KoreHLExporter_1 = require("./Exporters/KoreHLExporter");
+const KromExporter_1 = require("./Exporters/KromExporter");
+const NodeExporter_1 = require("./Exporters/NodeExporter");
+const PlayStationMobileExporter_1 = require("./Exporters/PlayStationMobileExporter");
+const WpfExporter_1 = require("./Exporters/WpfExporter");
+const XnaExporter_1 = require("./Exporters/XnaExporter");
+const UnityExporter_1 = require("./Exporters/UnityExporter");
+const HaxeProject_1 = require("./HaxeProject");
 let lastAssetConverter;
 let lastShaderCompiler;
 let lastHaxeCompiler;
@@ -92,7 +93,7 @@ function createKorefile(name, exporter, options, targetOptions, libraries, cdefi
     out += '});\n';
     return out;
 }
-function exportProjectFiles(name, options, exporter, kore, korehl, libraries, targetOptions, defines, cdefines) {
+function exportProjectFiles(name, resourceDir, projectData, options, exporter, kore, korehl, libraries, targetOptions, defines, cdefines) {
     return __awaiter(this, void 0, void 0, function* () {
         if (options.haxe !== '') {
             let haxeOptions = exporter.haxeOptions(name, targetOptions, defines);
@@ -104,16 +105,17 @@ function exportProjectFiles(name, options, exporter, kore, korehl, libraries, ta
             }
             HaxeProject_1.writeHaxeProject(options.to, haxeOptions);
             if (!options.nohaxe) {
-                let compiler = new HaxeCompiler_1.HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources);
+                let compiler = new HaxeCompiler_1.HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, resourceDir, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources);
                 lastHaxeCompiler = compiler;
                 yield compiler.run(options.watch);
             }
+            projectData.postHaxeCompilation();
             yield exporter.export(name, targetOptions, haxeOptions);
         }
         if (options.haxe !== '' && kore && !options.noproject) {
             // If target is a Kore project, generate additional project folders here.
             // generate the korefile.js
-            fs.copySync(path.join(__dirname, '..', 'Data', 'build-korefile.js'), path.join(options.to, exporter.sysdir() + '-build', 'korefile.js'), { clobber: true });
+            fs.copySync(path.join(__dirname, '..', 'Data', 'build-korefile.js'), path.join(options.to, exporter.sysdir() + '-build', 'korefile.js'), { overwrite: true });
             fs.writeFileSync(path.join(options.from, 'korefile.js'), createKorefile(name, exporter, options, targetOptions, libraries, cdefines));
             // Similar to khamake.js -> main.js -> run(...)
             // We now do koremake.js -> main.js -> run(...)
@@ -135,6 +137,7 @@ function exportProjectFiles(name, options, exporter, kore, korehl, libraries, ta
                     info: log.info,
                     error: log.error
                 });
+                projectData.postCppCompilation();
                 log.info('Done.');
                 return name;
             }
@@ -144,8 +147,8 @@ function exportProjectFiles(name, options, exporter, kore, korehl, libraries, ta
             }
         }
         else if (options.haxe !== '' && korehl && !options.noproject) {
-            fs.copySync(path.join(__dirname, 'Data', 'hl', 'kore_sources.c'), path.join(options.to, exporter.sysdir() + '-build', 'kore_sources.c'), { clobber: true });
-            fs.copySync(path.join(__dirname, 'Data', 'hl', 'korefile.js'), path.join(options.to, exporter.sysdir() + '-build', 'korefile.js'), { clobber: true });
+            fs.copySync(path.join(__dirname, 'Data', 'hl', 'kore_sources.c'), path.join(options.to, exporter.sysdir() + '-build', 'kore_sources.c'), { overwrite: true });
+            fs.copySync(path.join(__dirname, 'Data', 'hl', 'korefile.js'), path.join(options.to, exporter.sysdir() + '-build', 'korefile.js'), { overwrite: true });
             fs.writeFileSync(path.join(options.from, 'korefile.js'), createKorefile(name, exporter, options, targetOptions, libraries, cdefines));
             try {
                 let name = yield require(path.join(korepath.get(), 'out', 'main.js')).run({
@@ -190,12 +193,14 @@ function exportKhaProject(options) {
     return __awaiter(this, void 0, void 0, function* () {
         log.info('Creating Kha project.');
         let project = null;
+        let projectData;
         let foundProjectFile = false;
         // get the khafile.js and load the config code,
         // then create the project config object, which contains stuff
         // like project name, assets paths, sources path, library path...
         if (fs.existsSync(path.join(options.from, options.projectfile))) {
-            project = yield ProjectFile_1.loadProject(options.from, options.projectfile, options.target);
+            projectData = yield ProjectFile_1.loadProject(options.from, options.projectfile, options.target);
+            project = projectData.project;
             foundProjectFile = true;
         }
         if (!foundProjectFile) {
@@ -283,22 +288,39 @@ function exportKhaProject(options) {
         for (let library of project.libraries) {
             exporter.addLibrary(library);
         }
-        exporter.parameters = project.parameters;
+        exporter.parameters = exporter.parameters.concat(project.parameters);
         project.scriptdir = options.kha;
         project.addShaders('Sources/Shaders/**', {});
+        projectData.preAssetConversion();
         let assetConverter = new AssetConverter_1.AssetConverter(exporter, options.target, project.assetMatchers);
         lastAssetConverter = assetConverter;
-        let assets = yield assetConverter.run(options.watch);
+        let assets = yield assetConverter.run(options.watch, temp);
         let shaderDir = path.join(options.to, exporter.sysdir() + '-resources');
         if (target === Platform_1.Platform.Unity) {
             shaderDir = path.join(options.to, exporter.sysdir(), 'Assets', 'Shaders');
         }
+        projectData.preShaderCompilation();
         fs.ensureDirSync(shaderDir);
+        let oldResources = null;
+        let recompileAllShaders = false;
+        try {
+            oldResources = JSON.parse(fs.readFileSync(path.join(options.to, exporter.sysdir() + '-resources', 'files.json'), 'utf8'));
+            for (let file of oldResources.files) {
+                if (file.type === 'shader') {
+                    if (!file.files || file.files.length === 0) {
+                        recompileAllShaders = true;
+                        break;
+                    }
+                }
+            }
+        }
+        catch (error) {
+        }
         let exportedShaders = [];
         if (!options.noshaders) {
             let shaderCompiler = new ShaderCompiler_1.ShaderCompiler(exporter, options.target, options.krafix, shaderDir, temp, path.join(options.to, exporter.sysdir() + '-build'), options, project.shaderMatchers);
             lastShaderCompiler = shaderCompiler;
-            exportedShaders = yield shaderCompiler.run(options.watch);
+            exportedShaders = yield shaderCompiler.run(options.watch, recompileAllShaders);
         }
         if (target === Platform_1.Platform.Unity) {
             fs.ensureDirSync(path.join(options.to, exporter.sysdir() + '-resources'));
@@ -325,17 +347,13 @@ function exportKhaProject(options) {
                 fs.writeFileSync(path.join(blobDir, exportedShaders[i].files[0] + '.bytes'), exportedShaders[i].name, 'utf8');
             }
         }
-        let oldResources = null;
-        try {
-            oldResources = JSON.parse(fs.readFileSync(path.join(options.to, exporter.sysdir() + '-resources', 'files.json'), 'utf8'));
-        }
-        catch (error) {
-        }
         function findShader(name) {
             let fallback = {};
+            fallback.files = [];
             fallback.inputs = [];
             fallback.outputs = [];
             fallback.uniforms = [];
+            fallback.types = [];
             try {
                 for (let file of oldResources.files) {
                     if (file.type === 'shader' && file.name === fixName(name)) {
@@ -367,11 +385,12 @@ function exportKhaProject(options) {
             let oldShader = findShader(shader.name);
             files.push({
                 name: fixName(shader.name),
-                files: shader.files,
+                files: shader.files === null ? oldShader.files : shader.files,
                 type: 'shader',
                 inputs: shader.inputs === null ? oldShader.inputs : shader.inputs,
                 outputs: shader.outputs === null ? oldShader.outputs : shader.outputs,
-                uniforms: shader.uniforms === null ? oldShader.uniforms : shader.uniforms
+                uniforms: shader.uniforms === null ? oldShader.uniforms : shader.uniforms,
+                types: shader.types === null ? oldShader.types : shader.types
             });
         }
         function secondPass() {
@@ -394,7 +413,8 @@ function exportKhaProject(options) {
         if (foundProjectFile) {
             fs.outputFileSync(path.join(options.to, exporter.sysdir() + '-resources', 'files.json'), JSON.stringify({ files: files }, null, '\t'));
         }
-        return yield exportProjectFiles(project.name, options, exporter, kore, korehl, project.libraries, project.targetOptions, project.defines, project.cdefines);
+        projectData.preHaxeCompilation();
+        return yield exportProjectFiles(project.name, path.join(options.to, exporter.sysdir() + '-resources'), projectData, options, exporter, kore, korehl, project.libraries, project.targetOptions, project.defines, project.cdefines);
     });
 }
 function isKhaProject(directory, projectfile) {
@@ -444,6 +464,7 @@ function run(options, loglog) {
         else {
             options.kha = path.resolve(options.kha);
         }
+        log.info('Using Kha from ' + options.kha);
         if (!options.haxe) {
             let haxepath = path.join(options.kha, 'Tools', 'haxe');
             if (fs.existsSync(haxepath) && fs.statSync(haxepath).isDirectory())
@@ -485,6 +506,26 @@ function run(options, loglog) {
         if (options.target === Platform_1.Platform.Linux && options.run) {
             yield runProject(options);
         }
+        if (options.compile && options.target === Platform_1.Platform.Android) {
+            let gradlew = (process.platform === 'win32') ? 'gradlew.bat' : 'bash';
+            let args = (process.platform === 'win32') ? [] : ['gradlew'];
+            args.push('assemble');
+            let make = child_process.spawn(gradlew, args, { cwd: path.join(options.to, 'android', name) });
+            make.stdout.on('data', function (data) {
+                log.info(data.toString());
+            });
+            make.stderr.on('data', function (data) {
+                log.error(data.toString());
+            });
+            make.on('close', function (code) {
+                if (code === 0) {
+                }
+                else {
+                    log.error('Compilation failed.');
+                    process.exit(code);
+                }
+            });
+        }
         return name;
     });
 }
@@ -497,5 +538,5 @@ function close() {
     if (lastHaxeCompiler)
         lastHaxeCompiler.close();
 }
-exports.close = close;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/main.js.map
+exports.close = close;
+//# sourceMappingURL=main.js.map

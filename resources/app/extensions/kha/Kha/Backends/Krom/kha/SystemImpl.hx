@@ -15,43 +15,28 @@ class SystemImpl {
 	private static var framebuffer: Framebuffer;
 	private static var keyboard: Keyboard;
 	private static var mouse: Mouse;
+	private static var maxGamepads: Int = 4;
+	private static var gamepads: Array<Gamepad>;
 	
 	private static function renderCallback(): Void {
 		Scheduler.executeFrame();
 		System.render(0, framebuffer);
 	}
-	
-	private static function convertCode(code: Int): Key {
-		switch (code) {
-		case 0x00000112:
-			return Key.LEFT;
-		case 0x00000113:
-			return Key.UP;
-		case 0x00000114:
-			return Key.RIGHT;
-		case 0x00000115:
-			return Key.DOWN;
-		case 0x00000104, 0x00000105:
-			return Key.ENTER;
-		case 0x00000120:
-			return Key.SHIFT;
-		case 0x00000100:
-			return Key.ESC;
-		default:
-			return null;
-		}
+
+	private static function dropFilesCallback(filePath: String): Void {
+		System.dropFiles(filePath);
+	}
+		
+	private static function keyboardDownCallback(code: Int): Void {
+		keyboard.sendDownEvent(cast code);
 	}
 	
-	private static function keyboardDownCallback(code: Int, charCode: Int): Void {
-		var key = convertCode(code);
-		if (key != null) keyboard.sendDownEvent(key, " ");
-		else keyboard.sendDownEvent(Key.CHAR, String.fromCharCode(charCode));
+	private static function keyboardUpCallback(code: Int): Void {
+		keyboard.sendUpEvent(cast code);
 	}
 	
-	private static function keyboardUpCallback(code: Int, charCode: Int): Void {
-		var key = convertCode(code);
-		if (key != null) keyboard.sendUpEvent(key, " ");
-		else keyboard.sendUpEvent(Key.CHAR, String.fromCharCode(charCode));
+	private static function keyboardPressCallback(charCode: Int): Void {
+		keyboard.sendPressEvent(String.fromCharCode(charCode));
 	}
 	
 	private static function mouseDownCallback(button: Int, x: Int, y: Int): Void {
@@ -64,6 +49,18 @@ class SystemImpl {
 	
 	private static function mouseMoveCallback(x: Int, y: Int, mx: Int, my: Int): Void {
 		mouse.sendMoveEvent(0, x, y, mx, my);
+	}
+
+	private static function mouseWheelCallback(delta: Int): Void {
+		mouse.sendWheelEvent(0, delta);
+	}
+
+	private static function gamepadAxisCallback(gamepad: Int, axis: Int, value: Float): Void {
+		gamepads[gamepad].sendAxisEvent(axis, value);
+	}
+
+	public static function gamepadButtonCallback(gamepad: Int, button: Int, value: Float): Void {
+		gamepads[gamepad].sendButtonEvent(button, value);
 	}
 
 	private static var audioOutputData: Vector<Float>;
@@ -90,7 +87,7 @@ class SystemImpl {
 	}
 	
 	public static function init(options: SystemOptions, callback: Void -> Void): Void {
-		Krom.init(options.title, options.width, options.height, options.samplesPerPixel);
+		Krom.init(options.title, options.width, options.height, options.samplesPerPixel, options.vSync, translateWindowMode(options.windowMode), options.resizable, options.maximizable, options.minimizable);
 
 		start = Krom.getTime();
 		
@@ -105,15 +102,24 @@ class SystemImpl {
 		framebuffer = new Framebuffer(0, null, null, g4);
 		framebuffer.init(new kha.graphics2.Graphics1(framebuffer), new kha.graphics4.Graphics2(framebuffer), g4);
 		Krom.setCallback(renderCallback);
+		Krom.setDropFilesCallback(dropFilesCallback);
 		
 		keyboard = new Keyboard();
 		mouse = new Mouse();
+		gamepads = new Array<Gamepad>();
+		for (i in 0...maxGamepads) {
+			gamepads[i] = new Gamepad(i);
+		}
 		
 		Krom.setKeyboardDownCallback(keyboardDownCallback);
 		Krom.setKeyboardUpCallback(keyboardUpCallback);
+		Krom.setKeyboardPressCallback(keyboardPressCallback);
 		Krom.setMouseDownCallback(mouseDownCallback);
 		Krom.setMouseUpCallback(mouseUpCallback);
 		Krom.setMouseMoveCallback(mouseMoveCallback);
+		Krom.setMouseWheelCallback(mouseWheelCallback);
+		Krom.setGamepadAxisCallback(gamepadAxisCallback);
+		Krom.setGamepadButtonCallback(gamepadButtonCallback);
 
 		kha.audio2.Audio._init();
 		kha.audio1.Audio._init();
@@ -126,6 +132,18 @@ class SystemImpl {
 
 	public static function initEx(title: String, options: Array<WindowOptions>, windowCallback: Int -> Void, callback: Void -> Void): Void {
 
+	}
+
+	static function translateWindowMode(value: Null<WindowMode>): Int {
+		if (value == null) {
+			return 0;
+		}
+
+		return switch (value) {
+			case Window: 0;
+			case BorderlessWindow: 1;
+			case Fullscreen: 2;
+		}
 	}
 	
 	public static function getScreenRotation(): ScreenRotation {
@@ -157,11 +175,11 @@ class SystemImpl {
 	}
 	
 	public static function getSystemId(): String {
-		return "Krom";
+		return Krom.systemId();
 	}
 	
 	public static function requestShutdown(): Void {
-		
+		Krom.requestShutdown();
 	}
 	
 	public static function getMouse(num: Int): Mouse {
@@ -235,5 +253,9 @@ class SystemImpl {
 
 	public static function loadUrl(url: String): Void {
 		
+	}
+
+	public static function getGamepadId(index: Int): String {
+		return "unkown";
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -78,13 +78,11 @@ class StringBuf {
 
    public function toString() : String {
       if (charBuf!=null)
-      {
-         if (b==null)
-           return( charBufAsString() );
          flush();
-      }
-      if (b==null)
+      if (b==null || b.length==0)
          return "";
+      if (b.length==1)
+         return b[0];
       return b.join("");
    }
 

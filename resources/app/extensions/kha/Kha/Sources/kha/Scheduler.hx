@@ -72,8 +72,7 @@ class Scheduler {
 		
 		stopped = true;
 		frame_tasks_sorted = true;
-		current = realTime();
-		lastTime = realTime();
+		current = lastTime = realTime();
 
 		currentFrameTaskId = 0;
 		currentTimeTaskId  = 0;
@@ -326,7 +325,10 @@ class Scheduler {
 	}
 	
 	public static function addFrameTask(task: Void -> Void, priority: Int): Int {
-		return addBreakableFrameTask(function() { task(); return true; }, priority);
+		return addBreakableFrameTask(function () {
+			task();
+			return true;
+		}, priority);
 	}
 	
 	public static function pauseFrameTask(id: Int, paused: Bool): Void {
@@ -370,7 +372,10 @@ class Scheduler {
 	}
 	
 	public static function addTimeTaskToGroup(groupId: Int, task: Void -> Void, start: Float, period: Float = 0, duration: Float = 0): Int {
-		return addBreakableTimeTaskToGroup(groupId, function() { task(); return true; }, start, period, duration);
+		return addBreakableTimeTaskToGroup(groupId, function () {
+			task();
+			return true;
+		}, start, period, duration);
 	}
 	
 	public static function addBreakableTimeTask(task: Void -> Bool, start: Float, period: Float = 0, duration: Float = 0): Int {
@@ -473,7 +478,9 @@ class Scheduler {
 	
 	private static function sortFrameTasks(): Void {
 		if (frame_tasks_sorted) return;
-		frameTasks.sort(function(a: FrameTask, b: FrameTask): Int { return a.priority > b.priority ? 1 : ((a.priority < b.priority) ? -1 : 0); } );
+		frameTasks.sort(function (a: FrameTask, b: FrameTask): Int {
+			return a.priority > b.priority ? 1 : ((a.priority < b.priority) ? -1 : 0);
+		});
 		frame_tasks_sorted = true;
 	}
 }

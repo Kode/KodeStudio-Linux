@@ -1,0 +1,3 @@
+{
+	"config.grunt.autoDetect": "Controla se a deteção automática de tarefas do Grunt está ligado ou desligado. Padrão é ligado."
+}

@@ -1,9 +1,10 @@
 "use strict";
-const child_process = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const log = require('./log');
-const exec_1 = require('./exec');
+Object.defineProperty(exports, "__esModule", { value: true });
+const child_process = require("child_process");
+const fs = require("fs");
+const path = require("path");
+const log = require("./log");
+const exec_1 = require("./exec");
 function executeHaxe(from, haxeDirectory, options) {
     return new Promise((resolve, reject) => {
         let exe = 'haxe';
@@ -34,5 +35,5 @@ function executeHaxe(from, haxeDirectory, options) {
         });
     });
 }
-exports.executeHaxe = executeHaxe;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Haxe.js.map
+exports.executeHaxe = executeHaxe;
+//# sourceMappingURL=Haxe.js.map

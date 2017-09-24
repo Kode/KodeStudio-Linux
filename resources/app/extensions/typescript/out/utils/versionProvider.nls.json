@@ -1,0 +1,10 @@
+{
+	"messages": [
+		"Could not load the TypeScript version at this path",
+		"VS Code's tsserver was deleted by another application such as a misbehaving virus detection tool. Please reinstall VS Code."
+	],
+	"keys": [
+		"couldNotLoadTsVersion",
+		"noBundledServerFound"
+	]
+}

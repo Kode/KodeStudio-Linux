@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -67,7 +67,7 @@ extern class Date
 	function getMinutes() : Int;
 
 	/**
-		Returns the seconds of the `this` Date (0-59 range).
+		Returns the seconds of `this` Date (0-59 range).
 	**/
 	function getSeconds() : Int;
 

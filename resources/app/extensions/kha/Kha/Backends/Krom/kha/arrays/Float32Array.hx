@@ -1,12 +1,6 @@
 package kha.arrays;
 
-import kha.Color;
 import kha.FastFloat;
-import kha.math.FastVector2;
-import kha.math.FastVector3;
-import kha.math.FastVector4;
-import kha.math.FastMatrix3;
-import kha.math.FastMatrix4;
 
 abstract Float32Array(js.html.Float32Array) {
 	public inline function new(elements: Int) {
@@ -29,5 +23,19 @@ abstract Float32Array(js.html.Float32Array) {
 	
 	public inline function data(): js.html.Float32Array {
 		return this;
+	}
+
+	@:arrayAccess
+	public inline function arrayRead(index: Int): FastFloat {
+		return this[index];
+	}
+
+	@:arrayAccess
+	public inline function arrayWrite(index: Int, value: FastFloat): FastFloat {
+		return this[index] = value;
+	}
+
+	public inline function subarray(start: Int, ?end: Int): Float32Array {
+		return cast this.subarray(start, end);
 	}
 }

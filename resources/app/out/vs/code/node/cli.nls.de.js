@@ -3,12 +3,13 @@
  *--------------------------------------------------------*/
 define("vs/code/node/cli.nls.de", {
 	"vs/platform/environment/node/argv": [
-		"Argumente im Modus \"--goto\" müssen im Format \"DATEI(:ZEILE(:SPALTE))\" vorliegen.",
+		"Argumente im Modus \"--goto\" müssen im Format \"DATEI(:ZEILE(:ZEICHEN))\" vorliegen.",
 		"Öffnet einen Diff-Editor. Es müssen zwei Dateipfade als Argumente übergeben werden.",
-		"Öffnet die Datei im Pfad in der Zeile und Spalte (fügen Sie dem Pfad \":line[:column]\" hinzu).",
+		"Öffnet die Datei im Pfad in der Zeile und beim Zeichen (fügen Sie dem Pfad \":line[:character]\" hinzu).",
 		"Das zu verwendende Gebietsschema (z. B. en-US oder zh-TW).",
 		"Erzwingt eine neue Instanz des Codes.",
 		"Startet mit aktiviertem Befehl \"Developer: Startup Performance\".",
+		"CPU-Profiler beim Start ausführen",
 		"Erzwingt das Öffnen einer Datei oder eines Ordners im letzten aktiven Fenster.",
 		"Gibt das Verzeichnis an, in dem Benutzerdaten gespeichert werden. Nützlich, wenn die Ausführung als \"root\" erfolgt.",
 		"Ausführliche Ausgabe (impliziert \"-wait\").",
@@ -18,6 +19,7 @@ define("vs/code/node/cli.nls.de", {
 		"Zeigt Versionen der installierten Erweiterungen an, wenn \"--list-extension\" verwendet wird.",
 		"Installiert eine Extension.",
 		"Deinstalliert eine Extension.",
+		"Aktiviert vorgeschlagene API-Features für eine Erweiterung.",
 		"Deaktiviert alle installierten Extensions.",
 		"Deaktiviert die GPU-Hardwarebeschleunigung.",
 		"Gibt die Version aus.",

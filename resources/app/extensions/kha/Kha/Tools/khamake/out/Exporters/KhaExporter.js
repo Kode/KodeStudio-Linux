@@ -2,13 +2,14 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const path = require('path');
-const Exporter_1 = require('./Exporter');
+Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
+const Exporter_1 = require("./Exporter");
 class KhaExporter extends Exporter_1.Exporter {
     constructor(options) {
         super();
@@ -20,6 +21,8 @@ class KhaExporter extends Exporter_1.Exporter {
         this.addSourceDirectory(path.join(options.kha, 'Sources'));
         this.projectFiles = !options.noproject;
         this.parameters = [];
+        // this.parameters = ['--macro kha.internal.GraphicsBuilder.build("' + this.backend().toLowerCase() + '")'];
+        this.addSourceDirectory(path.join(options.kha, 'Backends', this.backend()));
     }
     sysdir() {
         return this.systemDirectory;
@@ -51,7 +54,7 @@ class KhaExporter extends Exporter_1.Exporter {
             }
         }
     }
-    copyImage(platform, from, to, options) {
+    copyImage(platform, from, to, options, cache) {
         return __awaiter(this, void 0, void 0, function* () {
             return [];
         });
@@ -77,5 +80,5 @@ class KhaExporter extends Exporter_1.Exporter {
         });
     }
 }
-exports.KhaExporter = KhaExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/KhaExporter.js.map
+exports.KhaExporter = KhaExporter;
+//# sourceMappingURL=KhaExporter.js.map

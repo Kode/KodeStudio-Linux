@@ -1,21 +1,32 @@
 "use strict";
-let myInfo = function (text) {
-    console.log(text);
+Object.defineProperty(exports, "__esModule", { value: true });
+let myInfo = function (text, newline) {
+    if (newline) {
+        console.log(text);
+    }
+    else {
+        process.stdout.write(text);
+    }
 };
-let myError = function (text) {
-    console.log(text);
+let myError = function (text, newline) {
+    if (newline) {
+        console.error(text);
+    }
+    else {
+        process.stderr.write(text);
+    }
 };
 function set(log) {
     myInfo = log.info;
     myError = log.error;
 }
 exports.set = set;
-function info(text) {
-    myInfo(text);
+function info(text, newline = true) {
+    myInfo(text, newline);
 }
 exports.info = info;
-function error(text) {
-    myError(text);
+function error(text, newline = true) {
+    myError(text, newline);
 }
-exports.error = error;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/log.js.map
+exports.error = error;
+//# sourceMappingURL=log.js.map

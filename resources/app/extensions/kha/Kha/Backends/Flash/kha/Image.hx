@@ -45,6 +45,20 @@ class Image implements Canvas implements Resource {
 		return null;
 	}
 
+	public static function fromBytes3D(bytes: Bytes, width: Int, height: Int, depth: Int, format: TextureFormat = null, usage: Usage = null): Image {
+		return null;
+	}
+	
+	public static function fromEncodedBytes(bytes: Bytes, fileExtention: String, doneCallback: Image -> Void, errorCallback: String->Void, readable:Bool = false): Void {
+		function handleError(e:flash.events.Event) errorCallback(e.toString());
+		var loader = new flash.display.Loader();
+		loader.contentLoaderInfo.addEventListener(flash.events.Event.COMPLETE, function(_) doneCallback(Image.fromBitmap(loader.content, readable)));
+		loader.contentLoaderInfo.addEventListener(flash.events.IOErrorEvent.IO_ERROR, handleError);
+		loader.contentLoaderInfo.addEventListener(flash.events.SecurityErrorEvent.SECURITY_ERROR, handleError);
+		loader.contentLoaderInfo.addEventListener(flash.events.AsyncErrorEvent.ASYNC_ERROR, handleError);
+		loader.loadBytes(bytes.getData());
+	}
+
 	public function new(width: Int, height: Int, format: TextureFormat, renderTarget: Bool, depthStencil: DepthStencilFormat, readable: Bool) {
 		myWidth = width;
 		myHeight = height;
@@ -228,6 +242,10 @@ class Image implements Canvas implements Resource {
 		if (!readable) bytes = null;
 	}
 
+	public function getPixels(): Bytes {
+		return null;
+	}
+
 	public function generateMipmaps(levels: Int): Void {
 
 	}
@@ -237,6 +255,10 @@ class Image implements Canvas implements Resource {
 	}
 
 	public function setDepthStencilFrom(image: Image): Void {
+		
+	}
+
+	public function clear(x: Int, y: Int, z: Int, width: Int, height: Int, depth: Int, color: Color): Void {
 		
 	}
 }

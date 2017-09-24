@@ -3,15 +3,16 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
-var path = require('path');
-var vscode_1 = require('vscode');
-var vscode_languageclient_1 = require('vscode-languageclient');
-var colorDecorators_1 = require('./colorDecorators');
-var nls = require('vscode-nls');
+Object.defineProperty(exports, "__esModule", { value: true });
+var path = require("path");
+var vscode_1 = require("vscode");
+var vscode_languageclient_1 = require("vscode-languageclient");
+var colorDecorators_1 = require("./colorDecorators");
+var nls = require("vscode-nls");
 var localize = nls.loadMessageBundle(__filename);
 var ColorSymbolRequest;
 (function (ColorSymbolRequest) {
-    ColorSymbolRequest.type = { get method() { return 'css/colorSymbols'; }, _: null };
+    ColorSymbolRequest.type = new vscode_languageclient_1.RequestType('css/colorSymbols');
 })(ColorSymbolRequest || (ColorSymbolRequest = {}));
 // this method is called when vs code is activated
 function activate(context) {
@@ -27,7 +28,7 @@ function activate(context) {
     };
     // Options to control the language client
     var clientOptions = {
-        documentSelector: ['css', 'less', 'scss'],
+        documentSelector: ['css', 'scss', 'less'],
         synchronize: {
             configurationSection: ['css', 'scss', 'less']
         },
@@ -39,19 +40,31 @@ function activate(context) {
     // Push the disposable to the context's subscriptions so that the
     // client can be deactivated on extension deactivation
     context.subscriptions.push(disposable);
-    var colorRequestor = function (uri) {
-        return client.sendRequest(ColorSymbolRequest.type, uri).then(function (ranges) { return ranges.map(client.protocol2CodeConverter.asRange); });
+    client.onReady().then(function (_) {
+        var colorRequestor = function (uri) {
+            return client.sendRequest(ColorSymbolRequest.type, uri).then(function (ranges) { return ranges.map(client.protocol2CodeConverter.asRange); });
+        };
+        var isDecoratorEnabled = function (languageId) {
+            return vscode_1.workspace.getConfiguration().get(languageId + '.colorDecorators.enable');
+        };
+        context.subscriptions.push(vscode_1.languages.registerColorProvider(['css', 'scss', 'less'], new colorDecorators_1.ColorProvider(colorRequestor)));
+        context.subscriptions.push(colorDecorators_1.activateColorDecorations(colorRequestor, { css: true, scss: true, less: true }, isDecoratorEnabled));
+    });
+    var indentationRules = {
+        increaseIndentPattern: /(^.*\{[^}]*$)/,
+        decreaseIndentPattern: /^\s*\}/
     };
-    disposable = colorDecorators_1.activateColorDecorations(colorRequestor, { css: true, scss: true, less: true });
-    context.subscriptions.push(disposable);
     vscode_1.languages.setLanguageConfiguration('css', {
-        wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]*(?=[^,{;]*[,{]))|(([@#.!])?[\w-?]+%?|[@#!.])/g
+        wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]*(?=[^,{;]*[,{]))|(([@#.!])?[\w-?]+%?|[@#!.])/g,
+        indentationRules: indentationRules
     });
     vscode_1.languages.setLanguageConfiguration('less', {
-        wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]+(?=[^,{;]*[,{]))|(([@#.!])?[\w-?]+%?|[@#!.])/g
+        wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]+(?=[^,{;]*[,{]))|(([@#.!])?[\w-?]+%?|[@#!.])/g,
+        indentationRules: indentationRules
     });
     vscode_1.languages.setLanguageConfiguration('scss', {
-        wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]*(?=[^,{;]*[,{]))|(([@$#.!])?[\w-?]+%?|[@#!$.])/g
+        wordPattern: /(#?-?\d*\.\d\w*%?)|(::?[\w-]*(?=[^,{;]*[,{]))|(([@$#.!])?[\w-?]+%?|[@#!$.])/g,
+        indentationRules: indentationRules
     });
     vscode_1.commands.registerCommand('_css.applyCodeAction', applyCodeAction);
     function applyCodeAction(uri, documentVersion, edits) {
@@ -74,4 +87,4 @@ function activate(context) {
     }
 }
 exports.activate = activate;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/css/client/out/cssMain.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/css/client/out/cssMain.js.map

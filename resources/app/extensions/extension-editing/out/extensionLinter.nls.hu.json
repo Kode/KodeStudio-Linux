@@ -1,0 +1,9 @@
+[
+	"A képek csak HTTPS-protokollt használhatnak.",
+	"Az SVG-k nem érvényes képforrások.",
+	"A beágyazott SVG-k nem érvényes képforrások.",
+	"A data URL-ek nem érvényes képforrások.",
+	"Relative image URLs require a repository with HTTPS protocol to be specified in the package.json.",
+	"An icon requires a repository with HTTPS protocol to be specified in this package.json.",
+	"Relative badge URLs require a repository with HTTPS protocol to be specified in this package.json."
+]

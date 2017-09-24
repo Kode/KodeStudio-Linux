@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
 @:coreApi class Std {
 
 	public static function is( v : Dynamic, t : Dynamic ) : Bool {
-		return untyped untyped __call__("_hx_instanceof", v,t);
+		return untyped __call__("_hx_instanceof", v,t);
 	}
 
 	public static function instance<T:{},S:T>( value : T, c : Class<S> ) : S {

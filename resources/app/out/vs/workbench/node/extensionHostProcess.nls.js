@@ -19,13 +19,12 @@ define("vs/workbench/node/extensionHostProcess.nls", {
 	"vs/base/node/processes": [
 		"Can't execute a shell command on an UNC drive."
 	],
-	"vs/platform/configuration/common/configurationRegistry": [
-		"Contributes configuration settings.",
-		"A summary of the settings. This label will be used in the settings file as separating comment.",
-		"Description of the configuration properties.",
-		"if set, 'configuration.type' must be set to 'object",
-		"'configuration.title' must be a string",
-		"'configuration.properties' must be an object"
+	"vs/editor/common/config/editorOptions": [
+		"The editor is not accessible at this time. Press Alt+F1 for options.",
+		"Editor content"
+	],
+	"vs/editor/common/modes/modesRegistry": [
+		"Plain Text"
 	],
 	"vs/platform/extensions/common/abstractExtensionService": [
 		"Extension `{1}` failed to activate. Reason: unknown dependency `{0}`.",
@@ -33,33 +32,17 @@ define("vs/workbench/node/extensionHostProcess.nls", {
 		"Extension `{0}` failed to activate. Reason: more than 10 levels of dependencies (most likely a dependency loop).",
 		"Activating extension `{0}` failed: {1}."
 	],
-	"vs/platform/extensions/common/extensionsRegistry": [
-		"For VS Code extensions, specifies the VS Code version that the extension is compatible with. Cannot be *. For example: ^0.10.5 indicates compatibility with a minimum VS Code version of 0.10.5.",
-		"The publisher of the VS Code extension.",
-		"The display name for the extension used in the VS Code gallery.",
-		"The categories used by the VS Code gallery to categorize the extension.",
-		"Banner used in the VS Code marketplace.",
-		"The banner color on the VS Code marketplace page header.",
-		"The color theme for the font used in the banner.",
-		"All contributions of the VS Code extension represented by this package.",
-		"Sets the extension to be flagged as a Preview in the Marketplace.",
-		"Activation events for the VS Code extension.",
-		"Array of badges to display in the sidebar of the Marketplace's extension page.",
-		"Badge image URL.",
-		"Badge link.",
-		"Badge description.",
-		"Dependencies to other extensions. The identifier of an extension is always ${publisher}.${name}. For example: vscode.csharp.",
-		"Script executed before the package is published as a VS Code extension.",
-		"The path to a 128x128 pixel icon."
-	],
 	"vs/workbench/api/node/extHostDiagnostics": [
 		"Not showing {0} further errors and warnings."
 	],
-	"vs/workbench/api/node/extHostTreeExplorers": [
-		"No TreeExplorerNodeProvider with id '{0}' registered.",
-		"TreeExplorerNodeProvider '{0}' failed to provide root node.",
-		"No TreeExplorerNodeProvider with id '{0}' registered.",
-		"TreeExplorerNodeProvider '{0}' failed to resolveChildren."
+	"vs/workbench/api/node/extHostTask": [
+		"{0}: {1}"
+	],
+	"vs/workbench/api/node/extHostTreeViews": [
+		"No tree view with id '{0}' registered.",
+		"No tree view with id '{0}' registered.",
+		"No tree item with id '{0}' found.",
+		"Element {0} is already registered"
 	],
 	"vs/workbench/node/extensionHostMain": [
 		"Path {0} does not point to a valid extension test runner."

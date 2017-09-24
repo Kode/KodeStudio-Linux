@@ -382,23 +382,49 @@ class BuildTool
 
          var cached = useCache && mCompiler.createCompilerVersion(group);
 
+         var inList = new Array<Bool>();
          for(file in group.mFiles)
          {
            if (useCache)
                file.computeDependHash();
             var obj_name = mCompiler.getCachedObjName(file);
             groupObjs.push(obj_name);
-            if (file.isOutOfDate(obj_name))
-            {
+            var outOfDate =  file.isOutOfDate(obj_name);
+            if (outOfDate)
                to_be_compiled.push(file);
-            }
+            inList.push(outOfDate);
          }
 
+         var pchStamp:Null<Float> = null;
          if (group.mPrecompiledHeader!="")
          {
             var obj = mCompiler.precompile(group,cached || to_be_compiled.length==0);
             if (obj!=null)
+            {
+               pchStamp = FileSystem.stat(obj).mtime.getTime();
                groupObjs.push(obj);
+
+               /*
+               for(i in 0...group.mFiles.length)
+               {
+                  var obj_name = groupObjs[i];
+                  if (!inList[i])
+                  {
+                     if (FileSystem.stat(obj_name).mtime.getTime() < pchStamp)
+                     {
+                        groupObjs.push(obj_name);
+                        trace(' Add $obj_name');
+                     }
+                     else
+                        trace(' Ok $obj_name');
+                  }
+                  else
+                  {
+                        trace(' Listed $obj_name  ' + group.mFiles[i].mName);
+                  }
+               }
+               */
+            }
          }
 
          if (group.mConfig!="")
@@ -484,7 +510,7 @@ class BuildTool
          if (threads<2)
          {
             for(file in to_be_compiled)
-               mCompiler.compile(file,-1,groupHeader);
+               mCompiler.compile(file,-1,groupHeader,pchStamp);
          }
          else
          {
@@ -509,7 +535,7 @@ class BuildTool
                      var file = to_be_compiled.shift();
                      mutex.release();
 
-                     compiler.compile(file,t,groupHeader);
+                     compiler.compile(file,t,groupHeader,pchStamp);
                   }
                   }
                   catch (error:Dynamic)
@@ -1711,7 +1737,7 @@ class BuildTool
          var dev_path = defines.get("DEVELOPER_DIR") + "/Platforms/iPhoneOS.platform/Developer/SDKs/";
          if (FileSystem.exists(dev_path))
          {
-            var best="";
+            var best="0.0";
             var files = FileSystem.readDirectory(dev_path);
             var extract_version = ~/^iPhoneOS(.*).sdk$/;
             for(file in files)
@@ -1723,7 +1749,7 @@ class BuildTool
                      best = ver;
                }
             }
-            if (best!="")
+            if (best!="0.0")
                defines.set("IPHONE_VER",best);
          }
       }
@@ -1733,7 +1759,7 @@ class BuildTool
          var dev_path = defines.get("DEVELOPER_DIR") + "/Platforms/AppleTVOS.platform/Developer/SDKs/";
          if (FileSystem.exists(dev_path))
          {
-            var best="";
+            var best="0.0";
             var files = FileSystem.readDirectory(dev_path);
             var extract_version = ~/^AppleTVOS(.*).sdk$/;
             for(file in files)
@@ -1745,7 +1771,7 @@ class BuildTool
                      best = ver;
                }
             }
-            if (best!="")
+            if (best!="0.0")
                defines.set("TVOS_VER",best);
          }
       }
@@ -1756,7 +1782,7 @@ class BuildTool
          var dev_path = defines.get("DEVELOPER_DIR") + "/Platforms/WatchOS.platform/Developer/SDKs/";
          if (FileSystem.exists(dev_path))
          {
-            var best="";
+            var best="0.0";
             var files = FileSystem.readDirectory(dev_path);
             var extract_version = ~/^WatchOS(.*).sdk$/;
             for(file in files)
@@ -1768,7 +1794,7 @@ class BuildTool
                      best = ver;
                }
             }
-            if (best!="")
+            if (best!="0.0")
                defines.set("WATCHOS_VER",best);
          }
       }
@@ -1787,7 +1813,9 @@ class BuildTool
                if (extract_version.match(file))
                {
                   var ver = extract_version.matched(1);
-                  if (Std.parseFloat(ver) > Std.parseFloat(best))
+                  var split_best = best.split(".");
+                  var split_ver = ver.split(".");
+                  if (Std.parseFloat(split_ver[0]) > Std.parseFloat(split_best[0]) || Std.parseFloat(split_ver[1]) > Std.parseFloat(split_best[1]))
                      best = ver;
                }
             }

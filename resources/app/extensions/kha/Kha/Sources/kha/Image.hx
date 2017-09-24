@@ -12,8 +12,12 @@ extern class Image implements Canvas implements Resource {
 
 	public static function fromBytes(bytes: Bytes, width: Int, height: Int, format: TextureFormat = TextureFormat.RGBA32, usage: Usage = Usage.StaticUsage): Image;
 
+	public static function fromBytes3D(bytes: Bytes, width: Int, height: Int, depth: Int, format: TextureFormat = TextureFormat.RGBA32, usage: Usage = Usage.StaticUsage): Image;
+
+	public static function fromEncodedBytes(bytes: Bytes, fileExtention: String, doneCallback: Image -> Void, errorCallback: String->Void, readable:Bool = false): Void;
+
 	// Create a new image instance and set things up so you can render to the image.
-	public static function createRenderTarget(width: Int, height: Int, format: TextureFormat = TextureFormat.RGBA32, depthStencil: DepthStencilFormat = NoDepthAndStencil, antiAliasingSamples: Int = 1): Image;
+	public static function createRenderTarget(width: Int, height: Int, format: TextureFormat = TextureFormat.RGBA32, depthStencil: DepthStencilFormat = NoDepthAndStencil, antiAliasingSamples: Int = 1, contextId: Int = 0): Image;
 	
 	public static var maxSize(get, null): Int;
 	
@@ -27,6 +31,8 @@ extern class Image implements Canvas implements Resource {
 	public function lock(level: Int = 0): Bytes;
 	
 	public function unlock(): Void;
+
+	public function getPixels(): Bytes;
 	
 	public function generateMipmaps(levels: Int): Void;
 	
@@ -35,6 +41,8 @@ extern class Image implements Canvas implements Resource {
 	
 	// Use depth buffer attached to different image.
 	public function setDepthStencilFrom(image: Image): Void;
+
+	public function clear(x: Int, y: Int, z: Int, width: Int, height: Int, depth: Int, color: Color): Void;
 	
 	public var width(get, null): Int;
 	

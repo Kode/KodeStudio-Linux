@@ -11,7 +11,7 @@ import {VrApi} from './VrApi';
 import {Options} from './Options';
 import {Platform} from './Platform';
 import {Project, Target, Library} from './Project';
-import {loadProject} from './ProjectFile';
+import {loadProject, ProjectData} from './ProjectFile';
 import {VisualStudioVersion} from './VisualStudioVersion';
 import {AssetConverter} from './AssetConverter';
 import {HaxeCompiler} from './HaxeCompiler';
@@ -101,7 +101,7 @@ function createKorefile(name: string, exporter: KhaExporter, options: any, targe
 	return out;
 }
 
-async function exportProjectFiles(name: string, options: Options, exporter: KhaExporter, kore: boolean, korehl: boolean, libraries: Library[], targetOptions: any, defines: string[], cdefines: string[]): Promise<string> {
+async function exportProjectFiles(name: string, resourceDir: string, projectData: ProjectData, options: Options, exporter: KhaExporter, kore: boolean, korehl: boolean, libraries: Library[], targetOptions: any, defines: string[], cdefines: string[]): Promise<string> {
 	if (options.haxe !== '') {
 		let haxeOptions = exporter.haxeOptions(name, targetOptions, defines);
 		haxeOptions.defines.push('kha');
@@ -115,17 +115,18 @@ async function exportProjectFiles(name: string, options: Options, exporter: KhaE
 		writeHaxeProject(options.to, haxeOptions);
 
 		if (!options.nohaxe) {
-			let compiler = new HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources);
+			let compiler = new HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, resourceDir, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources);
 			lastHaxeCompiler = compiler;
 			await compiler.run(options.watch);
 		}
+		projectData.postHaxeCompilation();
 
 		await exporter.export(name, targetOptions, haxeOptions);
 	}
 	if (options.haxe !== '' && kore && !options.noproject) {
 		// If target is a Kore project, generate additional project folders here.
 		// generate the korefile.js
-		fs.copySync(path.join(__dirname, '..', 'Data', 'build-korefile.js'), path.join(options.to, exporter.sysdir() + '-build', 'korefile.js'), { clobber: true });
+		fs.copySync(path.join(__dirname, '..', 'Data', 'build-korefile.js'), path.join(options.to, exporter.sysdir() + '-build', 'korefile.js'), { overwrite: true });
 		fs.writeFileSync(path.join(options.from, 'korefile.js'), createKorefile(name, exporter, options, targetOptions, libraries, cdefines));
 
 		// Similar to khamake.js -> main.js -> run(...)
@@ -150,6 +151,7 @@ async function exportProjectFiles(name: string, options: Options, exporter: KhaE
 				info: log.info,
 				error: log.error
 			});
+			projectData.postCppCompilation();
 			log.info('Done.');
 			return name;
 		}
@@ -159,8 +161,8 @@ async function exportProjectFiles(name: string, options: Options, exporter: KhaE
 		}
 	}
 	else if (options.haxe !== '' && korehl && !options.noproject) {
-		fs.copySync(path.join(__dirname, 'Data', 'hl', 'kore_sources.c'), path.join(options.to, exporter.sysdir() + '-build', 'kore_sources.c'), { clobber: true });
-		fs.copySync(path.join(__dirname, 'Data', 'hl', 'korefile.js'), path.join(options.to, exporter.sysdir() + '-build', 'korefile.js'), { clobber: true });
+		fs.copySync(path.join(__dirname, 'Data', 'hl', 'kore_sources.c'), path.join(options.to, exporter.sysdir() + '-build', 'kore_sources.c'), { overwrite: true });
+		fs.copySync(path.join(__dirname, 'Data', 'hl', 'korefile.js'), path.join(options.to, exporter.sysdir() + '-build', 'korefile.js'), { overwrite: true });
 		fs.writeFileSync(path.join(options.from, 'korefile.js'), createKorefile(name, exporter, options, targetOptions, libraries, cdefines));
 
 		try {
@@ -206,13 +208,15 @@ async function exportKhaProject(options: Options): Promise<string> {
 	log.info('Creating Kha project.');
 		
 	let project: Project = null;
+	let projectData: ProjectData;
 	let foundProjectFile = false;
 
 	// get the khafile.js and load the config code,
 	// then create the project config object, which contains stuff
 	// like project name, assets paths, sources path, library path...
 	if (fs.existsSync(path.join(options.from, options.projectfile))) {
-		project = await loadProject(options.from, options.projectfile, options.target);
+		projectData = await loadProject(options.from, options.projectfile, options.target);
+		project = projectData.project;
 		foundProjectFile = true;
 	}
 	
@@ -313,26 +317,46 @@ async function exportKhaProject(options: Options): Promise<string> {
 	for (let library of project.libraries) {
 		exporter.addLibrary(library);
 	}
-	exporter.parameters = project.parameters;
+	exporter.parameters = exporter.parameters.concat(project.parameters);
 	project.scriptdir = options.kha;
 	project.addShaders('Sources/Shaders/**', {});
 
+	projectData.preAssetConversion();
 	let assetConverter = new AssetConverter(exporter, options.target, project.assetMatchers);
 	lastAssetConverter = assetConverter;
-	let assets = await assetConverter.run(options.watch);
+	let assets = await assetConverter.run(options.watch, temp);
 
 	let shaderDir = path.join(options.to, exporter.sysdir() + '-resources');
 	if (target === Platform.Unity) {
 		shaderDir = path.join(options.to, exporter.sysdir(), 'Assets', 'Shaders');
 	}
 	
+	projectData.preShaderCompilation();
 	fs.ensureDirSync(shaderDir);
+
+	let oldResources: any = null;
+	let recompileAllShaders = false;
+	try {
+		oldResources = JSON.parse(fs.readFileSync(path.join(options.to, exporter.sysdir() + '-resources', 'files.json'), 'utf8'));
+		for (let file of oldResources.files) {
+			if (file.type === 'shader') {
+				if (!file.files || file.files.length === 0) {
+					recompileAllShaders = true;
+					break;
+				}
+			}
+		}
+	}
+	catch (error) {
+
+	}
+
 	let exportedShaders: CompiledShader[] = [];
 	if (!options.noshaders) {
 		let shaderCompiler = new ShaderCompiler(exporter, options.target, options.krafix, shaderDir, temp,
 		path.join(options.to, exporter.sysdir() + '-build'), options, project.shaderMatchers);
 		lastShaderCompiler = shaderCompiler;
-		exportedShaders = await shaderCompiler.run(options.watch);
+		exportedShaders = await shaderCompiler.run(options.watch, recompileAllShaders);
 	}
 
 	if (target === Platform.Unity) {
@@ -361,19 +385,14 @@ async function exportKhaProject(options: Options): Promise<string> {
 		}
 	}
 
-	let oldResources: any = null;
-	try {
-		oldResources = JSON.parse(fs.readFileSync(path.join(options.to, exporter.sysdir() + '-resources', 'files.json'), 'utf8'));
-	}
-	catch (error) {
-
-	}
-
 	function findShader(name: string) {
 		let fallback: any = { };
+		fallback.files = [];
 		fallback.inputs = [];
 		fallback.outputs = [];
 		fallback.uniforms = [];
+		fallback.types = [];
+
 		try {
 			for (let file of oldResources.files) {
 				if (file.type === 'shader' && file.name === fixName(name)) {
@@ -387,7 +406,7 @@ async function exportKhaProject(options: Options): Promise<string> {
 		return fallback;
 	}
 
-	let files: {name: string, files: string[], type: string, inputs: any[], outputs: any[], uniforms: any[]}[] = [];
+	let files: {name: string, files: string[], type: string, inputs: any[], outputs: any[], uniforms: any[], types: any[]}[] = [];
 	for (let asset of assets) {
 		let file: any = {
 			name: fixName(asset.name),
@@ -405,11 +424,12 @@ async function exportKhaProject(options: Options): Promise<string> {
 		let oldShader = findShader(shader.name);
 		files.push({
 			name: fixName(shader.name),
-			files: shader.files,
+			files: shader.files === null ? oldShader.files : shader.files,
 			type: 'shader',
 			inputs: shader.inputs === null ? oldShader.inputs : shader.inputs,
 			outputs: shader.outputs === null ? oldShader.outputs : shader.outputs,
-			uniforms: shader.uniforms === null ? oldShader.uniforms : shader.uniforms
+			uniforms: shader.uniforms === null ? oldShader.uniforms : shader.uniforms,
+			types: shader.types === null ? oldShader.types : shader.types
 		});
 	}
 
@@ -435,7 +455,8 @@ async function exportKhaProject(options: Options): Promise<string> {
 		fs.outputFileSync(path.join(options.to, exporter.sysdir() + '-resources', 'files.json'), JSON.stringify({ files: files }, null, '\t'));
 	}
 
-	return await exportProjectFiles(project.name, options, exporter, kore, korehl, project.libraries, project.targetOptions, project.defines, project.cdefines);
+	projectData.preHaxeCompilation();
+	return await exportProjectFiles(project.name, path.join(options.to, exporter.sysdir() + '-resources'), projectData, options, exporter, kore, korehl, project.libraries, project.targetOptions, project.defines, project.cdefines);
 }
 
 function isKhaProject(directory: string, projectfile: string) {
@@ -493,6 +514,7 @@ export async function run(options: Options, loglog: any): Promise<string> {
 	else {
 		options.kha = path.resolve(options.kha);
 	}
+	log.info('Using Kha from ' + options.kha);
 
 	if (!options.haxe) {
 		let haxepath = path.join(options.kha, 'Tools', 'haxe');
@@ -542,6 +564,31 @@ export async function run(options: Options, loglog: any): Promise<string> {
 
 	if (options.target === Platform.Linux && options.run) {
 		await runProject(options);
+	}
+
+	if (options.compile && options.target === Platform.Android) {
+		let gradlew = (process.platform === 'win32') ? 'gradlew.bat' : 'bash';
+		let args = (process.platform === 'win32') ? [] : ['gradlew'];
+		args.push('assemble');
+		let make = child_process.spawn(gradlew, args, { cwd: path.join(options.to, 'android', name) });
+
+		make.stdout.on('data', function (data: any) {
+			log.info(data.toString());
+		});
+
+		make.stderr.on('data', function (data: any) {
+			log.error(data.toString());
+		});
+
+		make.on('close', function (code: number) {
+			if (code === 0) {
+				
+			}
+			else {
+				log.error('Compilation failed.');
+				process.exit(code);
+			}
+		});
 	}
 
 	return name;

@@ -202,7 +202,7 @@ class Compiler
       return args;
    }
 
-   public function compile(inFile:File,inTid:Int,headerFunc:Void->Void)
+   public function compile(inFile:File,inTid:Int,headerFunc:Void->Void,pchTimeStamp:Null<Float>)
    {
       var obj_name = getObjName(inFile);
       var args = getArgs(inFile);
@@ -220,10 +220,19 @@ class Compiler
 
          if (FileSystem.exists(cacheName))
          {
-            //Log.info(""," copy cache for " + obj_name );
-            if (!useCacheInPlace)
-               sys.io.File.copy(cacheName, obj_name);
-            found = true;
+            var newer = true;
+            if (pchTimeStamp!=null)
+            {
+               var time = FileSystem.stat(cacheName).mtime.getTime();
+               newer = time>=pchTimeStamp;
+            }
+            if (newer)
+            {
+               //Log.info(""," copy cache for " + obj_name );
+               if (!useCacheInPlace)
+                  sys.io.File.copy(cacheName, obj_name);
+               found = true;
+            }
          }
       }
 
@@ -452,8 +461,21 @@ class Compiler
       var result = ProcessManager.runCommand("", mExe, args);
       if (result!=0)
       {
-         if (FileSystem.exists(pch_name))
-            FileSystem.deleteFile(pch_name);
+         var goes = 10;
+         for(attempt in 0...goes)
+         {
+            try {
+               if (FileSystem.exists(pch_name))
+                  FileSystem.deleteFile(pch_name);
+               break;
+            }
+            catch(error:Dynamic)
+            {
+               Log.warn('Error cleaning PCH file $pch_name: $error');
+               if (attempt<goes-1)
+                  Sys.sleep(0.25);
+            }
+         }
          Log.error("Could not create PCH");
          //throw "Error creating pch: " + result + " - build cancelled";
       }

@@ -8,60 +8,114 @@ import kha.graphics4.VertexStructure;
 
 @:headerCode('
 #include <Kore/pch.h>
-#include <Kore/Graphics/Graphics.h>
+#include <Kore/Graphics4/Graphics.h>
+#include <Kore/Graphics4/PipelineState.h>
 ')
 
-@:headerClassCode("Kore::Program* program;")
+@:cppFileCode('
+Kore::Graphics4::ZCompareMode convertCompareMode(int mode) {
+	switch (mode) {
+	case 0:
+		return Kore::Graphics4::ZCompareAlways;
+	case 1:
+		return Kore::Graphics4::ZCompareNever;
+	case 2:
+		return Kore::Graphics4::ZCompareEqual;
+	case 3:
+		return Kore::Graphics4::ZCompareNotEqual;
+	case 4:
+		return Kore::Graphics4::ZCompareLess;
+	case 5:
+		return Kore::Graphics4::ZCompareLessEqual;
+	case 6:
+		return Kore::Graphics4::ZCompareGreater;
+	case 7:
+	default:
+		return Kore::Graphics4::ZCompareGreaterEqual;
+	}
+}
+
+Kore::Graphics4::StencilAction convertStencilAction(int action) {
+	switch (action) {
+	case 0:
+		return Kore::Graphics4::Keep;
+	case 1:
+		return Kore::Graphics4::Zero;
+	case 2:
+		return Kore::Graphics4::Replace;
+	case 3:
+		return Kore::Graphics4::Increment;
+	case 4:
+		return Kore::Graphics4::IncrementWrap;
+	case 5:
+		return Kore::Graphics4::Decrement;
+	case 6:
+		return Kore::Graphics4::DecrementWrap;
+	case 7:
+	default:
+		return Kore::Graphics4::Invert;	
+	}
+}
+')
+
+@:headerClassCode("Kore::Graphics4::PipelineState* pipeline;")
 @:keep
 class PipelineState extends PipelineStateBase {
 	public function new() {
 		super();
-		untyped __cpp__('program = new Kore::Program;');
+		untyped __cpp__('pipeline = new Kore::Graphics4::PipelineState;');
 	}
 	
 	public function delete(): Void {
-		untyped __cpp__('delete program; program = nullptr;');
+		untyped __cpp__('delete pipeline; pipeline = nullptr;');
 	}
 	
 	@:functionCode('
-		program->setVertexShader(vertexShader->shader);
-		program->setFragmentShader(fragmentShader->shader);
-		if (geometryShader != null()) program->setGeometryShader(geometryShader->shader);
-		if (tessellationControlShader != null()) program->setTessellationControlShader(tessellationControlShader->shader);
-		if (tessellationEvaluationShader != null()) program->setTessellationEvaluationShader(tessellationEvaluationShader->shader);
-		Kore::VertexStructure s0, s1, s2, s3;
-		Kore::VertexStructure* structures2[4] = { &s0, &s1, &s2, &s3 };
+		pipeline->vertexShader = vertexShader->shader;
+		pipeline->fragmentShader = fragmentShader->shader;
+		if (geometryShader != null()) pipeline->geometryShader = geometryShader->shader;
+		if (tessellationControlShader != null()) pipeline->tessellationControlShader = tessellationControlShader->shader;
+		if (tessellationEvaluationShader != null()) pipeline->tessellationEvaluationShader = tessellationEvaluationShader->shader;
+		Kore::Graphics4::VertexStructure s0, s1, s2, s3;
+		Kore::Graphics4::VertexStructure* structures2[4] = { &s0, &s1, &s2, &s3 };
 		::kha::graphics4::VertexStructure* structures[4] = { &structure0, &structure1, &structure2, &structure3 };
 		for (int i1 = 0; i1 < size; ++i1) {
+			structures2[i1]->instanced = (*structures[i1])->instanced;
 			for (int i2 = 0; i2 < (*structures[i1])->size(); ++i2) {
-				Kore::VertexData data;
-			switch ((*structures[i1])->get(i2)->data->index) {
+				Kore::Graphics4::VertexData data;
+				switch ((*structures[i1])->get(i2)->data->index) {
 				case 0:
-					data = Kore::Float1VertexData;
+					data = Kore::Graphics4::Float1VertexData;
 					break;
 				case 1:
-					data = Kore::Float2VertexData;
+					data = Kore::Graphics4::Float2VertexData;
 					break;
 				case 2:
-					data = Kore::Float3VertexData;
+					data = Kore::Graphics4::Float3VertexData;
 					break;
 				case 3:
-					data = Kore::Float4VertexData;
+					data = Kore::Graphics4::Float4VertexData;
 					break;
 				case 4:
-					data = Kore::Float4x4VertexData;
+					data = Kore::Graphics4::Float4x4VertexData;
 					break;
 				}
-				structures2[i1]->add((*structures[i1])->get(i2)->name, data);
+				pipeline->inputLayout[i1] = structures2[i1];
+				pipeline->inputLayout[i1]->add((*structures[i1])->get(i2)->name, data);
 			}
 		}
-		program->link(structures2, size);
+		for (int i = size; i < 16; ++i) {
+			pipeline->inputLayout[i] = nullptr;
+		}
+		pipeline->compile();
 	')
 	private function linkWithStructures2(structure0: VertexStructure, structure1: VertexStructure, structure2: VertexStructure, structure3: VertexStructure, size: Int): Void {
 		
 	}
 	
 	public function compile(): Void {
+		setStates(cullMode.getIndex(), depthMode.getIndex(), stencilMode.getIndex(), stencilBothPass.getIndex(), stencilDepthFail.getIndex(), stencilFail.getIndex(),
+		getBlendFunc(blendSource), getBlendFunc(blendDestination), getBlendFunc(alphaBlendSource), getBlendFunc(alphaBlendDestination));
 		linkWithStructures2(
 			inputLayout.length > 0 ? inputLayout[0] : null,
 			inputLayout.length > 1 ? inputLayout[1] : null,
@@ -76,9 +130,7 @@ class PipelineState extends PipelineStateBase {
 		return location;
 	}
 	
-	@:functionCode('
-		location->location = program->getConstantLocation(name.c_str());
-	')
+	@:functionCode('location->location = pipeline->getConstantLocation(name.c_str());')
 	private function initConstantLocation(location: kha.kore.graphics4.ConstantLocation, name: String): Void {
 		
 	}
@@ -89,18 +141,111 @@ class PipelineState extends PipelineStateBase {
 		return unit;
 	}
 	
-	@:functionCode('
-		unit->unit = program->getTextureUnit(name.c_str());
-	')
+	@:functionCode('unit->unit = pipeline->getTextureUnit(name.c_str());')
 	private function initTextureUnit(unit: kha.kore.graphics4.TextureUnit, name: String): Void {
 		
 	}
 	
+	private static function getBlendFunc(factor: BlendingFactor): Int {
+		switch (factor) {
+		case BlendOne, Undefined:
+			return 0;
+		case BlendZero:
+			return 1;
+		case SourceAlpha:
+			return 2;
+		case DestinationAlpha:
+			return 3;
+		case InverseSourceAlpha:
+			return 4;
+		case InverseDestinationAlpha:
+			return 5;
+		case SourceColor:
+			return 6;
+		case DestinationColor:
+			return 7;
+		case InverseSourceColor:
+			return 8;
+		case InverseDestinationColor:
+			return 9;
+		default:
+			return 0;
+		}
+	}
+	
 	@:functionCode('
-		program->set();
-	')
-	public function set(): Void {
+		switch (cullMode) {
+		case 0:
+			pipeline->cullMode = Kore::Graphics4::Clockwise;
+			break;
+		case 1:
+			pipeline->cullMode = Kore::Graphics4::CounterClockwise;
+			break;
+		case 2:
+			pipeline->cullMode = Kore::Graphics4::NoCulling;
+			break;
+		}
+
+		switch (depthMode) {
+		case 0:
+			pipeline->depthMode = Kore::Graphics4::ZCompareAlways;
+			break;
+		case 1:
+			pipeline->depthMode = Kore::Graphics4::ZCompareNever;
+			break;
+		case 2:
+			pipeline->depthMode = Kore::Graphics4::ZCompareEqual;
+			break;
+		case 3:
+			pipeline->depthMode = Kore::Graphics4::ZCompareNotEqual;
+			break;
+		case 4:
+			pipeline->depthMode = Kore::Graphics4::ZCompareLess;
+			break;
+		case 5:
+			pipeline->depthMode = Kore::Graphics4::ZCompareLessEqual;
+			break;
+		case 6:
+			pipeline->depthMode = Kore::Graphics4::ZCompareGreater;
+			break;
+		case 7:
+			pipeline->depthMode = Kore::Graphics4::ZCompareGreaterEqual;
+			break;
+		}
+		pipeline->depthWrite = depthWrite;
 		
+		pipeline->stencilMode = convertCompareMode(stencilMode);
+		pipeline->stencilBothPass = convertStencilAction(stencilBothPass);
+		pipeline->stencilDepthFail = convertStencilAction(stencilDepthFail);
+		pipeline->stencilFail = convertStencilAction(stencilFail);
+		pipeline->stencilReferenceValue = stencilReferenceValue;
+		pipeline->stencilReadMask = stencilReadMask;
+		pipeline->stencilWriteMask = stencilWriteMask;
+		
+		pipeline->blendSource = (Kore::Graphics4::BlendingOperation)blendSource;
+		pipeline->blendDestination = (Kore::Graphics4::BlendingOperation)blendDestination;
+		pipeline->alphaBlendSource = (Kore::Graphics4::BlendingOperation)alphaBlendSource;
+		pipeline->alphaBlendDestination = (Kore::Graphics4::BlendingOperation)alphaBlendDestination;
+		
+		pipeline->colorWriteMaskRed = colorWriteMaskRed;
+		pipeline->colorWriteMaskGreen = colorWriteMaskGreen;
+		pipeline->colorWriteMaskBlue = colorWriteMaskBlue;
+		pipeline->colorWriteMaskAlpha = colorWriteMaskAlpha;
+		
+		pipeline->conservativeRasterization = conservativeRasterization;
+	')
+	private function setStates(cullMode: Int, depthMode: Int, stencilMode: Int, stencilBothPass: Int, stencilDepthFail: Int, stencilFail: Int,
+	blendSource: Int, blendDestination: Int, alphaBlendSource: Int, alphaBlendDestination: Int): Void {
+		
+	}
+	
+	@:functionCode('Kore::Graphics4::setPipeline(pipeline);')
+	private function set2(): Void {
+		
+	}
+	
+	public function set(): Void {
+		set2();
 	}
 	
 	@:noCompletion

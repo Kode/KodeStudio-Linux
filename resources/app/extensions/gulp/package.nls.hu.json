@@ -1,0 +1,3 @@
+{
+	"config.gulp.autoDetect": "Meghatározza, hogy a Gulp feladatok automatikus felderításe be van-e kapcsolva. A beállítás alapértelmezetten aktív."
+}

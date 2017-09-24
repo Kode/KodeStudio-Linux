@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -57,7 +57,6 @@ package java;
 
 	/**
 		Gets the native `java.lang.Class` from the supplied object. Will throw an exception in case of null being passed.
-		[deprecated] - use `getNativeType` instead
 	**/
 	inline public static function getNativeType<T>(obj:T):java.lang.Class<T>
 	{

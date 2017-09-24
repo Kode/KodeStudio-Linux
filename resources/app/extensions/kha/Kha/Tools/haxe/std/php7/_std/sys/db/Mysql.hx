@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -69,7 +69,7 @@ private class MysqlConnection implements Connection {
 	}
 
 	public function close() : Void {
-		close();
+		db.close();
 	}
 
 	public function escape( s : String ) : String {
@@ -180,7 +180,9 @@ private class MysqlResultSet implements ResultSet {
 
 	function withdrawFetched() : Dynamic {
 		if (fetchedRow == null) return null;
-		return Boot.createAnon(fetchedRow);
+		var row = fetchedRow;
+		fetchedRow = null;
+		return Boot.createAnon(row);
 	}
 
 	function correctArrayTypes(row:NativeAssocArray<String>):NativeAssocArray<Scalar> {

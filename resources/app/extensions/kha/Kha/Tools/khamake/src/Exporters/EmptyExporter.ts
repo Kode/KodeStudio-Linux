@@ -10,11 +10,12 @@ import * as log from '../log';
 import {Library} from '../Project';
 
 export class EmptyExporter extends KhaExporter {
-	parameters: Array<string>;
-
 	constructor(options: Options) {
 		super(options);
-		this.addSourceDirectory(path.join(options.kha, 'Backends', 'Empty'));
+	}
+
+	backend(): string {
+		return 'Empty';
 	}
 
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
@@ -24,6 +25,13 @@ export class EmptyExporter extends KhaExporter {
 		defines.push('sys_g4');
 		defines.push('sys_a1');
 		defines.push('sys_a2');
+
+		defines.push('kha_g1');
+		defines.push('kha_g2');
+		defines.push('kha_g3');
+		defines.push('kha_g4');
+		defines.push('kha_a1');
+		defines.push('kha_a2');
 
 		return {
 			from: this.options.from,
@@ -37,7 +45,8 @@ export class EmptyExporter extends KhaExporter {
 			language: 'xml',
 			width: this.width,
 			height: this.height,
-			name: name
+			name: name,
+			main: this.options.main,
 		};
 	}
 
@@ -58,18 +67,18 @@ export class EmptyExporter extends KhaExporter {
 	}
 
 	async copySound(platform: string, from: string, to: string) {
-		return [];
+		return [''];
 	}
 
 	async copyImage(platform: string, from: string, to: string, asset: any) {
-		return [];
+		return [''];
 	}
 
 	async copyBlob(platform: string, from: string, to: string) {
-		return [];
+		return [''];
 	}
 
 	async copyVideo(platform: string, from: string, to: string) {
-		return [];
+		return [''];
 	}
 }

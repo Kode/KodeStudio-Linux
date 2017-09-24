@@ -5,16 +5,17 @@
 #include <Kore/Math/Random.h>
 
 #include <limits>
+#include <string.h>
 
-#ifndef SYS_HTML5
-#ifndef SYS_ANDROID
+#ifndef KORE_HTML5
+#ifndef KORE_ANDROID
 double Kore::System::time() {
 	return timestamp() / frequency();
 }
 #endif
 #endif
 
-#if !defined(SYS_WINDOWS) && !defined(SYS_OSX) && !defined(SYS_LINUX) && !defined(SYS_HTML5)
+#if !defined(KORE_WINDOWS) && !defined(KORE_MACOS) && !defined(KORE_LINUX) && !defined(KORE_HTML5) && !defined(KORE_PI)
 
 int Kore::System::desktopWidth() {
 	return windowWidth(0);
@@ -24,23 +25,27 @@ int Kore::System::desktopHeight() {
 	return windowHeight(0);
 }
 
-#endif // !ined(SYS_WINDOWS) && !defined(SYS_OSX) && !defined(SYS_LINUX) && !defined(SYS_HTML5)
+#endif
 
-#if !defined(SYS_ANDROID) && !defined(SYS_WINDOWS)
+#if !defined(KORE_ANDROID) && !defined(KORE_WINDOWS)
 int Kore::System::screenDpi() {
 	return 96;
 }
-#endif //! defined(SYS_ANDROID)
+#endif
 
 namespace {
 	namespace callbacks {
-		void (*callback)();
-		void (*foregroundCallback)();
-		void (*backgroundCallback)();
-		void (*pauseCallback)();
-		void (*resumeCallback)();
-		void (*shutdownCallback)();
-		void (*orientationCallback)(Kore::Orientation);
+		void (*callback)() = nullptr;
+		void (*foregroundCallback)() = nullptr;
+		void (*backgroundCallback)() = nullptr;
+		void (*pauseCallback)() = nullptr;
+		void (*resumeCallback)() = nullptr;
+		void (*shutdownCallback)() = nullptr;
+		void (*orientationCallback)(Kore::Orientation) = nullptr;
+		void (*dropFilesCallback)(wchar_t*) = nullptr;
+		char* (*cutCallback)() = nullptr;
+		char* (*copyCallback)() = nullptr;
+		void (*pasteCallback)(char*) = nullptr;
 	}
 }
 
@@ -90,6 +95,22 @@ void Kore::System::setOrientationCallback(void (*value)(Orientation)) {
 	callbacks::orientationCallback = value;
 }
 
+void Kore::System::setDropFilesCallback(void (*value)(wchar_t*)) {
+	callbacks::dropFilesCallback = value;
+}
+
+void Kore::System::setCutCallback(char* (*value)()) {
+	callbacks::cutCallback = value;
+}
+
+void Kore::System::setCopyCallback(char* (*value)()) {
+	callbacks::copyCallback = value;
+}
+
+void Kore::System::setPasteCallback(void(*value)(char*)) {
+	callbacks::pasteCallback = value;
+}
+
 void Kore::System::callback() {
 	if (callbacks::callback != nullptr) {
 		callbacks::callback();
@@ -132,11 +153,37 @@ void Kore::System::orientationCallback(Orientation orientation) {
 	}
 }
 
+void Kore::System::dropFilesCallback(wchar_t* filePath) {
+	if (callbacks::dropFilesCallback != nullptr) {
+		callbacks::dropFilesCallback(filePath);
+	}
+}
+
+char* Kore::System::cutCallback() {
+	if (callbacks::cutCallback != nullptr) {
+		return callbacks::cutCallback();
+	}
+	return nullptr;
+}
+
+char* Kore::System::copyCallback() {
+	if (callbacks::copyCallback != nullptr) {
+		return callbacks::copyCallback();
+	}
+	return nullptr;
+}
+
+void Kore::System::pasteCallback(char* value) {
+	if (callbacks::pasteCallback != nullptr) {
+		callbacks::pasteCallback(value);
+	}
+}
+
 namespace {
 	namespace appstate {
 		bool running = false;
 		bool showWindowFlag = true;
-		const char* name = "KoreApplication";
+		char name[1024] = {"KoreApplication"};
 	}
 }
 
@@ -149,12 +196,18 @@ bool Kore::System::hasShowWindowFlag() {
 }
 
 void Kore::System::setName(const char* value) {
-	appstate::name = value; // TODO (DK) strcpy?
+	strcpy(appstate::name, value);
 }
 
 const char* Kore::System::name() {
 	return appstate::name;
 }
+
+#ifndef KORE_WINDOWS
+void Kore::System::_shutdown() {
+
+}
+#endif
 
 void Kore::System::stop() {
 	appstate::running = false;
@@ -169,13 +222,14 @@ void Kore::System::stop() {
 void Kore::System::start() {
 	appstate::running = true;
 
-#if !defined(SYS_HTML5) && !defined(SYS_TIZEN)
+#if !defined(KORE_HTML5) && !defined(KORE_TIZEN)
 	// if (Graphics::hasWindow()) Graphics::swapBuffers();
 
 	while (appstate::running) {
 		callback();
 		handleMessages();
 	}
+	_shutdown();
 #endif
 }
 

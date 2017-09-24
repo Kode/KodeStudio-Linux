@@ -9,25 +9,10 @@ package kha.graphics4;
 	// This is platform specific, use with care!
 	var Depth24Stencil8 = 3;
 	var Depth32Stencil8 = 4;
+	var Depth16 = 5;
 
 	//var StencilOnlyIndex1 = 5;
 	//var StencilOnlyIndex4 = 6;
 	//var StencilOnlyIndex8 = 7;
 	//var StencilOnlyIndex16 = 8;
 }
-
-/*enum DepthStencilFormat {
-	NoDepthAndStencil;
-	DepthOnly;
-	DepthAutoStencilAuto;
-
-	// This is platform specific, use with care!
-	//Depth24Stencil8;
-	//Depth32Stencil8;
-
-	//StencilOnlyIndex1;
-	//StencilOnlyIndex4;
-	//StencilOnlyIndex8;
-	//StencilOnlyIndex16;
-}
-*/

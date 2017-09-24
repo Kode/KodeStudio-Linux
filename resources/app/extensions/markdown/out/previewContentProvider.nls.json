@@ -1,0 +1,12 @@
+{
+	"messages": [
+		"Some content has been been disabled in this document",
+		"Potentially unsafe or insecure content has been disabled in the markdown preview. Change the Markdown preview security setting to allow insecure content or enable scripts",
+		"Content Disabled Security Warning"
+	],
+	"keys": [
+		"preview.securityMessage.text",
+		"preview.securityMessage.title",
+		"preview.securityMessage.label"
+	]
+}

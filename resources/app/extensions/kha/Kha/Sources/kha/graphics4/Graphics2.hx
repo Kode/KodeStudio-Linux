@@ -39,7 +39,7 @@ class ImageShaderPainter {
 	private static var vertexSize: Int = 9;
 	private var bufferIndex: Int;
 	private var rectVertexBuffer: VertexBuffer;
-    private var rectVertices: Float32Array;
+	private var rectVertices: Float32Array;
 	private var indexBuffer: IndexBuffer;
 	private var lastTexture: Image;
 	private var bilinear: Bool = false;
@@ -210,7 +210,7 @@ class ImageShaderPainter {
 		end();
 		this.bilinearMipmaps = bilinear;
 	}
-    
+
 	public inline function drawImage(img: kha.Image,
 		bottomleftx: FastFloat, bottomlefty: FastFloat,
 		topleftx: FastFloat, toplefty: FastFloat,
@@ -272,13 +272,13 @@ class ColoredShaderPainter {
 	private static var bufferSize: Int = 100;
 	private var bufferIndex: Int;
 	private var rectVertexBuffer: VertexBuffer;
-    private var rectVertices: Float32Array;
+	private var rectVertices: Float32Array;
 	private var indexBuffer: IndexBuffer;
 	
 	private static var triangleBufferSize: Int = 100;
 	private var triangleBufferIndex: Int;
 	private var triangleVertexBuffer: VertexBuffer;
-    private var triangleVertices: Float32Array;
+	private var triangleVertices: Float32Array;
 	private var triangleIndexBuffer: IndexBuffer;
 	
 	private var g: Graphics;
@@ -537,7 +537,7 @@ class TextShaderPainter {
 	private static var bufferSize: Int = 100;
 	private var bufferIndex: Int;
 	private var rectVertexBuffer: VertexBuffer;
-    private var rectVertices: Float32Array;
+	private var rectVertices: Float32Array;
 	private var indexBuffer: IndexBuffer;
 	private var font: Kravur;
 	private var lastTexture: Image;
@@ -782,6 +782,31 @@ class TextShaderPainter {
 		}
 		endString();
 	}
+
+	public function drawCharacters(text: Array<Int>, start: Int, length: Int, opacity: FastFloat, color: Color, x: Float, y: Float, transformation: FastMatrix3, fontGlyphs: Array<Int>): Void {
+		var font = this.font._get(fontSize, fontGlyphs);
+		var tex = font.getTexture();
+		if (lastTexture != null && tex != lastTexture) drawBuffer();
+		lastTexture = tex;
+
+		var xpos = x;
+		var ypos = y;
+		for (i in start...start + length) {
+			var q = font.getBakedQuad(findIndex(text[i], fontGlyphs), xpos, ypos);
+			if (q != null) {
+				if (bufferIndex + 1 >= bufferSize) drawBuffer();
+				setRectColors(opacity, color);
+				setRectTexCoords(q.s0 * tex.width / tex.realWidth, q.t0 * tex.height / tex.realHeight, q.s1 * tex.width / tex.realWidth, q.t1 * tex.height / tex.realHeight);
+				var p0 = transformation.multvec(new FastVector2(q.x0, q.y1)); //bottom-left
+				var p1 = transformation.multvec(new FastVector2(q.x0, q.y0)); //top-left
+				var p2 = transformation.multvec(new FastVector2(q.x1, q.y0)); //top-right
+				var p3 = transformation.multvec(new FastVector2(q.x1, q.y1)); //bottom-right
+				setRectVertices(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+				xpos += q.xadvance;
+				++bufferIndex;
+			}
+		}
+	}
 	
 	public function end(): Void {
 		if (bufferIndex > 0) drawBuffer();
@@ -963,6 +988,13 @@ class Graphics2 extends kha.graphics2.Graphics {
 		textPainter.drawString(text, opacity, color, x, y, transformation, fontGlyphs);
 	}
 
+	public override function drawCharacters(text: Array<Int>, start: Int, length: Int, x: Float, y: Float): Void {
+		imagePainter.end();
+		coloredPainter.end();
+		
+		textPainter.drawCharacters(text, start, length, opacity, color, x, y, transformation, fontGlyphs);
+	}
+
 	override public function get_font(): Font {
 		return myFont;
 	}
@@ -1031,7 +1063,7 @@ class Graphics2 extends kha.graphics2.Graphics {
 		//textPainter.setBilinearMipmapFilter(value == ImageScaleQuality.High); // TODO (DK) implement for fonts as well?
 		return myMipmapScaleQuality = value;
 	}
-    
+
 	override private function setPipeline(pipeline: PipelineState): Void {
 		flush();
 		imagePainter.pipeline = pipeline;
@@ -1044,8 +1076,7 @@ class Graphics2 extends kha.graphics2.Graphics {
 		flush();
 		g.scissor(x, y, width, height);
 	}
-	
-	
+
 	override public function disableScissor(): Void {
 		flush();
 		g.disableScissor();

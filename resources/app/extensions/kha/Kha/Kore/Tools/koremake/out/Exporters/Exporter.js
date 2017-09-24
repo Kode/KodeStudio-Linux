@@ -1,5 +1,7 @@
 "use strict";
-const fs = require('fs-extra');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
+const path = require("path");
 class Exporter {
     constructor() {
     }
@@ -16,6 +18,13 @@ class Exporter {
         let data = new Buffer(tabs + line + '\n');
         fs.writeSync(this.out, data, 0, data.length, null);
     }
+    nicePath(from, to, filepath) {
+        let absolute = filepath;
+        if (!path.isAbsolute(absolute)) {
+            absolute = path.resolve(from, filepath);
+        }
+        return path.relative(to, absolute);
+    }
 }
-exports.Exporter = Exporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/Exporters/Exporter.js.map
+exports.Exporter = Exporter;
+//# sourceMappingURL=Exporter.js.map

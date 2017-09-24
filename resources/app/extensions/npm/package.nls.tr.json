@@ -1,0 +1,4 @@
+{
+	"config.npm.autoDetect": "Npm betiklerinin otomatik olarak algılanıp algılanmayacağını denetler. Varsayılan olarak açıktır.",
+	"config.npm.runSilent": "npm komutlarını `--silent` seçeneğiyle çalıştır"
+}

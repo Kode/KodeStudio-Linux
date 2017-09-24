@@ -17,6 +17,7 @@ import kha.graphics4.TextureUnit;
 import kha.graphics4.Usage;
 import kha.graphics4.VertexBuffer;
 import kha.Image;
+import kha.math.FastMatrix3;
 import kha.math.FastMatrix4;
 import kha.math.FastVector2;
 import kha.math.FastVector3;
@@ -47,6 +48,14 @@ class Graphics implements kha.graphics4.Graphics {
 			RenderTexture.active = cast target.texture;
 			//setViewport(target.width, target.height);
 		}
+	}
+
+	public function beginFace(face: Int): Void {
+
+	}
+
+	public function beginEye(eye: Int): Void {
+		
 	}
 
 	@:functionCode('UnityEngine.GL.Viewport(new UnityEngine.Rect(0, 0, w, h));')
@@ -130,12 +139,24 @@ class Graphics implements kha.graphics4.Graphics {
 
 	}
 
+	public function setImageTexture(unit: kha.graphics4.TextureUnit, texture: kha.Image): Void {
+
+	}
+
 	public function setTextureParameters(texunit: TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void {
 
 	}
 
-	public function createCubeMap(size: Int, format: TextureFormat, usage: Usage, canRead: Bool = false): CubeMap {
-		return null;
+	public function setTexture3DParameters(texunit: TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, wAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void {
+	
+	}
+
+	public function setCubeMap(stage: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		
+	}
+	
+	public function setCubeMapDepth(stage: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		
 	}
 
 	public function renderTargetsInvertedY(): Bool {
@@ -189,6 +210,10 @@ class Graphics implements kha.graphics4.Graphics {
 
 	}
 
+	public function setFloat4s(location: ConstantLocation, floats: Vector<FastFloat>): Void {
+
+	}
+
 	public function setVector2(location: ConstantLocation, value: FastVector2): Void {
 		var loc = cast(location, kha.unity.ConstantLocation);
 		pipeline.material.SetVector(loc.name, new unityEngine.Vector4(value.x, value.y, 0.0, 1.0));
@@ -212,6 +237,10 @@ class Graphics implements kha.graphics4.Graphics {
 		m.SetRow(2, new unityEngine.Vector4(value._20, value._21, value._22, value._23));
 		m.SetRow(3, new unityEngine.Vector4(value._30, value._31, value._32, value._33));
 		pipeline.material.SetMatrix(loc.name, m);
+	}
+
+	public function setMatrix3(location: ConstantLocation, value: FastMatrix3): Void {
+		
 	}
 
 	public function drawIndexedVertices(start: Int = 0, count: Int = -1): Void {

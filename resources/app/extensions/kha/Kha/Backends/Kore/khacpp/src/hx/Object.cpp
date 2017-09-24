@@ -6,7 +6,7 @@
 #include <cpp/CppInt32__.h>
 #include <map>
 
-#ifdef SYS_CONSOLE
+#ifdef KORE_CONSOLE
 
 #elif defined(_WIN32)
 
@@ -40,10 +40,12 @@ namespace hx
 
 String sNone[] = { String(null()) };
 
+#if (HXCPP_API_LEVEL>=332)
 bool Object::_hx_isInstanceOf(int inClassId)
 {
    return inClassId == hx::Object::_hx_ClassId;
 }
+#endif
 
 Dynamic Object::__IField(int inFieldID)
 {

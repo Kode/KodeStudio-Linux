@@ -1,4 +1,0 @@
--cp src
---macro include("", true, null, ["src"])
--js out.js
---no-output

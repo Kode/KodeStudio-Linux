@@ -1,8 +1,9 @@
 "use strict";
-const Exporter_1 = require('./Exporter');
-const child_process = require('child_process');
-const fs = require('fs-extra');
-const path = require('path');
+Object.defineProperty(exports, "__esModule", { value: true });
+const Exporter_1 = require("./Exporter");
+const child_process = require("child_process");
+const fs = require("fs-extra");
+const path = require("path");
 let emmccPath = 'emcc';
 let defines = '';
 let includes = '';
@@ -66,7 +67,7 @@ class EmscriptenExporter extends Exporter_1.Exporter {
             debugDirName = debugDirName.substr(0, debugDirName.length - 1);
         if (debugDirName.lastIndexOf('/') >= 0)
             debugDirName = debugDirName.substr(debugDirName.lastIndexOf('/') + 1);
-        fs.copySync(path.resolve(from, debugDirName), path.resolve(to, debugDirName), { clobber: true });
+        fs.copySync(path.resolve(from, debugDirName), path.resolve(to, debugDirName), { overwrite: true });
         defines = '';
         definesArray = [];
         for (let def in project.getDefines()) {
@@ -78,8 +79,8 @@ class EmscriptenExporter extends Exporter_1.Exporter {
         includes = '';
         includesArray = [];
         for (let inc in project.getIncludeDirs()) {
-            includes += '-I../' + path.resolve(from, project.getIncludeDirs()[inc]) + ' ';
-            includesArray.push('-I../' + path.resolve(from, project.getIncludeDirs()[inc]));
+            includes += '-I' + this.nicePath(from, to, path.join(from, project.getIncludeDirs()[inc])) + ' ';
+            includesArray.push('-I' + this.nicePath(from, to, path.join(from, project.getIncludeDirs()[inc])));
         }
         this.writeFile(path.resolve(to, 'makefile'));
         this.p();
@@ -89,12 +90,12 @@ class EmscriptenExporter extends Exporter_1.Exporter {
             if (!filename.endsWith('.cpp') && !filename.endsWith('.c'))
                 continue;
             let lastpoint = filename.lastIndexOf('.');
-            let oname = filename.substr(0, lastpoint) + '.o';
+            let oname = this.nicePath(from, to, filename.substr(0, lastpoint) + '.o');
             oname = oname.replace(/..\//, '');
             oline += ' ' + oname;
         }
         this.p('kore.html:' + oline);
-        this.p('emcc ' + oline + ' -o kore.html --preload-file ' + debugDirName, 1);
+        this.p('emcc -O2 -s TOTAL_MEMORY=134217728 ' + oline + ' -o kore.html --preload-file ' + debugDirName, 1);
         this.p();
         for (let fileobject of project.getFiles()) {
             let filename = fileobject.file;
@@ -113,10 +114,10 @@ class EmscriptenExporter extends Exporter_1.Exporter {
                     fs.ensureDirSync(builddir);
             }
             let lastpoint = filename.lastIndexOf('.');
-            let oname = filename.substr(0, lastpoint) + '.o';
+            let oname = this.nicePath(from, to, filename.substr(0, lastpoint) + '.o');
             oname = oname.replace(/..\//, '');
-            this.p(oname + ': ../' + filename);
-            this.p('emcc -c ../' + filename + ' ' + includes + ' ' + defines + ' -o ' + oname, 1);
+            this.p(oname + ': ' + this.nicePath(from, to, filename));
+            this.p('emcc -O2 -c ' + this.nicePath(from, to, filename) + ' ' + includes + ' ' + defines + ' -o ' + oname, 1);
         }
         this.closeFile();
         /*
@@ -141,5 +142,5 @@ class EmscriptenExporter extends Exporter_1.Exporter {
         link(objectFiles, to.resolve(Paths.get("build", "Kt.js").toString()));*/
     }
 }
-exports.EmscriptenExporter = EmscriptenExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/Exporters/EmscriptenExporter.js.map
+exports.EmscriptenExporter = EmscriptenExporter;
+//# sourceMappingURL=EmscriptenExporter.js.map

@@ -2,43 +2,43 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const child_process = require('child_process');
-const fs = require('fs-extra');
-const path = require('path');
-const log = require('./log');
-const GraphicsApi_1 = require('./GraphicsApi');
-const Options_1 = require('./Options');
-const Project_1 = require('./Project');
-const Platform_1 = require('./Platform');
-const exec = require('./exec');
-const AndroidExporter_1 = require('./Exporters/AndroidExporter');
-const LinuxExporter_1 = require('./Exporters/LinuxExporter');
-const EmscriptenExporter_1 = require('./Exporters/EmscriptenExporter');
-const TizenExporter_1 = require('./Exporters/TizenExporter');
-const VisualStudioExporter_1 = require('./Exporters/VisualStudioExporter');
-const XCodeExporter_1 = require('./Exporters/XCodeExporter');
+Object.defineProperty(exports, "__esModule", { value: true });
+const child_process = require("child_process");
+const fs = require("fs-extra");
+const path = require("path");
+const log = require("./log");
+const GraphicsApi_1 = require("./GraphicsApi");
+const Options_1 = require("./Options");
+const Project_1 = require("./Project");
+const Platform_1 = require("./Platform");
+const exec = require("./exec");
+const VisualStudioVersion_1 = require("./VisualStudioVersion");
+const AndroidExporter_1 = require("./Exporters/AndroidExporter");
+const LinuxExporter_1 = require("./Exporters/LinuxExporter");
+const EmscriptenExporter_1 = require("./Exporters/EmscriptenExporter");
+const TizenExporter_1 = require("./Exporters/TizenExporter");
+const VisualStudioExporter_1 = require("./Exporters/VisualStudioExporter");
+const XCodeExporter_1 = require("./Exporters/XCodeExporter");
+let _global = global;
+_global.__base = __dirname + '/';
 let debug = false;
 function fromPlatform(platform) {
-    switch (platform) {
+    switch (platform.toLowerCase()) {
         case Platform_1.Platform.Windows:
             return 'Windows';
         case Platform_1.Platform.WindowsApp:
             return 'Windows App';
-        case Platform_1.Platform.PlayStation3:
-            return 'PlayStation 3';
         case Platform_1.Platform.iOS:
             return 'iOS';
         case Platform_1.Platform.OSX:
             return 'OS X';
         case Platform_1.Platform.Android:
             return 'Android';
-        case Platform_1.Platform.Xbox360:
-            return 'Xbox 360';
         case Platform_1.Platform.Linux:
             return 'Linux';
         case Platform_1.Platform.HTML5:
@@ -49,8 +49,14 @@ function fromPlatform(platform) {
             return 'Pi';
         case Platform_1.Platform.tvOS:
             return 'tvOS';
+        case Platform_1.Platform.PS4:
+            return 'PlayStation4';
+        case Platform_1.Platform.XboxOne:
+            return 'Xbox One';
+        case Platform_1.Platform.Switch:
+            return 'Switch';
         default:
-            return 'unknown';
+            throw 'Unknown platform ' + platform + '.';
     }
 }
 function shaderLang(platform) {
@@ -58,7 +64,6 @@ function shaderLang(platform) {
         case Platform_1.Platform.Windows:
             switch (Options_1.Options.graphicsApi) {
                 case GraphicsApi_1.GraphicsApi.OpenGL:
-                case GraphicsApi_1.GraphicsApi.OpenGL2:
                     return 'glsl';
                 case GraphicsApi_1.GraphicsApi.Direct3D9:
                     return 'd3d9';
@@ -73,8 +78,6 @@ function shaderLang(platform) {
             }
         case Platform_1.Platform.WindowsApp:
             return 'd3d11';
-        case Platform_1.Platform.PlayStation3:
-            return 'd3d9';
         case Platform_1.Platform.iOS:
         case Platform_1.Platform.tvOS:
             switch (Options_1.Options.graphicsApi) {
@@ -97,8 +100,6 @@ function shaderLang(platform) {
                 default:
                     return 'essl';
             }
-        case Platform_1.Platform.Xbox360:
-            return 'd3d9';
         case Platform_1.Platform.Linux:
             switch (Options_1.Options.graphicsApi) {
                 case GraphicsApi_1.GraphicsApi.Vulkan:
@@ -254,40 +255,31 @@ function exportKoremakeProject(from, to, platform, options) {
             exporter = new LinuxExporter_1.LinuxExporter();
         else if (platform === Platform_1.Platform.Tizen)
             exporter = new TizenExporter_1.TizenExporter();
-        else {
-            let found = false;
-            for (let p in Platform_1.Platform) {
-                if (platform === Platform_1.Platform[p]) {
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                exporter = new VisualStudioExporter_1.VisualStudioExporter();
-            }
-            else {
-                let libsdir = path.join(from.toString(), 'Backends');
-                if (fs.existsSync(libsdir) && fs.statSync(libsdir).isDirectory()) {
-                    let libdirs = fs.readdirSync(libsdir);
-                    for (let libdir of libdirs) {
-                        if (fs.statSync(path.join(from.toString(), 'Backends', libdir)).isDirectory()) {
-                            let libfiles = fs.readdirSync(path.join(from.toString(), 'Backends', libdir));
-                            for (let libfile of libfiles) {
-                                if (libfile.startsWith('Exporter') && libfile.endsWith('.js')) {
-                                    let Exporter = require(path.relative(__dirname, path.join(from.toString(), 'Backends', libdir, libfile)));
-                                    exporter = new Exporter();
-                                    break;
-                                }
+        else if (platform === Platform_1.Platform.PS4 || platform === Platform_1.Platform.XboxOne || platform === Platform_1.Platform.Switch) {
+            let libsdir = path.join(from.toString(), 'Backends');
+            if (fs.existsSync(libsdir) && fs.statSync(libsdir).isDirectory()) {
+                let libdirs = fs.readdirSync(libsdir);
+                for (let libdir of libdirs) {
+                    if (fs.statSync(path.join(from.toString(), 'Backends', libdir)).isDirectory()
+                        && (libdir.toLowerCase() === platform.toLowerCase() || libdir.toLowerCase() === fromPlatform(platform).toLowerCase())) {
+                        let libfiles = fs.readdirSync(path.join(from.toString(), 'Backends', libdir));
+                        for (let libfile of libfiles) {
+                            if (libfile.endsWith('Exporter.js')) {
+                                let Exporter = require(path.relative(__dirname, path.join(from.toString(), 'Backends', libdir, libfile)));
+                                exporter = new Exporter();
+                                break;
                             }
                         }
                     }
                 }
             }
         }
+        else
+            exporter = new VisualStudioExporter_1.VisualStudioExporter();
         if (exporter === null) {
             throw 'No exporter found for platform ' + platform + '.';
         }
-        exporter.exportSolution(project, from, to, platform, options.vrApi, options.nokrafix, options);
+        exporter.exportSolution(project, from, to, platform, options.vrApi, options);
         return project;
     });
 }
@@ -307,18 +299,18 @@ function exportProject(from, to, platform, options) {
 function compileProject(make, project, solutionName, options) {
     return new Promise((resolve, reject) => {
         make.stdout.on('data', function (data) {
-            log.info(data.toString());
+            log.info(data.toString(), false);
         });
         make.stderr.on('data', function (data) {
-            log.error(data.toString());
+            log.error(data.toString(), false);
         });
         make.on('close', function (code) {
             if (code === 0) {
                 if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Linux) || options.target === Platform_1.Platform.Linux) {
-                    fs.copySync(path.join(path.join(options.to.toString(), options.buildPath), solutionName), path.join(options.from.toString(), project.getDebugDir(), solutionName), { clobber: true });
+                    fs.copySync(path.join(path.join(options.to.toString(), options.buildPath), solutionName), path.join(options.from.toString(), project.getDebugDir(), solutionName), { overwrite: true });
                 }
                 else if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Windows) || options.target === Platform_1.Platform.Windows) {
-                    fs.copySync(path.join(options.to.toString(), 'Release', solutionName + '.exe'), path.join(options.from.toString(), project.getDebugDir(), solutionName + '.exe'), { clobber: true });
+                    fs.copySync(path.join(options.to.toString(), 'Release', solutionName + '.exe'), path.join(options.from.toString(), project.getDebugDir(), solutionName + '.exe'), { overwrite: true });
                 }
                 if (options.run) {
                     if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.OSX) || options.target === Platform_1.Platform.OSX) {
@@ -359,9 +351,9 @@ function run(options, loglog) {
             options.kore = path.resolve(options.kore);
         }
         debug = options.debug;
-        // if (options.vr != undefined) {
-        //     Options.vrApi = options.vr;
-        // }
+        if (options.vr !== undefined) {
+            Options_1.Options.vrApi = options.vr;
+        }
         options.buildPath = options.debug ? 'Debug' : 'Release';
         let project = null;
         try {
@@ -378,27 +370,54 @@ function run(options, loglog) {
             if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Linux) || options.target === Platform_1.Platform.Linux) {
                 make = child_process.spawn('make', [], { cwd: path.join(options.to, options.buildPath) });
             }
-            else if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.OSX) || options.target === Platform_1.Platform.OSX) {
-                make = child_process.spawn('xcodebuild', ['-configuration', 'Release', '-project', solutionName + '.xcodeproj'], { cwd: options.to });
+            else if ((options.customTarget && (options.customTarget.baseTarget === Platform_1.Platform.OSX || options.customTarget.baseTarget === Platform_1.Platform.iOS)) || options.target === Platform_1.Platform.OSX || options.target === Platform_1.Platform.iOS) {
+                make = child_process.spawn('xcodebuild', ['-configuration', options.debug ? 'Debug' : 'Release', '-project', solutionName + '.xcodeproj'], { cwd: options.to });
             }
-            else if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Windows) || options.target === Platform_1.Platform.Windows) {
+            else if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Windows) || options.target === Platform_1.Platform.Windows
+                || (options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.WindowsApp) || options.target === Platform_1.Platform.WindowsApp) {
                 let vsvars = null;
-                if (process.env.VS140COMNTOOLS) {
-                    vsvars = process.env.VS140COMNTOOLS + '\\vsvars32.bat';
-                }
-                else if (process.env.VS120COMNTOOLS) {
-                    vsvars = process.env.VS120COMNTOOLS + '\\vsvars32.bat';
-                }
-                else if (process.env.VS110COMNTOOLS) {
-                    vsvars = process.env.VS110COMNTOOLS + '\\vsvars32.bat';
+                switch (options.visualstudio) {
+                    case VisualStudioVersion_1.VisualStudioVersion.VS2017:
+                        const vspath = child_process.execFileSync(path.join(__dirname, '..', 'Data', 'windows', 'vswhere.exe'), ['-latest', '-property', 'installationPath'], { encoding: 'utf8' });
+                        const varspath = path.join(vspath.trim(), 'VC', 'Auxiliary', 'Build', 'vcvars32.bat');
+                        if (fs.existsSync(varspath)) {
+                            vsvars = varspath;
+                        }
+                        break;
+                    case VisualStudioVersion_1.VisualStudioVersion.VS2015:
+                        if (process.env.VS140COMNTOOLS) {
+                            vsvars = process.env.VS140COMNTOOLS + '\\vsvars32.bat';
+                        }
+                        break;
+                    case VisualStudioVersion_1.VisualStudioVersion.VS2013:
+                        if (process.env.VS120COMNTOOLS) {
+                            vsvars = process.env.VS120COMNTOOLS + '\\vsvars32.bat';
+                        }
+                        break;
+                    case VisualStudioVersion_1.VisualStudioVersion.VS2012:
+                        if (process.env.VS110COMNTOOLS) {
+                            vsvars = process.env.VS110COMNTOOLS + '\\vsvars32.bat';
+                        }
+                        break;
+                    case VisualStudioVersion_1.VisualStudioVersion.VS2010:
+                        if (process.env.VS100COMNTOOLS) {
+                            vsvars = process.env.VS100COMNTOOLS + '\\vsvars32.bat';
+                        }
+                        break;
                 }
                 if (vsvars !== null) {
-                    fs.writeFileSync(path.join(options.to, 'build.bat'), '@call "' + vsvars + '"\n' + '@MSBuild.exe "' + solutionName + '.vcxproj" /m /p:Configuration=Release,Platform=Win32');
+                    fs.writeFileSync(path.join(options.to, 'build.bat'), '@call "' + vsvars + '"\n' + '@MSBuild.exe "' + solutionName + '.vcxproj" /m /p:Configuration=' + (options.debug ? 'Debug' : 'Release') + ',Platform=Win32');
                     make = child_process.spawn('build.bat', [], { cwd: options.to });
                 }
                 else {
                     log.error('Visual Studio not found.');
                 }
+            }
+            else if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Android) || options.target === Platform_1.Platform.Android) {
+                let gradlew = (process.platform === 'win32') ? 'gradlew.bat' : 'bash';
+                let args = (process.platform === 'win32') ? [] : ['gradlew'];
+                args.push('assemble' + (options.debug ? 'Debug' : 'Release') + 'Arm7');
+                make = child_process.spawn(gradlew, args, { cwd: path.join(options.to, solutionName) });
             }
             if (make !== null) {
                 yield compileProject(make, project, solutionName, options);
@@ -412,5 +431,5 @@ function run(options, loglog) {
         return solutionName;
     });
 }
-exports.run = run;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/main.js.map
+exports.run = run;
+//# sourceMappingURL=main.js.map

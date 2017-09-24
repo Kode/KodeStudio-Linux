@@ -2,15 +2,16 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const fs = require('fs-extra');
-const path = require('path');
-const CSharpExporter_1 = require('./CSharpExporter');
-const ImageTool_1 = require('../ImageTool');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
+const path = require("path");
+const CSharpExporter_1 = require("./CSharpExporter");
+const ImageTool_1 = require("../ImageTool");
 const uuid = require('uuid');
 class PlayStationMobileExporter extends CSharpExporter_1.CSharpExporter {
     constructor(options) {
@@ -133,28 +134,28 @@ class PlayStationMobileExporter extends CSharpExporter_1.CSharpExporter {
     }*/
     copySound(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
-            return [];
+            return [''];
         });
     }
-    copyImage(platform, from, to, asset) {
+    copyImage(platform, from, to, asset, cache) {
         return __awaiter(this, void 0, void 0, function* () {
             this.files.push(asset['file']);
-            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false);
+            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false, false, cache);
             return [to + '.' + format];
         });
     }
     copyBlob(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { clobber: true });
+            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { overwrite: true });
             this.files.push(to);
             return [to];
         });
     }
     copyVideo(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
-            return [];
+            return [''];
         });
     }
 }
-exports.PlayStationMobileExporter = PlayStationMobileExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/PlayStationMobileExporter.js.map
+exports.PlayStationMobileExporter = PlayStationMobileExporter;
+//# sourceMappingURL=PlayStationMobileExporter.js.map

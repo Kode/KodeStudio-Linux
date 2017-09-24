@@ -2,17 +2,6 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 define("vs/code/node/cliProcessMain.nls.de", {
-	"vs/base/common/json": [
-		"Ungültiges Symbol",
-		"Ungültiges Zahlenformat.",
-		"Ein Eigenschaftenname wurde erwartet.",
-		"Ein Wert wurde erwartet.",
-		"Ein Doppelpunkt wurde erwartet.",
-		"Ein Komma wurde erwartet.",
-		"Eine schließende geschweifte Klammer wurde erwartet.",
-		"Eine schließende Klammer wurde erwartet.",
-		"Das Dateiende wurde erwartet.",
-	],
 	"vs/base/common/severity": [
 		"Fehler",
 		"Warnung",
@@ -22,10 +11,10 @@ define("vs/code/node/cliProcessMain.nls.de", {
 		"{0} wurde im ZIP nicht gefunden.",
 	],
 	"vs/code/node/cliProcessMain": [
-		"Die Erweiterung \"{0}\" wurde nicht gefunden.",
+		"Die Erweiterung \'{0}\' wurde nicht gefunden.",
 		"Die Erweiterung \"{0}\" ist nicht installiert.",
 		"Stellen Sie sicher, dass Sie die vollständige Erweiterungs-ID (einschließlich des Herausgebers) verwenden. Beispiel: {0}",
-		"Die Extension \"{0}\" wurde erfolgreich installiert.",
+		"Die Erweiterung \"{0}\" wurde erfolgreich installiert.",
 		"Die Erweiterung \"{0}\" ist bereits installiert.",
 		"\"{0}\" wurde in Marketplace gefunden.",
 		"Wird installiert...",
@@ -34,15 +23,14 @@ define("vs/code/node/cliProcessMain.nls.de", {
 		"Die Erweiterung \"{0}\" wurde erfolgreich deinstalliert.",
 	],
 	"vs/platform/configuration/common/configurationRegistry": [
-		"Trägt Konfigurationseigenschaften bei.",
-		"Eine Zusammenfassung der Einstellungen. Diese Bezeichnung wird in der Einstellungsdatei als trennender Kommentar verwendet.",
-		"Die Beschreibung der Konfigurationseigenschaften.",
-		"Wenn eine Festlegung erfolgt, muss \"configuration.type\" auf \"object\" festgelegt werden.",
-		"configuration.title muss eine Zeichenfolge sein.",
-		"\"configuration.properties\" muss ein Objekt sein.",
+		"Standard-Konfiguration überschreibt",
+		"Zu überschreibende Einstellungen für Sprache {0} konfigurieren.",
+		"Zu überschreibende Editor-Einstellungen für eine Sprache konfigurieren.",
+		"\"{0}\" kann nicht registriert werden. Die Eigenschaft stimmt mit dem Eigenschaftsmuster \'\\\\[.*\\\\]$\' zum Beschreiben sprachspezifischer Editor-Einstellungen überein. Verwenden Sie den Beitrag \"configurationDefaults\".",
+		"\"{0}\" kann nicht registriert werden. Diese Eigenschaft ist bereits registriert.",
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
-		"Erweiterungen",
+		"Extensions",
 		"Einstellungen",
 	],
 	"vs/platform/extensionManagement/node/extensionGalleryService": [
@@ -51,9 +39,6 @@ define("vs/code/node/cliProcessMain.nls.de", {
 	],
 	"vs/platform/extensionManagement/node/extensionManagementService": [
 		"Die Erweiterung ist ungültig: \"package.json\" ist keine JSON-Datei.",
-		"Die Erweiterung ist ungültig: Manifestnamenkonflikt.",
-		"Die Erweiterung ist ungültig: Manifestherausgeberkonflikt.",
-		"Die Erweiterung ist ungültig: Manifestversionskonflikt.",
 		"Bitte starten Sie Code vor der Neuinstallation von {0} neu.",
 		"Bitte starten Sie Code vor der Neuinstallation von {0} neu.",
 		"Durch das Installieren von \"{0}\" werden auch die abhängigen Komponenten installiert. Möchten Sie den Vorgang fortsetzen?",
@@ -71,25 +56,6 @@ define("vs/code/node/cliProcessMain.nls.de", {
 		"Die Erweiterung \"{0}\" kann nicht deinstalliert werden. Die Erweiterungen \"{1}\" und \"{2}\" hängen von dieser Erweiterung ab.",
 		"Die Erweiterung \"{0}\" kann nicht deinstalliert werden. Die Erweiterungen \"{1}\" und \"{2}\" sowie weitere hängen von dieser Erweiterung ab.",
 		"Die Erweiterung wurde nicht gefunden.",
-	],
-	"vs/platform/extensions/common/extensionsRegistry": [
-		"Gibt für VS Code-Erweiterungen die VS Code-Version an, mit der die Erweiterung kompatibel ist. Darf nicht \"*\" sein. Beispiel: ^0.10.5 gibt die Kompatibilität mit mindestens VS Code-Version 0.10.5 an.",
-		"Der Herausgeber der VS Code-Extension.",
-		"Der Anzeigename für die Extension, der im VS Code-Katalog verwendet wird.",
-		"Die vom VS Code-Katalog zum Kategorisieren der Extension verwendeten Kategorien.",
-		"Das in VS Code Marketplace verwendete Banner.",
-		"Die Bannerfarbe für die Kopfzeile der VS Code Marketplace-Seite.",
-		"Das Farbdesign für die Schriftart, die im Banner verwendet wird.",
-		"Alle Beiträge der VS Code-Extension, die durch dieses Paket dargestellt werden.",
-		"Legt die Erweiterung fest, die im Marketplace als Vorschau gekennzeichnet werden soll.",
-		"Aktivierungsereignisse für die VS Code-Extension.",
-		"Array aus Badges, die im Marketplace in der Seitenleiste auf der Seite mit den Erweiterungen angezeigt werden.",
-		"Die Bild-URL für den Badge.",
-		"Der Link für den Badge.",
-		"Eine Beschreibung für den Badge.",
-		"Abhängigkeiten von anderen Erweiterungen. Der Bezeichner einer Erweiterung ist immer ${publisher}.${name}, beispielsweise \"vscode.csharp\".",
-		"Ein Skript, das ausgeführt wird, bevor das Paket als VS Code-Extension veröffentlicht wird.",
-		"Der Pfad zu einem 128x128-Pixel-Symbol.",
 	],
 	"vs/platform/extensions/node/extensionValidator": [
 		"Der engines.vscode-Wert {0} konnte nicht analysiert werden. Verwenden Sie z. B. ^0.10.0, ^1.2.3, ^0.11.0, ^0.10.x usw.",

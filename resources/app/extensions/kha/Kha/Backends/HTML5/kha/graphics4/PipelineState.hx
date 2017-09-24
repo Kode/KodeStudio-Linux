@@ -56,7 +56,27 @@ class PipelineState extends PipelineStateBase {
 	private function compileShader(shader: Dynamic): Void {
 		if (shader.shader != null) return;
 		var s = SystemImpl.gl.createShader(shader.type);
-		SystemImpl.gl.shaderSource(s, shader.source);
+		var highp = SystemImpl.gl.getShaderPrecisionFormat(GL.FRAGMENT_SHADER, GL.HIGH_FLOAT);
+		var highpSupported = highp.precision != 0;
+		var files: Array<String> = shader.files;
+		for (i in 0...files.length) {
+			if (SystemImpl.gl2) {
+				if (files[i].indexOf("-webgl2") >= 0 || files[i].indexOf("runtime-string") >= 0) {
+					SystemImpl.gl.shaderSource(s, shader.sources[i]);
+					break;
+				}
+			}
+			else {
+				if (!highpSupported && files[i].indexOf("-relaxed") >= 0) {
+					SystemImpl.gl.shaderSource(s, shader.sources[i]);
+					break;
+				}
+				if (highpSupported && files[i].indexOf("-relaxed") < 0) {
+					SystemImpl.gl.shaderSource(s, shader.sources[i]);
+					break;
+				}
+			}
+		}
 		SystemImpl.gl.compileShader(s);
 		if (!SystemImpl.gl.getShaderParameter(s, GL.COMPILE_STATUS)) {
 			throw "Could not compile shader:\n" + SystemImpl.gl.getShaderInfoLog(s);
@@ -65,7 +85,17 @@ class PipelineState extends PipelineStateBase {
 	}
 	
 	public function getConstantLocation(name: String): kha.graphics4.ConstantLocation {
-		return new kha.js.graphics4.ConstantLocation(SystemImpl.gl.getUniformLocation(program, name));
+		var location = SystemImpl.gl.getUniformLocation(program, name);
+		var type = GL.FLOAT;
+		var count: Int = SystemImpl.gl.getProgramParameter(program, GL.ACTIVE_UNIFORMS);
+		for (i in 0...count) {
+			var info = SystemImpl.gl.getActiveUniform(program, i);
+			if (info.name == name || info.name == name + "[0]") {
+				type = info.type;
+				break;
+			}
+		}
+		return new kha.js.graphics4.ConstantLocation(location, type);
 	}
 	
 	public function getTextureUnit(name: String): kha.graphics4.TextureUnit {

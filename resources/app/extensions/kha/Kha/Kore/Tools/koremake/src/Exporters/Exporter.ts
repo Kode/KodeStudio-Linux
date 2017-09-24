@@ -1,5 +1,6 @@
 import {Project} from '../Project';
 import * as fs from 'fs-extra';
+import * as path from 'path';
 
 export abstract class Exporter {
 	out: number;
@@ -23,5 +24,13 @@ export abstract class Exporter {
 		fs.writeSync(this.out, data, 0, data.length, null);
 	}
 
-	abstract exportSolution(project: Project, from: string, to: string, platform: string, vrApi: any, nokrafix: boolean, options: any): void;
+	nicePath(from: string, to: string, filepath: string): string {
+		let absolute = filepath;
+		if (!path.isAbsolute(absolute)) {
+			absolute = path.resolve(from, filepath);
+		}
+		return path.relative(to, absolute);
+	}
+
+	abstract exportSolution(project: Project, from: string, to: string, platform: string, vrApi: any, options: any): void;
 }

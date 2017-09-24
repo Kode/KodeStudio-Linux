@@ -35,7 +35,7 @@ class FastMatrix3 {
 		return y * width + x;
 	}*/
 
-	@:extern public inline function setFrom(m:FastMatrix3):Void {
+	@:extern public inline function setFrom(m: FastMatrix3): Void {
 		this._00 = m._00; this._10 = m._10; this._20 = m._20;
 		this._01 = m._01; this._11 = m._11; this._21 = m._21;
 		this._02 = m._02; this._12 = m._12; this._22 = m._22;
@@ -137,14 +137,14 @@ class FastMatrix3 {
 		return m0 * m3 - m1 * m2;
 	}
 
-    @:extern public inline function determinant(): FastFloat {
-        var c00 = cofactor(_11, _21, _12, _22);
-        var c01 = cofactor(_10, _20, _12, _22);
-        var c02 = cofactor(_10, _20, _11, _21);
-        return _00 * c00 - _01 * c01 + _02 * c02;
-    }
+	@:extern public inline function determinant(): FastFloat {
+		var c00 = cofactor(_11, _21, _12, _22);
+		var c01 = cofactor(_10, _20, _12, _22);
+		var c02 = cofactor(_10, _20, _11, _21);
+		return _00 * c00 - _01 * c01 + _02 * c02;
+	}
 
-    @:extern public inline function inverse(): FastMatrix3 {
+	@:extern public inline function inverse(): FastMatrix3 {
 		var c00 = cofactor(_11, _21, _12, _22);
 		var c01 = cofactor(_10, _20, _12, _22);
 		var c02 = cofactor(_10, _20, _11, _21);
@@ -164,9 +164,9 @@ class FastMatrix3 {
 
 		var invdet: FastFloat = 1.0 / det;
 		return new FastMatrix3(
-			 c00 * invdet, -c01 * invdet,  c02 * invdet,
+			c00 * invdet,  -c01 * invdet,  c02 * invdet,
 			-c10 * invdet,  c11 * invdet, -c12 * invdet,
-			 c20 * invdet, -c21 * invdet,  c22 * invdet
+			c20 * invdet,  -c21 * invdet,  c22 * invdet
 		);
 	}
 }

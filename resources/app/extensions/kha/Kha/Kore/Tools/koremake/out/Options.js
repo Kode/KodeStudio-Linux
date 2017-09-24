@@ -1,12 +1,15 @@
 "use strict";
-const GraphicsApi_1 = require('./GraphicsApi');
-const VisualStudioVersion_1 = require('./VisualStudioVersion');
+Object.defineProperty(exports, "__esModule", { value: true });
+const GraphicsApi_1 = require("./GraphicsApi");
+const VisualStudioVersion_1 = require("./VisualStudioVersion");
+const VrApi_1 = require("./VrApi");
 exports.Options = {
     precompiledHeaders: false,
     intermediateDrive: '',
-    graphicsApi: GraphicsApi_1.GraphicsApi.Direct3D9,
-    visualStudioVersion: VisualStudioVersion_1.VisualStudioVersion.VS2013,
+    graphicsApi: GraphicsApi_1.GraphicsApi.Direct3D11,
+    vrApi: VrApi_1.VrApi.None,
+    visualStudioVersion: VisualStudioVersion_1.VisualStudioVersion.VS2017,
     compile: false,
     run: false
-};
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/Options.js.map
+};
+//# sourceMappingURL=Options.js.map

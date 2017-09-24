@@ -1,5 +1,6 @@
 "use strict";
-const fs = require('fs-extra');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
 class Exporter {
     constructor() {
     }
@@ -17,14 +18,14 @@ class Exporter {
         fs.writeSync(this.out, data, 0, data.length, null);
     }
     copyFile(from, to) {
-        fs.copySync(from, to, { clobber: true });
+        fs.copySync(from, to, { overwrite: true });
     }
     copyDirectory(from, to) {
-        fs.copySync(from, to, { clobber: true });
+        fs.copySync(from, to, { overwrite: true });
     }
     createDirectory(dir) {
         fs.ensureDirSync(dir);
     }
 }
-exports.Exporter = Exporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/Exporter.js.map
+exports.Exporter = Exporter;
+//# sourceMappingURL=Exporter.js.map

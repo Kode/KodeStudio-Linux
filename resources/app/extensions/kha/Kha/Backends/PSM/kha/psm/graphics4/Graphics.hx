@@ -17,6 +17,7 @@ import kha.graphics4.TextureFormat;
 import kha.graphics4.Usage;
 import kha.graphics4.VertexBuffer;
 import kha.graphics4.VertexShader;
+import kha.math.Matrix3;
 import kha.math.Matrix4;
 import kha.math.Vector2;
 import kha.math.Vector3;
@@ -70,8 +71,12 @@ class Graphics implements kha.graphics4.Graphics {
 		
 	}
 	
-	public function createCubeMap(size: Int, format: TextureFormat, usage: Usage, canRead: Bool = false): CubeMap {
-		return null;
+	public function setCubeMap(stage: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		
+	}
+	
+	public function setCubeMapDepth(stage: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		
 	}
 		
 	public function setStencilParameters(compareMode: CompareMode, bothPass: StencilAction, depthFail: StencilAction, stencilFail: StencilAction, referenceValue: Int, readMask: Int = 0xff, writeMask: Int = 0xff): Void {
@@ -84,6 +89,10 @@ class Graphics implements kha.graphics4.Graphics {
 	
 	public function setTextureParameters(texunit: kha.graphics4.TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void {
 		
+	}
+
+	public function setTexture3DParameters(texunit: kha.graphics4.TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, wAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void {
+	
 	}
 	
 	public function setBlendingMode(source: BlendingOperation, destination: BlendingOperation): Void {
@@ -192,8 +201,16 @@ class Graphics implements kha.graphics4.Graphics {
 	public function setMatrix(location: kha.graphics4.ConstantLocation, matrix: Matrix4): Void {
 		setMatrix2(cast location, matrix);
 	}
+
+	public function setMatrix3(location: kha.graphics4.ConstantLocation, matrix: Matrix3): Void {
+		
+	}
 	
 	public function setFloats(location: kha.graphics4.ConstantLocation, values: Array<Float>): Void {
+		
+	}
+
+	public function setFloat4s(location: kha.graphics4.ConstantLocation, values: Array<Float>): Void {
 		
 	}
 		
@@ -202,6 +219,14 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	public function begin(): Void {
+		
+	}
+
+	public function beginFace(face: Int): Void {
+
+	}
+
+	public function beginEye(eye: Int): Void {
 		
 	}
 	

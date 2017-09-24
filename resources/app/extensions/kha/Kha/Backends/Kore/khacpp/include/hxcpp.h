@@ -1,8 +1,9 @@
 #ifndef HXCPP_H
 #define HXCPP_H
 
-#pragma warning( disable : 4018 4244 )
-#if !defined(SYS_WINDOWS) && !defined(SYS_WINDOWSAPP)
+#pragma warning(disable : 4018 4101 4146 4244 4305)
+
+#if !defined(KORE_WINDOWS) && !defined(KORE_WINDOWSAPP)
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wunused-value"
 #pragma clang diagnostic ignored "-Wunreachable-code"
@@ -42,6 +43,10 @@
   #include <cstdlib>
 #endif
 
+#if defined(EMSCRIPTEN)
+  #include <emscripten.h>
+#endif
+
 #ifdef __OBJC__
 #ifdef HXCPP_OBJC
   #import <Foundation/Foundation.h>
@@ -63,6 +68,12 @@
 
 #if defined(EMSCRIPTEN)  || defined(_ARM_) || defined(__arm__)
    #define HXCPP_ALIGN_FLOAT
+#endif
+
+// Must allign allocs to 8 bytes to match floating point requirement?
+// Ints must br read on 4-byte boundary
+#ifdef EMSCRIPTEN
+   #define HXCPP_ALIGN_ALLOC
 #endif
 
 #if defined(__LP64__) || defined(_LP64) || defined(_WIN64)
@@ -242,6 +253,7 @@ namespace hx { template<typename T> class Native; }
 namespace hx { template<typename O> class ObjectPtr; }
 namespace cpp { template<typename S,typename H> class Struct; }
 namespace cpp { template<typename T> class Pointer; }
+namespace cpp { template<typename T> class Function; }
 template<typename ELEM_> class Array_obj;
 template<typename ELEM_> class Array;
 namespace hx {

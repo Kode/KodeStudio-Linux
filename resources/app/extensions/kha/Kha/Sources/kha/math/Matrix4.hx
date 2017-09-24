@@ -19,6 +19,13 @@ class Matrix4 {
 		this._03 = _03; this._13 = _13; this._23 = _23; this._33 = _33;
 	}
 
+	@:extern public inline function setFrom(m: Matrix4): Void {
+		this._00 = m._00; this._10 = m._10; this._20 = m._20; this._30 = m._30;
+		this._01 = m._01; this._11 = m._11; this._21 = m._21; this._31 = m._31;
+		this._02 = m._02; this._12 = m._12; this._22 = m._22; this._32 = m._32;
+		this._03 = m._03; this._13 = m._13; this._23 = m._23; this._33 = m._33;
+	}
+
 	@:extern public static inline function translation(x: Float, y: Float, z: Float): Matrix4 {
 		return new Matrix4(
 			1, 0, 0, x,
@@ -70,10 +77,10 @@ class Matrix4 {
 		var ca = Math.cos(alpha);
 		var sa = Math.sin(alpha);
 		return new Matrix4(
-			 ca, 0, sa, 0,
-			  0, 1,  0, 0,
+			ca,  0, sa, 0,
+			0,   1,  0, 0,
 			-sa, 0, ca, 0,
-			  0, 0,  0, 1
+			0,   0,  0, 1
 		);
 	}
 
@@ -83,8 +90,8 @@ class Matrix4 {
 		return new Matrix4(
 			ca, -sa, 0, 0,
 			sa,  ca, 0, 0,
-			 0,   0, 1, 0,
-			 0,   0, 0, 1
+			0,    0, 1, 0,
+			0,    0, 0, 1
 		);
 	}
 
@@ -98,8 +105,8 @@ class Matrix4 {
 		return new Matrix4(
 			cx * cy, cx * sy * sz - sx * cz, cx * sy * cz + sx * sz, 0,
 			sx * cy, sx * sy * sz + cx * cz, sx * sy * cz - cx * sz, 0,
-				-sy,                cy * sz,                cy * cz, 0,
-				  0,                      0,                      0, 1
+			-sy,     cy * sz,                cy * cz,                0,
+			0,       0,                      0,                      1
 		);
 	}
 
@@ -209,7 +216,7 @@ class Matrix4 {
 		return product;
 	}
 
-    @:extern public inline function cofactor(m0: Float, m1: Float, m2: Float,
+	@:extern public inline function cofactor(m0: Float, m1: Float, m2: Float,
 											m3: Float, m4: Float, m5: Float,
 											m6: Float, m7: Float, m8: Float): Float {
 		return m0 * ( m4 * m8 - m5 * m7 ) - m1 * ( m3 * m8 - m5 * m6 ) + m2 * ( m3 * m7 - m4 * m6 );
@@ -231,7 +238,7 @@ class Matrix4 {
 
 		var det: Float = _00 * c00 - _01 * c01 + _02 * c02 - _03 * c03;
 		if (Math.abs(det) < 0.000001) {
-            throw "determinant is too small";
+			throw "determinant is too small";
 		}
 
 		var c10 = cofactor(_01, _21, _31, _02, _22, _32, _03, _23, _33);
@@ -251,10 +258,10 @@ class Matrix4 {
 
 		var invdet: Float = 1.0 / det;
 		return new Matrix4(
-			 c00 * invdet, - c01 * invdet,   c02 * invdet, - c03 * invdet,
-			-c10 * invdet,   c11 * invdet, - c12 * invdet,   c13 * invdet,
-			 c20 * invdet, - c21 * invdet,   c22 * invdet, - c23 * invdet,
-			-c30 * invdet,   c31 * invdet, - c32 * invdet,   c33 * invdet
+			c00 * invdet,  -c01 * invdet,  c02 * invdet, -c03 * invdet,
+			-c10 * invdet,  c11 * invdet, -c12 * invdet,  c13 * invdet,
+			c20 * invdet,  -c21 * invdet,  c22 * invdet, -c23 * invdet,
+			-c30 * invdet,  c31 * invdet, -c32 * invdet,  c33 * invdet
 		);
 	}
 }

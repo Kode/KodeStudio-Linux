@@ -2,6 +2,7 @@ package kha;
 
 import haxe.io.Bytes;
 import kha.graphics4.TextureFormat;
+import kha.graphics4.DepthStencilFormat;
 import kha.graphics4.Usage;
 import kha.js.EmptyGraphics1;
 import kha.js.EmptyGraphics2;
@@ -34,11 +35,15 @@ class Image implements Canvas implements Resource {
 		return null;
 	}
 	
-	public static function createRenderTarget(width: Int, height: Int, format: TextureFormat = null, depthStencil: Bool = false, antiAliasingSamples: Int = 1): Image {
+	public static function createRenderTarget(width: Int, height: Int, format: TextureFormat = null, depthStencil: DepthStencilFormat = DepthStencilFormat.NoDepthAndStencil, antiAliasingSamples: Int = 1, contextId: Int = 0): Image {
 		return new Image(width, height, format);
 	}
 	
 	public static function fromBytes(bytes: Bytes, width: Int, height: Int, format: TextureFormat = null, usage: Usage = null): Image {
+		return null;
+	}
+
+	public static function fromBytes3D(bytes: Bytes, width: Int, height: Int, depth: Int, format: TextureFormat = null, usage: Usage = null): Image {
 		return null;
 	}
 	
@@ -59,9 +64,11 @@ class Image implements Canvas implements Resource {
 	public function unload(): Void { }
 	public function lock(level: Int = 0): Bytes { return bytes; }
 	public function unlock(): Void { }
+	public function getPixels(): Bytes { return null; }
 	public function generateMipmaps(levels: Int): Void { }
 	public function setMipmaps(mipmaps: Array<Image>): Void { }
 	public function setDepthStencilFrom(image: Image): Void { }
+	public function clear(x: Int, y: Int, z: Int, width: Int, height: Int, depth: Int, color: Color): Void { }
 	public var width(get, null): Int;
 	private function get_width(): Int { return w; }
 	public var height(get, null): Int;

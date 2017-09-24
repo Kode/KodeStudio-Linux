@@ -2,15 +2,16 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const fs = require('fs-extra');
-const path = require('path');
-const CSharpExporter_1 = require('./CSharpExporter');
-const ImageTool_1 = require('../ImageTool');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
+const path = require("path");
+const CSharpExporter_1 = require("./CSharpExporter");
+const ImageTool_1 = require("../ImageTool");
 const uuid = require('uuid');
 function findIcon(from, options) {
     if (fs.existsSync(path.join(from, 'icon.png')))
@@ -123,8 +124,8 @@ class XnaExporter extends CSharpExporter_1.CSharpExporter {
         this.closeFile();
     }
     exportCsProj(projectUuid) {
-        ImageTool_1.exportImage(this.options.kha, findIcon(this.options.to, this.options), path.join(this.options.to, this.sysdir() + '-build', 'GameThumbnail.png'), { width: 64, height: 64 }, 'png', false);
-        ImageTool_1.exportImage(this.options.kha, findIcon(this.options.to, this.options), path.join(this.options.to, this.sysdir() + '-build', 'Game.ico'), null, 'ico', false);
+        ImageTool_1.exportImage(this.options.kha, findIcon(this.options.to, this.options), path.join(this.options.to, this.sysdir() + '-build', 'GameThumbnail.png'), { width: 64, height: 64 }, 'png', false, false, {});
+        ImageTool_1.exportImage(this.options.kha, findIcon(this.options.to, this.options), path.join(this.options.to, this.sysdir() + '-build', 'Game.ico'), null, 'ico', false, false, {});
         this.writeFile(path.join(this.options.to, this.sysdir() + '-build', 'Project.csproj'));
         this.p('<?xml version="1.0" encoding="utf-8"?>');
         this.p('<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">');
@@ -247,13 +248,13 @@ class XnaExporter extends CSharpExporter_1.CSharpExporter {
         this.p('</Project>');
         this.closeFile();
     }
-    copyImage(platform, from, to, asset) {
+    copyImage(platform, from, to, asset, cache) {
         return __awaiter(this, void 0, void 0, function* () {
             this.images.push(asset['file']);
-            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, 'xna', to), asset, undefined, false);
+            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, 'xna', to), asset, undefined, false, false, cache);
             return [to + '.' + format];
         });
     }
 }
-exports.XnaExporter = XnaExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/XnaExporter.js.map
+exports.XnaExporter = XnaExporter;
+//# sourceMappingURL=XnaExporter.js.map

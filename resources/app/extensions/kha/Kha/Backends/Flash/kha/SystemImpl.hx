@@ -6,9 +6,9 @@ import flash.net.URLRequest;
 import flash.system.Capabilities;
 import kha.flash.utils.AGALMiniAssembler;
 import kha.input.Keyboard;
+import kha.input.KeyCode;
 import kha.input.Mouse;
 import kha.input.MouseImpl;
-import kha.Key;
 import flash.display.Stage;
 import flash.display.Stage3D;
 import flash.display3D.Context3D;
@@ -132,78 +132,15 @@ class SystemImpl {
 	private static function keyDownHandler(event: KeyboardEvent): Void {
 		if (pressedKeys[event.keyCode]) return;
 		pressedKeys[event.keyCode] = true;
-		switch (event.keyCode) {
-		case 8:
-			keyboard.sendDownEvent(Key.BACKSPACE, "");
-		case 9:
-			keyboard.sendDownEvent(Key.TAB, "");
-		case 13:
-			keyboard.sendDownEvent(Key.ENTER, "");
-		case 16:
-			keyboard.sendDownEvent(Key.SHIFT, "");
-		case 17:
-			keyboard.sendDownEvent(Key.CTRL, "");
-		case 18:
-			keyboard.sendDownEvent(Key.ALT, "");
-		case 27:
-			keyboard.sendDownEvent(Key.ESC, "");
-		case 46:
-			keyboard.sendDownEvent(Key.DEL, "");
-		case 38:
-			keyboard.sendDownEvent(Key.UP, "");
-		case 40:
-			keyboard.sendDownEvent(Key.DOWN, "");
-		case 37:
-			keyboard.sendDownEvent(Key.LEFT, "");
-		case 39:
-			keyboard.sendDownEvent(Key.RIGHT, "");
-		case 65:
-			keyboard.sendDownEvent(Key.CHAR, String.fromCharCode(event.charCode));
-		case 83:
-			keyboard.sendDownEvent(Key.CHAR, String.fromCharCode(event.charCode));
-		default:
-			if (event.charCode != 0) {
-				keyboard.sendDownEvent(Key.CHAR, String.fromCharCode(event.charCode));
-			}
+		keyboard.sendDownEvent(cast event.keyCode);
+		if (event.charCode != 0) {
+			keyboard.sendPressEvent(String.fromCharCode(event.charCode));
 		}
 	}
 
 	private static function keyUpHandler(event: KeyboardEvent): Void {
 		pressedKeys[event.keyCode] = false;
-		switch (event.keyCode) {
-		case 8:
-			keyboard.sendUpEvent(Key.BACKSPACE, "");
-		case 9:
-			keyboard.sendUpEvent(Key.TAB, "");
-		case 13:
-			keyboard.sendUpEvent(Key.ENTER, "");
-		case 16:
-			keyboard.sendUpEvent(Key.SHIFT, "");
-		case 17:
-			keyboard.sendUpEvent(Key.CTRL, "");
-		case 18:
-			keyboard.sendUpEvent(Key.ALT, "");
-		case 27:
-			keyboard.sendUpEvent(Key.ESC, "");
-		case 46:
-			keyboard.sendUpEvent(Key.DEL, "");
-		case 38:
-			keyboard.sendUpEvent(Key.UP, "");
-		case 40:
-			keyboard.sendUpEvent(Key.DOWN, "");
-		case 37:
-			keyboard.sendUpEvent(Key.LEFT, "");
-		case 39:
-			keyboard.sendUpEvent(Key.RIGHT, "");
-		case 65:
-			keyboard.sendUpEvent(Key.CHAR, String.fromCharCode(event.charCode));
-		case 83:
-			keyboard.sendUpEvent(Key.CHAR, String.fromCharCode(event.charCode));
-		default:
-			if (event.charCode != 0) {
-				keyboard.sendUpEvent(Key.CHAR, String.fromCharCode(event.charCode));
-			}
-		}
+		keyboard.sendUpEvent(cast event.keyCode);
 	}
 
 	private static var mouseX: Int;
@@ -257,7 +194,7 @@ class SystemImpl {
 
 	private static function mouseWheelHandler(event: MouseEvent): Void {
 		setMousePosition(event);
-		mouse.sendWheelEvent(0, event.delta);
+		mouse.sendWheelEvent(0, -event.delta);
 	}
 
 	private static function resizeHandler(event: Event): Void {
@@ -342,4 +279,7 @@ class SystemImpl {
 		Lib.getURL(new URLRequest(url), "_blank");
 	}
 	
+	public static function getGamepadId(index: Int): String {
+		return "unkown";
+	}
 }

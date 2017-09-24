@@ -1,36 +1,41 @@
+"use strict";
 // Called from entry point, e.g. Kha/make.js
 // This is where options are processed:
 // e.g. '-t html5 --server'
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const os = require('os');
-const path = require('path');
-const GraphicsApi_1 = require('./GraphicsApi');
-const VrApi_1 = require('./VrApi');
-const Options_1 = require('./Options');
-const Platform_1 = require('./Platform');
-const VisualStudioVersion_1 = require('./VisualStudioVersion');
+Object.defineProperty(exports, "__esModule", { value: true });
+const os = require("os");
+const path = require("path");
+const GraphicsApi_1 = require("./GraphicsApi");
+const VrApi_1 = require("./VrApi");
+const Options_1 = require("./Options");
+const Platform_1 = require("./Platform");
+const VisualStudioVersion_1 = require("./VisualStudioVersion");
 let version = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
 if (version < 6) {
     console.error('Requires Node.js version 6 or higher.');
     process.exit(1);
 }
 let defaultTarget;
+let defaultGraphics;
 if (os.platform() === 'linux') {
     defaultTarget = Platform_1.Platform.Linux;
+    defaultGraphics = GraphicsApi_1.GraphicsApi.OpenGL;
 }
 else if (os.platform() === 'win32') {
     defaultTarget = Platform_1.Platform.Windows;
+    defaultGraphics = GraphicsApi_1.GraphicsApi.Direct3D11;
 }
 else {
     defaultTarget = Platform_1.Platform.OSX;
+    defaultGraphics = GraphicsApi_1.GraphicsApi.OpenGL;
 }
 let options = [
     {
@@ -65,6 +70,12 @@ let options = [
         default: VrApi_1.VrApi.None
     },
     {
+        full: 'main',
+        value: true,
+        description: 'Entrypoint for the haxe code (-main argument), defaults to "Main".',
+        default: 'Main'
+    },
+    {
         full: 'intermediate',
         description: 'Intermediate location for object files.',
         value: true,
@@ -76,14 +87,14 @@ let options = [
         short: 'g',
         description: 'Graphics api to use. Possible parameters are direct3d9, direct3d11, direct3d12, metal and opengl.',
         value: true,
-        default: GraphicsApi_1.GraphicsApi.Direct3D9
+        default: defaultGraphics
     },
     {
         full: 'visualstudio',
         short: 'v',
         description: 'Version of Visual Studio to use. Possible parameters are vs2010, vs2012, vs2013 and vs2015.',
         value: true,
-        default: VisualStudioVersion_1.VisualStudioVersion.VS2015
+        default: VisualStudioVersion_1.VisualStudioVersion.VS2017
     },
     {
         full: 'kha',
@@ -261,16 +272,29 @@ for (let i = 2; i < args.length; ++i) {
             parsedOptions.target = arg;
     }
 }
-if (parsedOptions.graphics === GraphicsApi_1.GraphicsApi.OpenGL) {
-    parsedOptions.graphics = GraphicsApi_1.GraphicsApi.OpenGL2;
-}
 if (parsedOptions.run) {
     parsedOptions.compile = true;
 }
 function runKhamake() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield require('./main.js').run(parsedOptions, { info: console.log, error: console.log }, function (name) { });
+            let logInfo = function (text, newline) {
+                if (newline) {
+                    console.log(text);
+                }
+                else {
+                    process.stdout.write(text);
+                }
+            };
+            let logError = function (text, newline) {
+                if (newline) {
+                    console.error(text);
+                }
+                else {
+                    process.stderr.write(text);
+                }
+            };
+            yield require('./main.js').run(parsedOptions, { info: logInfo, error: logError }, (name) => { });
         }
         catch (error) {
             console.log(error);
@@ -302,5 +326,5 @@ else if (parsedOptions.server) {
 }
 else {
     runKhamake();
-}
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/khamake.js.map
+}
+//# sourceMappingURL=khamake.js.map

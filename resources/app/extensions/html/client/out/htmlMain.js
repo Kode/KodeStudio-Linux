@@ -3,21 +3,23 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
-var path = require('path');
-var vscode_1 = require('vscode');
-var vscode_languageclient_1 = require('vscode-languageclient');
-var htmlEmptyTagsShared_1 = require('./htmlEmptyTagsShared');
-var colorDecorators_1 = require('./colorDecorators');
-var vscode_extension_telemetry_1 = require('vscode-extension-telemetry');
-var nls = require('vscode-nls');
+Object.defineProperty(exports, "__esModule", { value: true });
+var path = require("path");
+var vscode_1 = require("vscode");
+var vscode_languageclient_1 = require("vscode-languageclient");
+var htmlEmptyTagsShared_1 = require("./htmlEmptyTagsShared");
+var colorDecorators_1 = require("./colorDecorators");
+var vscode_extension_telemetry_1 = require("vscode-extension-telemetry");
+var nls = require("vscode-nls");
 var localize = nls.loadMessageBundle(__filename);
 var ColorSymbolRequest;
 (function (ColorSymbolRequest) {
-    ColorSymbolRequest.type = { get method() { return 'css/colorSymbols'; }, _: null };
+    ColorSymbolRequest.type = new vscode_languageclient_1.RequestType('css/colorSymbols');
 })(ColorSymbolRequest || (ColorSymbolRequest = {}));
 function activate(context) {
     var packageInfo = getPackageInfo(context);
     var telemetryReporter = packageInfo && new vscode_extension_telemetry_1.default(packageInfo.name, packageInfo.version, packageInfo.aiKey);
+    context.subscriptions.push(telemetryReporter);
     // The server is implemented in node
     var serverModule = context.asAbsolutePath(path.join('server', 'out', 'htmlServerMain.js'));
     // The debug options for the server
@@ -36,22 +38,22 @@ function activate(context) {
         synchronize: {
             configurationSection: ['html', 'css', 'javascript'],
         },
-        initializationOptions: (_a = {
-                embeddedLanguages: embeddedLanguages
-            },
-            _a['format.enable'] = vscode_1.workspace.getConfiguration('html').get('format.enable'),
-            _a
-        )
+        initializationOptions: {
+            embeddedLanguages: embeddedLanguages
+        }
     };
     // Create the language client and start the client.
-    var client = new vscode_languageclient_1.LanguageClient('html', localize(0, null), serverOptions, clientOptions, true);
+    var client = new vscode_languageclient_1.LanguageClient('html', localize(0, null), serverOptions, clientOptions);
     var disposable = client.start();
     context.subscriptions.push(disposable);
     client.onReady().then(function () {
         var colorRequestor = function (uri) {
             return client.sendRequest(ColorSymbolRequest.type, uri).then(function (ranges) { return ranges.map(client.protocol2CodeConverter.asRange); });
         };
-        var disposable = colorDecorators_1.activateColorDecorations(colorRequestor, { html: true, handlebars: true, razor: true });
+        var isDecoratorEnabled = function (languageId) {
+            return vscode_1.workspace.getConfiguration().get('css.colorDecorators.enable');
+        };
+        var disposable = colorDecorators_1.activateColorDecorations(colorRequestor, { html: true, handlebars: true, razor: true }, isDecoratorEnabled);
         context.subscriptions.push(disposable);
         client.onTelemetry(function (e) {
             if (telemetryReporter) {
@@ -60,6 +62,10 @@ function activate(context) {
         });
     });
     vscode_1.languages.setLanguageConfiguration('html', {
+        indentationRules: {
+            increaseIndentPattern: /<(?!\?|(?:area|base|br|col|frame|hr|html|img|input|link|meta|param)\b|[^>]*\/>)([-_\.A-Za-z0-9]+)(?=\s|>)\b[^>]*>(?!.*<\/\1>)|<!--(?!.*-->)|\{[^}"']*$/,
+            decreaseIndentPattern: /^\s*(<\/(?!html)[-_\.A-Za-z0-9]+\b[^>]*>|-->|\})/
+        },
         wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\$\^\&\*\(\)\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\s]+)/g,
         onEnterRules: [
             {
@@ -101,7 +107,6 @@ function activate(context) {
             }
         ],
     });
-    var _a;
 }
 exports.activate = activate;
 function getPackageInfo(context) {
@@ -115,4 +120,4 @@ function getPackageInfo(context) {
     }
     return null;
 }
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/html/client/out/htmlMain.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/html/client/out/htmlMain.js.map

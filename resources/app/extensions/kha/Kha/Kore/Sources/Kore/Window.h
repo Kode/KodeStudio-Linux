@@ -29,6 +29,8 @@ namespace Kore {
 		int y;
 		int targetDisplay;
 
+		bool vSync;
+
 		bool resizable;
 		bool maximizable;
 		bool minimizable;
@@ -38,7 +40,6 @@ namespace Kore {
 		RendererOptions rendererOptions;
 
 		WindowOptions() {
-			showWindow = true;
 			title = "KoreWindow";
 			targetDisplay = -1;
 			mode = WindowModeWindow;
@@ -47,6 +48,8 @@ namespace Kore {
 			width = 800;
 			height = 600;
 			showWindow = true;
+
+			vSync = true;
 
 			resizable = false;
 			maximizable = false;

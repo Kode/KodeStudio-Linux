@@ -9,16 +9,18 @@ import {Options} from '../Options';
 import {Library} from '../Project';
 
 export class KoreHLExporter extends KhaExporter {
-	parameters: Array<string>;
-
 	constructor(options: Options) {
 		super(options);
-		this.addSourceDirectory(path.join(options.kha, 'Backends', 'KoreHL'));
 		// Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
+	}
+
+	backend(): string {
+		return 'KoreHL';
 	}
 
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('no-compilation');
+
 		defines.push('sys_' + this.options.target);
 		defines.push('sys_g1');
 		defines.push('sys_g2');
@@ -26,6 +28,17 @@ export class KoreHLExporter extends KhaExporter {
 		defines.push('sys_g4');
 		defines.push('sys_a1');
 		defines.push('sys_a2');
+
+		defines.push('kha_hl');
+		defines.push('kha_' + this.options.target);
+		defines.push('kha_' + this.options.target + '_hl');
+		defines.push('kha_' + this.options.graphics);
+		defines.push('kha_g1');
+		defines.push('kha_g2');
+		defines.push('kha_g3');
+		defines.push('kha_g4');
+		defines.push('kha_a1');
+		defines.push('kha_a2');
 
 		if (this.options.vr === 'gearvr') {
 			defines.push('vr_gearvr');
@@ -49,7 +62,8 @@ export class KoreHLExporter extends KhaExporter {
 			language: 'hl',
 			width: this.width,
 			height: this.height,
-			name: name
+			name: name,
+			main: this.options.main,
 		};
 	}
 
@@ -65,13 +79,13 @@ export class KoreHLExporter extends KhaExporter {
 	}*/
 
 	async copySound(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { clobber: true });
+		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { overwrite: true });
 		return [to + '.wav'];
 	}
 
-	async copyImage(platform: string, from: string, to: string, asset: any) {
+	async copyImage(platform: string, from: string, to: string, asset: any, cache: any) {
 		if (platform === Platform.iOS && asset.compressed) {
-			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, 'pvr', true);
+			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, 'pvr', true, false, cache);
 			return [to + '.' + format];
 		}
 		/*else if (platform === Platform.Android && asset.compressed) {
@@ -81,13 +95,13 @@ export class KoreHLExporter extends KhaExporter {
 		 exportImage(from, this.directory.resolve(this.sysdir()).resolve(to), asset, 'astc', true, callback);
 		 }*/
 		else {
-			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, true);
+			let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, true, false, cache);
 			return [to + '.' + format];
 		}
 	}
 
 	async copyBlob(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to).toString(), { clobber: true });
+		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to).toString(), { overwrite: true });
 		return [to];
 	}
 

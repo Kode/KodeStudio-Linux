@@ -21,6 +21,7 @@ import kha.graphics4.VertexBuffer;
 import kha.graphics4.VertexShader;
 import kha.graphics4.VertexStructure;
 import kha.Image;
+import kha.math.FastMatrix3;
 import kha.math.FastMatrix4;
 import kha.math.FastVector2;
 import kha.math.FastVector3;
@@ -181,8 +182,12 @@ class Graphics implements kha.graphics4.Graphics {
 		return false;
 	}
 	
-	public function createCubeMap(size: Int, format: TextureFormat, usage: Usage, canRead: Bool = false): CubeMap {
-		return null;
+	public function setCubeMap(stage: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		
+	}
+	
+	public function setCubeMapDepth(stage: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		
 	}
 	
 	//@:functionCode('Kore::Graphics::setStencilParameters(convertCompareMode(compareMode), convertStencilAction(bothPass), convertStencilAction(depthFail), convertStencilAction(stencilFail), referenceValue, readMask, writeMask);	')
@@ -267,6 +272,10 @@ class Graphics implements kha.graphics4.Graphics {
 		setTextureWrapNative(cast texunit, getTextureAddressing(uAddressing), getTextureAddressing(vAddressing));
 		setTextureFiltersNative(cast texunit, getTextureFilter(minificationFilter), getTextureFilter(magnificationFilter), getTextureMipMapFilter(mipmapFilter));
 	}
+
+	public function setTexture3DParameters(texunit: kha.graphics4.TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, wAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void {
+	
+	}
 	
 	//@:functionCode('Kore::Graphics::setRenderState(Kore::BackfaceCulling, value);')
 	private function setCullModeNative(value: Int): Void {
@@ -297,6 +306,10 @@ class Graphics implements kha.graphics4.Graphics {
 	public function setVideoTexture(unit: kha.graphics4.TextureUnit, texture: kha.Video): Void {
 		if (texture == null) return;
 		//setTextureInternal(cast unit, Image.createFromVideo(texture));
+	}
+
+	public function setImageTexture(unit: kha.graphics4.TextureUnit, texture: kha.Image): Void {
+
 	}
 		
 	public function setPipeline(pipe: PipelineState): Void {
@@ -392,6 +405,15 @@ class Graphics implements kha.graphics4.Graphics {
 	private function setFloatsPrivate(location: ConstantLocation, values: Vector<FastFloat>): Void {
 		
 	}
+
+	public function setFloat4s(location: kha.graphics4.ConstantLocation, values: Vector<FastFloat>): Void {
+		setFloat4sPrivate(cast location, values);
+	}
+	
+	//@:functionCode('Kore::Graphics::setFloat4s(location->location, values->Pointer(), values->length);')
+	private function setFloat4sPrivate(location: ConstantLocation, values: Vector<FastFloat>): Void {
+		
+	}
 	
 	public inline function setMatrix(location: kha.graphics4.ConstantLocation, matrix: FastMatrix4): Void {
 		kore_graphics_set_matrix(cast(location, ConstantLocation)._location,
@@ -399,6 +421,10 @@ class Graphics implements kha.graphics4.Graphics {
 			matrix._01, matrix._11, matrix._21, matrix._31,
 			matrix._02, matrix._12, matrix._22, matrix._32,
 			matrix._03, matrix._13, matrix._23, matrix._33);
+	}
+
+	public inline function setMatrix3(location: kha.graphics4.ConstantLocation, matrix: FastMatrix3): Void {
+		
 	}
 	
 	public function drawIndexedVertices(start: Int = 0, count: Int = -1): Void {
@@ -452,6 +478,14 @@ class Graphics implements kha.graphics4.Graphics {
 	public function begin(additionalRenderTargets: Array<Canvas> = null): Void {
 		if (target == null) renderToBackbuffer();
 		else renderToTexture(additionalRenderTargets);
+	}
+
+	public function beginFace(face: Int): Void {
+
+	}
+
+	public function beginEye(eye: Int): Void {
+		
 	}
 	
 	public function end(): Void {

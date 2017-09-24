@@ -3,14 +3,19 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
-var vscode_1 = require('vscode');
-var phpGlobals = require('./phpGlobals');
+Object.defineProperty(exports, "__esModule", { value: true });
+var vscode_1 = require("vscode");
+var phpGlobals = require("./phpGlobals");
 var PHPCompletionItemProvider = (function () {
     function PHPCompletionItemProvider() {
         this.triggerCharacters = ['.', ':', '$'];
     }
     PHPCompletionItemProvider.prototype.provideCompletionItems = function (document, position, token) {
         var result = [];
+        var shouldProvideCompletionItems = vscode_1.workspace.getConfiguration('php').get('suggest.basic', true);
+        if (!shouldProvideCompletionItems) {
+            return Promise.resolve(result);
+        }
         var range = document.getWordRangeAtPosition(position);
         var prefix = range ? document.getText(range) : '';
         if (!range) {
@@ -92,6 +97,5 @@ var PHPCompletionItemProvider = (function () {
     };
     return PHPCompletionItemProvider;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = PHPCompletionItemProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/php/out/features/completionItemProvider.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/php/out/features/completionItemProvider.js.map

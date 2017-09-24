@@ -1,0 +1,3 @@
+{
+	"config.gulp.autoDetect": "Controla se a detecção automática de tarefas Gulp está ativada ou desativada. Por padrão, é ativado."
+}

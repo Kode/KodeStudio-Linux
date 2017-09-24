@@ -2,20 +2,20 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const fs = require('fs-extra');
-const path = require('path');
-const KhaExporter_1 = require('./KhaExporter');
-const ImageTool_1 = require('../ImageTool');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
+const path = require("path");
+const KhaExporter_1 = require("./KhaExporter");
+const ImageTool_1 = require("../ImageTool");
 const uuid = require('uuid');
 class CSharpExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
-        this.addSourceDirectory(path.join(this.options.kha, 'Backends', this.backend()));
         fs.removeSync(path.join(this.options.to, this.sysdir() + '-build', 'Sources'));
     }
     includeFiles(dir, baseDir) {
@@ -38,6 +38,12 @@ class CSharpExporter extends KhaExporter_1.KhaExporter {
         defines.push('sys_g1');
         defines.push('sys_g2');
         defines.push('sys_a1');
+        defines.push('kha_cs');
+        defines.push('kha_' + this.options.target);
+        defines.push('kha_' + this.options.target + '_cs');
+        defines.push('kha_g1');
+        defines.push('kha_g2');
+        defines.push('kha_a1');
         return {
             from: this.options.from,
             to: path.join(this.sysdir() + '-build', 'Sources'),
@@ -50,7 +56,8 @@ class CSharpExporter extends KhaExporter_1.KhaExporter {
             language: 'cs',
             width: this.width,
             height: this.height,
-            name: name
+            name: name,
+            main: this.options.main,
         };
     }
     export(name, targetOptions, haxeOptions) {
@@ -93,15 +100,15 @@ class CSharpExporter extends KhaExporter_1.KhaExporter {
             return [to];
         });
     }
-    copyImage(platform, from, to, asset) {
+    copyImage(platform, from, to, asset, cache) {
         return __awaiter(this, void 0, void 0, function* () {
-            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false);
+            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false, false, cache);
             return [to + '.' + format];
         });
     }
     copyBlob(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs.copySync(from, path.join(this.options.to, this.sysdir(), to), { clobber: true });
+            fs.copySync(from, path.join(this.options.to, this.sysdir(), to), { overwrite: true });
             return [to];
         });
     }
@@ -111,5 +118,5 @@ class CSharpExporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.CSharpExporter = CSharpExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/CSharpExporter.js.map
+exports.CSharpExporter = CSharpExporter;
+//# sourceMappingURL=CSharpExporter.js.map

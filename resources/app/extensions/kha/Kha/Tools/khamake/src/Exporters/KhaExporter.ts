@@ -26,11 +26,15 @@ export abstract class KhaExporter extends Exporter {
 		this.addSourceDirectory(path.join(options.kha, 'Sources'));
 		this.projectFiles = !options.noproject;
 		this.parameters = [];
+		// this.parameters = ['--macro kha.internal.GraphicsBuilder.build("' + this.backend().toLowerCase() + '")'];
+		this.addSourceDirectory(path.join(options.kha, 'Backends', this.backend()));
 	}
 	
 	sysdir(): string {
 		return this.systemDirectory;
 	}
+
+	abstract backend(): string;
 
 	abstract haxeOptions(name: string, targetOptions: any, defines: Array<string>): any;
 
@@ -71,7 +75,7 @@ export abstract class KhaExporter extends Exporter {
 		}
 	}
 
-	async copyImage(platform: string, from: string, to: string, options: any): Promise<Array<string>> {
+	async copyImage(platform: string, from: string, to: string, options: any, cache: any): Promise<Array<string>> {
 		return [];
 	}
 

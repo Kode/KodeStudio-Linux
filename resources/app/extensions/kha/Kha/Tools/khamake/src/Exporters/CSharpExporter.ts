@@ -9,11 +9,8 @@ import {Library} from '../Project';
 const uuid = require('uuid');
 
 export abstract class CSharpExporter extends KhaExporter {
-	parameters: Array<string>;
-
 	constructor(options: Options) {
 		super(options);
-		this.addSourceDirectory(path.join(this.options.kha, 'Backends', this.backend()));
 		fs.removeSync(path.join(this.options.to, this.sysdir() + '-build', 'Sources'));
 	}
 
@@ -32,10 +29,18 @@ export abstract class CSharpExporter extends KhaExporter {
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('no-root');
 		defines.push('no-compilation');
+
 		defines.push('sys_' + this.options.target);
 		defines.push('sys_g1');
 		defines.push('sys_g2');
 		defines.push('sys_a1');
+
+		defines.push('kha_cs');
+		defines.push('kha_' + this.options.target);
+		defines.push('kha_' + this.options.target + '_cs');
+		defines.push('kha_g1');
+		defines.push('kha_g2');
+		defines.push('kha_a1');
 
 		return {
 			from: this.options.from,
@@ -49,7 +54,8 @@ export abstract class CSharpExporter extends KhaExporter {
 			language: 'cs',
 			width: this.width,
 			height: this.height,
-			name: name
+			name: name,
+			main: this.options.main,
 		};
 	}
 
@@ -99,13 +105,13 @@ export abstract class CSharpExporter extends KhaExporter {
 		return [to];
 	}
 
-	async copyImage(platform: string, from: string, to: string, asset: any) {
-		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false);
+	async copyImage(platform: string, from: string, to: string, asset: any, cache: any) {
+		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false, false, cache);
 		return [to + '.' + format];
 	}
 
 	async copyBlob(platform: string, from: string, to: string) {
-		fs.copySync(from, path.join(this.options.to, this.sysdir(), to), { clobber: true });
+		fs.copySync(from, path.join(this.options.to, this.sysdir(), to), { overwrite: true });
 		return [to];
 	}
 

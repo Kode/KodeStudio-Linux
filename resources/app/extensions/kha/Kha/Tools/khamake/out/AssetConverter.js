@@ -2,16 +2,17 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const fs = require('fs');
-const path = require('path');
-const log = require('./log');
-const chokidar = require('chokidar');
-const crypto = require('crypto');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
+const path = require("path");
+const log = require("./log");
+const chokidar = require("chokidar");
+const crypto = require("crypto");
 class AssetConverter {
     constructor(exporter, platform, assetMatchers) {
         this.exporter = exporter;
@@ -32,7 +33,10 @@ class AssetConverter {
         if (options.namePathSeparator) {
             dirValue = dirValue.split(path.sep).join(options.namePathSeparator);
         }
-        return pattern.replace(/{name}/g, value).replace(/{ext}/g, fileinfo.ext).replace(/{dir}/g, dirValue);
+        const dirRegex = dirValue === ''
+            ? /{dir}\//g
+            : /{dir}/g;
+        return pattern.replace(/{name}/g, value).replace(/{ext}/g, fileinfo.ext).replace(dirRegex, dirValue);
     }
     static createExportInfo(fileinfo, keepextension, options, from) {
         let nameValue = fileinfo.name;
@@ -56,7 +60,7 @@ class AssetConverter {
         }
         return { name: nameValue, destination: destination };
     }
-    watch(watch, match, options) {
+    watch(watch, match, temp, options) {
         return new Promise((resolve, reject) => {
             let ready = false;
             let files = [];
@@ -67,7 +71,7 @@ class AssetConverter {
                     switch (fileinfo.ext) {
                         case '.png':
                             log.info('Reexporting ' + fileinfo.name);
-                            this.exporter.copyImage(this.platform, file, fileinfo.name, {});
+                            this.exporter.copyImage(this.platform, file, fileinfo.name, {}, {});
                             break;
                     }
                 }
@@ -81,7 +85,7 @@ class AssetConverter {
                     switch (fileinfo.ext) {
                         case '.png':
                             log.info('Reexporting ' + fileinfo.name);
-                            this.exporter.copyImage(this.platform, file, fileinfo.name, {});
+                            this.exporter.copyImage(this.platform, file, fileinfo.name, {}, {});
                             break;
                     }
                 }
@@ -90,6 +94,11 @@ class AssetConverter {
                 ready = true;
                 let parsedFiles = [];
                 let index = 0;
+                let cache = {};
+                let cachePath = path.join(temp, 'cache.json');
+                if (fs.existsSync(cachePath)) {
+                    cache = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+                }
                 for (let file of files) {
                     let fileinfo = path.parse(file);
                     log.info('Exporting asset ' + (index + 1) + ' of ' + files.length + ' (' + fileinfo.base + ').');
@@ -99,7 +108,7 @@ class AssetConverter {
                         case '.jpeg':
                         case '.hdr': {
                             let exportInfo = AssetConverter.createExportInfo(fileinfo, false, options, this.exporter.options.from);
-                            let images = yield this.exporter.copyImage(this.platform, file, exportInfo.destination, options);
+                            let images = yield this.exporter.copyImage(this.platform, file, exportInfo.destination, options, cache);
                             parsedFiles.push({ name: exportInfo.name, from: file, type: 'image', files: images, original_width: options.original_width, original_height: options.original_height, readable: options.readable });
                             break;
                         }
@@ -117,6 +126,7 @@ class AssetConverter {
                         }
                         case '.mp4':
                         case '.webm':
+                        case '.mov':
                         case '.wmv':
                         case '.avi': {
                             let exportInfo = AssetConverter.createExportInfo(fileinfo, false, options, this.exporter.options.from);
@@ -133,19 +143,21 @@ class AssetConverter {
                     }
                     ++index;
                 }
+                fs.ensureDirSync(temp);
+                fs.writeFileSync(cachePath, JSON.stringify(cache), { encoding: 'utf8' });
                 resolve(parsedFiles);
             }));
         });
     }
-    run(watch) {
+    run(watch, temp) {
         return __awaiter(this, void 0, void 0, function* () {
             let files = [];
             for (let matcher of this.assetMatchers) {
-                files = files.concat(yield this.watch(watch, matcher.match, matcher.options));
+                files = files.concat(yield this.watch(watch, matcher.match, temp, matcher.options));
             }
             return files;
         });
     }
 }
-exports.AssetConverter = AssetConverter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/AssetConverter.js.map
+exports.AssetConverter = AssetConverter;
+//# sourceMappingURL=AssetConverter.js.map

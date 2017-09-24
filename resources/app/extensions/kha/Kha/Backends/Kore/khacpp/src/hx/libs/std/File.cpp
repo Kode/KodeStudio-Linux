@@ -23,6 +23,8 @@ namespace
 
 struct fio : public hx::Object
 {
+   HX_IS_INSTANCE_OF enum { _hx_ClassId = hx::clsIdFio };
+
    String name;
    FILE   *io;
    bool   closeIo;
@@ -344,7 +346,7 @@ Array<unsigned char> _hx_std_file_contents_bytes( String name )
       char *dest = (char *)&buffer[0];
 
       hx::EnterGCFreeZone();
-      #ifdef SYS_WIIU
+      #ifdef KORE_WIIU
       void* data = file.readAll();
       memcpy(dest, data, file.size());
       #else

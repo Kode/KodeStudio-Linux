@@ -1,0 +1,10 @@
+[
+	"Strict",
+	"Only load secure content",
+	"Allow insecure content",
+	"Enable loading content over http",
+	"Disable",
+	"Allow all content and script execution. Not recommended",
+	"More Information",
+	"選擇此工作區 Markdown 預覽的安全性設定"
+]

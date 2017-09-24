@@ -13,11 +13,8 @@ function findIcon(from: string, options: any) {
 }
 
 export class AndroidExporter extends KhaExporter {
-	parameters: Array<string>;
-
 	constructor(options: Options) {
 		super(options);
-		this.addSourceDirectory(path.join(options.kha, 'Backends', 'Android'));
 	}
 
 	backend() {
@@ -28,12 +25,23 @@ export class AndroidExporter extends KhaExporter {
 		const safename = name.replace(/ /g, '-');
 
 		defines.push('no-compilation');
+		
 		defines.push('sys_' + this.options.target);
 		defines.push('sys_g1');
 		defines.push('sys_g2');
 		defines.push('sys_g3');
 		defines.push('sys_g4');
 		defines.push('sys_a1');
+
+		defines.push('kha_java');
+		defines.push('kha_' + this.options.target);
+		defines.push('kha_' + this.options.target + '_java');
+		defines.push('kha_opengl');
+		defines.push('kha_g1');
+		defines.push('kha_g2');
+		defines.push('kha_g3');
+		defines.push('kha_g4');
+		defines.push('kha_a1');
 
 		return {
 			from: this.options.from,
@@ -47,7 +55,8 @@ export class AndroidExporter extends KhaExporter {
 			language: 'java',
 			width: this.width,
 			height: this.height,
-			name: name
+			name: name,
+			main: this.options.main,
 		};
 	}
 
@@ -63,12 +72,14 @@ export class AndroidExporter extends KhaExporter {
 
 		let targetOptions = {
 			package: 'com.ktxsoftware.kha',
-			screenOrientation: 'sensor'
+			screenOrientation: 'sensor',
+			permissions: new Array<string>()
 		};
 		if (_targetOptions != null && _targetOptions.android != null) {
 			let userOptions = _targetOptions.android;
 			if (userOptions.package != null) targetOptions.package = userOptions.package;
 			if (userOptions.screenOrientation != null) targetOptions.screenOrientation = userOptions.screenOrientation;
+			if (userOptions.permissions != null) targetOptions.permissions = userOptions.permissions;
 		}
 
 		let indir = path.join(__dirname, '..', '..', 'Data', 'android');
@@ -95,6 +106,7 @@ export class AndroidExporter extends KhaExporter {
 		let manifest = fs.readFileSync(path.join(indir, 'main', 'AndroidManifest.xml'), {encoding: 'utf8'});
 		manifest = manifest.replace(/{package}/g, targetOptions.package);
 		manifest = manifest.replace(/{screenOrientation}/g, targetOptions.screenOrientation);
+		manifest = manifest.replace(/{permissions}/g, targetOptions.permissions.map(function(p) { return '\n\t<uses-permission android:name="' + p + '"/>'; }).join(''));
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main'));
 		fs.writeFileSync(path.join(outdir, 'app', 'src', 'main', 'AndroidManifest.xml'), manifest, {encoding: 'utf8'});
 
@@ -104,15 +116,15 @@ export class AndroidExporter extends KhaExporter {
 		fs.writeFileSync(path.join(outdir, 'app', 'src', 'main', 'res', 'values', 'strings.xml'), strings, {encoding: 'utf8'});
 
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-hdpi'));
-		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-hdpi', 'ic_launcher'), {width: 72, height: 72}, 'png', false);
+		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-hdpi', 'ic_launcher'), {width: 72, height: 72}, 'png', false, false, {});
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-mdpi'));
-		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-mdpi', 'ic_launcher'), {width: 48, height: 48}, 'png', false);
+		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-mdpi', 'ic_launcher'), {width: 48, height: 48}, 'png', false, false, {});
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xhdpi'));
-		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xhdpi', 'ic_launcher'), {width: 96, height: 96}, 'png', false);
+		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xhdpi', 'ic_launcher'), {width: 96, height: 96}, 'png', false, false, {});
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi'));
-		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi', 'ic_launcher'), {width: 144, height: 144}, 'png', false);
+		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi', 'ic_launcher'), {width: 144, height: 144}, 'png', false, false, {});
 		fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xxxhdpi'));
-		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxxhdpi', 'ic_launcher'), {width: 192, height: 192}, 'png', false);
+		exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxxhdpi', 'ic_launcher'), {width: 192, height: 192}, 'png', false, false, {});
 
 		fs.copySync(path.join(indir, 'gradle', 'wrapper', 'gradle-wrapper.jar'), path.join(outdir, 'gradle', 'wrapper', 'gradle-wrapper.jar'));
 		fs.copySync(path.join(indir, 'gradle', 'wrapper', 'gradle-wrapper.properties'), path.join(outdir, 'gradle', 'wrapper', 'gradle-wrapper.properties'));
@@ -120,10 +132,6 @@ export class AndroidExporter extends KhaExporter {
 		fs.copySync(path.join(indir, 'idea', 'compiler.xml'), path.join(outdir, '.idea', 'compiler.xml'));
 		fs.copySync(path.join(indir, 'idea', 'gradle.xml'), path.join(outdir, '.idea', 'gradle.xml'));
 		fs.copySync(path.join(indir, 'idea', 'misc.xml'), path.join(outdir, '.idea', 'misc.xml'));
-
-		let modules = fs.readFileSync(path.join(indir, 'idea', 'modules.xml'), {encoding: 'utf8'});
-		modules = modules.replace(/{name}/g, safename);
-		fs.writeFileSync(path.join(outdir, '.idea', 'modules.xml'), modules, {encoding: 'utf8'});
 
 		fs.copySync(path.join(indir, 'idea', 'runConfigurations.xml'), path.join(outdir, '.idea', 'runConfigurations.xml'));
 		fs.copySync(path.join(indir, 'idea', 'copyright', 'profiles_settings.xml'), path.join(outdir, '.idea', 'copyright', 'profiles_settings.xml'));
@@ -136,18 +144,25 @@ export class AndroidExporter extends KhaExporter {
 		});
 	}*/
 
-	async copySound(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to + '.wav'), { clobber: true });
-		return [to + '.wav'];
+	async copySound(platform: string, from: string, to: string, options: any) {
+		if (options.quality < 1) {
+			fs.ensureDirSync(path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', path.dirname(to)));
+			let ogg = await convert(from, path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to + '.ogg'), this.options.ogg);
+			return [to + '.ogg'];
+		}
+		else {
+			fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to + '.wav'), { overwrite: true });
+			return [to + '.wav'];
+		}
 	}
 
-	async copyImage(platform: string, from: string, to: string, asset: any) {
-		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to), asset, undefined, false);
+	async copyImage(platform: string, from: string, to: string, asset: any, cache: any) {
+		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to), asset, undefined, false, false, cache);
 		return [to + '.' + format];
 	}
 
 	async copyBlob(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to), { clobber: true });
+		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to), { overwrite: true });
 		return [to];
 	}
 

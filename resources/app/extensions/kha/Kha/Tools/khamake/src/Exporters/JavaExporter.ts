@@ -8,20 +8,27 @@ import {exportImage} from '../ImageTool';
 import {Library} from '../Project';
 
 export class JavaExporter extends KhaExporter {
-	parameters: Array<string>;
-
 	constructor(options: Options) {
 		super(options);
-		this.addSourceDirectory(path.join(this.options.kha, 'Backends', this.backend()));
 		fs.removeSync(path.join(this.options.to, this.sysdir(), 'Sources'));
 	}
 
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('no-compilation');
+
 		defines.push('sys_' + this.options.target);
 		defines.push('sys_g1');
 		defines.push('sys_g2');
 		defines.push('sys_a1');
+
+		defines.push('kha_' + this.options.target);
+		if (this.options.target !== 'java') {
+			defines.push('kha_java');
+			defines.push('kha_' + this.options.target + '_java');
+		}
+		defines.push('kha_g1');
+		defines.push('kha_g2');
+		defines.push('kha_a1');
 
 		return {
 			from: this.options.from,
@@ -35,7 +42,8 @@ export class JavaExporter extends KhaExporter {
 			language: 'java',
 			width: this.width,
 			height: this.height,
-			name: name
+			name: name,
+			main: this.options.main,
 		};
 	}
 
@@ -85,17 +93,17 @@ export class JavaExporter extends KhaExporter {
 	}*/
 
 	async copySound(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { clobber: true });
+		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { overwrite: true });
 		return [to + '.wav'];
 	}
 
-	async copyImage(platform: string, from: string, to: string, asset: any) {
-		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false);
+	async copyImage(platform: string, from: string, to: string, asset: any, cache: any) {
+		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false, false, cache);
 		return [to + '.' + format];
 	}
 
 	async copyBlob(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { clobber: true });
+		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { overwrite: true });
 		return [to];
 	}
 

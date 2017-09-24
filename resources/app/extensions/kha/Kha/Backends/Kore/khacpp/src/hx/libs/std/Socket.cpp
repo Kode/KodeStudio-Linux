@@ -4,8 +4,30 @@
 
 #include <string.h>
 
+
 #ifdef NEKO_WINDOWS
-#   include <winsock2.h>
+
+#ifdef __GNUC__
+   // Mingw / gcc on windows
+   #define _WIN32_WINNT 0x0501
+   #include <winsock2.h>
+   #   include <Ws2tcpip.h>
+#else
+   // Windows...
+   #include <winsock2.h>
+   #include <In6addr.h>
+   #include <Ws2tcpip.h>
+#endif
+
+
+#define DYNAMIC_INET_FUNCS 1
+typedef WINSOCK_API_LINKAGE  INT (WSAAPI *inet_pton_func)( INT Family, PCSTR pszAddrString, PVOID pAddrBuf);
+typedef WINSOCK_API_LINKAGE  PCSTR (WSAAPI *inet_ntop_func)(INT  Family, PVOID pAddr, PSTR pStringBuf, size_t StringBufSize);
+
+
+
+
+
 #   define FDSIZE(n)   (sizeof(u_int) + (n) * sizeof(SOCKET))
 #   define SHUT_WR      SD_SEND
 #   define SHUT_RD      SD_RECEIVE
@@ -37,6 +59,8 @@ typedef socklen_t SocketLen;
 #   define MSG_NOSIGNAL 0
 #endif
 
+
+
 namespace
 {
 
@@ -44,6 +68,8 @@ static int socketType = 0;
 
 struct SocketWrapper : public hx::Object
 {
+   HX_IS_INSTANCE_OF enum { _hx_ClassId = hx::clsIdSocket };
+
    SOCKET socket;
 
    int __GetType() const { return socketType; }
@@ -120,16 +146,17 @@ void _hx_std_socket_init()
    socket_new : udp:bool -> 'socket
    <doc>Create a new socket, TCP or UDP</doc>
 **/
-Dynamic _hx_std_socket_new( bool udp )
+Dynamic _hx_std_socket_new( bool udp, bool ipv6 )
 {
    if (!socketType)
       socketType = hxcpp_alloc_kind();
 
    SOCKET s;
+   int family = ipv6 ? AF_INET6 : AF_INET;
    if( udp )
-      s = socket(AF_INET,SOCK_DGRAM,0);
+      s = socket(family,SOCK_DGRAM,0);
    else
-      s = socket(AF_INET,SOCK_STREAM,0);
+      s = socket(family,SOCK_STREAM,0);
 
    if( s == INVALID_SOCKET )
       return null();
@@ -346,6 +373,78 @@ int _hx_std_host_resolve( String host )
    return ip;
 }
 
+#ifdef DYNAMIC_INET_FUNCS
+bool dynamic_inet_pton_tried = false;
+inet_pton_func dynamic_inet_pton = 0;
+#endif
+
+Array<unsigned char> _hx_std_host_resolve_ipv6( String host, bool )
+{
+   in6_addr ipv6;
+
+   #ifdef DYNAMIC_INET_FUNCS
+   if (!dynamic_inet_pton_tried)
+   {
+      dynamic_inet_pton_tried = true;
+      HMODULE module = LoadLibraryA("WS2_32.dll");
+      if (module)
+         dynamic_inet_pton = (inet_pton_func)GetProcAddress(module,"inet_pton");
+   }
+   int ok = dynamic_inet_pton ? dynamic_inet_pton(AF_INET6, host.__s, (void *)&ipv6) : 0;
+   #else
+   int ok = inet_pton(AF_INET6, host.__s, (void *)&ipv6);
+   #endif
+
+   if (!ok)
+   {
+      addrinfo hints;
+
+      memset(&hints, 0, sizeof(struct addrinfo));
+      hints.ai_family = AF_INET6;  //  IPv6
+      hints.ai_socktype = 0;  // any - SOCK_STREAM or SOCK_DGRAM
+      hints.ai_flags = AI_PASSIVE;  // For wildcard IP address 
+      hints.ai_protocol = 0;        // Any protocol
+      hints.ai_canonname = 0;
+      hints.ai_addr = 0;
+      hints.ai_next = 0;
+
+      addrinfo *result = 0;
+      hx::EnterGCFreeZone();
+      int err =  getaddrinfo( host.__s, 0, &hints, &result);
+      hx::ExitGCFreeZone();
+      if (err==0)
+      {
+         for(addrinfo * rp = result; rp; rp = rp->ai_next)
+         {
+            if (rp->ai_family==AF_INET6)
+            {
+               sockaddr_in6 *s6 = (sockaddr_in6 *)rp->ai_addr;
+               ipv6 = s6->sin6_addr;
+               ok = true;
+               break;
+            }
+            else
+            {
+               freeaddrinfo(result);
+               hx::Throw( HX_CSTRING("Unkown ai_family") );
+            }
+         }
+         freeaddrinfo(result);
+      }
+      else
+      {
+         hx::Throw( host + HX_CSTRING(":") + String(gai_strerror(err)) );
+      }
+   }
+
+   if (!ok)
+      return null();
+
+   return Array_obj<unsigned char>::fromData( (unsigned char *)&ipv6, 16 );
+}
+
+
+
 /**
    host_to_string : 'int32 -> string
    <doc>Return a string representation of the IP address.</doc>
@@ -355,6 +454,32 @@ String _hx_std_host_to_string( int ip )
    struct in_addr i;
    *(int*)&i = ip;
    return String( inet_ntoa(i) );
+}
+
+
+#ifdef DYNAMIC_INET_FUNCS
+bool dynamic_inet_ntop_tried = false;
+inet_ntop_func dynamic_inet_ntop = 0;
+#endif
+
+
+String _hx_std_host_to_string_ipv6( Array<unsigned char> ip )
+{
+   char buf[100];
+   #ifdef DYNAMIC_INET_FUNCS
+   if (!dynamic_inet_ntop_tried)
+   {
+      dynamic_inet_ntop_tried = true;
+      HMODULE module = LoadLibraryA("WS2_32.dll");
+      if (module)
+         dynamic_inet_ntop = (inet_ntop_func)GetProcAddress(module,"inet_ntop");
+   }
+   if (!dynamic_inet_ntop)
+      return String();
+   return String( dynamic_inet_ntop(AF_INET6, &ip[0], buf, 100) );
+   #else
+   return String( inet_ntop(AF_INET6, &ip[0], buf, 100) );
+   #endif
 }
 
 /**
@@ -379,6 +504,28 @@ String _hx_std_host_reverse( int host )
       return String();
    return String( h->h_name );
 }
+
+String _hx_std_host_reverse_ipv6( Array<unsigned char> host )
+{
+   if (!host.mPtr || host->length!=16)
+      return String();
+
+   struct hostent *h = 0;
+   hx::EnterGCFreeZone();
+   #if defined(NEKO_WINDOWS) || defined(NEKO_MAC) || defined(ANDROID) || defined(BLACKBERRY) || defined(EMSCRIPTEN)
+   h = gethostbyaddr((char *)&host[0],16,AF_INET6);
+   #else
+   struct hostent htmp;
+   int errcode;
+   char buf[1024];
+   gethostbyaddr_r((char *)&host[0],16,AF_INET6,&htmp,buf,1024,&h,&errcode);
+   #endif
+   hx::ExitGCFreeZone();
+   if( !h )
+      return String();
+   return String( h->h_name );
+}
+
 
 /**
    host_local : void -> string
@@ -408,6 +555,31 @@ void _hx_std_socket_connect( Dynamic o, int host, int port )
    addr.sin_family = AF_INET;
    addr.sin_port = htons(port);
    *(int*)&addr.sin_addr.s_addr = host;
+
+   hx::EnterGCFreeZone();
+   if( connect(val_sock(o),(struct sockaddr*)&addr,sizeof(addr)) != 0 )
+   {
+      // This will throw a "Blocking" exception if the "error" was because
+      // it's a non-blocking socket with connection in progress, otherwise
+      // it will do nothing.
+      //
+      // - now it always throws
+      block_error();
+   }
+   hx::ExitGCFreeZone();
+}
+
+
+/**
+   socket_connect - to ipv6 host
+**/
+void _hx_std_socket_connect_ipv6( Dynamic o, Array<unsigned char> host, int port )
+{
+   struct sockaddr_in6 addr;
+   memset(&addr,0,sizeof(addr));
+   addr.sin6_family = AF_INET6;
+   addr.sin6_port = htons(port);
+   memcpy(&addr.sin6_addr,&host[0],16);
 
    hx::EnterGCFreeZone();
    if( connect(val_sock(o),(struct sockaddr*)&addr,sizeof(addr)) != 0 )
@@ -616,6 +788,36 @@ void _hx_std_socket_bind( Dynamic o, int host, int port )
    hx::ExitGCFreeZone();
 }
 
+
+/**
+   socket_bind - ipv6 version
+   <doc>Bind the socket for server usage on the given host and port</doc>
+**/
+void _hx_std_socket_bind_ipv6( Dynamic o, Array<unsigned char> host, int port )
+{
+   SOCKET sock = val_sock(o);
+
+   int opt = 1;
+
+   struct sockaddr_in6 addr;
+   memset(&addr,0,sizeof(addr));
+   addr.sin6_family = AF_INET6;
+   addr.sin6_port = htons(port);
+   memcpy(&addr.sin6_addr,&host[0], 16);
+   #ifndef NEKO_WINDOWS
+   setsockopt(sock,SOL_SOCKET,SO_REUSEADDR,(char*)&opt,sizeof(opt));
+   #endif
+
+   hx::EnterGCFreeZone();
+   if( bind(sock,(struct sockaddr*)&addr,sizeof(addr)) == SOCKET_ERROR )
+   {
+      hx::ExitGCFreeZone();
+      hx::Throw(HX_CSTRING("Bind failed"));
+   }
+   hx::ExitGCFreeZone();
+}
+
+
 /**
    socket_accept : 'socket -> 'socket
    <doc>Accept an incoming connection request</doc>
@@ -817,6 +1019,8 @@ static int pollType = 0;
 
 struct polldata : public hx::Object
 {
+   HX_IS_INSTANCE_OF enum { _hx_ClassId = hx::clsIdPollData };
+
    bool ok;
    int max;
    #ifdef NEKO_WINDOWS

@@ -1,0 +1,13 @@
+[
+	"O caminho {0} não aponta para uma instalação de tsserver válida. Voltando para a versão do TypeScript empacotada.",
+	"Servidor de linguagem TypeScript não pôde ser iniciado. Mensagem de erro é: {0}",
+	"Logging de TS Server requer TS TS 2.2.2+",
+	"Logging de TS Server está desligado. Por favor configure 'typescript.tsserver.log' e reinicie o  TS Server para habilitar o log",
+	"Habilitar logging e reniciar TS server",
+	"O TS Server não iniciou o logging.",
+	"Não foi possível abrir o arquivo de log do TS Server",
+	"O serviço de linguagem TypeScript morreu 5 vezes depois que começou. O serviço não será reiniciado.",
+	"Reportar Problema",
+	"O serviço TypeScript morreu inesperadamente 5 vezes nos últimos 5 minutos.",
+	"Reportar Problema"
+]

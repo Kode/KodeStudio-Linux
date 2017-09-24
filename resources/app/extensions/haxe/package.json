@@ -1,12 +1,12 @@
 {
     "name": "vshaxe",
-    "version": "1.2.0",
+    "version": "1.9.0",
     "publisher": "nadako",
     "engines": {
-        "vscode": "^1.0.0"
+        "vscode": "^1.14.0"
     },
-    "displayName": "Haxe Support",
-    "description": "Haxe language support for Visual Studio Code",
+    "displayName": "Haxe",
+    "description": "Haxe language support",
     "categories": [
         "Languages",
         "Linters"
@@ -15,11 +15,18 @@
         "theme": "dark",
         "color": "#A84B38"
     },
-    "icon": "haxe-logo.png",
+    "badges": [
+        {
+            "url": "https://api.travis-ci.org/vshaxe/vshaxe.svg?branch=master",
+            "href": "https://travis-ci.org/vshaxe/vshaxe",
+            "description": "Travis CI Status"
+        }
+    ],
+    "icon": "images/haxe-logo.png",
     "author": "Dan Korostelev",
     "license": "MIT",
     "dependencies": {
-        "vscode-languageclient": "^2.6.0"
+        "vscode-languageclient": "vshaxe/vscode-languageclient"
     },
     "bugs": "https://github.com/vshaxe/vshaxe/issues",
     "homepage": "https://github.com/vshaxe/vshaxe/blob/master/README.md",
@@ -28,8 +35,8 @@
         "url": "https://github.com/vshaxe/vshaxe.git"
     },
     "scripts": {
-        "vscode:prepublish": "haxe build.hxml",
-        "postinstall": "haxe build.hxml"
+        "vscode:prepublish": "haxelib run vshaxe-build -t vshaxe -t language-server-tests",
+        "postinstall": "haxelib run vshaxe-build -t vshaxe -t language-server-tests"
     },
     "main": "bin/client.js",
     "activationEvents": [
@@ -37,7 +44,13 @@
         "onCommand:haxe.restartLanguageServer",
         "onCommand:haxe.initProject",
         "onCommand:haxe.selectDisplayConfiguration",
-        "onCommand:haxe.runGlobalDiagnostics"
+        "onCommand:haxe.selectDisplayArgumentsProvider",
+        "onCommand:haxe.runGlobalDiagnostics",
+        "onCommand:haxe.toggleCodeLens",
+        "onCommand:haxe.dependencies.refresh",
+        "onCommand:haxe.dependencies.collapseAll",
+        "onView:haxe.dependencies",
+        "workspaceContains:*.hxml"
     ],
     "contributes": {
         "configuration": {
@@ -46,7 +59,9 @@
                 "haxe.displayConfigurations": {
                     "description": "Array of switchable configurations for haxe completion server. Each configuration is an array of command-line arguments, see item documentation for more details.",
                     "type": "array",
-                    "default": ["project-debug-html5.hxml"],
+                    "default": [
+                        "project-debug-html5.hxml"
+                    ],
                     "items": {
                         "description": "Command-line arguments passed to haxe completion server. Can contain hxml files. Relative paths will be resolved against workspace root.",
                         "type": "array",
@@ -55,16 +70,139 @@
                         }
                     }
                 },
+                "haxe.executable": {
+                    "description": "Path to the Haxe executable or an object containing a Haxe executable configuration",
+                    "default": "haxe",
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "description": "Path to the Haxe executable",
+                            "default": "haxe"
+                        },
+                        {
+                            "type": "object",
+                            "description": "Haxe executable configuration",
+                            "additionalProperties": false,
+                            "properties": {
+                                "path": {
+                                    "type": "string",
+                                    "description": "Path to the Haxe executable",
+                                    "default": "haxe"
+                                },
+                                "env": {
+                                    "description": "Additional environment variables used for running Haxe executable",
+                                    "type": "object",
+                                    "default": {},
+                                    "additionalProperties": {
+                                        "type": "string"
+                                    }
+                                },
+                                "windows": {
+                                    "description": "Windows-specific path to the Haxe executable or an object containing a Haxe executable configuration",
+                                    "default": "haxe",
+                                    "oneOf": [
+                                        {
+                                            "type": "string",
+                                            "description": "Path to the Haxe executable",
+                                            "default": "haxe"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "description": "Overrides for Windows",
+                                            "default": {},
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "path": {
+                                                    "type": "string",
+                                                    "description": "Path to the Haxe executable",
+                                                    "default": "haxe"
+                                                },
+                                                "env": {
+                                                    "description": "Additional environment variables used for running Haxe executable",
+                                                    "type": "object",
+                                                    "default": {},
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "linux": {
+                                    "description": "Linux-specific path to the Haxe executable or an object containing a Haxe executable configuration",
+                                    "default": "haxe",
+                                    "oneOf": [
+                                        {
+                                            "type": "string",
+                                            "description": "Path to the Haxe executable",
+                                            "default": "haxe"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "description": "Overrides for Linux",
+                                            "default": {},
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "path": {
+                                                    "type": "string",
+                                                    "description": "Path to the Haxe executable",
+                                                    "default": "haxe"
+                                                },
+                                                "env": {
+                                                    "description": "Additional environment variables used for running Haxe executable",
+                                                    "type": "object",
+                                                    "default": {},
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "osx": {
+                                    "description": "Mac-specific path to the Haxe executable or an object containing a Haxe executable configuration",
+                                    "default": "haxe",
+                                    "oneOf": [
+                                        {
+                                            "type": "string",
+                                            "description": "Path to the Haxe executable",
+                                            "default": "haxe"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "description": "Overrides for Mac",
+                                            "default": {},
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "path": {
+                                                    "type": "string",
+                                                    "description": "Path to the Haxe executable",
+                                                    "default": "haxe"
+                                                },
+                                                "env": {
+                                                    "description": "Additional environment variables used for running Haxe executable",
+                                                    "type": "object",
+                                                    "default": {},
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
                 "haxe.displayServer": {
                     "description": "Haxe completion server configuration",
                     "type": "object",
                     "default": {},
+                    "additionalProperties": false,
                     "properties": {
-                        "haxePath": {
-                            "description": "Path to the Haxe executable used for the completion server",
-                            "type": "string",
-                            "default": "haxe"
-                        },
                         "arguments": {
                             "description": "Array of arguments passed to the haxe completion server at start. Can be used for debugging completion server issues, for example by adding \"-v\" argument.",
                             "type": "array",
@@ -72,23 +210,6 @@
                             "items": {
                                 "type": "string"
                             }
-                        },
-                        "env": {
-                            "description": "Additional environment variables used to start the haxe completion server",
-                            "type": "object",
-                            "default": {},
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        },
-                        "windows": {
-                            "description": "Overrides for Windows"
-                        },
-                        "linux": {
-                            "description": "Overrides for Linux"
-                        },
-                        "osx": {
-                            "description": "Overrides for Mac"
                         }
                     }
                 },
@@ -121,16 +242,19 @@
                     "description": "Options for code generation",
                     "type": "object",
                     "default": {},
+                    "additionalProperties": false,
                     "properties": {
                         "functions": {
                             "description": "Options for generating functions",
                             "type": "object",
                             "default": {},
+                            "additionalProperties": false,
                             "properties": {
                                 "anonymous": {
                                     "description": "Options for generating anonymous functions",
                                     "type": "object",
                                     "default": {},
+                                    "additionalProperties": false,
                                     "properties": {
                                         "returnTypeHint": {
                                             "description": "In which case to include return type hints",
@@ -146,6 +270,11 @@
                                             "description": "Whether to include type hints for arguments",
                                             "type": "boolean",
                                             "default": false
+                                        },
+                                        "useArrowSyntax": {
+                                            "description": "Whether to use arrow function syntax (Haxe 4+)",
+                                            "type": "boolean",
+                                            "default": true
                                         }
                                     }
                                 }
@@ -162,12 +291,17 @@
                 "category": "Haxe"
             },
             {
-                "title": "Initialize VS Code Project...",
+                "title": "Initialize VS Code Project",
                 "command": "haxe.initProject",
                 "category": "Haxe"
             },
             {
-                "title": "Select Display Configuration...",
+                "title": "Select Completion Provider",
+                "command": "haxe.selectDisplayArgumentsProvider",
+                "category": "Haxe"
+            },
+            {
+                "title": "Select Configuration",
                 "command": "haxe.selectDisplayConfiguration",
                 "category": "Haxe"
             },
@@ -175,6 +309,29 @@
                 "title": "Run Global Diagnostics Check",
                 "command": "haxe.runGlobalDiagnostics",
                 "category": "Haxe"
+            },
+            {
+                "title": "Toggle Code Lens",
+                "command": "haxe.toggleCodeLens",
+                "category": "Haxe"
+            },
+            {
+                "title": "Refresh Dependencies",
+                "command": "haxe.dependencies.refresh",
+                "category": "Haxe",
+                "icon": {
+                    "light": "resources/light/refresh.svg",
+                    "dark": "resources/dark/refresh.svg"
+                }
+            },
+            {
+                "title": "Collapse All Dependencies",
+                "command": "haxe.dependencies.collapseAll",
+                "category": "Haxe",
+                "icon": {
+                    "light": "resources/light/collapseAll.svg",
+                    "dark": "resources/dark/collapseAll.svg"
+                }
             }
         ],
         "languages": [
@@ -187,7 +344,7 @@
                 "extensions": [
                     ".hx"
                 ],
-                "configuration": "./haxe.configuration.json"
+                "configuration": "./configurations/haxe.configuration.json"
             },
             {
                 "id": "hxml",
@@ -198,7 +355,7 @@
                 "extensions": [
                     ".hxml"
                 ],
-                "configuration": "./hxml.configuration.json"
+                "configuration": "./configurations/hxml.configuration.json"
             },
             {
                 "id": "Haxe AST dump",
@@ -208,7 +365,7 @@
                 "extensions": [
                     ".dump"
                 ],
-                "configuration": "./haxe.configuration.json"
+                "configuration": "./configurations/haxe.configuration.json"
             }
         ],
         "grammars": [
@@ -245,6 +402,67 @@
             {
                 "fileMatch": "haxelib.json",
                 "url": "http://json.schemastore.org/haxelib"
+            }
+        ],
+        "problemPatterns": [
+            {
+                "name": "haxe",
+                "regexp": "^(.+):(\\d+): (?:lines \\d+-(\\d+)|character(?:s (\\d+)-| )(\\d+)) : (?:(Warning) : )?(.*)$",
+                "file": 1,
+                "line": 2,
+                "endLine": 3,
+                "column": 4,
+                "endColumn": 5,
+                "severity": 6,
+                "message": 7
+            }
+        ],
+        "problemMatchers": [
+            {
+                "name": "haxe",
+                "owner": "haxe",
+                "applyTo": "allDocuments",
+                "fileLocation": [
+                    "relative",
+                    "${cwd}"
+                ],
+                "pattern": "$haxe"
+            }
+        ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "haxe.dependencies",
+                    "name": "Haxe Dependencies"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "command": "haxe.dependencies.refresh",
+                    "when": "view == haxe.dependencies",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "haxe.dependencies.collapseAll",
+                    "when": "view == haxe.dependencies",
+                    "group": "navigation@2"
+                }
+            ]
+        },
+        "taskDefinitions": [
+            {
+                "type": "hxml",
+                "required": [
+                    "file"
+                ],
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "description": "The HXML file to run"
+                    }
+                }
             }
         ]
     },

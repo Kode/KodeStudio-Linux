@@ -2,25 +2,13 @@ import {GraphicsApi} from './GraphicsApi';
 import {VisualStudioVersion} from './VisualStudioVersion';
 import {VrApi} from './VrApi';
 
-/*
-export var Options = {
-	precompiledHeaders: false,
-	intermediateDrive: '',
-	graphicsApi: GraphicsApi.Direct3D9,
-	vrApi: VrApi.None,
-	visualStudioVersion: VisualStudioVersion.VS2013,
-	compilation: true,
-	compile: false,
-	run: false
-};
-*/
-
 export class Options {
 	from: string;
 	to: string;
 	projectfile: string;
 	target: string;
 	vr: string;
+	main: string;
 	// intermediate: string;
 	graphics: string;
 	visualstudio: string;

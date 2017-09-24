@@ -1,9 +1,10 @@
+"use strict";
 /*---------------------------------------------------------
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
-"use strict";
-const path = require('path');
-const vscode_chrome_debug_core_1 = require('vscode-chrome-debug-core');
+Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
+const vscode_chrome_debug_core_1 = require("vscode-chrome-debug-core");
 const WIN_APPDATA = process.env.LOCALAPPDATA || '/';
 const DEFAULT_CHROME_PATH = {
     LINUX: '/usr/bin/google-chrome',
@@ -62,5 +63,6 @@ class DebounceHelper {
         fn();
     }
 }
-exports.DebounceHelper = DebounceHelper;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/chrome-debug/out/utils.js.map
+exports.DebounceHelper = DebounceHelper;
+exports.targetFilter = target => target && (!target.type || target.type === 'page');
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/chrome-debug/out/utils.js.map

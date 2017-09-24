@@ -18,18 +18,21 @@ export class FlashExporter extends KhaExporter {
 	images: Array<string>;
 	sounds: Array<string>;
 	blobs: Array<string>;
-	parameters: Array<string>;
 
 	constructor(options: Options) {
 		super(options);
 		this.images = [];
 		this.sounds = [];
 		this.blobs = [];
-		this.addSourceDirectory(path.join(options.kha, 'Backends', 'Flash'));
+	}
+
+	backend(): string {
+		return 'Flash';
 	}
 
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
 		defines.push('swf-script-timeout=60');
+
 		defines.push('sys_' + this.options.target);
 		defines.push('sys_g1');
 		defines.push('sys_g2');
@@ -37,6 +40,15 @@ export class FlashExporter extends KhaExporter {
 		defines.push('sys_g4');
 		defines.push('sys_a1');
 		defines.push('sys_a2');
+
+		defines.push('kha_' + this.options.target);
+		defines.push('kha_stage3d');
+		defines.push('kha_g1');
+		defines.push('kha_g2');
+		defines.push('kha_g3');
+		defines.push('kha_g4');
+		defines.push('kha_a1');
+		defines.push('kha_a2');
 
 		if (this.options.embedflashassets) defines.push('KHA_EMBEDDED_ASSETS');
 
@@ -61,9 +73,10 @@ export class FlashExporter extends KhaExporter {
 			width: this.width,
 			height: this.height,
 			name: name,
+			main: this.options.main,
 			framerate: 'framerate' in flashOptions ? flashOptions.framerate : defaultFlashOptions.framerate,
 			stageBackground: 'stageBackground' in flashOptions ? flashOptions.stageBackground : defaultFlashOptions.stageBackground,
-			swfVersion : 'swfVersion' in flashOptions ? flashOptions.swfVersion : defaultFlashOptions.swfVersion
+			swfVersion : 'swfVersion' in flashOptions ? flashOptions.swfVersion : defaultFlashOptions.swfVersion,
 		};
 	}
 
@@ -121,14 +134,14 @@ export class FlashExporter extends KhaExporter {
 		return files;
 	}
 
-	async copyImage(platform: string, from: string, to: string, asset: any) {
-		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false);
+	async copyImage(platform: string, from: string, to: string, asset: any, cache: any) {
+		let format = await exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, false, false, cache);
 		if (this.options.embedflashassets) this.images.push(to + '.' + format);
 		return [to + '.' + format];
 	}
 
 	async copyBlob(platform: string, from: string, to: string) {
-		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { clobber: true });
+		fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to), { overwrite: true });
 		if (this.options.embedflashassets) this.blobs.push(to);
 		return [to];
 	}

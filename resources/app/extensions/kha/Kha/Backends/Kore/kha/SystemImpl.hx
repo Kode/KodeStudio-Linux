@@ -1,6 +1,7 @@
 package kha;
 
 import kha.input.Gamepad;
+import kha.input.KeyCode;
 import kha.input.Keyboard;
 import kha.input.Mouse;
 import kha.input.Sensor;
@@ -33,11 +34,12 @@ import kha.graphics4.DepthStencilFormat;
 #include <Kore/Input/Mouse.h>
 #include <Kore/Window.h>
 
-void init_kore(const char* name, int width, int height, int antialiasing);
+void init_kore(const char* name, int width, int height, int antialiasing, bool vsync, int windowMode, bool resizable, bool maximizable, bool minimizable);
 void init_kore_ex(const char* name);
 void post_kore_init();
 void run_kore();
 int init_window(Kore::WindowOptions windowOptions);
+const char* getGamepadId(int index);
 ')
 @:keep
 class SystemImpl {
@@ -104,8 +106,9 @@ class SystemImpl {
 	private static var mouseLockListeners: Array<Int->Void>;
 
 	public static function init(options: SystemOptions, callback: Void -> Void): Void {
-		initKore(options.title, options.width, options.height, options.samplesPerPixel);
+		initKore(options.title, options.width, options.height, options.samplesPerPixel, options.vSync, translateWindowMode(options.windowMode), options.resizable, options.maximizable, options.minimizable);
 
+		kha.Worker._mainThread = cpp.vm.Thread.current();
 		//Shaders.init();
 
 		untyped __cpp__('post_kore_init()');
@@ -268,116 +271,16 @@ class SystemImpl {
 		System.render(id, framebuffers[id]);
 	}
 
-	public static function pushUp(): Void {
-		keyboard.sendDownEvent(Key.UP, null);
+	public static function keyDown(code: KeyCode): Void {
+		keyboard.sendDownEvent(code);
 	}
 
-	public static function pushDown(): Void {
-		keyboard.sendDownEvent(Key.DOWN, null);
+	public static function keyUp(code: KeyCode): Void {
+		keyboard.sendUpEvent(code);
 	}
 
-	public static function pushLeft(): Void {
-		keyboard.sendDownEvent(Key.LEFT, null);
-	}
-
-	public static function pushRight(): Void {
-		keyboard.sendDownEvent(Key.RIGHT, null);
-	}
-
-	public static function releaseUp(): Void {
-		keyboard.sendUpEvent(Key.UP, null);
-	}
-
-	public static function releaseDown(): Void {
-		keyboard.sendUpEvent(Key.DOWN, null);
-	}
-
-	public static function releaseLeft(): Void {
-		keyboard.sendUpEvent(Key.LEFT, null);
-	}
-
-	public static function releaseRight(): Void {
-		keyboard.sendUpEvent(Key.RIGHT, null);
-	}
-
-	public static function pushChar(charCode: Int): Void {
-		keyboard.sendDownEvent(Key.CHAR, String.fromCharCode(charCode));
-	}
-
-	public static function releaseChar(charCode: Int): Void {
-		keyboard.sendUpEvent(Key.CHAR, String.fromCharCode(charCode));
-	}
-
-	public static function pushShift(): Void {
-		keyboard.sendDownEvent(Key.SHIFT, null);
-	}
-
-	public static function releaseShift(): Void {
-		keyboard.sendUpEvent(Key.SHIFT, null);
-	}
-
-	public static function pushBackspace(): Void {
-		keyboard.sendDownEvent(Key.BACKSPACE, null);
-	}
-
-	public static function releaseBackspace(): Void {
-		keyboard.sendUpEvent(Key.BACKSPACE, null);
-	}
-
-	public static function pushTab(): Void {
-		keyboard.sendDownEvent(Key.TAB, null);
-	}
-
-	public static function releaseTab(): Void {
-		keyboard.sendUpEvent(Key.TAB, null);
-	}
-
-	public static function pushEnter(): Void {
-		keyboard.sendDownEvent(Key.ENTER, null);
-	}
-
-	public static function releaseEnter(): Void {
-		keyboard.sendUpEvent(Key.ENTER, null);
-	}
-
-	public static function pushControl(): Void {
-		keyboard.sendDownEvent(Key.CTRL, null);
-	}
-
-	public static function releaseControl(): Void {
-		keyboard.sendUpEvent(Key.CTRL, null);
-	}
-
-	public static function pushAlt(): Void {
-		keyboard.sendDownEvent(Key.ALT, null);
-	}
-
-	public static function releaseAlt(): Void {
-		keyboard.sendUpEvent(Key.ALT, null);
-	}
-
-	public static function pushEscape(): Void {
-		keyboard.sendDownEvent(Key.ESC, null);
-	}
-
-	public static function releaseEscape(): Void {
-		keyboard.sendUpEvent(Key.ESC, null);
-	}
-
-	public static function pushDelete(): Void {
-		keyboard.sendDownEvent(Key.DEL, null);
-	}
-
-	public static function releaseDelete(): Void {
-		keyboard.sendUpEvent(Key.DEL, null);
-	}
-
-	public static function pushBack(): Void {
-		keyboard.sendDownEvent(Key.BACK, null);
-	}
-
-	public static function releaseBack(): Void {
-		keyboard.sendUpEvent(Key.BACK, null);
+	public static function keyPress(char: Int): Void {
+		keyboard.sendPressEvent(String.fromCharCode(char));
 	}
 
 	public static var mouseX: Int;
@@ -475,9 +378,12 @@ class SystemImpl {
 		System.shutdown();
 	}
 
-	@:functionCode('init_kore(name, width, height, antialiasing);')
-	private static function initKore(name: String, width: Int, height: Int, antialiasing: Int): Void {
+	public static function dropFiles(filePath: String): Void {
+		System.dropFiles(filePath);
 	}
+
+	@:functionCode('init_kore(name, width, height, antialiasing, vSync, windowMode, resizable, maximizable, minimizable);')
+	private static function initKore(name: String, width: Int, height: Int, antialiasing: Int, vSync: Bool, windowMode: Int, resizable: Bool, maximizable: Bool, minimizable: Bool): Void {}
 
 	static function translatePosition(value: Null<WindowOptions.Position>): Int {
 		if (value == null) {
@@ -501,7 +407,7 @@ class SystemImpl {
 		}
 	}
 
-	static function translateWindowMode(value: Null<WindowOptions.Mode>): Int {
+	static function translateWindowMode(value: Null<WindowMode>): Int {
 		if (value == null) {
 			return 0;
 		}
@@ -524,6 +430,7 @@ class SystemImpl {
 			case DepthAutoStencilAuto: 16;
 			case Depth24Stencil8: 24;
 			case Depth32Stencil8: 32;
+			case Depth16: 16;
 		}
 	}
 
@@ -538,6 +445,7 @@ class SystemImpl {
 			case DepthAutoStencilAuto: 8;
 			case Depth24Stencil8: 8;
 			case Depth32Stencil8: 8;
+			case Depth16: 0;
 		}
 	}
 
@@ -591,7 +499,7 @@ class SystemImpl {
 	private static function initWindow(options: WindowOptions, callback: Int -> Void) {
 		var x = translatePosition(options.x);
 		var y = translatePosition(options.y);
-		var mode = translateWindowMode(options.mode != null ? options.mode : WindowOptions.Mode.Window);
+		var mode = translateWindowMode(options.mode != null ? options.mode : WindowMode.Window);
 		var targetDisplay = translateDisplay(options.targetDisplay != null ? options.targetDisplay : WindowOptions.TargetDisplay.Primary);
 		var depthBufferBits = translateDepthBufferFormat(options.rendererOptions != null ? options.rendererOptions.depthStencilFormat : DepthStencilFormat.DepthOnly);
 		var stencilBufferBits = translateStencilBufferFormat(options.rendererOptions != null ? options.rendererOptions.depthStencilFormat : DepthStencilFormat.DepthOnly);
@@ -659,7 +567,6 @@ class SystemImpl {
 		}
 	}
 
-
 	public function removeFromFullscreenChange(func: Void -> Void, error: Void -> Void): Void {
 		if (canSwitchFullscreen() && func != null) {
 			fullscreenListeners.remove(func);
@@ -676,5 +583,10 @@ class SystemImpl {
 	
 	public static function loadUrl(url: String): Void {
 		
+	}
+
+	@:functionCode('return ::String(::getGamepadId(index));')
+	public static function getGamepadId(index: Int): String {
+		return "unknown";
 	}
 }

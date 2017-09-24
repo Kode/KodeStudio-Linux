@@ -1,0 +1,13 @@
+[
+	"A(z) {0} elérési út nem egy érvényes tsserver-telepítésre mutat. A beépített TypeScript-verzió lesz használva.",
+	"Nem sikerült elindítani a TypeScript nyelvi szervert. Hibaüzenet: {0}",
+	"A TS-szerver naplózáshoz TS 2.2.2+ szükséges",
+	"A TS-szervernaplózás ki van kapcsolva. Állítsa be a `typescript.tsserver.log` beállítást, majd indítsa újra a TS-szervert a naplózás engedélyezéséhez!",
+	"Naplózás engedélyezése és TS-szerver újraindítása",
+	"A TS-szerver nem kezdett el naplózni",
+	"A TS-szervernapló nem nyitható meg",
+	"A TypeScript nyelvi szolgáltatás öt alkalommal omlott össze rögtön azután, hogy el lett indítva. A szolgáltatás nem lesz újraindítva.",
+	"Probléma jelentése",
+	"A TypeScript nyelvi szolgáltatás öt alkalommal omlott össze az elmúlt öt percben.",
+	"Probléma jelentése"
+]

@@ -30,8 +30,8 @@ ArrayBase::ArrayBase(int inSize,int inReserve,int inElementSize,bool inAtomic)
    else
       mBase = 0;
    mAlloc = alloc;
-   mPodSize = inAtomic ? inElementSize :
-               inElementSize==sizeof(String) ? DynamicConvertStringPodId : 0;
+   mArrayConvertId = inAtomic ? inElementSize :
+               inElementSize==sizeof(String) ? aciStringArray : aciObjectArray;
 }
 
 
@@ -130,6 +130,19 @@ void ArrayBase::Blit(int inDestElement, ArrayBase *inSourceArray, int inSourceEl
       memmove(dest,src,len);
 }
 
+
+#if (HXCPP_API_LEVEL>330)
+int ArrayBase::__Compare(const hx::Object *inRHS) const
+{
+   if (inRHS==this)
+      return 0;
+   if (inRHS->__GetType()!=vtArray)
+      return -1;
+   ArrayCommon *common = (ArrayCommon *)inRHS;
+   hx::Object *implementation = common->__GetRealObject();
+   return implementation<this ? -1 : implementation!=this;
+}
+#endif
 
 
 String ArrayBase::__ToString() const { return HX_CSTRING("Array"); }
@@ -423,6 +436,7 @@ void ArrayBase::safeSort(Dynamic inSorter, bool inIsString)
 #define DEFINE_ARRAY_FUNC(ret,func,array_list,dynamic_arg_list,arg_list,ARG_C) \
 struct ArrayBase_##func : public hx::Object \
 { \
+   HX_IS_INSTANCE_OF enum { _hx_ClassId = hx::clsIdClosure }; \
    bool __IsFunction() const { return true; } \
    ArrayBase *mThis; \
    ArrayBase_##func(ArrayBase *inThis) : mThis(inThis) { } \
@@ -619,6 +633,7 @@ namespace cpp
 #define DEFINE_VARRAY_FUNC(ret, func,array_list,dynamic_arg_list,arg_list,ARG_C) \
 struct VirtualArray_##func : public hx::Object \
 { \
+   HX_IS_INSTANCE_OF enum { _hx_ClassId = hx::clsIdClosure }; \
    bool __IsFunction() const { return true; } \
    VirtualArray mThis; \
    VirtualArray_##func(VirtualArray inThis) : mThis(inThis) { } \
@@ -675,6 +690,21 @@ DEFINE_VARRAY_FUNC1(,memcmp);
 DEFINE_VARRAY_FUNC1(return,__unsafe_get);
 DEFINE_VARRAY_FUNC2(return,__unsafe_set);
 DEFINE_VARRAY_FUNC4(,blit);
+
+
+
+
+#if (HXCPP_API_LEVEL>330)
+int VirtualArray_obj::__Compare(const hx::Object *inRHS) const
+{
+   if (inRHS->__GetType()!=vtArray)
+      return -1;
+   ArrayCommon *common = (ArrayCommon *)inRHS;
+   hx::Object *a = const_cast<VirtualArray_obj *>(this)->__GetRealObject();
+   hx::Object *b = common->__GetRealObject();
+   return a<b ? -1 : a>b;
+}
+#endif
 
 Dynamic VirtualArray_obj::__GetItem(int inIndex) const
 {
@@ -924,6 +954,8 @@ VirtualArray VirtualArray_obj::filter(Dynamic inFunc)
 class EmptyIterator : public IteratorBase
 {
 public:
+   HX_IS_INSTANCE_OF enum { _hx_ClassId = hx::clsIdArrayIterator }; \
+
    bool hasNext() { return false; }
    Dynamic _dynamicNext() { return null(); }
 };
@@ -939,5 +971,13 @@ Dynamic VirtualArray_obj::getEmptyIterator()
 
 } // End namespace cpp
 
+Dynamic _hx_reslove_virtual_array(cpp::VirtualArray inArray)
+{
+   if (!inArray.mPtr)
+      return Dynamic();
+   if (inArray->store==hx::arrayFixed  || inArray->store==hx::arrayObject)
+      return inArray->__GetRealObject();
+   return inArray;
+}
 
 #endif

@@ -1,0 +1,11 @@
+[
+	"Cursor do editor não está dentro de um conflito de mesclagem",
+	"{0}: Alterações Atuais ⟷ Alterações de Entrada",
+	"Cursor do editor não está dentro de um conflito de mesclagem",
+	"Cursor do editor está dentro do bloco comum de ancestrais, favor mover para o bloco \"atual\" ou \"entrada\"",
+	"Cursor do editor está dentro do separador de conflitos de mesclagem, por favor mova-o para o bloco \"atual\" ou \"entrada\"",
+	"Nenhum conflito de mesclagem encontrado neste arquivo",
+	"Não há outros conflitos de mesclagem dentro desse arquivo",
+	"Cursor do editor não está dentro de um conflito de mesclagem",
+	"Nenhum conflito de mesclagem encontrado neste arquivo"
+]

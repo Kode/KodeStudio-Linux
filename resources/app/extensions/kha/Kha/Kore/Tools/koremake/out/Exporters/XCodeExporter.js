@@ -1,11 +1,12 @@
 "use strict";
-const Exporter_1 = require('./Exporter');
-const GraphicsApi_1 = require('../GraphicsApi');
-const Icon = require('../Icon');
-const Platform_1 = require('../Platform');
-const Options_1 = require('../Options');
-const fs = require('fs-extra');
-const path = require('path');
+Object.defineProperty(exports, "__esModule", { value: true });
+const Exporter_1 = require("./Exporter");
+const GraphicsApi_1 = require("../GraphicsApi");
+const Icon = require("../Icon");
+const Platform_1 = require("../Platform");
+const Options_1 = require("../Options");
+const fs = require("fs-extra");
+const path = require("path");
 const uuid = require('uuid');
 function contains(a, b) {
     return a.indexOf(b) !== -1;
@@ -317,7 +318,9 @@ class XCodeExporter extends Exporter_1.Exporter {
                 filetype = 'sourcecode.metal';
                 fileencoding = 'fileEncoding = 4; ';
             }
-            this.p(file.getFileId() + ' /* ' + file.toString() + ' */ = {isa = PBXFileReference; ' + fileencoding + 'lastKnownFileType = ' + filetype + '; name = "' + file.getLastName() + '"; path = "' + path.resolve(from, file.toString()) + '"; sourceTree = "<group>"; };', 2);
+            if (!file.getName().endsWith('.DS_Store')) {
+                this.p(file.getFileId() + ' /* ' + file.toString() + ' */ = {isa = PBXFileReference; ' + fileencoding + 'lastKnownFileType = ' + filetype + '; name = "' + file.getLastName() + '"; path = "' + path.resolve(from, file.toString()) + '"; sourceTree = "<group>"; };', 2);
+            }
         }
         this.p(iconFileId + ' /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };', 2);
         this.p('/* End PBXFileReference section */');
@@ -382,7 +385,7 @@ class XCodeExporter extends Exporter_1.Exporter {
                 }
             }
             for (let file of files) {
-                if (file.getDir() === dir)
+                if (file.getDir() === dir && !file.getName().endsWith('.DS_Store'))
                     this.p(file.getFileId() + ' /* ' + file.toString() + ' */,', 4);
             }
             this.p(');', 3);
@@ -506,12 +509,7 @@ class XCodeExporter extends Exporter_1.Exporter {
         this.p('buildSettings = {', 3);
         this.p('ALWAYS_SEARCH_USER_PATHS = NO;', 4);
         this.p('CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";', 4);
-        if (platform === Platform_1.Platform.iOS || project.cpp11) {
-            this.p('CLANG_CXX_LIBRARY = "libc++";', 4);
-        }
-        else {
-            this.p('CLANG_CXX_LIBRARY = "libstdc++";', 4);
-        }
+        this.p('CLANG_CXX_LIBRARY = "compiler-default";', 4);
         this.p('CLANG_ENABLE_MODULES = YES;', 4);
         if (platform === Platform_1.Platform.iOS) {
             this.p('CLANG_ENABLE_OBJC_ARC = YES;', 4);
@@ -528,6 +526,8 @@ class XCodeExporter extends Exporter_1.Exporter {
         this.p('CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;', 4);
         this.p('CLANG_WARN_UNREACHABLE_CODE = YES;', 4);
         this.p('CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;', 4);
+        this.p('CLANG_WARN_INFINITE_RECURSION = YES;', 4);
+        this.p('CLANG_WARN_SUSPICIOUS_MOVE = YES;', 4);
         if (platform === Platform_1.Platform.iOS) {
             this.p('"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";', 4);
         }
@@ -557,17 +557,14 @@ class XCodeExporter extends Exporter_1.Exporter {
         this.p('GCC_WARN_UNUSED_FUNCTION = YES;', 4);
         this.p('GCC_WARN_UNUSED_VARIABLE = YES;', 4);
         if (platform === Platform_1.Platform.iOS) {
-            this.p('IPHONEOS_DEPLOYMENT_TARGET = 6.0;', 4);
+            this.p('IPHONEOS_DEPLOYMENT_TARGET = 7.0;', 4);
         }
         else {
             if (Options_1.Options.graphicsApi === GraphicsApi_1.GraphicsApi.Metal) {
                 this.p('MACOSX_DEPLOYMENT_TARGET = 10.11;', 4);
             }
             else {
-                if (project.cpp11)
-                    this.p('MACOSX_DEPLOYMENT_TARGET = 10.7;', 4);
-                else
-                    this.p('MACOSX_DEPLOYMENT_TARGET = 10.5;', 4);
+                this.p('MACOSX_DEPLOYMENT_TARGET = 10.9;', 4);
             }
         }
         this.p('MTL_ENABLE_DEBUG_INFO = YES;', 4);
@@ -587,12 +584,7 @@ class XCodeExporter extends Exporter_1.Exporter {
         this.p('buildSettings = {', 3);
         this.p('ALWAYS_SEARCH_USER_PATHS = NO;', 4);
         this.p('CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";', 4);
-        if (platform === Platform_1.Platform.iOS || project.cpp11) {
-            this.p('CLANG_CXX_LIBRARY = "libc++";', 4);
-        }
-        else {
-            this.p('CLANG_CXX_LIBRARY = "libstdc++";', 4);
-        }
+        this.p('CLANG_CXX_LIBRARY = "compiler-default";', 4);
         this.p('CLANG_ENABLE_MODULES = YES;', 4);
         if (platform === Platform_1.Platform.iOS) {
             this.p('CLANG_ENABLE_OBJC_ARC = YES;', 4);
@@ -609,6 +601,8 @@ class XCodeExporter extends Exporter_1.Exporter {
         this.p('CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;', 4);
         this.p('CLANG_WARN_UNREACHABLE_CODE = YES;', 4);
         this.p('CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;', 4);
+        this.p('CLANG_WARN_INFINITE_RECURSION = YES;', 4);
+        this.p('CLANG_WARN_SUSPICIOUS_MOVE = YES;', 4);
         if (platform === Platform_1.Platform.iOS) {
             this.p('"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";', 4);
         }
@@ -638,17 +632,14 @@ class XCodeExporter extends Exporter_1.Exporter {
         this.p('GCC_WARN_UNUSED_FUNCTION = YES;', 4);
         this.p('GCC_WARN_UNUSED_VARIABLE = YES;', 4);
         if (platform === Platform_1.Platform.iOS) {
-            this.p('IPHONEOS_DEPLOYMENT_TARGET = 6.0;', 4);
+            this.p('IPHONEOS_DEPLOYMENT_TARGET = 7.0;', 4);
         }
         else {
             if (Options_1.Options.graphicsApi === GraphicsApi_1.GraphicsApi.Metal) {
                 this.p('MACOSX_DEPLOYMENT_TARGET = 10.11;', 4);
             }
             else {
-                if (project.cpp11)
-                    this.p('MACOSX_DEPLOYMENT_TARGET = 10.7;', 4);
-                else
-                    this.p('MACOSX_DEPLOYMENT_TARGET = 10.5;', 4);
+                this.p('MACOSX_DEPLOYMENT_TARGET = 10.9;', 4);
             }
         }
         this.p('MTL_ENABLE_DEBUG_INFO = NO;', 4);
@@ -760,5 +751,5 @@ class XCodeExporter extends Exporter_1.Exporter {
         this.closeFile();
     }
 }
-exports.XCodeExporter = XCodeExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Kore/Tools/koremake/out/Exporters/XCodeExporter.js.map
+exports.XCodeExporter = XCodeExporter;
+//# sourceMappingURL=XCodeExporter.js.map

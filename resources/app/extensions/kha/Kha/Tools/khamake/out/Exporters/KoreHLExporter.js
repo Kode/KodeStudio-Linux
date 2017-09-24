@@ -2,22 +2,25 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const fs = require('fs-extra');
-const path = require('path');
-const KhaExporter_1 = require('./KhaExporter');
-const Converter_1 = require('../Converter');
-const Platform_1 = require('../Platform');
-const ImageTool_1 = require('../ImageTool');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
+const path = require("path");
+const KhaExporter_1 = require("./KhaExporter");
+const Converter_1 = require("../Converter");
+const Platform_1 = require("../Platform");
+const ImageTool_1 = require("../ImageTool");
 class KoreHLExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
-        this.addSourceDirectory(path.join(options.kha, 'Backends', 'KoreHL'));
         // Files.removeDirectory(this.directory.resolve(Paths.get(this.sysdir() + "-build", "Sources")));
+    }
+    backend() {
+        return 'KoreHL';
     }
     haxeOptions(name, targetOptions, defines) {
         defines.push('no-compilation');
@@ -28,6 +31,16 @@ class KoreHLExporter extends KhaExporter_1.KhaExporter {
         defines.push('sys_g4');
         defines.push('sys_a1');
         defines.push('sys_a2');
+        defines.push('kha_hl');
+        defines.push('kha_' + this.options.target);
+        defines.push('kha_' + this.options.target + '_hl');
+        defines.push('kha_' + this.options.graphics);
+        defines.push('kha_g1');
+        defines.push('kha_g2');
+        defines.push('kha_g3');
+        defines.push('kha_g4');
+        defines.push('kha_a1');
+        defines.push('kha_a2');
         if (this.options.vr === 'gearvr') {
             defines.push('vr_gearvr');
         }
@@ -49,7 +62,8 @@ class KoreHLExporter extends KhaExporter_1.KhaExporter {
             language: 'hl',
             width: this.width,
             height: this.height,
-            name: name
+            name: name,
+            main: this.options.main,
         };
     }
     export(name, targetOptions, haxeOptions) {
@@ -64,25 +78,25 @@ class KoreHLExporter extends KhaExporter_1.KhaExporter {
     }*/
     copySound(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { clobber: true });
+            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to + '.wav'), { overwrite: true });
             return [to + '.wav'];
         });
     }
-    copyImage(platform, from, to, asset) {
+    copyImage(platform, from, to, asset, cache) {
         return __awaiter(this, void 0, void 0, function* () {
             if (platform === Platform_1.Platform.iOS && asset.compressed) {
-                let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, 'pvr', true);
+                let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, 'pvr', true, false, cache);
                 return [to + '.' + format];
             }
             else {
-                let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, true);
+                let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), to), asset, undefined, true, false, cache);
                 return [to + '.' + format];
             }
         });
     }
     copyBlob(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to).toString(), { clobber: true });
+            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), to).toString(), { overwrite: true });
             return [to];
         });
     }
@@ -104,5 +118,5 @@ class KoreHLExporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.KoreHLExporter = KoreHLExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/KoreHLExporter.js.map
+exports.KoreHLExporter = KoreHLExporter;
+//# sourceMappingURL=KoreHLExporter.js.map

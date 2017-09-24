@@ -14,6 +14,7 @@ import kha.graphics4.VertexShader;
 import kha.graphics4.VertexStructure;
 import kha.graphics4.VertexData;
 import kha.input.Keyboard;
+import kha.input.KeyCode;
 import kha.math.FastMatrix4;
 import kha.math.Matrix4;
 import kha.math.Quaternion;
@@ -82,18 +83,18 @@ class VrInterfaceEmulated extends kha.vr.VrInterface {
 		
 	}
 	
-	private function keyDownEvent(key: Key, char: String): Void {
-		switch(key) {
-			case Key.LEFT:
+	private function keyDownEvent(code: KeyCode): Void {
+		switch (code) {
+			case KeyCode.Left:
 				yawDelta = keyboardSpeed;
 				
-			case Key.RIGHT:
+			case KeyCode.Right:
 				yawDelta = -keyboardSpeed;
 				
-			case Key.UP:
+			case KeyCode.Up:
 				pitchDelta = keyboardSpeed;
 				
-			case Key.DOWN:
+			case KeyCode.Down:
 				pitchDelta = -keyboardSpeed;
 				
 			default:
@@ -103,18 +104,18 @@ class VrInterfaceEmulated extends kha.vr.VrInterface {
 		
 	}
 	
-	private function keyUpEvent(key: Key, char: String): Void {
-		switch(key) {
-			case Key.LEFT:
+	private function keyUpEvent(code: KeyCode): Void {
+		switch(code) {
+			case KeyCode.Left:
 				yawDelta = 0.0;
 				
-			case Key.RIGHT:
+			case KeyCode.Right:
 				yawDelta = 0.0;
 				
-			case Key.UP:
+			case KeyCode.Up:
 				pitchDelta = 0.0;
 				
-			case Key.DOWN:
+			case KeyCode.Down:
 				pitchDelta = 0.0;
 				
 			default:
@@ -291,7 +292,7 @@ class VrInterfaceEmulated extends kha.vr.VrInterface {
 		vb.unlock();
 		
 		ib = new IndexBuffer(6, Usage.StaticUsage);
-		var indices: Array<Int> = ib.lock();
+		var indices = ib.lock();
 		
 		indices[0] = 0;
 		indices[1] = 1;
@@ -299,8 +300,7 @@ class VrInterfaceEmulated extends kha.vr.VrInterface {
 		indices[3] = 1;
 		indices[4] = 3;
 		indices[5] = 2;
-		
-		
+				
 		ib.unlock(); 
 		
 		pipeline = new PipelineState();

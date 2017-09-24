@@ -1,12 +1,18 @@
 package kha;
 
+import kha.WindowMode;
 import kha.WindowOptions;
 
 typedef SystemOptions = {
 	?title: String,
 	?width: Int,
 	?height: Int,
-	?samplesPerPixel: Int
+	?samplesPerPixel: Int,
+	?vSync: Bool,
+	?windowMode: WindowMode,
+	?resizable: Bool,
+	?maximizable: Bool,
+	?minimizable: Bool
 }
 
 @:allow(kha.SystemImpl)
@@ -17,17 +23,35 @@ class System {
 	private static var pauseListeners: Array<Void -> Void> = new Array();
 	private static var backgroundListeners: Array<Void -> Void> = new Array();
 	private static var shutdownListeners: Array<Void -> Void> = new Array();
+	private static var dropFilesListeners: Array<String -> Void> = new Array();
+	static var cutListener: Void->String = null;
+	static var copyListener: Void->String = null;
+	static var pasteListener: String->Void = null;
+	private static var theTitle: String;
 
 	public static function init(options: SystemOptions, callback: Void -> Void): Void {
 		if (options.title == null) options.title = "Kha";
 		if (options.width == null) options.width = 800;
 		if (options.height == null) options.height = 600;
 		if (options.samplesPerPixel == null) options.samplesPerPixel = 1;
+		if (options.vSync == null) options.vSync = true;
+		if (options.windowMode == null) options.windowMode = WindowMode.Window;
+		if (options.resizable == null) options.resizable = false;
+		if (options.maximizable == null) options.maximizable = false;
+		if (options.minimizable == null) options.minimizable = true;
+		theTitle = options.title;
 		SystemImpl.init(options, callback);
 	}
 
 	public static function initEx(title: String, options: Array<WindowOptions>, windowCallback: Int -> Void, callback: Void -> Void) {
+		theTitle = title;
 		SystemImpl.initEx(title, options, windowCallback, callback);
+	}
+
+	public static var title(get, null): String;
+
+	private static function get_title(): String {
+		return theTitle;
 	}
 
 	public static function notifyOnRender(listener: Framebuffer -> Void, id: Int = 0): Void {
@@ -47,6 +71,16 @@ class System {
 		if (pauseListener != null) pauseListeners.push(pauseListener);
 		if (backgroundListener != null) backgroundListeners.push(backgroundListener);
 		if (shutdownListener != null) shutdownListeners.push(shutdownListener);
+	}
+
+	public static function notifyOnDropFiles(dropFilesListener: String -> Void): Void {
+		dropFilesListeners.push(dropFilesListener);
+	}
+
+	public static function notifyOnCutCopyPaste(cutListener: Void->String, copyListener: Void->String, pasteListener: String->Void): Void {
+		System.cutListener = cutListener;
+		System.copyListener = copyListener;
+		System.pasteListener = pasteListener;
 	}
 
 	private static function render(id: Int, framebuffer: Framebuffer): Void {
@@ -89,6 +123,12 @@ class System {
 		}
 	}
 
+	private static function dropFiles(filePath: String): Void {
+		for (listener in dropFilesListeners) {
+			listener(filePath);
+		}
+	}
+
 	public static var time(get, null): Float;
 
 	private static function get_time(): Float {
@@ -103,8 +143,7 @@ class System {
 		return SystemImpl.windowHeight(windowId);
 	}
 	
-	public static function screenDpi(): Int
-	{
+	public static function screenDpi(): Int {
 		return SystemImpl.screenDpi();
 	}
 

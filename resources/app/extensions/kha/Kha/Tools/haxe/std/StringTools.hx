@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2005-2016 Haxe Foundation
+ * Copyright (C)2005-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -361,7 +361,7 @@ class StringTools {
 	}
 
 	/**
-		Replace all occurences of the String `sub` in the String `s` by the
+		Replace all occurrences of the String `sub` in the String `s` by the
 		String `by`.
 
 		If `sub` is the empty String `""`, `by` is inserted after each character

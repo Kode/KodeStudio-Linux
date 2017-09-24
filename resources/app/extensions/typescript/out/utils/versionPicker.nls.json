@@ -1,0 +1,14 @@
+{
+	"messages": [
+		"Use VS Code's Version",
+		"Use Workspace Version",
+		"Learn More",
+		"Select the TypeScript version used for JavaScript and TypeScript language features"
+	],
+	"keys": [
+		"useVSCodeVersionOption",
+		"useWorkspaceVersionOption",
+		"learnMore",
+		"selectTsVersion"
+	]
+}

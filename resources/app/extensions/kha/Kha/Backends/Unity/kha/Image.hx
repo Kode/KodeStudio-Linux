@@ -34,6 +34,10 @@ class Image implements Canvas implements Resource {
 		return null;
 	}
 
+	public static function fromBytes3D(bytes: Bytes, width: Int, height: Int, depth: Int, format: TextureFormat = null, usage: Usage = null): Image {
+		return null;
+	}
+
 	private static function upperPowerOfTwo(v: Int): Int {
 		v--;
 		v |= v >>> 1;
@@ -136,6 +140,10 @@ class Image implements Canvas implements Resource {
 
 	}
 
+	public function getPixels(): Bytes {
+		return null;
+	}
+
 	public function generateMipmaps(levels: Int): Void {
 		
 	}
@@ -145,6 +153,10 @@ class Image implements Canvas implements Resource {
 	}
 
 	public function setDepthStencilFrom(image: Image): Void {
+		
+	}
+
+	public function clear(x: Int, y: Int, z: Int, width: Int, height: Int, depth: Int, color: Color): Void {
 		
 	}
 

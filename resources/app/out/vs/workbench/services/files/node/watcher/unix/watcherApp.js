@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/common/platform","vs/base/common/event","vs/base/common/winjs.base","vs/base/common/types","vs/base/common/errors","vs/base/common/lifecycle","vs/base/common/async","vs/platform/files/common/files","vs/base/common/callbackList","vs/base/common/arrays","vs/base/common/paths","vs/base/common/cancellation","vs/base/common/objects","vs/base/common/uri","vs/base/common/strings","vs/workbench/services/files/node/watcher/unix/watcherIpc","vs/base/common/events","vs/base/node/event","vs/base/parts/ipc/common/ipc","vs/base/parts/ipc/node/ipc.cp","vs/workbench/services/files/node/watcher/unix/chokidarWatcherService","vs/platform/instantiation/common/instantiation","vs/base/common/map","vs/workbench/services/files/node/watcher/common","child_process","chokidar","fs","graceful-fs","vs/base/common/winjs.base.raw","vs/workbench/services/files/node/watcher/unix/watcherApp"];
+var __m = ["require","exports","vs/base/common/platform","vs/base/common/winjs.base","vs/base/common/types","vs/base/common/event","vs/base/common/strings","vs/base/common/uri","vs/base/common/lifecycle","vs/base/common/objects","vs/base/common/paths","vs/base/common/errors","child_process","vs/base/common/async","vs/base/common/functional","path","vs/platform/files/common/files","vs/base/node/flow","vs/base/common/callbackList","vs/base/common/arrays","vs/base/common/cancellation","vs/base/common/parsers","vs/base/node/decoder","vs/workbench/services/files/node/watcher/unix/chokidarWatcherService","vs/base/node/event","vs/base/common/uuid","vs/workbench/services/files/node/watcher/common","vs/base/node/extfs","fs","vs/base/common/events","vs/base/node/stdFork","vs/workbench/services/files/node/watcher/unix/watcherIpc","vs/platform/instantiation/common/instantiation","vs/base/common/map","vs/base/parts/ipc/common/ipc","vs/nls!vs/base/common/processes","vs/nls","vs/nls!vs/workbench/services/files/node/watcher/unix/watcherApp","vs/base/common/processes","vs/nls!vs/base/node/processes","vs/base/node/processes","vs/base/parts/ipc/node/ipc.cp","stream","net","os","assert","string_decoder","chokidar","graceful-fs","vs/base/common/winjs.base.raw","vs/workbench/services/files/node/watcher/unix/watcherApp"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,36 +10,23 @@ var __M = function(deps) {
   }
   return result;
 };
-define(__m[11/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[19/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Returns the last element of an array.
      * @param array The array.
-     * @param n Which element from the end (default ist zero).
+     * @param n Which element from the end (default is zero).
      */
     function tail(array, n) {
         if (n === void 0) { n = 0; }
         return array[array.length - (1 + n)];
     }
     exports.tail = tail;
-    /**
-     * Iterates the provided array and allows to remove
-     * elements while iterating.
-     */
-    function forEach(array, callback) {
-        for (var i = 0, len = array.length; i < len; i++) {
-            callback(array[i], function () {
-                array.splice(i, 1);
-                i--;
-                len--;
-            });
-        }
-    }
-    exports.forEach = forEach;
     function equals(one, other, itemEquals) {
         if (itemEquals === void 0) { itemEquals = function (a, b) { return a === b; }; }
         if (one.length !== other.length) {
@@ -94,6 +81,105 @@ define(__m[11/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), funct
     }
     exports.findFirst = findFirst;
     /**
+     * Like `Array#sort` but always stable. Usually runs a little slower `than Array#sort`
+     * so only use this when actually needing stable sort.
+     */
+    function mergeSort(data, compare) {
+        _divideAndMerge(data, compare);
+        return data;
+    }
+    exports.mergeSort = mergeSort;
+    function _divideAndMerge(data, compare) {
+        if (data.length <= 1) {
+            // sorted
+            return;
+        }
+        var p = (data.length / 2) | 0;
+        var left = data.slice(0, p);
+        var right = data.slice(p);
+        _divideAndMerge(left, compare);
+        _divideAndMerge(right, compare);
+        var leftIdx = 0;
+        var rightIdx = 0;
+        var i = 0;
+        while (leftIdx < left.length && rightIdx < right.length) {
+            var ret = compare(left[leftIdx], right[rightIdx]);
+            if (ret <= 0) {
+                // smaller_equal -> take left to preserve order
+                data[i++] = left[leftIdx++];
+            }
+            else {
+                // greater -> take right
+                data[i++] = right[rightIdx++];
+            }
+        }
+        while (leftIdx < left.length) {
+            data[i++] = left[leftIdx++];
+        }
+        while (rightIdx < right.length) {
+            data[i++] = right[rightIdx++];
+        }
+    }
+    function groupBy(data, compare) {
+        var result = [];
+        var currentGroup;
+        for (var _i = 0, _a = data.slice(0).sort(compare); _i < _a.length; _i++) {
+            var element = _a[_i];
+            if (!currentGroup || compare(currentGroup[0], element) !== 0) {
+                currentGroup = [element];
+                result.push(currentGroup);
+            }
+            else {
+                currentGroup.push(element);
+            }
+        }
+        return result;
+    }
+    exports.groupBy = groupBy;
+    /**
+     * Takes two *sorted* arrays and computes their delta (removed, added elements).
+     * Finishes in `Math.min(before.length, after.length)` steps.
+     * @param before
+     * @param after
+     * @param compare
+     */
+    function delta(before, after, compare) {
+        var removed = [];
+        var added = [];
+        var beforeIdx = 0;
+        var afterIdx = 0;
+        while (true) {
+            if (beforeIdx === before.length) {
+                added.push.apply(added, after.slice(afterIdx));
+                break;
+            }
+            if (afterIdx === after.length) {
+                removed.push.apply(removed, before.slice(beforeIdx));
+                break;
+            }
+            var beforeElement = before[beforeIdx];
+            var afterElement = after[afterIdx];
+            var n = compare(beforeElement, afterElement);
+            if (n === 0) {
+                // equal
+                beforeIdx += 1;
+                afterIdx += 1;
+            }
+            else if (n < 0) {
+                // beforeElement is smaller -> before element removed
+                removed.push(beforeElement);
+                beforeIdx += 1;
+            }
+            else if (n > 0) {
+                // beforeElement is greater -> after element added
+                added.push(afterElement);
+                afterIdx += 1;
+            }
+        }
+        return { removed: removed, added: added };
+    }
+    exports.delta = delta;
+    /**
      * Returns the top N elements from the array.
      *
      * Faster than sorting the entire array when the array is a lot larger than N.
@@ -108,7 +194,7 @@ define(__m[11/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), funct
             return [];
         }
         var result = array.slice(0, n).sort(compare);
-        var _loop_1 = function(i, m) {
+        var _loop_1 = function (i, m) {
             var element = array[i];
             if (compare(element, result[n - 1]) < 0) {
                 result.pop();
@@ -122,28 +208,6 @@ define(__m[11/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), funct
         return result;
     }
     exports.top = top;
-    function merge(arrays, hashFn) {
-        var result = new Array();
-        if (!hashFn) {
-            for (var i = 0, len = arrays.length; i < len; i++) {
-                result.push.apply(result, arrays[i]);
-            }
-        }
-        else {
-            var map = {};
-            for (var i = 0; i < arrays.length; i++) {
-                for (var j = 0; j < arrays[i].length; j++) {
-                    var element = arrays[i][j], hash = hashFn(element);
-                    if (!map.hasOwnProperty(hash)) {
-                        map[hash] = true;
-                        result.push(element);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-    exports.merge = merge;
     /**
      * @returns a new array with all undefined or null values removed. The original array is not modified at all.
      */
@@ -154,23 +218,6 @@ define(__m[11/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), funct
         return array.filter(function (e) { return !!e; });
     }
     exports.coalesce = coalesce;
-    /**
-     * @returns true if the given item is contained in the array.
-     */
-    function contains(array, item) {
-        return array.indexOf(item) >= 0;
-    }
-    exports.contains = contains;
-    /**
-     * Swaps the elements in the array for the provided positions.
-     */
-    function swap(array, pos1, pos2) {
-        var element1 = array[pos1];
-        var element2 = array[pos2];
-        array[pos1] = element2;
-        array[pos2] = element1;
-    }
-    exports.swap = swap;
     /**
      * Moves the element in the array for the provided positions.
      */
@@ -288,19 +335,35 @@ define(__m[11/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/]), funct
         };
     }
     exports.insert = insert;
+    /**
+     * Insert `insertArr` inside `target` at `insertIndex`.
+     * Please don't touch unless you understand https://jsperf.com/inserting-an-array-within-an-array
+     */
+    function arrayInsert(target, insertIndex, insertArr) {
+        var before = target.slice(0, insertIndex);
+        var after = target.slice(insertIndex);
+        return before.concat(insertArr, after);
+    }
+    exports.arrayInsert = arrayInsert;
 });
 
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define(__m[18/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+define(__m[29/*vs/base/common/events*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Event = (function () {
         function Event(originalEvent) {
             this.time = (new Date()).getTime();
@@ -313,10 +376,11 @@ define(__m[18/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), funct
     var PropertyChangeEvent = (function (_super) {
         __extends(PropertyChangeEvent, _super);
         function PropertyChangeEvent(key, oldValue, newValue, originalEvent) {
-            _super.call(this, originalEvent);
-            this.key = key;
-            this.oldValue = oldValue;
-            this.newValue = newValue;
+            var _this = _super.call(this, originalEvent) || this;
+            _this.key = key;
+            _this.oldValue = oldValue;
+            _this.newValue = newValue;
+            return _this;
         }
         return PropertyChangeEvent;
     }(Event));
@@ -324,8 +388,9 @@ define(__m[18/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), funct
     var ViewerEvent = (function (_super) {
         __extends(ViewerEvent, _super);
         function ViewerEvent(element, originalEvent) {
-            _super.call(this, originalEvent);
-            this.element = element;
+            var _this = _super.call(this, originalEvent) || this;
+            _this.element = element;
+            return _this;
         }
         return ViewerEvent;
     }(Event));
@@ -353,340 +418,160 @@ define(__m[18/*vs/base/common/events*/], __M([1/*require*/,0/*exports*/]), funct
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
-
-
-
-
-define(__m[24/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[14/*vs/base/common/functional*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
-    /**
-     * A simple map to store value by a key object. Key can be any object that has toString() function to get
-     * string value of the key.
-     */
-    var LinkedMap = (function () {
-        function LinkedMap() {
-            this.map = Object.create(null);
-            this._size = 0;
-        }
-        Object.defineProperty(LinkedMap.prototype, "size", {
-            get: function () {
-                return this._size;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        LinkedMap.prototype.get = function (k) {
-            var value = this.peek(k);
-            return value ? value : null;
-        };
-        LinkedMap.prototype.getOrSet = function (k, t) {
-            var res = this.get(k);
-            if (res) {
-                return res;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function not(fn) {
+        return function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
             }
-            this.set(k, t);
-            return t;
+            return !fn.apply(void 0, args);
         };
-        LinkedMap.prototype.keys = function () {
-            var keys = [];
-            for (var key in this.map) {
-                keys.push(this.map[key].key);
+    }
+    exports.not = not;
+    function once(fn) {
+        var _this = this;
+        var didCall = false;
+        var result;
+        return function () {
+            if (didCall) {
+                return result;
             }
-            return keys;
-        };
-        LinkedMap.prototype.values = function () {
-            var values = [];
-            for (var key in this.map) {
-                values.push(this.map[key].value);
-            }
-            return values;
-        };
-        LinkedMap.prototype.entries = function () {
-            var entries = [];
-            for (var key in this.map) {
-                entries.push(this.map[key]);
-            }
-            return entries;
-        };
-        LinkedMap.prototype.set = function (k, t) {
-            if (this.get(k)) {
-                return false; // already present!
-            }
-            this.push(k, t);
-            return true;
-        };
-        LinkedMap.prototype.delete = function (k) {
-            var value = this.get(k);
-            if (value) {
-                this.pop(k);
-                return value;
-            }
-            return null;
-        };
-        LinkedMap.prototype.has = function (k) {
-            return !!this.get(k);
-        };
-        LinkedMap.prototype.clear = function () {
-            this.map = Object.create(null);
-            this._size = 0;
-        };
-        LinkedMap.prototype.push = function (key, value) {
-            var entry = { key: key, value: value };
-            this.map[key.toString()] = entry;
-            this._size++;
-        };
-        LinkedMap.prototype.pop = function (k) {
-            delete this.map[k.toString()];
-            this._size--;
-        };
-        LinkedMap.prototype.peek = function (k) {
-            var entry = this.map[k.toString()];
-            return entry ? entry.value : null;
-        };
-        return LinkedMap;
-    }());
-    exports.LinkedMap = LinkedMap;
-    /**
-     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
-     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
-     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
-     */
-    var BoundedLinkedMap = (function () {
-        function BoundedLinkedMap(limit, ratio) {
-            if (limit === void 0) { limit = Number.MAX_VALUE; }
-            if (ratio === void 0) { ratio = 1; }
-            this.limit = limit;
-            this.map = Object.create(null);
-            this._size = 0;
-            this.ratio = limit * ratio;
-        }
-        Object.defineProperty(BoundedLinkedMap.prototype, "size", {
-            get: function () {
-                return this._size;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        BoundedLinkedMap.prototype.set = function (key, value) {
-            if (this.map[key]) {
-                return false; // already present!
-            }
-            var entry = { key: key, value: value };
-            this.push(entry);
-            if (this._size > this.limit) {
-                this.trim();
-            }
-            return true;
-        };
-        BoundedLinkedMap.prototype.get = function (key) {
-            var entry = this.map[key];
-            return entry ? entry.value : null;
-        };
-        BoundedLinkedMap.prototype.getOrSet = function (k, t) {
-            var res = this.get(k);
-            if (res) {
-                return res;
-            }
-            this.set(k, t);
-            return t;
-        };
-        BoundedLinkedMap.prototype.delete = function (key) {
-            var entry = this.map[key];
-            if (entry) {
-                this.map[key] = void 0;
-                this._size--;
-                if (entry.next) {
-                    entry.next.prev = entry.prev; // [A]<-[x]<-[C] = [A]<-[C]
-                }
-                else {
-                    this.head = entry.prev; // [A]-[x] = [A]
-                }
-                if (entry.prev) {
-                    entry.prev.next = entry.next; // [A]->[x]->[C] = [A]->[C]
-                }
-                else {
-                    this.tail = entry.next; // [x]-[A] = [A]
-                }
-                return entry.value;
-            }
-            return null;
-        };
-        BoundedLinkedMap.prototype.has = function (key) {
-            return !!this.map[key];
-        };
-        BoundedLinkedMap.prototype.clear = function () {
-            this.map = Object.create(null);
-            this._size = 0;
-            this.head = null;
-            this.tail = null;
-        };
-        BoundedLinkedMap.prototype.push = function (entry) {
-            if (this.head) {
-                // [A]-[B] = [A]-[B]->[X]
-                entry.prev = this.head;
-                this.head.next = entry;
-            }
-            if (!this.tail) {
-                this.tail = entry;
-            }
-            this.head = entry;
-            this.map[entry.key] = entry;
-            this._size++;
-        };
-        BoundedLinkedMap.prototype.trim = function () {
-            if (this.tail) {
-                // Remove all elements until ratio is reached
-                if (this.ratio < this.limit) {
-                    var index = 0;
-                    var current = this.tail;
-                    while (current.next) {
-                        // Remove the entry
-                        this.map[current.key] = void 0;
-                        this._size--;
-                        // if we reached the element that overflows our ratio condition
-                        // make its next element the new tail of the Map and adjust the size
-                        if (index === this.ratio) {
-                            this.tail = current.next;
-                            this.tail.prev = null;
-                            break;
-                        }
-                        // Move on
-                        current = current.next;
-                        index++;
-                    }
-                }
-                else {
-                    this.map[this.tail.key] = void 0;
-                    this._size--;
-                    // [x]-[B] = [B]
-                    this.tail = this.tail.next;
-                    this.tail.prev = null;
-                }
-            }
-        };
-        return BoundedLinkedMap;
-    }());
-    exports.BoundedLinkedMap = BoundedLinkedMap;
-    /**
-     * A subclass of Map<T> that makes an entry the MRU entry as soon
-     * as it is being accessed. In combination with the limit for the
-     * maximum number of elements in the cache, it helps to remove those
-     * entries from the cache that are LRU.
-     */
-    var LRUCache = (function (_super) {
-        __extends(LRUCache, _super);
-        function LRUCache(limit) {
-            _super.call(this, limit);
-        }
-        LRUCache.prototype.get = function (key) {
-            // Upon access of an entry, make it the head of
-            // the linked map so that it is the MRU element
-            var entry = this.map[key];
-            if (entry) {
-                this.delete(key);
-                this.push(entry);
-                return entry.value;
-            }
-            return null;
-        };
-        return LRUCache;
-    }(BoundedLinkedMap));
-    exports.LRUCache = LRUCache;
-    /**
-     * A trie map that allows for fast look up when keys are substrings
-     * to the actual search keys (dir/subdir-problem).
-     */
-    var TrieMap = (function () {
-        function TrieMap(splitter) {
-            this._root = { children: Object.create(null) };
-            this._splitter = splitter;
-        }
-        TrieMap.prototype.insert = function (path, element) {
-            var parts = this._splitter(path);
-            var i = 0;
-            // find insertion node
-            var node = this._root;
-            for (; i < parts.length; i++) {
-                var child = node.children[parts[i]];
-                if (child) {
-                    node = child;
-                    continue;
-                }
-                break;
-            }
-            // create new nodes
-            var newNode;
-            for (; i < parts.length; i++) {
-                newNode = { children: Object.create(null) };
-                node.children[parts[i]] = newNode;
-                node = newNode;
-            }
-            node.element = element;
-        };
-        TrieMap.prototype.lookUp = function (path) {
-            var parts = this._splitter(path);
-            var children = this._root.children;
-            var node;
-            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
-                var part = parts_1[_i];
-                node = children[part];
-                if (!node) {
-                    return;
-                }
-                children = node.children;
-            }
-            return node.element;
-        };
-        TrieMap.prototype.findSubstr = function (path) {
-            var parts = this._splitter(path);
-            var lastNode;
-            var children = this._root.children;
-            for (var _i = 0, parts_2 = parts; _i < parts_2.length; _i++) {
-                var part = parts_2[_i];
-                var node = children[part];
-                if (!node) {
-                    break;
-                }
-                if (node.element) {
-                    lastNode = node;
-                }
-                children = node.children;
-            }
-            // return the last matching node
-            // that had an element
-            if (lastNode) {
-                return lastNode.element;
-            }
-        };
-        TrieMap.prototype.findSuperstr = function (path) {
-            var parts = this._splitter(path);
-            var children = this._root.children;
-            var node;
-            for (var _i = 0, parts_3 = parts; _i < parts_3.length; _i++) {
-                var part = parts_3[_i];
-                node = children[part];
-                if (!node) {
-                    return;
-                }
-                children = node.children;
-            }
-            var result = new TrieMap(this._splitter);
-            result._root = node;
+            didCall = true;
+            result = fn.apply(_this, arguments);
             return result;
         };
-        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/).filter(function (s) { return !!s; }); };
-        return TrieMap;
-    }());
-    exports.TrieMap = TrieMap;
+    }
+    exports.once = once;
 });
 
-define(__m[2/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[8/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,14/*vs/base/common/functional*/]), function (require, exports, functional_1) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.empty = Object.freeze({
+        dispose: function () { }
+    });
+    function dispose(first) {
+        var rest = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            rest[_i - 1] = arguments[_i];
+        }
+        if (Array.isArray(first)) {
+            first.forEach(function (d) { return d && d.dispose(); });
+            return [];
+        }
+        else if (rest.length === 0) {
+            if (first) {
+                first.dispose();
+                return first;
+            }
+            return undefined;
+        }
+        else {
+            dispose(first);
+            dispose(rest);
+            return [];
+        }
+    }
+    exports.dispose = dispose;
+    function combinedDisposable(disposables) {
+        return { dispose: function () { return dispose(disposables); } };
+    }
+    exports.combinedDisposable = combinedDisposable;
+    function toDisposable() {
+        var fns = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            fns[_i] = arguments[_i];
+        }
+        return {
+            dispose: function () {
+                for (var _i = 0, fns_1 = fns; _i < fns_1.length; _i++) {
+                    var fn = fns_1[_i];
+                    fn();
+                }
+            }
+        };
+    }
+    exports.toDisposable = toDisposable;
+    var Disposable = (function () {
+        function Disposable() {
+            this._toDispose = [];
+        }
+        Disposable.prototype.dispose = function () {
+            this._toDispose = dispose(this._toDispose);
+        };
+        Disposable.prototype._register = function (t) {
+            this._toDispose.push(t);
+            return t;
+        };
+        return Disposable;
+    }());
+    exports.Disposable = Disposable;
+    var OneDisposable = (function () {
+        function OneDisposable() {
+        }
+        Object.defineProperty(OneDisposable.prototype, "value", {
+            set: function (value) {
+                if (this._value) {
+                    this._value.dispose();
+                }
+                this._value = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        OneDisposable.prototype.dispose = function () {
+            this.value = null;
+        };
+        return OneDisposable;
+    }());
+    exports.OneDisposable = OneDisposable;
+    var ReferenceCollection = (function () {
+        function ReferenceCollection() {
+            this.references = Object.create(null);
+        }
+        ReferenceCollection.prototype.acquire = function (key) {
+            var _this = this;
+            var reference = this.references[key];
+            if (!reference) {
+                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
+            }
+            var object = reference.object;
+            var dispose = functional_1.once(function () {
+                if (--reference.counter === 0) {
+                    _this.destroyReferencedObject(reference.object);
+                    delete _this.references[key];
+                }
+            });
+            reference.counter++;
+            return { object: object, dispose: dispose };
+        };
+        return ReferenceCollection;
+    }());
+    exports.ReferenceCollection = ReferenceCollection;
+    var ImmortalReference = (function () {
+        function ImmortalReference(object) {
+            this.object = object;
+        }
+        ImmortalReference.prototype.dispose = function () { };
+        return ImmortalReference;
+    }());
+    exports.ImmortalReference = ImmortalReference;
+});
+
+define(__m[2/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     // --- THIS FILE IS TEMPORARY UNTIL ENV.TS IS CLEANED UP. IT CAN SAFELY BE USED IN ALL TARGET EXECUTION ENVIRONMENTS (node & dom) ---
     var _isWindows = false;
     var _isMacintosh = false;
@@ -694,7 +579,6 @@ define(__m[2/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), func
     var _isRootUser = false;
     var _isNative = false;
     var _isWeb = false;
-    var _isQunit = false;
     var _locale = undefined;
     var _language = undefined;
     exports.LANGUAGE_DEFAULT = 'en';
@@ -726,25 +610,24 @@ define(__m[2/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), func
         _isWeb = true;
         _locale = navigator.language;
         _language = _locale;
-        _isQunit = !!self.QUnit;
     }
+    var Platform;
     (function (Platform) {
         Platform[Platform["Web"] = 0] = "Web";
         Platform[Platform["Mac"] = 1] = "Mac";
         Platform[Platform["Linux"] = 2] = "Linux";
         Platform[Platform["Windows"] = 3] = "Windows";
-    })(exports.Platform || (exports.Platform = {}));
-    var Platform = exports.Platform;
-    exports._platform = Platform.Web;
+    })(Platform = exports.Platform || (exports.Platform = {}));
+    var _platform = Platform.Web;
     if (_isNative) {
         if (_isMacintosh) {
-            exports._platform = Platform.Mac;
+            _platform = Platform.Mac;
         }
         else if (_isWindows) {
-            exports._platform = Platform.Windows;
+            _platform = Platform.Windows;
         }
         else if (_isLinux) {
-            exports._platform = Platform.Linux;
+            _platform = Platform.Linux;
         }
     }
     exports.isWindows = _isWindows;
@@ -753,8 +636,7 @@ define(__m[2/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), func
     exports.isRootUser = _isRootUser;
     exports.isNative = _isNative;
     exports.isWeb = _isWeb;
-    exports.isQunit = _isQunit;
-    exports.platform = exports._platform;
+    exports.platform = _platform;
     /**
      * The language used for the user interface. The format of
      * the string is all lower case (e.g. zh-tw for Traditional
@@ -777,14 +659,2300 @@ define(__m[2/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), func
     exports.clearTimeout = _globals.clearTimeout.bind(_globals);
     exports.setInterval = _globals.setInterval.bind(_globals);
     exports.clearInterval = _globals.clearInterval.bind(_globals);
+    var OperatingSystem;
+    (function (OperatingSystem) {
+        OperatingSystem[OperatingSystem["Windows"] = 1] = "Windows";
+        OperatingSystem[OperatingSystem["Macintosh"] = 2] = "Macintosh";
+        OperatingSystem[OperatingSystem["Linux"] = 3] = "Linux";
+    })(OperatingSystem = exports.OperatingSystem || (exports.OperatingSystem = {}));
+    exports.OS = (_isMacintosh ? 2 /* Macintosh */ : (_isWindows ? 1 /* Windows */ : 3 /* Linux */));
+    var AccessibilitySupport;
+    (function (AccessibilitySupport) {
+        /**
+         * This should be the browser case where it is not known if a screen reader is attached or no.
+         */
+        AccessibilitySupport[AccessibilitySupport["Unknown"] = 0] = "Unknown";
+        AccessibilitySupport[AccessibilitySupport["Disabled"] = 1] = "Disabled";
+        AccessibilitySupport[AccessibilitySupport["Enabled"] = 2] = "Enabled";
+    })(AccessibilitySupport = exports.AccessibilitySupport || (exports.AccessibilitySupport = {}));
 });
 
-define(__m[12/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/platform*/,11/*vs/base/common/arrays*/]), function (require, exports, platform_1, arrays_1) {
+define(__m[4/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var _typeof = {
+        number: 'number',
+        string: 'string',
+        undefined: 'undefined',
+        object: 'object',
+        function: 'function'
+    };
+    /**
+     * @returns whether the provided parameter is a JavaScript Array or not.
+     */
+    function isArray(array) {
+        if (Array.isArray) {
+            return Array.isArray(array);
+        }
+        if (array && typeof (array.length) === _typeof.number && array.constructor === Array) {
+            return true;
+        }
+        return false;
+    }
+    exports.isArray = isArray;
+    /**
+     * @returns whether the provided parameter is a JavaScript String or not.
+     */
+    function isString(str) {
+        if (typeof (str) === _typeof.string || str instanceof String) {
+            return true;
+        }
+        return false;
+    }
+    exports.isString = isString;
+    /**
+     * @returns whether the provided parameter is a JavaScript Array and each element in the array is a string.
+     */
+    function isStringArray(value) {
+        return isArray(value) && value.every(function (elem) { return isString(elem); });
+    }
+    exports.isStringArray = isStringArray;
+    /**
+     *
+     * @returns whether the provided parameter is of type `object` but **not**
+     *	`null`, an `array`, a `regexp`, nor a `date`.
+     */
+    function isObject(obj) {
+        // The method can't do a type cast since there are type (like strings) which
+        // are subclasses of any put not positvely matched by the function. Hence type
+        // narrowing results in wrong results.
+        return typeof obj === _typeof.object
+            && obj !== null
+            && !Array.isArray(obj)
+            && !(obj instanceof RegExp)
+            && !(obj instanceof Date);
+    }
+    exports.isObject = isObject;
+    /**
+     * In **contrast** to just checking `typeof` this will return `false` for `NaN`.
+     * @returns whether the provided parameter is a JavaScript Number or not.
+     */
+    function isNumber(obj) {
+        if ((typeof (obj) === _typeof.number || obj instanceof Number) && !isNaN(obj)) {
+            return true;
+        }
+        return false;
+    }
+    exports.isNumber = isNumber;
+    /**
+     * @returns whether the provided parameter is a JavaScript Boolean or not.
+     */
+    function isBoolean(obj) {
+        return obj === true || obj === false;
+    }
+    exports.isBoolean = isBoolean;
+    /**
+     * @returns whether the provided parameter is undefined.
+     */
+    function isUndefined(obj) {
+        return typeof (obj) === _typeof.undefined;
+    }
+    exports.isUndefined = isUndefined;
+    /**
+     * @returns whether the provided parameter is undefined or null.
+     */
+    function isUndefinedOrNull(obj) {
+        return isUndefined(obj) || obj === null;
+    }
+    exports.isUndefinedOrNull = isUndefinedOrNull;
+    var hasOwnProperty = Object.prototype.hasOwnProperty;
+    /**
+     * @returns whether the provided parameter is an empty JavaScript Object or not.
+     */
+    function isEmptyObject(obj) {
+        if (!isObject(obj)) {
+            return false;
+        }
+        for (var key in obj) {
+            if (hasOwnProperty.call(obj, key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    exports.isEmptyObject = isEmptyObject;
+    /**
+     * @returns whether the provided parameter is a JavaScript Function or not.
+     */
+    function isFunction(obj) {
+        return typeof obj === _typeof.function;
+    }
+    exports.isFunction = isFunction;
+    /**
+     * @returns whether the provided parameters is are JavaScript Function or not.
+     */
+    function areFunctions() {
+        var objects = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            objects[_i] = arguments[_i];
+        }
+        return objects && objects.length > 0 && objects.every(isFunction);
+    }
+    exports.areFunctions = areFunctions;
+    function validateConstraints(args, constraints) {
+        var len = Math.min(args.length, constraints.length);
+        for (var i = 0; i < len; i++) {
+            validateConstraint(args[i], constraints[i]);
+        }
+    }
+    exports.validateConstraints = validateConstraints;
+    function validateConstraint(arg, constraint) {
+        if (isString(constraint)) {
+            if (typeof arg !== constraint) {
+                throw new Error("argument does not match constraint: typeof " + constraint);
+            }
+        }
+        else if (isFunction(constraint)) {
+            if (arg instanceof constraint) {
+                return;
+            }
+            if (arg && arg.constructor === constraint) {
+                return;
+            }
+            if (constraint.length === 1 && constraint.call(undefined, arg) === true) {
+                return;
+            }
+            throw new Error("argument does not match one of these constraints: arg instanceof constraint, arg.constructor === constraint, nor constraint(arg) === true");
+        }
+    }
+    exports.validateConstraint = validateConstraint;
+    /**
+     * Creates a new object of the provided class and will call the constructor with
+     * any additional argument supplied.
+     */
+    function create(ctor) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        var obj = Object.create(ctor.prototype);
+        ctor.apply(obj, args);
+        return obj;
+    }
+    exports.create = create;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[9/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/types*/]), function (require, exports, types_1) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function clone(obj) {
+        if (!obj || typeof obj !== 'object') {
+            return obj;
+        }
+        if (obj instanceof RegExp) {
+            // See https://github.com/Microsoft/TypeScript/issues/10990
+            return obj;
+        }
+        var result = (Array.isArray(obj)) ? [] : {};
+        Object.keys(obj).forEach(function (key) {
+            if (obj[key] && typeof obj[key] === 'object') {
+                result[key] = clone(obj[key]);
+            }
+            else {
+                result[key] = obj[key];
+            }
+        });
+        return result;
+    }
+    exports.clone = clone;
+    function deepClone(obj) {
+        if (!obj || typeof obj !== 'object') {
+            return obj;
+        }
+        var result = (Array.isArray(obj)) ? [] : {};
+        Object.getOwnPropertyNames(obj).forEach(function (key) {
+            if (obj[key] && typeof obj[key] === 'object') {
+                result[key] = deepClone(obj[key]);
+            }
+            else {
+                result[key] = obj[key];
+            }
+        });
+        return result;
+    }
+    exports.deepClone = deepClone;
+    var hasOwnProperty = Object.prototype.hasOwnProperty;
+    function cloneAndChange(obj, changer) {
+        return _cloneAndChange(obj, changer, []);
+    }
+    exports.cloneAndChange = cloneAndChange;
+    function _cloneAndChange(obj, changer, encounteredObjects) {
+        if (types_1.isUndefinedOrNull(obj)) {
+            return obj;
+        }
+        var changed = changer(obj);
+        if (typeof changed !== 'undefined') {
+            return changed;
+        }
+        if (types_1.isArray(obj)) {
+            var r1 = [];
+            for (var i1 = 0; i1 < obj.length; i1++) {
+                r1.push(_cloneAndChange(obj[i1], changer, encounteredObjects));
+            }
+            return r1;
+        }
+        if (types_1.isObject(obj)) {
+            if (encounteredObjects.indexOf(obj) >= 0) {
+                throw new Error('Cannot clone recursive data-structure');
+            }
+            encounteredObjects.push(obj);
+            var r2 = {};
+            for (var i2 in obj) {
+                if (hasOwnProperty.call(obj, i2)) {
+                    r2[i2] = _cloneAndChange(obj[i2], changer, encounteredObjects);
+                }
+            }
+            encounteredObjects.pop();
+            return r2;
+        }
+        return obj;
+    }
+    /**
+     * Copies all properties of source into destination. The optional parameter "overwrite" allows to control
+     * if existing properties on the destination should be overwritten or not. Defaults to true (overwrite).
+     */
+    function mixin(destination, source, overwrite) {
+        if (overwrite === void 0) { overwrite = true; }
+        if (!types_1.isObject(destination)) {
+            return source;
+        }
+        if (types_1.isObject(source)) {
+            Object.keys(source).forEach(function (key) {
+                if (key in destination) {
+                    if (overwrite) {
+                        if (types_1.isObject(destination[key]) && types_1.isObject(source[key])) {
+                            mixin(destination[key], source[key], overwrite);
+                        }
+                        else {
+                            destination[key] = source[key];
+                        }
+                    }
+                }
+                else {
+                    destination[key] = source[key];
+                }
+            });
+        }
+        return destination;
+    }
+    exports.mixin = mixin;
+    function assign(destination) {
+        var sources = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            sources[_i - 1] = arguments[_i];
+        }
+        sources.forEach(function (source) { return Object.keys(source).forEach(function (key) { return destination[key] = source[key]; }); });
+        return destination;
+    }
+    exports.assign = assign;
+    function toObject(arr, keyMap) {
+        return arr.reduce(function (o, d) {
+            return assign(o, (_a = {}, _a[keyMap(d)] = d, _a));
+            var _a;
+        }, Object.create(null));
+    }
+    exports.toObject = toObject;
+    function equals(one, other) {
+        if (one === other) {
+            return true;
+        }
+        if (one === null || one === undefined || other === null || other === undefined) {
+            return false;
+        }
+        if (typeof one !== typeof other) {
+            return false;
+        }
+        if (typeof one !== 'object') {
+            return false;
+        }
+        if ((Array.isArray(one)) !== (Array.isArray(other))) {
+            return false;
+        }
+        var i;
+        var key;
+        if (Array.isArray(one)) {
+            if (one.length !== other.length) {
+                return false;
+            }
+            for (i = 0; i < one.length; i++) {
+                if (!equals(one[i], other[i])) {
+                    return false;
+                }
+            }
+        }
+        else {
+            var oneKeys = [];
+            for (key in one) {
+                oneKeys.push(key);
+            }
+            oneKeys.sort();
+            var otherKeys = [];
+            for (key in other) {
+                otherKeys.push(key);
+            }
+            otherKeys.sort();
+            if (!equals(oneKeys, otherKeys)) {
+                return false;
+            }
+            for (i = 0; i < oneKeys.length; i++) {
+                if (!equals(one[oneKeys[i]], other[oneKeys[i]])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    exports.equals = equals;
+    function ensureProperty(obj, property, defaultValue) {
+        if (typeof obj[property] === 'undefined') {
+            obj[property] = defaultValue;
+        }
+    }
+    exports.ensureProperty = ensureProperty;
+    function arrayToHash(array) {
+        var result = {};
+        for (var i = 0; i < array.length; ++i) {
+            result[array[i]] = true;
+        }
+        return result;
+    }
+    exports.arrayToHash = arrayToHash;
+    /**
+     * Given an array of strings, returns a function which, given a string
+     * returns true or false whether the string is in that array.
+     */
+    function createKeywordMatcher(arr, caseInsensitive) {
+        if (caseInsensitive === void 0) { caseInsensitive = false; }
+        if (caseInsensitive) {
+            arr = arr.map(function (x) { return x.toLowerCase(); });
+        }
+        var hash = arrayToHash(arr);
+        if (caseInsensitive) {
+            return function (word) {
+                return hash[word.toLowerCase()] !== undefined && hash.hasOwnProperty(word.toLowerCase());
+            };
+        }
+        else {
+            return function (word) {
+                return hash[word] !== undefined && hash.hasOwnProperty(word);
+            };
+        }
+    }
+    exports.createKeywordMatcher = createKeywordMatcher;
+    /**
+     * Started from TypeScript's __extends function to make a type a subclass of a specific class.
+     * Modified to work with properties already defined on the derivedClass, since we can't get TS
+     * to call this method before the constructor definition.
+     */
+    function derive(baseClass, derivedClass) {
+        for (var prop in baseClass) {
+            if (baseClass.hasOwnProperty(prop)) {
+                derivedClass[prop] = baseClass[prop];
+            }
+        }
+        derivedClass = derivedClass || function () { };
+        var basePrototype = baseClass.prototype;
+        var derivedPrototype = derivedClass.prototype;
+        derivedClass.prototype = Object.create(basePrototype);
+        for (var prop in derivedPrototype) {
+            if (derivedPrototype.hasOwnProperty(prop)) {
+                // handle getters and setters properly
+                Object.defineProperty(derivedClass.prototype, prop, Object.getOwnPropertyDescriptor(derivedPrototype, prop));
+            }
+        }
+        // Cast to any due to Bug 16188:PropertyDescriptor set and get function should be optional.
+        Object.defineProperty(derivedClass.prototype, 'constructor', { value: derivedClass, writable: true, configurable: true, enumerable: true });
+    }
+    exports.derive = derive;
+    /**
+     * Calls JSON.Stringify with a replacer to break apart any circular references.
+     * This prevents JSON.stringify from throwing the exception
+     *  "Uncaught TypeError: Converting circular structure to JSON"
+     */
+    function safeStringify(obj) {
+        var seen = [];
+        return JSON.stringify(obj, function (key, value) {
+            if (types_1.isObject(value) || Array.isArray(value)) {
+                if (seen.indexOf(value) !== -1) {
+                    return '[Circular]';
+                }
+                else {
+                    seen.push(value);
+                }
+            }
+            return value;
+        });
+    }
+    exports.safeStringify = safeStringify;
+    function getOrDefault(obj, fn, defaultValue) {
+        if (defaultValue === void 0) { defaultValue = null; }
+        var result = fn(obj);
+        return typeof result === 'undefined' ? defaultValue : result;
+    }
+    exports.getOrDefault = getOrDefault;
+    function distinct(base, target) {
+        var result = Object.create(null);
+        if (!base || !target) {
+            return result;
+        }
+        var targetKeys = Object.keys(target);
+        targetKeys.forEach(function (k) {
+            var baseValue = base[k];
+            var targetValue = target[k];
+            if (!equals(baseValue, targetValue)) {
+                result[k] = targetValue;
+            }
+        });
+        return result;
+    }
+    exports.distinct = distinct;
+});
+
+define(__m[21/*vs/base/common/parsers*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/types*/]), function (require, exports, Types) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var ValidationState;
+    (function (ValidationState) {
+        ValidationState[ValidationState["OK"] = 0] = "OK";
+        ValidationState[ValidationState["Info"] = 1] = "Info";
+        ValidationState[ValidationState["Warning"] = 2] = "Warning";
+        ValidationState[ValidationState["Error"] = 3] = "Error";
+        ValidationState[ValidationState["Fatal"] = 4] = "Fatal";
+    })(ValidationState = exports.ValidationState || (exports.ValidationState = {}));
+    var ValidationStatus = (function () {
+        function ValidationStatus() {
+            this._state = ValidationState.OK;
+        }
+        Object.defineProperty(ValidationStatus.prototype, "state", {
+            get: function () {
+                return this._state;
+            },
+            set: function (value) {
+                if (value > this._state) {
+                    this._state = value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ValidationStatus.prototype.isOK = function () {
+            return this._state === ValidationState.OK;
+        };
+        ValidationStatus.prototype.isFatal = function () {
+            return this._state === ValidationState.Fatal;
+        };
+        return ValidationStatus;
+    }());
+    exports.ValidationStatus = ValidationStatus;
+    var NullProblemReporter = (function () {
+        function NullProblemReporter() {
+            this.status = new ValidationStatus();
+        }
+        NullProblemReporter.prototype.info = function (message) { };
+        ;
+        NullProblemReporter.prototype.warn = function (message) { };
+        ;
+        NullProblemReporter.prototype.error = function (message) { };
+        ;
+        NullProblemReporter.prototype.fatal = function (message) { };
+        ;
+        return NullProblemReporter;
+    }());
+    exports.NullProblemReporter = NullProblemReporter;
+    var Parser = (function () {
+        function Parser(problemReporter) {
+            this._problemReporter = problemReporter;
+        }
+        Parser.prototype.reset = function () {
+            this._problemReporter.status.state = ValidationState.OK;
+        };
+        Object.defineProperty(Parser.prototype, "problemReporter", {
+            get: function () {
+                return this._problemReporter;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Parser.prototype.info = function (message) {
+            this._problemReporter.info(message);
+        };
+        Parser.prototype.warn = function (message) {
+            this._problemReporter.warn(message);
+        };
+        Parser.prototype.error = function (message) {
+            this._problemReporter.error(message);
+        };
+        Parser.prototype.fatal = function (message) {
+            this._problemReporter.fatal(message);
+        };
+        Parser.prototype.is = function (value, func, wrongTypeState, wrongTypeMessage, undefinedState, undefinedMessage) {
+            if (Types.isUndefined(value)) {
+                if (undefinedState) {
+                    this._problemReporter.status.state = undefinedState;
+                }
+                if (undefinedMessage) {
+                    this._problemReporter.info(undefinedMessage);
+                }
+                return false;
+            }
+            if (!func(value)) {
+                if (wrongTypeState) {
+                    this._problemReporter.status.state = wrongTypeState;
+                }
+                if (wrongTypeMessage) {
+                    this.info(wrongTypeMessage);
+                }
+                return false;
+            }
+            return true;
+        };
+        Parser.merge = function (destination, source, overwrite) {
+            var _this = this;
+            Object.keys(source).forEach(function (key) {
+                var destValue = destination[key];
+                var sourceValue = source[key];
+                if (Types.isUndefined(sourceValue)) {
+                    return;
+                }
+                if (Types.isUndefined(destValue)) {
+                    destination[key] = sourceValue;
+                }
+                else {
+                    if (overwrite) {
+                        if (Types.isObject(destValue) && Types.isObject(sourceValue)) {
+                            _this.merge(destValue, sourceValue, overwrite);
+                        }
+                        else {
+                            destination[key] = sourceValue;
+                        }
+                    }
+                }
+            });
+        };
+        return Parser;
+    }());
+    exports.Parser = Parser;
+    var AbstractSystemVariables = (function () {
+        function AbstractSystemVariables() {
+        }
+        AbstractSystemVariables.prototype.resolve = function (value) {
+            if (Types.isString(value)) {
+                return this.resolveString(value);
+            }
+            else if (Types.isArray(value)) {
+                return this.__resolveArray(value);
+            }
+            else if (Types.isObject(value)) {
+                return this.__resolveLiteral(value);
+            }
+            return value;
+        };
+        AbstractSystemVariables.prototype.resolveAny = function (value) {
+            if (Types.isString(value)) {
+                return this.resolveString(value);
+            }
+            else if (Types.isArray(value)) {
+                return this.__resolveAnyArray(value);
+            }
+            else if (Types.isObject(value)) {
+                return this.__resolveAnyLiteral(value);
+            }
+            return value;
+        };
+        AbstractSystemVariables.prototype.resolveString = function (value) {
+            var _this = this;
+            var regexp = /\$\{(.*?)\}/g;
+            return value.replace(regexp, function (match, name) {
+                var newValue = _this[name];
+                if (Types.isString(newValue)) {
+                    return newValue;
+                }
+                else {
+                    return match && match.indexOf('env.') > 0 ? '' : match;
+                }
+            });
+        };
+        AbstractSystemVariables.prototype.__resolveLiteral = function (values) {
+            var _this = this;
+            var result = Object.create(null);
+            Object.keys(values).forEach(function (key) {
+                var value = values[key];
+                result[key] = _this.resolve(value);
+            });
+            return result;
+        };
+        AbstractSystemVariables.prototype.__resolveAnyLiteral = function (values) {
+            var _this = this;
+            var result = Object.create(null);
+            Object.keys(values).forEach(function (key) {
+                var value = values[key];
+                result[key] = _this.resolveAny(value);
+            });
+            return result;
+        };
+        AbstractSystemVariables.prototype.__resolveArray = function (value) {
+            var _this = this;
+            return value.map(function (s) { return _this.resolveString(s); });
+        };
+        AbstractSystemVariables.prototype.__resolveAnyArray = function (value) {
+            var _this = this;
+            return value.map(function (s) { return _this.resolveAny(s); });
+        };
+        return AbstractSystemVariables;
+    }());
+    exports.AbstractSystemVariables = AbstractSystemVariables;
+});
+
+define(__m[7/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/platform*/]), function (require, exports, platform) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function _encode(ch) {
+        return '%' + ch.charCodeAt(0).toString(16).toUpperCase();
+    }
+    // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+    function encodeURIComponent2(str) {
+        return encodeURIComponent(str).replace(/[!'()*]/g, _encode);
+    }
+    function encodeNoop(str) {
+        return str.replace(/[#?]/, _encode);
+    }
+    /**
+     * Uniform Resource Identifier (URI) http://tools.ietf.org/html/rfc3986.
+     * This class is a simple parser which creates the basic component paths
+     * (http://tools.ietf.org/html/rfc3986#section-3) with minimal validation
+     * and encoding.
+     *
+     *       foo://example.com:8042/over/there?name=ferret#nose
+     *       \_/   \______________/\_________/ \_________/ \__/
+     *        |           |            |            |        |
+     *     scheme     authority       path        query   fragment
+     *        |   _____________________|__
+     *       / \ /                        \
+     *       urn:example:animal:ferret:nose
+     *
+     *
+     */
+    var URI = (function () {
+        /**
+         * @internal
+         */
+        function URI(scheme, authority, path, query, fragment) {
+            this._formatted = null;
+            this._fsPath = null;
+            this.scheme = scheme || URI._empty;
+            this.authority = authority || URI._empty;
+            this.path = path || URI._empty;
+            this.query = query || URI._empty;
+            this.fragment = fragment || URI._empty;
+            this._validate(this);
+        }
+        URI.isUri = function (thing) {
+            if (thing instanceof URI) {
+                return true;
+            }
+            if (!thing) {
+                return false;
+            }
+            return typeof thing.authority === 'string'
+                && typeof thing.fragment === 'string'
+                && typeof thing.path === 'string'
+                && typeof thing.query === 'string'
+                && typeof thing.scheme === 'string';
+        };
+        Object.defineProperty(URI.prototype, "fsPath", {
+            // ---- filesystem path -----------------------
+            /**
+             * Returns a string representing the corresponding file system path of this URI.
+             * Will handle UNC paths and normalize windows drive letters to lower-case. Also
+             * uses the platform specific path separator. Will *not* validate the path for
+             * invalid characters and semantics. Will *not* look at the scheme of this URI.
+             */
+            get: function () {
+                if (!this._fsPath) {
+                    var value = void 0;
+                    if (this.authority && this.path && this.scheme === 'file') {
+                        // unc path: file://shares/c$/far/boo
+                        value = "//" + this.authority + this.path;
+                    }
+                    else if (URI._driveLetterPath.test(this.path)) {
+                        // windows drive letter: file:///c:/far/boo
+                        value = this.path[1].toLowerCase() + this.path.substr(2);
+                    }
+                    else {
+                        // other path
+                        value = this.path;
+                    }
+                    if (platform.isWindows) {
+                        value = value.replace(/\//g, '\\');
+                    }
+                    this._fsPath = value;
+                }
+                return this._fsPath;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        // ---- modify to new -------------------------
+        URI.prototype.with = function (change) {
+            if (!change) {
+                return this;
+            }
+            var scheme = change.scheme, authority = change.authority, path = change.path, query = change.query, fragment = change.fragment;
+            if (scheme === void 0) {
+                scheme = this.scheme;
+            }
+            else if (scheme === null) {
+                scheme = '';
+            }
+            if (authority === void 0) {
+                authority = this.authority;
+            }
+            else if (authority === null) {
+                authority = '';
+            }
+            if (path === void 0) {
+                path = this.path;
+            }
+            else if (path === null) {
+                path = '';
+            }
+            if (query === void 0) {
+                query = this.query;
+            }
+            else if (query === null) {
+                query = '';
+            }
+            if (fragment === void 0) {
+                fragment = this.fragment;
+            }
+            else if (fragment === null) {
+                fragment = '';
+            }
+            if (scheme === this.scheme
+                && authority === this.authority
+                && path === this.path
+                && query === this.query
+                && fragment === this.fragment) {
+                return this;
+            }
+            return new URI(scheme, authority, path, query, fragment);
+        };
+        // ---- parse & validate ------------------------
+        URI.parse = function (value) {
+            var match = URI._regexp.exec(value);
+            if (!match) {
+                return new URI(URI._empty, URI._empty, URI._empty, URI._empty, URI._empty);
+            }
+            return new URI(match[2] || URI._empty, decodeURIComponent(match[4] || URI._empty), decodeURIComponent(match[5] || URI._empty), decodeURIComponent(match[7] || URI._empty), decodeURIComponent(match[9] || URI._empty));
+        };
+        URI.file = function (path) {
+            var authority = URI._empty;
+            // normalize to fwd-slashes on windows,
+            // on other systems bwd-slashes are valid
+            // filename character, eg /f\oo/ba\r.txt
+            if (platform.isWindows) {
+                path = path.replace(/\\/g, URI._slash);
+            }
+            // check for authority as used in UNC shares
+            // or use the path as given
+            if (path[0] === URI._slash && path[0] === path[1]) {
+                var idx = path.indexOf(URI._slash, 2);
+                if (idx === -1) {
+                    authority = path.substring(2);
+                    path = URI._empty;
+                }
+                else {
+                    authority = path.substring(2, idx);
+                    path = path.substring(idx);
+                }
+            }
+            // Ensure that path starts with a slash
+            // or that it is at least a slash
+            if (path[0] !== URI._slash) {
+                path = URI._slash + path;
+            }
+            return new URI('file', authority, path, URI._empty, URI._empty);
+        };
+        URI.from = function (components) {
+            return new URI(components.scheme, components.authority, components.path, components.query, components.fragment);
+        };
+        URI.prototype._validate = function (ret) {
+            // scheme, https://tools.ietf.org/html/rfc3986#section-3.1
+            // ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+            if (ret.scheme && !URI._schemePattern.test(ret.scheme)) {
+                throw new Error('[UriError]: Scheme contains illegal characters.');
+            }
+            // path, http://tools.ietf.org/html/rfc3986#section-3.3
+            // If a URI contains an authority component, then the path component
+            // must either be empty or begin with a slash ("/") character.  If a URI
+            // does not contain an authority component, then the path cannot begin
+            // with two slash characters ("//").
+            if (ret.path) {
+                if (ret.authority) {
+                    if (!URI._singleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
+                    }
+                }
+                else {
+                    if (URI._doubleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
+                    }
+                }
+            }
+        };
+        // ---- printing/externalize ---------------------------
+        /**
+         *
+         * @param skipEncoding Do not encode the result, default is `false`
+         */
+        URI.prototype.toString = function (skipEncoding) {
+            if (skipEncoding === void 0) { skipEncoding = false; }
+            if (!skipEncoding) {
+                if (!this._formatted) {
+                    this._formatted = URI._asFormatted(this, false);
+                }
+                return this._formatted;
+            }
+            else {
+                // we don't cache that
+                return URI._asFormatted(this, true);
+            }
+        };
+        URI._asFormatted = function (uri, skipEncoding) {
+            var encoder = !skipEncoding
+                ? encodeURIComponent2
+                : encodeNoop;
+            var parts = [];
+            var scheme = uri.scheme, authority = uri.authority, path = uri.path, query = uri.query, fragment = uri.fragment;
+            if (scheme) {
+                parts.push(scheme, ':');
+            }
+            if (authority || scheme === 'file') {
+                parts.push('//');
+            }
+            if (authority) {
+                authority = authority.toLowerCase();
+                var idx = authority.indexOf(':');
+                if (idx === -1) {
+                    parts.push(encoder(authority));
+                }
+                else {
+                    parts.push(encoder(authority.substr(0, idx)), authority.substr(idx));
+                }
+            }
+            if (path) {
+                // lower-case windows drive letters in /C:/fff or C:/fff
+                var m = URI._upperCaseDrive.exec(path);
+                if (m) {
+                    if (m[1]) {
+                        path = '/' + m[2].toLowerCase() + path.substr(3); // "/c:".length === 3
+                    }
+                    else {
+                        path = m[2].toLowerCase() + path.substr(2); // // "c:".length === 2
+                    }
+                }
+                // encode every segement but not slashes
+                // make sure that # and ? are always encoded
+                // when occurring in paths - otherwise the result
+                // cannot be parsed back again
+                var lastIdx = 0;
+                while (true) {
+                    var idx = path.indexOf(URI._slash, lastIdx);
+                    if (idx === -1) {
+                        parts.push(encoder(path.substring(lastIdx)));
+                        break;
+                    }
+                    parts.push(encoder(path.substring(lastIdx, idx)), URI._slash);
+                    lastIdx = idx + 1;
+                }
+                ;
+            }
+            if (query) {
+                parts.push('?', encoder(query));
+            }
+            if (fragment) {
+                parts.push('#', encoder(fragment));
+            }
+            return parts.join(URI._empty);
+        };
+        URI.prototype.toJSON = function () {
+            var res = {
+                fsPath: this.fsPath,
+                external: this.toString(),
+                $mid: 1
+            };
+            if (this.path) {
+                res.path = this.path;
+            }
+            if (this.scheme) {
+                res.scheme = this.scheme;
+            }
+            if (this.authority) {
+                res.authority = this.authority;
+            }
+            if (this.query) {
+                res.query = this.query;
+            }
+            if (this.fragment) {
+                res.fragment = this.fragment;
+            }
+            return res;
+        };
+        URI.revive = function (data) {
+            var result = new URI(data.scheme, data.authority, data.path, data.query, data.fragment);
+            result._fsPath = data.fsPath;
+            result._formatted = data.external;
+            return result;
+        };
+        URI._empty = '';
+        URI._slash = '/';
+        URI._regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
+        URI._driveLetterPath = /^\/[a-zA-z]:/;
+        URI._upperCaseDrive = /^(\/)?([A-Z]:)/;
+        URI._schemePattern = /^\w[\w\d+.-]*$/;
+        URI._singleSlashStart = /^\//;
+        URI._doubleSlashStart = /^\/\//;
+        return URI;
+    }());
+    exports.default = URI;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+define(__m[33/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function values(map) {
+        var result = [];
+        map.forEach(function (value) { return result.push(value); });
+        return result;
+    }
+    exports.values = values;
+    function keys(map) {
+        var result = [];
+        map.forEach(function (value, key) { return result.push(key); });
+        return result;
+    }
+    exports.keys = keys;
+    function getOrSet(map, key, value) {
+        var result = map.get(key);
+        if (result === void 0) {
+            result = value;
+            map.set(key, result);
+        }
+        return result;
+    }
+    exports.getOrSet = getOrSet;
+    /**
+     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
+     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
+     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
+     */
+    var BoundedMap = (function () {
+        function BoundedMap(limit, ratio, value) {
+            if (limit === void 0) { limit = Number.MAX_VALUE; }
+            if (ratio === void 0) { ratio = 1; }
+            var _this = this;
+            this.limit = limit;
+            this.map = new Map();
+            this.ratio = limit * ratio;
+            if (value) {
+                value.entries.forEach(function (entry) {
+                    _this.set(entry.key, entry.value);
+                });
+            }
+        }
+        BoundedMap.prototype.setLimit = function (limit) {
+            if (limit < 0) {
+                return; // invalid limit
+            }
+            this.limit = limit;
+            while (this.map.size > this.limit) {
+                this.trim();
+            }
+        };
+        BoundedMap.prototype.serialize = function () {
+            var serialized = { entries: [] };
+            this.map.forEach(function (entry) {
+                serialized.entries.push({ key: entry.key, value: entry.value });
+            });
+            return serialized;
+        };
+        Object.defineProperty(BoundedMap.prototype, "size", {
+            get: function () {
+                return this.map.size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        BoundedMap.prototype.set = function (key, value) {
+            if (this.map.has(key)) {
+                return false; // already present!
+            }
+            var entry = { key: key, value: value };
+            this.push(entry);
+            if (this.size > this.limit) {
+                this.trim();
+            }
+            return true;
+        };
+        BoundedMap.prototype.get = function (key) {
+            var entry = this.map.get(key);
+            return entry ? entry.value : null;
+        };
+        BoundedMap.prototype.getOrSet = function (k, t) {
+            var res = this.get(k);
+            if (res) {
+                return res;
+            }
+            this.set(k, t);
+            return t;
+        };
+        BoundedMap.prototype.delete = function (key) {
+            var entry = this.map.get(key);
+            if (entry) {
+                this.map.delete(key);
+                if (entry.next) {
+                    entry.next.prev = entry.prev; // [A]<-[x]<-[C] = [A]<-[C]
+                }
+                else {
+                    this.head = entry.prev; // [A]-[x] = [A]
+                }
+                if (entry.prev) {
+                    entry.prev.next = entry.next; // [A]->[x]->[C] = [A]->[C]
+                }
+                else {
+                    this.tail = entry.next; // [x]-[A] = [A]
+                }
+                return entry.value;
+            }
+            return null;
+        };
+        BoundedMap.prototype.has = function (key) {
+            return this.map.has(key);
+        };
+        BoundedMap.prototype.clear = function () {
+            this.map.clear();
+            this.head = null;
+            this.tail = null;
+        };
+        BoundedMap.prototype.push = function (entry) {
+            if (this.head) {
+                // [A]-[B] = [A]-[B]->[X]
+                entry.prev = this.head;
+                this.head.next = entry;
+            }
+            if (!this.tail) {
+                this.tail = entry;
+            }
+            this.head = entry;
+            this.map.set(entry.key, entry);
+        };
+        BoundedMap.prototype.trim = function () {
+            if (this.tail) {
+                // Remove all elements until ratio is reached
+                if (this.ratio < this.limit) {
+                    var index = 0;
+                    var current = this.tail;
+                    while (current.next) {
+                        // Remove the entry
+                        this.map.delete(current.key);
+                        // if we reached the element that overflows our ratio condition
+                        // make its next element the new tail of the Map and adjust the size
+                        if (index === this.ratio) {
+                            this.tail = current.next;
+                            this.tail.prev = null;
+                            break;
+                        }
+                        // Move on
+                        current = current.next;
+                        index++;
+                    }
+                }
+                else {
+                    this.map.delete(this.tail.key);
+                    // [x]-[B] = [B]
+                    this.tail = this.tail.next;
+                    if (this.tail) {
+                        this.tail.prev = null;
+                    }
+                }
+            }
+        };
+        return BoundedMap;
+    }());
+    exports.BoundedMap = BoundedMap;
+    // --- trie'ish datastructure
+    var Node = (function () {
+        function Node() {
+            this.children = new Map();
+        }
+        return Node;
+    }());
+    /**
+     * A trie map that allows for fast look up when keys are substrings
+     * to the actual search keys (dir/subdir-problem).
+     */
+    var TrieMap = (function () {
+        function TrieMap(splitter) {
+            this._root = new Node();
+            this._splitter = function (s) { return splitter(s).filter(function (s) { return Boolean(s); }); };
+        }
+        TrieMap.prototype.insert = function (path, element) {
+            var parts = this._splitter(path);
+            var i = 0;
+            // find insertion node
+            var node = this._root;
+            for (; i < parts.length; i++) {
+                var child = node.children.get(parts[i]);
+                if (child) {
+                    node = child;
+                    continue;
+                }
+                break;
+            }
+            // create new nodes
+            var newNode;
+            for (; i < parts.length; i++) {
+                newNode = new Node();
+                node.children.set(parts[i], newNode);
+                node = newNode;
+            }
+            node.element = element;
+        };
+        TrieMap.prototype.lookUp = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                node = children.get(part);
+                if (!node) {
+                    return undefined;
+                }
+                children = node.children;
+            }
+            return node.element;
+        };
+        TrieMap.prototype.findSubstr = function (path) {
+            var parts = this._splitter(path);
+            var lastNode;
+            var children = this._root.children;
+            for (var _i = 0, parts_2 = parts; _i < parts_2.length; _i++) {
+                var part = parts_2[_i];
+                var node = children.get(part);
+                if (!node) {
+                    break;
+                }
+                if (node.element) {
+                    lastNode = node;
+                }
+                children = node.children;
+            }
+            // return the last matching node
+            // that had an element
+            if (lastNode) {
+                return lastNode.element;
+            }
+            return undefined;
+        };
+        TrieMap.prototype.findSuperstr = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_3 = parts; _i < parts_3.length; _i++) {
+                var part = parts_3[_i];
+                node = children.get(part);
+                if (!node) {
+                    return undefined;
+                }
+                children = node.children;
+            }
+            var result = new TrieMap(this._splitter);
+            result._root = node;
+            return result;
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/).filter(function (s) { return !!s; }); };
+        return TrieMap;
+    }());
+    exports.TrieMap = TrieMap;
+    var ResourceMap = (function () {
+        function ResourceMap(ignoreCase) {
+            this.ignoreCase = ignoreCase;
+            this.map = new Map();
+        }
+        ResourceMap.prototype.set = function (resource, value) {
+            this.map.set(this.toKey(resource), value);
+        };
+        ResourceMap.prototype.get = function (resource) {
+            return this.map.get(this.toKey(resource));
+        };
+        ResourceMap.prototype.has = function (resource) {
+            return this.map.has(this.toKey(resource));
+        };
+        Object.defineProperty(ResourceMap.prototype, "size", {
+            get: function () {
+                return this.map.size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ResourceMap.prototype.clear = function () {
+            this.map.clear();
+        };
+        ResourceMap.prototype.delete = function (resource) {
+            return this.map.delete(this.toKey(resource));
+        };
+        ResourceMap.prototype.forEach = function (clb) {
+            this.map.forEach(clb);
+        };
+        ResourceMap.prototype.values = function () {
+            return values(this.map);
+        };
+        ResourceMap.prototype.toKey = function (resource) {
+            var key = resource.toString();
+            if (this.ignoreCase) {
+                key = key.toLowerCase();
+            }
+            return key;
+        };
+        return ResourceMap;
+    }());
+    exports.ResourceMap = ResourceMap;
+    var StrictResourceMap = (function (_super) {
+        __extends(StrictResourceMap, _super);
+        function StrictResourceMap() {
+            return _super.call(this) || this;
+        }
+        StrictResourceMap.prototype.keys = function () {
+            return keys(this.map).map(function (key) { return uri_1.default.parse(key); });
+        };
+        return StrictResourceMap;
+    }(ResourceMap));
+    exports.StrictResourceMap = StrictResourceMap;
+    var Touch;
+    (function (Touch) {
+        Touch.None = 0;
+        Touch.First = 1;
+        Touch.Last = 2;
+    })(Touch = exports.Touch || (exports.Touch = {}));
+    var LinkedMap = (function () {
+        function LinkedMap() {
+            this._map = new Map();
+            this._head = undefined;
+            this._tail = undefined;
+            this._size = 0;
+        }
+        LinkedMap.prototype.clear = function () {
+            this._map.clear();
+            this._head = undefined;
+            this._tail = undefined;
+            this._size = 0;
+        };
+        LinkedMap.prototype.isEmpty = function () {
+            return !this._head && !this._tail;
+        };
+        Object.defineProperty(LinkedMap.prototype, "size", {
+            get: function () {
+                return this._size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        LinkedMap.prototype.has = function (key) {
+            return this._map.has(key);
+        };
+        LinkedMap.prototype.get = function (key) {
+            var item = this._map.get(key);
+            if (!item) {
+                return undefined;
+            }
+            return item.value;
+        };
+        LinkedMap.prototype.set = function (key, value, touch) {
+            if (touch === void 0) { touch = Touch.None; }
+            var item = this._map.get(key);
+            if (item) {
+                item.value = value;
+                if (touch !== Touch.None) {
+                    this.touch(item, touch);
+                }
+            }
+            else {
+                item = { key: key, value: value, next: undefined, previous: undefined };
+                switch (touch) {
+                    case Touch.None:
+                        this.addItemLast(item);
+                        break;
+                    case Touch.First:
+                        this.addItemFirst(item);
+                        break;
+                    case Touch.Last:
+                        this.addItemLast(item);
+                        break;
+                    default:
+                        this.addItemLast(item);
+                        break;
+                }
+                this._map.set(key, item);
+                this._size++;
+            }
+        };
+        LinkedMap.prototype.delete = function (key) {
+            return !!this.remove(key);
+        };
+        LinkedMap.prototype.remove = function (key) {
+            var item = this._map.get(key);
+            if (!item) {
+                return undefined;
+            }
+            this._map.delete(key);
+            this.removeItem(item);
+            this._size--;
+            return item.value;
+        };
+        LinkedMap.prototype.shift = function () {
+            if (!this._head && !this._tail) {
+                return undefined;
+            }
+            if (!this._head || !this._tail) {
+                throw new Error('Invalid list');
+            }
+            var item = this._head;
+            this._map.delete(item.key);
+            this.removeItem(item);
+            this._size--;
+            return item.value;
+        };
+        LinkedMap.prototype.forEach = function (callbackfn, thisArg) {
+            var current = this._head;
+            while (current) {
+                if (thisArg) {
+                    callbackfn.bind(thisArg)(current.value, current.key, this);
+                }
+                else {
+                    callbackfn(current.value, current.key, this);
+                }
+                current = current.next;
+            }
+        };
+        LinkedMap.prototype.forEachReverse = function (callbackfn, thisArg) {
+            var current = this._tail;
+            while (current) {
+                if (thisArg) {
+                    callbackfn.bind(thisArg)(current.value, current.key, this);
+                }
+                else {
+                    callbackfn(current.value, current.key, this);
+                }
+                current = current.previous;
+            }
+        };
+        LinkedMap.prototype.values = function () {
+            var result = [];
+            var current = this._head;
+            while (current) {
+                result.push(current.value);
+                current = current.next;
+            }
+            return result;
+        };
+        LinkedMap.prototype.keys = function () {
+            var result = [];
+            var current = this._head;
+            while (current) {
+                result.push(current.key);
+                current = current.next;
+            }
+            return result;
+        };
+        /* VS Code / Monaco editor runs on es5 which has no Symbol.iterator
+        public keys(): IterableIterator<K> {
+            let current = this._head;
+            let iterator: IterableIterator<K> = {
+                [Symbol.iterator]() {
+                    return iterator;
+                },
+                next():IteratorResult<K> {
+                    if (current) {
+                        let result = { value: current.key, done: false };
+                        current = current.next;
+                        return result;
+                    } else {
+                        return { value: undefined, done: true };
+                    }
+                }
+            };
+            return iterator;
+        }
+    
+        public values(): IterableIterator<V> {
+            let current = this._head;
+            let iterator: IterableIterator<V> = {
+                [Symbol.iterator]() {
+                    return iterator;
+                },
+                next():IteratorResult<V> {
+                    if (current) {
+                        let result = { value: current.value, done: false };
+                        current = current.next;
+                        return result;
+                    } else {
+                        return { value: undefined, done: true };
+                    }
+                }
+            };
+            return iterator;
+        }
+        */
+        LinkedMap.prototype.addItemFirst = function (item) {
+            // First time Insert
+            if (!this._head && !this._tail) {
+                this._tail = item;
+            }
+            else if (!this._head) {
+                throw new Error('Invalid list');
+            }
+            else {
+                item.next = this._head;
+                this._head.previous = item;
+            }
+            this._head = item;
+        };
+        LinkedMap.prototype.addItemLast = function (item) {
+            // First time Insert
+            if (!this._head && !this._tail) {
+                this._head = item;
+            }
+            else if (!this._tail) {
+                throw new Error('Invalid list');
+            }
+            else {
+                item.previous = this._tail;
+                this._tail.next = item;
+            }
+            this._tail = item;
+        };
+        LinkedMap.prototype.removeItem = function (item) {
+            if (item === this._head && item === this._tail) {
+                this._head = undefined;
+                this._tail = undefined;
+            }
+            else if (item === this._head) {
+                this._head = item.next;
+            }
+            else if (item === this._tail) {
+                this._tail = item.previous;
+            }
+            else {
+                var next = item.next;
+                var previous = item.previous;
+                if (!next || !previous) {
+                    throw new Error('Invalid list');
+                }
+                next.previous = previous;
+                previous.next = next;
+            }
+        };
+        LinkedMap.prototype.touch = function (item, touch) {
+            if (!this._head || !this._tail) {
+                throw new Error('Invalid list');
+            }
+            if ((touch !== Touch.First && touch !== Touch.Last)) {
+                return;
+            }
+            if (touch === Touch.First) {
+                if (item === this._head) {
+                    return;
+                }
+                var next = item.next;
+                var previous = item.previous;
+                // Unlink the item
+                if (item === this._tail) {
+                    // previous must be defined since item was not head but is tail
+                    // So there are more than on item in the map
+                    previous.next = undefined;
+                    this._tail = previous;
+                }
+                else {
+                    // Both next and previous are not undefined since item was neither head nor tail.
+                    next.previous = previous;
+                    previous.next = next;
+                }
+                // Insert the node at head
+                item.previous = undefined;
+                item.next = this._head;
+                this._head.previous = item;
+                this._head = item;
+            }
+            else if (touch === Touch.Last) {
+                if (item === this._tail) {
+                    return;
+                }
+                var next = item.next;
+                var previous = item.previous;
+                // Unlink the item.
+                if (item === this._head) {
+                    // next must be defined since item was not tail but is head
+                    // So there are more than on item in the map
+                    next.previous = undefined;
+                    this._head = next;
+                }
+                else {
+                    // Both next and previous are not undefined since item was neither head nor tail.
+                    next.previous = previous;
+                    previous.next = next;
+                }
+                item.next = undefined;
+                item.previous = this._tail;
+                this._tail.next = item;
+                this._tail = item;
+            }
+        };
+        return LinkedMap;
+    }());
+    exports.LinkedMap = LinkedMap;
+});
+
+define(__m[6/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,33/*vs/base/common/map*/]), function (require, exports, map_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * The empty string.
+     */
+    exports.empty = '';
+    function isFalsyOrWhitespace(str) {
+        if (!str || typeof str !== 'string') {
+            return true;
+        }
+        return str.trim().length === 0;
+    }
+    exports.isFalsyOrWhitespace = isFalsyOrWhitespace;
+    /**
+     * @returns the provided number with the given number of preceding zeros.
+     */
+    function pad(n, l, char) {
+        if (char === void 0) { char = '0'; }
+        var str = '' + n;
+        var r = [str];
+        for (var i = str.length; i < l; i++) {
+            r.push(char);
+        }
+        return r.reverse().join('');
+    }
+    exports.pad = pad;
+    var _formatRegexp = /{(\d+)}/g;
+    /**
+     * Helper to produce a string with a variable number of arguments. Insert variable segments
+     * into the string using the {n} notation where N is the index of the argument following the string.
+     * @param value string to which formatting is applied
+     * @param args replacements for {n}-entries
+     */
+    function format(value) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        if (args.length === 0) {
+            return value;
+        }
+        return value.replace(_formatRegexp, function (match, group) {
+            var idx = parseInt(group, 10);
+            return isNaN(idx) || idx < 0 || idx >= args.length ?
+                match :
+                args[idx];
+        });
+    }
+    exports.format = format;
+    /**
+     * Converts HTML characters inside the string to use entities instead. Makes the string safe from
+     * being used e.g. in HTMLElement.innerHTML.
+     */
+    function escape(html) {
+        return html.replace(/[<|>|&]/g, function (match) {
+            switch (match) {
+                case '<': return '&lt;';
+                case '>': return '&gt;';
+                case '&': return '&amp;';
+                default: return match;
+            }
+        });
+    }
+    exports.escape = escape;
+    /**
+     * Escapes regular expression characters in a given string
+     */
+    function escapeRegExpCharacters(value) {
+        return value.replace(/[\-\\\{\}\*\+\?\|\^\$\.\[\]\(\)\#]/g, '\\$&');
+    }
+    exports.escapeRegExpCharacters = escapeRegExpCharacters;
+    /**
+     * Removes all occurrences of needle from the beginning and end of haystack.
+     * @param haystack string to trim
+     * @param needle the thing to trim (default is a blank)
+     */
+    function trim(haystack, needle) {
+        if (needle === void 0) { needle = ' '; }
+        var trimmed = ltrim(haystack, needle);
+        return rtrim(trimmed, needle);
+    }
+    exports.trim = trim;
+    /**
+     * Removes all occurrences of needle from the beginning of haystack.
+     * @param haystack string to trim
+     * @param needle the thing to trim
+     */
+    function ltrim(haystack, needle) {
+        if (!haystack || !needle) {
+            return haystack;
+        }
+        var needleLen = needle.length;
+        if (needleLen === 0 || haystack.length === 0) {
+            return haystack;
+        }
+        var offset = 0, idx = -1;
+        while ((idx = haystack.indexOf(needle, offset)) === offset) {
+            offset = offset + needleLen;
+        }
+        return haystack.substring(offset);
+    }
+    exports.ltrim = ltrim;
+    /**
+     * Removes all occurrences of needle from the end of haystack.
+     * @param haystack string to trim
+     * @param needle the thing to trim
+     */
+    function rtrim(haystack, needle) {
+        if (!haystack || !needle) {
+            return haystack;
+        }
+        var needleLen = needle.length, haystackLen = haystack.length;
+        if (needleLen === 0 || haystackLen === 0) {
+            return haystack;
+        }
+        var offset = haystackLen, idx = -1;
+        while (true) {
+            idx = haystack.lastIndexOf(needle, offset - 1);
+            if (idx === -1 || idx + needleLen !== offset) {
+                break;
+            }
+            if (idx === 0) {
+                return '';
+            }
+            offset = idx;
+        }
+        return haystack.substring(0, offset);
+    }
+    exports.rtrim = rtrim;
+    function convertSimple2RegExpPattern(pattern) {
+        return pattern.replace(/[\-\\\{\}\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&').replace(/[\*]/g, '.*');
+    }
+    exports.convertSimple2RegExpPattern = convertSimple2RegExpPattern;
+    function stripWildcards(pattern) {
+        return pattern.replace(/\*/g, '');
+    }
+    exports.stripWildcards = stripWildcards;
+    /**
+     * Determines if haystack starts with needle.
+     */
+    function startsWith(haystack, needle) {
+        if (haystack.length < needle.length) {
+            return false;
+        }
+        for (var i = 0; i < needle.length; i++) {
+            if (haystack[i] !== needle[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    exports.startsWith = startsWith;
+    /**
+     * Determines if haystack ends with needle.
+     */
+    function endsWith(haystack, needle) {
+        var diff = haystack.length - needle.length;
+        if (diff > 0) {
+            return haystack.indexOf(needle, diff) === diff;
+        }
+        else if (diff === 0) {
+            return haystack === needle;
+        }
+        else {
+            return false;
+        }
+    }
+    exports.endsWith = endsWith;
+    function indexOfIgnoreCase(haystack, needle, position) {
+        if (position === void 0) { position = 0; }
+        var index = haystack.indexOf(needle, position);
+        if (index < 0) {
+            if (position > 0) {
+                haystack = haystack.substr(position);
+            }
+            needle = escapeRegExpCharacters(needle);
+            index = haystack.search(new RegExp(needle, 'i'));
+        }
+        return index;
+    }
+    exports.indexOfIgnoreCase = indexOfIgnoreCase;
+    function createRegExp(searchString, isRegex, options) {
+        if (options === void 0) { options = {}; }
+        if (!searchString) {
+            throw new Error('Cannot create regex from empty string');
+        }
+        if (!isRegex) {
+            searchString = escapeRegExpCharacters(searchString);
+        }
+        if (options.wholeWord) {
+            if (!/\B/.test(searchString.charAt(0))) {
+                searchString = '\\b' + searchString;
+            }
+            if (!/\B/.test(searchString.charAt(searchString.length - 1))) {
+                searchString = searchString + '\\b';
+            }
+        }
+        var modifiers = '';
+        if (options.global) {
+            modifiers += 'g';
+        }
+        if (!options.matchCase) {
+            modifiers += 'i';
+        }
+        if (options.multiline) {
+            modifiers += 'm';
+        }
+        return new RegExp(searchString, modifiers);
+    }
+    exports.createRegExp = createRegExp;
+    function regExpLeadsToEndlessLoop(regexp) {
+        // Exit early if it's one of these special cases which are meant to match
+        // against an empty string
+        if (regexp.source === '^' || regexp.source === '^$' || regexp.source === '$') {
+            return false;
+        }
+        // We check against an empty string. If the regular expression doesn't advance
+        // (e.g. ends in an endless loop) it will match an empty string.
+        var match = regexp.exec('');
+        return (match && regexp.lastIndex === 0);
+    }
+    exports.regExpLeadsToEndlessLoop = regExpLeadsToEndlessLoop;
+    /**
+     * The normalize() method returns the Unicode Normalization Form of a given string. The form will be
+     * the Normalization Form Canonical Composition.
+     *
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize}
+     */
+    exports.canNormalize = typeof (''.normalize) === 'function';
+    var nonAsciiCharactersPattern = /[^\u0000-\u0080]/;
+    var normalizedCache = new map_1.BoundedMap(10000); // bounded to 10000 elements
+    function normalizeNFC(str) {
+        if (!exports.canNormalize || !str) {
+            return str;
+        }
+        var cached = normalizedCache.get(str);
+        if (cached) {
+            return cached;
+        }
+        var res;
+        if (nonAsciiCharactersPattern.test(str)) {
+            res = str.normalize('NFC');
+        }
+        else {
+            res = str;
+        }
+        // Use the cache for fast lookup
+        normalizedCache.set(str, res);
+        return res;
+    }
+    exports.normalizeNFC = normalizeNFC;
+    /**
+     * Returns first index of the string that is not whitespace.
+     * If string is empty or contains only whitespaces, returns -1
+     */
+    function firstNonWhitespaceIndex(str) {
+        for (var i = 0, len = str.length; i < len; i++) {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    exports.firstNonWhitespaceIndex = firstNonWhitespaceIndex;
+    /**
+     * Returns the leading whitespace of the string.
+     * If the string contains only whitespaces, returns entire string
+     */
+    function getLeadingWhitespace(str, start, end) {
+        if (start === void 0) { start = 0; }
+        if (end === void 0) { end = str.length; }
+        for (var i = start; i < end; i++) {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
+                return str.substring(start, i);
+            }
+        }
+        return str.substring(start, end);
+    }
+    exports.getLeadingWhitespace = getLeadingWhitespace;
+    /**
+     * Returns last index of the string that is not whitespace.
+     * If string is empty or contains only whitespaces, returns -1
+     */
+    function lastNonWhitespaceIndex(str, startIndex) {
+        if (startIndex === void 0) { startIndex = str.length - 1; }
+        for (var i = startIndex; i >= 0; i--) {
+            var chCode = str.charCodeAt(i);
+            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    exports.lastNonWhitespaceIndex = lastNonWhitespaceIndex;
+    function compare(a, b) {
+        if (a < b) {
+            return -1;
+        }
+        else if (a > b) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+    exports.compare = compare;
+    function compareIgnoreCase(a, b) {
+        var len = Math.min(a.length, b.length);
+        for (var i = 0; i < len; i++) {
+            var codeA = a.charCodeAt(i);
+            var codeB = b.charCodeAt(i);
+            if (codeA === codeB) {
+                // equal
+                continue;
+            }
+            if (isUpperAsciiLetter(codeA)) {
+                codeA += 32;
+            }
+            if (isUpperAsciiLetter(codeB)) {
+                codeB += 32;
+            }
+            var diff = codeA - codeB;
+            if (diff === 0) {
+                // equal -> ignoreCase
+                continue;
+            }
+            else if (isLowerAsciiLetter(codeA) && isLowerAsciiLetter(codeB)) {
+                //
+                return diff;
+            }
+            else {
+                return compare(a.toLowerCase(), b.toLowerCase());
+            }
+        }
+        if (a.length < b.length) {
+            return -1;
+        }
+        else if (a.length > b.length) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+    exports.compareIgnoreCase = compareIgnoreCase;
+    function isLowerAsciiLetter(code) {
+        return code >= 97 /* a */ && code <= 122 /* z */;
+    }
+    function isUpperAsciiLetter(code) {
+        return code >= 65 /* A */ && code <= 90 /* Z */;
+    }
+    function isAsciiLetter(code) {
+        return isLowerAsciiLetter(code) || isUpperAsciiLetter(code);
+    }
+    function equalsIgnoreCase(a, b) {
+        var len1 = a ? a.length : 0;
+        var len2 = b ? b.length : 0;
+        if (len1 !== len2) {
+            return false;
+        }
+        return doEqualsIgnoreCase(a, b);
+    }
+    exports.equalsIgnoreCase = equalsIgnoreCase;
+    function doEqualsIgnoreCase(a, b, stopAt) {
+        if (stopAt === void 0) { stopAt = a.length; }
+        if (typeof a !== 'string' || typeof b !== 'string') {
+            return false;
+        }
+        for (var i = 0; i < stopAt; i++) {
+            var codeA = a.charCodeAt(i);
+            var codeB = b.charCodeAt(i);
+            if (codeA === codeB) {
+                continue;
+            }
+            // a-z A-Z
+            if (isAsciiLetter(codeA) && isAsciiLetter(codeB)) {
+                var diff = Math.abs(codeA - codeB);
+                if (diff !== 0 && diff !== 32) {
+                    return false;
+                }
+            }
+            else {
+                if (String.fromCharCode(codeA).toLowerCase() !== String.fromCharCode(codeB).toLowerCase()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    function beginsWithIgnoreCase(str, candidate) {
+        var candidateLength = candidate.length;
+        if (candidate.length > str.length) {
+            return false;
+        }
+        return doEqualsIgnoreCase(str, candidate, candidateLength);
+    }
+    exports.beginsWithIgnoreCase = beginsWithIgnoreCase;
+    /**
+     * @returns the length of the common prefix of the two strings.
+     */
+    function commonPrefixLength(a, b) {
+        var i, len = Math.min(a.length, b.length);
+        for (i = 0; i < len; i++) {
+            if (a.charCodeAt(i) !== b.charCodeAt(i)) {
+                return i;
+            }
+        }
+        return len;
+    }
+    exports.commonPrefixLength = commonPrefixLength;
+    /**
+     * @returns the length of the common suffix of the two strings.
+     */
+    function commonSuffixLength(a, b) {
+        var i, len = Math.min(a.length, b.length);
+        var aLastIndex = a.length - 1;
+        var bLastIndex = b.length - 1;
+        for (i = 0; i < len; i++) {
+            if (a.charCodeAt(aLastIndex - i) !== b.charCodeAt(bLastIndex - i)) {
+                return i;
+            }
+        }
+        return len;
+    }
+    exports.commonSuffixLength = commonSuffixLength;
+    function substrEquals(a, aStart, aEnd, b, bStart, bEnd) {
+        while (aStart < aEnd && bStart < bEnd) {
+            if (a[aStart] !== b[bStart]) {
+                return false;
+            }
+            aStart += 1;
+            bStart += 1;
+        }
+        return true;
+    }
+    /**
+     * Return the overlap between the suffix of `a` and the prefix of `b`.
+     * For instance `overlap("foobar", "arr, I'm a pirate") === 2`.
+     */
+    function overlap(a, b) {
+        var aEnd = a.length;
+        var bEnd = b.length;
+        var aStart = aEnd - bEnd;
+        if (aStart === 0) {
+            return a === b ? aEnd : 0;
+        }
+        else if (aStart < 0) {
+            bEnd += aStart;
+            aStart = 0;
+        }
+        while (aStart < aEnd && bEnd > 0) {
+            if (substrEquals(a, aStart, aEnd, b, 0, bEnd)) {
+                return bEnd;
+            }
+            bEnd -= 1;
+            aStart += 1;
+        }
+        return 0;
+    }
+    exports.overlap = overlap;
+    // --- unicode
+    // http://en.wikipedia.org/wiki/Surrogate_pair
+    // Returns the code point starting at a specified index in a string
+    // Code points U+0000 to U+D7FF and U+E000 to U+FFFF are represented on a single character
+    // Code points U+10000 to U+10FFFF are represented on two consecutive characters
+    //export function getUnicodePoint(str:string, index:number, len:number):number {
+    //	let chrCode = str.charCodeAt(index);
+    //	if (0xD800 <= chrCode && chrCode <= 0xDBFF && index + 1 < len) {
+    //		let nextChrCode = str.charCodeAt(index + 1);
+    //		if (0xDC00 <= nextChrCode && nextChrCode <= 0xDFFF) {
+    //			return (chrCode - 0xD800) << 10 + (nextChrCode - 0xDC00) + 0x10000;
+    //		}
+    //	}
+    //	return chrCode;
+    //}
+    function isHighSurrogate(charCode) {
+        return (0xD800 <= charCode && charCode <= 0xDBFF);
+    }
+    exports.isHighSurrogate = isHighSurrogate;
+    function isLowSurrogate(charCode) {
+        return (0xDC00 <= charCode && charCode <= 0xDFFF);
+    }
+    exports.isLowSurrogate = isLowSurrogate;
+    /**
+     * Generated using https://github.com/alexandrudima/unicode-utils/blob/master/generate-rtl-test.js
+     */
+    var CONTAINS_RTL = /(?:[\u05BE\u05C0\u05C3\u05C6\u05D0-\u05F4\u0608\u060B\u060D\u061B-\u064A\u066D-\u066F\u0671-\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u0710\u0712-\u072F\u074D-\u07A5\u07B1-\u07EA\u07F4\u07F5\u07FA-\u0815\u081A\u0824\u0828\u0830-\u0858\u085E-\u08BD\u200F\uFB1D\uFB1F-\uFB28\uFB2A-\uFD3D\uFD50-\uFDFC\uFE70-\uFEFC]|\uD802[\uDC00-\uDD1B\uDD20-\uDE00\uDE10-\uDE33\uDE40-\uDEE4\uDEEB-\uDF35\uDF40-\uDFFF]|\uD803[\uDC00-\uDCFF]|\uD83A[\uDC00-\uDCCF\uDD00-\uDD43\uDD50-\uDFFF]|\uD83B[\uDC00-\uDEBB])/;
+    /**
+     * Returns true if `str` contains any Unicode character that is classified as "R" or "AL".
+     */
+    function containsRTL(str) {
+        return CONTAINS_RTL.test(str);
+    }
+    exports.containsRTL = containsRTL;
+    /**
+     * Generated using https://github.com/alexandrudima/unicode-utils/blob/master/generate-emoji-test.js
+     */
+    var CONTAINS_EMOJI = /(?:[\u231A\u231B\u23F0\u23F3\u2600-\u27BF\u2B50\u2B55]|\uD83C[\uDDE6-\uDDFF\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F\uDE80-\uDEF8]|\uD83E[\uDD00-\uDDE6])/;
+    function containsEmoji(str) {
+        return CONTAINS_EMOJI.test(str);
+    }
+    exports.containsEmoji = containsEmoji;
+    var IS_BASIC_ASCII = /^[\t\n\r\x20-\x7E]*$/;
+    /**
+     * Returns true if `str` contains only basic ASCII characters in the range 32 - 126 (including 32 and 126) or \n, \r, \t
+     */
+    function isBasicASCII(str) {
+        return IS_BASIC_ASCII.test(str);
+    }
+    exports.isBasicASCII = isBasicASCII;
+    function containsFullWidthCharacter(str) {
+        for (var i = 0, len = str.length; i < len; i++) {
+            if (isFullWidthCharacter(str.charCodeAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    exports.containsFullWidthCharacter = containsFullWidthCharacter;
+    function isFullWidthCharacter(charCode) {
+        // Do a cheap trick to better support wrapping of wide characters, treat them as 2 columns
+        // http://jrgraphix.net/research/unicode_blocks.php
+        //          2E80 — 2EFF   CJK Radicals Supplement
+        //          2F00 — 2FDF   Kangxi Radicals
+        //          2FF0 — 2FFF   Ideographic Description Characters
+        //          3000 — 303F   CJK Symbols and Punctuation
+        //          3040 — 309F   Hiragana
+        //          30A0 — 30FF   Katakana
+        //          3100 — 312F   Bopomofo
+        //          3130 — 318F   Hangul Compatibility Jamo
+        //          3190 — 319F   Kanbun
+        //          31A0 — 31BF   Bopomofo Extended
+        //          31F0 — 31FF   Katakana Phonetic Extensions
+        //          3200 — 32FF   Enclosed CJK Letters and Months
+        //          3300 — 33FF   CJK Compatibility
+        //          3400 — 4DBF   CJK Unified Ideographs Extension A
+        //          4DC0 — 4DFF   Yijing Hexagram Symbols
+        //          4E00 — 9FFF   CJK Unified Ideographs
+        //          A000 — A48F   Yi Syllables
+        //          A490 — A4CF   Yi Radicals
+        //          AC00 — D7AF   Hangul Syllables
+        // [IGNORE] D800 — DB7F   High Surrogates
+        // [IGNORE] DB80 — DBFF   High Private Use Surrogates
+        // [IGNORE] DC00 — DFFF   Low Surrogates
+        // [IGNORE] E000 — F8FF   Private Use Area
+        //          F900 — FAFF   CJK Compatibility Ideographs
+        // [IGNORE] FB00 — FB4F   Alphabetic Presentation Forms
+        // [IGNORE] FB50 — FDFF   Arabic Presentation Forms-A
+        // [IGNORE] FE00 — FE0F   Variation Selectors
+        // [IGNORE] FE20 — FE2F   Combining Half Marks
+        // [IGNORE] FE30 — FE4F   CJK Compatibility Forms
+        // [IGNORE] FE50 — FE6F   Small Form Variants
+        // [IGNORE] FE70 — FEFF   Arabic Presentation Forms-B
+        //          FF00 — FFEF   Halfwidth and Fullwidth Forms
+        //               [https://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms]
+        //               of which FF01 - FF5E fullwidth ASCII of 21 to 7E
+        // [IGNORE]    and FF65 - FFDC halfwidth of Katakana and Hangul
+        // [IGNORE] FFF0 — FFFF   Specials
+        charCode = +charCode; // @perf
+        return ((charCode >= 0x2E80 && charCode <= 0xD7AF)
+            || (charCode >= 0xF900 && charCode <= 0xFAFF)
+            || (charCode >= 0xFF01 && charCode <= 0xFF5E));
+    }
+    exports.isFullWidthCharacter = isFullWidthCharacter;
+    /**
+     * Computes the difference score for two strings. More similar strings have a higher score.
+     * We use largest common subsequence dynamic programming approach but penalize in the end for length differences.
+     * Strings that have a large length difference will get a bad default score 0.
+     * Complexity - both time and space O(first.length * second.length)
+     * Dynamic programming LCS computation http://en.wikipedia.org/wiki/Longest_common_subsequence_problem
+     *
+     * @param first a string
+     * @param second a string
+     */
+    function difference(first, second, maxLenDelta) {
+        if (maxLenDelta === void 0) { maxLenDelta = 4; }
+        var lengthDifference = Math.abs(first.length - second.length);
+        // We only compute score if length of the currentWord and length of entry.name are similar.
+        if (lengthDifference > maxLenDelta) {
+            return 0;
+        }
+        // Initialize LCS (largest common subsequence) matrix.
+        var LCS = [];
+        var zeroArray = [];
+        var i, j;
+        for (i = 0; i < second.length + 1; ++i) {
+            zeroArray.push(0);
+        }
+        for (i = 0; i < first.length + 1; ++i) {
+            LCS.push(zeroArray);
+        }
+        for (i = 1; i < first.length + 1; ++i) {
+            for (j = 1; j < second.length + 1; ++j) {
+                if (first[i - 1] === second[j - 1]) {
+                    LCS[i][j] = LCS[i - 1][j - 1] + 1;
+                }
+                else {
+                    LCS[i][j] = Math.max(LCS[i - 1][j], LCS[i][j - 1]);
+                }
+            }
+        }
+        return LCS[first.length][second.length] - Math.sqrt(lengthDifference);
+    }
+    exports.difference = difference;
+    /**
+     * Returns an array in which every entry is the offset of a
+     * line. There is always one entry which is zero.
+     */
+    function computeLineStarts(text) {
+        var regexp = /\r\n|\r|\n/g, ret = [0], match;
+        while ((match = regexp.exec(text))) {
+            ret.push(regexp.lastIndex);
+        }
+        return ret;
+    }
+    exports.computeLineStarts = computeLineStarts;
+    /**
+     * Given a string and a max length returns a shorted version. Shorting
+     * happens at favorable positions - such as whitespace or punctuation characters.
+     */
+    function lcut(text, n) {
+        if (text.length < n) {
+            return text;
+        }
+        var segments = text.split(/\b/), count = 0;
+        for (var i = segments.length - 1; i >= 0; i--) {
+            count += segments[i].length;
+            if (count > n) {
+                segments.splice(0, i);
+                break;
+            }
+        }
+        return segments.join(exports.empty).replace(/^\s/, exports.empty);
+    }
+    exports.lcut = lcut;
+    // Escape codes
+    // http://en.wikipedia.org/wiki/ANSI_escape_code
+    var EL = /\x1B\x5B[12]?K/g; // Erase in line
+    var COLOR_START = /\x1b\[\d+m/g; // Color
+    var COLOR_END = /\x1b\[0?m/g; // Color
+    function removeAnsiEscapeCodes(str) {
+        if (str) {
+            str = str.replace(EL, '');
+            str = str.replace(COLOR_START, '');
+            str = str.replace(COLOR_END, '');
+        }
+        return str;
+    }
+    exports.removeAnsiEscapeCodes = removeAnsiEscapeCodes;
+    // -- UTF-8 BOM
+    exports.UTF8_BOM_CHARACTER = String.fromCharCode(65279 /* UTF8_BOM */);
+    function startsWithUTF8BOM(str) {
+        return (str && str.length > 0 && str.charCodeAt(0) === 65279 /* UTF8_BOM */);
+    }
+    exports.startsWithUTF8BOM = startsWithUTF8BOM;
+    /**
+     * Appends two strings. If the appended result is longer than maxLength,
+     * trims the start of the result and replaces it with '...'.
+     */
+    function appendWithLimit(first, second, maxLength) {
+        var newLength = first.length + second.length;
+        if (newLength > maxLength) {
+            first = '...' + first.substr(newLength - maxLength);
+        }
+        if (second.length > maxLength) {
+            first += second.substr(second.length - maxLength);
+        }
+        else {
+            first += second;
+        }
+        return first;
+    }
+    exports.appendWithLimit = appendWithLimit;
+    function safeBtoa(str) {
+        return btoa(encodeURIComponent(str)); // we use encodeURIComponent because btoa fails for non Latin 1 values
+    }
+    exports.safeBtoa = safeBtoa;
+    function repeat(s, count) {
+        var result = '';
+        for (var i = 0; i < count; i++) {
+            result += s;
+        }
+        return result;
+    }
+    exports.repeat = repeat;
+});
+
+define(__m[10/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/platform*/,19/*vs/base/common/arrays*/,6/*vs/base/common/strings*/]), function (require, exports, platform_1, arrays_1, strings_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The forward slash path separator.
      */
@@ -794,8 +2962,9 @@ define(__m[12/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,2/*vs/bas
      */
     exports.nativeSep = platform_1.isWindows ? '\\' : '/';
     function relative(from, to) {
-        var originalNormalizedFrom = normalize(from);
-        var originalNormalizedTo = normalize(to);
+        // ignore trailing slashes
+        var originalNormalizedFrom = strings_1.rtrim(normalize(from), exports.sep);
+        var originalNormalizedTo = strings_1.rtrim(normalize(to), exports.sep);
         // we're assuming here that any non=linux OS is case insensitive
         // so we must compare each part in its lowercase form
         var normalizedFrom = platform_1.isLinux ? originalNormalizedFrom : originalNormalizedFrom.toLowerCase();
@@ -824,7 +2993,11 @@ define(__m[12/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,2/*vs/bas
             return path[0];
         }
         else {
-            return path.substring(0, ~idx);
+            var res = path.substring(0, ~idx);
+            if (platform_1.isWindows && res[res.length - 1] === ':') {
+                res += exports.nativeSep; // make sure drive letters end with backslash
+            }
+            return res;
         }
     }
     exports.dirname = dirname;
@@ -1051,43 +3224,6 @@ define(__m[12/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,2/*vs/bas
         return true;
     }
     exports.isUNC = isUNC;
-    function isPosixAbsolute(path) {
-        return path && path[0] === '/';
-    }
-    function makePosixAbsolute(path) {
-        return isPosixAbsolute(normalize(path)) ? path : exports.sep + path;
-    }
-    exports.makePosixAbsolute = makePosixAbsolute;
-    function isEqualOrParent(path, candidate) {
-        if (path === candidate) {
-            return true;
-        }
-        path = normalize(path);
-        candidate = normalize(candidate);
-        var candidateLen = candidate.length;
-        var lastCandidateChar = candidate.charCodeAt(candidateLen - 1);
-        if (lastCandidateChar === 47 /* Slash */) {
-            candidate = candidate.substring(0, candidateLen - 1);
-            candidateLen -= 1;
-        }
-        if (path === candidate) {
-            return true;
-        }
-        if (!platform_1.isLinux) {
-            // case insensitive
-            path = path.toLowerCase();
-            candidate = candidate.toLowerCase();
-        }
-        if (path === candidate) {
-            return true;
-        }
-        if (path.indexOf(candidate) !== 0) {
-            return false;
-        }
-        var char = path.charCodeAt(candidateLen);
-        return char === 47 /* Slash */;
-    }
-    exports.isEqualOrParent = isEqualOrParent;
     // Reference: https://en.wikipedia.org/wiki/Filename
     var INVALID_FILE_CHARS = platform_1.isWindows ? /[\\/:\*\?"<>\|]/g : /[\\/]/g;
     var WINDOWS_FORBIDDEN_NAMES = /^(con|prn|aux|clock\$|nul|lpt[0-9]|com[0-9])$/i;
@@ -1114,2256 +3250,187 @@ define(__m[12/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,2/*vs/bas
         return true;
     }
     exports.isValidBasename = isValidBasename;
-    exports.isAbsoluteRegex = /^((\/|[a-zA-Z]:\\)[^\(\)<>\\'\"\[\]]+)/;
+    function isEqual(pathA, pathB, ignoreCase) {
+        var identityEquals = (pathA === pathB);
+        if (!ignoreCase || identityEquals) {
+            return identityEquals;
+        }
+        if (!pathA || !pathB) {
+            return false;
+        }
+        return strings_1.equalsIgnoreCase(pathA, pathB);
+    }
+    exports.isEqual = isEqual;
+    function isEqualOrParent(path, candidate, ignoreCase) {
+        if (path === candidate) {
+            return true;
+        }
+        if (!path || !candidate) {
+            return false;
+        }
+        if (candidate.length > path.length) {
+            return false;
+        }
+        if (ignoreCase) {
+            var beginsWith = strings_1.beginsWithIgnoreCase(path, candidate);
+            if (!beginsWith) {
+                return false;
+            }
+            if (candidate.length === path.length) {
+                return true; // same path, different casing
+            }
+            var sepOffset = candidate.length;
+            if (candidate.charAt(candidate.length - 1) === exports.nativeSep) {
+                sepOffset--; // adjust the expected sep offset in case our candidate already ends in separator character
+            }
+            return path.charAt(sepOffset) === exports.nativeSep;
+        }
+        if (candidate.charAt(candidate.length - 1) !== exports.nativeSep) {
+            candidate += exports.nativeSep;
+        }
+        return path.indexOf(candidate) === 0;
+    }
+    exports.isEqualOrParent = isEqualOrParent;
     /**
-     * If you have access to node, it is recommended to use node's path.isAbsolute().
-     * This is a simple regex based approach.
+     * Adapted from Node's path.isAbsolute functions
      */
     function isAbsolute(path) {
-        return exports.isAbsoluteRegex.test(path);
+        return platform_1.isWindows ?
+            isAbsolute_win32(path) :
+            isAbsolute_posix(path);
     }
     exports.isAbsolute = isAbsolute;
-});
-
-define(__m[16/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/,24/*vs/base/common/map*/]), function (require, exports, map_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    /**
-     * The empty string.
-     */
-    exports.empty = '';
-    function isFalsyOrWhitespace(str) {
-        if (!str || typeof str !== 'string') {
+    function isAbsolute_win32(path) {
+        if (!path) {
+            return false;
+        }
+        var char0 = path.charCodeAt(0);
+        if (char0 === 47 /* Slash */ || char0 === 92 /* Backslash */) {
             return true;
         }
-        return str.trim().length === 0;
-    }
-    exports.isFalsyOrWhitespace = isFalsyOrWhitespace;
-    /**
-     * @returns the provided number with the given number of preceding zeros.
-     */
-    function pad(n, l, char) {
-        if (char === void 0) { char = '0'; }
-        var str = '' + n;
-        var r = [str];
-        for (var i = str.length; i < l; i++) {
-            r.push(char);
-        }
-        return r.reverse().join('');
-    }
-    exports.pad = pad;
-    var _formatRegexp = /{(\d+)}/g;
-    /**
-     * Helper to produce a string with a variable number of arguments. Insert variable segments
-     * into the string using the {n} notation where N is the index of the argument following the string.
-     * @param value string to which formatting is applied
-     * @param args replacements for {n}-entries
-     */
-    function format(value) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        if (args.length === 0) {
-            return value;
-        }
-        return value.replace(_formatRegexp, function (match, group) {
-            var idx = parseInt(group, 10);
-            return isNaN(idx) || idx < 0 || idx >= args.length ?
-                match :
-                args[idx];
-        });
-    }
-    exports.format = format;
-    /**
-     * Converts HTML characters inside the string to use entities instead. Makes the string safe from
-     * being used e.g. in HTMLElement.innerHTML.
-     */
-    function escape(html) {
-        return html.replace(/[<|>|&]/g, function (match) {
-            switch (match) {
-                case '<': return '&lt;';
-                case '>': return '&gt;';
-                case '&': return '&amp;';
-                default: return match;
-            }
-        });
-    }
-    exports.escape = escape;
-    /**
-     * Escapes regular expression characters in a given string
-     */
-    function escapeRegExpCharacters(value) {
-        return value.replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&');
-    }
-    exports.escapeRegExpCharacters = escapeRegExpCharacters;
-    /**
-     * Removes all occurrences of needle from the beginning and end of haystack.
-     * @param haystack string to trim
-     * @param needle the thing to trim (default is a blank)
-     */
-    function trim(haystack, needle) {
-        if (needle === void 0) { needle = ' '; }
-        var trimmed = ltrim(haystack, needle);
-        return rtrim(trimmed, needle);
-    }
-    exports.trim = trim;
-    /**
-     * Removes all occurrences of needle from the beginning of haystack.
-     * @param haystack string to trim
-     * @param needle the thing to trim
-     */
-    function ltrim(haystack, needle) {
-        if (!haystack || !needle) {
-            return haystack;
-        }
-        var needleLen = needle.length;
-        if (needleLen === 0 || haystack.length === 0) {
-            return haystack;
-        }
-        var offset = 0, idx = -1;
-        while ((idx = haystack.indexOf(needle, offset)) === offset) {
-            offset = offset + needleLen;
-        }
-        return haystack.substring(offset);
-    }
-    exports.ltrim = ltrim;
-    /**
-     * Removes all occurrences of needle from the end of haystack.
-     * @param haystack string to trim
-     * @param needle the thing to trim
-     */
-    function rtrim(haystack, needle) {
-        if (!haystack || !needle) {
-            return haystack;
-        }
-        var needleLen = needle.length, haystackLen = haystack.length;
-        if (needleLen === 0 || haystackLen === 0) {
-            return haystack;
-        }
-        var offset = haystackLen, idx = -1;
-        while (true) {
-            idx = haystack.lastIndexOf(needle, offset - 1);
-            if (idx === -1 || idx + needleLen !== offset) {
-                break;
-            }
-            if (idx === 0) {
-                return '';
-            }
-            offset = idx;
-        }
-        return haystack.substring(0, offset);
-    }
-    exports.rtrim = rtrim;
-    function convertSimple2RegExpPattern(pattern) {
-        return pattern.replace(/[\-\\\{\}\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&').replace(/[\*]/g, '.*');
-    }
-    exports.convertSimple2RegExpPattern = convertSimple2RegExpPattern;
-    function stripWildcards(pattern) {
-        return pattern.replace(/\*/g, '');
-    }
-    exports.stripWildcards = stripWildcards;
-    /**
-     * Determines if haystack starts with needle.
-     */
-    function startsWith(haystack, needle) {
-        if (haystack.length < needle.length) {
-            return false;
-        }
-        for (var i = 0; i < needle.length; i++) {
-            if (haystack[i] !== needle[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    exports.startsWith = startsWith;
-    /**
-     * Determines if haystack ends with needle.
-     */
-    function endsWith(haystack, needle) {
-        var diff = haystack.length - needle.length;
-        if (diff > 0) {
-            return haystack.indexOf(needle, diff) === diff;
-        }
-        else if (diff === 0) {
-            return haystack === needle;
-        }
-        else {
-            return false;
-        }
-    }
-    exports.endsWith = endsWith;
-    function indexOfIgnoreCase(haystack, needle, position) {
-        if (position === void 0) { position = 0; }
-        var index = haystack.indexOf(needle, position);
-        if (index < 0) {
-            if (position > 0) {
-                haystack = haystack.substr(position);
-            }
-            needle = escapeRegExpCharacters(needle);
-            index = haystack.search(new RegExp(needle, 'i'));
-        }
-        return index;
-    }
-    exports.indexOfIgnoreCase = indexOfIgnoreCase;
-    function createRegExp(searchString, isRegex, options) {
-        if (options === void 0) { options = {}; }
-        if (searchString === '') {
-            throw new Error('Cannot create regex from empty string');
-        }
-        if (!isRegex) {
-            searchString = searchString.replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&');
-        }
-        if (options.wholeWord) {
-            if (!/\B/.test(searchString.charAt(0))) {
-                searchString = '\\b' + searchString;
-            }
-            if (!/\B/.test(searchString.charAt(searchString.length - 1))) {
-                searchString = searchString + '\\b';
-            }
-        }
-        var modifiers = '';
-        if (options.global) {
-            modifiers += 'g';
-        }
-        if (!options.matchCase) {
-            modifiers += 'i';
-        }
-        if (options.multiline) {
-            modifiers += 'm';
-        }
-        return new RegExp(searchString, modifiers);
-    }
-    exports.createRegExp = createRegExp;
-    function regExpLeadsToEndlessLoop(regexp) {
-        // Exit early if it's one of these special cases which are meant to match
-        // against an empty string
-        if (regexp.source === '^' || regexp.source === '^$' || regexp.source === '$') {
-            return false;
-        }
-        // We check against an empty string. If the regular expression doesn't advance
-        // (e.g. ends in an endless loop) it will match an empty string.
-        var match = regexp.exec('');
-        return (match && regexp.lastIndex === 0);
-    }
-    exports.regExpLeadsToEndlessLoop = regExpLeadsToEndlessLoop;
-    /**
-     * The normalize() method returns the Unicode Normalization Form of a given string. The form will be
-     * the Normalization Form Canonical Composition.
-     *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize}
-     */
-    exports.canNormalize = typeof (''.normalize) === 'function';
-    var nonAsciiCharactersPattern = /[^\u0000-\u0080]/;
-    var normalizedCache = new map_1.BoundedLinkedMap(10000); // bounded to 10000 elements
-    function normalizeNFC(str) {
-        if (!exports.canNormalize || !str) {
-            return str;
-        }
-        var cached = normalizedCache.get(str);
-        if (cached) {
-            return cached;
-        }
-        var res;
-        if (nonAsciiCharactersPattern.test(str)) {
-            res = str.normalize('NFC');
-        }
-        else {
-            res = str;
-        }
-        // Use the cache for fast lookup
-        normalizedCache.set(str, res);
-        return res;
-    }
-    exports.normalizeNFC = normalizeNFC;
-    /**
-     * Returns first index of the string that is not whitespace.
-     * If string is empty or contains only whitespaces, returns -1
-     */
-    function firstNonWhitespaceIndex(str) {
-        for (var i = 0, len = str.length; i < len; i++) {
-            var chCode = str.charCodeAt(i);
-            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    exports.firstNonWhitespaceIndex = firstNonWhitespaceIndex;
-    /**
-     * Returns the leading whitespace of the string.
-     * If the string contains only whitespaces, returns entire string
-     */
-    function getLeadingWhitespace(str) {
-        for (var i = 0, len = str.length; i < len; i++) {
-            var chCode = str.charCodeAt(i);
-            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
-                return str.substring(0, i);
-            }
-        }
-        return str;
-    }
-    exports.getLeadingWhitespace = getLeadingWhitespace;
-    /**
-     * Returns last index of the string that is not whitespace.
-     * If string is empty or contains only whitespaces, returns -1
-     */
-    function lastNonWhitespaceIndex(str, startIndex) {
-        if (startIndex === void 0) { startIndex = str.length - 1; }
-        for (var i = startIndex; i >= 0; i--) {
-            var chCode = str.charCodeAt(i);
-            if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    exports.lastNonWhitespaceIndex = lastNonWhitespaceIndex;
-    function compare(a, b) {
-        if (a < b) {
-            return -1;
-        }
-        else if (a > b) {
-            return 1;
-        }
-        else {
-            return 0;
-        }
-    }
-    exports.compare = compare;
-    function isAsciiChar(code) {
-        return (code >= 97 /* a */ && code <= 122 /* z */) || (code >= 65 /* A */ && code <= 90 /* Z */);
-    }
-    function equalsIgnoreCase(a, b) {
-        var len1 = a.length, len2 = b.length;
-        if (len1 !== len2) {
-            return false;
-        }
-        for (var i = 0; i < len1; i++) {
-            var codeA = a.charCodeAt(i), codeB = b.charCodeAt(i);
-            if (codeA === codeB) {
-                continue;
-            }
-            else if (isAsciiChar(codeA) && isAsciiChar(codeB)) {
-                var diff = Math.abs(codeA - codeB);
-                if (diff !== 0 && diff !== 32) {
-                    return false;
+        else if ((char0 >= 65 /* A */ && char0 <= 90 /* Z */) || (char0 >= 97 /* a */ && char0 <= 122 /* z */)) {
+            if (path.length > 2 && path.charCodeAt(1) === 58 /* Colon */) {
+                var char2 = path.charCodeAt(2);
+                if (char2 === 47 /* Slash */ || char2 === 92 /* Backslash */) {
+                    return true;
                 }
             }
-            else {
-                if (String.fromCharCode(codeA).toLocaleLowerCase() !== String.fromCharCode(codeB).toLocaleLowerCase()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    exports.equalsIgnoreCase = equalsIgnoreCase;
-    /**
-     * @returns the length of the common prefix of the two strings.
-     */
-    function commonPrefixLength(a, b) {
-        var i, len = Math.min(a.length, b.length);
-        for (i = 0; i < len; i++) {
-            if (a.charCodeAt(i) !== b.charCodeAt(i)) {
-                return i;
-            }
-        }
-        return len;
-    }
-    exports.commonPrefixLength = commonPrefixLength;
-    /**
-     * @returns the length of the common suffix of the two strings.
-     */
-    function commonSuffixLength(a, b) {
-        var i, len = Math.min(a.length, b.length);
-        var aLastIndex = a.length - 1;
-        var bLastIndex = b.length - 1;
-        for (i = 0; i < len; i++) {
-            if (a.charCodeAt(aLastIndex - i) !== b.charCodeAt(bLastIndex - i)) {
-                return i;
-            }
-        }
-        return len;
-    }
-    exports.commonSuffixLength = commonSuffixLength;
-    // --- unicode
-    // http://en.wikipedia.org/wiki/Surrogate_pair
-    // Returns the code point starting at a specified index in a string
-    // Code points U+0000 to U+D7FF and U+E000 to U+FFFF are represented on a single character
-    // Code points U+10000 to U+10FFFF are represented on two consecutive characters
-    //export function getUnicodePoint(str:string, index:number, len:number):number {
-    //	let chrCode = str.charCodeAt(index);
-    //	if (0xD800 <= chrCode && chrCode <= 0xDBFF && index + 1 < len) {
-    //		let nextChrCode = str.charCodeAt(index + 1);
-    //		if (0xDC00 <= nextChrCode && nextChrCode <= 0xDFFF) {
-    //			return (chrCode - 0xD800) << 10 + (nextChrCode - 0xDC00) + 0x10000;
-    //		}
-    //	}
-    //	return chrCode;
-    //}
-    function isHighSurrogate(charCode) {
-        return (0xD800 <= charCode && charCode <= 0xDBFF);
-    }
-    exports.isHighSurrogate = isHighSurrogate;
-    function isLowSurrogate(charCode) {
-        return (0xDC00 <= charCode && charCode <= 0xDFFF);
-    }
-    exports.isLowSurrogate = isLowSurrogate;
-    /**
-     * Generated using https://github.com/alexandrudima/unicode-utils/blob/master/generate-rtl-test.js
-     */
-    var CONTAINS_RTL = /(?:[\u05BE\u05C0\u05C3\u05C6\u05D0-\u05F4\u0608\u060B\u060D\u061B-\u064A\u066D-\u066F\u0671-\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u0710\u0712-\u072F\u074D-\u07A5\u07B1-\u07EA\u07F4\u07F5\u07FA-\u0815\u081A\u0824\u0828\u0830-\u0858\u085E-\u08BD\u200F\uFB1D\uFB1F-\uFB28\uFB2A-\uFD3D\uFD50-\uFDFC\uFE70-\uFEFC]|\uD802[\uDC00-\uDD1B\uDD20-\uDE00\uDE10-\uDE33\uDE40-\uDEE4\uDEEB-\uDF35\uDF40-\uDFFF]|\uD803[\uDC00-\uDCFF]|\uD83A[\uDC00-\uDCCF\uDD00-\uDD43\uDD50-\uDFFF]|\uD83B[\uDC00-\uDEBB])/;
-    /**
-     * Returns true if `str` contains any Unicode character that is classified as "R" or "AL".
-     */
-    function containsRTL(str) {
-        return CONTAINS_RTL.test(str);
-    }
-    exports.containsRTL = containsRTL;
-    function isFullWidthCharacter(charCode) {
-        // Do a cheap trick to better support wrapping of wide characters, treat them as 2 columns
-        // http://jrgraphix.net/research/unicode_blocks.php
-        //          2E80 — 2EFF   CJK Radicals Supplement
-        //          2F00 — 2FDF   Kangxi Radicals
-        //          2FF0 — 2FFF   Ideographic Description Characters
-        //          3000 — 303F   CJK Symbols and Punctuation
-        //          3040 — 309F   Hiragana
-        //          30A0 — 30FF   Katakana
-        //          3100 — 312F   Bopomofo
-        //          3130 — 318F   Hangul Compatibility Jamo
-        //          3190 — 319F   Kanbun
-        //          31A0 — 31BF   Bopomofo Extended
-        //          31F0 — 31FF   Katakana Phonetic Extensions
-        //          3200 — 32FF   Enclosed CJK Letters and Months
-        //          3300 — 33FF   CJK Compatibility
-        //          3400 — 4DBF   CJK Unified Ideographs Extension A
-        //          4DC0 — 4DFF   Yijing Hexagram Symbols
-        //          4E00 — 9FFF   CJK Unified Ideographs
-        //          A000 — A48F   Yi Syllables
-        //          A490 — A4CF   Yi Radicals
-        //          AC00 — D7AF   Hangul Syllables
-        // [IGNORE] D800 — DB7F   High Surrogates
-        // [IGNORE] DB80 — DBFF   High Private Use Surrogates
-        // [IGNORE] DC00 — DFFF   Low Surrogates
-        // [IGNORE] E000 — F8FF   Private Use Area
-        //          F900 — FAFF   CJK Compatibility Ideographs
-        // [IGNORE] FB00 — FB4F   Alphabetic Presentation Forms
-        // [IGNORE] FB50 — FDFF   Arabic Presentation Forms-A
-        // [IGNORE] FE00 — FE0F   Variation Selectors
-        // [IGNORE] FE20 — FE2F   Combining Half Marks
-        // [IGNORE] FE30 — FE4F   CJK Compatibility Forms
-        // [IGNORE] FE50 — FE6F   Small Form Variants
-        // [IGNORE] FE70 — FEFF   Arabic Presentation Forms-B
-        //          FF00 — FFEF   Halfwidth and Fullwidth Forms
-        //               [https://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms]
-        //               of which FF01 - FF5E fullwidth ASCII of 21 to 7E
-        // [IGNORE]    and FF65 - FFDC halfwidth of Katakana and Hangul
-        // [IGNORE] FFF0 — FFFF   Specials
-        charCode = +charCode; // @perf
-        return ((charCode >= 0x2E80 && charCode <= 0xD7AF)
-            || (charCode >= 0xF900 && charCode <= 0xFAFF)
-            || (charCode >= 0xFF01 && charCode <= 0xFF5E));
-    }
-    exports.isFullWidthCharacter = isFullWidthCharacter;
-    /**
-     * Computes the difference score for two strings. More similar strings have a higher score.
-     * We use largest common subsequence dynamic programming approach but penalize in the end for length differences.
-     * Strings that have a large length difference will get a bad default score 0.
-     * Complexity - both time and space O(first.length * second.length)
-     * Dynamic programming LCS computation http://en.wikipedia.org/wiki/Longest_common_subsequence_problem
-     *
-     * @param first a string
-     * @param second a string
-     */
-    function difference(first, second, maxLenDelta) {
-        if (maxLenDelta === void 0) { maxLenDelta = 4; }
-        var lengthDifference = Math.abs(first.length - second.length);
-        // We only compute score if length of the currentWord and length of entry.name are similar.
-        if (lengthDifference > maxLenDelta) {
-            return 0;
-        }
-        // Initialize LCS (largest common subsequence) matrix.
-        var LCS = [];
-        var zeroArray = [];
-        var i, j;
-        for (i = 0; i < second.length + 1; ++i) {
-            zeroArray.push(0);
-        }
-        for (i = 0; i < first.length + 1; ++i) {
-            LCS.push(zeroArray);
-        }
-        for (i = 1; i < first.length + 1; ++i) {
-            for (j = 1; j < second.length + 1; ++j) {
-                if (first[i - 1] === second[j - 1]) {
-                    LCS[i][j] = LCS[i - 1][j - 1] + 1;
-                }
-                else {
-                    LCS[i][j] = Math.max(LCS[i - 1][j], LCS[i][j - 1]);
-                }
-            }
-        }
-        return LCS[first.length][second.length] - Math.sqrt(lengthDifference);
-    }
-    exports.difference = difference;
-    /**
-     * Returns an array in which every entry is the offset of a
-     * line. There is always one entry which is zero.
-     */
-    function computeLineStarts(text) {
-        var regexp = /\r\n|\r|\n/g, ret = [0], match;
-        while ((match = regexp.exec(text))) {
-            ret.push(regexp.lastIndex);
-        }
-        return ret;
-    }
-    exports.computeLineStarts = computeLineStarts;
-    /**
-     * Given a string and a max length returns a shorted version. Shorting
-     * happens at favorable positions - such as whitespace or punctuation characters.
-     */
-    function lcut(text, n) {
-        if (text.length < n) {
-            return text;
-        }
-        var segments = text.split(/\b/), count = 0;
-        for (var i = segments.length - 1; i >= 0; i--) {
-            count += segments[i].length;
-            if (count > n) {
-                segments.splice(0, i);
-                break;
-            }
-        }
-        return segments.join(exports.empty).replace(/^\s/, exports.empty);
-    }
-    exports.lcut = lcut;
-    // Escape codes
-    // http://en.wikipedia.org/wiki/ANSI_escape_code
-    var EL = /\x1B\x5B[12]?K/g; // Erase in line
-    var COLOR_START = /\x1b\[\d+m/g; // Color
-    var COLOR_END = /\x1b\[0?m/g; // Color
-    function removeAnsiEscapeCodes(str) {
-        if (str) {
-            str = str.replace(EL, '');
-            str = str.replace(COLOR_START, '');
-            str = str.replace(COLOR_END, '');
-        }
-        return str;
-    }
-    exports.removeAnsiEscapeCodes = removeAnsiEscapeCodes;
-    // -- UTF-8 BOM
-    exports.UTF8_BOM_CHARACTER = String.fromCharCode(65279 /* UTF8_BOM */);
-    function startsWithUTF8BOM(str) {
-        return (str && str.length > 0 && str.charCodeAt(0) === 65279 /* UTF8_BOM */);
-    }
-    exports.startsWithUTF8BOM = startsWithUTF8BOM;
-    /**
-     * Appends two strings. If the appended result is longer than maxLength,
-     * trims the start of the result and replaces it with '...'.
-     */
-    function appendWithLimit(first, second, maxLength) {
-        var newLength = first.length + second.length;
-        if (newLength > maxLength) {
-            first = '...' + first.substr(newLength - maxLength);
-        }
-        if (second.length > maxLength) {
-            first += second.substr(second.length - maxLength);
-        }
-        else {
-            first += second;
-        }
-        return first;
-    }
-    exports.appendWithLimit = appendWithLimit;
-    function safeBtoa(str) {
-        return btoa(encodeURIComponent(str)); // we use encodeURIComponent because btoa fails for non Latin 1 values
-    }
-    exports.safeBtoa = safeBtoa;
-    function repeat(s, count) {
-        var result = '';
-        for (var i = 0; i < count; i++) {
-            result += s;
-        }
-        return result;
-    }
-    exports.repeat = repeat;
-});
-
-define(__m[5/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var _typeof = {
-        number: 'number',
-        string: 'string',
-        undefined: 'undefined',
-        object: 'object',
-        function: 'function'
-    };
-    /**
-     * @returns whether the provided parameter is a JavaScript Array or not.
-     */
-    function isArray(array) {
-        if (Array.isArray) {
-            return Array.isArray(array);
-        }
-        if (array && typeof (array.length) === _typeof.number && array.constructor === Array) {
-            return true;
         }
         return false;
     }
-    exports.isArray = isArray;
-    /**
-     * @returns whether the provided parameter is a JavaScript String or not.
-     */
-    function isString(str) {
-        if (typeof (str) === _typeof.string || str instanceof String) {
-            return true;
-        }
-        return false;
+    exports.isAbsolute_win32 = isAbsolute_win32;
+    function isAbsolute_posix(path) {
+        return path && path.charCodeAt(0) === 47 /* Slash */;
     }
-    exports.isString = isString;
-    /**
-     * @returns whether the provided parameter is a JavaScript Array and each element in the array is a string.
-     */
-    function isStringArray(value) {
-        return isArray(value) && value.every(function (elem) { return isString(elem); });
-    }
-    exports.isStringArray = isStringArray;
-    /**
-     *
-     * @returns whether the provided parameter is of type `object` but **not**
-     *	`null`, an `array`, a `regexp`, nor a `date`.
-     */
-    function isObject(obj) {
-        // The method can't do a type cast since there are type (like strings) which
-        // are subclasses of any put not positvely matched by the function. Hence type
-        // narrowing results in wrong results.
-        return typeof obj === _typeof.object
-            && obj !== null
-            && !Array.isArray(obj)
-            && !(obj instanceof RegExp)
-            && !(obj instanceof Date);
-    }
-    exports.isObject = isObject;
-    /**
-     * In **contrast** to just checking `typeof` this will return `false` for `NaN`.
-     * @returns whether the provided parameter is a JavaScript Number or not.
-     */
-    function isNumber(obj) {
-        if ((typeof (obj) === _typeof.number || obj instanceof Number) && !isNaN(obj)) {
-            return true;
-        }
-        return false;
-    }
-    exports.isNumber = isNumber;
-    /**
-     * @returns whether the provided parameter is a JavaScript Boolean or not.
-     */
-    function isBoolean(obj) {
-        return obj === true || obj === false;
-    }
-    exports.isBoolean = isBoolean;
-    /**
-     * @returns whether the provided parameter is undefined.
-     */
-    function isUndefined(obj) {
-        return typeof (obj) === _typeof.undefined;
-    }
-    exports.isUndefined = isUndefined;
-    /**
-     * @returns whether the provided parameter is undefined or null.
-     */
-    function isUndefinedOrNull(obj) {
-        return isUndefined(obj) || obj === null;
-    }
-    exports.isUndefinedOrNull = isUndefinedOrNull;
-    var hasOwnProperty = Object.prototype.hasOwnProperty;
-    /**
-     * @returns whether the provided parameter is an empty JavaScript Object or not.
-     */
-    function isEmptyObject(obj) {
-        if (!isObject(obj)) {
-            return false;
-        }
-        for (var key in obj) {
-            if (hasOwnProperty.call(obj, key)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    exports.isEmptyObject = isEmptyObject;
-    /**
-     * @returns whether the provided parameter is a JavaScript Function or not.
-     */
-    function isFunction(obj) {
-        return typeof obj === _typeof.function;
-    }
-    exports.isFunction = isFunction;
-    /**
-     * @returns whether the provided parameters is are JavaScript Function or not.
-     */
-    function areFunctions() {
-        var objects = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            objects[_i - 0] = arguments[_i];
-        }
-        return objects && objects.length > 0 && objects.every(isFunction);
-    }
-    exports.areFunctions = areFunctions;
-    function validateConstraints(args, constraints) {
-        var len = Math.min(args.length, constraints.length);
-        for (var i = 0; i < len; i++) {
-            validateConstraint(args[i], constraints[i]);
-        }
-    }
-    exports.validateConstraints = validateConstraints;
-    function validateConstraint(arg, constraint) {
-        if (isString(constraint)) {
-            if (typeof arg !== constraint) {
-                throw new Error("argument does not match constraint: typeof " + constraint);
-            }
-        }
-        else if (isFunction(constraint)) {
-            if (arg instanceof constraint) {
-                return;
-            }
-            if (arg && arg.constructor === constraint) {
-                return;
-            }
-            if (constraint.length === 1 && constraint.call(undefined, arg) === true) {
-                return;
-            }
-            throw new Error("argument does not match one of these constraints: arg instanceof constraint, arg.constructor === constraint, nor constraint(arg) === true");
-        }
-    }
-    exports.validateConstraint = validateConstraint;
-    /**
-     * Creates a new object of the provided class and will call the constructor with
-     * any additional argument supplied.
-     */
-    function create(ctor) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        var obj = Object.create(ctor.prototype);
-        ctor.apply(obj, args);
-        return obj;
-    }
-    exports.create = create;
+    exports.isAbsolute_posix = isAbsolute_posix;
 });
 
-define(__m[6/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/platform*/,5/*vs/base/common/types*/]), function (require, exports, platform, types) {
+
+
+
+
+
+
+
+
+
+
+define(__m[25/*vs/base/common/uuid*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
-    var ErrorHandler = (function () {
-        function ErrorHandler() {
-            this.listeners = [];
-            this.unexpectedErrorHandler = function (e) {
-                platform.setTimeout(function () {
-                    if (e.stack) {
-                        throw new Error(e.message + '\n\n' + e.stack);
-                    }
-                    throw e;
-                }, 0);
-            };
-        }
-        ErrorHandler.prototype.addListener = function (listener) {
-            var _this = this;
-            this.listeners.push(listener);
-            return function () {
-                _this._removeListener(listener);
-            };
-        };
-        ErrorHandler.prototype.emit = function (e) {
-            this.listeners.forEach(function (listener) {
-                listener(e);
-            });
-        };
-        ErrorHandler.prototype._removeListener = function (listener) {
-            this.listeners.splice(this.listeners.indexOf(listener), 1);
-        };
-        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
-            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
-            return this.unexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.onUnexpectedError = function (e) {
-            this.unexpectedErrorHandler(e);
-            this.emit(e);
-        };
-        // For external errors, we don't want the listeners to be called
-        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
-            this.unexpectedErrorHandler(e);
-        };
-        return ErrorHandler;
-    }());
-    exports.ErrorHandler = ErrorHandler;
-    exports.errorHandler = new ErrorHandler();
-    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
-        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
-    }
-    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
-    function onUnexpectedError(e) {
-        // ignore errors from cancelled promises
-        if (!isPromiseCanceledError(e)) {
-            exports.errorHandler.onUnexpectedError(e);
-        }
-    }
-    exports.onUnexpectedError = onUnexpectedError;
-    function onUnexpectedExternalError(e) {
-        // ignore errors from cancelled promises
-        if (!isPromiseCanceledError(e)) {
-            exports.errorHandler.onUnexpectedExternalError(e);
-        }
-    }
-    exports.onUnexpectedExternalError = onUnexpectedExternalError;
-    function onUnexpectedPromiseError(promise) {
-        return promise.then(null, onUnexpectedError);
-    }
-    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
-    function transformErrorForSerialization(error) {
-        if (error instanceof Error) {
-            var name_1 = error.name, message = error.message;
-            var stack = error.stacktrace || error.stack;
-            return {
-                $isError: true,
-                name: name_1,
-                message: message,
-                stack: stack
-            };
-        }
-        // return as is
-        return error;
-    }
-    exports.transformErrorForSerialization = transformErrorForSerialization;
-    var canceledName = 'Canceled';
-    /**
-     * Checks if the given error is a promise in canceled state
-     */
-    function isPromiseCanceledError(error) {
-        return error instanceof Error && error.name === canceledName && error.message === canceledName;
-    }
-    exports.isPromiseCanceledError = isPromiseCanceledError;
-    /**
-     * Returns an error that signals cancellation.
-     */
-    function canceled() {
-        var error = new Error(canceledName);
-        error.name = error.message;
-        return error;
-    }
-    exports.canceled = canceled;
-    /**
-     * Returns an error that signals something is not implemented.
-     */
-    function notImplemented() {
-        return new Error('Not Implemented');
-    }
-    exports.notImplemented = notImplemented;
-    function illegalArgument(name) {
-        if (name) {
-            return new Error("Illegal argument: " + name);
-        }
-        else {
-            return new Error('Illegal argument');
-        }
-    }
-    exports.illegalArgument = illegalArgument;
-    function illegalState(name) {
-        if (name) {
-            return new Error("Illegal state: " + name);
-        }
-        else {
-            return new Error('Illegal state');
-        }
-    }
-    exports.illegalState = illegalState;
-    function readonly(name) {
-        return name
-            ? new Error("readonly property '" + name + " cannot be changed'")
-            : new Error('readonly property cannot be changed');
-    }
-    exports.readonly = readonly;
-    function create(message, options) {
-        if (options === void 0) { options = {}; }
-        var result = new Error(message);
-        if (types.isNumber(options.severity)) {
-            result.severity = options.severity;
-        }
-        if (options.actions) {
-            result.actions = options.actions;
-        }
-        return result;
-    }
-    exports.create = create;
-    function getErrorMessage(err) {
-        if (!err) {
-            return 'Error';
-        }
-        if (err.message) {
-            return err.message;
-        }
-        if (err.stack) {
-            return err.stack.split('\n')[0];
-        }
-        return String(err);
-    }
-    exports.getErrorMessage = getErrorMessage;
-});
-
-define(__m[10/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/errors*/]), function (require, exports, errors_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var CallbackList = (function () {
-        function CallbackList() {
-        }
-        CallbackList.prototype.add = function (callback, context, bucket) {
-            var _this = this;
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                this._callbacks = [];
-                this._contexts = [];
-            }
-            this._callbacks.push(callback);
-            this._contexts.push(context);
-            if (Array.isArray(bucket)) {
-                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
-            }
-        };
-        CallbackList.prototype.remove = function (callback, context) {
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                return;
-            }
-            var foundCallbackWithDifferentContext = false;
-            for (var i = 0, len = this._callbacks.length; i < len; i++) {
-                if (this._callbacks[i] === callback) {
-                    if (this._contexts[i] === context) {
-                        // callback & context match => remove it
-                        this._callbacks.splice(i, 1);
-                        this._contexts.splice(i, 1);
-                        return;
-                    }
-                    else {
-                        foundCallbackWithDifferentContext = true;
-                    }
-                }
-            }
-            if (foundCallbackWithDifferentContext) {
-                throw new Error('When adding a listener with a context, you should remove it with the same context');
-            }
-        };
-        CallbackList.prototype.invoke = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            if (!this._callbacks) {
-                return;
-            }
-            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
-            for (var i = 0, len = callbacks.length; i < len; i++) {
-                try {
-                    ret.push(callbacks[i].apply(contexts[i], args));
-                }
-                catch (e) {
-                    errors_1.onUnexpectedError(e);
-                }
-            }
-            return ret;
-        };
-        CallbackList.prototype.isEmpty = function () {
-            return !this._callbacks || this._callbacks.length === 0;
-        };
-        CallbackList.prototype.entries = function () {
-            var _this = this;
-            if (!this._callbacks) {
-                return [];
-            }
-            return this._callbacks.map(function (fn, index) { return [fn, _this._contexts[index]]; });
-        };
-        CallbackList.prototype.dispose = function () {
-            this._callbacks = undefined;
-            this._contexts = undefined;
-        };
-        return CallbackList;
-    }());
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = CallbackList;
-});
-
-
-
-
-
-
-define(__m[7/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/types*/]), function (require, exports, types_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    exports.empty = Object.freeze({
-        dispose: function () { }
-    });
-    function dispose() {
-        var disposables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+    var ValueUUID = (function () {
+        function ValueUUID(_value) {
+            this._value = _value;
+            // empty
         }
-        var first = disposables[0];
-        if (types_1.isArray(first)) {
-            disposables = first;
-        }
-        disposables.forEach(function (d) { return d && d.dispose(); });
-        return [];
-    }
-    exports.dispose = dispose;
-    function combinedDisposable(disposables) {
-        return { dispose: function () { return dispose(disposables); } };
-    }
-    exports.combinedDisposable = combinedDisposable;
-    function toDisposable() {
-        var fns = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            fns[_i - 0] = arguments[_i];
-        }
-        return combinedDisposable(fns.map(function (fn) { return ({ dispose: fn }); }));
-    }
-    exports.toDisposable = toDisposable;
-    var Disposable = (function () {
-        function Disposable() {
-            this._toDispose = [];
-        }
-        Disposable.prototype.dispose = function () {
-            this._toDispose = dispose(this._toDispose);
+        ValueUUID.prototype.asHex = function () {
+            return this._value;
         };
-        Disposable.prototype._register = function (t) {
-            this._toDispose.push(t);
-            return t;
+        ValueUUID.prototype.equals = function (other) {
+            return this.asHex() === other.asHex();
         };
-        return Disposable;
+        return ValueUUID;
     }());
-    exports.Disposable = Disposable;
-    var Disposables = (function (_super) {
-        __extends(Disposables, _super);
-        function Disposables() {
-            _super.apply(this, arguments);
+    var V4UUID = (function (_super) {
+        __extends(V4UUID, _super);
+        function V4UUID() {
+            return _super.call(this, [
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                '-',
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                '-',
+                '4',
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                '-',
+                V4UUID._oneOf(V4UUID._timeHighBits),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                '-',
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+                V4UUID._randomHex(),
+            ].join('')) || this;
         }
-        Disposables.prototype.add = function (arg) {
-            if (!Array.isArray(arg)) {
-                return this._register(arg);
-            }
-            else {
-                for (var _i = 0, arg_1 = arg; _i < arg_1.length; _i++) {
-                    var element = arg_1[_i];
-                    return this._register(element);
-                }
-            }
+        V4UUID._oneOf = function (array) {
+            return array[Math.floor(array.length * Math.random())];
         };
-        return Disposables;
-    }(Disposable));
-    exports.Disposables = Disposables;
-    var ReferenceCollection = (function () {
-        function ReferenceCollection() {
-            this.references = Object.create(null);
-        }
-        ReferenceCollection.prototype.acquire = function (key) {
-            var _this = this;
-            var reference = this.references[key];
-            if (!reference) {
-                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
-            }
-            var object = reference.object;
-            var dispose = function () {
-                if (--reference.counter === 0) {
-                    _this.destroyReferencedObject(reference.object);
-                    delete _this.references[key];
-                }
-            };
-            reference.counter++;
-            return { object: object, dispose: dispose };
+        V4UUID._randomHex = function () {
+            return V4UUID._oneOf(V4UUID._chars);
         };
-        return ReferenceCollection;
-    }());
-    exports.ReferenceCollection = ReferenceCollection;
-    var ImmortalReference = (function () {
-        function ImmortalReference(object) {
-            this.object = object;
-        }
-        ImmortalReference.prototype.dispose = function () { };
-        return ImmortalReference;
-    }());
-    exports.ImmortalReference = ImmortalReference;
-});
-
-define(__m[3/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/lifecycle*/,10/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var Event;
-    (function (Event) {
-        var _disposable = { dispose: function () { } };
-        Event.None = function () { return _disposable; };
-    })(Event || (Event = {}));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Event;
+        V4UUID._chars = ['0', '1', '2', '3', '4', '5', '6', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+        V4UUID._timeHighBits = ['8', '9', 'a', 'b'];
+        return V4UUID;
+    }(ValueUUID));
+    function v4() {
+        return new V4UUID();
+    }
+    exports.v4 = v4;
+    var _UUIDPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    function isUUID(value) {
+        return _UUIDPattern.test(value);
+    }
+    exports.isUUID = isUUID;
     /**
-     * The Emitter can be used to expose an Event to the public
-     * to fire it from the insides.
-     * Sample:
-        class Document {
-    
-            private _onDidChange = new Emitter<(value:string)=>any>();
-    
-            public onDidChange = this._onDidChange.event;
-    
-            // getter-style
-            // get onDidChange(): Event<(value:string)=>any> {
-            // 	return this._onDidChange.event;
-            // }
-    
-            private _doIt() {
-                //...
-                this._onDidChange.fire(value);
-            }
-        }
+     * Parses a UUID that is of the format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
+     * @param value A uuid string.
      */
-    var Emitter = (function () {
-        function Emitter(_options) {
-            this._options = _options;
+    function parse(value) {
+        if (!isUUID(value)) {
+            throw new Error('invalid uuid');
         }
-        Object.defineProperty(Emitter.prototype, "event", {
-            /**
-             * For the public to allow to subscribe
-             * to events from this Emitter
-             */
-            get: function () {
-                var _this = this;
-                if (!this._event) {
-                    this._event = function (listener, thisArgs, disposables) {
-                        if (!_this._callbacks) {
-                            _this._callbacks = new callbackList_1.default();
-                        }
-                        var firstListener = _this._callbacks.isEmpty();
-                        if (firstListener && _this._options && _this._options.onFirstListenerAdd) {
-                            _this._options.onFirstListenerAdd(_this);
-                        }
-                        _this._callbacks.add(listener, thisArgs);
-                        if (firstListener && _this._options && _this._options.onFirstListenerDidAdd) {
-                            _this._options.onFirstListenerDidAdd(_this);
-                        }
-                        var result;
-                        result = {
-                            dispose: function () {
-                                result.dispose = Emitter._noop;
-                                if (!_this._disposed) {
-                                    _this._callbacks.remove(listener, thisArgs);
-                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
-                                        _this._options.onLastListenerRemove(_this);
-                                    }
-                                }
-                            }
-                        };
-                        if (Array.isArray(disposables)) {
-                            disposables.push(result);
-                        }
-                        return result;
-                    };
-                }
-                return this._event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * To be kept private to fire an event to
-         * subscribers
-         */
-        Emitter.prototype.fire = function (event) {
-            if (this._callbacks) {
-                this._callbacks.invoke.call(this._callbacks, event);
-            }
-        };
-        Emitter.prototype.dispose = function () {
-            if (this._callbacks) {
-                this._callbacks.dispose();
-                this._callbacks = undefined;
-                this._disposed = true;
-            }
-        };
-        Emitter._noop = function () { };
-        return Emitter;
-    }());
-    exports.Emitter = Emitter;
-    /**
-     * Creates an Event which is backed-up by the event emitter. This allows
-     * to use the existing eventing pattern and is likely using less memory.
-     * Sample:
-     *
-     * 	class Document {
-     *
-     *		private _eventbus = new EventEmitter();
-     *
-     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
-     *
-     *		// getter-style
-     *		// get onDidChange(): Event<(value:string)=>any> {
-     *		// 	cache fromEventEmitter result and return
-     *		// }
-     *
-     *		private _doIt() {
-     *			// ...
-     *			this._eventbus.emit('changed', value)
-     *		}
-     *	}
-     */
-    function fromEventEmitter(emitter, eventType) {
-        return function (listener, thisArgs, disposables) {
-            var result = emitter.addListener2(eventType, function () {
-                listener.apply(thisArgs, arguments);
-            });
-            if (Array.isArray(disposables)) {
-                disposables.push(result);
-            }
-            return result;
-        };
+        return new ValueUUID(value);
     }
-    exports.fromEventEmitter = fromEventEmitter;
-    function fromPromise(promise) {
-        var emitter = new Emitter();
-        var shouldEmit = false;
-        promise
-            .then(null, function () { return null; })
-            .then(function () {
-            if (!shouldEmit) {
-                setTimeout(function () { return emitter.fire(); }, 0);
-            }
-            else {
-                emitter.fire();
-            }
-        });
-        shouldEmit = true;
-        return emitter.event;
+    exports.parse = parse;
+    function generateUuid() {
+        return v4().asHex();
     }
-    exports.fromPromise = fromPromise;
-    function delayed(promise) {
-        var toCancel = null;
-        var listener = null;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
-            },
-            onLastListenerRemove: function () {
-                if (toCancel) {
-                    toCancel.cancel();
-                    toCancel = null;
-                }
-                if (listener) {
-                    listener.dispose();
-                    listener = null;
-                }
-            }
-        });
-        return emitter.event;
-    }
-    exports.delayed = delayed;
-    function once(event) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            var result = event(function (e) {
-                result.dispose();
-                return listener.call(thisArgs, e);
-            }, null, disposables);
-            return result;
-        };
-    }
-    exports.once = once;
-    function any() {
-        var events = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            events[_i - 0] = arguments[_i];
-        }
-        var listeners = [];
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                listeners = events.map(function (e) { return e(function (r) { return emitter.fire(r); }); });
-            },
-            onLastListenerRemove: function () {
-                listeners = lifecycle_1.dispose(listeners);
-            }
-        });
-        return emitter.event;
-    }
-    exports.any = any;
-    function debounceEvent(event, merger, delay) {
-        if (delay === void 0) { delay = 100; }
-        var subscription;
-        var output;
-        var handle;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                subscription = event(function (cur) {
-                    output = merger(output, cur);
-                    clearTimeout(handle);
-                    handle = setTimeout(function () {
-                        var _output = output;
-                        output = undefined;
-                        emitter.fire(_output);
-                    }, delay);
-                });
-            },
-            onLastListenerRemove: function () {
-                subscription.dispose();
-            }
-        });
-        return emitter.event;
-    }
-    exports.debounceEvent = debounceEvent;
-    /**
-     * The EventDelayer is useful in situations in which you want
-     * to delay firing your events during some code.
-     * You can wrap that code and be sure that the event will not
-     * be fired during that wrap.
-     *
-     * ```
-     * const emitter: Emitter;
-     * const delayer = new EventDelayer();
-     * const delayedEvent = delayer.wrapEvent(emitter.event);
-     *
-     * delayedEvent(console.log);
-     *
-     * delayer.bufferEvents(() => {
-     *   emitter.fire(); // event will not be fired yet
-     * });
-     *
-     * // event will only be fired at this point
-     * ```
-     */
-    var EventBufferer = (function () {
-        function EventBufferer() {
-            this.buffers = [];
-        }
-        EventBufferer.prototype.wrapEvent = function (event) {
-            var _this = this;
-            return function (listener, thisArgs, disposables) {
-                return event(function (i) {
-                    var buffer = _this.buffers[_this.buffers.length - 1];
-                    if (buffer) {
-                        buffer.push(function () { return listener.call(thisArgs, i); });
-                    }
-                    else {
-                        listener.call(thisArgs, i);
-                    }
-                }, void 0, disposables);
-            };
-        };
-        EventBufferer.prototype.bufferEvents = function (fn) {
-            var buffer = [];
-            this.buffers.push(buffer);
-            fn();
-            this.buffers.pop();
-            buffer.forEach(function (flush) { return flush(); });
-        };
-        return EventBufferer;
-    }());
-    exports.EventBufferer = EventBufferer;
-    function mapEvent(event, map) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
-        };
-    }
-    exports.mapEvent = mapEvent;
-    function filterEvent(event, filter) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
-        };
-    }
-    exports.filterEvent = filterEvent;
-    var ChainableEvent = (function () {
-        function ChainableEvent(_event) {
-            this._event = _event;
-        }
-        Object.defineProperty(ChainableEvent.prototype, "event", {
-            get: function () { return this._event; },
-            enumerable: true,
-            configurable: true
-        });
-        ChainableEvent.prototype.map = function (fn) {
-            return new ChainableEvent(mapEvent(this._event, fn));
-        };
-        ChainableEvent.prototype.filter = function (fn) {
-            return new ChainableEvent(filterEvent(this._event, fn));
-        };
-        ChainableEvent.prototype.on = function (listener, thisArgs, disposables) {
-            return this._event(listener, thisArgs, disposables);
-        };
-        return ChainableEvent;
-    }());
-    function chain(event) {
-        return new ChainableEvent(event);
-    }
-    exports.chain = chain;
-    function stopwatch(event) {
-        var start = new Date().getTime();
-        return mapEvent(once(event), function (_) { return new Date().getTime() - start; });
-    }
-    exports.stopwatch = stopwatch;
-    /**
-     * Buffers the provided event until a first listener comes
-     * along, at which point fire all the events at once and
-     * pipe the event from then on.
-     *
-     * ```typescript
-     * const emitter = new Emitter<number>();
-     * const event = emitter.event;
-     * const bufferedEvent = buffer(event);
-     *
-     * emitter.fire(1);
-     * emitter.fire(2);
-     * emitter.fire(3);
-     * // nothing...
-     *
-     * const listener = bufferedEvent(num => console.log(num));
-     * // 1, 2, 3
-     *
-     * emitter.fire(4);
-     * // 4
-     * ```
-     */
-    function buffer(event, nextTick, buffer) {
-        if (nextTick === void 0) { nextTick = false; }
-        if (buffer === void 0) { buffer = []; }
-        buffer = buffer.slice();
-        var listener = event(function (e) {
-            if (buffer) {
-                buffer.push(e);
-            }
-            else {
-                emitter.fire(e);
-            }
-        });
-        var flush = function () {
-            buffer.forEach(function (e) { return emitter.fire(e); });
-            buffer = null;
-        };
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                if (!listener) {
-                    listener = event(function (e) { return emitter.fire(e); });
-                }
-            },
-            onFirstListenerDidAdd: function () {
-                if (buffer) {
-                    if (nextTick) {
-                        setTimeout(flush);
-                    }
-                    else {
-                        flush();
-                    }
-                }
-            },
-            onLastListenerRemove: function () {
-                listener.dispose();
-                listener = null;
-            }
-        });
-        return emitter.event;
-    }
-    exports.buffer = buffer;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[13/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/event*/]), function (require, exports, event_1) {
-    'use strict';
-    var shortcutEvent = Object.freeze(function (callback, context) {
-        var handle = setTimeout(callback.bind(context), 0);
-        return { dispose: function () { clearTimeout(handle); } };
-    });
-    var CancellationToken;
-    (function (CancellationToken) {
-        CancellationToken.None = Object.freeze({
-            isCancellationRequested: false,
-            onCancellationRequested: event_1.default.None
-        });
-        CancellationToken.Cancelled = Object.freeze({
-            isCancellationRequested: true,
-            onCancellationRequested: shortcutEvent
-        });
-    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
-    var MutableToken = (function () {
-        function MutableToken() {
-            this._isCancelled = false;
-        }
-        MutableToken.prototype.cancel = function () {
-            if (!this._isCancelled) {
-                this._isCancelled = true;
-                if (this._emitter) {
-                    this._emitter.fire(undefined);
-                    this._emitter = undefined;
-                }
-            }
-        };
-        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
-            get: function () {
-                return this._isCancelled;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
-            get: function () {
-                if (this._isCancelled) {
-                    return shortcutEvent;
-                }
-                if (!this._emitter) {
-                    this._emitter = new event_1.Emitter();
-                }
-                return this._emitter.event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return MutableToken;
-    }());
-    var CancellationTokenSource = (function () {
-        function CancellationTokenSource() {
-        }
-        Object.defineProperty(CancellationTokenSource.prototype, "token", {
-            get: function () {
-                if (!this._token) {
-                    // be lazy and create the token only when
-                    // actually needed
-                    this._token = new MutableToken();
-                }
-                return this._token;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        CancellationTokenSource.prototype.cancel = function () {
-            if (!this._token) {
-                // save an object by returning the default
-                // cancelled token when cancellation happens
-                // before someone asks for the token
-                this._token = CancellationToken.Cancelled;
-            }
-            else {
-                this._token.cancel();
-            }
-        };
-        CancellationTokenSource.prototype.dispose = function () {
-            this.cancel();
-        };
-        return CancellationTokenSource;
-    }());
-    exports.CancellationTokenSource = CancellationTokenSource;
-});
-
-define(__m[14/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/types*/]), function (require, exports, Types) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    function clone(obj) {
-        if (!obj || typeof obj !== 'object') {
-            return obj;
-        }
-        if (obj instanceof RegExp) {
-            // See https://github.com/Microsoft/TypeScript/issues/10990
-            return obj;
-        }
-        var result = (Array.isArray(obj)) ? [] : {};
-        Object.keys(obj).forEach(function (key) {
-            if (obj[key] && typeof obj[key] === 'object') {
-                result[key] = clone(obj[key]);
-            }
-            else {
-                result[key] = obj[key];
-            }
-        });
-        return result;
-    }
-    exports.clone = clone;
-    function deepClone(obj) {
-        if (!obj || typeof obj !== 'object') {
-            return obj;
-        }
-        var result = (Array.isArray(obj)) ? [] : {};
-        Object.getOwnPropertyNames(obj).forEach(function (key) {
-            if (obj[key] && typeof obj[key] === 'object') {
-                result[key] = deepClone(obj[key]);
-            }
-            else {
-                result[key] = obj[key];
-            }
-        });
-        return result;
-    }
-    exports.deepClone = deepClone;
-    var hasOwnProperty = Object.prototype.hasOwnProperty;
-    function cloneAndChange(obj, changer) {
-        return _cloneAndChange(obj, changer, []);
-    }
-    exports.cloneAndChange = cloneAndChange;
-    function _cloneAndChange(obj, changer, encounteredObjects) {
-        if (Types.isUndefinedOrNull(obj)) {
-            return obj;
-        }
-        var changed = changer(obj);
-        if (typeof changed !== 'undefined') {
-            return changed;
-        }
-        if (Types.isArray(obj)) {
-            var r1 = [];
-            for (var i1 = 0; i1 < obj.length; i1++) {
-                r1.push(_cloneAndChange(obj[i1], changer, encounteredObjects));
-            }
-            return r1;
-        }
-        if (Types.isObject(obj)) {
-            if (encounteredObjects.indexOf(obj) >= 0) {
-                throw new Error('Cannot clone recursive data-structure');
-            }
-            encounteredObjects.push(obj);
-            var r2 = {};
-            for (var i2 in obj) {
-                if (hasOwnProperty.call(obj, i2)) {
-                    r2[i2] = _cloneAndChange(obj[i2], changer, encounteredObjects);
-                }
-            }
-            encounteredObjects.pop();
-            return r2;
-        }
-        return obj;
-    }
-    // DON'T USE THESE FUNCTION UNLESS YOU KNOW HOW CHROME
-    // WORKS... WE HAVE SEEN VERY WEIRD BEHAVIOUR WITH CHROME >= 37
-    ///**
-    // * Recursively call Object.freeze on object and any properties that are objects.
-    // */
-    //export function deepFreeze(obj:any):void {
-    //	Object.freeze(obj);
-    //	Object.keys(obj).forEach((key) => {
-    //		if(!(typeof obj[key] === 'object') || Object.isFrozen(obj[key])) {
-    //			return;
-    //		}
-    //
-    //		deepFreeze(obj[key]);
-    //	});
-    //	if(!Object.isFrozen(obj)) {
-    //		console.log('too warm');
-    //	}
-    //}
-    //
-    //export function deepSeal(obj:any):void {
-    //	Object.seal(obj);
-    //	Object.keys(obj).forEach((key) => {
-    //		if(!(typeof obj[key] === 'object') || Object.isSealed(obj[key])) {
-    //			return;
-    //		}
-    //
-    //		deepSeal(obj[key]);
-    //	});
-    //	if(!Object.isSealed(obj)) {
-    //		console.log('NOT sealed');
-    //	}
-    //}
-    /**
-     * Copies all properties of source into destination. The optional parameter "overwrite" allows to control
-     * if existing properties on the destination should be overwritten or not. Defaults to true (overwrite).
-     */
-    function mixin(destination, source, overwrite) {
-        if (overwrite === void 0) { overwrite = true; }
-        if (!Types.isObject(destination)) {
-            return source;
-        }
-        if (Types.isObject(source)) {
-            Object.keys(source).forEach(function (key) {
-                if (key in destination) {
-                    if (overwrite) {
-                        if (Types.isObject(destination[key]) && Types.isObject(source[key])) {
-                            mixin(destination[key], source[key], overwrite);
-                        }
-                        else {
-                            destination[key] = source[key];
-                        }
-                    }
-                }
-                else {
-                    destination[key] = source[key];
-                }
-            });
-        }
-        return destination;
-    }
-    exports.mixin = mixin;
-    function assign(destination) {
-        var sources = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            sources[_i - 1] = arguments[_i];
-        }
-        sources.forEach(function (source) { return Object.keys(source).forEach(function (key) { return destination[key] = source[key]; }); });
-        return destination;
-    }
-    exports.assign = assign;
-    function toObject(arr, keyMap, valueMap) {
-        if (valueMap === void 0) { valueMap = function (x) { return x; }; }
-        return arr.reduce(function (o, d) { return assign(o, (_a = {}, _a[keyMap(d)] = valueMap(d), _a)); var _a; }, Object.create(null));
-    }
-    exports.toObject = toObject;
-    function equals(one, other) {
-        if (one === other) {
-            return true;
-        }
-        if (one === null || one === undefined || other === null || other === undefined) {
-            return false;
-        }
-        if (typeof one !== typeof other) {
-            return false;
-        }
-        if (typeof one !== 'object') {
-            return false;
-        }
-        if ((Array.isArray(one)) !== (Array.isArray(other))) {
-            return false;
-        }
-        var i, key;
-        if (Array.isArray(one)) {
-            if (one.length !== other.length) {
-                return false;
-            }
-            for (i = 0; i < one.length; i++) {
-                if (!equals(one[i], other[i])) {
-                    return false;
-                }
-            }
-        }
-        else {
-            var oneKeys = [];
-            for (key in one) {
-                oneKeys.push(key);
-            }
-            oneKeys.sort();
-            var otherKeys = [];
-            for (key in other) {
-                otherKeys.push(key);
-            }
-            otherKeys.sort();
-            if (!equals(oneKeys, otherKeys)) {
-                return false;
-            }
-            for (i = 0; i < oneKeys.length; i++) {
-                if (!equals(one[oneKeys[i]], other[oneKeys[i]])) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    exports.equals = equals;
-    function ensureProperty(obj, property, defaultValue) {
-        if (typeof obj[property] === 'undefined') {
-            obj[property] = defaultValue;
-        }
-    }
-    exports.ensureProperty = ensureProperty;
-    function arrayToHash(array) {
-        var result = {};
-        for (var i = 0; i < array.length; ++i) {
-            result[array[i]] = true;
-        }
-        return result;
-    }
-    exports.arrayToHash = arrayToHash;
-    /**
-     * Given an array of strings, returns a function which, given a string
-     * returns true or false whether the string is in that array.
-     */
-    function createKeywordMatcher(arr, caseInsensitive) {
-        if (caseInsensitive === void 0) { caseInsensitive = false; }
-        if (caseInsensitive) {
-            arr = arr.map(function (x) { return x.toLowerCase(); });
-        }
-        var hash = arrayToHash(arr);
-        if (caseInsensitive) {
-            return function (word) {
-                return hash[word.toLowerCase()] !== undefined && hash.hasOwnProperty(word.toLowerCase());
-            };
-        }
-        else {
-            return function (word) {
-                return hash[word] !== undefined && hash.hasOwnProperty(word);
-            };
-        }
-    }
-    exports.createKeywordMatcher = createKeywordMatcher;
-    /**
-     * Started from TypeScript's __extends function to make a type a subclass of a specific class.
-     * Modified to work with properties already defined on the derivedClass, since we can't get TS
-     * to call this method before the constructor definition.
-     */
-    function derive(baseClass, derivedClass) {
-        for (var prop in baseClass) {
-            if (baseClass.hasOwnProperty(prop)) {
-                derivedClass[prop] = baseClass[prop];
-            }
-        }
-        derivedClass = derivedClass || function () { };
-        var basePrototype = baseClass.prototype;
-        var derivedPrototype = derivedClass.prototype;
-        derivedClass.prototype = Object.create(basePrototype);
-        for (var prop in derivedPrototype) {
-            if (derivedPrototype.hasOwnProperty(prop)) {
-                // handle getters and setters properly
-                Object.defineProperty(derivedClass.prototype, prop, Object.getOwnPropertyDescriptor(derivedPrototype, prop));
-            }
-        }
-        // Cast to any due to Bug 16188:PropertyDescriptor set and get function should be optional.
-        Object.defineProperty(derivedClass.prototype, 'constructor', { value: derivedClass, writable: true, configurable: true, enumerable: true });
-    }
-    exports.derive = derive;
-    /**
-     * Calls JSON.Stringify with a replacer to break apart any circular references.
-     * This prevents JSON.stringify from throwing the exception
-     *  "Uncaught TypeError: Converting circular structure to JSON"
-     */
-    function safeStringify(obj) {
-        var seen = [];
-        return JSON.stringify(obj, function (key, value) {
-            if (Types.isObject(value) || Array.isArray(value)) {
-                if (seen.indexOf(value) !== -1) {
-                    return '[Circular]';
-                }
-                else {
-                    seen.push(value);
-                }
-            }
-            return value;
-        });
-    }
-    exports.safeStringify = safeStringify;
-    function getOrDefault(obj, fn, defaultValue) {
-        if (defaultValue === void 0) { defaultValue = null; }
-        var result = fn(obj);
-        return typeof result === 'undefined' ? defaultValue : result;
-    }
-    exports.getOrDefault = getOrDefault;
-});
-
-define(__m[15/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/platform*/]), function (require, exports, platform) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    function _encode(ch) {
-        return '%' + ch.charCodeAt(0).toString(16).toUpperCase();
-    }
-    // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
-    function encodeURIComponent2(str) {
-        return encodeURIComponent(str).replace(/[!'()*]/g, _encode);
-    }
-    function encodeNoop(str) {
-        return str;
-    }
-    /**
-     * Uniform Resource Identifier (URI) http://tools.ietf.org/html/rfc3986.
-     * This class is a simple parser which creates the basic component paths
-     * (http://tools.ietf.org/html/rfc3986#section-3) with minimal validation
-     * and encoding.
-     *
-     *       foo://example.com:8042/over/there?name=ferret#nose
-     *       \_/   \______________/\_________/ \_________/ \__/
-     *        |           |            |            |        |
-     *     scheme     authority       path        query   fragment
-     *        |   _____________________|__
-     *       / \ /                        \
-     *       urn:example:animal:ferret:nose
-     *
-     *
-     */
-    var URI = (function () {
-        function URI() {
-            this._scheme = URI._empty;
-            this._authority = URI._empty;
-            this._path = URI._empty;
-            this._query = URI._empty;
-            this._fragment = URI._empty;
-            this._formatted = null;
-            this._fsPath = null;
-        }
-        URI.isUri = function (thing) {
-            if (thing instanceof URI) {
-                return true;
-            }
-            if (!thing) {
-                return false;
-            }
-            return typeof thing.authority === 'string'
-                && typeof thing.fragment === 'string'
-                && typeof thing.path === 'string'
-                && typeof thing.query === 'string'
-                && typeof thing.scheme === 'string';
-        };
-        Object.defineProperty(URI.prototype, "scheme", {
-            /**
-             * scheme is the 'http' part of 'http://www.msft.com/some/path?query#fragment'.
-             * The part before the first colon.
-             */
-            get: function () {
-                return this._scheme;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "authority", {
-            /**
-             * authority is the 'www.msft.com' part of 'http://www.msft.com/some/path?query#fragment'.
-             * The part between the first double slashes and the next slash.
-             */
-            get: function () {
-                return this._authority;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "path", {
-            /**
-             * path is the '/some/path' part of 'http://www.msft.com/some/path?query#fragment'.
-             */
-            get: function () {
-                return this._path;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "query", {
-            /**
-             * query is the 'query' part of 'http://www.msft.com/some/path?query#fragment'.
-             */
-            get: function () {
-                return this._query;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "fragment", {
-            /**
-             * fragment is the 'fragment' part of 'http://www.msft.com/some/path?query#fragment'.
-             */
-            get: function () {
-                return this._fragment;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "fsPath", {
-            // ---- filesystem path -----------------------
-            /**
-             * Returns a string representing the corresponding file system path of this URI.
-             * Will handle UNC paths and normalize windows drive letters to lower-case. Also
-             * uses the platform specific path separator. Will *not* validate the path for
-             * invalid characters and semantics. Will *not* look at the scheme of this URI.
-             */
-            get: function () {
-                if (!this._fsPath) {
-                    var value;
-                    if (this._authority && this._path && this.scheme === 'file') {
-                        // unc path: file://shares/c$/far/boo
-                        value = "//" + this._authority + this._path;
-                    }
-                    else if (URI._driveLetterPath.test(this._path)) {
-                        // windows drive letter: file:///c:/far/boo
-                        value = this._path[1].toLowerCase() + this._path.substr(2);
-                    }
-                    else {
-                        // other path
-                        value = this._path;
-                    }
-                    if (platform.isWindows) {
-                        value = value.replace(/\//g, '\\');
-                    }
-                    this._fsPath = value;
-                }
-                return this._fsPath;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        // ---- modify to new -------------------------
-        URI.prototype.with = function (change) {
-            if (!change) {
-                return this;
-            }
-            var scheme = change.scheme, authority = change.authority, path = change.path, query = change.query, fragment = change.fragment;
-            if (scheme === void 0) {
-                scheme = this.scheme;
-            }
-            else if (scheme === null) {
-                scheme = '';
-            }
-            if (authority === void 0) {
-                authority = this.authority;
-            }
-            else if (authority === null) {
-                authority = '';
-            }
-            if (path === void 0) {
-                path = this.path;
-            }
-            else if (path === null) {
-                path = '';
-            }
-            if (query === void 0) {
-                query = this.query;
-            }
-            else if (query === null) {
-                query = '';
-            }
-            if (fragment === void 0) {
-                fragment = this.fragment;
-            }
-            else if (fragment === null) {
-                fragment = '';
-            }
-            if (scheme === this.scheme
-                && authority === this.authority
-                && path === this.path
-                && query === this.query
-                && fragment === this.fragment) {
-                return this;
-            }
-            var ret = new URI();
-            ret._scheme = scheme;
-            ret._authority = authority;
-            ret._path = path;
-            ret._query = query;
-            ret._fragment = fragment;
-            URI._validate(ret);
-            return ret;
-        };
-        // ---- parse & validate ------------------------
-        URI.parse = function (value) {
-            var ret = new URI();
-            var data = URI._parseComponents(value);
-            ret._scheme = data.scheme;
-            ret._authority = decodeURIComponent(data.authority);
-            ret._path = decodeURIComponent(data.path);
-            ret._query = decodeURIComponent(data.query);
-            ret._fragment = decodeURIComponent(data.fragment);
-            URI._validate(ret);
-            return ret;
-        };
-        URI.file = function (path) {
-            var ret = new URI();
-            ret._scheme = 'file';
-            // normalize to fwd-slashes
-            path = path.replace(/\\/g, URI._slash);
-            // check for authority as used in UNC shares
-            // or use the path as given
-            if (path[0] === URI._slash && path[0] === path[1]) {
-                var idx = path.indexOf(URI._slash, 2);
-                if (idx === -1) {
-                    ret._authority = path.substring(2);
-                }
-                else {
-                    ret._authority = path.substring(2, idx);
-                    ret._path = path.substring(idx);
-                }
-            }
-            else {
-                ret._path = path;
-            }
-            // Ensure that path starts with a slash
-            // or that it is at least a slash
-            if (ret._path[0] !== URI._slash) {
-                ret._path = URI._slash + ret._path;
-            }
-            URI._validate(ret);
-            return ret;
-        };
-        URI._parseComponents = function (value) {
-            var ret = {
-                scheme: URI._empty,
-                authority: URI._empty,
-                path: URI._empty,
-                query: URI._empty,
-                fragment: URI._empty,
-            };
-            var match = URI._regexp.exec(value);
-            if (match) {
-                ret.scheme = match[2] || ret.scheme;
-                ret.authority = match[4] || ret.authority;
-                ret.path = match[5] || ret.path;
-                ret.query = match[7] || ret.query;
-                ret.fragment = match[9] || ret.fragment;
-            }
-            return ret;
-        };
-        URI.from = function (components) {
-            return new URI().with(components);
-        };
-        URI._validate = function (ret) {
-            // scheme, https://tools.ietf.org/html/rfc3986#section-3.1
-            // ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
-            if (ret.scheme && !URI._schemePattern.test(ret.scheme)) {
-                throw new Error('[UriError]: Scheme contains illegal characters.');
-            }
-            // path, http://tools.ietf.org/html/rfc3986#section-3.3
-            // If a URI contains an authority component, then the path component
-            // must either be empty or begin with a slash ("/") character.  If a URI
-            // does not contain an authority component, then the path cannot begin
-            // with two slash characters ("//").
-            if (ret.path) {
-                if (ret.authority) {
-                    if (!URI._singleSlashStart.test(ret.path)) {
-                        throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
-                    }
-                }
-                else {
-                    if (URI._doubleSlashStart.test(ret.path)) {
-                        throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
-                    }
-                }
-            }
-        };
-        // ---- printing/externalize ---------------------------
-        /**
-         *
-         * @param skipEncoding Do not encode the result, default is `false`
-         */
-        URI.prototype.toString = function (skipEncoding) {
-            if (skipEncoding === void 0) { skipEncoding = false; }
-            if (!skipEncoding) {
-                if (!this._formatted) {
-                    this._formatted = URI._asFormatted(this, false);
-                }
-                return this._formatted;
-            }
-            else {
-                // we don't cache that
-                return URI._asFormatted(this, true);
-            }
-        };
-        URI._asFormatted = function (uri, skipEncoding) {
-            var encoder = !skipEncoding
-                ? encodeURIComponent2
-                : encodeNoop;
-            var parts = [];
-            var scheme = uri.scheme, authority = uri.authority, path = uri.path, query = uri.query, fragment = uri.fragment;
-            if (scheme) {
-                parts.push(scheme, ':');
-            }
-            if (authority || scheme === 'file') {
-                parts.push('//');
-            }
-            if (authority) {
-                authority = authority.toLowerCase();
-                var idx = authority.indexOf(':');
-                if (idx === -1) {
-                    parts.push(encoder(authority));
-                }
-                else {
-                    parts.push(encoder(authority.substr(0, idx)), authority.substr(idx));
-                }
-            }
-            if (path) {
-                // lower-case windows drive letters in /C:/fff or C:/fff
-                var m = URI._upperCaseDrive.exec(path);
-                if (m) {
-                    if (m[1]) {
-                        path = '/' + m[2].toLowerCase() + path.substr(3); // "/c:".length === 3
-                    }
-                    else {
-                        path = m[2].toLowerCase() + path.substr(2); // // "c:".length === 2
-                    }
-                }
-                // encode every segement but not slashes
-                // make sure that # and ? are always encoded
-                // when occurring in paths - otherwise the result
-                // cannot be parsed back again
-                var lastIdx = 0;
-                while (true) {
-                    var idx = path.indexOf(URI._slash, lastIdx);
-                    if (idx === -1) {
-                        parts.push(encoder(path.substring(lastIdx)).replace(/[#?]/, _encode));
-                        break;
-                    }
-                    parts.push(encoder(path.substring(lastIdx, idx)).replace(/[#?]/, _encode), URI._slash);
-                    lastIdx = idx + 1;
-                }
-                ;
-            }
-            if (query) {
-                parts.push('?', encoder(query));
-            }
-            if (fragment) {
-                parts.push('#', encoder(fragment));
-            }
-            return parts.join(URI._empty);
-        };
-        URI.prototype.toJSON = function () {
-            return {
-                scheme: this.scheme,
-                authority: this.authority,
-                path: this.path,
-                fsPath: this.fsPath,
-                query: this.query,
-                fragment: this.fragment,
-                external: this.toString(),
-                $mid: 1
-            };
-        };
-        URI.revive = function (data) {
-            var result = new URI();
-            result._scheme = data.scheme;
-            result._authority = data.authority;
-            result._path = data.path;
-            result._query = data.query;
-            result._fragment = data.fragment;
-            result._fsPath = data.fsPath;
-            result._formatted = data.external;
-            URI._validate(result);
-            return result;
-        };
-        URI._empty = '';
-        URI._slash = '/';
-        URI._regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
-        URI._driveLetterPath = /^\/[a-zA-z]:/;
-        URI._upperCaseDrive = /^(\/)?([A-Z]:)/;
-        URI._schemePattern = /^\w[\w\d+.-]*$/;
-        URI._singleSlashStart = /^\//;
-        URI._doubleSlashStart = /^\/\//;
-        return URI;
-    }());
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = URI;
+    exports.generateUuid = generateUuid;
 });
 
 /**
@@ -5442,63 +5509,887 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define(__m[4/*vs/base/common/winjs.base*/], __M([30/*vs/base/common/winjs.base.raw*/,6/*vs/base/common/errors*/]), function (winjs, __Errors__) {
+define(__m[3/*vs/base/common/winjs.base*/], __M([49/*vs/base/common/winjs.base.raw*/]), function (winjs) {
 	'use strict';
-
-	var outstandingPromiseErrors = {};
-	function promiseErrorHandler(e) {
-
-		//
-		// e.detail looks like: { exception, error, promise, handler, id, parent }
-		//
-		var details = e.detail;
-		var id = details.id;
-
-		// If the error has a parent promise then this is not the origination of the
-		//  error so we check if it has a handler, and if so we mark that the error
-		//  was handled by removing it from outstandingPromiseErrors
-		//
-		if (details.parent) {
-			if (details.handler && outstandingPromiseErrors) {
-				delete outstandingPromiseErrors[id];
-			}
-			return;
-		}
-
-		// Indicate that this error was originated and needs to be handled
-		outstandingPromiseErrors[id] = details;
-
-		// The first time the queue fills up this iteration, schedule a timeout to
-		// check if any errors are still unhandled.
-		if (Object.keys(outstandingPromiseErrors).length === 1) {
-			setTimeout(function () {
-				var errors = outstandingPromiseErrors;
-				outstandingPromiseErrors = {};
-				Object.keys(errors).forEach(function (errorId) {
-					var error = errors[errorId];
-					if(error.exception) {
-						__Errors__.onUnexpectedError(error.exception);
-					} else if(error.error) {
-						__Errors__.onUnexpectedError(error.error);
-					}
-					console.log("WARNING: Promise with no error callback:" + error.id);
-					console.log(error);
-					if(error.exception) {
-						console.log(error.exception.stack);
-					}
-				});
-			}, 0);
-		}
-	}
-
-	winjs.Promise.addEventListener("error", promiseErrorHandler);
-
 	return {
 		Promise: winjs.Promise,
 		TPromise: winjs.Promise,
 		PPromise: winjs.Promise
 	};
 });
+
+define(__m[11/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/platform*/,4/*vs/base/common/types*/,3/*vs/base/common/winjs.base*/]), function (require, exports, platform, types, winjs_base_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    // ------ BEGIN Hook up error listeners to winjs promises
+    var outstandingPromiseErrors = {};
+    function promiseErrorHandler(e) {
+        //
+        // e.detail looks like: { exception, error, promise, handler, id, parent }
+        //
+        var details = e.detail;
+        var id = details.id;
+        // If the error has a parent promise then this is not the origination of the
+        //  error so we check if it has a handler, and if so we mark that the error
+        //  was handled by removing it from outstandingPromiseErrors
+        //
+        if (details.parent) {
+            if (details.handler && outstandingPromiseErrors) {
+                delete outstandingPromiseErrors[id];
+            }
+            return;
+        }
+        // Indicate that this error was originated and needs to be handled
+        outstandingPromiseErrors[id] = details;
+        // The first time the queue fills up this iteration, schedule a timeout to
+        // check if any errors are still unhandled.
+        if (Object.keys(outstandingPromiseErrors).length === 1) {
+            setTimeout(function () {
+                var errors = outstandingPromiseErrors;
+                outstandingPromiseErrors = {};
+                Object.keys(errors).forEach(function (errorId) {
+                    var error = errors[errorId];
+                    if (error.exception) {
+                        onUnexpectedError(error.exception);
+                    }
+                    else if (error.error) {
+                        onUnexpectedError(error.error);
+                    }
+                    console.log('WARNING: Promise with no error callback:' + error.id);
+                    console.log(error);
+                    if (error.exception) {
+                        console.log(error.exception.stack);
+                    }
+                });
+            }, 0);
+        }
+    }
+    winjs_base_1.TPromise.addEventListener('error', promiseErrorHandler);
+    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
+    var ErrorHandler = (function () {
+        function ErrorHandler() {
+            this.listeners = [];
+            this.unexpectedErrorHandler = function (e) {
+                platform.setTimeout(function () {
+                    if (e.stack) {
+                        throw new Error(e.message + '\n\n' + e.stack);
+                    }
+                    throw e;
+                }, 0);
+            };
+        }
+        ErrorHandler.prototype.addListener = function (listener) {
+            var _this = this;
+            this.listeners.push(listener);
+            return function () {
+                _this._removeListener(listener);
+            };
+        };
+        ErrorHandler.prototype.emit = function (e) {
+            this.listeners.forEach(function (listener) {
+                listener(e);
+            });
+        };
+        ErrorHandler.prototype._removeListener = function (listener) {
+            this.listeners.splice(this.listeners.indexOf(listener), 1);
+        };
+        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
+            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
+            return this.unexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.onUnexpectedError = function (e) {
+            this.unexpectedErrorHandler(e);
+            this.emit(e);
+        };
+        // For external errors, we don't want the listeners to be called
+        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
+            this.unexpectedErrorHandler(e);
+        };
+        return ErrorHandler;
+    }());
+    exports.ErrorHandler = ErrorHandler;
+    exports.errorHandler = new ErrorHandler();
+    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
+        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
+    }
+    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
+    function onUnexpectedError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedError(e);
+        }
+    }
+    exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedExternalError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedExternalError(e);
+        }
+    }
+    exports.onUnexpectedExternalError = onUnexpectedExternalError;
+    function onUnexpectedPromiseError(promise) {
+        return promise.then(null, onUnexpectedError);
+    }
+    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
+    function transformErrorForSerialization(error) {
+        if (error instanceof Error) {
+            var name_1 = error.name, message = error.message;
+            var stack = error.stacktrace || error.stack;
+            return {
+                $isError: true,
+                name: name_1,
+                message: message,
+                stack: stack
+            };
+        }
+        // return as is
+        return error;
+    }
+    exports.transformErrorForSerialization = transformErrorForSerialization;
+    var canceledName = 'Canceled';
+    /**
+     * Checks if the given error is a promise in canceled state
+     */
+    function isPromiseCanceledError(error) {
+        return error instanceof Error && error.name === canceledName && error.message === canceledName;
+    }
+    exports.isPromiseCanceledError = isPromiseCanceledError;
+    /**
+     * Returns an error that signals cancellation.
+     */
+    function canceled() {
+        var error = new Error(canceledName);
+        error.name = error.message;
+        return error;
+    }
+    exports.canceled = canceled;
+    /**
+     * Returns an error that signals something is not implemented.
+     */
+    function notImplemented() {
+        return new Error('Not Implemented');
+    }
+    exports.notImplemented = notImplemented;
+    function illegalArgument(name) {
+        if (name) {
+            return new Error("Illegal argument: " + name);
+        }
+        else {
+            return new Error('Illegal argument');
+        }
+    }
+    exports.illegalArgument = illegalArgument;
+    function illegalState(name) {
+        if (name) {
+            return new Error("Illegal state: " + name);
+        }
+        else {
+            return new Error('Illegal state');
+        }
+    }
+    exports.illegalState = illegalState;
+    function readonly(name) {
+        return name
+            ? new Error("readonly property '" + name + " cannot be changed'")
+            : new Error('readonly property cannot be changed');
+    }
+    exports.readonly = readonly;
+    function create(message, options) {
+        if (options === void 0) { options = {}; }
+        var result = new Error(message);
+        if (types.isNumber(options.severity)) {
+            result.severity = options.severity;
+        }
+        if (options.actions) {
+            result.actions = options.actions;
+        }
+        return result;
+    }
+    exports.create = create;
+    function getErrorMessage(err) {
+        if (!err) {
+            return 'Error';
+        }
+        if (err.message) {
+            return err.message;
+        }
+        if (err.stack) {
+            return err.stack.split('\n')[0];
+        }
+        return String(err);
+    }
+    exports.getErrorMessage = getErrorMessage;
+});
+
+define(__m[18/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var CallbackList = (function () {
+        function CallbackList() {
+        }
+        CallbackList.prototype.add = function (callback, context, bucket) {
+            var _this = this;
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                this._callbacks = [];
+                this._contexts = [];
+            }
+            this._callbacks.push(callback);
+            this._contexts.push(context);
+            if (Array.isArray(bucket)) {
+                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
+            }
+        };
+        CallbackList.prototype.remove = function (callback, context) {
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                return;
+            }
+            var foundCallbackWithDifferentContext = false;
+            for (var i = 0, len = this._callbacks.length; i < len; i++) {
+                if (this._callbacks[i] === callback) {
+                    if (this._contexts[i] === context) {
+                        // callback & context match => remove it
+                        this._callbacks.splice(i, 1);
+                        this._contexts.splice(i, 1);
+                        return;
+                    }
+                    else {
+                        foundCallbackWithDifferentContext = true;
+                    }
+                }
+            }
+            if (foundCallbackWithDifferentContext) {
+                throw new Error('When adding a listener with a context, you should remove it with the same context');
+            }
+        };
+        CallbackList.prototype.invoke = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            if (!this._callbacks) {
+                return undefined;
+            }
+            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
+            for (var i = 0, len = callbacks.length; i < len; i++) {
+                try {
+                    ret.push(callbacks[i].apply(contexts[i], args));
+                }
+                catch (e) {
+                    errors_1.onUnexpectedError(e);
+                }
+            }
+            return ret;
+        };
+        CallbackList.prototype.isEmpty = function () {
+            return !this._callbacks || this._callbacks.length === 0;
+        };
+        CallbackList.prototype.entries = function () {
+            var _this = this;
+            if (!this._callbacks) {
+                return [];
+            }
+            return this._callbacks.map(function (fn, index) { return [fn, _this._contexts[index]]; });
+        };
+        CallbackList.prototype.dispose = function () {
+            this._callbacks = undefined;
+            this._contexts = undefined;
+        };
+        return CallbackList;
+    }());
+    exports.default = CallbackList;
+});
+
+define(__m[5/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/lifecycle*/,18/*vs/base/common/callbackList*/,3/*vs/base/common/winjs.base*/,14/*vs/base/common/functional*/]), function (require, exports, lifecycle_1, callbackList_1, winjs_base_1, functional_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Event;
+    (function (Event) {
+        var _disposable = { dispose: function () { } };
+        Event.None = function () { return _disposable; };
+    })(Event || (Event = {}));
+    exports.default = Event;
+    /**
+     * The Emitter can be used to expose an Event to the public
+     * to fire it from the insides.
+     * Sample:
+        class Document {
+    
+            private _onDidChange = new Emitter<(value:string)=>any>();
+    
+            public onDidChange = this._onDidChange.event;
+    
+            // getter-style
+            // get onDidChange(): Event<(value:string)=>any> {
+            // 	return this._onDidChange.event;
+            // }
+    
+            private _doIt() {
+                //...
+                this._onDidChange.fire(value);
+            }
+        }
+     */
+    var Emitter = (function () {
+        function Emitter(_options) {
+            this._options = _options;
+        }
+        Object.defineProperty(Emitter.prototype, "event", {
+            /**
+             * For the public to allow to subscribe
+             * to events from this Emitter
+             */
+            get: function () {
+                var _this = this;
+                if (!this._event) {
+                    this._event = function (listener, thisArgs, disposables) {
+                        if (!_this._callbacks) {
+                            _this._callbacks = new callbackList_1.default();
+                        }
+                        var firstListener = _this._callbacks.isEmpty();
+                        if (firstListener && _this._options && _this._options.onFirstListenerAdd) {
+                            _this._options.onFirstListenerAdd(_this);
+                        }
+                        _this._callbacks.add(listener, thisArgs);
+                        if (firstListener && _this._options && _this._options.onFirstListenerDidAdd) {
+                            _this._options.onFirstListenerDidAdd(_this);
+                        }
+                        if (_this._options && _this._options.onListenerDidAdd) {
+                            _this._options.onListenerDidAdd(_this, listener, thisArgs);
+                        }
+                        var result;
+                        result = {
+                            dispose: function () {
+                                result.dispose = Emitter._noop;
+                                if (!_this._disposed) {
+                                    _this._callbacks.remove(listener, thisArgs);
+                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
+                                        _this._options.onLastListenerRemove(_this);
+                                    }
+                                }
+                            }
+                        };
+                        if (Array.isArray(disposables)) {
+                            disposables.push(result);
+                        }
+                        return result;
+                    };
+                }
+                return this._event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * To be kept private to fire an event to
+         * subscribers
+         */
+        Emitter.prototype.fire = function (event) {
+            if (this._callbacks) {
+                this._callbacks.invoke.call(this._callbacks, event);
+            }
+        };
+        Emitter.prototype.dispose = function () {
+            if (this._callbacks) {
+                this._callbacks.dispose();
+                this._callbacks = undefined;
+                this._disposed = true;
+            }
+        };
+        Emitter._noop = function () { };
+        return Emitter;
+    }());
+    exports.Emitter = Emitter;
+    var EventMultiplexer = (function () {
+        function EventMultiplexer() {
+            var _this = this;
+            this.hasListeners = false;
+            this.events = [];
+            this.emitter = new Emitter({
+                onFirstListenerAdd: function () { return _this.onFirstListenerAdd(); },
+                onLastListenerRemove: function () { return _this.onLastListenerRemove(); }
+            });
+        }
+        Object.defineProperty(EventMultiplexer.prototype, "event", {
+            get: function () {
+                return this.emitter.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        EventMultiplexer.prototype.add = function (event) {
+            var _this = this;
+            var e = { event: event, listener: null };
+            this.events.push(e);
+            if (this.hasListeners) {
+                this.hook(e);
+            }
+            var dispose = function () {
+                if (_this.hasListeners) {
+                    _this.unhook(e);
+                }
+                var idx = _this.events.indexOf(e);
+                _this.events.splice(idx, 1);
+            };
+            return lifecycle_1.toDisposable(functional_1.once(dispose));
+        };
+        EventMultiplexer.prototype.onFirstListenerAdd = function () {
+            var _this = this;
+            this.hasListeners = true;
+            this.events.forEach(function (e) { return _this.hook(e); });
+        };
+        EventMultiplexer.prototype.onLastListenerRemove = function () {
+            var _this = this;
+            this.hasListeners = false;
+            this.events.forEach(function (e) { return _this.unhook(e); });
+        };
+        EventMultiplexer.prototype.hook = function (e) {
+            var _this = this;
+            e.listener = e.event(function (r) { return _this.emitter.fire(r); });
+        };
+        EventMultiplexer.prototype.unhook = function (e) {
+            e.listener.dispose();
+            e.listener = null;
+        };
+        EventMultiplexer.prototype.dispose = function () {
+            this.emitter.dispose();
+        };
+        return EventMultiplexer;
+    }());
+    exports.EventMultiplexer = EventMultiplexer;
+    /**
+     * Creates an Event which is backed-up by the event emitter. This allows
+     * to use the existing eventing pattern and is likely using less memory.
+     * Sample:
+     *
+     * 	class Document {
+     *
+     *		private _eventbus = new EventEmitter();
+     *
+     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
+     *
+     *		// getter-style
+     *		// get onDidChange(): Event<(value:string)=>any> {
+     *		// 	cache fromEventEmitter result and return
+     *		// }
+     *
+     *		private _doIt() {
+     *			// ...
+     *			this._eventbus.emit('changed', value)
+     *		}
+     *	}
+     */
+    function fromEventEmitter(emitter, eventType) {
+        return function (listener, thisArgs, disposables) {
+            var result = emitter.addListener(eventType, function () {
+                listener.apply(thisArgs, arguments);
+            });
+            if (Array.isArray(disposables)) {
+                disposables.push(result);
+            }
+            return result;
+        };
+    }
+    exports.fromEventEmitter = fromEventEmitter;
+    function fromCallback(fn) {
+        var listener;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () { return listener = fn(function (e) { return emitter.fire(e); }); },
+            onLastListenerRemove: function () { return listener.dispose(); }
+        });
+        return emitter.event;
+    }
+    exports.fromCallback = fromCallback;
+    function fromPromise(promise) {
+        var emitter = new Emitter();
+        var shouldEmit = false;
+        promise
+            .then(null, function () { return null; })
+            .then(function () {
+            if (!shouldEmit) {
+                setTimeout(function () { return emitter.fire(); }, 0);
+            }
+            else {
+                emitter.fire();
+            }
+        });
+        shouldEmit = true;
+        return emitter.event;
+    }
+    exports.fromPromise = fromPromise;
+    function toPromise(event) {
+        return new winjs_base_1.TPromise(function (complete) {
+            var sub = event(function (e) {
+                sub.dispose();
+                complete(e);
+            });
+        });
+    }
+    exports.toPromise = toPromise;
+    function delayed(promise) {
+        var toCancel = null;
+        var listener = null;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
+            },
+            onLastListenerRemove: function () {
+                if (toCancel) {
+                    toCancel.cancel();
+                    toCancel = null;
+                }
+                if (listener) {
+                    listener.dispose();
+                    listener = null;
+                }
+            }
+        });
+        return emitter.event;
+    }
+    exports.delayed = delayed;
+    function once(event) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            var result = event(function (e) {
+                result.dispose();
+                return listener.call(thisArgs, e);
+            }, null, disposables);
+            return result;
+        };
+    }
+    exports.once = once;
+    function any() {
+        var events = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            events[_i] = arguments[_i];
+        }
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return lifecycle_1.combinedDisposable(events.map(function (event) { return event(function (e) { return listener.call(thisArgs, e); }, null, disposables); }));
+        };
+    }
+    exports.any = any;
+    function debounceEvent(event, merger, delay, leading) {
+        if (delay === void 0) { delay = 100; }
+        if (leading === void 0) { leading = false; }
+        var subscription;
+        var output;
+        var handle;
+        var numDebouncedCalls = 0;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                subscription = event(function (cur) {
+                    numDebouncedCalls++;
+                    output = merger(output, cur);
+                    if (!handle && leading) {
+                        emitter.fire(output);
+                    }
+                    clearTimeout(handle);
+                    handle = setTimeout(function () {
+                        var _output = output;
+                        output = undefined;
+                        if (!leading || numDebouncedCalls > 1) {
+                            emitter.fire(_output);
+                        }
+                        handle = null;
+                        numDebouncedCalls = 0;
+                    }, delay);
+                });
+            },
+            onLastListenerRemove: function () {
+                subscription.dispose();
+            }
+        });
+        return emitter.event;
+    }
+    exports.debounceEvent = debounceEvent;
+    /**
+     * The EventDelayer is useful in situations in which you want
+     * to delay firing your events during some code.
+     * You can wrap that code and be sure that the event will not
+     * be fired during that wrap.
+     *
+     * ```
+     * const emitter: Emitter;
+     * const delayer = new EventDelayer();
+     * const delayedEvent = delayer.wrapEvent(emitter.event);
+     *
+     * delayedEvent(console.log);
+     *
+     * delayer.bufferEvents(() => {
+     *   emitter.fire(); // event will not be fired yet
+     * });
+     *
+     * // event will only be fired at this point
+     * ```
+     */
+    var EventBufferer = (function () {
+        function EventBufferer() {
+            this.buffers = [];
+        }
+        EventBufferer.prototype.wrapEvent = function (event) {
+            var _this = this;
+            return function (listener, thisArgs, disposables) {
+                return event(function (i) {
+                    var buffer = _this.buffers[_this.buffers.length - 1];
+                    if (buffer) {
+                        buffer.push(function () { return listener.call(thisArgs, i); });
+                    }
+                    else {
+                        listener.call(thisArgs, i);
+                    }
+                }, void 0, disposables);
+            };
+        };
+        EventBufferer.prototype.bufferEvents = function (fn) {
+            var buffer = [];
+            this.buffers.push(buffer);
+            fn();
+            this.buffers.pop();
+            buffer.forEach(function (flush) { return flush(); });
+        };
+        return EventBufferer;
+    }());
+    exports.EventBufferer = EventBufferer;
+    function mapEvent(event, map) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
+        };
+    }
+    exports.mapEvent = mapEvent;
+    function filterEvent(event, filter) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
+        };
+    }
+    exports.filterEvent = filterEvent;
+    var ChainableEvent = (function () {
+        function ChainableEvent(_event) {
+            this._event = _event;
+        }
+        Object.defineProperty(ChainableEvent.prototype, "event", {
+            get: function () { return this._event; },
+            enumerable: true,
+            configurable: true
+        });
+        ChainableEvent.prototype.map = function (fn) {
+            return new ChainableEvent(mapEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.filter = function (fn) {
+            return new ChainableEvent(filterEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.on = function (listener, thisArgs, disposables) {
+            return this._event(listener, thisArgs, disposables);
+        };
+        return ChainableEvent;
+    }());
+    function chain(event) {
+        return new ChainableEvent(event);
+    }
+    exports.chain = chain;
+    function stopwatch(event) {
+        var start = new Date().getTime();
+        return mapEvent(once(event), function (_) { return new Date().getTime() - start; });
+    }
+    exports.stopwatch = stopwatch;
+    /**
+     * Buffers the provided event until a first listener comes
+     * along, at which point fire all the events at once and
+     * pipe the event from then on.
+     *
+     * ```typescript
+     * const emitter = new Emitter<number>();
+     * const event = emitter.event;
+     * const bufferedEvent = buffer(event);
+     *
+     * emitter.fire(1);
+     * emitter.fire(2);
+     * emitter.fire(3);
+     * // nothing...
+     *
+     * const listener = bufferedEvent(num => console.log(num));
+     * // 1, 2, 3
+     *
+     * emitter.fire(4);
+     * // 4
+     * ```
+     */
+    function buffer(event, nextTick, buffer) {
+        if (nextTick === void 0) { nextTick = false; }
+        if (buffer === void 0) { buffer = []; }
+        buffer = buffer.slice();
+        var listener = event(function (e) {
+            if (buffer) {
+                buffer.push(e);
+            }
+            else {
+                emitter.fire(e);
+            }
+        });
+        var flush = function () {
+            buffer.forEach(function (e) { return emitter.fire(e); });
+            buffer = null;
+        };
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                if (!listener) {
+                    listener = event(function (e) { return emitter.fire(e); });
+                }
+            },
+            onFirstListenerDidAdd: function () {
+                if (buffer) {
+                    if (nextTick) {
+                        setTimeout(flush);
+                    }
+                    else {
+                        flush();
+                    }
+                }
+            },
+            onLastListenerRemove: function () {
+                listener.dispose();
+                listener = null;
+            }
+        });
+        return emitter.event;
+    }
+    exports.buffer = buffer;
+    /**
+     * Similar to `buffer` but it buffers indefinitely and repeats
+     * the buffered events to every new listener.
+     */
+    function echo(event, nextTick, buffer) {
+        if (nextTick === void 0) { nextTick = false; }
+        if (buffer === void 0) { buffer = []; }
+        buffer = buffer.slice();
+        event(function (e) {
+            buffer.push(e);
+            emitter.fire(e);
+        });
+        var flush = function (listener, thisArgs) { return buffer.forEach(function (e) { return listener.call(thisArgs, e); }); };
+        var emitter = new Emitter({
+            onListenerDidAdd: function (emitter, listener, thisArgs) {
+                if (nextTick) {
+                    setTimeout(function () { return flush(listener, thisArgs); });
+                }
+                else {
+                    flush(listener, thisArgs);
+                }
+            }
+        });
+        return emitter.event;
+    }
+    exports.echo = echo;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[20/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/event*/]), function (require, exports, event_1) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var shortcutEvent = Object.freeze(function (callback, context) {
+        var handle = setTimeout(callback.bind(context), 0);
+        return { dispose: function () { clearTimeout(handle); } };
+    });
+    var CancellationToken;
+    (function (CancellationToken) {
+        CancellationToken.None = Object.freeze({
+            isCancellationRequested: false,
+            onCancellationRequested: event_1.default.None
+        });
+        CancellationToken.Cancelled = Object.freeze({
+            isCancellationRequested: true,
+            onCancellationRequested: shortcutEvent
+        });
+    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
+    var MutableToken = (function () {
+        function MutableToken() {
+            this._isCancelled = false;
+        }
+        MutableToken.prototype.cancel = function () {
+            if (!this._isCancelled) {
+                this._isCancelled = true;
+                if (this._emitter) {
+                    this._emitter.fire(undefined);
+                    this._emitter = undefined;
+                }
+            }
+        };
+        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
+            get: function () {
+                return this._isCancelled;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
+            get: function () {
+                if (this._isCancelled) {
+                    return shortcutEvent;
+                }
+                if (!this._emitter) {
+                    this._emitter = new event_1.Emitter();
+                }
+                return this._emitter.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return MutableToken;
+    }());
+    var CancellationTokenSource = (function () {
+        function CancellationTokenSource() {
+        }
+        Object.defineProperty(CancellationTokenSource.prototype, "token", {
+            get: function () {
+                if (!this._token) {
+                    // be lazy and create the token only when
+                    // actually needed
+                    this._token = new MutableToken();
+                }
+                return this._token;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CancellationTokenSource.prototype.cancel = function () {
+            if (!this._token) {
+                // save an object by returning the default
+                // cancelled token when cancellation happens
+                // before someone asks for the token
+                this._token = CancellationToken.Cancelled;
+            }
+            else {
+                this._token.cancel();
+            }
+        };
+        CancellationTokenSource.prototype.dispose = function () {
+            this.cancel();
+        };
+        return CancellationTokenSource;
+    }());
+    exports.CancellationTokenSource = CancellationTokenSource;
+});
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -5508,8 +6399,14 @@ define(__m[4/*vs/base/common/winjs.base*/], __M([30/*vs/base/common/winjs.base.r
 
 
 
-define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/errors*/,2/*vs/base/common/platform*/,4/*vs/base/common/winjs.base*/,13/*vs/base/common/cancellation*/,7/*vs/base/common/lifecycle*/,3/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
+
+
+
+
+
+define(__m[13/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/errors*/,2/*vs/base/common/platform*/,3/*vs/base/common/winjs.base*/,20/*vs/base/common/cancellation*/,8/*vs/base/common/lifecycle*/,5/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
     }
@@ -5550,6 +6447,7 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
                 if (!errors.isPromiseCanceledError(err)) {
                     return winjs_base_1.TPromise.wrapError(err);
                 }
+                return undefined;
             });
         }
         return always(promise, function () { return subscription.dispose(); });
@@ -5567,8 +6465,8 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
      * The throttler implements this via the queue() method, by providing it a task
      * factory. Following the example:
      *
-     * 		var throttler = new Throttler();
-     * 		var letters = [];
+     * 		const throttler = new Throttler();
+     * 		const letters = [];
      *
      * 		function deliver() {
      * 			const lettersToDeliver = letters;
@@ -5598,20 +6496,20 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
                         _this.queuedPromiseFactory = null;
                         return result;
                     };
-                    this.queuedPromise = new winjs_base_1.Promise(function (c, e, p) {
+                    this.queuedPromise = new winjs_base_1.TPromise(function (c, e, p) {
                         _this.activePromise.then(onComplete_1, onComplete_1, p).done(c);
                     }, function () {
                         _this.activePromise.cancel();
                     });
                 }
-                return new winjs_base_1.Promise(function (c, e, p) {
+                return new winjs_base_1.TPromise(function (c, e, p) {
                     _this.queuedPromise.then(c, e, p);
                 }, function () {
                     // no-op
                 });
             }
             this.activePromise = promiseFactory();
-            return new winjs_base_1.Promise(function (c, e, p) {
+            return new winjs_base_1.TPromise(function (c, e, p) {
                 _this.activePromise.done(function (result) {
                     _this.activePromise = null;
                     c(result);
@@ -5652,8 +6550,8 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
      * to be executed and the waiting period (delay) must be passed in as arguments. Following
      * the example:
      *
-     * 		var delayer = new Delayer(WAITING_PERIOD);
-     * 		var letters = [];
+     * 		const delayer = new Delayer(WAITING_PERIOD);
+     * 		const letters = [];
      *
      * 		function letterReceived(l) {
      * 			letters.push(l);
@@ -5674,7 +6572,7 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
             this.task = task;
             this.cancelTimeout();
             if (!this.completionPromise) {
-                this.completionPromise = new winjs_base_1.Promise(function (c) {
+                this.completionPromise = new winjs_base_1.TPromise(function (c) {
                     _this.onSuccess = c;
                 }, function () {
                     // no-op
@@ -5721,8 +6619,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
     var ThrottledDelayer = (function (_super) {
         __extends(ThrottledDelayer, _super);
         function ThrottledDelayer(defaultDelay) {
-            _super.call(this, defaultDelay);
-            this.throttler = new Throttler();
+            var _this = _super.call(this, defaultDelay) || this;
+            _this.throttler = new Throttler();
+            return _this;
         }
         ThrottledDelayer.prototype.trigger = function (promiseFactory, delay) {
             var _this = this;
@@ -5739,9 +6638,10 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         __extends(PeriodThrottledDelayer, _super);
         function PeriodThrottledDelayer(defaultDelay, minimumPeriod) {
             if (minimumPeriod === void 0) { minimumPeriod = 0; }
-            _super.call(this, defaultDelay);
-            this.minimumPeriod = minimumPeriod;
-            this.periodThrottler = new Throttler();
+            var _this = _super.call(this, defaultDelay) || this;
+            _this.minimumPeriod = minimumPeriod;
+            _this.periodThrottler = new Throttler();
+            return _this;
         }
         PeriodThrottledDelayer.prototype.trigger = function (promiseFactory, delay) {
             var _this = this;
@@ -5784,8 +6684,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
     var ShallowCancelThenPromise = (function (_super) {
         __extends(ShallowCancelThenPromise, _super);
         function ShallowCancelThenPromise(outer) {
+            var _this = this;
             var completeCallback, errorCallback, progressCallback;
-            _super.call(this, function (c, e, p) {
+            _this = _super.call(this, function (c, e, p) {
                 completeCallback = c;
                 errorCallback = e;
                 progressCallback = p;
@@ -5793,8 +6694,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
                 // cancel this promise but not the
                 // outer promise
                 errorCallback(errors.canceled());
-            });
+            }) || this;
             outer.then(completeCallback, errorCallback, progressCallback);
+            return _this;
         }
         return ShallowCancelThenPromise;
     }(winjs_base_1.TPromise));
@@ -5878,20 +6780,6 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         return loop();
     }
     exports.first = first;
-    function once(fn) {
-        var _this = this;
-        var didCall = false;
-        var result;
-        return function () {
-            if (didCall) {
-                return result;
-            }
-            didCall = true;
-            result = fn.apply(_this, arguments);
-            return result;
-        };
-    }
-    exports.once = once;
     /**
      * A helper to queue N promises and run them all with a max degree of parallelism. The helper
      * ensures that at any time no more than M promises are running at the same time.
@@ -5953,16 +6841,26 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
     var Queue = (function (_super) {
         __extends(Queue, _super);
         function Queue() {
-            _super.call(this, 1);
+            return _super.call(this, 1) || this;
         }
         return Queue;
     }(Limiter));
     exports.Queue = Queue;
+    function setDisposableTimeout(handler, timeout) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        var handle = setTimeout.apply(void 0, [handler, timeout].concat(args));
+        return { dispose: function () { clearTimeout(handle); } };
+    }
+    exports.setDisposableTimeout = setDisposableTimeout;
     var TimeoutTimer = (function (_super) {
         __extends(TimeoutTimer, _super);
         function TimeoutTimer() {
-            _super.call(this);
-            this._token = -1;
+            var _this = _super.call(this) || this;
+            _this._token = -1;
+            return _this;
         }
         TimeoutTimer.prototype.dispose = function () {
             this.cancel();
@@ -5999,8 +6897,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
     var IntervalTimer = (function (_super) {
         __extends(IntervalTimer, _super);
         function IntervalTimer() {
-            _super.call(this);
-            this._token = -1;
+            var _this = _super.call(this) || this;
+            _this._token = -1;
+            return _this;
         }
         IntervalTimer.prototype.dispose = function () {
             this.cancel();
@@ -6078,7 +6977,7 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        return new winjs_base_1.Promise(function (c, e) { return fn.apply(void 0, args.concat([function (err, result) { return err ? e(err) : c(result); }])); });
+        return new winjs_base_1.TPromise(function (c, e) { return fn.apply(void 0, args.concat([function (err, result) { return err ? e(err) : c(result); }])); }, function () { return null; });
     }
     exports.nfcall = nfcall;
     function ninvoke(thisArg, fn) {
@@ -6086,7 +6985,7 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         for (var _i = 2; _i < arguments.length; _i++) {
             args[_i - 2] = arguments[_i];
         }
-        return new winjs_base_1.Promise(function (c, e) { return fn.call.apply(fn, [thisArg].concat(args, [function (err, result) { return err ? e(err) : c(result); }])); });
+        return new winjs_base_1.TPromise(function (c, e) { return fn.call.apply(fn, [thisArg].concat(args, [function (err, result) { return err ? e(err) : c(result); }])); }, function () { return null; });
     }
     exports.ninvoke = ninvoke;
 });
@@ -6095,14 +6994,76 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[19/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/event*/]), function (require, exports, event_1) {
+define(__m[22/*vs/base/node/decoder*/], __M([0/*require*/,1/*exports*/,46/*string_decoder*/]), function (require, exports, sd) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Convenient way to iterate over output line by line. This helper accommodates for the fact that
+     * a buffer might not end with new lines all the way.
+     *
+     * To use:
+     * - call the write method
+     * - forEach() over the result to get the lines
+     */
+    var LineDecoder = (function () {
+        function LineDecoder(encoding) {
+            if (encoding === void 0) { encoding = 'utf8'; }
+            this.stringDecoder = new sd.StringDecoder(encoding);
+            this.remaining = null;
+        }
+        LineDecoder.prototype.write = function (buffer) {
+            var result = [];
+            var value = this.remaining
+                ? this.remaining + this.stringDecoder.write(buffer)
+                : this.stringDecoder.write(buffer);
+            if (value.length < 1) {
+                return result;
+            }
+            var start = 0;
+            var ch;
+            var idx = start;
+            while (idx < value.length) {
+                ch = value.charCodeAt(idx);
+                if (ch === 13 /* CarriageReturn */ || ch === 10 /* LineFeed */) {
+                    result.push(value.substring(start, idx));
+                    idx++;
+                    if (idx < value.length) {
+                        var lastChar = ch;
+                        ch = value.charCodeAt(idx);
+                        if ((lastChar === 13 /* CarriageReturn */ && ch === 10 /* LineFeed */) || (lastChar === 10 /* LineFeed */ && ch === 13 /* CarriageReturn */)) {
+                            idx++;
+                        }
+                    }
+                    start = idx;
+                }
+                else {
+                    idx++;
+                }
+            }
+            this.remaining = start < value.length ? value.substr(start) : null;
+            return result;
+        };
+        LineDecoder.prototype.end = function () {
+            return this.remaining;
+        };
+        return LineDecoder;
+    }());
+    exports.LineDecoder = LineDecoder;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[24/*vs/base/node/event*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/event*/]), function (require, exports, event_1) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     function fromEventEmitter(emitter, eventName, map) {
         if (map === void 0) { map = function (id) { return id; }; }
         var fn = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
+                args[_i] = arguments[_i];
             }
             return result.fire(map.apply(void 0, args));
         };
@@ -6119,8 +7080,682 @@ define(__m[19/*vs/base/node/event*/], __M([1/*require*/,0/*exports*/,3/*vs/base/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/winjs.base*/,7/*vs/base/common/lifecycle*/,3/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+define(__m[17/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,45/*assert*/]), function (require, exports, assert) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
+     * array to the callback (callback). The resulting errors and results are evaluated by calling the provided callback function.
+     */
+    function parallel(list, fn, callback) {
+        var results = new Array(list.length);
+        var errors = new Array(list.length);
+        var didErrorOccur = false;
+        var doneCount = 0;
+        if (list.length === 0) {
+            return callback(null, []);
+        }
+        list.forEach(function (item, index) {
+            fn(item, function (error, result) {
+                if (error) {
+                    didErrorOccur = true;
+                    results[index] = null;
+                    errors[index] = error;
+                }
+                else {
+                    results[index] = result;
+                    errors[index] = null;
+                }
+                if (++doneCount === list.length) {
+                    return callback(didErrorOccur ? errors : null, results);
+                }
+            });
+        });
+    }
+    exports.parallel = parallel;
+    function loop(param, fn, callback) {
+        // Assert
+        assert.ok(param, 'Missing first parameter');
+        assert.ok(typeof (fn) === 'function', 'Second parameter must be a function that is called for each element');
+        assert.ok(typeof (callback) === 'function', 'Third parameter must be a function that is called on error and success');
+        // Param is function, execute to retrieve array
+        if (typeof (param) === 'function') {
+            try {
+                param(function (error, result) {
+                    if (error) {
+                        callback(error, null);
+                    }
+                    else {
+                        loop(result, fn, callback);
+                    }
+                });
+            }
+            catch (error) {
+                callback(error, null);
+            }
+        }
+        else {
+            var results_1 = [];
+            var looper_1 = function (i) {
+                // Still work to do
+                if (i < param.length) {
+                    // Execute function on array element
+                    try {
+                        fn(param[i], function (error, result) {
+                            // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
+                            if (error === true || error === false) {
+                                result = error;
+                                error = null;
+                            }
+                            // Quit looping on error
+                            if (error) {
+                                callback(error, null);
+                            }
+                            else {
+                                if (result) {
+                                    results_1.push(result);
+                                }
+                                process.nextTick(function () {
+                                    looper_1(i + 1);
+                                });
+                            }
+                        }, i, param.length);
+                    }
+                    catch (error) {
+                        callback(error, null);
+                    }
+                }
+                else {
+                    callback(null, results_1);
+                }
+            };
+            // Start looping with first element in array
+            looper_1(0);
+        }
+    }
+    exports.loop = loop;
+    function Sequence(sequences) {
+        // Assert
+        assert.ok(sequences.length > 1, 'Need at least one error handler and one function to process sequence');
+        sequences.forEach(function (sequence) {
+            assert.ok(typeof (sequence) === 'function');
+        });
+        // Execute in Loop
+        var errorHandler = sequences.splice(0, 1)[0]; //Remove error handler
+        var sequenceResult = null;
+        loop(sequences, function (sequence, clb) {
+            var sequenceFunction = function (error, result) {
+                // A method might only send a boolean value as return value (e.g. fs.exists), support this case gracefully
+                if (error === true || error === false) {
+                    result = error;
+                    error = null;
+                }
+                // Handle Error and Result
+                if (error) {
+                    clb(error, null);
+                }
+                else {
+                    sequenceResult = result; //Remember result of sequence
+                    clb(null, null); //Don't pass on result to Looper as we are not aggregating it
+                }
+            };
+            // We call the sequence function setting "this" to be the callback we define here
+            // and we pass in the "sequenceResult" as first argument. Doing all this avoids having
+            // to pass in a callback to the sequence because the callback is already "this".
+            try {
+                sequence.call(sequenceFunction, sequenceResult);
+            }
+            catch (error) {
+                clb(error, null);
+            }
+        }, function (error, result) {
+            if (error) {
+                errorHandler(error);
+            }
+        });
+    }
+    function sequence(sequences) {
+        Sequence((Array.isArray(sequences)) ? sequences : Array.prototype.slice.call(arguments));
+    }
+    exports.sequence = sequence;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[27/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,25/*vs/base/common/uuid*/,6/*vs/base/common/strings*/,2/*vs/base/common/platform*/,17/*vs/base/node/flow*/,28/*fs*/,15/*path*/]), function (require, exports, uuid, strings, platform, flow, fs, paths) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var loop = flow.loop;
+    function readdirSync(path) {
+        // Mac: uses NFD unicode form on disk, but we want NFC
+        // See also https://github.com/nodejs/node/issues/2165
+        if (platform.isMacintosh) {
+            return fs.readdirSync(path).map(function (c) { return strings.normalizeNFC(c); });
+        }
+        return fs.readdirSync(path);
+    }
+    exports.readdirSync = readdirSync;
+    function readdir(path, callback) {
+        // Mac: uses NFD unicode form on disk, but we want NFC
+        // See also https://github.com/nodejs/node/issues/2165
+        if (platform.isMacintosh) {
+            return fs.readdir(path, function (error, children) {
+                if (error) {
+                    return callback(error, null);
+                }
+                return callback(null, children.map(function (c) { return strings.normalizeNFC(c); }));
+            });
+        }
+        return fs.readdir(path, callback);
+    }
+    exports.readdir = readdir;
+    function mkdirp(path, mode, callback) {
+        fs.exists(path, function (exists) {
+            if (exists) {
+                return isDirectory(path, function (err, itIs) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    if (!itIs) {
+                        return callback(new Error('"' + path + '" is not a directory.'));
+                    }
+                    callback(null);
+                });
+            }
+            mkdirp(paths.dirname(path), mode, function (err) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                if (mode) {
+                    fs.mkdir(path, mode, function (error) {
+                        if (error) {
+                            return callback(error);
+                        }
+                        fs.chmod(path, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
+                    });
+                }
+                else {
+                    fs.mkdir(path, null, callback);
+                }
+            });
+        });
+    }
+    exports.mkdirp = mkdirp;
+    function isDirectory(path, callback) {
+        fs.stat(path, function (error, stat) {
+            if (error) {
+                return callback(error);
+            }
+            callback(null, stat.isDirectory());
+        });
+    }
+    function copy(source, target, callback, copiedSources) {
+        if (!copiedSources) {
+            copiedSources = Object.create(null);
+        }
+        fs.stat(source, function (error, stat) {
+            if (error) {
+                return callback(error);
+            }
+            if (!stat.isDirectory()) {
+                return pipeFs(source, target, stat.mode & 511, callback);
+            }
+            if (copiedSources[source]) {
+                return callback(null); // escape when there are cycles (can happen with symlinks)
+            }
+            else {
+                copiedSources[source] = true; // remember as copied
+            }
+            mkdirp(target, stat.mode & 511, function (err) {
+                readdir(source, function (err, files) {
+                    loop(files, function (file, clb) {
+                        copy(paths.join(source, file), paths.join(target, file), function (error) { return clb(error, undefined); }, copiedSources);
+                    }, callback);
+                });
+            });
+        });
+    }
+    exports.copy = copy;
+    function pipeFs(source, target, mode, callback) {
+        var callbackHandled = false;
+        var readStream = fs.createReadStream(source);
+        var writeStream = fs.createWriteStream(target, { mode: mode });
+        var onError = function (error) {
+            if (!callbackHandled) {
+                callbackHandled = true;
+                callback(error);
+            }
+        };
+        readStream.on('error', onError);
+        writeStream.on('error', onError);
+        readStream.on('end', function () {
+            writeStream.end(function () {
+                if (!callbackHandled) {
+                    callbackHandled = true;
+                    fs.chmod(target, mode, callback); // we need to explicitly chmod because of https://github.com/nodejs/node/issues/1104
+                }
+            });
+        });
+        // In node 0.8 there is no easy way to find out when the pipe operation has finished. As such, we use the end property = false
+        // so that we are in charge of calling end() on the write stream and we will be notified when the write stream is really done.
+        // We can do this because file streams have an end() method that allows to pass in a callback.
+        // In node 0.10 there is an event 'finish' emitted from the write stream that can be used. See
+        // https://groups.google.com/forum/?fromgroups=#!topic/nodejs/YWQ1sRoXOdI
+        readStream.pipe(writeStream, { end: false });
+    }
+    // Deletes the given path by first moving it out of the workspace. This has two benefits. For one, the operation can return fast because
+    // after the rename, the contents are out of the workspace although not yet deleted. The greater benefit however is that this operation
+    // will fail in case any file is used by another process. fs.unlink() in node will not bail if a file unlinked is used by another process.
+    // However, the consequences are bad as outlined in all the related bugs from https://github.com/joyent/node/issues/7164
+    function del(path, tmpFolder, callback, done) {
+        fs.exists(path, function (exists) {
+            if (!exists) {
+                return callback(null);
+            }
+            fs.stat(path, function (err, stat) {
+                if (err || !stat) {
+                    return callback(err);
+                }
+                // Special windows workaround: A file or folder that ends with a "." cannot be moved to another place
+                // because it is not a valid file name. In this case, we really have to do the deletion without prior move.
+                if (path[path.length - 1] === '.' || strings.endsWith(path, './') || strings.endsWith(path, '.\\')) {
+                    return rmRecursive(path, callback);
+                }
+                var pathInTemp = paths.join(tmpFolder, uuid.generateUuid());
+                fs.rename(path, pathInTemp, function (error) {
+                    if (error) {
+                        return rmRecursive(path, callback); // if rename fails, delete without tmp dir
+                    }
+                    // Return early since the move succeeded
+                    callback(null);
+                    // do the heavy deletion outside the callers callback
+                    rmRecursive(pathInTemp, function (error) {
+                        if (error) {
+                            console.error(error);
+                        }
+                        if (done) {
+                            done(error);
+                        }
+                    });
+                });
+            });
+        });
+    }
+    exports.del = del;
+    function rmRecursive(path, callback) {
+        if (path === '\\' || path === '/') {
+            return callback(new Error('Will not delete root!'));
+        }
+        fs.exists(path, function (exists) {
+            if (!exists) {
+                callback(null);
+            }
+            else {
+                fs.lstat(path, function (err, stat) {
+                    if (err || !stat) {
+                        callback(err);
+                    }
+                    else if (!stat.isDirectory() || stat.isSymbolicLink() /* !!! never recurse into links when deleting !!! */) {
+                        var mode = stat.mode;
+                        if (!(mode & 128)) {
+                            fs.chmod(path, mode | 128, function (err) {
+                                if (err) {
+                                    callback(err);
+                                }
+                                else {
+                                    fs.unlink(path, callback);
+                                }
+                            });
+                        }
+                        else {
+                            fs.unlink(path, callback);
+                        }
+                    }
+                    else {
+                        readdir(path, function (err, children) {
+                            if (err || !children) {
+                                callback(err);
+                            }
+                            else if (children.length === 0) {
+                                fs.rmdir(path, callback);
+                            }
+                            else {
+                                var firstError_1 = null;
+                                var childrenLeft_1 = children.length;
+                                children.forEach(function (child) {
+                                    rmRecursive(paths.join(path, child), function (err) {
+                                        childrenLeft_1--;
+                                        if (err) {
+                                            firstError_1 = firstError_1 || err;
+                                        }
+                                        if (childrenLeft_1 === 0) {
+                                            if (firstError_1) {
+                                                callback(firstError_1);
+                                            }
+                                            else {
+                                                fs.rmdir(path, callback);
+                                            }
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    function delSync(path) {
+        try {
+            var stat = fs.lstatSync(path);
+            if (stat.isDirectory() && !stat.isSymbolicLink()) {
+                readdirSync(path).forEach(function (child) { return delSync(paths.join(path, child)); });
+                fs.rmdirSync(path);
+            }
+            else {
+                fs.unlinkSync(path);
+            }
+        }
+        catch (err) {
+            if (err.code === 'ENOENT') {
+                return; // not found
+            }
+            throw err;
+        }
+    }
+    exports.delSync = delSync;
+    function mv(source, target, callback) {
+        if (source === target) {
+            return callback(null);
+        }
+        function updateMtime(err) {
+            if (err) {
+                return callback(err);
+            }
+            fs.stat(target, function (error, stat) {
+                if (error) {
+                    return callback(error);
+                }
+                if (stat.isDirectory()) {
+                    return callback(null);
+                }
+                fs.open(target, 'a', null, function (err, fd) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    fs.futimes(fd, stat.atime, new Date(), function (err) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        fs.close(fd, callback);
+                    });
+                });
+            });
+        }
+        // Try native rename()
+        fs.rename(source, target, function (err) {
+            if (!err) {
+                return updateMtime(null);
+            }
+            // In two cases we fallback to classic copy and delete:
+            //
+            // 1.) The EXDEV error indicates that source and target are on different devices
+            // In this case, fallback to using a copy() operation as there is no way to
+            // rename() between different devices.
+            //
+            // 2.) The user tries to rename a file/folder that ends with a dot. This is not
+            // really possible to move then, at least on UNC devices.
+            if (err && source.toLowerCase() !== target.toLowerCase() && (err.code === 'EXDEV') || strings.endsWith(source, '.')) {
+                return copy(source, target, function (err) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    rmRecursive(source, updateMtime);
+                });
+            }
+            return callback(err);
+        });
+    }
+    exports.mv = mv;
+    // Calls fs.writeFile() followed by a fs.sync() call to flush the changes to disk
+    // We do this in cases where we want to make sure the data is really on disk and
+    // not in some cache.
+    //
+    // See https://github.com/nodejs/node/blob/v5.10.0/lib/fs.js#L1194
+    var canFlush = true;
+    function writeFileAndFlush(path, data, options, callback) {
+        if (!canFlush) {
+            return fs.writeFile(path, data, options, callback);
+        }
+        if (!options) {
+            options = { encoding: 'utf8', mode: 438, flag: 'w' };
+        }
+        else if (typeof options === 'string') {
+            options = { encoding: options, mode: 438, flag: 'w' };
+        }
+        // Open the file with same flags and mode as fs.writeFile()
+        fs.open(path, options.flag, options.mode, function (openError, fd) {
+            if (openError) {
+                return callback(openError);
+            }
+            // It is valid to pass a fd handle to fs.writeFile() and this will keep the handle open!
+            fs.writeFile(fd, data, options.encoding, function (writeError) {
+                if (writeError) {
+                    return fs.close(fd, function () { return callback(writeError); }); // still need to close the handle on error!
+                }
+                // Flush contents (not metadata) of the file to disk
+                fs.fdatasync(fd, function (syncError) {
+                    // In some exotic setups it is well possible that node fails to sync
+                    // In that case we disable flushing and warn to the console
+                    if (syncError) {
+                        console.warn('[node.js fs] fdatasync is now disabled for this session because it failed: ', syncError);
+                        canFlush = false;
+                    }
+                    return fs.close(fd, function (closeError) { return callback(closeError); });
+                });
+            });
+        });
+    }
+    exports.writeFileAndFlush = writeFileAndFlush;
+    /**
+     * Copied from: https://github.com/Microsoft/vscode-node-debug/blob/master/src/node/pathUtilities.ts#L83
+     *
+     * Given an absolute, normalized, and existing file path 'realcase' returns the exact path that the file has on disk.
+     * On a case insensitive file system, the returned path might differ from the original path by character casing.
+     * On a case sensitive file system, the returned path will always be identical to the original path.
+     * In case of errors, null is returned. But you cannot use this function to verify that a path exists.
+     * realcaseSync does not handle '..' or '.' path segments and it does not take the locale into account.
+     */
+    function realcaseSync(path) {
+        var dir = paths.dirname(path);
+        if (path === dir) {
+            return path;
+        }
+        var name = paths.basename(path).toLowerCase();
+        try {
+            var entries = readdirSync(dir);
+            var found = entries.filter(function (e) { return e.toLowerCase() === name; }); // use a case insensitive search
+            if (found.length === 1) {
+                // on a case sensitive filesystem we cannot determine here, whether the file exists or not, hence we need the 'file exists' precondition
+                var prefix = realcaseSync(dir); // recurse
+                if (prefix) {
+                    return paths.join(prefix, found[0]);
+                }
+            }
+            else if (found.length > 1) {
+                // must be a case sensitive $filesystem
+                var ix = found.indexOf(name);
+                if (ix >= 0) {
+                    var prefix = realcaseSync(dir); // recurse
+                    if (prefix) {
+                        return paths.join(prefix, found[ix]);
+                    }
+                }
+            }
+        }
+        catch (error) {
+            // silently ignore error
+        }
+        return null;
+    }
+    exports.realcaseSync = realcaseSync;
+    function realpathSync(path) {
+        try {
+            return fs.realpathSync(path);
+        }
+        catch (error) {
+            // We hit an error calling fs.realpathSync(). Since fs.realpathSync() is doing some path normalization
+            // we now do a similar normalization and then try again if we can access the path with read
+            // permissions at least. If that succeeds, we return that path.
+            // fs.realpath() is resolving symlinks and that can fail in certain cases. The workaround is
+            // to not resolve links but to simply see if the path is read accessible or not.
+            var normalizedPath = normalizePath(path);
+            fs.accessSync(normalizedPath, fs.constants.R_OK); // throws in case of an error
+            return normalizedPath;
+        }
+    }
+    exports.realpathSync = realpathSync;
+    function realpath(path, callback) {
+        return fs.realpath(path, function (error, realpath) {
+            if (!error) {
+                return callback(null, realpath);
+            }
+            // We hit an error calling fs.realpath(). Since fs.realpath() is doing some path normalization
+            // we now do a similar normalization and then try again if we can access the path with read
+            // permissions at least. If that succeeds, we return that path.
+            // fs.realpath() is resolving symlinks and that can fail in certain cases. The workaround is
+            // to not resolve links but to simply see if the path is read accessible or not.
+            var normalizedPath = normalizePath(path);
+            return fs.access(normalizedPath, fs.constants.R_OK, function (error) {
+                return callback(error, normalizedPath);
+            });
+        });
+    }
+    exports.realpath = realpath;
+    function normalizePath(path) {
+        return strings.rtrim(paths.normalize(path), paths.sep);
+    }
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[30/*vs/base/node/stdFork*/], __M([0/*require*/,1/*exports*/,15/*path*/,44/*os*/,43/*net*/,12/*child_process*/,7/*vs/base/common/uri*/]), function (require, exports, path, os, net, cp, uri_1) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function makeRandomHexString(length) {
+        var chars = ['0', '1', '2', '3', '4', '5', '6', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+        var result = '';
+        for (var i = 0; i < length; i++) {
+            var idx = Math.floor(chars.length * Math.random());
+            result += chars[idx];
+        }
+        return result;
+    }
+    function generatePipeName() {
+        var randomName = 'vscode-' + makeRandomHexString(40);
+        if (process.platform === 'win32') {
+            return '\\\\.\\pipe\\' + randomName + '-sock';
+        }
+        // Mac/Unix: use socket file
+        return path.join(os.tmpdir(), randomName + '.sock');
+    }
+    function generatePatchedEnv(env, stdInPipeName, stdOutPipeName, stdErrPipeName) {
+        // Set the two unique pipe names and the electron flag as process env
+        var newEnv = {};
+        for (var key in env) {
+            newEnv[key] = env[key];
+        }
+        newEnv['STDIN_PIPE_NAME'] = stdInPipeName;
+        newEnv['STDOUT_PIPE_NAME'] = stdOutPipeName;
+        newEnv['STDERR_PIPE_NAME'] = stdErrPipeName;
+        newEnv['ELECTRON_RUN_AS_NODE'] = '1';
+        newEnv['ELECTRON_NO_ASAR'] = '1';
+        return newEnv;
+    }
+    function fork(modulePath, args, options, callback) {
+        var callbackCalled = false;
+        var resolve = function (result) {
+            if (callbackCalled) {
+                return;
+            }
+            callbackCalled = true;
+            callback(null, result);
+        };
+        var reject = function (err) {
+            if (callbackCalled) {
+                return;
+            }
+            callbackCalled = true;
+            callback(err, null);
+        };
+        // Generate three unique pipe names
+        var stdInPipeName = generatePipeName();
+        var stdOutPipeName = generatePipeName();
+        var stdErrPipeName = generatePipeName();
+        var newEnv = generatePatchedEnv(options.env || process.env, stdInPipeName, stdOutPipeName, stdErrPipeName);
+        var childProcess;
+        // Begin listening to stderr pipe
+        var stdErrServer = net.createServer(function (stdErrStream) {
+            // From now on the childProcess.stderr is available for reading
+            childProcess.stderr = stdErrStream;
+        });
+        stdErrServer.listen(stdErrPipeName);
+        // Begin listening to stdout pipe
+        var stdOutServer = net.createServer(function (stdOutStream) {
+            // The child process will write exactly one chunk with content `ready` when it has installed a listener to the stdin pipe
+            stdOutStream.once('data', function (chunk) {
+                // The child process is sending me the `ready` chunk, time to connect to the stdin pipe
+                childProcess.stdin = net.connect(stdInPipeName);
+                // From now on the childProcess.stdout is available for reading
+                childProcess.stdout = stdOutStream;
+                resolve(childProcess);
+            });
+        });
+        stdOutServer.listen(stdOutPipeName);
+        var serverClosed = false;
+        var closeServer = function () {
+            if (serverClosed) {
+                return;
+            }
+            serverClosed = true;
+            process.removeListener('exit', closeServer);
+            stdOutServer.close();
+            stdErrServer.close();
+        };
+        // Create the process
+        var bootstrapperPath = (uri_1.default.parse(require.toUrl('./stdForkStart.js')).fsPath);
+        childProcess = cp.fork(bootstrapperPath, [modulePath].concat(args), {
+            silent: true,
+            cwd: options.cwd,
+            env: newEnv,
+            execArgv: options.execArgv
+        });
+        childProcess.once('error', function (err) {
+            closeServer();
+            reject(err);
+        });
+        childProcess.once('exit', function (err) {
+            closeServer();
+            reject(err);
+        });
+        // On vscode exit still close server #7758
+        process.once('exit', closeServer);
+    }
+    exports.fork = fork;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[34/*vs/base/parts/ipc/common/ipc*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/winjs.base*/,8/*vs/base/common/lifecycle*/,5/*vs/base/common/event*/]), function (require, exports, winjs_base_1, lifecycle_1, event_1) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var MessageType;
     (function (MessageType) {
         MessageType[MessageType["RequestCommon"] = 0] = "RequestCommon";
@@ -6169,7 +7804,7 @@ define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,4
                 promise = channel.call(request.name, request.arg);
             }
             catch (err) {
-                promise = winjs_base_1.Promise.wrapError(err);
+                promise = winjs_base_1.TPromise.wrapError(err);
             }
             var id = request.id;
             var requestPromise = promise.then(function (data) {
@@ -6252,7 +7887,7 @@ define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,4
         ChannelClient.prototype.doRequest = function (request) {
             var _this = this;
             var id = request.raw.id;
-            return new winjs_base_1.Promise(function (c, e, p) {
+            return new winjs_base_1.TPromise(function (c, e, p) {
                 _this.handlers[id] = function (response) {
                     switch (response.type) {
                         case MessageType.ResponseSuccess:
@@ -6281,7 +7916,7 @@ define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,4
         ChannelClient.prototype.bufferRequest = function (request) {
             var _this = this;
             var flushedRequest = null;
-            return new winjs_base_1.Promise(function (c, e, p) {
+            return new winjs_base_1.TPromise(function (c, e, p) {
                 _this.bufferedRequests.push(request);
                 request.flush = function () {
                     request.flush = null;
@@ -6323,6 +7958,7 @@ define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,4
                 this.protocol.send(raw);
             }
             catch (err) {
+                // noop
             }
         };
         ChannelClient.prototype.dispose = function () {
@@ -6371,7 +8007,7 @@ define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,4
             var call = function (command, arg) {
                 var id = router.route(command, arg);
                 if (!id) {
-                    return winjs_base_1.TPromise.wrapError('Client id should be provided');
+                    return winjs_base_1.TPromise.wrapError(new Error('Client id should be provided'));
                 }
                 return _this.getClient(id).then(function (client) { return client.getChannel(channelName).call(command, arg); });
             };
@@ -6448,7 +8084,7 @@ define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,4
     function eventToCall(event, serializer) {
         if (serializer === void 0) { serializer = function (t) { return t; }; }
         var disposable;
-        return new winjs_base_1.Promise(function (c, e, p) { return disposable = event(function (t) { return p(serializer(t)); }); }, function () { return disposable.dispose(); });
+        return new winjs_base_1.TPromise(function (c, e, p) { return disposable = event(function (t) { return p(serializer(t)); }); }, function () { return disposable.dispose(); });
     }
     exports.eventToCall = eventToCall;
     function eventFromCall(channel, name, arg, deserializer) {
@@ -6470,6 +8106,560 @@ define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,4
     exports.eventFromCall = eventFromCall;
 });
 
+define(__m[35/*vs/nls!vs/base/common/processes*/], __M([36/*vs/nls*/,37/*vs/nls!vs/workbench/services/files/node/watcher/unix/watcherApp*/]), function(nls, data) { return nls.create("vs/base/common/processes", data); });
+
+
+
+
+
+
+
+
+
+
+define(__m[38/*vs/base/common/processes*/], __M([0/*require*/,1/*exports*/,35/*vs/nls!vs/base/common/processes*/,9/*vs/base/common/objects*/,2/*vs/base/common/platform*/,4/*vs/base/common/types*/,21/*vs/base/common/parsers*/]), function (require, exports, NLS, Objects, Platform, Types, parsers_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Source;
+    (function (Source) {
+        Source[Source["stdout"] = 0] = "stdout";
+        Source[Source["stderr"] = 1] = "stderr";
+    })(Source = exports.Source || (exports.Source = {}));
+    var TerminateResponseCode;
+    (function (TerminateResponseCode) {
+        TerminateResponseCode[TerminateResponseCode["Success"] = 0] = "Success";
+        TerminateResponseCode[TerminateResponseCode["Unknown"] = 1] = "Unknown";
+        TerminateResponseCode[TerminateResponseCode["AccessDenied"] = 2] = "AccessDenied";
+        TerminateResponseCode[TerminateResponseCode["ProcessNotFound"] = 3] = "ProcessNotFound";
+    })(TerminateResponseCode = exports.TerminateResponseCode || (exports.TerminateResponseCode = {}));
+    var ExecutableParser = (function (_super) {
+        __extends(ExecutableParser, _super);
+        function ExecutableParser(logger) {
+            return _super.call(this, logger) || this;
+        }
+        ExecutableParser.prototype.parse = function (json, parserOptions) {
+            if (parserOptions === void 0) { parserOptions = { globals: null, emptyCommand: false, noDefaults: false }; }
+            var result = this.parseExecutable(json, parserOptions.globals);
+            if (this.problemReporter.status.isFatal()) {
+                return result;
+            }
+            var osExecutable;
+            if (json.windows && Platform.platform === Platform.Platform.Windows) {
+                osExecutable = this.parseExecutable(json.windows);
+            }
+            else if (json.osx && Platform.platform === Platform.Platform.Mac) {
+                osExecutable = this.parseExecutable(json.osx);
+            }
+            else if (json.linux && Platform.platform === Platform.Platform.Linux) {
+                osExecutable = this.parseExecutable(json.linux);
+            }
+            if (osExecutable) {
+                result = ExecutableParser.mergeExecutable(result, osExecutable);
+            }
+            if ((!result || !result.command) && !parserOptions.emptyCommand) {
+                this.fatal(NLS.localize(0, null));
+                return null;
+            }
+            if (!parserOptions.noDefaults) {
+                parsers_1.Parser.merge(result, {
+                    command: undefined,
+                    isShellCommand: false,
+                    args: [],
+                    options: {}
+                }, false);
+            }
+            return result;
+        };
+        ExecutableParser.prototype.parseExecutable = function (json, globals) {
+            var command = undefined;
+            var isShellCommand = undefined;
+            var args = undefined;
+            var options = undefined;
+            if (this.is(json.command, Types.isString)) {
+                command = json.command;
+            }
+            if (this.is(json.isShellCommand, Types.isBoolean, parsers_1.ValidationState.Warning, NLS.localize(1, null, json.isShellCommand))) {
+                isShellCommand = json.isShellCommand;
+            }
+            if (this.is(json.args, Types.isStringArray, parsers_1.ValidationState.Warning, NLS.localize(2, null, json.isShellCommand))) {
+                args = json.args.slice(0);
+            }
+            if (this.is(json.options, Types.isObject)) {
+                options = this.parseCommandOptions(json.options);
+            }
+            return { command: command, isShellCommand: isShellCommand, args: args, options: options };
+        };
+        ExecutableParser.prototype.parseCommandOptions = function (json) {
+            var result = {};
+            if (!json) {
+                return result;
+            }
+            if (this.is(json.cwd, Types.isString, parsers_1.ValidationState.Warning, NLS.localize(3, null, json.cwd))) {
+                result.cwd = json.cwd;
+            }
+            if (!Types.isUndefined(json.env)) {
+                result.env = Objects.clone(json.env);
+            }
+            return result;
+        };
+        ExecutableParser.mergeExecutable = function (executable, other) {
+            if (!executable) {
+                return other;
+            }
+            parsers_1.Parser.merge(executable, other, true);
+            return executable;
+        };
+        return ExecutableParser;
+    }(parsers_1.Parser));
+    exports.ExecutableParser = ExecutableParser;
+});
+
+define(__m[39/*vs/nls!vs/base/node/processes*/], __M([36/*vs/nls*/,37/*vs/nls!vs/workbench/services/files/node/watcher/unix/watcherApp*/]), function(nls, data) { return nls.create("vs/base/node/processes", data); });
+
+
+
+
+
+
+
+
+
+
+define(__m[40/*vs/base/node/processes*/], __M([0/*require*/,1/*exports*/,15/*path*/,12/*child_process*/,42/*stream*/,30/*vs/base/node/stdFork*/,39/*vs/nls!vs/base/node/processes*/,3/*vs/base/common/winjs.base*/,4/*vs/base/common/types*/,7/*vs/base/common/uri*/,9/*vs/base/common/objects*/,10/*vs/base/common/paths*/,2/*vs/base/common/platform*/,22/*vs/base/node/decoder*/,38/*vs/base/common/processes*/]), function (require, exports, path, cp, stream_1, stdFork_1, nls, winjs_base_1, Types, uri_1, Objects, TPath, Platform, decoder_1, processes_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var exec = cp.exec;
+    var spawn = cp.spawn;
+    exports.Source = processes_1.Source;
+    exports.TerminateResponseCode = processes_1.TerminateResponseCode;
+    function getWindowsCode(status) {
+        switch (status) {
+            case 0:
+                return processes_1.TerminateResponseCode.Success;
+            case 1:
+                return processes_1.TerminateResponseCode.AccessDenied;
+            case 128:
+                return processes_1.TerminateResponseCode.ProcessNotFound;
+            default:
+                return processes_1.TerminateResponseCode.Unknown;
+        }
+    }
+    function terminateProcess(process, cwd) {
+        if (Platform.isWindows) {
+            try {
+                var options = {
+                    stdio: ['pipe', 'pipe', 'ignore']
+                };
+                if (cwd) {
+                    options.cwd = cwd;
+                }
+                cp.execFileSync('taskkill', ['/T', '/F', '/PID', process.pid.toString()], options);
+            }
+            catch (err) {
+                return { success: false, error: err, code: err.status ? getWindowsCode(err.status) : processes_1.TerminateResponseCode.Unknown };
+            }
+        }
+        else if (Platform.isLinux || Platform.isMacintosh) {
+            try {
+                var cmd = uri_1.default.parse(require.toUrl('vs/base/node/terminateProcess.sh')).fsPath;
+                var result = cp.spawnSync(cmd, [process.pid.toString()]);
+                if (result.error) {
+                    return { success: false, error: result.error };
+                }
+            }
+            catch (err) {
+                return { success: false, error: err };
+            }
+        }
+        else {
+            process.kill('SIGKILL');
+        }
+        return { success: true };
+    }
+    exports.terminateProcess = terminateProcess;
+    function getWindowsShell() {
+        return process.env['comspec'] || 'cmd.exe';
+    }
+    exports.getWindowsShell = getWindowsShell;
+    var AbstractProcess = (function () {
+        function AbstractProcess(arg1, arg2, arg3, arg4) {
+            var _this = this;
+            if (arg4) {
+                this.cmd = arg1;
+                this.args = arg2;
+                this.shell = arg3;
+                this.options = arg4;
+            }
+            else if (arg3 && arg2) {
+                this.module = arg1;
+                this.args = arg2;
+                this.shell = false;
+                this.options = arg3;
+            }
+            else {
+                var executable = arg1;
+                this.cmd = executable.command;
+                this.shell = executable.isShellCommand;
+                this.args = executable.args.slice(0);
+                this.options = executable.options || {};
+            }
+            this.childProcess = null;
+            this.terminateRequested = false;
+            if (this.options.env) {
+                var newEnv_1 = Object.create(null);
+                Object.keys(process.env).forEach(function (key) {
+                    newEnv_1[key] = process.env[key];
+                });
+                Object.keys(this.options.env).forEach(function (key) {
+                    newEnv_1[key] = _this.options.env[key];
+                });
+                this.options.env = newEnv_1;
+            }
+        }
+        AbstractProcess.prototype.getSanitizedCommand = function () {
+            var result = this.cmd ? this.cmd.toLowerCase() : this.module.toLowerCase();
+            var index = result.lastIndexOf(path.sep);
+            if (index !== -1) {
+                result = result.substring(index + 1);
+            }
+            if (AbstractProcess.WellKnowCommands[result]) {
+                return result;
+            }
+            return 'other';
+        };
+        AbstractProcess.prototype.start = function () {
+            var _this = this;
+            if (Platform.isWindows && ((this.options && this.options.cwd && TPath.isUNC(this.options.cwd)) || !this.options && !this.options.cwd && TPath.isUNC(process.cwd()))) {
+                return winjs_base_1.TPromise.wrapError(new Error(nls.localize(0, null)));
+            }
+            return this.useExec().then(function (useExec) {
+                var cc;
+                var ee;
+                var pp;
+                var result = new winjs_base_1.PPromise(function (c, e, p) {
+                    cc = c;
+                    ee = e;
+                    pp = p;
+                });
+                if (useExec) {
+                    var cmd = _this.cmd;
+                    if (_this.args) {
+                        cmd = cmd + ' ' + _this.args.join(' ');
+                    }
+                    _this.childProcess = exec(cmd, _this.options, function (error, stdout, stderr) {
+                        _this.childProcess = null;
+                        var err = error;
+                        // This is tricky since executing a command shell reports error back in case the executed command return an
+                        // error or the command didn't exist at all. So we can't blindly treat an error as a failed command. So we
+                        // always parse the output and report success unless the job got killed.
+                        if (err && err.killed) {
+                            ee({ killed: _this.terminateRequested, stdout: stdout.toString(), stderr: stderr.toString() });
+                        }
+                        else {
+                            _this.handleExec(cc, pp, error, stdout, stderr);
+                        }
+                    });
+                }
+                else {
+                    var childProcess = null;
+                    var closeHandler_1 = function (data) {
+                        _this.childProcess = null;
+                        _this.childProcessPromise = null;
+                        _this.handleClose(data, cc, pp, ee);
+                        var result = {
+                            terminated: _this.terminateRequested
+                        };
+                        if (Types.isNumber(data)) {
+                            result.cmdCode = data;
+                        }
+                        cc(result);
+                    };
+                    if (_this.shell && Platform.isWindows) {
+                        var options = Objects.clone(_this.options);
+                        options.windowsVerbatimArguments = true;
+                        options.detached = false;
+                        var quotedCommand = false;
+                        var quotedArg_1 = false;
+                        var commandLine_1 = [];
+                        var quoted_1 = _this.ensureQuotes(_this.cmd);
+                        commandLine_1.push(quoted_1.value);
+                        quotedCommand = quoted_1.quoted;
+                        if (_this.args) {
+                            _this.args.forEach(function (elem) {
+                                quoted_1 = _this.ensureQuotes(elem);
+                                commandLine_1.push(quoted_1.value);
+                                quotedArg_1 = quotedArg_1 && quoted_1.quoted;
+                            });
+                        }
+                        var args = [
+                            '/s',
+                            '/c',
+                        ];
+                        if (quotedCommand) {
+                            if (quotedArg_1) {
+                                args.push('"' + commandLine_1.join(' ') + '"');
+                            }
+                            else if (commandLine_1.length > 1) {
+                                args.push('"' + commandLine_1[0] + '"' + ' ' + commandLine_1.slice(1).join(' '));
+                            }
+                            else {
+                                args.push('"' + commandLine_1[0] + '"');
+                            }
+                        }
+                        else {
+                            args.push(commandLine_1.join(' '));
+                        }
+                        childProcess = spawn(getWindowsShell(), args, options);
+                    }
+                    else {
+                        if (_this.cmd) {
+                            childProcess = spawn(_this.cmd, _this.args, _this.options);
+                        }
+                        else if (_this.module) {
+                            _this.childProcessPromise = new winjs_base_1.TPromise(function (c, e, p) {
+                                stdFork_1.fork(_this.module, _this.args, _this.options, function (error, childProcess) {
+                                    if (error) {
+                                        e(error);
+                                        ee({ terminated: _this.terminateRequested, error: error });
+                                        return;
+                                    }
+                                    _this.childProcess = childProcess;
+                                    _this.childProcess.on('close', closeHandler_1);
+                                    _this.handleSpawn(childProcess, cc, pp, ee, false);
+                                    c(childProcess);
+                                });
+                            });
+                        }
+                    }
+                    if (childProcess) {
+                        _this.childProcess = childProcess;
+                        _this.childProcessPromise = winjs_base_1.TPromise.as(childProcess);
+                        childProcess.on('error', function (error) {
+                            _this.childProcess = null;
+                            ee({ terminated: _this.terminateRequested, error: error });
+                        });
+                        if (childProcess.pid) {
+                            _this.childProcess.on('close', closeHandler_1);
+                            _this.handleSpawn(childProcess, cc, pp, ee, true);
+                        }
+                    }
+                }
+                return result;
+            });
+        };
+        AbstractProcess.prototype.handleClose = function (data, cc, pp, ee) {
+            // Default is to do nothing.
+        };
+        AbstractProcess.prototype.ensureQuotes = function (value) {
+            if (AbstractProcess.regexp.test(value)) {
+                return {
+                    value: '"' + value + '"',
+                    quoted: true
+                };
+            }
+            else {
+                return {
+                    value: value,
+                    quoted: value.length > 0 && value[0] === '"' && value[value.length - 1] === '"'
+                };
+            }
+        };
+        AbstractProcess.prototype.isRunning = function () {
+            return this.childProcessPromise !== null;
+        };
+        Object.defineProperty(AbstractProcess.prototype, "pid", {
+            get: function () {
+                return this.childProcessPromise.then(function (childProcess) { return childProcess.pid; }, function (err) { return -1; });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        AbstractProcess.prototype.terminate = function () {
+            var _this = this;
+            if (!this.childProcessPromise) {
+                return winjs_base_1.TPromise.as({ success: true });
+            }
+            return this.childProcessPromise.then(function (childProcess) {
+                _this.terminateRequested = true;
+                var result = terminateProcess(childProcess, _this.options.cwd);
+                if (result.success) {
+                    _this.childProcess = null;
+                }
+                return result;
+            }, function (err) {
+                return { success: true };
+            });
+        };
+        AbstractProcess.prototype.useExec = function () {
+            var _this = this;
+            return new winjs_base_1.TPromise(function (c, e, p) {
+                if (!_this.shell || !Platform.isWindows) {
+                    c(false);
+                }
+                var cmdShell = spawn(getWindowsShell(), ['/s', '/c']);
+                cmdShell.on('error', function (error) {
+                    c(true);
+                });
+                cmdShell.on('exit', function (data) {
+                    c(false);
+                });
+            });
+        };
+        AbstractProcess.WellKnowCommands = {
+            'ant': true,
+            'cmake': true,
+            'eslint': true,
+            'gradle': true,
+            'grunt': true,
+            'gulp': true,
+            'jake': true,
+            'jenkins': true,
+            'jshint': true,
+            'make': true,
+            'maven': true,
+            'msbuild': true,
+            'msc': true,
+            'nmake': true,
+            'npm': true,
+            'rake': true,
+            'tsc': true,
+            'xbuild': true
+        };
+        AbstractProcess.regexp = /^[^"].* .*[^"]/;
+        return AbstractProcess;
+    }());
+    exports.AbstractProcess = AbstractProcess;
+    var LineProcess = (function (_super) {
+        __extends(LineProcess, _super);
+        function LineProcess(arg1, arg2, arg3, arg4) {
+            return _super.call(this, arg1, arg2, arg3, arg4) || this;
+        }
+        LineProcess.prototype.handleExec = function (cc, pp, error, stdout, stderr) {
+            [stdout, stderr].forEach(function (buffer, index) {
+                var lineDecoder = new decoder_1.LineDecoder();
+                var lines = lineDecoder.write(buffer);
+                lines.forEach(function (line) {
+                    pp({ line: line, source: index === 0 ? processes_1.Source.stdout : processes_1.Source.stderr });
+                });
+                var line = lineDecoder.end();
+                if (line) {
+                    pp({ line: line, source: index === 0 ? processes_1.Source.stdout : processes_1.Source.stderr });
+                }
+            });
+            cc({ terminated: this.terminateRequested, error: error });
+        };
+        LineProcess.prototype.handleSpawn = function (childProcess, cc, pp, ee, sync) {
+            var _this = this;
+            this.stdoutLineDecoder = new decoder_1.LineDecoder();
+            this.stderrLineDecoder = new decoder_1.LineDecoder();
+            childProcess.stdout.on('data', function (data) {
+                var lines = _this.stdoutLineDecoder.write(data);
+                lines.forEach(function (line) { return pp({ line: line, source: processes_1.Source.stdout }); });
+            });
+            childProcess.stderr.on('data', function (data) {
+                var lines = _this.stderrLineDecoder.write(data);
+                lines.forEach(function (line) { return pp({ line: line, source: processes_1.Source.stderr }); });
+            });
+        };
+        LineProcess.prototype.handleClose = function (data, cc, pp, ee) {
+            [this.stdoutLineDecoder.end(), this.stderrLineDecoder.end()].forEach(function (line, index) {
+                if (line) {
+                    pp({ line: line, source: index === 0 ? processes_1.Source.stdout : processes_1.Source.stderr });
+                }
+            });
+        };
+        return LineProcess;
+    }(AbstractProcess));
+    exports.LineProcess = LineProcess;
+    var BufferProcess = (function (_super) {
+        __extends(BufferProcess, _super);
+        function BufferProcess(arg1, arg2, arg3, arg4) {
+            return _super.call(this, arg1, arg2, arg3, arg4) || this;
+        }
+        BufferProcess.prototype.handleExec = function (cc, pp, error, stdout, stderr) {
+            pp({ data: stdout, source: processes_1.Source.stdout });
+            pp({ data: stderr, source: processes_1.Source.stderr });
+            cc({ terminated: this.terminateRequested, error: error });
+        };
+        BufferProcess.prototype.handleSpawn = function (childProcess, cc, pp, ee, sync) {
+            childProcess.stdout.on('data', function (data) {
+                pp({ data: data, source: processes_1.Source.stdout });
+            });
+            childProcess.stderr.on('data', function (data) {
+                pp({ data: data, source: processes_1.Source.stderr });
+            });
+        };
+        return BufferProcess;
+    }(AbstractProcess));
+    exports.BufferProcess = BufferProcess;
+    var StreamProcess = (function (_super) {
+        __extends(StreamProcess, _super);
+        function StreamProcess(arg1, arg2, arg3, arg4) {
+            return _super.call(this, arg1, arg2, arg3, arg4) || this;
+        }
+        StreamProcess.prototype.handleExec = function (cc, pp, error, stdout, stderr) {
+            var stdoutStream = new stream_1.PassThrough();
+            stdoutStream.end(stdout);
+            var stderrStream = new stream_1.PassThrough();
+            stderrStream.end(stderr);
+            pp({ stdin: null, stdout: stdoutStream, stderr: stderrStream });
+            cc({ terminated: this.terminateRequested, error: error });
+        };
+        StreamProcess.prototype.handleSpawn = function (childProcess, cc, pp, ee, sync) {
+            if (sync) {
+                process.nextTick(function () {
+                    pp({ stdin: childProcess.stdin, stdout: childProcess.stdout, stderr: childProcess.stderr });
+                });
+            }
+            else {
+                pp({ stdin: childProcess.stdin, stdout: childProcess.stdout, stderr: childProcess.stderr });
+            }
+        };
+        return StreamProcess;
+    }(AbstractProcess));
+    exports.StreamProcess = StreamProcess;
+    // Wrapper around process.send() that will queue any messages if the internal node.js
+    // queue is filled with messages and only continue sending messages when the internal
+    // queue is free again to consume messages.
+    // On Windows we always wait for the send() method to return before sending the next message
+    // to workaround https://github.com/nodejs/node/issues/7657 (IPC can freeze process)
+    function createQueuedSender(childProcess) {
+        var msgQueue = [];
+        var useQueue = false;
+        var send = function (msg) {
+            if (useQueue) {
+                msgQueue.push(msg); // add to the queue if the process cannot handle more messages
+                return;
+            }
+            var result = childProcess.send(msg, function (error) {
+                if (error) {
+                    console.error(error); // unlikely to happen, best we can do is log this error
+                }
+                useQueue = false; // we are good again to send directly without queue
+                // now send all the messages that we have in our queue and did not send yet
+                if (msgQueue.length > 0) {
+                    var msgQueueCopy = msgQueue.slice(0);
+                    msgQueue = [];
+                    msgQueueCopy.forEach(function (entry) { return send(entry); });
+                }
+            });
+            if (!result || Platform.isWindows /* workaround https://github.com/nodejs/node/issues/7657 */) {
+                useQueue = true;
+            }
+        };
+        return { send: send };
+    }
+    exports.createQueuedSender = createQueuedSender;
+});
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -6479,20 +8669,26 @@ define(__m[20/*vs/base/parts/ipc/common/ipc*/], __M([1/*require*/,0/*exports*/,4
 
 
 
-define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,26/*child_process*/,4/*vs/base/common/winjs.base*/,8/*vs/base/common/async*/,14/*vs/base/common/objects*/,3/*vs/base/common/event*/,19/*vs/base/node/event*/,20/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, child_process_1, winjs_base_1, async_1, objects_1, event_1, event_2, ipc_1) {
+
+
+
+
+
+define(__m[41/*vs/base/parts/ipc/node/ipc.cp*/], __M([0/*require*/,1/*exports*/,12/*child_process*/,3/*vs/base/common/winjs.base*/,13/*vs/base/common/async*/,9/*vs/base/common/objects*/,5/*vs/base/common/event*/,24/*vs/base/node/event*/,40/*vs/base/node/processes*/,34/*vs/base/parts/ipc/common/ipc*/]), function (require, exports, child_process_1, winjs_base_1, async_1, objects_1, event_1, event_2, processes_1, ipc_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Server = (function (_super) {
         __extends(Server, _super);
         function Server() {
-            var _this = this;
-            _super.call(this, {
+            var _this = _super.call(this, {
                 send: function (r) { try {
                     process.send(r);
                 }
                 catch (e) { } },
                 onMessage: event_2.fromEventEmitter(process, 'message', function (msg) { return msg; })
-            });
+            }) || this;
             process.once('disconnect', function () { return _this.dispose(); });
+            return _this;
         }
         return Server;
     }(ipc_1.ChannelServer));
@@ -6516,13 +8712,13 @@ define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
         Client.prototype.request = function (channelName, name, arg) {
             var _this = this;
             if (!this.disposeDelayer) {
-                return winjs_base_1.Promise.wrapError('disposed');
+                return winjs_base_1.TPromise.wrapError(new Error('disposed'));
             }
             this.disposeDelayer.cancel();
             var channel = this.channels[channelName] || (this.channels[channelName] = this.client.getChannel(channelName));
             var request = channel.call(name, arg);
             // Progress doesn't propagate across 'then', we need to create a promise wrapper
-            var result = new winjs_base_1.Promise(function (c, e, p) {
+            var result = new winjs_base_1.TPromise(function (c, e, p) {
                 request.then(c, e, p).done(function () {
                     if (!_this.activeRequests) {
                         return;
@@ -6545,6 +8741,9 @@ define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
                     forkOpts.env = objects_1.assign(objects_1.clone(process.env), { 'VSCODE_PARENT_PID': String(process.pid) });
                     if (this.options && this.options.env) {
                         forkOpts.env = objects_1.assign(forkOpts.env, this.options.env);
+                    }
+                    if (this.options && this.options.freshExecArgv) {
+                        forkOpts.execArgv = [];
                     }
                     if (this.options && typeof this.options.debug === 'number') {
                         forkOpts.execArgv = ['--nolazy', '--debug=' + this.options.debug];
@@ -6573,7 +8772,8 @@ define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
                             onMessageEmitter_1.fire(msg);
                         }
                     });
-                    var send = function (r) { return _this.child && _this.child.connected && _this.child.send(r); };
+                    var sender_1 = this.options.useQueue ? processes_1.createQueuedSender(this.child) : this.child;
+                    var send = function (r) { return _this.child && _this.child.connected && sender_1.send(r); };
                     var onMessage = onMessageEmitter_1.event;
                     var protocol = { send: send, onMessage: onMessage };
                     this._client = new ipc_1.ChannelClient(protocol);
@@ -6617,15 +8817,17 @@ define(__m[21/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
     exports.Client = Client;
 });
 
-define(__m[23/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[32/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     // ------ internal util
     var _util;
     (function (_util) {
+        _util.serviceIds = new Map();
         _util.DI_TARGET = '$di$target';
         _util.DI_DEPENDENCIES = '$di$dependencies';
         function getServiceDependencies(ctor) {
@@ -6647,6 +8849,9 @@ define(__m[23/*vs/platform/instantiation/common/instantiation*/], __M([1/*requir
      * A *only* valid way to create a {{ServiceIdentifier}}.
      */
     function createDecorator(serviceId) {
+        if (_util.serviceIds.has(serviceId)) {
+            return _util.serviceIds.get(serviceId);
+        }
         var id = function (target, key, index) {
             if (arguments.length !== 3) {
                 throw new Error('@IServiceName-decorator can only be used to decorate a parameter');
@@ -6654,6 +8859,7 @@ define(__m[23/*vs/platform/instantiation/common/instantiation*/], __M([1/*requir
             storeServiceDependency(id, target, index, false);
         };
         id.toString = function () { return serviceId; };
+        _util.serviceIds.set(serviceId, id);
         return id;
     }
     exports.createDecorator = createDecorator;
@@ -6676,36 +8882,72 @@ define(__m[23/*vs/platform/instantiation/common/instantiation*/], __M([1/*requir
 
 
 
-define(__m[9/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/,12/*vs/base/common/paths*/,18/*vs/base/common/events*/,2/*vs/base/common/platform*/,23/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, paths, events, platform_1, instantiation_1) {
+
+
+
+
+
+define(__m[16/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/paths*/,29/*vs/base/common/events*/,2/*vs/base/common/platform*/,32/*vs/platform/instantiation/common/instantiation*/,6/*vs/base/common/strings*/]), function (require, exports, paths, events, platform_1, instantiation_1, strings_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.IFileService = instantiation_1.createDecorator('fileService');
+    var FileOperation;
+    (function (FileOperation) {
+        FileOperation[FileOperation["CREATE"] = 0] = "CREATE";
+        FileOperation[FileOperation["DELETE"] = 1] = "DELETE";
+        FileOperation[FileOperation["MOVE"] = 2] = "MOVE";
+        FileOperation[FileOperation["COPY"] = 3] = "COPY";
+        FileOperation[FileOperation["IMPORT"] = 4] = "IMPORT";
+    })(FileOperation = exports.FileOperation || (exports.FileOperation = {}));
+    var FileOperationEvent = (function () {
+        function FileOperationEvent(_resource, _operation, _target) {
+            this._resource = _resource;
+            this._operation = _operation;
+            this._target = _target;
+        }
+        Object.defineProperty(FileOperationEvent.prototype, "resource", {
+            get: function () {
+                return this._resource;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FileOperationEvent.prototype, "target", {
+            get: function () {
+                return this._target;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FileOperationEvent.prototype, "operation", {
+            get: function () {
+                return this._operation;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return FileOperationEvent;
+    }());
+    exports.FileOperationEvent = FileOperationEvent;
     /**
      * Possible changes that can occur to a file.
      */
+    var FileChangeType;
     (function (FileChangeType) {
         FileChangeType[FileChangeType["UPDATED"] = 0] = "UPDATED";
         FileChangeType[FileChangeType["ADDED"] = 1] = "ADDED";
         FileChangeType[FileChangeType["DELETED"] = 2] = "DELETED";
-    })(exports.FileChangeType || (exports.FileChangeType = {}));
-    var FileChangeType = exports.FileChangeType;
-    /**
-     * Possible events to subscribe to
-     */
-    exports.EventType = {
-        /**
-        * Send on file changes.
-        */
-        FILE_CHANGES: 'files:fileChanges'
-    };
+    })(FileChangeType = exports.FileChangeType || (exports.FileChangeType = {}));
     var FileChangesEvent = (function (_super) {
         __extends(FileChangesEvent, _super);
         function FileChangesEvent(changes) {
-            _super.call(this);
-            this._changes = changes;
+            var _this = _super.call(this) || this;
+            _this._changes = changes;
+            return _this;
         }
         Object.defineProperty(FileChangesEvent.prototype, "changes", {
             get: function () {
@@ -6729,9 +8971,9 @@ define(__m[9/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/,
                 }
                 // For deleted also return true when deleted folder is parent of target path
                 if (type === FileChangeType.DELETED) {
-                    return isEqual(resource.fsPath, change.resource.fsPath) || isParent(resource.fsPath, change.resource.fsPath);
+                    return paths.isEqualOrParent(resource.fsPath, change.resource.fsPath, !platform_1.isLinux /* ignorecase */);
                 }
-                return isEqual(resource.fsPath, change.resource.fsPath);
+                return paths.isEqual(resource.fsPath, change.resource.fsPath, !platform_1.isLinux /* ignorecase */);
             });
         };
         /**
@@ -6781,22 +9023,47 @@ define(__m[9/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/,
         return FileChangesEvent;
     }(events.Event));
     exports.FileChangesEvent = FileChangesEvent;
-    function isEqual(path1, path2) {
-        var identityEquals = (path1 === path2);
-        if (platform_1.isLinux || identityEquals) {
-            return identityEquals;
+    function isParent(path, candidate, ignoreCase) {
+        if (!path || !candidate || path === candidate) {
+            return false;
         }
-        return path1.toLowerCase() === path2.toLowerCase();
+        if (candidate.length > path.length) {
+            return false;
+        }
+        if (candidate.charAt(candidate.length - 1) !== paths.nativeSep) {
+            candidate += paths.nativeSep;
+        }
+        if (ignoreCase) {
+            return strings_1.beginsWithIgnoreCase(path, candidate);
+        }
+        return path.indexOf(candidate) === 0;
     }
-    exports.isEqual = isEqual;
-    function isParent(path, candidate) {
-        if (!platform_1.isLinux) {
+    exports.isParent = isParent;
+    function indexOf(path, candidate, ignoreCase) {
+        if (candidate.length > path.length) {
+            return -1;
+        }
+        if (path === candidate) {
+            return 0;
+        }
+        if (ignoreCase) {
             path = path.toLowerCase();
             candidate = candidate.toLowerCase();
         }
-        return path.indexOf(candidate + paths.nativeSep) === 0;
+        return path.indexOf(candidate);
     }
-    exports.isParent = isParent;
+    exports.indexOf = indexOf;
+    var FileOperationError = (function (_super) {
+        __extends(FileOperationError, _super);
+        function FileOperationError(message, fileOperationResult) {
+            var _this = _super.call(this, message) || this;
+            _this.fileOperationResult = fileOperationResult;
+            return _this;
+        }
+        return FileOperationError;
+    }(Error));
+    exports.FileOperationError = FileOperationError;
+    var FileOperationResult;
     (function (FileOperationResult) {
         FileOperationResult[FileOperationResult["FILE_IS_BINARY"] = 0] = "FILE_IS_BINARY";
         FileOperationResult[FileOperationResult["FILE_IS_DIRECTORY"] = 1] = "FILE_IS_DIRECTORY";
@@ -6807,14 +9074,21 @@ define(__m[9/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/,
         FileOperationResult[FileOperationResult["FILE_READ_ONLY"] = 6] = "FILE_READ_ONLY";
         FileOperationResult[FileOperationResult["FILE_TOO_LARGE"] = 7] = "FILE_TOO_LARGE";
         FileOperationResult[FileOperationResult["FILE_INVALID_PATH"] = 8] = "FILE_INVALID_PATH";
-    })(exports.FileOperationResult || (exports.FileOperationResult = {}));
-    var FileOperationResult = exports.FileOperationResult;
-    exports.MAX_FILE_SIZE = 50 * 1024 * 1024;
+    })(FileOperationResult = exports.FileOperationResult || (exports.FileOperationResult = {}));
+    // See https://github.com/Microsoft/vscode/issues/30180
+    var WIN32_MAX_FILE_SIZE = 300 * 1024 * 1024; // 300 MB
+    var GENERAL_MAX_FILE_SIZE = 16 * 1024 * 1024 * 1024; // 16 GB
+    exports.MAX_FILE_SIZE = (typeof process === 'object' ? (process.arch === 'ia32' ? WIN32_MAX_FILE_SIZE : GENERAL_MAX_FILE_SIZE) : WIN32_MAX_FILE_SIZE);
     exports.AutoSaveConfiguration = {
         OFF: 'off',
         AFTER_DELAY: 'afterDelay',
         ON_FOCUS_CHANGE: 'onFocusChange',
         ON_WINDOW_CHANGE: 'onWindowChange'
+    };
+    exports.HotExitConfiguration = {
+        OFF: 'off',
+        ON_EXIT: 'onExit',
+        ON_EXIT_AND_WINDOW_CLOSE: 'onExitAndWindowClose'
     };
     exports.CONTENT_CHANGE_EVENT_BUFFER_DELAY = 1000;
     exports.SUPPORTED_ENCODINGS = {
@@ -7031,30 +9305,37 @@ define(__m[9/*vs/platform/files/common/files*/], __M([1/*require*/,0/*exports*/,
             labelShort: 'ISO 8859-11',
             order: 42
         },
-        'koi8-ru': {
+        koi8ru: {
             labelLong: 'Cyrillic (KOI8-RU)',
             labelShort: 'KOI8-RU',
             order: 43
         },
-        'koi8-t': {
+        koi8t: {
             labelLong: 'Tajik (KOI8-T)',
             labelShort: 'KOI8-T',
             order: 44
         },
-        GB2312: {
+        gb2312: {
             labelLong: 'Simplified Chinese (GB 2312)',
             labelShort: 'GB 2312',
             order: 45
         }
     };
+    var FileKind;
+    (function (FileKind) {
+        FileKind[FileKind["FILE"] = 0] = "FILE";
+        FileKind[FileKind["FOLDER"] = 1] = "FOLDER";
+        FileKind[FileKind["ROOT_FOLDER"] = 2] = "ROOT_FOLDER";
+    })(FileKind = exports.FileKind || (exports.FileKind = {}));
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[25/*vs/workbench/services/files/node/watcher/common*/], __M([1/*require*/,0/*exports*/,15/*vs/base/common/uri*/,9/*vs/platform/files/common/files*/]), function (require, exports, uri_1, files_1) {
+define(__m[26/*vs/workbench/services/files/node/watcher/common*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/uri*/,16/*vs/platform/files/common/files*/,2/*vs/base/common/platform*/]), function (require, exports, uri_1, files_1, platform_1) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     function toFileChangesEvent(changes) {
         // map to file changes event that talks about URIs
         return new files_1.FileChangesEvent(changes.map(function (c) {
@@ -7127,7 +9408,7 @@ define(__m[25/*vs/workbench/services/files/node/watcher/common*/], __M([1/*requi
             }).sort(function (e1, e2) {
                 return e1.path.length - e2.path.length; // shortest path first
             }).filter(function (e) {
-                if (deletedPaths.some(function (d) { return files_1.isParent(e.path, d); })) {
+                if (deletedPaths.some(function (d) { return files_1.isParent(e.path, d, !platform_1.isLinux /* ignorecase */); })) {
                     return false; // DELETE is ignored if parent is deleted already
                 }
                 // otherwise mark as deleted
@@ -7143,8 +9424,9 @@ define(__m[25/*vs/workbench/services/files/node/watcher/common*/], __M([1/*requi
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[22/*vs/workbench/services/files/node/watcher/unix/chokidarWatcherService*/], __M([1/*require*/,0/*exports*/,27/*chokidar*/,28/*fs*/,29/*graceful-fs*/,4/*vs/base/common/winjs.base*/,9/*vs/platform/files/common/files*/,8/*vs/base/common/async*/,16/*vs/base/common/strings*/,25/*vs/workbench/services/files/node/watcher/common*/]), function (require, exports, chokidar, fs, gracefulFs, winjs_base_1, files_1, async_1, strings, watcher) {
+define(__m[23/*vs/workbench/services/files/node/watcher/unix/chokidarWatcherService*/], __M([0/*require*/,1/*exports*/,47/*chokidar*/,28/*fs*/,48/*graceful-fs*/,3/*vs/base/common/winjs.base*/,16/*vs/platform/files/common/files*/,13/*vs/base/common/async*/,6/*vs/base/common/strings*/,27/*vs/base/node/extfs*/,2/*vs/base/common/platform*/,26/*vs/workbench/services/files/node/watcher/common*/]), function (require, exports, chokidar, fs, gracefulFs, winjs_base_1, files_1, async_1, strings, extfs_1, platform_1, watcher) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     gracefulFs.gracefulify(fs);
     var ChokidarWatcherService = (function () {
         function ChokidarWatcherService() {
@@ -7157,39 +9439,45 @@ define(__m[22/*vs/workbench/services/files/node/watcher/unix/chokidarWatcherServ
                 followSymlinks: true,
                 ignored: request.ignored,
                 interval: 1000,
-                binaryInterval: 1000
+                binaryInterval: 1000,
+                disableGlobbing: true // fix https://github.com/Microsoft/vscode/issues/4586
             };
-            var chokidarWatcher = chokidar.watch(request.basePath, watcherOpts);
+            // Chokidar fails when the basePath does not match case-identical to the path on disk
+            // so we have to find the real casing of the path and do some path massaging to fix this
+            // see https://github.com/paulmillr/chokidar/issues/418
+            var originalBasePath = request.basePath;
+            var realBasePath = platform_1.isMacintosh ? (extfs_1.realcaseSync(originalBasePath) || originalBasePath) : originalBasePath;
+            var realBasePathLength = realBasePath.length;
+            var realBasePathDiffers = (originalBasePath !== realBasePath);
+            if (realBasePathDiffers) {
+                console.warn("Watcher basePath does not match version on disk and was corrected (original: " + originalBasePath + ", real: " + realBasePath + ")");
+            }
+            var chokidarWatcher = chokidar.watch(realBasePath, watcherOpts);
             // Detect if for some reason the native watcher library fails to load
-            if (process.platform === 'darwin' && !chokidarWatcher.options.useFsEvents) {
+            if (platform_1.isMacintosh && !chokidarWatcher.options.useFsEvents) {
                 console.error('Watcher is not using native fsevents library and is falling back to unefficient polling.');
             }
             var undeliveredFileEvents = [];
             var fileEventDelayer = new async_1.ThrottledDelayer(ChokidarWatcherService.FS_EVENT_DELAY);
             return new winjs_base_1.TPromise(function (c, e, p) {
                 chokidarWatcher.on('all', function (type, path) {
-                    if (path.indexOf(request.basePath) < 0) {
+                    if (path.indexOf(realBasePath) < 0) {
                         return; // we really only care about absolute paths here in our basepath context here
+                    }
+                    // Make sure to convert the path back to its original basePath form if the realpath is different
+                    if (realBasePathDiffers) {
+                        path = originalBasePath + path.substr(realBasePathLength);
                     }
                     var event = null;
                     // Change
                     if (type === 'change') {
-                        event = {
-                            type: 0,
-                            path: path
-                        };
+                        event = { type: 0, path: path };
                     }
                     else if (type === 'add' || type === 'addDir') {
-                        event = {
-                            type: 1,
-                            path: path
-                        };
+                        event = { type: 1, path: path };
                     }
                     else if (type === 'unlink' || type === 'unlinkDir') {
-                        event = {
-                            type: 2,
-                            path: path
-                        };
+                        event = { type: 2, path: path };
                     }
                     if (event) {
                         // Logging
@@ -7246,8 +9534,9 @@ define(__m[22/*vs/workbench/services/files/node/watcher/unix/chokidarWatcherServ
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[17/*vs/workbench/services/files/node/watcher/unix/watcherIpc*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[31/*vs/workbench/services/files/node/watcher/unix/watcherIpc*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var WatcherChannel = (function () {
         function WatcherChannel(service) {
             this.service = service;
@@ -7256,6 +9545,7 @@ define(__m[17/*vs/workbench/services/files/node/watcher/unix/watcherIpc*/], __M(
             switch (command) {
                 case 'watch': return this.service.watch(arg);
             }
+            return undefined;
         };
         return WatcherChannel;
     }());
@@ -7272,12 +9562,13 @@ define(__m[17/*vs/workbench/services/files/node/watcher/unix/watcherIpc*/], __M(
     exports.WatcherChannelClient = WatcherChannelClient;
 });
 
-define(__m[31/*vs/workbench/services/files/node/watcher/unix/watcherApp*/], __M([1/*require*/,0/*exports*/,21/*vs/base/parts/ipc/node/ipc.cp*/,17/*vs/workbench/services/files/node/watcher/unix/watcherIpc*/,22/*vs/workbench/services/files/node/watcher/unix/chokidarWatcherService*/]), function (require, exports, ipc_cp_1, watcherIpc_1, chokidarWatcherService_1) {
+define(__m[50/*vs/workbench/services/files/node/watcher/unix/watcherApp*/], __M([0/*require*/,1/*exports*/,41/*vs/base/parts/ipc/node/ipc.cp*/,31/*vs/workbench/services/files/node/watcher/unix/watcherIpc*/,23/*vs/workbench/services/files/node/watcher/unix/chokidarWatcherService*/]), function (require, exports, ipc_cp_1, watcherIpc_1, chokidarWatcherService_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var server = new ipc_cp_1.Server();
     var service = new chokidarWatcherService_1.ChokidarWatcherService();
     var channel = new watcherIpc_1.WatcherChannel(service);

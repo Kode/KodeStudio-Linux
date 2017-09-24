@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["require","exports","vs/base/common/errors","vs/base/common/winjs.base","vs/base/common/platform","vs/base/common/lifecycle","vs/base/common/event","vs/editor/common/core/position","vs/editor/common/core/range","vs/base/common/strings","vs/base/common/types","vs/base/common/map","vs/base/common/cancellation","vs/base/common/uri","vs/base/common/diff/diff","vs/base/common/callbackList","vs/base/common/filters","vs/editor/common/model/mirrorModel2","vs/base/common/async","vs/editor/common/viewModel/prefixSumComputer","vs/editor/common/core/characterClassifier","vs/base/common/keyCodes","vs/base/common/diff/diffChange","vs/editor/common/core/selection","vs/editor/common/diff/diffComputer","vs/editor/common/model/wordHelper","vs/editor/common/modes/linkComputer","vs/editor/common/modes/supports/inplaceReplaceSupport","vs/editor/common/standalone/standaloneBase","vs/base/common/worker/simpleWorker","vs/base/common/winjs.base.raw","vs/editor/common/services/editorSimpleWorker"];
+var __m = ["exports","require","vs/base/common/winjs.base","vs/editor/common/core/position","vs/base/common/platform","vs/editor/common/core/range","vs/base/common/uri","vs/editor/common/core/uint","vs/base/common/errors","vs/base/common/event","vs/base/common/lifecycle","vs/base/common/functional","vs/base/common/diff/diff","vs/base/common/cancellation","vs/base/common/types","vs/base/common/callbackList","vs/base/common/diff/diffChange","vs/base/common/map","vs/base/common/async","vs/editor/common/viewModel/prefixSumComputer","vs/base/common/strings","vs/base/common/keyCodes","vs/editor/common/core/selection","vs/editor/common/core/token","vs/editor/common/model/mirrorModel","vs/editor/common/core/characterClassifier","vs/editor/common/diff/diffComputer","vs/editor/common/model/wordHelper","vs/editor/common/modes/linkComputer","vs/editor/common/modes/supports/inplaceReplaceSupport","vs/editor/common/standalone/standaloneBase","vs/base/common/worker/simpleWorker","vs/base/common/winjs.base.raw","vs/editor/common/services/editorSimpleWorker"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -10,6 +10,11 @@ var __M = function(deps) {
   }
   return result;
 };
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+'use strict';
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -25,32 +30,108 @@ var __M = function(deps) {
  *---------------------------------------------------------------------------------------------
  *---------------------------------------------------------------------------------------------
  *--------------------------------------------------------------------------------------------*/
-'use strict';
-// Limitation: To load jquery through the loader, always require 'jquery' and add a path for it in the loader configuration
-var _amdLoaderGlobal = this, define;
+var _amdLoaderGlobal = this;
 var AMDLoader;
 (function (AMDLoader) {
-    // ------------------------------------------------------------------------
-    // Utilities
-    function _isWindows() {
-        if (typeof navigator !== 'undefined') {
-            if (navigator.userAgent && navigator.userAgent.indexOf('Windows') >= 0) {
-                return true;
+    AMDLoader.global = _amdLoaderGlobal;
+    var Environment = (function () {
+        function Environment(opts) {
+            this.isWindows = opts.isWindows;
+            this.isNode = opts.isNode;
+            this.isElectronRenderer = opts.isElectronRenderer;
+            this.isWebWorker = opts.isWebWorker;
+        }
+        Environment.detect = function () {
+            return new Environment({
+                isWindows: this._isWindows(),
+                isNode: (typeof module !== 'undefined' && !!module.exports),
+                isElectronRenderer: (typeof process !== 'undefined' && typeof process.versions !== 'undefined' && typeof process.versions.electron !== 'undefined' && process.type === 'renderer'),
+                isWebWorker: (typeof AMDLoader.global.importScripts === 'function')
+            });
+        };
+        Environment._isWindows = function () {
+            if (typeof navigator !== 'undefined') {
+                if (navigator.userAgent && navigator.userAgent.indexOf('Windows') >= 0) {
+                    return true;
+                }
             }
+            if (typeof process !== 'undefined') {
+                return (process.platform === 'win32');
+            }
+            return false;
+        };
+        return Environment;
+    }());
+    AMDLoader.Environment = Environment;
+})(AMDLoader || (AMDLoader = {}));
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var AMDLoader;
+(function (AMDLoader) {
+    var LoaderEventType;
+    (function (LoaderEventType) {
+        LoaderEventType[LoaderEventType["LoaderAvailable"] = 1] = "LoaderAvailable";
+        LoaderEventType[LoaderEventType["BeginLoadingScript"] = 10] = "BeginLoadingScript";
+        LoaderEventType[LoaderEventType["EndLoadingScriptOK"] = 11] = "EndLoadingScriptOK";
+        LoaderEventType[LoaderEventType["EndLoadingScriptError"] = 12] = "EndLoadingScriptError";
+        LoaderEventType[LoaderEventType["BeginInvokeFactory"] = 21] = "BeginInvokeFactory";
+        LoaderEventType[LoaderEventType["EndInvokeFactory"] = 22] = "EndInvokeFactory";
+        LoaderEventType[LoaderEventType["NodeBeginEvaluatingScript"] = 31] = "NodeBeginEvaluatingScript";
+        LoaderEventType[LoaderEventType["NodeEndEvaluatingScript"] = 32] = "NodeEndEvaluatingScript";
+        LoaderEventType[LoaderEventType["NodeBeginNativeRequire"] = 33] = "NodeBeginNativeRequire";
+        LoaderEventType[LoaderEventType["NodeEndNativeRequire"] = 34] = "NodeEndNativeRequire";
+    })(LoaderEventType = AMDLoader.LoaderEventType || (AMDLoader.LoaderEventType = {}));
+    var LoaderEvent = (function () {
+        function LoaderEvent(type, detail, timestamp) {
+            this.type = type;
+            this.detail = detail;
+            this.timestamp = timestamp;
         }
-        if (typeof process !== 'undefined') {
-            return (process.platform === 'win32');
+        return LoaderEvent;
+    }());
+    AMDLoader.LoaderEvent = LoaderEvent;
+    var LoaderEventRecorder = (function () {
+        function LoaderEventRecorder(loaderAvailableTimestamp) {
+            this._events = [new LoaderEvent(LoaderEventType.LoaderAvailable, '', loaderAvailableTimestamp)];
         }
-        return false;
-    }
-    var isWindows = _isWindows();
+        LoaderEventRecorder.prototype.record = function (type, detail) {
+            this._events.push(new LoaderEvent(type, detail, AMDLoader.Utilities.getHighPerformanceTimestamp()));
+        };
+        LoaderEventRecorder.prototype.getEvents = function () {
+            return this._events;
+        };
+        return LoaderEventRecorder;
+    }());
+    AMDLoader.LoaderEventRecorder = LoaderEventRecorder;
+    var NullLoaderEventRecorder = (function () {
+        function NullLoaderEventRecorder() {
+        }
+        NullLoaderEventRecorder.prototype.record = function (type, detail) {
+            // Nothing to do
+        };
+        NullLoaderEventRecorder.prototype.getEvents = function () {
+            return [];
+        };
+        return NullLoaderEventRecorder;
+    }());
+    NullLoaderEventRecorder.INSTANCE = new NullLoaderEventRecorder();
+    AMDLoader.NullLoaderEventRecorder = NullLoaderEventRecorder;
+})(AMDLoader || (AMDLoader = {}));
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var AMDLoader;
+(function (AMDLoader) {
     var Utilities = (function () {
         function Utilities() {
         }
         /**
          * This method does not take care of / vs \
          */
-        Utilities.fileUriToFilePath = function (uri) {
+        Utilities.fileUriToFilePath = function (isWindows, uri) {
             uri = decodeURI(uri);
             if (isWindows) {
                 if (/^file:\/\/\//.test(uri)) {
@@ -80,17 +161,14 @@ var AMDLoader;
             return /^[^\#]*\?/gi.test(url);
         };
         /**
-         * Does `url` start with http:// or https:// or / ?
+         * Does `url` start with http:// or https:// or file:// or / ?
          */
         Utilities.isAbsolutePath = function (url) {
-            return (Utilities.startsWith(url, 'http://')
-                || Utilities.startsWith(url, 'https://')
-                || Utilities.startsWith(url, 'file://')
-                || Utilities.startsWith(url, '/'));
+            return /^((http:\/\/)|(https:\/\/)|(file:\/\/)|(\/))/.test(url);
         };
         Utilities.forEachProperty = function (obj, callback) {
             if (obj) {
-                var key;
+                var key = void 0;
                 for (key in obj) {
                     if (obj.hasOwnProperty(key)) {
                         callback(key, obj[key]);
@@ -105,17 +183,11 @@ var AMDLoader;
             });
             return isEmpty;
         };
-        Utilities.isArray = function (obj) {
-            if (Array.isArray) {
-                return Array.isArray(obj);
-            }
-            return Object.prototype.toString.call(obj) === '[object Array]';
-        };
         Utilities.recursiveClone = function (obj) {
             if (!obj || typeof obj !== 'object') {
                 return obj;
             }
-            var result = Utilities.isArray(obj) ? [] : {};
+            var result = Array.isArray(obj) ? [] : {};
             Utilities.forEachProperty(obj, function (key, value) {
                 if (value && typeof value === 'object') {
                     result[key] = Utilities.recursiveClone(value);
@@ -130,19 +202,35 @@ var AMDLoader;
             return '===anonymous' + (Utilities.NEXT_ANONYMOUS_ID++) + '===';
         };
         Utilities.isAnonymousModule = function (id) {
-            return id.indexOf('===anonymous') === 0;
+            return /^===anonymous/.test(id);
         };
-        Utilities.NEXT_ANONYMOUS_ID = 1;
+        Utilities.getHighPerformanceTimestamp = function () {
+            if (!this.PERFORMANCE_NOW_PROBED) {
+                this.PERFORMANCE_NOW_PROBED = true;
+                this.HAS_PERFORMANCE_NOW = (AMDLoader.global.performance && typeof AMDLoader.global.performance.now === 'function');
+            }
+            return (this.HAS_PERFORMANCE_NOW ? AMDLoader.global.performance.now() : Date.now());
+        };
         return Utilities;
     }());
+    Utilities.NEXT_ANONYMOUS_ID = 1;
+    Utilities.PERFORMANCE_NOW_PROBED = false;
+    Utilities.HAS_PERFORMANCE_NOW = false;
     AMDLoader.Utilities = Utilities;
+})(AMDLoader || (AMDLoader = {}));
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var AMDLoader;
+(function (AMDLoader) {
     var ConfigurationOptionsUtil = (function () {
         function ConfigurationOptionsUtil() {
         }
         /**
          * Ensure configuration options make sense
          */
-        ConfigurationOptionsUtil.validateConfigurationOptions = function (options) {
+        ConfigurationOptionsUtil.validateConfigurationOptions = function (isWebWorker, options) {
             function defaultOnError(err) {
                 if (err.errorCode === 'load') {
                     console.error('Loading "' + err.moduleId + '" failed');
@@ -173,12 +261,6 @@ var AMDLoader;
             if (typeof options.paths !== 'object') {
                 options.paths = {};
             }
-            if (typeof options.bundles !== 'object') {
-                options.bundles = [];
-            }
-            if (typeof options.shim !== 'object') {
-                options.shim = {};
-            }
             if (typeof options.config !== 'object') {
                 options.config = {};
             }
@@ -192,11 +274,11 @@ var AMDLoader;
             if (typeof options.onError !== 'function') {
                 options.onError = defaultOnError;
             }
-            if (typeof options.ignoreDuplicateModules !== 'object' || !Utilities.isArray(options.ignoreDuplicateModules)) {
+            if (typeof options.ignoreDuplicateModules !== 'object' || !Array.isArray(options.ignoreDuplicateModules)) {
                 options.ignoreDuplicateModules = [];
             }
             if (options.baseUrl.length > 0) {
-                if (!Utilities.endsWith(options.baseUrl, '/')) {
+                if (!AMDLoader.Utilities.endsWith(options.baseUrl, '/')) {
                     options.baseUrl += '/';
                 }
             }
@@ -206,94 +288,69 @@ var AMDLoader;
             if (typeof options.nodeCachedDataWriteDelay !== 'number' || options.nodeCachedDataWriteDelay < 0) {
                 options.nodeCachedDataWriteDelay = 1000 * 7;
             }
-            if (typeof options.onNodeCachedDataError !== 'function') {
-                options.onNodeCachedDataError = function (err) {
-                    if (err.errorCode === 'cachedDataRejected') {
+            if (typeof options.onNodeCachedData !== 'function') {
+                options.onNodeCachedData = function (err, data) {
+                    if (!err) {
+                        // ignore
+                    }
+                    else if (err.errorCode === 'cachedDataRejected') {
                         console.warn('Rejected cached data from file: ' + err.path);
                     }
                     else if (err.errorCode === 'unlink' || err.errorCode === 'writeFile') {
                         console.error('Problems writing cached data file: ' + err.path);
                         console.error(err.detail);
                     }
+                    else {
+                        console.error(err);
+                    }
                 };
             }
             return options;
         };
-        ConfigurationOptionsUtil.mergeConfigurationOptions = function (overwrite, base) {
+        ConfigurationOptionsUtil.mergeConfigurationOptions = function (isWebWorker, overwrite, base) {
             if (overwrite === void 0) { overwrite = null; }
             if (base === void 0) { base = null; }
-            var result = Utilities.recursiveClone(base || {});
+            var result = AMDLoader.Utilities.recursiveClone(base || {});
             // Merge known properties and overwrite the unknown ones
-            Utilities.forEachProperty(overwrite, function (key, value) {
-                if (key === 'bundles' && typeof result.bundles !== 'undefined') {
-                    if (Utilities.isArray(value)) {
-                        // Compatibility style
-                        result.bundles = result.bundles.concat(value);
-                    }
-                    else {
-                        // AMD API style
-                        Utilities.forEachProperty(value, function (key, value) {
-                            var bundleConfiguration = {
-                                location: key,
-                                modules: value
-                            };
-                            result.bundles.push(bundleConfiguration);
-                        });
-                    }
-                }
-                else if (key === 'ignoreDuplicateModules' && typeof result.ignoreDuplicateModules !== 'undefined') {
+            AMDLoader.Utilities.forEachProperty(overwrite, function (key, value) {
+                if (key === 'ignoreDuplicateModules' && typeof result.ignoreDuplicateModules !== 'undefined') {
                     result.ignoreDuplicateModules = result.ignoreDuplicateModules.concat(value);
                 }
                 else if (key === 'paths' && typeof result.paths !== 'undefined') {
-                    Utilities.forEachProperty(value, function (key2, value2) { return result.paths[key2] = value2; });
-                }
-                else if (key === 'shim' && typeof result.shim !== 'undefined') {
-                    Utilities.forEachProperty(value, function (key2, value2) { return result.shim[key2] = value2; });
+                    AMDLoader.Utilities.forEachProperty(value, function (key2, value2) { return result.paths[key2] = value2; });
                 }
                 else if (key === 'config' && typeof result.config !== 'undefined') {
-                    Utilities.forEachProperty(value, function (key2, value2) { return result.config[key2] = value2; });
+                    AMDLoader.Utilities.forEachProperty(value, function (key2, value2) { return result.config[key2] = value2; });
                 }
                 else {
-                    result[key] = Utilities.recursiveClone(value);
+                    result[key] = AMDLoader.Utilities.recursiveClone(value);
                 }
             });
-            return ConfigurationOptionsUtil.validateConfigurationOptions(result);
+            return ConfigurationOptionsUtil.validateConfigurationOptions(isWebWorker, result);
         };
         return ConfigurationOptionsUtil;
     }());
     AMDLoader.ConfigurationOptionsUtil = ConfigurationOptionsUtil;
     var Configuration = (function () {
-        function Configuration(options) {
-            this.options = ConfigurationOptionsUtil.mergeConfigurationOptions(options);
+        function Configuration(env, options) {
+            this._env = env;
+            this.options = ConfigurationOptionsUtil.mergeConfigurationOptions(this._env.isWebWorker, options);
             this._createIgnoreDuplicateModulesMap();
+            this._createNodeModulesMap();
             this._createSortedPathsRules();
-            this._createShimModules();
-            this._createOverwriteModuleIdToPath();
             if (this.options.baseUrl === '') {
-                if (isNode && this.options.nodeRequire && this.options.nodeRequire.main && this.options.nodeRequire.main.filename) {
+                if (this._env.isNode && this.options.nodeRequire && this.options.nodeRequire.main && this.options.nodeRequire.main.filename) {
                     var nodeMain = this.options.nodeRequire.main.filename;
                     var dirnameIndex = Math.max(nodeMain.lastIndexOf('/'), nodeMain.lastIndexOf('\\'));
                     this.options.baseUrl = nodeMain.substring(0, dirnameIndex + 1);
                 }
-                if (isNode && this.options.nodeMain) {
+                if (this._env.isNode && this.options.nodeMain) {
                     var nodeMain = this.options.nodeMain;
                     var dirnameIndex = Math.max(nodeMain.lastIndexOf('/'), nodeMain.lastIndexOf('\\'));
                     this.options.baseUrl = nodeMain.substring(0, dirnameIndex + 1);
                 }
             }
         }
-        Configuration.prototype._createOverwriteModuleIdToPath = function () {
-            this.overwriteModuleIdToPath = {};
-            for (var i = 0; i < this.options.bundles.length; i++) {
-                var bundle = this.options.bundles[i];
-                var location = bundle.location;
-                if (bundle.modules) {
-                    for (var j = 0; j < bundle.modules.length; j++) {
-                        this.overwriteModuleIdToPath[bundle.modules[j]] = location;
-                    }
-                }
-            }
-        };
         Configuration.prototype._createIgnoreDuplicateModulesMap = function () {
             // Build a map out of the ignoreDuplicateModules array
             this.ignoreDuplicateModulesMap = {};
@@ -301,13 +358,21 @@ var AMDLoader;
                 this.ignoreDuplicateModulesMap[this.options.ignoreDuplicateModules[i]] = true;
             }
         };
+        Configuration.prototype._createNodeModulesMap = function () {
+            // Build a map out of nodeModules array
+            this.nodeModulesMap = Object.create(null);
+            for (var _i = 0, _a = this.options.nodeModules; _i < _a.length; _i++) {
+                var nodeModule = _a[_i];
+                this.nodeModulesMap[nodeModule] = true;
+            }
+        };
         Configuration.prototype._createSortedPathsRules = function () {
             var _this = this;
             // Create an array our of the paths rules, sorted descending by length to
             // result in a more specific -> less specific order
             this.sortedPathsRules = [];
-            Utilities.forEachProperty(this.options.paths, function (from, to) {
-                if (!Utilities.isArray(to)) {
+            AMDLoader.Utilities.forEachProperty(this.options.paths, function (from, to) {
+                if (!Array.isArray(to)) {
                     _this.sortedPathsRules.push({
                         from: from,
                         to: [to]
@@ -324,91 +389,13 @@ var AMDLoader;
                 return b.from.length - a.from.length;
             });
         };
-        Configuration.prototype._ensureShimModule1 = function (path, shimMD) {
-            // Ensure dependencies are also shimmed
-            for (var i = 0; i < shimMD.length; i++) {
-                var dependencyId = shimMD[i];
-                if (!this.shimModules.hasOwnProperty(dependencyId)) {
-                    this._ensureShimModule1(dependencyId, []);
-                }
-            }
-            this.shimModules[path] = {
-                stack: null,
-                dependencies: shimMD,
-                callback: null
-            };
-            if (this.options.isBuild) {
-                this.shimModulesStr[path] = 'null';
-            }
-        };
-        Configuration.prototype._ensureShimModule2 = function (path, shimMD) {
-            this.shimModules[path] = {
-                stack: null,
-                dependencies: shimMD.deps || [],
-                callback: function () {
-                    var depsValues = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        depsValues[_i - 0] = arguments[_i];
-                    }
-                    if (typeof shimMD.init === 'function') {
-                        var initReturnValue = shimMD.init.apply(global, depsValues);
-                        if (typeof initReturnValue !== 'undefined') {
-                            return initReturnValue;
-                        }
-                    }
-                    if (typeof shimMD.exports === 'function') {
-                        return shimMD.exports.apply(global, depsValues);
-                    }
-                    if (typeof shimMD.exports === 'string') {
-                        var pieces = shimMD.exports.split('.');
-                        var obj = global;
-                        for (var i = 0; i < pieces.length; i++) {
-                            if (obj) {
-                                obj = obj[pieces[i]];
-                            }
-                        }
-                        return obj;
-                    }
-                    return shimMD.exports || {};
-                }
-            };
-            if (this.options.isBuild) {
-                if (typeof shimMD.init === 'function') {
-                    this.shimModulesStr[path] = shimMD.init.toString();
-                }
-                else if (typeof shimMD.exports === 'function') {
-                    this.shimModulesStr[path] = shimMD.exports.toString();
-                }
-                else if (typeof shimMD.exports === 'string') {
-                    this.shimModulesStr[path] = 'function() { return this.' + shimMD.exports + '; }';
-                }
-                else {
-                    this.shimModulesStr[path] = JSON.stringify(shimMD.exports);
-                }
-            }
-        };
-        Configuration.prototype._createShimModules = function () {
-            var _this = this;
-            this.shimModules = {};
-            this.shimModulesStr = {};
-            Utilities.forEachProperty(this.options.shim, function (path, shimMD) {
-                if (!shimMD) {
-                    return;
-                }
-                if (Utilities.isArray(shimMD)) {
-                    _this._ensureShimModule1(path, shimMD);
-                    return;
-                }
-                _this._ensureShimModule2(path, shimMD);
-            });
-        };
         /**
          * Clone current configuration and overwrite options selectively.
          * @param options The selective options to overwrite with.
          * @result A new configuration
          */
         Configuration.prototype.cloneAndMerge = function (options) {
-            return new Configuration(ConfigurationOptionsUtil.mergeConfigurationOptions(options, this.options));
+            return new Configuration(this._env, ConfigurationOptionsUtil.mergeConfigurationOptions(this._env.isWebWorker, options, this.options));
         };
         /**
          * Get current options bag. Useful for passing it forward to plugins.
@@ -420,7 +407,7 @@ var AMDLoader;
             var pathRule;
             for (var i = 0, len = this.sortedPathsRules.length; i < len; i++) {
                 pathRule = this.sortedPathsRules[i];
-                if (Utilities.startsWith(moduleId, pathRule.from)) {
+                if (AMDLoader.Utilities.startsWith(moduleId, pathRule.from)) {
                     var result = [];
                     for (var j = 0, lenJ = pathRule.to.length; j < lenJ; j++) {
                         result.push(pathRule.to[j] + moduleId.substr(pathRule.from.length));
@@ -431,7 +418,7 @@ var AMDLoader;
             return [moduleId];
         };
         Configuration.prototype._addUrlArgsToUrl = function (url) {
-            if (Utilities.containsQueryString(url)) {
+            if (AMDLoader.Utilities.containsQueryString(url)) {
                 return url + '&' + this.options.urlArgs;
             }
             else {
@@ -456,31 +443,35 @@ var AMDLoader;
          * Transform a module id to a location. Appends .js to module ids
          */
         Configuration.prototype.moduleIdToPaths = function (moduleId) {
-            if (this.isBuild() && this.options.nodeModules.indexOf(moduleId) >= 0) {
-                // This is a node module and we are at build time, drop it
-                return ['empty:'];
+            if (this.nodeModulesMap[moduleId] === true) {
+                // This is a node module...
+                if (this.isBuild()) {
+                    // ...and we are at build time, drop it
+                    return ['empty:'];
+                }
+                else {
+                    // ...and at runtime we create a `shortcut`-path
+                    return ['node|' + moduleId];
+                }
             }
             var result = moduleId;
-            if (this.overwriteModuleIdToPath.hasOwnProperty(result)) {
-                result = this.overwriteModuleIdToPath[result];
-            }
             var results;
-            if (!Utilities.endsWith(result, '.js') && !Utilities.isAbsolutePath(result)) {
+            if (!AMDLoader.Utilities.endsWith(result, '.js') && !AMDLoader.Utilities.isAbsolutePath(result)) {
                 results = this._applyPaths(result);
                 for (var i = 0, len = results.length; i < len; i++) {
                     if (this.isBuild() && results[i] === 'empty:') {
                         continue;
                     }
-                    if (!Utilities.isAbsolutePath(results[i])) {
+                    if (!AMDLoader.Utilities.isAbsolutePath(results[i])) {
                         results[i] = this.options.baseUrl + results[i];
                     }
-                    if (!Utilities.endsWith(results[i], '.js') && !Utilities.containsQueryString(results[i])) {
+                    if (!AMDLoader.Utilities.endsWith(results[i], '.js') && !AMDLoader.Utilities.containsQueryString(results[i])) {
                         results[i] = results[i] + '.js';
                     }
                 }
             }
             else {
-                if (!Utilities.endsWith(result, '.js') && !Utilities.containsQueryString(result)) {
+                if (!AMDLoader.Utilities.endsWith(result, '.js') && !AMDLoader.Utilities.containsQueryString(result)) {
                     result = result + '.js';
                 }
                 results = [result];
@@ -492,34 +483,19 @@ var AMDLoader;
          */
         Configuration.prototype.requireToUrl = function (url) {
             var result = url;
-            if (!Utilities.isAbsolutePath(result)) {
+            if (!AMDLoader.Utilities.isAbsolutePath(result)) {
                 result = this._applyPaths(result)[0];
-                if (!Utilities.isAbsolutePath(result)) {
+                if (!AMDLoader.Utilities.isAbsolutePath(result)) {
                     result = this.options.baseUrl + result;
                 }
             }
             return this._addUrlArgsIfNecessaryToUrl(result);
         };
         /**
-         * Test if `moduleId` is shimmed.
-         */
-        Configuration.prototype.isShimmed = function (moduleId) {
-            return this.shimModules.hasOwnProperty(moduleId);
-        };
-        /**
          * Flag to indicate if current execution is as part of a build.
          */
         Configuration.prototype.isBuild = function () {
             return this.options.isBuild;
-        };
-        /**
-         * Get a normalized shim definition for `moduleId`.
-         */
-        Configuration.prototype.getShimmedModuleDefine = function (moduleId) {
-            return this.shimModules[moduleId];
-        };
-        Configuration.prototype.getShimmedModulesStr = function (moduleId) {
-            return this.shimModulesStr[moduleId];
         };
         /**
          * Test if module `moduleId` is expected to be defined multiple times
@@ -556,11 +532,322 @@ var AMDLoader;
         return Configuration;
     }());
     AMDLoader.Configuration = Configuration;
+})(AMDLoader || (AMDLoader = {}));
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var AMDLoader;
+(function (AMDLoader) {
+    /**
+     * Load `scriptSrc` only once (avoid multiple <script> tags)
+     */
+    var OnlyOnceScriptLoader = (function () {
+        function OnlyOnceScriptLoader(actualScriptLoader) {
+            this.actualScriptLoader = actualScriptLoader;
+            this.callbackMap = {};
+        }
+        OnlyOnceScriptLoader.prototype.load = function (moduleManager, scriptSrc, callback, errorback) {
+            var _this = this;
+            var scriptCallbacks = {
+                callback: callback,
+                errorback: errorback
+            };
+            if (this.callbackMap.hasOwnProperty(scriptSrc)) {
+                this.callbackMap[scriptSrc].push(scriptCallbacks);
+                return;
+            }
+            this.callbackMap[scriptSrc] = [scriptCallbacks];
+            this.actualScriptLoader.load(moduleManager, scriptSrc, function () { return _this.triggerCallback(scriptSrc); }, function (err) { return _this.triggerErrorback(scriptSrc, err); });
+        };
+        OnlyOnceScriptLoader.prototype.triggerCallback = function (scriptSrc) {
+            var scriptCallbacks = this.callbackMap[scriptSrc];
+            delete this.callbackMap[scriptSrc];
+            for (var i = 0; i < scriptCallbacks.length; i++) {
+                scriptCallbacks[i].callback();
+            }
+        };
+        OnlyOnceScriptLoader.prototype.triggerErrorback = function (scriptSrc, err) {
+            var scriptCallbacks = this.callbackMap[scriptSrc];
+            delete this.callbackMap[scriptSrc];
+            for (var i = 0; i < scriptCallbacks.length; i++) {
+                scriptCallbacks[i].errorback(err);
+            }
+        };
+        return OnlyOnceScriptLoader;
+    }());
+    var BrowserScriptLoader = (function () {
+        function BrowserScriptLoader() {
+        }
+        /**
+         * Attach load / error listeners to a script element and remove them when either one has fired.
+         * Implemented for browssers supporting HTML5 standard 'load' and 'error' events.
+         */
+        BrowserScriptLoader.prototype.attachListeners = function (script, callback, errorback) {
+            var unbind = function () {
+                script.removeEventListener('load', loadEventListener);
+                script.removeEventListener('error', errorEventListener);
+            };
+            var loadEventListener = function (e) {
+                unbind();
+                callback();
+            };
+            var errorEventListener = function (e) {
+                unbind();
+                errorback(e);
+            };
+            script.addEventListener('load', loadEventListener);
+            script.addEventListener('error', errorEventListener);
+        };
+        BrowserScriptLoader.prototype.load = function (moduleManager, scriptSrc, callback, errorback) {
+            var script = document.createElement('script');
+            script.setAttribute('async', 'async');
+            script.setAttribute('type', 'text/javascript');
+            this.attachListeners(script, callback, errorback);
+            script.setAttribute('src', scriptSrc);
+            document.getElementsByTagName('head')[0].appendChild(script);
+        };
+        return BrowserScriptLoader;
+    }());
+    var WorkerScriptLoader = (function () {
+        function WorkerScriptLoader() {
+        }
+        WorkerScriptLoader.prototype.load = function (moduleManager, scriptSrc, callback, errorback) {
+            try {
+                importScripts(scriptSrc);
+                callback();
+            }
+            catch (e) {
+                errorback(e);
+            }
+        };
+        return WorkerScriptLoader;
+    }());
+    var NodeScriptLoader = (function () {
+        function NodeScriptLoader(env) {
+            this._env = env;
+            this._didInitialize = false;
+            this._didPatchNodeRequire = false;
+        }
+        NodeScriptLoader.prototype._init = function (nodeRequire) {
+            if (this._didInitialize) {
+                return;
+            }
+            this._didInitialize = true;
+            // capture node modules
+            this._fs = nodeRequire('fs');
+            this._vm = nodeRequire('vm');
+            this._path = nodeRequire('path');
+            this._crypto = nodeRequire('crypto');
+            // js-flags have an impact on cached data
+            this._jsflags = '';
+            for (var _i = 0, _a = process.argv; _i < _a.length; _i++) {
+                var arg = _a[_i];
+                if (arg.indexOf('--js-flags=') === 0) {
+                    this._jsflags = arg;
+                    break;
+                }
+            }
+        };
+        // patch require-function of nodejs such that we can manually create a script
+        // from cached data. this is done by overriding the `Module._compile` function
+        NodeScriptLoader.prototype._initNodeRequire = function (nodeRequire, moduleManager) {
+            var nodeCachedDataDir = moduleManager.getConfig().getOptionsLiteral().nodeCachedDataDir;
+            if (!nodeCachedDataDir || this._didPatchNodeRequire) {
+                return;
+            }
+            this._didPatchNodeRequire = true;
+            var that = this;
+            var Module = nodeRequire('module');
+            function makeRequireFunction(mod) {
+                var Module = mod.constructor;
+                var require = function require(path) {
+                    try {
+                        return mod.require(path);
+                    }
+                    finally {
+                        // nothing
+                    }
+                };
+                require.resolve = function resolve(request) {
+                    return Module._resolveFilename(request, mod);
+                };
+                require.main = process.mainModule;
+                require.extensions = Module._extensions;
+                require.cache = Module._cache;
+                return require;
+            }
+            Module.prototype._compile = function (content, filename) {
+                // remove shebang
+                content = content.replace(/^#!.*/, '');
+                // create wrapper function
+                var wrapper = Module.wrap(content);
+                var cachedDataPath = that._getCachedDataPath(nodeCachedDataDir, filename);
+                var options = { filename: filename };
+                try {
+                    options.cachedData = that._fs.readFileSync(cachedDataPath);
+                }
+                catch (e) {
+                    options.produceCachedData = true;
+                }
+                var script = new that._vm.Script(wrapper, options);
+                var compileWrapper = script.runInThisContext(options);
+                var dirname = that._path.dirname(filename);
+                var require = makeRequireFunction(this);
+                var args = [this.exports, require, this, filename, dirname, process, AMDLoader.global, Buffer];
+                var result = compileWrapper.apply(this.exports, args);
+                that._processCachedData(moduleManager, script, cachedDataPath);
+                return result;
+            };
+        };
+        NodeScriptLoader.prototype.load = function (moduleManager, scriptSrc, callback, errorback) {
+            var _this = this;
+            var opts = moduleManager.getConfig().getOptionsLiteral();
+            var nodeRequire = (opts.nodeRequire || AMDLoader.global.nodeRequire);
+            var nodeInstrumenter = (opts.nodeInstrumenter || function (c) { return c; });
+            this._init(nodeRequire);
+            this._initNodeRequire(nodeRequire, moduleManager);
+            var recorder = moduleManager.getRecorder();
+            if (/^node\|/.test(scriptSrc)) {
+                var pieces = scriptSrc.split('|');
+                var moduleExports_1 = null;
+                try {
+                    moduleExports_1 = nodeRequire(pieces[1]);
+                }
+                catch (err) {
+                    errorback(err);
+                    return;
+                }
+                moduleManager.enqueueDefineAnonymousModule([], function () { return moduleExports_1; });
+                callback();
+            }
+            else {
+                scriptSrc = AMDLoader.Utilities.fileUriToFilePath(this._env.isWindows, scriptSrc);
+                this._fs.readFile(scriptSrc, { encoding: 'utf8' }, function (err, data) {
+                    if (err) {
+                        errorback(err);
+                        return;
+                    }
+                    var normalizedScriptSrc = _this._path.normalize(scriptSrc);
+                    var vmScriptSrc = normalizedScriptSrc;
+                    // Make the script src friendly towards electron
+                    if (_this._env.isElectronRenderer) {
+                        var driveLetterMatch = vmScriptSrc.match(/^([a-z])\:(.*)/i);
+                        if (driveLetterMatch) {
+                            // windows
+                            vmScriptSrc = "file:///" + (driveLetterMatch[1].toUpperCase() + ':' + driveLetterMatch[2]).replace(/\\/g, '/');
+                        }
+                        else {
+                            // nix
+                            vmScriptSrc = "file://" + vmScriptSrc;
+                        }
+                    }
+                    var contents, prefix = '(function (require, define, __filename, __dirname) { ', suffix = '\n});';
+                    if (data.charCodeAt(0) === NodeScriptLoader._BOM) {
+                        contents = prefix + data.substring(1) + suffix;
+                    }
+                    else {
+                        contents = prefix + data + suffix;
+                    }
+                    contents = nodeInstrumenter(contents, normalizedScriptSrc);
+                    if (!opts.nodeCachedDataDir) {
+                        _this._loadAndEvalScript(moduleManager, scriptSrc, vmScriptSrc, contents, { filename: vmScriptSrc }, recorder);
+                        callback();
+                    }
+                    else {
+                        var cachedDataPath_1 = _this._getCachedDataPath(opts.nodeCachedDataDir, scriptSrc);
+                        _this._fs.readFile(cachedDataPath_1, function (err, cachedData) {
+                            // create script options
+                            var options = {
+                                filename: vmScriptSrc,
+                                produceCachedData: typeof cachedData === 'undefined',
+                                cachedData: cachedData
+                            };
+                            var script = _this._loadAndEvalScript(moduleManager, scriptSrc, vmScriptSrc, contents, options, recorder);
+                            callback();
+                            _this._processCachedData(moduleManager, script, cachedDataPath_1);
+                        });
+                    }
+                });
+            }
+        };
+        NodeScriptLoader.prototype._loadAndEvalScript = function (moduleManager, scriptSrc, vmScriptSrc, contents, options, recorder) {
+            // create script, run script
+            recorder.record(AMDLoader.LoaderEventType.NodeBeginEvaluatingScript, scriptSrc);
+            var script = new this._vm.Script(contents, options);
+            var r = script.runInThisContext(options);
+            r.call(AMDLoader.global, moduleManager.getGlobalAMDRequireFunc(), moduleManager.getGlobalAMDDefineFunc(), vmScriptSrc, this._path.dirname(scriptSrc));
+            // signal done
+            recorder.record(AMDLoader.LoaderEventType.NodeEndEvaluatingScript, scriptSrc);
+            return script;
+        };
+        NodeScriptLoader.prototype._getCachedDataPath = function (basedir, filename) {
+            var hash = this._crypto.createHash('md5').update(filename, 'utf8').update(this._jsflags, 'utf8').digest('hex');
+            var basename = this._path.basename(filename).replace(/\.js$/, '');
+            return this._path.join(basedir, basename + "-" + hash + ".code");
+        };
+        NodeScriptLoader.prototype._processCachedData = function (moduleManager, script, cachedDataPath) {
+            var _this = this;
+            if (script.cachedDataRejected) {
+                // data rejected => delete cache file
+                moduleManager.getConfig().getOptionsLiteral().onNodeCachedData({
+                    errorCode: 'cachedDataRejected',
+                    path: cachedDataPath
+                });
+                NodeScriptLoader._runSoon(function () { return _this._fs.unlink(cachedDataPath, function (err) {
+                    if (err) {
+                        moduleManager.getConfig().getOptionsLiteral().onNodeCachedData({
+                            errorCode: 'unlink',
+                            path: cachedDataPath,
+                            detail: err
+                        });
+                    }
+                }); }, moduleManager.getConfig().getOptionsLiteral().nodeCachedDataWriteDelay);
+            }
+            else if (script.cachedDataProduced) {
+                // data produced => tell outside world
+                moduleManager.getConfig().getOptionsLiteral().onNodeCachedData(undefined, {
+                    path: cachedDataPath,
+                    length: script.cachedData.length
+                });
+                // data produced => write cache file
+                NodeScriptLoader._runSoon(function () { return _this._fs.writeFile(cachedDataPath, script.cachedData, function (err) {
+                    if (err) {
+                        moduleManager.getConfig().getOptionsLiteral().onNodeCachedData({
+                            errorCode: 'writeFile',
+                            path: cachedDataPath,
+                            detail: err
+                        });
+                    }
+                }); }, moduleManager.getConfig().getOptionsLiteral().nodeCachedDataWriteDelay);
+            }
+        };
+        NodeScriptLoader._runSoon = function (callback, minTimeout) {
+            var timeout = minTimeout + Math.ceil(Math.random() * minTimeout);
+            setTimeout(callback, timeout);
+        };
+        return NodeScriptLoader;
+    }());
+    NodeScriptLoader._BOM = 0xFEFF;
+    function createScriptLoader(env) {
+        return new OnlyOnceScriptLoader(env.isWebWorker ?
+            new WorkerScriptLoader()
+            : env.isNode ?
+                new NodeScriptLoader(env)
+                : new BrowserScriptLoader());
+    }
+    AMDLoader.createScriptLoader = createScriptLoader;
+})(AMDLoader || (AMDLoader = {}));
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var AMDLoader;
+(function (AMDLoader) {
     // ------------------------------------------------------------------------
     // ModuleIdResolver
     var ModuleIdResolver = (function () {
-        function ModuleIdResolver(config, fromModuleId) {
-            this._config = config;
+        function ModuleIdResolver(fromModuleId) {
             var lastSlash = fromModuleId.lastIndexOf('/');
             if (lastSlash !== -1) {
                 this.fromModulePath = fromModuleId.substr(0, lastSlash + 1);
@@ -569,9 +856,6 @@ var AMDLoader;
                 this.fromModulePath = '';
             }
         }
-        ModuleIdResolver.prototype.isBuild = function () {
-            return this._config.isBuild();
-        };
         /**
          * Normalize 'a/../name' to 'name', etc.
          */
@@ -598,239 +882,89 @@ var AMDLoader;
          */
         ModuleIdResolver.prototype.resolveModule = function (moduleId) {
             var result = moduleId;
-            if (!Utilities.isAbsolutePath(result)) {
-                if (Utilities.startsWith(result, './') || Utilities.startsWith(result, '../')) {
+            if (!AMDLoader.Utilities.isAbsolutePath(result)) {
+                if (AMDLoader.Utilities.startsWith(result, './') || AMDLoader.Utilities.startsWith(result, '../')) {
                     result = ModuleIdResolver._normalizeModuleId(this.fromModulePath + result);
                 }
             }
             return result;
         };
-        /**
-         * Transform a module id to a location. Appends .js to module ids
-         */
-        ModuleIdResolver.prototype.moduleIdToPaths = function (moduleId) {
-            var r = this._config.moduleIdToPaths(moduleId);
-            if (isNode && moduleId.indexOf('/') === -1) {
-                r.push('node|' + this.fromModulePath + '|' + moduleId);
-            }
-            return r;
-        };
-        /**
-         * Transform a module id or url to a location.
-         */
-        ModuleIdResolver.prototype.requireToUrl = function (url) {
-            return this._config.requireToUrl(url);
-        };
-        /**
-         * Should errors be caught when executing module factories?
-         */
-        ModuleIdResolver.prototype.shouldCatchError = function () {
-            return this._config.shouldCatchError();
-        };
-        /**
-         * Forward an error to the error handler.
-         */
-        ModuleIdResolver.prototype.onError = function (err) {
-            this._config.onError(err);
-        };
         return ModuleIdResolver;
     }());
+    ModuleIdResolver.ROOT = new ModuleIdResolver('');
     AMDLoader.ModuleIdResolver = ModuleIdResolver;
     // ------------------------------------------------------------------------
     // Module
     var Module = (function () {
-        function Module(id, dependencies, callback, errorback, recorder, moduleIdResolver, config, defineCallStack) {
-            if (defineCallStack === void 0) { defineCallStack = null; }
-            this._id = id;
-            this._dependencies = dependencies;
-            this._dependenciesValues = [];
+        function Module(id, strId, dependencies, callback, errorback, moduleIdResolver) {
+            this.id = id;
+            this.strId = strId;
+            this.dependencies = dependencies;
             this._callback = callback;
             this._errorback = errorback;
-            this._recorder = recorder;
-            this._moduleIdResolver = moduleIdResolver;
-            this._exports = {};
-            this._exportsPassedIn = false;
-            this._config = config;
-            this._defineCallStack = defineCallStack;
-            this._digestDependencies();
-            if (this._unresolvedDependenciesCount === 0) {
-                this._complete();
-            }
+            this.moduleIdResolver = moduleIdResolver;
+            this.exports = {};
+            this.exportsPassedIn = false;
+            this.unresolvedDependenciesCount = this.dependencies.length;
+            this._isComplete = false;
         }
-        Module.prototype._digestDependencies = function () {
-            var _this = this;
-            // Exact count of dependencies
-            this._unresolvedDependenciesCount = this._dependencies.length;
-            // Send on to the manager only a subset of dependencies
-            // For example, 'exports' and 'module' can be fulfilled locally
-            this._normalizedDependencies = [];
-            this._managerDependencies = [];
-            this._managerDependenciesMap = {};
-            var i, len, d;
-            for (i = 0, len = this._dependencies.length; i < len; i++) {
-                d = this._dependencies[i];
-                if (!d) {
-                    // Most likely, undefined sneaked in to the dependency array
-                    // Also, IE8 interprets ['a', 'b',] as ['a', 'b', undefined]
-                    console.warn('Please check module ' + this._id + ', the dependency list looks broken');
-                    this._normalizedDependencies[i] = d;
-                    this._dependenciesValues[i] = null;
-                    this._unresolvedDependenciesCount--;
-                    continue;
-                }
-                if (d === 'exports') {
-                    // Fulfill 'exports' locally and remember that it was passed in
-                    // Later on, we will ignore the return value of the factory method
-                    this._exportsPassedIn = true;
-                    this._normalizedDependencies[i] = d;
-                    this._dependenciesValues[i] = this._exports;
-                    this._unresolvedDependenciesCount--;
-                }
-                else if (d === 'module') {
-                    // Fulfill 'module' locally
-                    this._normalizedDependencies[i] = d;
-                    this._dependenciesValues[i] = {
-                        id: this._id,
-                        config: function () { return _this._config; }
-                    };
-                    this._unresolvedDependenciesCount--;
-                }
-                else if (d === 'require') {
-                    // Request 'requre' from the manager
-                    this._normalizedDependencies[i] = d;
-                    this.addManagerDependency(d, i);
-                }
-                else {
-                    // Normalize dependency and then request it from the manager
-                    var bangIndex = d.indexOf('!');
-                    if (bangIndex >= 0) {
-                        var pluginId = d.substring(0, bangIndex);
-                        var pluginParam = d.substring(bangIndex + 1, d.length);
-                        d = this._moduleIdResolver.resolveModule(pluginId) + '!' + pluginParam;
-                    }
-                    else {
-                        d = this._moduleIdResolver.resolveModule(d);
-                    }
-                    this._normalizedDependencies[i] = d;
-                    this.addManagerDependency(d, i);
-                }
+        Module._safeInvokeFunction = function (callback, args) {
+            try {
+                return {
+                    returnedValue: callback.apply(AMDLoader.global, args),
+                    producedError: null
+                };
+            }
+            catch (e) {
+                return {
+                    returnedValue: null,
+                    producedError: e
+                };
             }
         };
-        Module.prototype.addManagerDependency = function (dependency, index) {
-            if (this._managerDependenciesMap.hasOwnProperty(dependency)) {
-                throw new Error('Module ' + this._id + ' contains multiple times a dependency to ' + dependency);
-            }
-            this._managerDependencies.push(dependency);
-            this._managerDependenciesMap[dependency] = index;
-        };
-        /**
-         * Called by the module manager because plugin dependencies can not
-         * be normalized statically, the part after '!' can only be normalized
-         * once the plugin has loaded and its normalize logic is plugged in.
-         */
-        Module.prototype.renameDependency = function (oldDependencyId, newDependencyId) {
-            if (!this._managerDependenciesMap.hasOwnProperty(oldDependencyId)) {
-                throw new Error('Loader: Cannot rename an unknown dependency!');
-            }
-            var index = this._managerDependenciesMap[oldDependencyId];
-            delete this._managerDependenciesMap[oldDependencyId];
-            this._managerDependenciesMap[newDependencyId] = index;
-            this._normalizedDependencies[index] = newDependencyId;
-        };
-        /**
-         * Get module's id
-         */
-        Module.prototype.getId = function () {
-            return this._id;
-        };
-        /**
-         * Get the module id resolver associated with this module
-         */
-        Module.prototype.getModuleIdResolver = function () {
-            return this._moduleIdResolver;
-        };
-        Module.prototype.isExportsPassedIn = function () {
-            return this._exportsPassedIn;
-        };
-        Module.prototype.getExports = function () {
-            return this._exports;
-        };
-        /**
-         * Get the initial dependencies (resolved).
-         * Does not account for any renames
-         */
-        Module.prototype.getDependencies = function () {
-            return this._managerDependencies;
-        };
-        Module.prototype.getNormalizedDependencies = function () {
-            return this._normalizedDependencies;
-        };
-        Module.prototype.getDefineCallStack = function () {
-            return this._defineCallStack;
-        };
-        Module.prototype._invokeFactory = function () {
-            if (this._moduleIdResolver.isBuild() && !Utilities.isAnonymousModule(this._id)) {
+        Module._invokeFactory = function (config, strModuleId, callback, dependenciesValues) {
+            if (config.isBuild() && !AMDLoader.Utilities.isAnonymousModule(strModuleId)) {
                 return {
                     returnedValue: null,
                     producedError: null
                 };
             }
-            var producedError = null, returnedValue = null;
-            if (this._moduleIdResolver.shouldCatchError()) {
-                try {
-                    returnedValue = this._callback.apply(global, this._dependenciesValues);
-                }
-                catch (e) {
-                    producedError = e;
-                }
-                finally {
-                }
-            }
-            else {
-                returnedValue = this._callback.apply(global, this._dependenciesValues);
+            if (config.shouldCatchError()) {
+                return this._safeInvokeFunction(callback, dependenciesValues);
             }
             return {
-                returnedValue: returnedValue,
-                producedError: producedError
+                returnedValue: callback.apply(AMDLoader.global, dependenciesValues),
+                producedError: null
             };
         };
-        Module.prototype._complete = function () {
+        Module.prototype.complete = function (recorder, config, dependenciesValues) {
+            this._isComplete = true;
             var producedError = null;
             if (this._callback) {
                 if (typeof this._callback === 'function') {
-                    this._recorder.record(LoaderEventType.BeginInvokeFactory, this._id);
-                    var r = this._invokeFactory();
+                    recorder.record(AMDLoader.LoaderEventType.BeginInvokeFactory, this.strId);
+                    var r = Module._invokeFactory(config, this.strId, this._callback, dependenciesValues);
                     producedError = r.producedError;
-                    this._recorder.record(LoaderEventType.EndInvokeFactory, this._id);
-                    if (!producedError && typeof r.returnedValue !== 'undefined' && (!this._exportsPassedIn || Utilities.isEmpty(this._exports))) {
-                        this._exports = r.returnedValue;
+                    recorder.record(AMDLoader.LoaderEventType.EndInvokeFactory, this.strId);
+                    if (!producedError && typeof r.returnedValue !== 'undefined' && (!this.exportsPassedIn || AMDLoader.Utilities.isEmpty(this.exports))) {
+                        this.exports = r.returnedValue;
                     }
                 }
                 else {
-                    this._exports = this._callback;
+                    this.exports = this._callback;
                 }
             }
             if (producedError) {
-                this.getModuleIdResolver().onError({
+                config.onError({
                     errorCode: 'factory',
-                    moduleId: this._id,
+                    moduleId: this.strId,
                     detail: producedError
                 });
             }
-        };
-        /**
-         * Release references used while resolving module
-         */
-        Module.prototype.cleanUp = function () {
-            if (this._moduleIdResolver && !this._moduleIdResolver.isBuild()) {
-                this._normalizedDependencies = null;
-                this._moduleIdResolver = null;
-            }
-            this._dependencies = null;
-            this._dependenciesValues = null;
+            this.dependencies = null;
             this._callback = null;
-            this._managerDependencies = null;
-            this._managerDependenciesMap = null;
+            this._errorback = null;
+            this.moduleIdResolver = null;
         };
         /**
          * One of the direct dependencies or a transitive dependency has failed to load.
@@ -843,96 +977,89 @@ var AMDLoader;
             return false;
         };
         /**
-         * Resolve a dependency with a value.
-         */
-        Module.prototype.resolveDependency = function (id, value) {
-            if (!this._managerDependenciesMap.hasOwnProperty(id)) {
-                throw new Error('Cannot resolve a dependency I do not have!');
-            }
-            this._dependenciesValues[this._managerDependenciesMap[id]] = value;
-            // Prevent resolving the same dependency twice
-            delete this._managerDependenciesMap[id];
-            this._unresolvedDependenciesCount--;
-            if (this._unresolvedDependenciesCount === 0) {
-                this._complete();
-            }
-        };
-        /**
          * Is the current module complete?
          */
         Module.prototype.isComplete = function () {
-            return this._unresolvedDependenciesCount === 0;
+            return this._isComplete;
         };
         return Module;
     }());
     AMDLoader.Module = Module;
-    // ------------------------------------------------------------------------
-    // LoaderEvent
-    (function (LoaderEventType) {
-        LoaderEventType[LoaderEventType["LoaderAvailable"] = 1] = "LoaderAvailable";
-        LoaderEventType[LoaderEventType["BeginLoadingScript"] = 10] = "BeginLoadingScript";
-        LoaderEventType[LoaderEventType["EndLoadingScriptOK"] = 11] = "EndLoadingScriptOK";
-        LoaderEventType[LoaderEventType["EndLoadingScriptError"] = 12] = "EndLoadingScriptError";
-        LoaderEventType[LoaderEventType["BeginInvokeFactory"] = 21] = "BeginInvokeFactory";
-        LoaderEventType[LoaderEventType["EndInvokeFactory"] = 22] = "EndInvokeFactory";
-        LoaderEventType[LoaderEventType["NodeBeginEvaluatingScript"] = 31] = "NodeBeginEvaluatingScript";
-        LoaderEventType[LoaderEventType["NodeEndEvaluatingScript"] = 32] = "NodeEndEvaluatingScript";
-        LoaderEventType[LoaderEventType["NodeBeginNativeRequire"] = 33] = "NodeBeginNativeRequire";
-        LoaderEventType[LoaderEventType["NodeEndNativeRequire"] = 34] = "NodeEndNativeRequire";
-    })(AMDLoader.LoaderEventType || (AMDLoader.LoaderEventType = {}));
-    var LoaderEventType = AMDLoader.LoaderEventType;
-    function getHighPerformanceTimestamp() {
-        return (hasPerformanceNow ? global.performance.now() : Date.now());
-    }
-    var LoaderEvent = (function () {
-        function LoaderEvent(type, detail, timestamp) {
-            this.type = type;
-            this.detail = detail;
-            this.timestamp = timestamp;
+    var ModuleIdProvider = (function () {
+        function ModuleIdProvider() {
+            this._nextId = 0;
+            this._strModuleIdToIntModuleId = new Map();
+            this._intModuleIdToStrModuleId = [];
+            // Ensure values 0, 1, 2 are assigned accordingly with ModuleId
+            this.getModuleId('exports');
+            this.getModuleId('module');
+            this.getModuleId('require');
         }
-        return LoaderEvent;
+        ModuleIdProvider.prototype.getMaxModuleId = function () {
+            return this._nextId;
+        };
+        ModuleIdProvider.prototype.getModuleId = function (strModuleId) {
+            var id = this._strModuleIdToIntModuleId.get(strModuleId);
+            if (typeof id === 'undefined') {
+                id = this._nextId++;
+                this._strModuleIdToIntModuleId.set(strModuleId, id);
+                this._intModuleIdToStrModuleId[id] = strModuleId;
+            }
+            return id;
+        };
+        ModuleIdProvider.prototype.getStrModuleId = function (moduleId) {
+            return this._intModuleIdToStrModuleId[moduleId];
+        };
+        return ModuleIdProvider;
     }());
-    AMDLoader.LoaderEvent = LoaderEvent;
-    var LoaderEventRecorder = (function () {
-        function LoaderEventRecorder(loaderAvailableTimestamp) {
-            this._events = [new LoaderEvent(LoaderEventType.LoaderAvailable, '', loaderAvailableTimestamp)];
+    var RegularDependency = (function () {
+        function RegularDependency(id) {
+            this.id = id;
         }
-        LoaderEventRecorder.prototype.record = function (type, detail) {
-            this._events.push(new LoaderEvent(type, detail, getHighPerformanceTimestamp()));
-        };
-        LoaderEventRecorder.prototype.getEvents = function () {
-            return this._events;
-        };
-        return LoaderEventRecorder;
+        return RegularDependency;
     }());
-    AMDLoader.LoaderEventRecorder = LoaderEventRecorder;
-    var NullLoaderEventRecorder = (function () {
-        function NullLoaderEventRecorder() {
+    RegularDependency.EXPORTS = new RegularDependency(0 /* EXPORTS */);
+    RegularDependency.MODULE = new RegularDependency(1 /* MODULE */);
+    RegularDependency.REQUIRE = new RegularDependency(2 /* REQUIRE */);
+    AMDLoader.RegularDependency = RegularDependency;
+    var PluginDependency = (function () {
+        function PluginDependency(id, pluginId, pluginParam) {
+            this.id = id;
+            this.pluginId = pluginId;
+            this.pluginParam = pluginParam;
         }
-        NullLoaderEventRecorder.prototype.record = function (type, detail) {
-            // Nothing to do
-        };
-        NullLoaderEventRecorder.prototype.getEvents = function () {
-            return [];
-        };
-        NullLoaderEventRecorder.INSTANCE = new NullLoaderEventRecorder();
-        return NullLoaderEventRecorder;
+        return PluginDependency;
     }());
-    AMDLoader.NullLoaderEventRecorder = NullLoaderEventRecorder;
+    AMDLoader.PluginDependency = PluginDependency;
     var ModuleManager = (function () {
-        function ModuleManager(scriptLoader) {
-            this._recorder = null;
-            this._config = new Configuration();
+        function ModuleManager(env, scriptLoader, defineFunc, requireFunc, loaderAvailableTimestamp) {
+            if (loaderAvailableTimestamp === void 0) { loaderAvailableTimestamp = 0; }
+            this._env = env;
             this._scriptLoader = scriptLoader;
-            this._modules = {};
-            this._knownModules = {};
-            this._inverseDependencies = {};
-            this._dependencies = {};
-            this._inversePluginDependencies = {};
-            this._queuedDefineCalls = [];
-            this._loadingScriptsCount = 0;
-            this._resolvedScriptPaths = {};
+            this._loaderAvailableTimestamp = loaderAvailableTimestamp;
+            this._defineFunc = defineFunc;
+            this._requireFunc = requireFunc;
+            this._moduleIdProvider = new ModuleIdProvider();
+            this._config = new AMDLoader.Configuration(this._env);
+            this._modules2 = [];
+            this._knownModules2 = [];
+            this._inverseDependencies2 = [];
+            this._inversePluginDependencies2 = new Map();
+            this._currentAnnonymousDefineCall = null;
+            this._recorder = null;
+            this._buildInfoPath = [];
+            this._buildInfoDefineStack = [];
+            this._buildInfoDependencies = [];
         }
+        ModuleManager.prototype.reset = function () {
+            return new ModuleManager(this._env, this._scriptLoader, this._defineFunc, this._requireFunc, this._loaderAvailableTimestamp);
+        };
+        ModuleManager.prototype.getGlobalAMDDefineFunc = function () {
+            return this._defineFunc;
+        };
+        ModuleManager.prototype.getGlobalAMDRequireFunc = function () {
+            return this._requireFunc;
+        };
         ModuleManager._findRelevantLocationInStack = function (needle, stack) {
             var normalize = function (str) { return str.replace(/\\/g, '/'); };
             var normalizedPath = normalize(needle);
@@ -961,31 +1088,36 @@ var AMDLoader;
             throw new Error('Could not correlate define call site for needle ' + needle);
         };
         ModuleManager.prototype.getBuildInfo = function () {
-            var _this = this;
             if (!this._config.isBuild()) {
                 return null;
             }
-            return Object.keys(this._modules).map(function (moduleId) {
-                var m = _this._modules[moduleId];
-                var location = _this._resolvedScriptPaths[moduleId] || null;
-                var defineStack = m.getDefineCallStack();
-                return {
-                    id: moduleId,
-                    path: location,
-                    defineLocation: (location && defineStack ? ModuleManager._findRelevantLocationInStack(location, defineStack) : null),
-                    dependencies: m.getNormalizedDependencies(),
-                    shim: (_this._config.isShimmed(moduleId) ? _this._config.getShimmedModulesStr(moduleId) : null),
-                    exports: m.getExports()
+            var result = [], resultLen = 0;
+            for (var i = 0, len = this._modules2.length; i < len; i++) {
+                var m = this._modules2[i];
+                if (!m) {
+                    continue;
+                }
+                var location_1 = this._buildInfoPath[m.id] || null;
+                var defineStack = this._buildInfoDefineStack[m.id] || null;
+                var dependencies = this._buildInfoDependencies[m.id];
+                result[resultLen++] = {
+                    id: m.strId,
+                    path: location_1,
+                    defineLocation: (location_1 && defineStack ? ModuleManager._findRelevantLocationInStack(location_1, defineStack) : null),
+                    dependencies: dependencies,
+                    shim: null,
+                    exports: m.exports
                 };
-            });
+            }
+            return result;
         };
         ModuleManager.prototype.getRecorder = function () {
             if (!this._recorder) {
                 if (this._config.shouldRecordStats()) {
-                    this._recorder = new LoaderEventRecorder(loaderAvailableTimestamp);
+                    this._recorder = new AMDLoader.LoaderEventRecorder(this._loaderAvailableTimestamp);
                 }
                 else {
-                    this._recorder = NullLoaderEventRecorder.INSTANCE;
+                    this._recorder = AMDLoader.NullLoaderEventRecorder.INSTANCE;
                 }
             }
             return this._recorder;
@@ -994,110 +1126,106 @@ var AMDLoader;
             return this.getRecorder().getEvents();
         };
         /**
-         * Defines a module.
-         * @param id @see defineModule
-         * @param dependencies @see defineModule
-         * @param callback @see defineModule
-         */
-        ModuleManager.prototype.enqueueDefineModule = function (id, dependencies, callback) {
-            if (this._loadingScriptsCount === 0) {
-                // There are no scripts currently loading, so no load event will be fired, so the queue will not be consumed
-                this.defineModule(id, dependencies, callback, null, null);
-            }
-            else {
-                this._queuedDefineCalls.push({
-                    id: id,
-                    stack: null,
-                    dependencies: dependencies,
-                    callback: callback
-                });
-            }
-        };
-        /**
          * Defines an anonymous module (without an id). Its name will be resolved as we receive a callback from the scriptLoader.
          * @param dependecies @see defineModule
          * @param callback @see defineModule
          */
         ModuleManager.prototype.enqueueDefineAnonymousModule = function (dependencies, callback) {
+            if (this._currentAnnonymousDefineCall !== null) {
+                throw new Error('Can only have one anonymous define call per script file');
+            }
             var stack = null;
             if (this._config.isBuild()) {
-                stack = (new Error('StackLocation')).stack;
+                stack = new Error('StackLocation').stack;
             }
-            this._queuedDefineCalls.push({
-                id: null,
+            this._currentAnnonymousDefineCall = {
                 stack: stack,
                 dependencies: dependencies,
                 callback: callback
-            });
+            };
         };
         /**
          * Creates a module and stores it in _modules. The manager will immediately begin resolving its dependencies.
-         * @param id An unique and absolute id of the module. This must not collide with another module's id
+         * @param strModuleId An unique and absolute id of the module. This must not collide with another module's id
          * @param dependencies An array with the dependencies of the module. Special keys are: "require", "exports" and "module"
          * @param callback if callback is a function, it will be called with the resolved dependencies. if callback is an object, it will be considered as the exports of the module.
          */
-        ModuleManager.prototype.defineModule = function (id, dependencies, callback, errorback, stack, moduleIdResolver) {
-            if (moduleIdResolver === void 0) { moduleIdResolver = new ModuleIdResolver(this._config, id); }
-            if (this._modules.hasOwnProperty(id)) {
-                if (!this._config.isDuplicateMessageIgnoredFor(id)) {
-                    console.warn('Duplicate definition of module \'' + id + '\'');
+        ModuleManager.prototype.defineModule = function (strModuleId, dependencies, callback, errorback, stack, moduleIdResolver) {
+            var _this = this;
+            if (moduleIdResolver === void 0) { moduleIdResolver = new ModuleIdResolver(strModuleId); }
+            var moduleId = this._moduleIdProvider.getModuleId(strModuleId);
+            if (this._modules2[moduleId]) {
+                if (!this._config.isDuplicateMessageIgnoredFor(strModuleId)) {
+                    console.warn('Duplicate definition of module \'' + strModuleId + '\'');
                 }
                 // Super important! Completely ignore duplicate module definition
                 return;
             }
-            var moduleConfig = this._config.getConfigForModule(id);
-            var m = new Module(id, dependencies, callback, errorback, this.getRecorder(), moduleIdResolver, moduleConfig, stack);
-            this._modules[id] = m;
+            var m = new Module(moduleId, strModuleId, this._normalizeDependencies(dependencies, moduleIdResolver), callback, errorback, moduleIdResolver);
+            this._modules2[moduleId] = m;
+            if (this._config.isBuild()) {
+                this._buildInfoDefineStack[moduleId] = stack;
+                this._buildInfoDependencies[moduleId] = m.dependencies.map(function (dep) { return _this._moduleIdProvider.getStrModuleId(dep.id); });
+            }
             // Resolving of dependencies is immediate (not in a timeout). If there's a need to support a packer that concatenates in an
             // unordered manner, in order to finish processing the file, execute the following method in a timeout
             this._resolve(m);
+        };
+        ModuleManager.prototype._normalizeDependency = function (dependency, moduleIdResolver) {
+            if (dependency === 'exports') {
+                return RegularDependency.EXPORTS;
+            }
+            if (dependency === 'module') {
+                return RegularDependency.MODULE;
+            }
+            if (dependency === 'require') {
+                return RegularDependency.REQUIRE;
+            }
+            // Normalize dependency and then request it from the manager
+            var bangIndex = dependency.indexOf('!');
+            if (bangIndex >= 0) {
+                var strPluginId = moduleIdResolver.resolveModule(dependency.substr(0, bangIndex));
+                var pluginParam = moduleIdResolver.resolveModule(dependency.substr(bangIndex + 1));
+                var dependencyId = this._moduleIdProvider.getModuleId(strPluginId + '!' + pluginParam);
+                var pluginId = this._moduleIdProvider.getModuleId(strPluginId);
+                return new PluginDependency(dependencyId, pluginId, pluginParam);
+            }
+            return new RegularDependency(this._moduleIdProvider.getModuleId(moduleIdResolver.resolveModule(dependency)));
+        };
+        ModuleManager.prototype._normalizeDependencies = function (dependencies, moduleIdResolver) {
+            var result = [], resultLen = 0;
+            for (var i = 0, len = dependencies.length; i < len; i++) {
+                result[resultLen++] = this._normalizeDependency(dependencies[i], moduleIdResolver);
+            }
+            return result;
         };
         ModuleManager.prototype._relativeRequire = function (moduleIdResolver, dependencies, callback, errorback) {
             if (typeof dependencies === 'string') {
                 return this.synchronousRequire(dependencies, moduleIdResolver);
             }
-            this.defineModule(Utilities.generateAnonymousModule(), dependencies, callback, errorback, null, moduleIdResolver);
+            this.defineModule(AMDLoader.Utilities.generateAnonymousModule(), dependencies, callback, errorback, null, moduleIdResolver);
         };
         /**
          * Require synchronously a module by its absolute id. If the module is not loaded, an exception will be thrown.
          * @param id The unique and absolute id of the required module
          * @return The exports of module 'id'
          */
-        ModuleManager.prototype.synchronousRequire = function (id, moduleIdResolver) {
-            if (moduleIdResolver === void 0) { moduleIdResolver = new ModuleIdResolver(this._config, id); }
-            var moduleId = moduleIdResolver.resolveModule(id);
-            var bangIndex = moduleId.indexOf('!');
-            if (bangIndex >= 0) {
-                // This is a synchronous require for a plugin dependency, so be sure to normalize the pluginParam (the piece after '!')
-                var pluginId = moduleId.substring(0, bangIndex), pluginParam = moduleId.substring(bangIndex + 1, moduleId.length), plugin = {};
-                if (this._modules.hasOwnProperty(pluginId)) {
-                    plugin = this._modules[pluginId];
-                }
-                // Helper to normalize the part which comes after '!'
-                var normalize = function (_arg) {
-                    return moduleIdResolver.resolveModule(_arg);
-                };
-                if (typeof plugin.normalize === 'function') {
-                    pluginParam = plugin.normalize(pluginParam, normalize);
-                }
-                else {
-                    pluginParam = normalize(pluginParam);
-                }
-                moduleId = pluginId + '!' + pluginParam;
+        ModuleManager.prototype.synchronousRequire = function (_strModuleId, moduleIdResolver) {
+            if (moduleIdResolver === void 0) { moduleIdResolver = new ModuleIdResolver(_strModuleId); }
+            var dependency = this._normalizeDependency(_strModuleId, moduleIdResolver);
+            var m = this._modules2[dependency.id];
+            if (!m) {
+                throw new Error('Check dependency list! Synchronous require cannot resolve module \'' + _strModuleId + '\'. This is the first mention of this module!');
             }
-            if (!this._modules.hasOwnProperty(moduleId)) {
-                throw new Error('Check dependency list! Synchronous require cannot resolve module \'' + moduleId + '\'. This is the first mention of this module!');
-            }
-            var m = this._modules[moduleId];
             if (!m.isComplete()) {
-                throw new Error('Check dependency list! Synchronous require cannot resolve module \'' + moduleId + '\'. This module has not been resolved completely yet.');
+                throw new Error('Check dependency list! Synchronous require cannot resolve module \'' + _strModuleId + '\'. This module has not been resolved completely yet.');
             }
-            return m.getExports();
+            return m.exports;
         };
         ModuleManager.prototype.configure = function (params, shouldOverwrite) {
             var oldShouldRecordStats = this._config.shouldRecordStats();
             if (shouldOverwrite) {
-                this._config = new Configuration(params);
+                this._config = new AMDLoader.Configuration(this._env, params);
             }
             else {
                 this._config = this._config.cloneAndMerge(params);
@@ -1106,87 +1234,60 @@ var AMDLoader;
                 this._recorder = null;
             }
         };
-        ModuleManager.prototype.getConfigurationOptions = function () {
-            return this._config.getOptionsLiteral();
+        ModuleManager.prototype.getConfig = function () {
+            return this._config;
         };
         /**
          * Callback from the scriptLoader when a module has been loaded.
          * This means its code is available and has been executed.
          */
-        ModuleManager.prototype._onLoad = function (id) {
-            var defineCall;
-            this._loadingScriptsCount--;
-            if (this._config.isShimmed(id)) {
-                // Do not consume queue, might end up consuming a module that is later expected
-                // If a shimmed module has loaded, create a define call for it
-                defineCall = this._config.getShimmedModuleDefine(id);
-                this.defineModule(id, defineCall.dependencies, defineCall.callback, null, defineCall.stack);
+        ModuleManager.prototype._onLoad = function (moduleId) {
+            if (this._currentAnnonymousDefineCall !== null) {
+                var defineCall = this._currentAnnonymousDefineCall;
+                this._currentAnnonymousDefineCall = null;
+                // Hit an anonymous define call
+                this.defineModule(this._moduleIdProvider.getStrModuleId(moduleId), defineCall.dependencies, defineCall.callback, null, defineCall.stack);
             }
-            else {
-                if (this._queuedDefineCalls.length === 0) {
-                    // Loaded a file and it didn't call `define`
-                    this._loadingScriptsCount++;
-                    this._onLoadError(id, new Error('No define call received from module ' + id + '.'));
-                }
-                else {
-                    // Consume queue until first anonymous define call
-                    // or until current id is found in the queue
-                    while (this._queuedDefineCalls.length > 0) {
-                        defineCall = this._queuedDefineCalls.shift();
-                        if (defineCall.id === id || defineCall.id === null) {
-                            // Hit an anonymous define call or its own define call
-                            defineCall.id = id;
-                            this.defineModule(defineCall.id, defineCall.dependencies, defineCall.callback, null, defineCall.stack);
-                            break;
-                        }
-                        else {
-                            // Hit other named define calls
-                            this.defineModule(defineCall.id, defineCall.dependencies, defineCall.callback, null, defineCall.stack);
-                        }
-                    }
-                }
-            }
-            if (this._loadingScriptsCount === 0) {
-                // No more on loads will be triggered, so make sure queue is empty
-                while (this._queuedDefineCalls.length > 0) {
-                    defineCall = this._queuedDefineCalls.shift();
-                    if (defineCall.id === null) {
-                        console.warn('Found an unmatched anonymous define call in the define queue. Ignoring it!');
-                        console.warn(defineCall.callback);
-                    }
-                    else {
-                        // Hit other named define calls
-                        this.defineModule(defineCall.id, defineCall.dependencies, defineCall.callback, null, defineCall.stack);
-                    }
-                }
-            }
+        };
+        ModuleManager.prototype._createLoadError = function (moduleId, err) {
+            var _this = this;
+            var strModuleId = this._moduleIdProvider.getStrModuleId(moduleId);
+            var neededBy = (this._inverseDependencies2[moduleId] || []).map(function (intModuleId) { return _this._moduleIdProvider.getStrModuleId(intModuleId); });
+            return {
+                errorCode: 'load',
+                moduleId: strModuleId,
+                neededBy: neededBy,
+                detail: err
+            };
         };
         /**
          * Callback from the scriptLoader when a module hasn't been loaded.
          * This means that the script was not found (e.g. 404) or there was an error in the script.
          */
-        ModuleManager.prototype._onLoadError = function (id, err) {
-            this._loadingScriptsCount--;
-            var error = {
-                errorCode: 'load',
-                moduleId: id,
-                neededBy: (this._inverseDependencies[id] ? this._inverseDependencies[id].slice(0) : []),
-                detail: err
-            };
+        ModuleManager.prototype._onLoadError = function (moduleId, err) {
+            var error = this._createLoadError(moduleId, err);
             // Find any 'local' error handlers, walk the entire chain of inverse dependencies if necessary.
-            var seenModuleId = {}, queueElement, someoneNotified = false, queue = [];
-            queue.push(id);
-            seenModuleId[id] = true;
+            var seenModuleId = [];
+            for (var i = 0, len = this._moduleIdProvider.getMaxModuleId(); i < len; i++) {
+                seenModuleId[i] = false;
+            }
+            var someoneNotified = false;
+            var queue = [];
+            queue.push(moduleId);
+            seenModuleId[moduleId] = true;
             while (queue.length > 0) {
-                queueElement = queue.shift();
-                if (this._modules[queueElement]) {
-                    someoneNotified = this._modules[queueElement].onDependencyError(error) || someoneNotified;
+                var queueElement = queue.shift();
+                var m = this._modules2[queueElement];
+                if (m) {
+                    someoneNotified = m.onDependencyError(error) || someoneNotified;
                 }
-                if (this._inverseDependencies[queueElement]) {
-                    for (var i = 0, len = this._inverseDependencies[queueElement].length; i < len; i++) {
-                        if (!seenModuleId.hasOwnProperty(this._inverseDependencies[queueElement][i])) {
-                            queue.push(this._inverseDependencies[queueElement][i]);
-                            seenModuleId[this._inverseDependencies[queueElement][i]] = true;
+                var inverseDeps = this._inverseDependencies2[queueElement];
+                if (inverseDeps) {
+                    for (var i = 0, len = inverseDeps.length; i < len; i++) {
+                        var inverseDep = inverseDeps[i];
+                        if (!seenModuleId[inverseDep]) {
+                            queue.push(inverseDep);
+                            seenModuleId[inverseDep] = true;
                         }
                     }
                 }
@@ -1196,81 +1297,41 @@ var AMDLoader;
             }
         };
         /**
-         * Module id has been loaded completely, its exports are available.
-         * @param id module's id
-         * @param exports module's exports
-         */
-        ModuleManager.prototype._onModuleComplete = function (id, exports) {
-            var i, len, inverseDependencyId, inverseDependency;
-            // Clean up module's dependencies since module is now complete
-            delete this._dependencies[id];
-            if (this._inverseDependencies.hasOwnProperty(id)) {
-                // Fetch and clear inverse dependencies
-                var inverseDependencies = this._inverseDependencies[id];
-                delete this._inverseDependencies[id];
-                // Resolve one inverse dependency at a time, always
-                // on the lookout for a completed module.
-                for (i = 0, len = inverseDependencies.length; i < len; i++) {
-                    inverseDependencyId = inverseDependencies[i];
-                    inverseDependency = this._modules[inverseDependencyId];
-                    inverseDependency.resolveDependency(id, exports);
-                    if (inverseDependency.isComplete()) {
-                        this._onModuleComplete(inverseDependencyId, inverseDependency.getExports());
-                    }
-                }
-            }
-            if (this._inversePluginDependencies.hasOwnProperty(id)) {
-                // This module is used as a plugin at least once
-                // Fetch and clear these inverse plugin dependencies
-                var inversePluginDependencies = this._inversePluginDependencies[id];
-                delete this._inversePluginDependencies[id];
-                // Resolve plugin dependencies one at a time
-                for (i = 0, len = inversePluginDependencies.length; i < len; i++) {
-                    var inversePluginDependencyId = inversePluginDependencies[i].moduleId;
-                    var inversePluginDependency = this._modules[inversePluginDependencyId];
-                    this._resolvePluginDependencySync(inversePluginDependencyId, inversePluginDependencies[i].dependencyId, exports);
-                    // Anonymous modules might already be gone at this point
-                    if (inversePluginDependency.isComplete()) {
-                        this._onModuleComplete(inversePluginDependencyId, inversePluginDependency.getExports());
-                    }
-                }
-            }
-            if (Utilities.isAnonymousModule(id)) {
-                // Clean up references to anonymous modules, to prevent memory leaks
-                delete this._modules[id];
-                delete this._dependencies[id];
-            }
-            else {
-                this._modules[id].cleanUp();
-            }
-        };
-        /**
          * Walks (recursively) the dependencies of 'from' in search of 'to'.
          * Returns true if there is such a path or false otherwise.
          * @param from Module id to start at
          * @param to Module id to look for
          */
-        ModuleManager.prototype._hasDependencyPath = function (from, to) {
-            var i, len, inQueue = {}, queue = [], element, dependencies, dependency;
+        ModuleManager.prototype._hasDependencyPath = function (fromId, toId) {
+            var from = this._modules2[fromId];
+            if (!from) {
+                return false;
+            }
+            var inQueue = [];
+            for (var i = 0, len = this._moduleIdProvider.getMaxModuleId(); i < len; i++) {
+                inQueue[i] = false;
+            }
+            var queue = [];
             // Insert 'from' in queue
             queue.push(from);
-            inQueue[from] = true;
+            inQueue[fromId] = true;
             while (queue.length > 0) {
                 // Pop first inserted element of queue
-                element = queue.shift();
-                if (this._dependencies.hasOwnProperty(element)) {
-                    dependencies = this._dependencies[element];
+                var element = queue.shift();
+                var dependencies = element.dependencies;
+                if (dependencies) {
                     // Walk the element's dependencies
-                    for (i = 0, len = dependencies.length; i < len; i++) {
-                        dependency = dependencies[i];
-                        if (dependency === to) {
+                    for (var i = 0, len = dependencies.length; i < len; i++) {
+                        var dependency = dependencies[i];
+                        if (dependency.id === toId) {
                             // There is a path to 'to'
                             return true;
                         }
-                        if (!inQueue.hasOwnProperty(dependency)) {
+                        var dependencyModule = this._modules2[dependency.id];
+                        if (dependencyModule && !inQueue[dependency.id]) {
                             // Insert 'dependency' in queue
-                            inQueue[dependency] = true;
-                            queue.push(dependency);
+                            inQueue[dependency.id] = true;
+                            queue.push(dependencyModule);
                         }
                     }
                 }
@@ -1284,19 +1345,20 @@ var AMDLoader;
          * @param from Module id to start at
          * @param to Module id to look for
          */
-        ModuleManager.prototype._findCyclePath = function (from, to, depth) {
-            if (from === to || depth === 50) {
-                return [from];
+        ModuleManager.prototype._findCyclePath = function (fromId, toId, depth) {
+            if (fromId === toId || depth === 50) {
+                return [fromId];
             }
-            if (!this._dependencies.hasOwnProperty(from)) {
+            var from = this._modules2[fromId];
+            if (!from) {
                 return null;
             }
-            var path, dependencies = this._dependencies[from];
             // Walk the element's dependencies
+            var dependencies = from.dependencies;
             for (var i = 0, len = dependencies.length; i < len; i++) {
-                path = this._findCyclePath(dependencies[i], to, depth + 1);
+                var path = this._findCyclePath(dependencies[i].id, toId, depth + 1);
                 if (path !== null) {
-                    path.push(from);
+                    path.push(fromId);
                     return path;
                 }
             }
@@ -1311,184 +1373,26 @@ var AMDLoader;
                 return _this._relativeRequire(moduleIdResolver, dependencies, callback, errorback);
             });
             result.toUrl = function (id) {
-                return moduleIdResolver.requireToUrl(moduleIdResolver.resolveModule(id));
+                return _this._config.requireToUrl(moduleIdResolver.resolveModule(id));
             };
             result.getStats = function () {
                 return _this.getLoaderEvents();
             };
-            result.__$__nodeRequire = global.nodeRequire;
+            result.__$__nodeRequire = AMDLoader.global.nodeRequire;
             return result;
         };
-        /**
-         * Resolve a plugin dependency with the plugin loaded & complete
-         * @param moduleId The module that has this dependency
-         * @param dependencyId The semi-normalized dependency that appears in the module. e.g. 'vs/css!./mycssfile'. Only the plugin part (before !) is normalized
-         * @param plugin The plugin (what the plugin exports)
-         */
-        ModuleManager.prototype._resolvePluginDependencySync = function (moduleId, dependencyId, plugin) {
+        ModuleManager.prototype._loadModule = function (moduleId) {
             var _this = this;
-            var m = this._modules[moduleId], moduleIdResolver = m.getModuleIdResolver(), bangIndex = dependencyId.indexOf('!'), pluginId = dependencyId.substring(0, bangIndex), pluginParam = dependencyId.substring(bangIndex + 1, dependencyId.length);
-            // Helper to normalize the part which comes after '!'
-            var normalize = function (_arg) {
-                return moduleIdResolver.resolveModule(_arg);
-            };
-            if (typeof plugin.normalize === 'function') {
-                pluginParam = plugin.normalize(pluginParam, normalize);
+            if (this._modules2[moduleId] || this._knownModules2[moduleId]) {
+                // known module
+                return;
             }
-            else {
-                pluginParam = normalize(pluginParam);
+            this._knownModules2[moduleId] = true;
+            var strModuleId = this._moduleIdProvider.getStrModuleId(moduleId);
+            var paths = this._config.moduleIdToPaths(strModuleId);
+            if (this._env.isNode && strModuleId.indexOf('/') === -1) {
+                paths.push('node|' + strModuleId);
             }
-            if (!plugin.dynamic) {
-                // Now normalize the entire dependency
-                var oldDependencyId = dependencyId;
-                dependencyId = pluginId + '!' + pluginParam;
-                // Let the module know that the dependency has been normalized so it can update its internal state
-                m.renameDependency(oldDependencyId, dependencyId);
-                this._resolveDependency(moduleId, dependencyId, function (moduleId) {
-                    // Delegate the loading of the resource to the plugin
-                    var load = (function (value) {
-                        _this.defineModule(dependencyId, [], value, null, null);
-                    });
-                    load.error = function (err) {
-                        _this._config.onError({
-                            errorCode: 'load',
-                            moduleId: dependencyId,
-                            neededBy: (_this._inverseDependencies[dependencyId] ? _this._inverseDependencies[dependencyId].slice(0) : []),
-                            detail: err
-                        });
-                    };
-                    plugin.load(pluginParam, _this._createRequire(moduleIdResolver), load, _this._config.getOptionsLiteral());
-                });
-            }
-            else {
-                // This plugin is dynamic and does not want the loader to cache anything on its behalf
-                // Delegate the loading of the resource to the plugin
-                var load = (function (value) {
-                    m.resolveDependency(dependencyId, value);
-                    if (m.isComplete()) {
-                        _this._onModuleComplete(moduleId, m.getExports());
-                    }
-                });
-                load.error = function (err) {
-                    _this._config.onError({
-                        errorCode: 'load',
-                        moduleId: dependencyId,
-                        neededBy: [moduleId],
-                        detail: err
-                    });
-                };
-                plugin.load(pluginParam, this._createRequire(moduleIdResolver), load, this._config.getOptionsLiteral());
-            }
-        };
-        /**
-         * Resolve a plugin dependency with the plugin not loaded or not complete yet
-         * @param moduleId The module that has this dependency
-         * @param dependencyId The semi-normalized dependency that appears in the module. e.g. 'vs/css!./mycssfile'. Only the plugin part (before !) is normalized
-         */
-        ModuleManager.prototype._resolvePluginDependencyAsync = function (moduleId, dependencyId) {
-            var m = this._modules[moduleId], bangIndex = dependencyId.indexOf('!'), pluginId = dependencyId.substring(0, bangIndex);
-            // Record dependency for when the plugin gets loaded
-            this._inversePluginDependencies[pluginId] = this._inversePluginDependencies[pluginId] || [];
-            this._inversePluginDependencies[pluginId].push({
-                moduleId: moduleId,
-                dependencyId: dependencyId
-            });
-            if (!this._modules.hasOwnProperty(pluginId) && !this._knownModules.hasOwnProperty(pluginId)) {
-                // This is the first mention of module 'pluginId', so load it
-                this._knownModules[pluginId] = true;
-                this._loadModule(m.getModuleIdResolver(), pluginId);
-            }
-        };
-        /**
-         * Resolve a plugin dependency
-         * @param moduleId The module that has this dependency
-         * @param dependencyId The semi-normalized dependency that appears in the module. e.g. 'vs/css!./mycssfile'. Only the plugin part (before !) is normalized
-         */
-        ModuleManager.prototype._resolvePluginDependency = function (moduleId, dependencyId) {
-            var bangIndex = dependencyId.indexOf('!'), pluginId = dependencyId.substring(0, bangIndex);
-            if (this._modules.hasOwnProperty(pluginId) && this._modules[pluginId].isComplete()) {
-                // Plugin has already been loaded & resolved
-                this._resolvePluginDependencySync(moduleId, dependencyId, this._modules[pluginId].getExports());
-            }
-            else {
-                // Plugin is not loaded or not resolved
-                this._resolvePluginDependencyAsync(moduleId, dependencyId);
-            }
-        };
-        /**
-         * Resolve a module dependency to a shimmed module and delegate the loading to loadCallback.
-         * @param moduleId The module that has this dependency
-         * @param dependencyId The normalized dependency that appears in the module -- this module is shimmed
-         * @param loadCallback Callback that will be called to trigger the loading of 'dependencyId' if needed
-         */
-        ModuleManager.prototype._resolveShimmedDependency = function (moduleId, dependencyId, loadCallback) {
-            // If a shimmed module has dependencies, we must first load those dependencies
-            // and only when those are loaded we can load the shimmed module.
-            // To achieve this, we inject a module definition with those dependencies
-            // and from its factory method we really load the shimmed module.
-            var defineInfo = this._config.getShimmedModuleDefine(dependencyId);
-            if (defineInfo.dependencies.length > 0) {
-                this.defineModule(Utilities.generateAnonymousModule(), defineInfo.dependencies, function () { return loadCallback(dependencyId); }, null, null, new ModuleIdResolver(this._config, dependencyId));
-            }
-            else {
-                loadCallback(dependencyId);
-            }
-        };
-        /**
-         * Resolve a module dependency and delegate the loading to loadCallback
-         * @param moduleId The module that has this dependency
-         * @param dependencyId The normalized dependency that appears in the module
-         * @param loadCallback Callback that will be called to trigger the loading of 'dependencyId' if needed
-         */
-        ModuleManager.prototype._resolveDependency = function (moduleId, dependencyId, loadCallback) {
-            var m = this._modules[moduleId];
-            if (this._modules.hasOwnProperty(dependencyId) && this._modules[dependencyId].isComplete()) {
-                // Dependency has already been loaded & resolved
-                m.resolveDependency(dependencyId, this._modules[dependencyId].getExports());
-            }
-            else {
-                // Dependency is not loaded or not resolved
-                // Record dependency
-                this._dependencies[moduleId].push(dependencyId);
-                if (this._hasDependencyPath(dependencyId, moduleId)) {
-                    console.warn('There is a dependency cycle between \'' + dependencyId + '\' and \'' + moduleId + '\'. The cyclic path follows:');
-                    var cyclePath = this._findCyclePath(dependencyId, moduleId, 0);
-                    cyclePath.reverse();
-                    cyclePath.push(dependencyId);
-                    console.warn(cyclePath.join(' => \n'));
-                    // Break the cycle
-                    var dependency = this._modules.hasOwnProperty(dependencyId) ? this._modules[dependencyId] : null;
-                    var dependencyValue;
-                    if (dependency && dependency.isExportsPassedIn()) {
-                        // If dependency uses 'exports', then resolve it with that object
-                        dependencyValue = dependency.getExports();
-                    }
-                    // Resolve dependency with undefined or with 'exports' object
-                    m.resolveDependency(dependencyId, dependencyValue);
-                }
-                else {
-                    // Since we are actually waiting for this dependency,
-                    // record inverse dependency
-                    this._inverseDependencies[dependencyId] = this._inverseDependencies[dependencyId] || [];
-                    this._inverseDependencies[dependencyId].push(moduleId);
-                    if (!this._modules.hasOwnProperty(dependencyId) && !this._knownModules.hasOwnProperty(dependencyId)) {
-                        // This is the first mention of module 'dependencyId', so load it
-                        // Mark this module as loaded so we don't hit this case again
-                        this._knownModules[dependencyId] = true;
-                        if (this._config.isShimmed(dependencyId)) {
-                            this._resolveShimmedDependency(moduleId, dependencyId, loadCallback);
-                        }
-                        else {
-                            loadCallback(dependencyId);
-                        }
-                    }
-                }
-            }
-        };
-        ModuleManager.prototype._loadModule = function (anyModuleIdResolver, moduleId) {
-            var _this = this;
-            this._loadingScriptsCount++;
-            var paths = anyModuleIdResolver.moduleIdToPaths(moduleId);
             var lastPathIndex = -1;
             var loadNextPath = function (err) {
                 lastPathIndex++;
@@ -1497,369 +1401,192 @@ var AMDLoader;
                     _this._onLoadError(moduleId, err);
                 }
                 else {
-                    var currentPath = paths[lastPathIndex];
-                    var recorder = _this.getRecorder();
-                    if (_this._config.isBuild() && currentPath === 'empty:') {
-                        _this._resolvedScriptPaths[moduleId] = currentPath;
-                        _this.enqueueDefineModule(moduleId, [], null);
+                    var currentPath_1 = paths[lastPathIndex];
+                    var recorder_1 = _this.getRecorder();
+                    if (_this._config.isBuild() && currentPath_1 === 'empty:') {
+                        _this._buildInfoPath[moduleId] = currentPath_1;
+                        _this.defineModule(_this._moduleIdProvider.getStrModuleId(moduleId), [], null, null, null);
                         _this._onLoad(moduleId);
                         return;
                     }
-                    recorder.record(LoaderEventType.BeginLoadingScript, currentPath);
-                    _this._scriptLoader.load(currentPath, function () {
+                    recorder_1.record(AMDLoader.LoaderEventType.BeginLoadingScript, currentPath_1);
+                    _this._scriptLoader.load(_this, currentPath_1, function () {
                         if (_this._config.isBuild()) {
-                            _this._resolvedScriptPaths[moduleId] = currentPath;
+                            _this._buildInfoPath[moduleId] = currentPath_1;
                         }
-                        recorder.record(LoaderEventType.EndLoadingScriptOK, currentPath);
+                        recorder_1.record(AMDLoader.LoaderEventType.EndLoadingScriptOK, currentPath_1);
                         _this._onLoad(moduleId);
                     }, function (err) {
-                        recorder.record(LoaderEventType.EndLoadingScriptError, currentPath);
+                        recorder_1.record(AMDLoader.LoaderEventType.EndLoadingScriptError, currentPath_1);
                         loadNextPath(err);
-                    }, recorder);
+                    });
                 }
             };
             loadNextPath(null);
         };
         /**
+         * Resolve a plugin dependency with the plugin loaded & complete
+         * @param module The module that has this dependency
+         * @param pluginDependency The semi-normalized dependency that appears in the module. e.g. 'vs/css!./mycssfile'. Only the plugin part (before !) is normalized
+         * @param plugin The plugin (what the plugin exports)
+         */
+        ModuleManager.prototype._loadPluginDependency = function (plugin, pluginDependency) {
+            var _this = this;
+            if (this._modules2[pluginDependency.id] || this._knownModules2[pluginDependency.id]) {
+                // known module
+                return;
+            }
+            this._knownModules2[pluginDependency.id] = true;
+            // Delegate the loading of the resource to the plugin
+            var load = (function (value) {
+                _this.defineModule(_this._moduleIdProvider.getStrModuleId(pluginDependency.id), [], value, null, null);
+            });
+            load.error = function (err) {
+                _this._config.onError(_this._createLoadError(pluginDependency.id, err));
+            };
+            plugin.load(pluginDependency.pluginParam, this._createRequire(ModuleIdResolver.ROOT), load, this._config.getOptionsLiteral());
+        };
+        /**
          * Examine the dependencies of module 'module' and resolve them as needed.
          */
-        ModuleManager.prototype._resolve = function (m) {
+        ModuleManager.prototype._resolve = function (module) {
             var _this = this;
-            var i, len, id, dependencies, dependencyId, moduleIdResolver;
-            id = m.getId();
-            dependencies = m.getDependencies();
-            moduleIdResolver = m.getModuleIdResolver();
-            this._dependencies[id] = [];
-            var loadCallback = function (moduleId) { return _this._loadModule(moduleIdResolver, moduleId); };
-            for (i = 0, len = dependencies.length; i < len; i++) {
-                dependencyId = dependencies[i];
-                if (dependencyId === 'require') {
-                    m.resolveDependency(dependencyId, this._createRequire(moduleIdResolver));
+            var dependencies = module.dependencies;
+            for (var i = 0, len = dependencies.length; i < len; i++) {
+                var dependency = dependencies[i];
+                if (dependency === RegularDependency.EXPORTS) {
+                    module.exportsPassedIn = true;
+                    module.unresolvedDependenciesCount--;
                     continue;
                 }
-                else {
-                    if (dependencyId.indexOf('!') >= 0) {
-                        this._resolvePluginDependency(id, dependencyId);
+                if (dependency === RegularDependency.MODULE) {
+                    module.unresolvedDependenciesCount--;
+                    continue;
+                }
+                if (dependency === RegularDependency.REQUIRE) {
+                    module.unresolvedDependenciesCount--;
+                    continue;
+                }
+                var dependencyModule = this._modules2[dependency.id];
+                if (dependencyModule && dependencyModule.isComplete()) {
+                    module.unresolvedDependenciesCount--;
+                    continue;
+                }
+                if (this._hasDependencyPath(dependency.id, module.id)) {
+                    console.warn('There is a dependency cycle between \'' + this._moduleIdProvider.getStrModuleId(dependency.id) + '\' and \'' + this._moduleIdProvider.getStrModuleId(module.id) + '\'. The cyclic path follows:');
+                    var cyclePath = this._findCyclePath(dependency.id, module.id, 0);
+                    cyclePath.reverse();
+                    cyclePath.push(dependency.id);
+                    console.warn(cyclePath.map(function (id) { return _this._moduleIdProvider.getStrModuleId(id); }).join(' => \n'));
+                    // Break the cycle
+                    module.unresolvedDependenciesCount--;
+                    continue;
+                }
+                // record inverse dependency
+                this._inverseDependencies2[dependency.id] = this._inverseDependencies2[dependency.id] || [];
+                this._inverseDependencies2[dependency.id].push(module.id);
+                if (dependency instanceof PluginDependency) {
+                    var plugin = this._modules2[dependency.pluginId];
+                    if (plugin && plugin.isComplete()) {
+                        this._loadPluginDependency(plugin.exports, dependency);
+                        continue;
                     }
-                    else {
-                        this._resolveDependency(id, dependencyId, loadCallback);
+                    // Record dependency for when the plugin gets loaded
+                    var inversePluginDeps = this._inversePluginDependencies2.get(dependency.pluginId);
+                    if (!inversePluginDeps) {
+                        inversePluginDeps = [];
+                        this._inversePluginDependencies2.set(dependency.pluginId, inversePluginDeps);
+                    }
+                    inversePluginDeps.push(dependency);
+                    this._loadModule(dependency.pluginId);
+                    continue;
+                }
+                this._loadModule(dependency.id);
+            }
+            if (module.unresolvedDependenciesCount === 0) {
+                this._onModuleComplete(module);
+            }
+        };
+        ModuleManager.prototype._onModuleComplete = function (module) {
+            var _this = this;
+            var recorder = this.getRecorder();
+            if (module.isComplete()) {
+                // already done
+                return;
+            }
+            var dependencies = module.dependencies;
+            var dependenciesValues = [];
+            for (var i = 0, len = dependencies.length; i < len; i++) {
+                var dependency = dependencies[i];
+                if (dependency === RegularDependency.EXPORTS) {
+                    dependenciesValues[i] = module.exports;
+                    continue;
+                }
+                if (dependency === RegularDependency.MODULE) {
+                    dependenciesValues[i] = {
+                        id: module.strId,
+                        config: function () {
+                            return _this._config.getConfigForModule(module.strId);
+                        }
+                    };
+                    continue;
+                }
+                if (dependency === RegularDependency.REQUIRE) {
+                    dependenciesValues[i] = this._createRequire(module.moduleIdResolver);
+                    continue;
+                }
+                var dependencyModule = this._modules2[dependency.id];
+                if (dependencyModule) {
+                    dependenciesValues[i] = dependencyModule.exports;
+                    continue;
+                }
+                dependenciesValues[i] = null;
+            }
+            module.complete(recorder, this._config, dependenciesValues);
+            // Fetch and clear inverse dependencies
+            var inverseDeps = this._inverseDependencies2[module.id];
+            this._inverseDependencies2[module.id] = null;
+            if (inverseDeps) {
+                // Resolve one inverse dependency at a time, always
+                // on the lookout for a completed module.
+                for (var i = 0, len = inverseDeps.length; i < len; i++) {
+                    var inverseDependencyId = inverseDeps[i];
+                    var inverseDependency = this._modules2[inverseDependencyId];
+                    inverseDependency.unresolvedDependenciesCount--;
+                    if (inverseDependency.unresolvedDependenciesCount === 0) {
+                        this._onModuleComplete(inverseDependency);
                     }
                 }
             }
-            if (m.isComplete()) {
-                // This module was completed as soon as its been seen.
-                this._onModuleComplete(id, m.getExports());
+            var inversePluginDeps = this._inversePluginDependencies2.get(module.id);
+            if (inversePluginDeps) {
+                // This module is used as a plugin at least once
+                // Fetch and clear these inverse plugin dependencies
+                this._inversePluginDependencies2.delete(module.id);
+                // Resolve plugin dependencies one at a time
+                for (var i = 0, len = inversePluginDeps.length; i < len; i++) {
+                    this._loadPluginDependency(module.exports, inversePluginDeps[i]);
+                }
             }
         };
         return ModuleManager;
     }());
     AMDLoader.ModuleManager = ModuleManager;
-    /**
-     * Load `scriptSrc` only once (avoid multiple <script> tags)
-     */
-    var OnlyOnceScriptLoader = (function () {
-        function OnlyOnceScriptLoader(actualScriptLoader) {
-            this.actualScriptLoader = actualScriptLoader;
-            this.callbackMap = {};
-        }
-        OnlyOnceScriptLoader.prototype.setModuleManager = function (moduleManager) {
-            this.actualScriptLoader.setModuleManager(moduleManager);
-        };
-        OnlyOnceScriptLoader.prototype.load = function (scriptSrc, callback, errorback, recorder) {
-            var _this = this;
-            var scriptCallbacks = {
-                callback: callback,
-                errorback: errorback
-            };
-            if (this.callbackMap.hasOwnProperty(scriptSrc)) {
-                this.callbackMap[scriptSrc].push(scriptCallbacks);
-                return;
-            }
-            this.callbackMap[scriptSrc] = [scriptCallbacks];
-            this.actualScriptLoader.load(scriptSrc, function () { return _this.triggerCallback(scriptSrc); }, function (err) { return _this.triggerErrorback(scriptSrc, err); }, recorder);
-        };
-        OnlyOnceScriptLoader.prototype.triggerCallback = function (scriptSrc) {
-            var scriptCallbacks = this.callbackMap[scriptSrc];
-            delete this.callbackMap[scriptSrc];
-            for (var i = 0; i < scriptCallbacks.length; i++) {
-                scriptCallbacks[i].callback();
-            }
-        };
-        OnlyOnceScriptLoader.prototype.triggerErrorback = function (scriptSrc, err) {
-            var scriptCallbacks = this.callbackMap[scriptSrc];
-            delete this.callbackMap[scriptSrc];
-            for (var i = 0; i < scriptCallbacks.length; i++) {
-                scriptCallbacks[i].errorback(err);
-            }
-        };
-        return OnlyOnceScriptLoader;
-    }());
-    var BrowserScriptLoader = (function () {
-        function BrowserScriptLoader() {
-        }
-        /**
-         * Attach load / error listeners to a script element and remove them when either one has fired.
-         * Implemented for browssers supporting 'onreadystatechange' events, such as IE8 or IE9
-         */
-        BrowserScriptLoader.prototype.attachListenersV1 = function (script, callback, errorback) {
-            var unbind = function () {
-                script.detachEvent('onreadystatechange', loadEventListener);
-                if (script.addEventListener) {
-                    script.removeEventListener('error', errorEventListener);
-                }
-            };
-            var loadEventListener = function (e) {
-                if (script.readyState === 'loaded' || script.readyState === 'complete') {
-                    unbind();
-                    callback();
-                }
-            };
-            var errorEventListener = function (e) {
-                unbind();
-                errorback(e);
-            };
-            script.attachEvent('onreadystatechange', loadEventListener);
-            if (script.addEventListener) {
-                script.addEventListener('error', errorEventListener);
-            }
-        };
-        /**
-         * Attach load / error listeners to a script element and remove them when either one has fired.
-         * Implemented for browssers supporting HTML5 standard 'load' and 'error' events.
-         */
-        BrowserScriptLoader.prototype.attachListenersV2 = function (script, callback, errorback) {
-            var unbind = function () {
-                script.removeEventListener('load', loadEventListener);
-                script.removeEventListener('error', errorEventListener);
-            };
-            var loadEventListener = function (e) {
-                unbind();
-                callback();
-            };
-            var errorEventListener = function (e) {
-                unbind();
-                errorback(e);
-            };
-            script.addEventListener('load', loadEventListener);
-            script.addEventListener('error', errorEventListener);
-        };
-        BrowserScriptLoader.prototype.setModuleManager = function (moduleManager) {
-            /* Intentional empty */
-        };
-        BrowserScriptLoader.prototype.load = function (scriptSrc, callback, errorback) {
-            var script = document.createElement('script');
-            script.setAttribute('async', 'async');
-            script.setAttribute('type', 'text/javascript');
-            if (global.attachEvent) {
-                this.attachListenersV1(script, callback, errorback);
-            }
-            else {
-                this.attachListenersV2(script, callback, errorback);
-            }
-            script.setAttribute('src', scriptSrc);
-            document.getElementsByTagName('head')[0].appendChild(script);
-        };
-        return BrowserScriptLoader;
-    }());
-    var WorkerScriptLoader = (function () {
-        function WorkerScriptLoader() {
-            this.loadCalls = [];
-            this.loadTimeout = -1;
-        }
-        WorkerScriptLoader.prototype.setModuleManager = function (moduleManager) {
-            /* Intentional empty */
-        };
-        WorkerScriptLoader.prototype.load = function (scriptSrc, callback, errorback) {
-            var _this = this;
-            this.loadCalls.push({
-                scriptSrc: scriptSrc,
-                callback: callback,
-                errorback: errorback
-            });
-            if (navigator.userAgent.indexOf('Firefox') >= 0) {
-                // Firefox fails installing the timer every now and then :(
-                this._load();
-            }
-            else {
-                if (this.loadTimeout === -1) {
-                    this.loadTimeout = setTimeout(function () {
-                        _this.loadTimeout = -1;
-                        _this._load();
-                    }, 0);
-                }
-            }
-        };
-        WorkerScriptLoader.prototype._load = function () {
-            var loadCalls = this.loadCalls;
-            this.loadCalls = [];
-            var i, len = loadCalls.length, scripts = [];
-            for (i = 0; i < len; i++) {
-                scripts.push(loadCalls[i].scriptSrc);
-            }
-            var errorOccured = false;
-            try {
-                importScripts.apply(null, scripts);
-            }
-            catch (e) {
-                errorOccured = true;
-                for (i = 0; i < len; i++) {
-                    loadCalls[i].errorback(e);
-                }
-            }
-            if (!errorOccured) {
-                for (i = 0; i < len; i++) {
-                    loadCalls[i].callback();
-                }
-            }
-        };
-        return WorkerScriptLoader;
-    }());
-    var NodeScriptLoader = (function () {
-        function NodeScriptLoader() {
-            this._initialized = false;
-        }
-        NodeScriptLoader.prototype.setModuleManager = function (moduleManager) {
-            this._moduleManager = moduleManager;
-        };
-        NodeScriptLoader.prototype._init = function (nodeRequire) {
-            if (this._initialized) {
-                return;
-            }
-            this._initialized = true;
-            this._fs = nodeRequire('fs');
-            this._vm = nodeRequire('vm');
-            this._path = nodeRequire('path');
-            this._crypto = nodeRequire('crypto');
-        };
-        NodeScriptLoader.prototype.load = function (scriptSrc, callback, errorback, recorder) {
-            var _this = this;
-            var opts = this._moduleManager.getConfigurationOptions();
-            var nodeRequire = (opts.nodeRequire || global.nodeRequire);
-            var nodeInstrumenter = (opts.nodeInstrumenter || function (c) { return c; });
-            this._init(nodeRequire);
-            if (/^node\|/.test(scriptSrc)) {
-                var pieces = scriptSrc.split('|');
-                var moduleExports = null;
-                try {
-                    recorder.record(LoaderEventType.NodeBeginNativeRequire, pieces[2]);
-                    moduleExports = nodeRequire(pieces[2]);
-                }
-                catch (err) {
-                    recorder.record(LoaderEventType.NodeEndNativeRequire, pieces[2]);
-                    errorback(err);
-                    return;
-                }
-                recorder.record(LoaderEventType.NodeEndNativeRequire, pieces[2]);
-                this._moduleManager.enqueueDefineAnonymousModule([], function () { return moduleExports; });
-                callback();
-            }
-            else {
-                scriptSrc = Utilities.fileUriToFilePath(scriptSrc);
-                this._fs.readFile(scriptSrc, { encoding: 'utf8' }, function (err, data) {
-                    if (err) {
-                        errorback(err);
-                        return;
-                    }
-                    var vmScriptSrc = _this._path.normalize(scriptSrc);
-                    // Make the script src friendly towards electron
-                    if (isElectronRenderer) {
-                        var driveLetterMatch = vmScriptSrc.match(/^([a-z])\:(.*)/i);
-                        if (driveLetterMatch) {
-                            vmScriptSrc = driveLetterMatch[1].toUpperCase() + ':' + driveLetterMatch[2];
-                        }
-                        vmScriptSrc = 'file:///' + vmScriptSrc.replace(/\\/g, '/');
-                    }
-                    var contents, prefix = '(function (require, define, __filename, __dirname) { ', suffix = '\n});';
-                    if (data.charCodeAt(0) === NodeScriptLoader._BOM) {
-                        contents = prefix + data.substring(1) + suffix;
-                    }
-                    else {
-                        contents = prefix + data + suffix;
-                    }
-                    contents = nodeInstrumenter(contents, vmScriptSrc);
-                    if (!opts.nodeCachedDataDir) {
-                        _this._loadAndEvalScript(scriptSrc, vmScriptSrc, contents, { filename: vmScriptSrc }, recorder);
-                        callback();
-                    }
-                    else {
-                        var cachedDataPath_1 = _this._getCachedDataPath(opts.nodeCachedDataDir, scriptSrc);
-                        _this._fs.readFile(cachedDataPath_1, function (err, data) {
-                            // create script options
-                            var scriptOptions = {
-                                filename: vmScriptSrc,
-                                produceCachedData: typeof data === 'undefined',
-                                cachedData: data
-                            };
-                            var script = _this._loadAndEvalScript(scriptSrc, vmScriptSrc, contents, scriptOptions, recorder);
-                            callback();
-                            // cached code after math
-                            if (script.cachedDataRejected) {
-                                // data rejected => delete cache file
-                                opts.onNodeCachedDataError({
-                                    errorCode: 'cachedDataRejected',
-                                    path: cachedDataPath_1
-                                });
-                                NodeScriptLoader._runSoon(function () { return _this._fs.unlink(cachedDataPath_1, function (err) {
-                                    if (err) {
-                                        _this._moduleManager.getConfigurationOptions().onNodeCachedDataError({
-                                            errorCode: 'unlink',
-                                            path: cachedDataPath_1,
-                                            detail: err
-                                        });
-                                    }
-                                }); }, opts.nodeCachedDataWriteDelay);
-                            }
-                            else if (script.cachedDataProduced) {
-                                // data produced => write cache file
-                                NodeScriptLoader._runSoon(function () { return _this._fs.writeFile(cachedDataPath_1, script.cachedData, function (err) {
-                                    if (err) {
-                                        _this._moduleManager.getConfigurationOptions().onNodeCachedDataError({
-                                            errorCode: 'writeFile',
-                                            path: cachedDataPath_1,
-                                            detail: err
-                                        });
-                                    }
-                                }); }, opts.nodeCachedDataWriteDelay);
-                            }
-                        });
-                    }
-                });
-            }
-        };
-        NodeScriptLoader.prototype._loadAndEvalScript = function (scriptSrc, vmScriptSrc, contents, options, recorder) {
-            // create script, run script
-            recorder.record(LoaderEventType.NodeBeginEvaluatingScript, scriptSrc);
-            var script = new this._vm.Script(contents, options);
-            var r = script.runInThisContext(options);
-            r.call(global, RequireFunc, DefineFunc, vmScriptSrc, this._path.dirname(scriptSrc));
-            // signal done
-            recorder.record(LoaderEventType.NodeEndEvaluatingScript, scriptSrc);
-            return script;
-        };
-        NodeScriptLoader.prototype._getCachedDataPath = function (baseDir, filename) {
-            var hash = this._crypto.createHash('md5').update(filename, 'utf8').digest('hex');
-            var basename = this._path.basename(filename).replace(/\.js$/, '');
-            return this._path.join(baseDir, hash + "-" + basename + ".code");
-        };
-        NodeScriptLoader._runSoon = function (callback, minTimeout) {
-            var timeout = minTimeout + Math.ceil(Math.random() * minTimeout);
-            setTimeout(callback, timeout);
-        };
-        NodeScriptLoader._BOM = 0xFEFF;
-        return NodeScriptLoader;
-    }());
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    // define
-    var DefineFunc = (function () {
-        function DefineFunc(id, dependencies, callback) {
+})(AMDLoader || (AMDLoader = {}));
+var define;
+var AMDLoader;
+(function (AMDLoader) {
+    var moduleManager = null;
+    var DefineFunc = null;
+    var RequireFunc = null;
+    function createGlobalAMDFuncs() {
+        var _defineFunc = function (id, dependencies, callback) {
             if (typeof id !== 'string') {
                 callback = dependencies;
                 dependencies = id;
                 id = null;
             }
-            if (typeof dependencies !== 'object' || !Utilities.isArray(dependencies)) {
+            if (typeof dependencies !== 'object' || !Array.isArray(dependencies)) {
                 callback = dependencies;
                 dependencies = null;
             }
@@ -1867,22 +1594,24 @@ var AMDLoader;
                 dependencies = ['require', 'exports', 'module'];
             }
             if (id) {
-                moduleManager.enqueueDefineModule(id, dependencies, callback);
+                moduleManager.defineModule(id, dependencies, callback, null, null);
             }
             else {
                 moduleManager.enqueueDefineAnonymousModule(dependencies, callback);
             }
-        }
+        };
+        DefineFunc = _defineFunc;
         DefineFunc.amd = {
             jQuery: true
         };
-        return DefineFunc;
-    }());
-    var RequireFunc = (function () {
-        function RequireFunc() {
+        var _requireFunc_config = function (params, shouldOverwrite) {
+            if (shouldOverwrite === void 0) { shouldOverwrite = false; }
+            moduleManager.configure(params, shouldOverwrite);
+        };
+        var _requireFunc = function () {
             if (arguments.length === 1) {
-                if ((arguments[0] instanceof Object) && !Utilities.isArray(arguments[0])) {
-                    RequireFunc.config(arguments[0]);
+                if ((arguments[0] instanceof Object) && !Array.isArray(arguments[0])) {
+                    _requireFunc_config(arguments[0]);
                     return;
                 }
                 if (typeof arguments[0] === 'string') {
@@ -1890,110 +1619,48 @@ var AMDLoader;
                 }
             }
             if (arguments.length === 2 || arguments.length === 3) {
-                if (Utilities.isArray(arguments[0])) {
-                    moduleManager.defineModule(Utilities.generateAnonymousModule(), arguments[0], arguments[1], arguments[2], null);
+                if (Array.isArray(arguments[0])) {
+                    moduleManager.defineModule(AMDLoader.Utilities.generateAnonymousModule(), arguments[0], arguments[1], arguments[2], null);
                     return;
                 }
             }
             throw new Error('Unrecognized require call');
-        }
-        RequireFunc.config = function (params, shouldOverwrite) {
-            if (shouldOverwrite === void 0) { shouldOverwrite = false; }
-            moduleManager.configure(params, shouldOverwrite);
         };
+        RequireFunc = _requireFunc;
+        RequireFunc.config = _requireFunc_config;
         RequireFunc.getConfig = function () {
-            return moduleManager.getConfigurationOptions();
+            return moduleManager.getConfig().getOptionsLiteral();
         };
-        /**
-         * Non standard extension to reset completely the loader state. This is used for running amdjs tests
-         */
         RequireFunc.reset = function () {
-            moduleManager = new ModuleManager(scriptLoader);
-            scriptLoader.setModuleManager(moduleManager);
+            moduleManager = moduleManager.reset();
         };
-        /**
-         * Non standard extension to fetch loader state for building purposes.
-         */
         RequireFunc.getBuildInfo = function () {
             return moduleManager.getBuildInfo();
         };
-        /**
-         * Non standard extension to fetch loader events
-         */
         RequireFunc.getStats = function () {
             return moduleManager.getLoaderEvents();
         };
-        return RequireFunc;
-    }());
-    var global = _amdLoaderGlobal, hasPerformanceNow = (global.performance && typeof global.performance.now === 'function'), isWebWorker, isElectronRenderer, isElectronMain, isNode, scriptLoader, moduleManager, loaderAvailableTimestamp;
-    function initVars() {
-        isWebWorker = (typeof global.importScripts === 'function');
-        isElectronRenderer = (typeof process !== 'undefined' && typeof process.versions !== 'undefined' && typeof process.versions['electron'] !== 'undefined' && process.type === 'renderer');
-        isElectronMain = (typeof process !== 'undefined' && typeof process.versions !== 'undefined' && typeof process.versions['electron'] !== 'undefined' && process.type === 'browser');
-        isNode = (typeof module !== 'undefined' && !!module.exports);
-        if (isWebWorker) {
-            scriptLoader = new OnlyOnceScriptLoader(new WorkerScriptLoader());
-        }
-        else if (isNode) {
-            scriptLoader = new OnlyOnceScriptLoader(new NodeScriptLoader());
-        }
-        else {
-            scriptLoader = new OnlyOnceScriptLoader(new BrowserScriptLoader());
-        }
-        moduleManager = new ModuleManager(scriptLoader);
-        scriptLoader.setModuleManager(moduleManager);
-    }
-    function initConsole() {
-        // Define used console.* functions, in order to not fail in environments where they are not available
-        if (!isNode) {
-            if (!global.console) {
-                global.console = {};
-            }
-            if (!global.console.log) {
-                global.console.log = function () { };
-            }
-            if (!global.console.warn) {
-                global.console.warn = global.console.log;
-            }
-            if (!global.console.error) {
-                global.console.error = global.console.log;
-            }
-        }
-    }
-    function initMainScript() {
-        if (!isWebWorker && !isNode) {
-            window.onload = function () {
-                var i, len, main, scripts = document.getElementsByTagName('script');
-                // Look through all the scripts for the data-main attribute
-                for (i = 0, len = scripts.length; i < len; i++) {
-                    main = scripts[i].getAttribute('data-main');
-                    if (main) {
-                        break;
-                    }
-                }
-                // Load the main script
-                if (main) {
-                    moduleManager.defineModule(Utilities.generateAnonymousModule(), [main], null, null, null, new ModuleIdResolver(new Configuration(), ''));
-                }
-            };
-        }
     }
     function init() {
-        initVars();
-        initConsole();
-        initMainScript();
-        if (isNode) {
-            var _nodeRequire = (global.require || require);
+        createGlobalAMDFuncs();
+        var env = AMDLoader.Environment.detect();
+        var scriptLoader = AMDLoader.createScriptLoader(env);
+        moduleManager = new AMDLoader.ModuleManager(env, scriptLoader, DefineFunc, RequireFunc, AMDLoader.Utilities.getHighPerformanceTimestamp());
+        if (env.isNode) {
+            var _nodeRequire = (AMDLoader.global.require || require);
             var nodeRequire = function (what) {
-                moduleManager.getRecorder().record(LoaderEventType.NodeBeginNativeRequire, what);
-                var r = _nodeRequire(what);
-                moduleManager.getRecorder().record(LoaderEventType.NodeEndNativeRequire, what);
-                return r;
+                moduleManager.getRecorder().record(AMDLoader.LoaderEventType.NodeBeginNativeRequire, what);
+                try {
+                    return _nodeRequire(what);
+                }
+                finally {
+                    moduleManager.getRecorder().record(AMDLoader.LoaderEventType.NodeEndNativeRequire, what);
+                }
             };
-            global.nodeRequire = nodeRequire;
+            AMDLoader.global.nodeRequire = nodeRequire;
             RequireFunc.nodeRequire = nodeRequire;
         }
-        if (isNode && !isElectronRenderer) {
+        if (env.isNode && !env.isElectronRenderer) {
             module.exports = RequireFunc;
             // These two defs are fore the local closure defined in node in the case that the loader is concatenated
             define = function () {
@@ -2003,33 +1670,35 @@ var AMDLoader;
         }
         else {
             // The global variable require can configure the loader
-            if (typeof global.require !== 'undefined' && typeof global.require !== 'function') {
-                RequireFunc.config(global.require);
+            if (typeof AMDLoader.global.require !== 'undefined' && typeof AMDLoader.global.require !== 'function') {
+                RequireFunc.config(AMDLoader.global.require);
             }
-            if (!isElectronRenderer) {
-                global.define = define = DefineFunc;
+            if (!env.isElectronRenderer) {
+                AMDLoader.global.define = define = DefineFunc;
             }
             else {
                 define = function () {
                     DefineFunc.apply(null, arguments);
                 };
             }
-            global.require = RequireFunc;
-            global.require.__$__nodeRequire = nodeRequire;
+            AMDLoader.global.require = RequireFunc;
+            AMDLoader.global.require.__$__nodeRequire = nodeRequire;
         }
     }
-    if (typeof global.define !== 'function' || !global.define.amd) {
+    AMDLoader.init = init;
+    if (typeof doNotInitLoader === 'undefined' &&
+        (typeof AMDLoader.global.define !== 'function' || !AMDLoader.global.define.amd)) {
         init();
-        loaderAvailableTimestamp = getHighPerformanceTimestamp();
     }
 })(AMDLoader || (AMDLoader = {}));
 
-define(__m[22/*vs/base/common/diff/diffChange*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[16/*vs/base/common/diff/diffChange*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.DifferenceType = {
         Add: 0,
         Remove: 1,
@@ -2081,20 +1750,21 @@ define(__m[22/*vs/base/common/diff/diffChange*/], __M([0/*require*/,1/*exports*/
     exports.DiffChange = DiffChange;
 });
 
-define(__m[14/*vs/base/common/diff/diff*/], __M([0/*require*/,1/*exports*/,22/*vs/base/common/diff/diffChange*/]), function (require, exports, diffChange_1) {
+define(__m[12/*vs/base/common/diff/diff*/], __M([1/*require*/,0/*exports*/,16/*vs/base/common/diff/diffChange*/]), function (require, exports, diffChange_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     function createStringSequence(a) {
         return {
             getLength: function () { return a.length; },
             getElementHash: function (pos) { return a[pos]; }
         };
     }
-    function stringDiff(original, modified) {
-        return new LcsDiff(createStringSequence(original), createStringSequence(modified)).ComputeDiff();
+    function stringDiff(original, modified, pretty) {
+        return new LcsDiff(createStringSequence(original), createStringSequence(modified)).ComputeDiff(pretty);
     }
     exports.stringDiff = stringDiff;
     //
@@ -2220,10 +1890,10 @@ define(__m[14/*vs/base/common/diff/diff*/], __M([0/*require*/,1/*exports*/,22/*v
             }
             return this.m_changes;
         };
+        /**
+         * Retrieves all of the changes marked by the class in the reverse order
+         */
         DiffChangeHelper.prototype.getReverseChanges = function () {
-            /// <summary>
-            /// Retrieves all of the changes marked by the class in the reverse order
-            /// </summary>
             if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
                 // Finish up on whatever is left
                 this.MarkNextChange();
@@ -2292,17 +1962,30 @@ define(__m[14/*vs/base/common/diff/diff*/], __M([0/*require*/,1/*exports*/,22/*v
         LcsDiff.prototype.ElementsAreEqual = function (originalIndex, newIndex) {
             return this.m_originalIds[originalIndex] === this.m_modifiedIds[newIndex];
         };
-        LcsDiff.prototype.ComputeDiff = function () {
-            return this._ComputeDiff(0, this.OriginalSequence.getLength() - 1, 0, this.ModifiedSequence.getLength() - 1);
+        LcsDiff.prototype.OriginalElementsAreEqual = function (index1, index2) {
+            return this.m_originalIds[index1] === this.m_originalIds[index2];
+        };
+        LcsDiff.prototype.ModifiedElementsAreEqual = function (index1, index2) {
+            return this.m_modifiedIds[index1] === this.m_modifiedIds[index2];
+        };
+        LcsDiff.prototype.ComputeDiff = function (pretty) {
+            return this._ComputeDiff(0, this.OriginalSequence.getLength() - 1, 0, this.ModifiedSequence.getLength() - 1, pretty);
         };
         /**
          * Computes the differences between the original and modified input
          * sequences on the bounded range.
          * @returns An array of the differences between the two input sequences.
          */
-        LcsDiff.prototype._ComputeDiff = function (originalStart, originalEnd, modifiedStart, modifiedEnd) {
+        LcsDiff.prototype._ComputeDiff = function (originalStart, originalEnd, modifiedStart, modifiedEnd, pretty) {
             var quitEarlyArr = [false];
-            return this.ComputeDiffRecursive(originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr);
+            var changes = this.ComputeDiffRecursive(originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr);
+            if (pretty) {
+                // We have to clean up the computed diff to be more intuitive
+                // but it turns out this cannot be done correctly until the entire set
+                // of diffs have been computed
+                return this.ShiftChanges(changes);
+            }
+            return changes;
         };
         /**
          * Private helper method which computes the differences on the bounded range
@@ -2690,6 +2373,131 @@ define(__m[14/*vs/base/common/diff/diff*/], __M([0/*require*/,1/*exports*/,22/*v
             return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
         };
         /**
+         * Shifts the given changes to provide a more intuitive diff.
+         * While the first element in a diff matches the first element after the diff,
+         * we shift the diff down.
+         *
+         * @param changes The list of changes to shift
+         * @returns The shifted changes
+         */
+        LcsDiff.prototype.ShiftChanges = function (changes) {
+            var mergedDiffs;
+            do {
+                mergedDiffs = false;
+                // Shift all the changes down first
+                for (var i = 0; i < changes.length; i++) {
+                    var change = changes[i];
+                    var originalStop = (i < changes.length - 1) ? changes[i + 1].originalStart : this.OriginalSequence.getLength();
+                    var modifiedStop = (i < changes.length - 1) ? changes[i + 1].modifiedStart : this.ModifiedSequence.getLength();
+                    var checkOriginal = change.originalLength > 0;
+                    var checkModified = change.modifiedLength > 0;
+                    while (change.originalStart + change.originalLength < originalStop &&
+                        change.modifiedStart + change.modifiedLength < modifiedStop &&
+                        (!checkOriginal || this.OriginalElementsAreEqual(change.originalStart, change.originalStart + change.originalLength)) &&
+                        (!checkModified || this.ModifiedElementsAreEqual(change.modifiedStart, change.modifiedStart + change.modifiedLength))) {
+                        change.originalStart++;
+                        change.modifiedStart++;
+                    }
+                }
+                // Build up the new list (we have to build a new list because we
+                // might have changes we can merge together now)
+                var result = new Array();
+                var mergedChangeArr = [null];
+                for (var i = 0; i < changes.length; i++) {
+                    if (i < changes.length - 1 && this.ChangesOverlap(changes[i], changes[i + 1], mergedChangeArr)) {
+                        mergedDiffs = true;
+                        result.push(mergedChangeArr[0]);
+                        i++;
+                    }
+                    else {
+                        result.push(changes[i]);
+                    }
+                }
+                changes = result;
+            } while (mergedDiffs);
+            // Shift changes back up until we hit empty or whitespace-only lines
+            for (var i = changes.length - 1; i >= 0; i--) {
+                var change = changes[i];
+                var originalStop = 0;
+                var modifiedStop = 0;
+                if (i > 0) {
+                    var prevChange = changes[i - 1];
+                    if (prevChange.originalLength > 0) {
+                        originalStop = prevChange.originalStart + prevChange.originalLength;
+                    }
+                    if (prevChange.modifiedLength > 0) {
+                        modifiedStop = prevChange.modifiedStart + prevChange.modifiedLength;
+                    }
+                }
+                var checkOriginal = change.originalLength > 0;
+                var checkModified = change.modifiedLength > 0;
+                var bestDelta = 0;
+                var bestScore = this._boundaryScore(change.originalStart, change.originalLength, change.modifiedStart, change.modifiedLength);
+                for (var delta = 1;; delta++) {
+                    var originalStart = change.originalStart - delta;
+                    var modifiedStart = change.modifiedStart - delta;
+                    if (originalStart < originalStop || modifiedStart < modifiedStart) {
+                        break;
+                    }
+                    if (checkOriginal && !this.OriginalElementsAreEqual(originalStart, originalStart + change.originalLength)) {
+                        break;
+                    }
+                    if (checkModified && !this.ModifiedElementsAreEqual(modifiedStart, modifiedStart + change.modifiedLength)) {
+                        break;
+                    }
+                    var score = this._boundaryScore(originalStart, change.originalLength, modifiedStart, change.modifiedLength);
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestDelta = delta;
+                    }
+                }
+                change.originalStart -= bestDelta;
+                change.modifiedStart -= bestDelta;
+            }
+            return changes;
+        };
+        LcsDiff.prototype._OriginalIsBoundary = function (index) {
+            if (index <= 0 || index >= this.OriginalSequence.getLength() - 1) {
+                return true;
+            }
+            return /^\s*$/.test(this.OriginalSequence.getElementHash(index));
+        };
+        LcsDiff.prototype._OriginalRegionIsBoundary = function (originalStart, originalLength) {
+            if (this._OriginalIsBoundary(originalStart) || this._OriginalIsBoundary(originalStart - 1)) {
+                return true;
+            }
+            if (originalLength > 0) {
+                var originalEnd = originalStart + originalLength;
+                if (this._OriginalIsBoundary(originalEnd - 1) || this._OriginalIsBoundary(originalEnd)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        LcsDiff.prototype._ModifiedIsBoundary = function (index) {
+            if (index <= 0 || index >= this.ModifiedSequence.getLength() - 1) {
+                return true;
+            }
+            return /^\s*$/.test(this.ModifiedSequence.getElementHash(index));
+        };
+        LcsDiff.prototype._ModifiedRegionIsBoundary = function (modifiedStart, modifiedLength) {
+            if (this._ModifiedIsBoundary(modifiedStart) || this._ModifiedIsBoundary(modifiedStart - 1)) {
+                return true;
+            }
+            if (modifiedLength > 0) {
+                var modifiedEnd = modifiedStart + modifiedLength;
+                if (this._ModifiedIsBoundary(modifiedEnd - 1) || this._ModifiedIsBoundary(modifiedEnd)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        LcsDiff.prototype._boundaryScore = function (originalStart, originalLength, modifiedStart, modifiedLength) {
+            var originalScore = (this._OriginalRegionIsBoundary(originalStart, originalLength) ? 1 : 0);
+            var modifiedScore = (this._ModifiedRegionIsBoundary(modifiedStart, modifiedLength) ? 1 : 0);
+            return (originalScore + modifiedScore);
+        };
+        /**
          * Concatenates the two input DiffChange lists and returns the resulting
          * list.
          * @param The left changes
@@ -2790,13 +2598,48 @@ define(__m[14/*vs/base/common/diff/diff*/], __M([0/*require*/,1/*exports*/,22/*v
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[21/*vs/base/common/keyCodes*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[11/*vs/base/common/functional*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function not(fn) {
+        return function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            return !fn.apply(void 0, args);
+        };
+    }
+    exports.not = not;
+    function once(fn) {
+        var _this = this;
+        var didCall = false;
+        var result;
+        return function () {
+            if (didCall) {
+                return result;
+            }
+            didCall = true;
+            result = fn.apply(_this, arguments);
+            return result;
+        };
+    }
+    exports.once = once;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[21/*vs/base/common/keyCodes*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Virtual Key Codes, the value does not hold any inherent meaning.
      * Inspired somewhat from https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
      * But these are "more general", as they should work across browsers & OS`s.
      */
+    var KeyCode;
     (function (KeyCode) {
         /**
          * Placed first to cover the 0 value of the enum.
@@ -2961,634 +2804,436 @@ define(__m[21/*vs/base/common/keyCodes*/], __M([0/*require*/,1/*exports*/]), fun
         KeyCode[KeyCode["NUMPAD_DECIMAL"] = 107] = "NUMPAD_DECIMAL";
         KeyCode[KeyCode["NUMPAD_DIVIDE"] = 108] = "NUMPAD_DIVIDE";
         /**
+         * Cover all key codes when IME is processing input.
+         */
+        KeyCode[KeyCode["KEY_IN_COMPOSITION"] = 109] = "KEY_IN_COMPOSITION";
+        KeyCode[KeyCode["ABNT_C1"] = 110] = "ABNT_C1";
+        KeyCode[KeyCode["ABNT_C2"] = 111] = "ABNT_C2";
+        /**
          * Placed last to cover the length of the enum.
          * Please do not depend on this value!
          */
-        KeyCode[KeyCode["MAX_VALUE"] = 109] = "MAX_VALUE";
-    })(exports.KeyCode || (exports.KeyCode = {}));
-    var KeyCode = exports.KeyCode;
-    var Mapping = (function () {
-        function Mapping(fromKeyCode, toKeyCode) {
-            this._fromKeyCode = fromKeyCode;
-            this._toKeyCode = toKeyCode;
+        KeyCode[KeyCode["MAX_VALUE"] = 112] = "MAX_VALUE";
+    })(KeyCode = exports.KeyCode || (exports.KeyCode = {}));
+    var KeyCodeStrMap = (function () {
+        function KeyCodeStrMap() {
+            this._keyCodeToStr = [];
+            this._strToKeyCode = Object.create(null);
         }
-        Mapping.prototype.fromKeyCode = function (keyCode) {
-            return this._fromKeyCode[keyCode];
+        KeyCodeStrMap.prototype.define = function (keyCode, str) {
+            this._keyCodeToStr[keyCode] = str;
+            this._strToKeyCode[str.toLowerCase()] = keyCode;
         };
-        Mapping.prototype.toKeyCode = function (str) {
-            if (this._toKeyCode.hasOwnProperty(str)) {
-                return this._toKeyCode[str];
-            }
-            return 0 /* Unknown */;
+        KeyCodeStrMap.prototype.keyCodeToStr = function (keyCode) {
+            return this._keyCodeToStr[keyCode];
         };
-        return Mapping;
+        KeyCodeStrMap.prototype.strToKeyCode = function (str) {
+            return this._strToKeyCode[str.toLowerCase()] || 0 /* Unknown */;
+        };
+        return KeyCodeStrMap;
     }());
-    exports.Mapping = Mapping;
-    function createMapping(fill1, fill2) {
-        var MAP = [];
-        fill1(MAP);
-        var REVERSE_MAP = {};
-        for (var i = 0, len = MAP.length; i < len; i++) {
-            if (!MAP[i]) {
-                continue;
-            }
-            REVERSE_MAP[MAP[i]] = i;
+    var uiMap = new KeyCodeStrMap();
+    var userSettingsUSMap = new KeyCodeStrMap();
+    var userSettingsGeneralMap = new KeyCodeStrMap();
+    (function () {
+        function define(keyCode, uiLabel, usUserSettingsLabel, generalUserSettingsLabel) {
+            if (usUserSettingsLabel === void 0) { usUserSettingsLabel = uiLabel; }
+            if (generalUserSettingsLabel === void 0) { generalUserSettingsLabel = usUserSettingsLabel; }
+            uiMap.define(keyCode, uiLabel);
+            userSettingsUSMap.define(keyCode, usUserSettingsLabel);
+            userSettingsGeneralMap.define(keyCode, generalUserSettingsLabel);
         }
-        fill2(REVERSE_MAP);
-        var FINAL_REVERSE_MAP = {};
-        for (var entry in REVERSE_MAP) {
-            if (REVERSE_MAP.hasOwnProperty(entry)) {
-                FINAL_REVERSE_MAP[entry] = REVERSE_MAP[entry];
-                FINAL_REVERSE_MAP[entry.toLowerCase()] = REVERSE_MAP[entry];
-            }
-        }
-        return new Mapping(MAP, FINAL_REVERSE_MAP);
-    }
-    var STRING = createMapping(function (TO_STRING_MAP) {
-        TO_STRING_MAP[0 /* Unknown */] = 'unknown';
-        TO_STRING_MAP[1 /* Backspace */] = 'Backspace';
-        TO_STRING_MAP[2 /* Tab */] = 'Tab';
-        TO_STRING_MAP[3 /* Enter */] = 'Enter';
-        TO_STRING_MAP[4 /* Shift */] = 'Shift';
-        TO_STRING_MAP[5 /* Ctrl */] = 'Ctrl';
-        TO_STRING_MAP[6 /* Alt */] = 'Alt';
-        TO_STRING_MAP[7 /* PauseBreak */] = 'PauseBreak';
-        TO_STRING_MAP[8 /* CapsLock */] = 'CapsLock';
-        TO_STRING_MAP[9 /* Escape */] = 'Escape';
-        TO_STRING_MAP[10 /* Space */] = 'Space';
-        TO_STRING_MAP[11 /* PageUp */] = 'PageUp';
-        TO_STRING_MAP[12 /* PageDown */] = 'PageDown';
-        TO_STRING_MAP[13 /* End */] = 'End';
-        TO_STRING_MAP[14 /* Home */] = 'Home';
-        TO_STRING_MAP[15 /* LeftArrow */] = 'LeftArrow';
-        TO_STRING_MAP[16 /* UpArrow */] = 'UpArrow';
-        TO_STRING_MAP[17 /* RightArrow */] = 'RightArrow';
-        TO_STRING_MAP[18 /* DownArrow */] = 'DownArrow';
-        TO_STRING_MAP[19 /* Insert */] = 'Insert';
-        TO_STRING_MAP[20 /* Delete */] = 'Delete';
-        TO_STRING_MAP[21 /* KEY_0 */] = '0';
-        TO_STRING_MAP[22 /* KEY_1 */] = '1';
-        TO_STRING_MAP[23 /* KEY_2 */] = '2';
-        TO_STRING_MAP[24 /* KEY_3 */] = '3';
-        TO_STRING_MAP[25 /* KEY_4 */] = '4';
-        TO_STRING_MAP[26 /* KEY_5 */] = '5';
-        TO_STRING_MAP[27 /* KEY_6 */] = '6';
-        TO_STRING_MAP[28 /* KEY_7 */] = '7';
-        TO_STRING_MAP[29 /* KEY_8 */] = '8';
-        TO_STRING_MAP[30 /* KEY_9 */] = '9';
-        TO_STRING_MAP[31 /* KEY_A */] = 'A';
-        TO_STRING_MAP[32 /* KEY_B */] = 'B';
-        TO_STRING_MAP[33 /* KEY_C */] = 'C';
-        TO_STRING_MAP[34 /* KEY_D */] = 'D';
-        TO_STRING_MAP[35 /* KEY_E */] = 'E';
-        TO_STRING_MAP[36 /* KEY_F */] = 'F';
-        TO_STRING_MAP[37 /* KEY_G */] = 'G';
-        TO_STRING_MAP[38 /* KEY_H */] = 'H';
-        TO_STRING_MAP[39 /* KEY_I */] = 'I';
-        TO_STRING_MAP[40 /* KEY_J */] = 'J';
-        TO_STRING_MAP[41 /* KEY_K */] = 'K';
-        TO_STRING_MAP[42 /* KEY_L */] = 'L';
-        TO_STRING_MAP[43 /* KEY_M */] = 'M';
-        TO_STRING_MAP[44 /* KEY_N */] = 'N';
-        TO_STRING_MAP[45 /* KEY_O */] = 'O';
-        TO_STRING_MAP[46 /* KEY_P */] = 'P';
-        TO_STRING_MAP[47 /* KEY_Q */] = 'Q';
-        TO_STRING_MAP[48 /* KEY_R */] = 'R';
-        TO_STRING_MAP[49 /* KEY_S */] = 'S';
-        TO_STRING_MAP[50 /* KEY_T */] = 'T';
-        TO_STRING_MAP[51 /* KEY_U */] = 'U';
-        TO_STRING_MAP[52 /* KEY_V */] = 'V';
-        TO_STRING_MAP[53 /* KEY_W */] = 'W';
-        TO_STRING_MAP[54 /* KEY_X */] = 'X';
-        TO_STRING_MAP[55 /* KEY_Y */] = 'Y';
-        TO_STRING_MAP[56 /* KEY_Z */] = 'Z';
-        TO_STRING_MAP[58 /* ContextMenu */] = 'ContextMenu';
-        TO_STRING_MAP[59 /* F1 */] = 'F1';
-        TO_STRING_MAP[60 /* F2 */] = 'F2';
-        TO_STRING_MAP[61 /* F3 */] = 'F3';
-        TO_STRING_MAP[62 /* F4 */] = 'F4';
-        TO_STRING_MAP[63 /* F5 */] = 'F5';
-        TO_STRING_MAP[64 /* F6 */] = 'F6';
-        TO_STRING_MAP[65 /* F7 */] = 'F7';
-        TO_STRING_MAP[66 /* F8 */] = 'F8';
-        TO_STRING_MAP[67 /* F9 */] = 'F9';
-        TO_STRING_MAP[68 /* F10 */] = 'F10';
-        TO_STRING_MAP[69 /* F11 */] = 'F11';
-        TO_STRING_MAP[70 /* F12 */] = 'F12';
-        TO_STRING_MAP[71 /* F13 */] = 'F13';
-        TO_STRING_MAP[72 /* F14 */] = 'F14';
-        TO_STRING_MAP[73 /* F15 */] = 'F15';
-        TO_STRING_MAP[74 /* F16 */] = 'F16';
-        TO_STRING_MAP[75 /* F17 */] = 'F17';
-        TO_STRING_MAP[76 /* F18 */] = 'F18';
-        TO_STRING_MAP[77 /* F19 */] = 'F19';
-        TO_STRING_MAP[78 /* NumLock */] = 'NumLock';
-        TO_STRING_MAP[79 /* ScrollLock */] = 'ScrollLock';
-        TO_STRING_MAP[80 /* US_SEMICOLON */] = ';';
-        TO_STRING_MAP[81 /* US_EQUAL */] = '=';
-        TO_STRING_MAP[82 /* US_COMMA */] = ',';
-        TO_STRING_MAP[83 /* US_MINUS */] = '-';
-        TO_STRING_MAP[84 /* US_DOT */] = '.';
-        TO_STRING_MAP[85 /* US_SLASH */] = '/';
-        TO_STRING_MAP[86 /* US_BACKTICK */] = '`';
-        TO_STRING_MAP[87 /* US_OPEN_SQUARE_BRACKET */] = '[';
-        TO_STRING_MAP[88 /* US_BACKSLASH */] = '\\';
-        TO_STRING_MAP[89 /* US_CLOSE_SQUARE_BRACKET */] = ']';
-        TO_STRING_MAP[90 /* US_QUOTE */] = '\'';
-        TO_STRING_MAP[91 /* OEM_8 */] = 'OEM_8';
-        TO_STRING_MAP[92 /* OEM_102 */] = 'OEM_102';
-        TO_STRING_MAP[93 /* NUMPAD_0 */] = 'NumPad0';
-        TO_STRING_MAP[94 /* NUMPAD_1 */] = 'NumPad1';
-        TO_STRING_MAP[95 /* NUMPAD_2 */] = 'NumPad2';
-        TO_STRING_MAP[96 /* NUMPAD_3 */] = 'NumPad3';
-        TO_STRING_MAP[97 /* NUMPAD_4 */] = 'NumPad4';
-        TO_STRING_MAP[98 /* NUMPAD_5 */] = 'NumPad5';
-        TO_STRING_MAP[99 /* NUMPAD_6 */] = 'NumPad6';
-        TO_STRING_MAP[100 /* NUMPAD_7 */] = 'NumPad7';
-        TO_STRING_MAP[101 /* NUMPAD_8 */] = 'NumPad8';
-        TO_STRING_MAP[102 /* NUMPAD_9 */] = 'NumPad9';
-        TO_STRING_MAP[103 /* NUMPAD_MULTIPLY */] = 'NumPad_Multiply';
-        TO_STRING_MAP[104 /* NUMPAD_ADD */] = 'NumPad_Add';
-        TO_STRING_MAP[105 /* NUMPAD_SEPARATOR */] = 'NumPad_Separator';
-        TO_STRING_MAP[106 /* NUMPAD_SUBTRACT */] = 'NumPad_Subtract';
-        TO_STRING_MAP[107 /* NUMPAD_DECIMAL */] = 'NumPad_Decimal';
-        TO_STRING_MAP[108 /* NUMPAD_DIVIDE */] = 'NumPad_Divide';
-        // for (let i = 0; i < KeyCode.MAX_VALUE; i++) {
-        // 	if (!TO_STRING_MAP[i]) {
-        // 		console.warn('Missing string representation for ' + KeyCode[i]);
-        // 	}
-        // }
-    }, function (FROM_STRING_MAP) {
-        FROM_STRING_MAP['\r'] = 3 /* Enter */;
-    });
-    exports.USER_SETTINGS = createMapping(function (TO_USER_SETTINGS_MAP) {
-        for (var i = 0, len = STRING._fromKeyCode.length; i < len; i++) {
-            TO_USER_SETTINGS_MAP[i] = STRING._fromKeyCode[i];
-        }
-        TO_USER_SETTINGS_MAP[15 /* LeftArrow */] = 'Left';
-        TO_USER_SETTINGS_MAP[16 /* UpArrow */] = 'Up';
-        TO_USER_SETTINGS_MAP[17 /* RightArrow */] = 'Right';
-        TO_USER_SETTINGS_MAP[18 /* DownArrow */] = 'Down';
-    }, function (FROM_USER_SETTINGS_MAP) {
-        FROM_USER_SETTINGS_MAP['OEM_1'] = 80 /* US_SEMICOLON */;
-        FROM_USER_SETTINGS_MAP['OEM_PLUS'] = 81 /* US_EQUAL */;
-        FROM_USER_SETTINGS_MAP['OEM_COMMA'] = 82 /* US_COMMA */;
-        FROM_USER_SETTINGS_MAP['OEM_MINUS'] = 83 /* US_MINUS */;
-        FROM_USER_SETTINGS_MAP['OEM_PERIOD'] = 84 /* US_DOT */;
-        FROM_USER_SETTINGS_MAP['OEM_2'] = 85 /* US_SLASH */;
-        FROM_USER_SETTINGS_MAP['OEM_3'] = 86 /* US_BACKTICK */;
-        FROM_USER_SETTINGS_MAP['OEM_4'] = 87 /* US_OPEN_SQUARE_BRACKET */;
-        FROM_USER_SETTINGS_MAP['OEM_5'] = 88 /* US_BACKSLASH */;
-        FROM_USER_SETTINGS_MAP['OEM_6'] = 89 /* US_CLOSE_SQUARE_BRACKET */;
-        FROM_USER_SETTINGS_MAP['OEM_7'] = 90 /* US_QUOTE */;
-        FROM_USER_SETTINGS_MAP['OEM_8'] = 91 /* OEM_8 */;
-        FROM_USER_SETTINGS_MAP['OEM_102'] = 92 /* OEM_102 */;
-    });
+        define(0 /* Unknown */, 'unknown');
+        define(1 /* Backspace */, 'Backspace');
+        define(2 /* Tab */, 'Tab');
+        define(3 /* Enter */, 'Enter');
+        define(4 /* Shift */, 'Shift');
+        define(5 /* Ctrl */, 'Ctrl');
+        define(6 /* Alt */, 'Alt');
+        define(7 /* PauseBreak */, 'PauseBreak');
+        define(8 /* CapsLock */, 'CapsLock');
+        define(9 /* Escape */, 'Escape');
+        define(10 /* Space */, 'Space');
+        define(11 /* PageUp */, 'PageUp');
+        define(12 /* PageDown */, 'PageDown');
+        define(13 /* End */, 'End');
+        define(14 /* Home */, 'Home');
+        define(15 /* LeftArrow */, 'LeftArrow', 'Left');
+        define(16 /* UpArrow */, 'UpArrow', 'Up');
+        define(17 /* RightArrow */, 'RightArrow', 'Right');
+        define(18 /* DownArrow */, 'DownArrow', 'Down');
+        define(19 /* Insert */, 'Insert');
+        define(20 /* Delete */, 'Delete');
+        define(21 /* KEY_0 */, '0');
+        define(22 /* KEY_1 */, '1');
+        define(23 /* KEY_2 */, '2');
+        define(24 /* KEY_3 */, '3');
+        define(25 /* KEY_4 */, '4');
+        define(26 /* KEY_5 */, '5');
+        define(27 /* KEY_6 */, '6');
+        define(28 /* KEY_7 */, '7');
+        define(29 /* KEY_8 */, '8');
+        define(30 /* KEY_9 */, '9');
+        define(31 /* KEY_A */, 'A');
+        define(32 /* KEY_B */, 'B');
+        define(33 /* KEY_C */, 'C');
+        define(34 /* KEY_D */, 'D');
+        define(35 /* KEY_E */, 'E');
+        define(36 /* KEY_F */, 'F');
+        define(37 /* KEY_G */, 'G');
+        define(38 /* KEY_H */, 'H');
+        define(39 /* KEY_I */, 'I');
+        define(40 /* KEY_J */, 'J');
+        define(41 /* KEY_K */, 'K');
+        define(42 /* KEY_L */, 'L');
+        define(43 /* KEY_M */, 'M');
+        define(44 /* KEY_N */, 'N');
+        define(45 /* KEY_O */, 'O');
+        define(46 /* KEY_P */, 'P');
+        define(47 /* KEY_Q */, 'Q');
+        define(48 /* KEY_R */, 'R');
+        define(49 /* KEY_S */, 'S');
+        define(50 /* KEY_T */, 'T');
+        define(51 /* KEY_U */, 'U');
+        define(52 /* KEY_V */, 'V');
+        define(53 /* KEY_W */, 'W');
+        define(54 /* KEY_X */, 'X');
+        define(55 /* KEY_Y */, 'Y');
+        define(56 /* KEY_Z */, 'Z');
+        define(57 /* Meta */, 'Meta');
+        define(58 /* ContextMenu */, 'ContextMenu');
+        define(59 /* F1 */, 'F1');
+        define(60 /* F2 */, 'F2');
+        define(61 /* F3 */, 'F3');
+        define(62 /* F4 */, 'F4');
+        define(63 /* F5 */, 'F5');
+        define(64 /* F6 */, 'F6');
+        define(65 /* F7 */, 'F7');
+        define(66 /* F8 */, 'F8');
+        define(67 /* F9 */, 'F9');
+        define(68 /* F10 */, 'F10');
+        define(69 /* F11 */, 'F11');
+        define(70 /* F12 */, 'F12');
+        define(71 /* F13 */, 'F13');
+        define(72 /* F14 */, 'F14');
+        define(73 /* F15 */, 'F15');
+        define(74 /* F16 */, 'F16');
+        define(75 /* F17 */, 'F17');
+        define(76 /* F18 */, 'F18');
+        define(77 /* F19 */, 'F19');
+        define(78 /* NumLock */, 'NumLock');
+        define(79 /* ScrollLock */, 'ScrollLock');
+        define(80 /* US_SEMICOLON */, ';', ';', 'OEM_1');
+        define(81 /* US_EQUAL */, '=', '=', 'OEM_PLUS');
+        define(82 /* US_COMMA */, ',', ',', 'OEM_COMMA');
+        define(83 /* US_MINUS */, '-', '-', 'OEM_MINUS');
+        define(84 /* US_DOT */, '.', '.', 'OEM_PERIOD');
+        define(85 /* US_SLASH */, '/', '/', 'OEM_2');
+        define(86 /* US_BACKTICK */, '`', '`', 'OEM_3');
+        define(110 /* ABNT_C1 */, 'ABNT_C1');
+        define(111 /* ABNT_C2 */, 'ABNT_C2');
+        define(87 /* US_OPEN_SQUARE_BRACKET */, '[', '[', 'OEM_4');
+        define(88 /* US_BACKSLASH */, '\\', '\\', 'OEM_5');
+        define(89 /* US_CLOSE_SQUARE_BRACKET */, ']', ']', 'OEM_6');
+        define(90 /* US_QUOTE */, '\'', '\'', 'OEM_7');
+        define(91 /* OEM_8 */, 'OEM_8');
+        define(92 /* OEM_102 */, 'OEM_102');
+        define(93 /* NUMPAD_0 */, 'NumPad0');
+        define(94 /* NUMPAD_1 */, 'NumPad1');
+        define(95 /* NUMPAD_2 */, 'NumPad2');
+        define(96 /* NUMPAD_3 */, 'NumPad3');
+        define(97 /* NUMPAD_4 */, 'NumPad4');
+        define(98 /* NUMPAD_5 */, 'NumPad5');
+        define(99 /* NUMPAD_6 */, 'NumPad6');
+        define(100 /* NUMPAD_7 */, 'NumPad7');
+        define(101 /* NUMPAD_8 */, 'NumPad8');
+        define(102 /* NUMPAD_9 */, 'NumPad9');
+        define(103 /* NUMPAD_MULTIPLY */, 'NumPad_Multiply');
+        define(104 /* NUMPAD_ADD */, 'NumPad_Add');
+        define(105 /* NUMPAD_SEPARATOR */, 'NumPad_Separator');
+        define(106 /* NUMPAD_SUBTRACT */, 'NumPad_Subtract');
+        define(107 /* NUMPAD_DECIMAL */, 'NumPad_Decimal');
+        define(108 /* NUMPAD_DIVIDE */, 'NumPad_Divide');
+    })();
     var KeyCodeUtils;
     (function (KeyCodeUtils) {
-        function toString(key) {
-            return STRING.fromKeyCode(key);
+        function toString(keyCode) {
+            return uiMap.keyCodeToStr(keyCode);
         }
         KeyCodeUtils.toString = toString;
         function fromString(key) {
-            return STRING.toKeyCode(key);
+            return uiMap.strToKeyCode(key);
         }
         KeyCodeUtils.fromString = fromString;
+        function toUserSettingsUS(keyCode) {
+            return userSettingsUSMap.keyCodeToStr(keyCode);
+        }
+        KeyCodeUtils.toUserSettingsUS = toUserSettingsUS;
+        function toUserSettingsGeneral(keyCode) {
+            return userSettingsGeneralMap.keyCodeToStr(keyCode);
+        }
+        KeyCodeUtils.toUserSettingsGeneral = toUserSettingsGeneral;
+        function fromUserSettings(key) {
+            return userSettingsUSMap.strToKeyCode(key) || userSettingsGeneralMap.strToKeyCode(key);
+        }
+        KeyCodeUtils.fromUserSettings = fromUserSettings;
     })(KeyCodeUtils = exports.KeyCodeUtils || (exports.KeyCodeUtils = {}));
-    // Binary encoding strategy:
-    // 15:  1 bit for ctrlCmd
-    // 14:  1 bit for shift
-    // 13:  1 bit for alt
-    // 12:  1 bit for winCtrl
-    //  0: 12 bits for keyCode (up to a maximum keyCode of 4096. Given we have 83 at this point thats good enough)
+    /**
+     * Binary encoding strategy:
+     * ```
+     *    1111 11
+     *    5432 1098 7654 3210
+     *    ---- CSAW KKKK KKKK
+     *  C = bit 11 = ctrlCmd flag
+     *  S = bit 10 = shift flag
+     *  A = bit 9 = alt flag
+     *  W = bit 8 = winCtrl flag
+     *  K = bits 0-7 = key code
+     * ```
+     */
     var BinaryKeybindingsMask;
     (function (BinaryKeybindingsMask) {
-        BinaryKeybindingsMask[BinaryKeybindingsMask["CtrlCmd"] = 32768] = "CtrlCmd";
-        BinaryKeybindingsMask[BinaryKeybindingsMask["Shift"] = 16384] = "Shift";
-        BinaryKeybindingsMask[BinaryKeybindingsMask["Alt"] = 8192] = "Alt";
-        BinaryKeybindingsMask[BinaryKeybindingsMask["WinCtrl"] = 4096] = "WinCtrl";
-        BinaryKeybindingsMask[BinaryKeybindingsMask["KeyCode"] = 4095] = "KeyCode";
-        BinaryKeybindingsMask[BinaryKeybindingsMask["ModifierMask"] = 61440] = "ModifierMask";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["CtrlCmd"] = 2048] = "CtrlCmd";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["Shift"] = 1024] = "Shift";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["Alt"] = 512] = "Alt";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["WinCtrl"] = 256] = "WinCtrl";
+        BinaryKeybindingsMask[BinaryKeybindingsMask["KeyCode"] = 255] = "KeyCode";
     })(BinaryKeybindingsMask || (BinaryKeybindingsMask = {}));
+    var KeyMod;
     (function (KeyMod) {
-        KeyMod[KeyMod["CtrlCmd"] = 32768] = "CtrlCmd";
-        KeyMod[KeyMod["Shift"] = 16384] = "Shift";
-        KeyMod[KeyMod["Alt"] = 8192] = "Alt";
-        KeyMod[KeyMod["WinCtrl"] = 4096] = "WinCtrl";
-    })(exports.KeyMod || (exports.KeyMod = {}));
-    var KeyMod = exports.KeyMod;
+        KeyMod[KeyMod["CtrlCmd"] = 2048] = "CtrlCmd";
+        KeyMod[KeyMod["Shift"] = 1024] = "Shift";
+        KeyMod[KeyMod["Alt"] = 512] = "Alt";
+        KeyMod[KeyMod["WinCtrl"] = 256] = "WinCtrl";
+    })(KeyMod = exports.KeyMod || (exports.KeyMod = {}));
     function KeyChord(firstPart, secondPart) {
-        return firstPart | ((secondPart & 0x0000ffff) << 16);
+        var chordPart = ((secondPart & 0x0000ffff) << 16) >>> 0;
+        return (firstPart | chordPart) >>> 0;
     }
     exports.KeyChord = KeyChord;
-    var BinaryKeybindings = (function () {
-        function BinaryKeybindings() {
+    function createKeybinding(keybinding, OS) {
+        if (keybinding === 0) {
+            return null;
         }
-        BinaryKeybindings.extractFirstPart = function (keybinding) {
-            return keybinding & 0x0000ffff;
-        };
-        BinaryKeybindings.extractChordPart = function (keybinding) {
-            return (keybinding >> 16) & 0x0000ffff;
-        };
-        BinaryKeybindings.hasChord = function (keybinding) {
-            return (this.extractChordPart(keybinding) !== 0);
-        };
-        BinaryKeybindings.hasCtrlCmd = function (keybinding) {
-            return (keybinding & 32768 /* CtrlCmd */ ? true : false);
-        };
-        BinaryKeybindings.hasShift = function (keybinding) {
-            return (keybinding & 16384 /* Shift */ ? true : false);
-        };
-        BinaryKeybindings.hasAlt = function (keybinding) {
-            return (keybinding & 8192 /* Alt */ ? true : false);
-        };
-        BinaryKeybindings.hasWinCtrl = function (keybinding) {
-            return (keybinding & 4096 /* WinCtrl */ ? true : false);
-        };
-        BinaryKeybindings.isModifierKey = function (keybinding) {
-            if ((keybinding & 61440 /* ModifierMask */) === keybinding) {
-                return true;
+        var firstPart = (keybinding & 0x0000ffff) >>> 0;
+        var chordPart = (keybinding & 0xffff0000) >>> 16;
+        if (chordPart !== 0) {
+            return new ChordKeybinding(createSimpleKeybinding(firstPart, OS), createSimpleKeybinding(chordPart, OS));
+        }
+        return createSimpleKeybinding(firstPart, OS);
+    }
+    exports.createKeybinding = createKeybinding;
+    function createSimpleKeybinding(keybinding, OS) {
+        var ctrlCmd = (keybinding & 2048 /* CtrlCmd */ ? true : false);
+        var winCtrl = (keybinding & 256 /* WinCtrl */ ? true : false);
+        var ctrlKey = (OS === 2 /* Macintosh */ ? winCtrl : ctrlCmd);
+        var shiftKey = (keybinding & 1024 /* Shift */ ? true : false);
+        var altKey = (keybinding & 512 /* Alt */ ? true : false);
+        var metaKey = (OS === 2 /* Macintosh */ ? ctrlCmd : winCtrl);
+        var keyCode = (keybinding & 255 /* KeyCode */);
+        return new SimpleKeybinding(ctrlKey, shiftKey, altKey, metaKey, keyCode);
+    }
+    exports.createSimpleKeybinding = createSimpleKeybinding;
+    var KeybindingType;
+    (function (KeybindingType) {
+        KeybindingType[KeybindingType["Simple"] = 1] = "Simple";
+        KeybindingType[KeybindingType["Chord"] = 2] = "Chord";
+    })(KeybindingType = exports.KeybindingType || (exports.KeybindingType = {}));
+    var SimpleKeybinding = (function () {
+        function SimpleKeybinding(ctrlKey, shiftKey, altKey, metaKey, keyCode) {
+            this.type = 1 /* Simple */;
+            this.ctrlKey = ctrlKey;
+            this.shiftKey = shiftKey;
+            this.altKey = altKey;
+            this.metaKey = metaKey;
+            this.keyCode = keyCode;
+        }
+        SimpleKeybinding.prototype.equals = function (other) {
+            if (other.type !== 1 /* Simple */) {
+                return false;
             }
-            var keyCode = this.extractKeyCode(keybinding);
-            return (keyCode === 5 /* Ctrl */
-                || keyCode === 57 /* Meta */
-                || keyCode === 6 /* Alt */
-                || keyCode === 4 /* Shift */);
+            return (this.ctrlKey === other.ctrlKey
+                && this.shiftKey === other.shiftKey
+                && this.altKey === other.altKey
+                && this.metaKey === other.metaKey
+                && this.keyCode === other.keyCode);
         };
-        BinaryKeybindings.extractKeyCode = function (keybinding) {
-            return (keybinding & 4095 /* KeyCode */);
+        SimpleKeybinding.prototype.isModifierKey = function () {
+            return (this.keyCode === 0 /* Unknown */
+                || this.keyCode === 5 /* Ctrl */
+                || this.keyCode === 57 /* Meta */
+                || this.keyCode === 6 /* Alt */
+                || this.keyCode === 4 /* Shift */);
         };
-        return BinaryKeybindings;
+        /**
+         * Does this keybinding refer to the key code of a modifier and it also has the modifier flag?
+         */
+        SimpleKeybinding.prototype.isDuplicateModifierCase = function () {
+            return ((this.ctrlKey && this.keyCode === 5 /* Ctrl */)
+                || (this.shiftKey && this.keyCode === 4 /* Shift */)
+                || (this.altKey && this.keyCode === 6 /* Alt */)
+                || (this.metaKey && this.keyCode === 57 /* Meta */));
+        };
+        return SimpleKeybinding;
     }());
-    exports.BinaryKeybindings = BinaryKeybindings;
-    var Keybinding = (function () {
-        function Keybinding(keybinding) {
-            this.value = keybinding;
+    exports.SimpleKeybinding = SimpleKeybinding;
+    var ChordKeybinding = (function () {
+        function ChordKeybinding(firstPart, chordPart) {
+            this.type = 2 /* Chord */;
+            this.firstPart = firstPart;
+            this.chordPart = chordPart;
         }
-        Keybinding.prototype.equals = function (other) {
-            return this.value === other.value;
-        };
-        Keybinding.prototype.hasCtrlCmd = function () {
-            return BinaryKeybindings.hasCtrlCmd(this.value);
-        };
-        Keybinding.prototype.hasShift = function () {
-            return BinaryKeybindings.hasShift(this.value);
-        };
-        Keybinding.prototype.hasAlt = function () {
-            return BinaryKeybindings.hasAlt(this.value);
-        };
-        Keybinding.prototype.hasWinCtrl = function () {
-            return BinaryKeybindings.hasWinCtrl(this.value);
-        };
-        Keybinding.prototype.isModifierKey = function () {
-            return BinaryKeybindings.isModifierKey(this.value);
-        };
-        Keybinding.prototype.getKeyCode = function () {
-            return BinaryKeybindings.extractKeyCode(this.value);
-        };
-        return Keybinding;
+        return ChordKeybinding;
     }());
-    exports.Keybinding = Keybinding;
+    exports.ChordKeybinding = ChordKeybinding;
+    var ResolvedKeybindingPart = (function () {
+        function ResolvedKeybindingPart(ctrlKey, shiftKey, altKey, metaKey, kbLabel, kbAriaLabel) {
+            this.ctrlKey = ctrlKey;
+            this.shiftKey = shiftKey;
+            this.altKey = altKey;
+            this.metaKey = metaKey;
+            this.keyLabel = kbLabel;
+            this.keyAriaLabel = kbAriaLabel;
+        }
+        return ResolvedKeybindingPart;
+    }());
+    exports.ResolvedKeybindingPart = ResolvedKeybindingPart;
+    /**
+     * A resolved keybinding. Can be a simple keybinding or a chord keybinding.
+     */
+    var ResolvedKeybinding = (function () {
+        function ResolvedKeybinding() {
+        }
+        return ResolvedKeybinding;
+    }());
+    exports.ResolvedKeybinding = ResolvedKeybinding;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-define(__m[11/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[10/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,11/*vs/base/common/functional*/]), function (require, exports, functional_1) {
     'use strict';
-    /**
-     * A simple map to store value by a key object. Key can be any object that has toString() function to get
-     * string value of the key.
-     */
-    var LinkedMap = (function () {
-        function LinkedMap() {
-            this.map = Object.create(null);
-            this._size = 0;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.empty = Object.freeze({
+        dispose: function () { }
+    });
+    function dispose(first) {
+        var rest = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            rest[_i - 1] = arguments[_i];
         }
-        Object.defineProperty(LinkedMap.prototype, "size", {
-            get: function () {
-                return this._size;
+        if (Array.isArray(first)) {
+            first.forEach(function (d) { return d && d.dispose(); });
+            return [];
+        }
+        else if (rest.length === 0) {
+            if (first) {
+                first.dispose();
+                return first;
+            }
+            return undefined;
+        }
+        else {
+            dispose(first);
+            dispose(rest);
+            return [];
+        }
+    }
+    exports.dispose = dispose;
+    function combinedDisposable(disposables) {
+        return { dispose: function () { return dispose(disposables); } };
+    }
+    exports.combinedDisposable = combinedDisposable;
+    function toDisposable() {
+        var fns = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            fns[_i] = arguments[_i];
+        }
+        return {
+            dispose: function () {
+                for (var _i = 0, fns_1 = fns; _i < fns_1.length; _i++) {
+                    var fn = fns_1[_i];
+                    fn();
+                }
+            }
+        };
+    }
+    exports.toDisposable = toDisposable;
+    var Disposable = (function () {
+        function Disposable() {
+            this._toDispose = [];
+        }
+        Disposable.prototype.dispose = function () {
+            this._toDispose = dispose(this._toDispose);
+        };
+        Disposable.prototype._register = function (t) {
+            this._toDispose.push(t);
+            return t;
+        };
+        return Disposable;
+    }());
+    exports.Disposable = Disposable;
+    var OneDisposable = (function () {
+        function OneDisposable() {
+        }
+        Object.defineProperty(OneDisposable.prototype, "value", {
+            set: function (value) {
+                if (this._value) {
+                    this._value.dispose();
+                }
+                this._value = value;
             },
             enumerable: true,
             configurable: true
         });
-        LinkedMap.prototype.get = function (k) {
-            var value = this.peek(k);
-            return value ? value : null;
+        OneDisposable.prototype.dispose = function () {
+            this.value = null;
         };
-        LinkedMap.prototype.getOrSet = function (k, t) {
-            var res = this.get(k);
-            if (res) {
-                return res;
-            }
-            this.set(k, t);
-            return t;
-        };
-        LinkedMap.prototype.keys = function () {
-            var keys = [];
-            for (var key in this.map) {
-                keys.push(this.map[key].key);
-            }
-            return keys;
-        };
-        LinkedMap.prototype.values = function () {
-            var values = [];
-            for (var key in this.map) {
-                values.push(this.map[key].value);
-            }
-            return values;
-        };
-        LinkedMap.prototype.entries = function () {
-            var entries = [];
-            for (var key in this.map) {
-                entries.push(this.map[key]);
-            }
-            return entries;
-        };
-        LinkedMap.prototype.set = function (k, t) {
-            if (this.get(k)) {
-                return false; // already present!
-            }
-            this.push(k, t);
-            return true;
-        };
-        LinkedMap.prototype.delete = function (k) {
-            var value = this.get(k);
-            if (value) {
-                this.pop(k);
-                return value;
-            }
-            return null;
-        };
-        LinkedMap.prototype.has = function (k) {
-            return !!this.get(k);
-        };
-        LinkedMap.prototype.clear = function () {
-            this.map = Object.create(null);
-            this._size = 0;
-        };
-        LinkedMap.prototype.push = function (key, value) {
-            var entry = { key: key, value: value };
-            this.map[key.toString()] = entry;
-            this._size++;
-        };
-        LinkedMap.prototype.pop = function (k) {
-            delete this.map[k.toString()];
-            this._size--;
-        };
-        LinkedMap.prototype.peek = function (k) {
-            var entry = this.map[k.toString()];
-            return entry ? entry.value : null;
-        };
-        return LinkedMap;
+        return OneDisposable;
     }());
-    exports.LinkedMap = LinkedMap;
-    /**
-     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
-     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
-     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
-     */
-    var BoundedLinkedMap = (function () {
-        function BoundedLinkedMap(limit, ratio) {
-            if (limit === void 0) { limit = Number.MAX_VALUE; }
-            if (ratio === void 0) { ratio = 1; }
-            this.limit = limit;
-            this.map = Object.create(null);
-            this._size = 0;
-            this.ratio = limit * ratio;
+    exports.OneDisposable = OneDisposable;
+    var ReferenceCollection = (function () {
+        function ReferenceCollection() {
+            this.references = Object.create(null);
         }
-        Object.defineProperty(BoundedLinkedMap.prototype, "size", {
-            get: function () {
-                return this._size;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        BoundedLinkedMap.prototype.set = function (key, value) {
-            if (this.map[key]) {
-                return false; // already present!
+        ReferenceCollection.prototype.acquire = function (key) {
+            var _this = this;
+            var reference = this.references[key];
+            if (!reference) {
+                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
             }
-            var entry = { key: key, value: value };
-            this.push(entry);
-            if (this._size > this.limit) {
-                this.trim();
-            }
-            return true;
-        };
-        BoundedLinkedMap.prototype.get = function (key) {
-            var entry = this.map[key];
-            return entry ? entry.value : null;
-        };
-        BoundedLinkedMap.prototype.getOrSet = function (k, t) {
-            var res = this.get(k);
-            if (res) {
-                return res;
-            }
-            this.set(k, t);
-            return t;
-        };
-        BoundedLinkedMap.prototype.delete = function (key) {
-            var entry = this.map[key];
-            if (entry) {
-                this.map[key] = void 0;
-                this._size--;
-                if (entry.next) {
-                    entry.next.prev = entry.prev; // [A]<-[x]<-[C] = [A]<-[C]
+            var object = reference.object;
+            var dispose = functional_1.once(function () {
+                if (--reference.counter === 0) {
+                    _this.destroyReferencedObject(reference.object);
+                    delete _this.references[key];
                 }
-                else {
-                    this.head = entry.prev; // [A]-[x] = [A]
-                }
-                if (entry.prev) {
-                    entry.prev.next = entry.next; // [A]->[x]->[C] = [A]->[C]
-                }
-                else {
-                    this.tail = entry.next; // [x]-[A] = [A]
-                }
-                return entry.value;
-            }
-            return null;
+            });
+            reference.counter++;
+            return { object: object, dispose: dispose };
         };
-        BoundedLinkedMap.prototype.has = function (key) {
-            return !!this.map[key];
-        };
-        BoundedLinkedMap.prototype.clear = function () {
-            this.map = Object.create(null);
-            this._size = 0;
-            this.head = null;
-            this.tail = null;
-        };
-        BoundedLinkedMap.prototype.push = function (entry) {
-            if (this.head) {
-                // [A]-[B] = [A]-[B]->[X]
-                entry.prev = this.head;
-                this.head.next = entry;
-            }
-            if (!this.tail) {
-                this.tail = entry;
-            }
-            this.head = entry;
-            this.map[entry.key] = entry;
-            this._size++;
-        };
-        BoundedLinkedMap.prototype.trim = function () {
-            if (this.tail) {
-                // Remove all elements until ratio is reached
-                if (this.ratio < this.limit) {
-                    var index = 0;
-                    var current = this.tail;
-                    while (current.next) {
-                        // Remove the entry
-                        this.map[current.key] = void 0;
-                        this._size--;
-                        // if we reached the element that overflows our ratio condition
-                        // make its next element the new tail of the Map and adjust the size
-                        if (index === this.ratio) {
-                            this.tail = current.next;
-                            this.tail.prev = null;
-                            break;
-                        }
-                        // Move on
-                        current = current.next;
-                        index++;
-                    }
-                }
-                else {
-                    this.map[this.tail.key] = void 0;
-                    this._size--;
-                    // [x]-[B] = [B]
-                    this.tail = this.tail.next;
-                    this.tail.prev = null;
-                }
-            }
-        };
-        return BoundedLinkedMap;
+        return ReferenceCollection;
     }());
-    exports.BoundedLinkedMap = BoundedLinkedMap;
-    /**
-     * A subclass of Map<T> that makes an entry the MRU entry as soon
-     * as it is being accessed. In combination with the limit for the
-     * maximum number of elements in the cache, it helps to remove those
-     * entries from the cache that are LRU.
-     */
-    var LRUCache = (function (_super) {
-        __extends(LRUCache, _super);
-        function LRUCache(limit) {
-            _super.call(this, limit);
+    exports.ReferenceCollection = ReferenceCollection;
+    var ImmortalReference = (function () {
+        function ImmortalReference(object) {
+            this.object = object;
         }
-        LRUCache.prototype.get = function (key) {
-            // Upon access of an entry, make it the head of
-            // the linked map so that it is the MRU element
-            var entry = this.map[key];
-            if (entry) {
-                this.delete(key);
-                this.push(entry);
-                return entry.value;
-            }
-            return null;
-        };
-        return LRUCache;
-    }(BoundedLinkedMap));
-    exports.LRUCache = LRUCache;
-    /**
-     * A trie map that allows for fast look up when keys are substrings
-     * to the actual search keys (dir/subdir-problem).
-     */
-    var TrieMap = (function () {
-        function TrieMap(splitter) {
-            this._root = { children: Object.create(null) };
-            this._splitter = splitter;
-        }
-        TrieMap.prototype.insert = function (path, element) {
-            var parts = this._splitter(path);
-            var i = 0;
-            // find insertion node
-            var node = this._root;
-            for (; i < parts.length; i++) {
-                var child = node.children[parts[i]];
-                if (child) {
-                    node = child;
-                    continue;
-                }
-                break;
-            }
-            // create new nodes
-            var newNode;
-            for (; i < parts.length; i++) {
-                newNode = { children: Object.create(null) };
-                node.children[parts[i]] = newNode;
-                node = newNode;
-            }
-            node.element = element;
-        };
-        TrieMap.prototype.lookUp = function (path) {
-            var parts = this._splitter(path);
-            var children = this._root.children;
-            var node;
-            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
-                var part = parts_1[_i];
-                node = children[part];
-                if (!node) {
-                    return;
-                }
-                children = node.children;
-            }
-            return node.element;
-        };
-        TrieMap.prototype.findSubstr = function (path) {
-            var parts = this._splitter(path);
-            var lastNode;
-            var children = this._root.children;
-            for (var _i = 0, parts_2 = parts; _i < parts_2.length; _i++) {
-                var part = parts_2[_i];
-                var node = children[part];
-                if (!node) {
-                    break;
-                }
-                if (node.element) {
-                    lastNode = node;
-                }
-                children = node.children;
-            }
-            // return the last matching node
-            // that had an element
-            if (lastNode) {
-                return lastNode.element;
-            }
-        };
-        TrieMap.prototype.findSuperstr = function (path) {
-            var parts = this._splitter(path);
-            var children = this._root.children;
-            var node;
-            for (var _i = 0, parts_3 = parts; _i < parts_3.length; _i++) {
-                var part = parts_3[_i];
-                node = children[part];
-                if (!node) {
-                    return;
-                }
-                children = node.children;
-            }
-            var result = new TrieMap(this._splitter);
-            result._root = node;
-            return result;
-        };
-        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/).filter(function (s) { return !!s; }); };
-        return TrieMap;
+        ImmortalReference.prototype.dispose = function () { };
+        return ImmortalReference;
     }());
-    exports.TrieMap = TrieMap;
+    exports.ImmortalReference = ImmortalReference;
 });
 
-define(__m[4/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[4/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     // --- THIS FILE IS TEMPORARY UNTIL ENV.TS IS CLEANED UP. IT CAN SAFELY BE USED IN ALL TARGET EXECUTION ENVIRONMENTS (node & dom) ---
     var _isWindows = false;
     var _isMacintosh = false;
@@ -3596,7 +3241,6 @@ define(__m[4/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), func
     var _isRootUser = false;
     var _isNative = false;
     var _isWeb = false;
-    var _isQunit = false;
     var _locale = undefined;
     var _language = undefined;
     exports.LANGUAGE_DEFAULT = 'en';
@@ -3628,25 +3272,24 @@ define(__m[4/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), func
         _isWeb = true;
         _locale = navigator.language;
         _language = _locale;
-        _isQunit = !!self.QUnit;
     }
+    var Platform;
     (function (Platform) {
         Platform[Platform["Web"] = 0] = "Web";
         Platform[Platform["Mac"] = 1] = "Mac";
         Platform[Platform["Linux"] = 2] = "Linux";
         Platform[Platform["Windows"] = 3] = "Windows";
-    })(exports.Platform || (exports.Platform = {}));
-    var Platform = exports.Platform;
-    exports._platform = Platform.Web;
+    })(Platform = exports.Platform || (exports.Platform = {}));
+    var _platform = Platform.Web;
     if (_isNative) {
         if (_isMacintosh) {
-            exports._platform = Platform.Mac;
+            _platform = Platform.Mac;
         }
         else if (_isWindows) {
-            exports._platform = Platform.Windows;
+            _platform = Platform.Windows;
         }
         else if (_isLinux) {
-            exports._platform = Platform.Linux;
+            _platform = Platform.Linux;
         }
     }
     exports.isWindows = _isWindows;
@@ -3655,8 +3298,7 @@ define(__m[4/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), func
     exports.isRootUser = _isRootUser;
     exports.isNative = _isNative;
     exports.isWeb = _isWeb;
-    exports.isQunit = _isQunit;
-    exports.platform = exports._platform;
+    exports.platform = _platform;
     /**
      * The language used for the user interface. The format of
      * the string is all lower case (e.g. zh-tw for Traditional
@@ -3679,14 +3321,1127 @@ define(__m[4/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), func
     exports.clearTimeout = _globals.clearTimeout.bind(_globals);
     exports.setInterval = _globals.setInterval.bind(_globals);
     exports.clearInterval = _globals.clearInterval.bind(_globals);
+    var OperatingSystem;
+    (function (OperatingSystem) {
+        OperatingSystem[OperatingSystem["Windows"] = 1] = "Windows";
+        OperatingSystem[OperatingSystem["Macintosh"] = 2] = "Macintosh";
+        OperatingSystem[OperatingSystem["Linux"] = 3] = "Linux";
+    })(OperatingSystem = exports.OperatingSystem || (exports.OperatingSystem = {}));
+    exports.OS = (_isMacintosh ? 2 /* Macintosh */ : (_isWindows ? 1 /* Windows */ : 3 /* Linux */));
+    var AccessibilitySupport;
+    (function (AccessibilitySupport) {
+        /**
+         * This should be the browser case where it is not known if a screen reader is attached or no.
+         */
+        AccessibilitySupport[AccessibilitySupport["Unknown"] = 0] = "Unknown";
+        AccessibilitySupport[AccessibilitySupport["Disabled"] = 1] = "Disabled";
+        AccessibilitySupport[AccessibilitySupport["Enabled"] = 2] = "Enabled";
+    })(AccessibilitySupport = exports.AccessibilitySupport || (exports.AccessibilitySupport = {}));
 });
 
-define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/map*/]), function (require, exports, map_1) {
+define(__m[14/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var _typeof = {
+        number: 'number',
+        string: 'string',
+        undefined: 'undefined',
+        object: 'object',
+        function: 'function'
+    };
+    /**
+     * @returns whether the provided parameter is a JavaScript Array or not.
+     */
+    function isArray(array) {
+        if (Array.isArray) {
+            return Array.isArray(array);
+        }
+        if (array && typeof (array.length) === _typeof.number && array.constructor === Array) {
+            return true;
+        }
+        return false;
+    }
+    exports.isArray = isArray;
+    /**
+     * @returns whether the provided parameter is a JavaScript String or not.
+     */
+    function isString(str) {
+        if (typeof (str) === _typeof.string || str instanceof String) {
+            return true;
+        }
+        return false;
+    }
+    exports.isString = isString;
+    /**
+     * @returns whether the provided parameter is a JavaScript Array and each element in the array is a string.
+     */
+    function isStringArray(value) {
+        return isArray(value) && value.every(function (elem) { return isString(elem); });
+    }
+    exports.isStringArray = isStringArray;
+    /**
+     *
+     * @returns whether the provided parameter is of type `object` but **not**
+     *	`null`, an `array`, a `regexp`, nor a `date`.
+     */
+    function isObject(obj) {
+        // The method can't do a type cast since there are type (like strings) which
+        // are subclasses of any put not positvely matched by the function. Hence type
+        // narrowing results in wrong results.
+        return typeof obj === _typeof.object
+            && obj !== null
+            && !Array.isArray(obj)
+            && !(obj instanceof RegExp)
+            && !(obj instanceof Date);
+    }
+    exports.isObject = isObject;
+    /**
+     * In **contrast** to just checking `typeof` this will return `false` for `NaN`.
+     * @returns whether the provided parameter is a JavaScript Number or not.
+     */
+    function isNumber(obj) {
+        if ((typeof (obj) === _typeof.number || obj instanceof Number) && !isNaN(obj)) {
+            return true;
+        }
+        return false;
+    }
+    exports.isNumber = isNumber;
+    /**
+     * @returns whether the provided parameter is a JavaScript Boolean or not.
+     */
+    function isBoolean(obj) {
+        return obj === true || obj === false;
+    }
+    exports.isBoolean = isBoolean;
+    /**
+     * @returns whether the provided parameter is undefined.
+     */
+    function isUndefined(obj) {
+        return typeof (obj) === _typeof.undefined;
+    }
+    exports.isUndefined = isUndefined;
+    /**
+     * @returns whether the provided parameter is undefined or null.
+     */
+    function isUndefinedOrNull(obj) {
+        return isUndefined(obj) || obj === null;
+    }
+    exports.isUndefinedOrNull = isUndefinedOrNull;
+    var hasOwnProperty = Object.prototype.hasOwnProperty;
+    /**
+     * @returns whether the provided parameter is an empty JavaScript Object or not.
+     */
+    function isEmptyObject(obj) {
+        if (!isObject(obj)) {
+            return false;
+        }
+        for (var key in obj) {
+            if (hasOwnProperty.call(obj, key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    exports.isEmptyObject = isEmptyObject;
+    /**
+     * @returns whether the provided parameter is a JavaScript Function or not.
+     */
+    function isFunction(obj) {
+        return typeof obj === _typeof.function;
+    }
+    exports.isFunction = isFunction;
+    /**
+     * @returns whether the provided parameters is are JavaScript Function or not.
+     */
+    function areFunctions() {
+        var objects = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            objects[_i] = arguments[_i];
+        }
+        return objects && objects.length > 0 && objects.every(isFunction);
+    }
+    exports.areFunctions = areFunctions;
+    function validateConstraints(args, constraints) {
+        var len = Math.min(args.length, constraints.length);
+        for (var i = 0; i < len; i++) {
+            validateConstraint(args[i], constraints[i]);
+        }
+    }
+    exports.validateConstraints = validateConstraints;
+    function validateConstraint(arg, constraint) {
+        if (isString(constraint)) {
+            if (typeof arg !== constraint) {
+                throw new Error("argument does not match constraint: typeof " + constraint);
+            }
+        }
+        else if (isFunction(constraint)) {
+            if (arg instanceof constraint) {
+                return;
+            }
+            if (arg && arg.constructor === constraint) {
+                return;
+            }
+            if (constraint.length === 1 && constraint.call(undefined, arg) === true) {
+                return;
+            }
+            throw new Error("argument does not match one of these constraints: arg instanceof constraint, arg.constructor === constraint, nor constraint(arg) === true");
+        }
+    }
+    exports.validateConstraint = validateConstraint;
+    /**
+     * Creates a new object of the provided class and will call the constructor with
+     * any additional argument supplied.
+     */
+    function create(ctor) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        var obj = Object.create(ctor.prototype);
+        ctor.apply(obj, args);
+        return obj;
+    }
+    exports.create = create;
+});
+
+define(__m[6/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/platform*/]), function (require, exports, platform) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function _encode(ch) {
+        return '%' + ch.charCodeAt(0).toString(16).toUpperCase();
+    }
+    // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+    function encodeURIComponent2(str) {
+        return encodeURIComponent(str).replace(/[!'()*]/g, _encode);
+    }
+    function encodeNoop(str) {
+        return str.replace(/[#?]/, _encode);
+    }
+    /**
+     * Uniform Resource Identifier (URI) http://tools.ietf.org/html/rfc3986.
+     * This class is a simple parser which creates the basic component paths
+     * (http://tools.ietf.org/html/rfc3986#section-3) with minimal validation
+     * and encoding.
+     *
+     *       foo://example.com:8042/over/there?name=ferret#nose
+     *       \_/   \______________/\_________/ \_________/ \__/
+     *        |           |            |            |        |
+     *     scheme     authority       path        query   fragment
+     *        |   _____________________|__
+     *       / \ /                        \
+     *       urn:example:animal:ferret:nose
+     *
+     *
+     */
+    var URI = (function () {
+        /**
+         * @internal
+         */
+        function URI(scheme, authority, path, query, fragment) {
+            this._formatted = null;
+            this._fsPath = null;
+            this.scheme = scheme || URI._empty;
+            this.authority = authority || URI._empty;
+            this.path = path || URI._empty;
+            this.query = query || URI._empty;
+            this.fragment = fragment || URI._empty;
+            this._validate(this);
+        }
+        URI.isUri = function (thing) {
+            if (thing instanceof URI) {
+                return true;
+            }
+            if (!thing) {
+                return false;
+            }
+            return typeof thing.authority === 'string'
+                && typeof thing.fragment === 'string'
+                && typeof thing.path === 'string'
+                && typeof thing.query === 'string'
+                && typeof thing.scheme === 'string';
+        };
+        Object.defineProperty(URI.prototype, "fsPath", {
+            // ---- filesystem path -----------------------
+            /**
+             * Returns a string representing the corresponding file system path of this URI.
+             * Will handle UNC paths and normalize windows drive letters to lower-case. Also
+             * uses the platform specific path separator. Will *not* validate the path for
+             * invalid characters and semantics. Will *not* look at the scheme of this URI.
+             */
+            get: function () {
+                if (!this._fsPath) {
+                    var value = void 0;
+                    if (this.authority && this.path && this.scheme === 'file') {
+                        // unc path: file://shares/c$/far/boo
+                        value = "//" + this.authority + this.path;
+                    }
+                    else if (URI._driveLetterPath.test(this.path)) {
+                        // windows drive letter: file:///c:/far/boo
+                        value = this.path[1].toLowerCase() + this.path.substr(2);
+                    }
+                    else {
+                        // other path
+                        value = this.path;
+                    }
+                    if (platform.isWindows) {
+                        value = value.replace(/\//g, '\\');
+                    }
+                    this._fsPath = value;
+                }
+                return this._fsPath;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        // ---- modify to new -------------------------
+        URI.prototype.with = function (change) {
+            if (!change) {
+                return this;
+            }
+            var scheme = change.scheme, authority = change.authority, path = change.path, query = change.query, fragment = change.fragment;
+            if (scheme === void 0) {
+                scheme = this.scheme;
+            }
+            else if (scheme === null) {
+                scheme = '';
+            }
+            if (authority === void 0) {
+                authority = this.authority;
+            }
+            else if (authority === null) {
+                authority = '';
+            }
+            if (path === void 0) {
+                path = this.path;
+            }
+            else if (path === null) {
+                path = '';
+            }
+            if (query === void 0) {
+                query = this.query;
+            }
+            else if (query === null) {
+                query = '';
+            }
+            if (fragment === void 0) {
+                fragment = this.fragment;
+            }
+            else if (fragment === null) {
+                fragment = '';
+            }
+            if (scheme === this.scheme
+                && authority === this.authority
+                && path === this.path
+                && query === this.query
+                && fragment === this.fragment) {
+                return this;
+            }
+            return new URI(scheme, authority, path, query, fragment);
+        };
+        // ---- parse & validate ------------------------
+        URI.parse = function (value) {
+            var match = URI._regexp.exec(value);
+            if (!match) {
+                return new URI(URI._empty, URI._empty, URI._empty, URI._empty, URI._empty);
+            }
+            return new URI(match[2] || URI._empty, decodeURIComponent(match[4] || URI._empty), decodeURIComponent(match[5] || URI._empty), decodeURIComponent(match[7] || URI._empty), decodeURIComponent(match[9] || URI._empty));
+        };
+        URI.file = function (path) {
+            var authority = URI._empty;
+            // normalize to fwd-slashes on windows,
+            // on other systems bwd-slashes are valid
+            // filename character, eg /f\oo/ba\r.txt
+            if (platform.isWindows) {
+                path = path.replace(/\\/g, URI._slash);
+            }
+            // check for authority as used in UNC shares
+            // or use the path as given
+            if (path[0] === URI._slash && path[0] === path[1]) {
+                var idx = path.indexOf(URI._slash, 2);
+                if (idx === -1) {
+                    authority = path.substring(2);
+                    path = URI._empty;
+                }
+                else {
+                    authority = path.substring(2, idx);
+                    path = path.substring(idx);
+                }
+            }
+            // Ensure that path starts with a slash
+            // or that it is at least a slash
+            if (path[0] !== URI._slash) {
+                path = URI._slash + path;
+            }
+            return new URI('file', authority, path, URI._empty, URI._empty);
+        };
+        URI.from = function (components) {
+            return new URI(components.scheme, components.authority, components.path, components.query, components.fragment);
+        };
+        URI.prototype._validate = function (ret) {
+            // scheme, https://tools.ietf.org/html/rfc3986#section-3.1
+            // ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+            if (ret.scheme && !URI._schemePattern.test(ret.scheme)) {
+                throw new Error('[UriError]: Scheme contains illegal characters.');
+            }
+            // path, http://tools.ietf.org/html/rfc3986#section-3.3
+            // If a URI contains an authority component, then the path component
+            // must either be empty or begin with a slash ("/") character.  If a URI
+            // does not contain an authority component, then the path cannot begin
+            // with two slash characters ("//").
+            if (ret.path) {
+                if (ret.authority) {
+                    if (!URI._singleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
+                    }
+                }
+                else {
+                    if (URI._doubleSlashStart.test(ret.path)) {
+                        throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
+                    }
+                }
+            }
+        };
+        // ---- printing/externalize ---------------------------
+        /**
+         *
+         * @param skipEncoding Do not encode the result, default is `false`
+         */
+        URI.prototype.toString = function (skipEncoding) {
+            if (skipEncoding === void 0) { skipEncoding = false; }
+            if (!skipEncoding) {
+                if (!this._formatted) {
+                    this._formatted = URI._asFormatted(this, false);
+                }
+                return this._formatted;
+            }
+            else {
+                // we don't cache that
+                return URI._asFormatted(this, true);
+            }
+        };
+        URI._asFormatted = function (uri, skipEncoding) {
+            var encoder = !skipEncoding
+                ? encodeURIComponent2
+                : encodeNoop;
+            var parts = [];
+            var scheme = uri.scheme, authority = uri.authority, path = uri.path, query = uri.query, fragment = uri.fragment;
+            if (scheme) {
+                parts.push(scheme, ':');
+            }
+            if (authority || scheme === 'file') {
+                parts.push('//');
+            }
+            if (authority) {
+                authority = authority.toLowerCase();
+                var idx = authority.indexOf(':');
+                if (idx === -1) {
+                    parts.push(encoder(authority));
+                }
+                else {
+                    parts.push(encoder(authority.substr(0, idx)), authority.substr(idx));
+                }
+            }
+            if (path) {
+                // lower-case windows drive letters in /C:/fff or C:/fff
+                var m = URI._upperCaseDrive.exec(path);
+                if (m) {
+                    if (m[1]) {
+                        path = '/' + m[2].toLowerCase() + path.substr(3); // "/c:".length === 3
+                    }
+                    else {
+                        path = m[2].toLowerCase() + path.substr(2); // // "c:".length === 2
+                    }
+                }
+                // encode every segement but not slashes
+                // make sure that # and ? are always encoded
+                // when occurring in paths - otherwise the result
+                // cannot be parsed back again
+                var lastIdx = 0;
+                while (true) {
+                    var idx = path.indexOf(URI._slash, lastIdx);
+                    if (idx === -1) {
+                        parts.push(encoder(path.substring(lastIdx)));
+                        break;
+                    }
+                    parts.push(encoder(path.substring(lastIdx, idx)), URI._slash);
+                    lastIdx = idx + 1;
+                }
+                ;
+            }
+            if (query) {
+                parts.push('?', encoder(query));
+            }
+            if (fragment) {
+                parts.push('#', encoder(fragment));
+            }
+            return parts.join(URI._empty);
+        };
+        URI.prototype.toJSON = function () {
+            var res = {
+                fsPath: this.fsPath,
+                external: this.toString(),
+                $mid: 1
+            };
+            if (this.path) {
+                res.path = this.path;
+            }
+            if (this.scheme) {
+                res.scheme = this.scheme;
+            }
+            if (this.authority) {
+                res.authority = this.authority;
+            }
+            if (this.query) {
+                res.query = this.query;
+            }
+            if (this.fragment) {
+                res.fragment = this.fragment;
+            }
+            return res;
+        };
+        URI.revive = function (data) {
+            var result = new URI(data.scheme, data.authority, data.path, data.query, data.fragment);
+            result._fsPath = data.fsPath;
+            result._formatted = data.external;
+            return result;
+        };
+        URI._empty = '';
+        URI._slash = '/';
+        URI._regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
+        URI._driveLetterPath = /^\/[a-zA-z]:/;
+        URI._upperCaseDrive = /^(\/)?([A-Z]:)/;
+        URI._schemePattern = /^\w[\w\d+.-]*$/;
+        URI._singleSlashStart = /^\//;
+        URI._doubleSlashStart = /^\/\//;
+        return URI;
+    }());
+    exports.default = URI;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+define(__m[17/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function values(map) {
+        var result = [];
+        map.forEach(function (value) { return result.push(value); });
+        return result;
+    }
+    exports.values = values;
+    function keys(map) {
+        var result = [];
+        map.forEach(function (value, key) { return result.push(key); });
+        return result;
+    }
+    exports.keys = keys;
+    function getOrSet(map, key, value) {
+        var result = map.get(key);
+        if (result === void 0) {
+            result = value;
+            map.set(key, result);
+        }
+        return result;
+    }
+    exports.getOrSet = getOrSet;
+    /**
+     * A simple Map<T> that optionally allows to set a limit of entries to store. Once the limit is hit,
+     * the cache will remove the entry that was last recently added. Or, if a ratio is provided below 1,
+     * all elements will be removed until the ratio is full filled (e.g. 0.75 to remove 25% of old elements).
+     */
+    var BoundedMap = (function () {
+        function BoundedMap(limit, ratio, value) {
+            if (limit === void 0) { limit = Number.MAX_VALUE; }
+            if (ratio === void 0) { ratio = 1; }
+            var _this = this;
+            this.limit = limit;
+            this.map = new Map();
+            this.ratio = limit * ratio;
+            if (value) {
+                value.entries.forEach(function (entry) {
+                    _this.set(entry.key, entry.value);
+                });
+            }
+        }
+        BoundedMap.prototype.setLimit = function (limit) {
+            if (limit < 0) {
+                return; // invalid limit
+            }
+            this.limit = limit;
+            while (this.map.size > this.limit) {
+                this.trim();
+            }
+        };
+        BoundedMap.prototype.serialize = function () {
+            var serialized = { entries: [] };
+            this.map.forEach(function (entry) {
+                serialized.entries.push({ key: entry.key, value: entry.value });
+            });
+            return serialized;
+        };
+        Object.defineProperty(BoundedMap.prototype, "size", {
+            get: function () {
+                return this.map.size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        BoundedMap.prototype.set = function (key, value) {
+            if (this.map.has(key)) {
+                return false; // already present!
+            }
+            var entry = { key: key, value: value };
+            this.push(entry);
+            if (this.size > this.limit) {
+                this.trim();
+            }
+            return true;
+        };
+        BoundedMap.prototype.get = function (key) {
+            var entry = this.map.get(key);
+            return entry ? entry.value : null;
+        };
+        BoundedMap.prototype.getOrSet = function (k, t) {
+            var res = this.get(k);
+            if (res) {
+                return res;
+            }
+            this.set(k, t);
+            return t;
+        };
+        BoundedMap.prototype.delete = function (key) {
+            var entry = this.map.get(key);
+            if (entry) {
+                this.map.delete(key);
+                if (entry.next) {
+                    entry.next.prev = entry.prev; // [A]<-[x]<-[C] = [A]<-[C]
+                }
+                else {
+                    this.head = entry.prev; // [A]-[x] = [A]
+                }
+                if (entry.prev) {
+                    entry.prev.next = entry.next; // [A]->[x]->[C] = [A]->[C]
+                }
+                else {
+                    this.tail = entry.next; // [x]-[A] = [A]
+                }
+                return entry.value;
+            }
+            return null;
+        };
+        BoundedMap.prototype.has = function (key) {
+            return this.map.has(key);
+        };
+        BoundedMap.prototype.clear = function () {
+            this.map.clear();
+            this.head = null;
+            this.tail = null;
+        };
+        BoundedMap.prototype.push = function (entry) {
+            if (this.head) {
+                // [A]-[B] = [A]-[B]->[X]
+                entry.prev = this.head;
+                this.head.next = entry;
+            }
+            if (!this.tail) {
+                this.tail = entry;
+            }
+            this.head = entry;
+            this.map.set(entry.key, entry);
+        };
+        BoundedMap.prototype.trim = function () {
+            if (this.tail) {
+                // Remove all elements until ratio is reached
+                if (this.ratio < this.limit) {
+                    var index = 0;
+                    var current = this.tail;
+                    while (current.next) {
+                        // Remove the entry
+                        this.map.delete(current.key);
+                        // if we reached the element that overflows our ratio condition
+                        // make its next element the new tail of the Map and adjust the size
+                        if (index === this.ratio) {
+                            this.tail = current.next;
+                            this.tail.prev = null;
+                            break;
+                        }
+                        // Move on
+                        current = current.next;
+                        index++;
+                    }
+                }
+                else {
+                    this.map.delete(this.tail.key);
+                    // [x]-[B] = [B]
+                    this.tail = this.tail.next;
+                    if (this.tail) {
+                        this.tail.prev = null;
+                    }
+                }
+            }
+        };
+        return BoundedMap;
+    }());
+    exports.BoundedMap = BoundedMap;
+    // --- trie'ish datastructure
+    var Node = (function () {
+        function Node() {
+            this.children = new Map();
+        }
+        return Node;
+    }());
+    /**
+     * A trie map that allows for fast look up when keys are substrings
+     * to the actual search keys (dir/subdir-problem).
+     */
+    var TrieMap = (function () {
+        function TrieMap(splitter) {
+            this._root = new Node();
+            this._splitter = function (s) { return splitter(s).filter(function (s) { return Boolean(s); }); };
+        }
+        TrieMap.prototype.insert = function (path, element) {
+            var parts = this._splitter(path);
+            var i = 0;
+            // find insertion node
+            var node = this._root;
+            for (; i < parts.length; i++) {
+                var child = node.children.get(parts[i]);
+                if (child) {
+                    node = child;
+                    continue;
+                }
+                break;
+            }
+            // create new nodes
+            var newNode;
+            for (; i < parts.length; i++) {
+                newNode = new Node();
+                node.children.set(parts[i], newNode);
+                node = newNode;
+            }
+            node.element = element;
+        };
+        TrieMap.prototype.lookUp = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+                var part = parts_1[_i];
+                node = children.get(part);
+                if (!node) {
+                    return undefined;
+                }
+                children = node.children;
+            }
+            return node.element;
+        };
+        TrieMap.prototype.findSubstr = function (path) {
+            var parts = this._splitter(path);
+            var lastNode;
+            var children = this._root.children;
+            for (var _i = 0, parts_2 = parts; _i < parts_2.length; _i++) {
+                var part = parts_2[_i];
+                var node = children.get(part);
+                if (!node) {
+                    break;
+                }
+                if (node.element) {
+                    lastNode = node;
+                }
+                children = node.children;
+            }
+            // return the last matching node
+            // that had an element
+            if (lastNode) {
+                return lastNode.element;
+            }
+            return undefined;
+        };
+        TrieMap.prototype.findSuperstr = function (path) {
+            var parts = this._splitter(path);
+            var children = this._root.children;
+            var node;
+            for (var _i = 0, parts_3 = parts; _i < parts_3.length; _i++) {
+                var part = parts_3[_i];
+                node = children.get(part);
+                if (!node) {
+                    return undefined;
+                }
+                children = node.children;
+            }
+            var result = new TrieMap(this._splitter);
+            result._root = node;
+            return result;
+        };
+        TrieMap.PathSplitter = function (s) { return s.split(/[\\/]/).filter(function (s) { return !!s; }); };
+        return TrieMap;
+    }());
+    exports.TrieMap = TrieMap;
+    var ResourceMap = (function () {
+        function ResourceMap(ignoreCase) {
+            this.ignoreCase = ignoreCase;
+            this.map = new Map();
+        }
+        ResourceMap.prototype.set = function (resource, value) {
+            this.map.set(this.toKey(resource), value);
+        };
+        ResourceMap.prototype.get = function (resource) {
+            return this.map.get(this.toKey(resource));
+        };
+        ResourceMap.prototype.has = function (resource) {
+            return this.map.has(this.toKey(resource));
+        };
+        Object.defineProperty(ResourceMap.prototype, "size", {
+            get: function () {
+                return this.map.size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ResourceMap.prototype.clear = function () {
+            this.map.clear();
+        };
+        ResourceMap.prototype.delete = function (resource) {
+            return this.map.delete(this.toKey(resource));
+        };
+        ResourceMap.prototype.forEach = function (clb) {
+            this.map.forEach(clb);
+        };
+        ResourceMap.prototype.values = function () {
+            return values(this.map);
+        };
+        ResourceMap.prototype.toKey = function (resource) {
+            var key = resource.toString();
+            if (this.ignoreCase) {
+                key = key.toLowerCase();
+            }
+            return key;
+        };
+        return ResourceMap;
+    }());
+    exports.ResourceMap = ResourceMap;
+    var StrictResourceMap = (function (_super) {
+        __extends(StrictResourceMap, _super);
+        function StrictResourceMap() {
+            return _super.call(this) || this;
+        }
+        StrictResourceMap.prototype.keys = function () {
+            return keys(this.map).map(function (key) { return uri_1.default.parse(key); });
+        };
+        return StrictResourceMap;
+    }(ResourceMap));
+    exports.StrictResourceMap = StrictResourceMap;
+    var Touch;
+    (function (Touch) {
+        Touch.None = 0;
+        Touch.First = 1;
+        Touch.Last = 2;
+    })(Touch = exports.Touch || (exports.Touch = {}));
+    var LinkedMap = (function () {
+        function LinkedMap() {
+            this._map = new Map();
+            this._head = undefined;
+            this._tail = undefined;
+            this._size = 0;
+        }
+        LinkedMap.prototype.clear = function () {
+            this._map.clear();
+            this._head = undefined;
+            this._tail = undefined;
+            this._size = 0;
+        };
+        LinkedMap.prototype.isEmpty = function () {
+            return !this._head && !this._tail;
+        };
+        Object.defineProperty(LinkedMap.prototype, "size", {
+            get: function () {
+                return this._size;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        LinkedMap.prototype.has = function (key) {
+            return this._map.has(key);
+        };
+        LinkedMap.prototype.get = function (key) {
+            var item = this._map.get(key);
+            if (!item) {
+                return undefined;
+            }
+            return item.value;
+        };
+        LinkedMap.prototype.set = function (key, value, touch) {
+            if (touch === void 0) { touch = Touch.None; }
+            var item = this._map.get(key);
+            if (item) {
+                item.value = value;
+                if (touch !== Touch.None) {
+                    this.touch(item, touch);
+                }
+            }
+            else {
+                item = { key: key, value: value, next: undefined, previous: undefined };
+                switch (touch) {
+                    case Touch.None:
+                        this.addItemLast(item);
+                        break;
+                    case Touch.First:
+                        this.addItemFirst(item);
+                        break;
+                    case Touch.Last:
+                        this.addItemLast(item);
+                        break;
+                    default:
+                        this.addItemLast(item);
+                        break;
+                }
+                this._map.set(key, item);
+                this._size++;
+            }
+        };
+        LinkedMap.prototype.delete = function (key) {
+            return !!this.remove(key);
+        };
+        LinkedMap.prototype.remove = function (key) {
+            var item = this._map.get(key);
+            if (!item) {
+                return undefined;
+            }
+            this._map.delete(key);
+            this.removeItem(item);
+            this._size--;
+            return item.value;
+        };
+        LinkedMap.prototype.shift = function () {
+            if (!this._head && !this._tail) {
+                return undefined;
+            }
+            if (!this._head || !this._tail) {
+                throw new Error('Invalid list');
+            }
+            var item = this._head;
+            this._map.delete(item.key);
+            this.removeItem(item);
+            this._size--;
+            return item.value;
+        };
+        LinkedMap.prototype.forEach = function (callbackfn, thisArg) {
+            var current = this._head;
+            while (current) {
+                if (thisArg) {
+                    callbackfn.bind(thisArg)(current.value, current.key, this);
+                }
+                else {
+                    callbackfn(current.value, current.key, this);
+                }
+                current = current.next;
+            }
+        };
+        LinkedMap.prototype.forEachReverse = function (callbackfn, thisArg) {
+            var current = this._tail;
+            while (current) {
+                if (thisArg) {
+                    callbackfn.bind(thisArg)(current.value, current.key, this);
+                }
+                else {
+                    callbackfn(current.value, current.key, this);
+                }
+                current = current.previous;
+            }
+        };
+        LinkedMap.prototype.values = function () {
+            var result = [];
+            var current = this._head;
+            while (current) {
+                result.push(current.value);
+                current = current.next;
+            }
+            return result;
+        };
+        LinkedMap.prototype.keys = function () {
+            var result = [];
+            var current = this._head;
+            while (current) {
+                result.push(current.key);
+                current = current.next;
+            }
+            return result;
+        };
+        /* VS Code / Monaco editor runs on es5 which has no Symbol.iterator
+        public keys(): IterableIterator<K> {
+            let current = this._head;
+            let iterator: IterableIterator<K> = {
+                [Symbol.iterator]() {
+                    return iterator;
+                },
+                next():IteratorResult<K> {
+                    if (current) {
+                        let result = { value: current.key, done: false };
+                        current = current.next;
+                        return result;
+                    } else {
+                        return { value: undefined, done: true };
+                    }
+                }
+            };
+            return iterator;
+        }
+    
+        public values(): IterableIterator<V> {
+            let current = this._head;
+            let iterator: IterableIterator<V> = {
+                [Symbol.iterator]() {
+                    return iterator;
+                },
+                next():IteratorResult<V> {
+                    if (current) {
+                        let result = { value: current.value, done: false };
+                        current = current.next;
+                        return result;
+                    } else {
+                        return { value: undefined, done: true };
+                    }
+                }
+            };
+            return iterator;
+        }
+        */
+        LinkedMap.prototype.addItemFirst = function (item) {
+            // First time Insert
+            if (!this._head && !this._tail) {
+                this._tail = item;
+            }
+            else if (!this._head) {
+                throw new Error('Invalid list');
+            }
+            else {
+                item.next = this._head;
+                this._head.previous = item;
+            }
+            this._head = item;
+        };
+        LinkedMap.prototype.addItemLast = function (item) {
+            // First time Insert
+            if (!this._head && !this._tail) {
+                this._head = item;
+            }
+            else if (!this._tail) {
+                throw new Error('Invalid list');
+            }
+            else {
+                item.previous = this._tail;
+                this._tail.next = item;
+            }
+            this._tail = item;
+        };
+        LinkedMap.prototype.removeItem = function (item) {
+            if (item === this._head && item === this._tail) {
+                this._head = undefined;
+                this._tail = undefined;
+            }
+            else if (item === this._head) {
+                this._head = item.next;
+            }
+            else if (item === this._tail) {
+                this._tail = item.previous;
+            }
+            else {
+                var next = item.next;
+                var previous = item.previous;
+                if (!next || !previous) {
+                    throw new Error('Invalid list');
+                }
+                next.previous = previous;
+                previous.next = next;
+            }
+        };
+        LinkedMap.prototype.touch = function (item, touch) {
+            if (!this._head || !this._tail) {
+                throw new Error('Invalid list');
+            }
+            if ((touch !== Touch.First && touch !== Touch.Last)) {
+                return;
+            }
+            if (touch === Touch.First) {
+                if (item === this._head) {
+                    return;
+                }
+                var next = item.next;
+                var previous = item.previous;
+                // Unlink the item
+                if (item === this._tail) {
+                    // previous must be defined since item was not head but is tail
+                    // So there are more than on item in the map
+                    previous.next = undefined;
+                    this._tail = previous;
+                }
+                else {
+                    // Both next and previous are not undefined since item was neither head nor tail.
+                    next.previous = previous;
+                    previous.next = next;
+                }
+                // Insert the node at head
+                item.previous = undefined;
+                item.next = this._head;
+                this._head.previous = item;
+                this._head = item;
+            }
+            else if (touch === Touch.Last) {
+                if (item === this._tail) {
+                    return;
+                }
+                var next = item.next;
+                var previous = item.previous;
+                // Unlink the item.
+                if (item === this._head) {
+                    // next must be defined since item was not tail but is head
+                    // So there are more than on item in the map
+                    next.previous = undefined;
+                    this._head = next;
+                }
+                else {
+                    // Both next and previous are not undefined since item was neither head nor tail.
+                    next.previous = previous;
+                    previous.next = next;
+                }
+                item.next = undefined;
+                item.previous = this._tail;
+                this._tail.next = item;
+                this._tail = item;
+            }
+        };
+        return LinkedMap;
+    }());
+    exports.LinkedMap = LinkedMap;
+});
+
+define(__m[20/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/,17/*vs/base/common/map*/]), function (require, exports, map_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The empty string.
      */
@@ -3753,7 +4508,7 @@ define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/b
      * Escapes regular expression characters in a given string
      */
     function escapeRegExpCharacters(value) {
-        return value.replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&');
+        return value.replace(/[\-\\\{\}\*\+\?\|\^\$\.\[\]\(\)\#]/g, '\\$&');
     }
     exports.escapeRegExpCharacters = escapeRegExpCharacters;
     /**
@@ -3868,11 +4623,11 @@ define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/b
     exports.indexOfIgnoreCase = indexOfIgnoreCase;
     function createRegExp(searchString, isRegex, options) {
         if (options === void 0) { options = {}; }
-        if (searchString === '') {
+        if (!searchString) {
             throw new Error('Cannot create regex from empty string');
         }
         if (!isRegex) {
-            searchString = searchString.replace(/[\-\\\{\}\*\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&');
+            searchString = escapeRegExpCharacters(searchString);
         }
         if (options.wholeWord) {
             if (!/\B/.test(searchString.charAt(0))) {
@@ -3915,7 +4670,7 @@ define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/b
      */
     exports.canNormalize = typeof (''.normalize) === 'function';
     var nonAsciiCharactersPattern = /[^\u0000-\u0080]/;
-    var normalizedCache = new map_1.BoundedLinkedMap(10000); // bounded to 10000 elements
+    var normalizedCache = new map_1.BoundedMap(10000); // bounded to 10000 elements
     function normalizeNFC(str) {
         if (!exports.canNormalize || !str) {
             return str;
@@ -3954,14 +4709,16 @@ define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/b
      * Returns the leading whitespace of the string.
      * If the string contains only whitespaces, returns entire string
      */
-    function getLeadingWhitespace(str) {
-        for (var i = 0, len = str.length; i < len; i++) {
+    function getLeadingWhitespace(str, start, end) {
+        if (start === void 0) { start = 0; }
+        if (end === void 0) { end = str.length; }
+        for (var i = start; i < end; i++) {
             var chCode = str.charCodeAt(i);
             if (chCode !== 32 /* Space */ && chCode !== 9 /* Tab */) {
-                return str.substring(0, i);
+                return str.substring(start, i);
             }
         }
-        return str;
+        return str.substring(start, end);
     }
     exports.getLeadingWhitespace = getLeadingWhitespace;
     /**
@@ -3991,34 +4748,97 @@ define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/b
         }
     }
     exports.compare = compare;
-    function isAsciiChar(code) {
-        return (code >= 97 /* a */ && code <= 122 /* z */) || (code >= 65 /* A */ && code <= 90 /* Z */);
+    function compareIgnoreCase(a, b) {
+        var len = Math.min(a.length, b.length);
+        for (var i = 0; i < len; i++) {
+            var codeA = a.charCodeAt(i);
+            var codeB = b.charCodeAt(i);
+            if (codeA === codeB) {
+                // equal
+                continue;
+            }
+            if (isUpperAsciiLetter(codeA)) {
+                codeA += 32;
+            }
+            if (isUpperAsciiLetter(codeB)) {
+                codeB += 32;
+            }
+            var diff = codeA - codeB;
+            if (diff === 0) {
+                // equal -> ignoreCase
+                continue;
+            }
+            else if (isLowerAsciiLetter(codeA) && isLowerAsciiLetter(codeB)) {
+                //
+                return diff;
+            }
+            else {
+                return compare(a.toLowerCase(), b.toLowerCase());
+            }
+        }
+        if (a.length < b.length) {
+            return -1;
+        }
+        else if (a.length > b.length) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+    exports.compareIgnoreCase = compareIgnoreCase;
+    function isLowerAsciiLetter(code) {
+        return code >= 97 /* a */ && code <= 122 /* z */;
+    }
+    function isUpperAsciiLetter(code) {
+        return code >= 65 /* A */ && code <= 90 /* Z */;
+    }
+    function isAsciiLetter(code) {
+        return isLowerAsciiLetter(code) || isUpperAsciiLetter(code);
     }
     function equalsIgnoreCase(a, b) {
-        var len1 = a.length, len2 = b.length;
+        var len1 = a ? a.length : 0;
+        var len2 = b ? b.length : 0;
         if (len1 !== len2) {
             return false;
         }
-        for (var i = 0; i < len1; i++) {
-            var codeA = a.charCodeAt(i), codeB = b.charCodeAt(i);
+        return doEqualsIgnoreCase(a, b);
+    }
+    exports.equalsIgnoreCase = equalsIgnoreCase;
+    function doEqualsIgnoreCase(a, b, stopAt) {
+        if (stopAt === void 0) { stopAt = a.length; }
+        if (typeof a !== 'string' || typeof b !== 'string') {
+            return false;
+        }
+        for (var i = 0; i < stopAt; i++) {
+            var codeA = a.charCodeAt(i);
+            var codeB = b.charCodeAt(i);
             if (codeA === codeB) {
                 continue;
             }
-            else if (isAsciiChar(codeA) && isAsciiChar(codeB)) {
+            // a-z A-Z
+            if (isAsciiLetter(codeA) && isAsciiLetter(codeB)) {
                 var diff = Math.abs(codeA - codeB);
                 if (diff !== 0 && diff !== 32) {
                     return false;
                 }
             }
             else {
-                if (String.fromCharCode(codeA).toLocaleLowerCase() !== String.fromCharCode(codeB).toLocaleLowerCase()) {
+                if (String.fromCharCode(codeA).toLowerCase() !== String.fromCharCode(codeB).toLowerCase()) {
                     return false;
                 }
             }
         }
         return true;
     }
-    exports.equalsIgnoreCase = equalsIgnoreCase;
+    function beginsWithIgnoreCase(str, candidate) {
+        var candidateLength = candidate.length;
+        if (candidate.length > str.length) {
+            return false;
+        }
+        return doEqualsIgnoreCase(str, candidate, candidateLength);
+    }
+    exports.beginsWithIgnoreCase = beginsWithIgnoreCase;
     /**
      * @returns the length of the common prefix of the two strings.
      */
@@ -4047,6 +4867,41 @@ define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/b
         return len;
     }
     exports.commonSuffixLength = commonSuffixLength;
+    function substrEquals(a, aStart, aEnd, b, bStart, bEnd) {
+        while (aStart < aEnd && bStart < bEnd) {
+            if (a[aStart] !== b[bStart]) {
+                return false;
+            }
+            aStart += 1;
+            bStart += 1;
+        }
+        return true;
+    }
+    /**
+     * Return the overlap between the suffix of `a` and the prefix of `b`.
+     * For instance `overlap("foobar", "arr, I'm a pirate") === 2`.
+     */
+    function overlap(a, b) {
+        var aEnd = a.length;
+        var bEnd = b.length;
+        var aStart = aEnd - bEnd;
+        if (aStart === 0) {
+            return a === b ? aEnd : 0;
+        }
+        else if (aStart < 0) {
+            bEnd += aStart;
+            aStart = 0;
+        }
+        while (aStart < aEnd && bEnd > 0) {
+            if (substrEquals(a, aStart, aEnd, b, 0, bEnd)) {
+                return bEnd;
+            }
+            bEnd -= 1;
+            aStart += 1;
+        }
+        return 0;
+    }
+    exports.overlap = overlap;
     // --- unicode
     // http://en.wikipedia.org/wiki/Surrogate_pair
     // Returns the code point starting at a specified index in a string
@@ -4081,6 +4936,31 @@ define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/b
         return CONTAINS_RTL.test(str);
     }
     exports.containsRTL = containsRTL;
+    /**
+     * Generated using https://github.com/alexandrudima/unicode-utils/blob/master/generate-emoji-test.js
+     */
+    var CONTAINS_EMOJI = /(?:[\u231A\u231B\u23F0\u23F3\u2600-\u27BF\u2B50\u2B55]|\uD83C[\uDDE6-\uDDFF\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F\uDE80-\uDEF8]|\uD83E[\uDD00-\uDDE6])/;
+    function containsEmoji(str) {
+        return CONTAINS_EMOJI.test(str);
+    }
+    exports.containsEmoji = containsEmoji;
+    var IS_BASIC_ASCII = /^[\t\n\r\x20-\x7E]*$/;
+    /**
+     * Returns true if `str` contains only basic ASCII characters in the range 32 - 126 (including 32 and 126) or \n, \r, \t
+     */
+    function isBasicASCII(str) {
+        return IS_BASIC_ASCII.test(str);
+    }
+    exports.isBasicASCII = isBasicASCII;
+    function containsFullWidthCharacter(str) {
+        for (var i = 0, len = str.length; i < len; i++) {
+            if (isFullWidthCharacter(str.charCodeAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    exports.containsFullWidthCharacter = containsFullWidthCharacter;
     function isFullWidthCharacter(charCode) {
         // Do a cheap trick to better support wrapping of wide characters, treat them as 2 columns
         // http://jrgraphix.net/research/unicode_blocks.php
@@ -4247,1706 +5127,6 @@ define(__m[9/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/,11/*vs/b
         return result;
     }
     exports.repeat = repeat;
-});
-
-define(__m[16/*vs/base/common/filters*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/strings*/,11/*vs/base/common/map*/]), function (require, exports, strings, map_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    // Combined filters
-    /**
-     * @returns A filter which combines the provided set
-     * of filters with an or. The *first* filters that
-     * matches defined the return value of the returned
-     * filter.
-     */
-    function or() {
-        var filter = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            filter[_i - 0] = arguments[_i];
-        }
-        return function (word, wordToMatchAgainst) {
-            for (var i = 0, len = filter.length; i < len; i++) {
-                var match = filter[i](word, wordToMatchAgainst);
-                if (match) {
-                    return match;
-                }
-            }
-            return null;
-        };
-    }
-    exports.or = or;
-    /**
-     * @returns A filter which combines the provided set
-     * of filters with an and. The combines matches are
-     * returned if *all* filters match.
-     */
-    function and() {
-        var filter = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            filter[_i - 0] = arguments[_i];
-        }
-        return function (word, wordToMatchAgainst) {
-            var result = [];
-            for (var i = 0, len = filter.length; i < len; i++) {
-                var match = filter[i](word, wordToMatchAgainst);
-                if (!match) {
-                    return null;
-                }
-                result = result.concat(match);
-            }
-            return result;
-        };
-    }
-    exports.and = and;
-    // Prefix
-    exports.matchesStrictPrefix = function (word, wordToMatchAgainst) { return _matchesPrefix(false, word, wordToMatchAgainst); };
-    exports.matchesPrefix = function (word, wordToMatchAgainst) { return _matchesPrefix(true, word, wordToMatchAgainst); };
-    function _matchesPrefix(ignoreCase, word, wordToMatchAgainst) {
-        if (!wordToMatchAgainst || wordToMatchAgainst.length === 0 || wordToMatchAgainst.length < word.length) {
-            return null;
-        }
-        if (ignoreCase) {
-            word = word.toLowerCase();
-            wordToMatchAgainst = wordToMatchAgainst.toLowerCase();
-        }
-        for (var i = 0; i < word.length; i++) {
-            if (word[i] !== wordToMatchAgainst[i]) {
-                return null;
-            }
-        }
-        return word.length > 0 ? [{ start: 0, end: word.length }] : [];
-    }
-    // Contiguous Substring
-    function matchesContiguousSubString(word, wordToMatchAgainst) {
-        var index = wordToMatchAgainst.toLowerCase().indexOf(word.toLowerCase());
-        if (index === -1) {
-            return null;
-        }
-        return [{ start: index, end: index + word.length }];
-    }
-    exports.matchesContiguousSubString = matchesContiguousSubString;
-    // Substring
-    function matchesSubString(word, wordToMatchAgainst) {
-        return _matchesSubString(word.toLowerCase(), wordToMatchAgainst.toLowerCase(), 0, 0);
-    }
-    exports.matchesSubString = matchesSubString;
-    function _matchesSubString(word, wordToMatchAgainst, i, j) {
-        if (i === word.length) {
-            return [];
-        }
-        else if (j === wordToMatchAgainst.length) {
-            return null;
-        }
-        else {
-            if (word[i] === wordToMatchAgainst[j]) {
-                var result = null;
-                if (result = _matchesSubString(word, wordToMatchAgainst, i + 1, j + 1)) {
-                    return join({ start: j, end: j + 1 }, result);
-                }
-            }
-            return _matchesSubString(word, wordToMatchAgainst, i, j + 1);
-        }
-    }
-    // CamelCase
-    function isLower(code) {
-        return 97 /* a */ <= code && code <= 122 /* z */;
-    }
-    function isUpper(code) {
-        return 65 /* A */ <= code && code <= 90 /* Z */;
-    }
-    function isNumber(code) {
-        return 48 /* Digit0 */ <= code && code <= 57 /* Digit9 */;
-    }
-    function isWhitespace(code) {
-        return (code === 32 /* Space */
-            || code === 9 /* Tab */
-            || code === 10 /* LineFeed */
-            || code === 13 /* CarriageReturn */);
-    }
-    function isAlphanumeric(code) {
-        return isLower(code) || isUpper(code) || isNumber(code);
-    }
-    function join(head, tail) {
-        if (tail.length === 0) {
-            tail = [head];
-        }
-        else if (head.end === tail[0].start) {
-            tail[0].start = head.start;
-        }
-        else {
-            tail.unshift(head);
-        }
-        return tail;
-    }
-    function nextAnchor(camelCaseWord, start) {
-        for (var i = start; i < camelCaseWord.length; i++) {
-            var c = camelCaseWord.charCodeAt(i);
-            if (isUpper(c) || isNumber(c) || (i > 0 && !isAlphanumeric(camelCaseWord.charCodeAt(i - 1)))) {
-                return i;
-            }
-        }
-        return camelCaseWord.length;
-    }
-    function _matchesCamelCase(word, camelCaseWord, i, j) {
-        if (i === word.length) {
-            return [];
-        }
-        else if (j === camelCaseWord.length) {
-            return null;
-        }
-        else if (word[i] !== camelCaseWord[j].toLowerCase()) {
-            return null;
-        }
-        else {
-            var result = null;
-            var nextUpperIndex = j + 1;
-            result = _matchesCamelCase(word, camelCaseWord, i + 1, j + 1);
-            while (!result && (nextUpperIndex = nextAnchor(camelCaseWord, nextUpperIndex)) < camelCaseWord.length) {
-                result = _matchesCamelCase(word, camelCaseWord, i + 1, nextUpperIndex);
-                nextUpperIndex++;
-            }
-            return result === null ? null : join({ start: j, end: j + 1 }, result);
-        }
-    }
-    // Heuristic to avoid computing camel case matcher for words that don't
-    // look like camelCaseWords.
-    function analyzeCamelCaseWord(word) {
-        var upper = 0, lower = 0, alpha = 0, numeric = 0, code = 0;
-        for (var i = 0; i < word.length; i++) {
-            code = word.charCodeAt(i);
-            if (isUpper(code)) {
-                upper++;
-            }
-            if (isLower(code)) {
-                lower++;
-            }
-            if (isAlphanumeric(code)) {
-                alpha++;
-            }
-            if (isNumber(code)) {
-                numeric++;
-            }
-        }
-        var upperPercent = upper / word.length;
-        var lowerPercent = lower / word.length;
-        var alphaPercent = alpha / word.length;
-        var numericPercent = numeric / word.length;
-        return { upperPercent: upperPercent, lowerPercent: lowerPercent, alphaPercent: alphaPercent, numericPercent: numericPercent };
-    }
-    function isUpperCaseWord(analysis) {
-        var upperPercent = analysis.upperPercent, lowerPercent = analysis.lowerPercent, alphaPercent = analysis.alphaPercent, numericPercent = analysis.numericPercent;
-        return lowerPercent === 0 && upperPercent > 0.6;
-    }
-    function isCamelCaseWord(analysis) {
-        var upperPercent = analysis.upperPercent, lowerPercent = analysis.lowerPercent, alphaPercent = analysis.alphaPercent, numericPercent = analysis.numericPercent;
-        return lowerPercent > 0.2 && upperPercent < 0.8 && alphaPercent > 0.6 && numericPercent < 0.2;
-    }
-    // Heuristic to avoid computing camel case matcher for words that don't
-    // look like camel case patterns.
-    function isCamelCasePattern(word) {
-        var upper = 0, lower = 0, code = 0, whitespace = 0;
-        for (var i = 0; i < word.length; i++) {
-            code = word.charCodeAt(i);
-            if (isUpper(code)) {
-                upper++;
-            }
-            if (isLower(code)) {
-                lower++;
-            }
-            if (isWhitespace(code)) {
-                whitespace++;
-            }
-        }
-        if ((upper === 0 || lower === 0) && whitespace === 0) {
-            return word.length <= 30;
-        }
-        else {
-            return upper <= 5;
-        }
-    }
-    function matchesCamelCase(word, camelCaseWord) {
-        if (!camelCaseWord || camelCaseWord.length === 0) {
-            return null;
-        }
-        if (!isCamelCasePattern(word)) {
-            return null;
-        }
-        if (camelCaseWord.length > 60) {
-            return null;
-        }
-        var analysis = analyzeCamelCaseWord(camelCaseWord);
-        if (!isCamelCaseWord(analysis)) {
-            if (!isUpperCaseWord(analysis)) {
-                return null;
-            }
-            camelCaseWord = camelCaseWord.toLowerCase();
-        }
-        var result = null;
-        var i = 0;
-        while (i < camelCaseWord.length && (result = _matchesCamelCase(word.toLowerCase(), camelCaseWord, 0, i)) === null) {
-            i = nextAnchor(camelCaseWord, i + 1);
-        }
-        return result;
-    }
-    exports.matchesCamelCase = matchesCamelCase;
-    // Matches beginning of words supporting non-ASCII languages
-    // E.g. "gp" or "g p" will match "Git: Pull"
-    // Useful in cases where the target is words (e.g. command labels)
-    function matchesWords(word, target) {
-        if (!target || target.length === 0) {
-            return null;
-        }
-        var result = null;
-        var i = 0;
-        while (i < target.length && (result = _matchesWords(word.toLowerCase(), target, 0, i)) === null) {
-            i = nextWord(target, i + 1);
-        }
-        return result;
-    }
-    exports.matchesWords = matchesWords;
-    function _matchesWords(word, target, i, j) {
-        if (i === word.length) {
-            return [];
-        }
-        else if (j === target.length) {
-            return null;
-        }
-        else if (word[i] !== target[j].toLowerCase()) {
-            return null;
-        }
-        else {
-            var result = null;
-            var nextWordIndex = j + 1;
-            result = _matchesWords(word, target, i + 1, j + 1);
-            while (!result && (nextWordIndex = nextWord(target, nextWordIndex)) < target.length) {
-                result = _matchesWords(word, target, i + 1, nextWordIndex);
-                nextWordIndex++;
-            }
-            return result === null ? null : join({ start: j, end: j + 1 }, result);
-        }
-    }
-    function nextWord(word, start) {
-        for (var i = start; i < word.length; i++) {
-            var c = word.charCodeAt(i);
-            if (isWhitespace(c) || (i > 0 && isWhitespace(word.charCodeAt(i - 1)))) {
-                return i;
-            }
-        }
-        return word.length;
-    }
-    // Fuzzy
-    (function (SubstringMatching) {
-        SubstringMatching[SubstringMatching["Contiguous"] = 0] = "Contiguous";
-        SubstringMatching[SubstringMatching["Separate"] = 1] = "Separate";
-    })(exports.SubstringMatching || (exports.SubstringMatching = {}));
-    var SubstringMatching = exports.SubstringMatching;
-    exports.fuzzyContiguousFilter = or(exports.matchesPrefix, matchesCamelCase, matchesContiguousSubString);
-    var fuzzySeparateFilter = or(exports.matchesPrefix, matchesCamelCase, matchesSubString);
-    var fuzzyRegExpCache = new map_1.BoundedLinkedMap(10000); // bounded to 10000 elements
-    function matchesFuzzy(word, wordToMatchAgainst, enableSeparateSubstringMatching) {
-        if (enableSeparateSubstringMatching === void 0) { enableSeparateSubstringMatching = false; }
-        if (typeof word !== 'string' || typeof wordToMatchAgainst !== 'string') {
-            return null; // return early for invalid input
-        }
-        // Form RegExp for wildcard matches
-        var regexp = fuzzyRegExpCache.get(word);
-        if (!regexp) {
-            regexp = new RegExp(strings.convertSimple2RegExpPattern(word), 'i');
-            fuzzyRegExpCache.set(word, regexp);
-        }
-        // RegExp Filter
-        var match = regexp.exec(wordToMatchAgainst);
-        if (match) {
-            return [{ start: match.index, end: match.index + match[0].length }];
-        }
-        // Default Filter
-        return enableSeparateSubstringMatching ? fuzzySeparateFilter(word, wordToMatchAgainst) : exports.fuzzyContiguousFilter(word, wordToMatchAgainst);
-    }
-    exports.matchesFuzzy = matchesFuzzy;
-});
-
-define(__m[10/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var _typeof = {
-        number: 'number',
-        string: 'string',
-        undefined: 'undefined',
-        object: 'object',
-        function: 'function'
-    };
-    /**
-     * @returns whether the provided parameter is a JavaScript Array or not.
-     */
-    function isArray(array) {
-        if (Array.isArray) {
-            return Array.isArray(array);
-        }
-        if (array && typeof (array.length) === _typeof.number && array.constructor === Array) {
-            return true;
-        }
-        return false;
-    }
-    exports.isArray = isArray;
-    /**
-     * @returns whether the provided parameter is a JavaScript String or not.
-     */
-    function isString(str) {
-        if (typeof (str) === _typeof.string || str instanceof String) {
-            return true;
-        }
-        return false;
-    }
-    exports.isString = isString;
-    /**
-     * @returns whether the provided parameter is a JavaScript Array and each element in the array is a string.
-     */
-    function isStringArray(value) {
-        return isArray(value) && value.every(function (elem) { return isString(elem); });
-    }
-    exports.isStringArray = isStringArray;
-    /**
-     *
-     * @returns whether the provided parameter is of type `object` but **not**
-     *	`null`, an `array`, a `regexp`, nor a `date`.
-     */
-    function isObject(obj) {
-        // The method can't do a type cast since there are type (like strings) which
-        // are subclasses of any put not positvely matched by the function. Hence type
-        // narrowing results in wrong results.
-        return typeof obj === _typeof.object
-            && obj !== null
-            && !Array.isArray(obj)
-            && !(obj instanceof RegExp)
-            && !(obj instanceof Date);
-    }
-    exports.isObject = isObject;
-    /**
-     * In **contrast** to just checking `typeof` this will return `false` for `NaN`.
-     * @returns whether the provided parameter is a JavaScript Number or not.
-     */
-    function isNumber(obj) {
-        if ((typeof (obj) === _typeof.number || obj instanceof Number) && !isNaN(obj)) {
-            return true;
-        }
-        return false;
-    }
-    exports.isNumber = isNumber;
-    /**
-     * @returns whether the provided parameter is a JavaScript Boolean or not.
-     */
-    function isBoolean(obj) {
-        return obj === true || obj === false;
-    }
-    exports.isBoolean = isBoolean;
-    /**
-     * @returns whether the provided parameter is undefined.
-     */
-    function isUndefined(obj) {
-        return typeof (obj) === _typeof.undefined;
-    }
-    exports.isUndefined = isUndefined;
-    /**
-     * @returns whether the provided parameter is undefined or null.
-     */
-    function isUndefinedOrNull(obj) {
-        return isUndefined(obj) || obj === null;
-    }
-    exports.isUndefinedOrNull = isUndefinedOrNull;
-    var hasOwnProperty = Object.prototype.hasOwnProperty;
-    /**
-     * @returns whether the provided parameter is an empty JavaScript Object or not.
-     */
-    function isEmptyObject(obj) {
-        if (!isObject(obj)) {
-            return false;
-        }
-        for (var key in obj) {
-            if (hasOwnProperty.call(obj, key)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    exports.isEmptyObject = isEmptyObject;
-    /**
-     * @returns whether the provided parameter is a JavaScript Function or not.
-     */
-    function isFunction(obj) {
-        return typeof obj === _typeof.function;
-    }
-    exports.isFunction = isFunction;
-    /**
-     * @returns whether the provided parameters is are JavaScript Function or not.
-     */
-    function areFunctions() {
-        var objects = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            objects[_i - 0] = arguments[_i];
-        }
-        return objects && objects.length > 0 && objects.every(isFunction);
-    }
-    exports.areFunctions = areFunctions;
-    function validateConstraints(args, constraints) {
-        var len = Math.min(args.length, constraints.length);
-        for (var i = 0; i < len; i++) {
-            validateConstraint(args[i], constraints[i]);
-        }
-    }
-    exports.validateConstraints = validateConstraints;
-    function validateConstraint(arg, constraint) {
-        if (isString(constraint)) {
-            if (typeof arg !== constraint) {
-                throw new Error("argument does not match constraint: typeof " + constraint);
-            }
-        }
-        else if (isFunction(constraint)) {
-            if (arg instanceof constraint) {
-                return;
-            }
-            if (arg && arg.constructor === constraint) {
-                return;
-            }
-            if (constraint.length === 1 && constraint.call(undefined, arg) === true) {
-                return;
-            }
-            throw new Error("argument does not match one of these constraints: arg instanceof constraint, arg.constructor === constraint, nor constraint(arg) === true");
-        }
-    }
-    exports.validateConstraint = validateConstraint;
-    /**
-     * Creates a new object of the provided class and will call the constructor with
-     * any additional argument supplied.
-     */
-    function create(ctor) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        var obj = Object.create(ctor.prototype);
-        ctor.apply(obj, args);
-        return obj;
-    }
-    exports.create = create;
-});
-
-define(__m[2/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/platform*/,10/*vs/base/common/types*/]), function (require, exports, platform, types) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
-    var ErrorHandler = (function () {
-        function ErrorHandler() {
-            this.listeners = [];
-            this.unexpectedErrorHandler = function (e) {
-                platform.setTimeout(function () {
-                    if (e.stack) {
-                        throw new Error(e.message + '\n\n' + e.stack);
-                    }
-                    throw e;
-                }, 0);
-            };
-        }
-        ErrorHandler.prototype.addListener = function (listener) {
-            var _this = this;
-            this.listeners.push(listener);
-            return function () {
-                _this._removeListener(listener);
-            };
-        };
-        ErrorHandler.prototype.emit = function (e) {
-            this.listeners.forEach(function (listener) {
-                listener(e);
-            });
-        };
-        ErrorHandler.prototype._removeListener = function (listener) {
-            this.listeners.splice(this.listeners.indexOf(listener), 1);
-        };
-        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
-            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
-            return this.unexpectedErrorHandler;
-        };
-        ErrorHandler.prototype.onUnexpectedError = function (e) {
-            this.unexpectedErrorHandler(e);
-            this.emit(e);
-        };
-        // For external errors, we don't want the listeners to be called
-        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
-            this.unexpectedErrorHandler(e);
-        };
-        return ErrorHandler;
-    }());
-    exports.ErrorHandler = ErrorHandler;
-    exports.errorHandler = new ErrorHandler();
-    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
-        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
-    }
-    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
-    function onUnexpectedError(e) {
-        // ignore errors from cancelled promises
-        if (!isPromiseCanceledError(e)) {
-            exports.errorHandler.onUnexpectedError(e);
-        }
-    }
-    exports.onUnexpectedError = onUnexpectedError;
-    function onUnexpectedExternalError(e) {
-        // ignore errors from cancelled promises
-        if (!isPromiseCanceledError(e)) {
-            exports.errorHandler.onUnexpectedExternalError(e);
-        }
-    }
-    exports.onUnexpectedExternalError = onUnexpectedExternalError;
-    function onUnexpectedPromiseError(promise) {
-        return promise.then(null, onUnexpectedError);
-    }
-    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
-    function transformErrorForSerialization(error) {
-        if (error instanceof Error) {
-            var name_1 = error.name, message = error.message;
-            var stack = error.stacktrace || error.stack;
-            return {
-                $isError: true,
-                name: name_1,
-                message: message,
-                stack: stack
-            };
-        }
-        // return as is
-        return error;
-    }
-    exports.transformErrorForSerialization = transformErrorForSerialization;
-    var canceledName = 'Canceled';
-    /**
-     * Checks if the given error is a promise in canceled state
-     */
-    function isPromiseCanceledError(error) {
-        return error instanceof Error && error.name === canceledName && error.message === canceledName;
-    }
-    exports.isPromiseCanceledError = isPromiseCanceledError;
-    /**
-     * Returns an error that signals cancellation.
-     */
-    function canceled() {
-        var error = new Error(canceledName);
-        error.name = error.message;
-        return error;
-    }
-    exports.canceled = canceled;
-    /**
-     * Returns an error that signals something is not implemented.
-     */
-    function notImplemented() {
-        return new Error('Not Implemented');
-    }
-    exports.notImplemented = notImplemented;
-    function illegalArgument(name) {
-        if (name) {
-            return new Error("Illegal argument: " + name);
-        }
-        else {
-            return new Error('Illegal argument');
-        }
-    }
-    exports.illegalArgument = illegalArgument;
-    function illegalState(name) {
-        if (name) {
-            return new Error("Illegal state: " + name);
-        }
-        else {
-            return new Error('Illegal state');
-        }
-    }
-    exports.illegalState = illegalState;
-    function readonly(name) {
-        return name
-            ? new Error("readonly property '" + name + " cannot be changed'")
-            : new Error('readonly property cannot be changed');
-    }
-    exports.readonly = readonly;
-    function create(message, options) {
-        if (options === void 0) { options = {}; }
-        var result = new Error(message);
-        if (types.isNumber(options.severity)) {
-            result.severity = options.severity;
-        }
-        if (options.actions) {
-            result.actions = options.actions;
-        }
-        return result;
-    }
-    exports.create = create;
-    function getErrorMessage(err) {
-        if (!err) {
-            return 'Error';
-        }
-        if (err.message) {
-            return err.message;
-        }
-        if (err.stack) {
-            return err.stack.split('\n')[0];
-        }
-        return String(err);
-    }
-    exports.getErrorMessage = getErrorMessage;
-});
-
-define(__m[15/*vs/base/common/callbackList*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/errors*/]), function (require, exports, errors_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var CallbackList = (function () {
-        function CallbackList() {
-        }
-        CallbackList.prototype.add = function (callback, context, bucket) {
-            var _this = this;
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                this._callbacks = [];
-                this._contexts = [];
-            }
-            this._callbacks.push(callback);
-            this._contexts.push(context);
-            if (Array.isArray(bucket)) {
-                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
-            }
-        };
-        CallbackList.prototype.remove = function (callback, context) {
-            if (context === void 0) { context = null; }
-            if (!this._callbacks) {
-                return;
-            }
-            var foundCallbackWithDifferentContext = false;
-            for (var i = 0, len = this._callbacks.length; i < len; i++) {
-                if (this._callbacks[i] === callback) {
-                    if (this._contexts[i] === context) {
-                        // callback & context match => remove it
-                        this._callbacks.splice(i, 1);
-                        this._contexts.splice(i, 1);
-                        return;
-                    }
-                    else {
-                        foundCallbackWithDifferentContext = true;
-                    }
-                }
-            }
-            if (foundCallbackWithDifferentContext) {
-                throw new Error('When adding a listener with a context, you should remove it with the same context');
-            }
-        };
-        CallbackList.prototype.invoke = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            if (!this._callbacks) {
-                return;
-            }
-            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
-            for (var i = 0, len = callbacks.length; i < len; i++) {
-                try {
-                    ret.push(callbacks[i].apply(contexts[i], args));
-                }
-                catch (e) {
-                    errors_1.onUnexpectedError(e);
-                }
-            }
-            return ret;
-        };
-        CallbackList.prototype.isEmpty = function () {
-            return !this._callbacks || this._callbacks.length === 0;
-        };
-        CallbackList.prototype.entries = function () {
-            var _this = this;
-            if (!this._callbacks) {
-                return [];
-            }
-            return this._callbacks.map(function (fn, index) { return [fn, _this._contexts[index]]; });
-        };
-        CallbackList.prototype.dispose = function () {
-            this._callbacks = undefined;
-            this._contexts = undefined;
-        };
-        return CallbackList;
-    }());
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = CallbackList;
-});
-
-
-
-
-
-
-define(__m[5/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/types*/]), function (require, exports, types_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    exports.empty = Object.freeze({
-        dispose: function () { }
-    });
-    function dispose() {
-        var disposables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
-        }
-        var first = disposables[0];
-        if (types_1.isArray(first)) {
-            disposables = first;
-        }
-        disposables.forEach(function (d) { return d && d.dispose(); });
-        return [];
-    }
-    exports.dispose = dispose;
-    function combinedDisposable(disposables) {
-        return { dispose: function () { return dispose(disposables); } };
-    }
-    exports.combinedDisposable = combinedDisposable;
-    function toDisposable() {
-        var fns = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            fns[_i - 0] = arguments[_i];
-        }
-        return combinedDisposable(fns.map(function (fn) { return ({ dispose: fn }); }));
-    }
-    exports.toDisposable = toDisposable;
-    var Disposable = (function () {
-        function Disposable() {
-            this._toDispose = [];
-        }
-        Disposable.prototype.dispose = function () {
-            this._toDispose = dispose(this._toDispose);
-        };
-        Disposable.prototype._register = function (t) {
-            this._toDispose.push(t);
-            return t;
-        };
-        return Disposable;
-    }());
-    exports.Disposable = Disposable;
-    var Disposables = (function (_super) {
-        __extends(Disposables, _super);
-        function Disposables() {
-            _super.apply(this, arguments);
-        }
-        Disposables.prototype.add = function (arg) {
-            if (!Array.isArray(arg)) {
-                return this._register(arg);
-            }
-            else {
-                for (var _i = 0, arg_1 = arg; _i < arg_1.length; _i++) {
-                    var element = arg_1[_i];
-                    return this._register(element);
-                }
-            }
-        };
-        return Disposables;
-    }(Disposable));
-    exports.Disposables = Disposables;
-    var ReferenceCollection = (function () {
-        function ReferenceCollection() {
-            this.references = Object.create(null);
-        }
-        ReferenceCollection.prototype.acquire = function (key) {
-            var _this = this;
-            var reference = this.references[key];
-            if (!reference) {
-                reference = this.references[key] = { counter: 0, object: this.createReferencedObject(key) };
-            }
-            var object = reference.object;
-            var dispose = function () {
-                if (--reference.counter === 0) {
-                    _this.destroyReferencedObject(reference.object);
-                    delete _this.references[key];
-                }
-            };
-            reference.counter++;
-            return { object: object, dispose: dispose };
-        };
-        return ReferenceCollection;
-    }());
-    exports.ReferenceCollection = ReferenceCollection;
-    var ImmortalReference = (function () {
-        function ImmortalReference(object) {
-            this.object = object;
-        }
-        ImmortalReference.prototype.dispose = function () { };
-        return ImmortalReference;
-    }());
-    exports.ImmortalReference = ImmortalReference;
-});
-
-define(__m[6/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/lifecycle*/,15/*vs/base/common/callbackList*/]), function (require, exports, lifecycle_1, callbackList_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    var Event;
-    (function (Event) {
-        var _disposable = { dispose: function () { } };
-        Event.None = function () { return _disposable; };
-    })(Event || (Event = {}));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Event;
-    /**
-     * The Emitter can be used to expose an Event to the public
-     * to fire it from the insides.
-     * Sample:
-        class Document {
-    
-            private _onDidChange = new Emitter<(value:string)=>any>();
-    
-            public onDidChange = this._onDidChange.event;
-    
-            // getter-style
-            // get onDidChange(): Event<(value:string)=>any> {
-            // 	return this._onDidChange.event;
-            // }
-    
-            private _doIt() {
-                //...
-                this._onDidChange.fire(value);
-            }
-        }
-     */
-    var Emitter = (function () {
-        function Emitter(_options) {
-            this._options = _options;
-        }
-        Object.defineProperty(Emitter.prototype, "event", {
-            /**
-             * For the public to allow to subscribe
-             * to events from this Emitter
-             */
-            get: function () {
-                var _this = this;
-                if (!this._event) {
-                    this._event = function (listener, thisArgs, disposables) {
-                        if (!_this._callbacks) {
-                            _this._callbacks = new callbackList_1.default();
-                        }
-                        var firstListener = _this._callbacks.isEmpty();
-                        if (firstListener && _this._options && _this._options.onFirstListenerAdd) {
-                            _this._options.onFirstListenerAdd(_this);
-                        }
-                        _this._callbacks.add(listener, thisArgs);
-                        if (firstListener && _this._options && _this._options.onFirstListenerDidAdd) {
-                            _this._options.onFirstListenerDidAdd(_this);
-                        }
-                        var result;
-                        result = {
-                            dispose: function () {
-                                result.dispose = Emitter._noop;
-                                if (!_this._disposed) {
-                                    _this._callbacks.remove(listener, thisArgs);
-                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
-                                        _this._options.onLastListenerRemove(_this);
-                                    }
-                                }
-                            }
-                        };
-                        if (Array.isArray(disposables)) {
-                            disposables.push(result);
-                        }
-                        return result;
-                    };
-                }
-                return this._event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * To be kept private to fire an event to
-         * subscribers
-         */
-        Emitter.prototype.fire = function (event) {
-            if (this._callbacks) {
-                this._callbacks.invoke.call(this._callbacks, event);
-            }
-        };
-        Emitter.prototype.dispose = function () {
-            if (this._callbacks) {
-                this._callbacks.dispose();
-                this._callbacks = undefined;
-                this._disposed = true;
-            }
-        };
-        Emitter._noop = function () { };
-        return Emitter;
-    }());
-    exports.Emitter = Emitter;
-    /**
-     * Creates an Event which is backed-up by the event emitter. This allows
-     * to use the existing eventing pattern and is likely using less memory.
-     * Sample:
-     *
-     * 	class Document {
-     *
-     *		private _eventbus = new EventEmitter();
-     *
-     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
-     *
-     *		// getter-style
-     *		// get onDidChange(): Event<(value:string)=>any> {
-     *		// 	cache fromEventEmitter result and return
-     *		// }
-     *
-     *		private _doIt() {
-     *			// ...
-     *			this._eventbus.emit('changed', value)
-     *		}
-     *	}
-     */
-    function fromEventEmitter(emitter, eventType) {
-        return function (listener, thisArgs, disposables) {
-            var result = emitter.addListener2(eventType, function () {
-                listener.apply(thisArgs, arguments);
-            });
-            if (Array.isArray(disposables)) {
-                disposables.push(result);
-            }
-            return result;
-        };
-    }
-    exports.fromEventEmitter = fromEventEmitter;
-    function fromPromise(promise) {
-        var emitter = new Emitter();
-        var shouldEmit = false;
-        promise
-            .then(null, function () { return null; })
-            .then(function () {
-            if (!shouldEmit) {
-                setTimeout(function () { return emitter.fire(); }, 0);
-            }
-            else {
-                emitter.fire();
-            }
-        });
-        shouldEmit = true;
-        return emitter.event;
-    }
-    exports.fromPromise = fromPromise;
-    function delayed(promise) {
-        var toCancel = null;
-        var listener = null;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
-            },
-            onLastListenerRemove: function () {
-                if (toCancel) {
-                    toCancel.cancel();
-                    toCancel = null;
-                }
-                if (listener) {
-                    listener.dispose();
-                    listener = null;
-                }
-            }
-        });
-        return emitter.event;
-    }
-    exports.delayed = delayed;
-    function once(event) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            var result = event(function (e) {
-                result.dispose();
-                return listener.call(thisArgs, e);
-            }, null, disposables);
-            return result;
-        };
-    }
-    exports.once = once;
-    function any() {
-        var events = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            events[_i - 0] = arguments[_i];
-        }
-        var listeners = [];
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                listeners = events.map(function (e) { return e(function (r) { return emitter.fire(r); }); });
-            },
-            onLastListenerRemove: function () {
-                listeners = lifecycle_1.dispose(listeners);
-            }
-        });
-        return emitter.event;
-    }
-    exports.any = any;
-    function debounceEvent(event, merger, delay) {
-        if (delay === void 0) { delay = 100; }
-        var subscription;
-        var output;
-        var handle;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                subscription = event(function (cur) {
-                    output = merger(output, cur);
-                    clearTimeout(handle);
-                    handle = setTimeout(function () {
-                        var _output = output;
-                        output = undefined;
-                        emitter.fire(_output);
-                    }, delay);
-                });
-            },
-            onLastListenerRemove: function () {
-                subscription.dispose();
-            }
-        });
-        return emitter.event;
-    }
-    exports.debounceEvent = debounceEvent;
-    /**
-     * The EventDelayer is useful in situations in which you want
-     * to delay firing your events during some code.
-     * You can wrap that code and be sure that the event will not
-     * be fired during that wrap.
-     *
-     * ```
-     * const emitter: Emitter;
-     * const delayer = new EventDelayer();
-     * const delayedEvent = delayer.wrapEvent(emitter.event);
-     *
-     * delayedEvent(console.log);
-     *
-     * delayer.bufferEvents(() => {
-     *   emitter.fire(); // event will not be fired yet
-     * });
-     *
-     * // event will only be fired at this point
-     * ```
-     */
-    var EventBufferer = (function () {
-        function EventBufferer() {
-            this.buffers = [];
-        }
-        EventBufferer.prototype.wrapEvent = function (event) {
-            var _this = this;
-            return function (listener, thisArgs, disposables) {
-                return event(function (i) {
-                    var buffer = _this.buffers[_this.buffers.length - 1];
-                    if (buffer) {
-                        buffer.push(function () { return listener.call(thisArgs, i); });
-                    }
-                    else {
-                        listener.call(thisArgs, i);
-                    }
-                }, void 0, disposables);
-            };
-        };
-        EventBufferer.prototype.bufferEvents = function (fn) {
-            var buffer = [];
-            this.buffers.push(buffer);
-            fn();
-            this.buffers.pop();
-            buffer.forEach(function (flush) { return flush(); });
-        };
-        return EventBufferer;
-    }());
-    exports.EventBufferer = EventBufferer;
-    function mapEvent(event, map) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
-        };
-    }
-    exports.mapEvent = mapEvent;
-    function filterEvent(event, filter) {
-        return function (listener, thisArgs, disposables) {
-            if (thisArgs === void 0) { thisArgs = null; }
-            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
-        };
-    }
-    exports.filterEvent = filterEvent;
-    var ChainableEvent = (function () {
-        function ChainableEvent(_event) {
-            this._event = _event;
-        }
-        Object.defineProperty(ChainableEvent.prototype, "event", {
-            get: function () { return this._event; },
-            enumerable: true,
-            configurable: true
-        });
-        ChainableEvent.prototype.map = function (fn) {
-            return new ChainableEvent(mapEvent(this._event, fn));
-        };
-        ChainableEvent.prototype.filter = function (fn) {
-            return new ChainableEvent(filterEvent(this._event, fn));
-        };
-        ChainableEvent.prototype.on = function (listener, thisArgs, disposables) {
-            return this._event(listener, thisArgs, disposables);
-        };
-        return ChainableEvent;
-    }());
-    function chain(event) {
-        return new ChainableEvent(event);
-    }
-    exports.chain = chain;
-    function stopwatch(event) {
-        var start = new Date().getTime();
-        return mapEvent(once(event), function (_) { return new Date().getTime() - start; });
-    }
-    exports.stopwatch = stopwatch;
-    /**
-     * Buffers the provided event until a first listener comes
-     * along, at which point fire all the events at once and
-     * pipe the event from then on.
-     *
-     * ```typescript
-     * const emitter = new Emitter<number>();
-     * const event = emitter.event;
-     * const bufferedEvent = buffer(event);
-     *
-     * emitter.fire(1);
-     * emitter.fire(2);
-     * emitter.fire(3);
-     * // nothing...
-     *
-     * const listener = bufferedEvent(num => console.log(num));
-     * // 1, 2, 3
-     *
-     * emitter.fire(4);
-     * // 4
-     * ```
-     */
-    function buffer(event, nextTick, buffer) {
-        if (nextTick === void 0) { nextTick = false; }
-        if (buffer === void 0) { buffer = []; }
-        buffer = buffer.slice();
-        var listener = event(function (e) {
-            if (buffer) {
-                buffer.push(e);
-            }
-            else {
-                emitter.fire(e);
-            }
-        });
-        var flush = function () {
-            buffer.forEach(function (e) { return emitter.fire(e); });
-            buffer = null;
-        };
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () {
-                if (!listener) {
-                    listener = event(function (e) { return emitter.fire(e); });
-                }
-            },
-            onFirstListenerDidAdd: function () {
-                if (buffer) {
-                    if (nextTick) {
-                        setTimeout(flush);
-                    }
-                    else {
-                        flush();
-                    }
-                }
-            },
-            onLastListenerRemove: function () {
-                listener.dispose();
-                listener = null;
-            }
-        });
-        return emitter.event;
-    }
-    exports.buffer = buffer;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[12/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/event*/]), function (require, exports, event_1) {
-    'use strict';
-    var shortcutEvent = Object.freeze(function (callback, context) {
-        var handle = setTimeout(callback.bind(context), 0);
-        return { dispose: function () { clearTimeout(handle); } };
-    });
-    var CancellationToken;
-    (function (CancellationToken) {
-        CancellationToken.None = Object.freeze({
-            isCancellationRequested: false,
-            onCancellationRequested: event_1.default.None
-        });
-        CancellationToken.Cancelled = Object.freeze({
-            isCancellationRequested: true,
-            onCancellationRequested: shortcutEvent
-        });
-    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
-    var MutableToken = (function () {
-        function MutableToken() {
-            this._isCancelled = false;
-        }
-        MutableToken.prototype.cancel = function () {
-            if (!this._isCancelled) {
-                this._isCancelled = true;
-                if (this._emitter) {
-                    this._emitter.fire(undefined);
-                    this._emitter = undefined;
-                }
-            }
-        };
-        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
-            get: function () {
-                return this._isCancelled;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
-            get: function () {
-                if (this._isCancelled) {
-                    return shortcutEvent;
-                }
-                if (!this._emitter) {
-                    this._emitter = new event_1.Emitter();
-                }
-                return this._emitter.event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return MutableToken;
-    }());
-    var CancellationTokenSource = (function () {
-        function CancellationTokenSource() {
-        }
-        Object.defineProperty(CancellationTokenSource.prototype, "token", {
-            get: function () {
-                if (!this._token) {
-                    // be lazy and create the token only when
-                    // actually needed
-                    this._token = new MutableToken();
-                }
-                return this._token;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        CancellationTokenSource.prototype.cancel = function () {
-            if (!this._token) {
-                // save an object by returning the default
-                // cancelled token when cancellation happens
-                // before someone asks for the token
-                this._token = CancellationToken.Cancelled;
-            }
-            else {
-                this._token.cancel();
-            }
-        };
-        CancellationTokenSource.prototype.dispose = function () {
-            this.cancel();
-        };
-        return CancellationTokenSource;
-    }());
-    exports.CancellationTokenSource = CancellationTokenSource;
-});
-
-define(__m[13/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/platform*/]), function (require, exports, platform) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    function _encode(ch) {
-        return '%' + ch.charCodeAt(0).toString(16).toUpperCase();
-    }
-    // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
-    function encodeURIComponent2(str) {
-        return encodeURIComponent(str).replace(/[!'()*]/g, _encode);
-    }
-    function encodeNoop(str) {
-        return str;
-    }
-    /**
-     * Uniform Resource Identifier (URI) http://tools.ietf.org/html/rfc3986.
-     * This class is a simple parser which creates the basic component paths
-     * (http://tools.ietf.org/html/rfc3986#section-3) with minimal validation
-     * and encoding.
-     *
-     *       foo://example.com:8042/over/there?name=ferret#nose
-     *       \_/   \______________/\_________/ \_________/ \__/
-     *        |           |            |            |        |
-     *     scheme     authority       path        query   fragment
-     *        |   _____________________|__
-     *       / \ /                        \
-     *       urn:example:animal:ferret:nose
-     *
-     *
-     */
-    var URI = (function () {
-        function URI() {
-            this._scheme = URI._empty;
-            this._authority = URI._empty;
-            this._path = URI._empty;
-            this._query = URI._empty;
-            this._fragment = URI._empty;
-            this._formatted = null;
-            this._fsPath = null;
-        }
-        URI.isUri = function (thing) {
-            if (thing instanceof URI) {
-                return true;
-            }
-            if (!thing) {
-                return false;
-            }
-            return typeof thing.authority === 'string'
-                && typeof thing.fragment === 'string'
-                && typeof thing.path === 'string'
-                && typeof thing.query === 'string'
-                && typeof thing.scheme === 'string';
-        };
-        Object.defineProperty(URI.prototype, "scheme", {
-            /**
-             * scheme is the 'http' part of 'http://www.msft.com/some/path?query#fragment'.
-             * The part before the first colon.
-             */
-            get: function () {
-                return this._scheme;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "authority", {
-            /**
-             * authority is the 'www.msft.com' part of 'http://www.msft.com/some/path?query#fragment'.
-             * The part between the first double slashes and the next slash.
-             */
-            get: function () {
-                return this._authority;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "path", {
-            /**
-             * path is the '/some/path' part of 'http://www.msft.com/some/path?query#fragment'.
-             */
-            get: function () {
-                return this._path;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "query", {
-            /**
-             * query is the 'query' part of 'http://www.msft.com/some/path?query#fragment'.
-             */
-            get: function () {
-                return this._query;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "fragment", {
-            /**
-             * fragment is the 'fragment' part of 'http://www.msft.com/some/path?query#fragment'.
-             */
-            get: function () {
-                return this._fragment;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URI.prototype, "fsPath", {
-            // ---- filesystem path -----------------------
-            /**
-             * Returns a string representing the corresponding file system path of this URI.
-             * Will handle UNC paths and normalize windows drive letters to lower-case. Also
-             * uses the platform specific path separator. Will *not* validate the path for
-             * invalid characters and semantics. Will *not* look at the scheme of this URI.
-             */
-            get: function () {
-                if (!this._fsPath) {
-                    var value;
-                    if (this._authority && this._path && this.scheme === 'file') {
-                        // unc path: file://shares/c$/far/boo
-                        value = "//" + this._authority + this._path;
-                    }
-                    else if (URI._driveLetterPath.test(this._path)) {
-                        // windows drive letter: file:///c:/far/boo
-                        value = this._path[1].toLowerCase() + this._path.substr(2);
-                    }
-                    else {
-                        // other path
-                        value = this._path;
-                    }
-                    if (platform.isWindows) {
-                        value = value.replace(/\//g, '\\');
-                    }
-                    this._fsPath = value;
-                }
-                return this._fsPath;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        // ---- modify to new -------------------------
-        URI.prototype.with = function (change) {
-            if (!change) {
-                return this;
-            }
-            var scheme = change.scheme, authority = change.authority, path = change.path, query = change.query, fragment = change.fragment;
-            if (scheme === void 0) {
-                scheme = this.scheme;
-            }
-            else if (scheme === null) {
-                scheme = '';
-            }
-            if (authority === void 0) {
-                authority = this.authority;
-            }
-            else if (authority === null) {
-                authority = '';
-            }
-            if (path === void 0) {
-                path = this.path;
-            }
-            else if (path === null) {
-                path = '';
-            }
-            if (query === void 0) {
-                query = this.query;
-            }
-            else if (query === null) {
-                query = '';
-            }
-            if (fragment === void 0) {
-                fragment = this.fragment;
-            }
-            else if (fragment === null) {
-                fragment = '';
-            }
-            if (scheme === this.scheme
-                && authority === this.authority
-                && path === this.path
-                && query === this.query
-                && fragment === this.fragment) {
-                return this;
-            }
-            var ret = new URI();
-            ret._scheme = scheme;
-            ret._authority = authority;
-            ret._path = path;
-            ret._query = query;
-            ret._fragment = fragment;
-            URI._validate(ret);
-            return ret;
-        };
-        // ---- parse & validate ------------------------
-        URI.parse = function (value) {
-            var ret = new URI();
-            var data = URI._parseComponents(value);
-            ret._scheme = data.scheme;
-            ret._authority = decodeURIComponent(data.authority);
-            ret._path = decodeURIComponent(data.path);
-            ret._query = decodeURIComponent(data.query);
-            ret._fragment = decodeURIComponent(data.fragment);
-            URI._validate(ret);
-            return ret;
-        };
-        URI.file = function (path) {
-            var ret = new URI();
-            ret._scheme = 'file';
-            // normalize to fwd-slashes
-            path = path.replace(/\\/g, URI._slash);
-            // check for authority as used in UNC shares
-            // or use the path as given
-            if (path[0] === URI._slash && path[0] === path[1]) {
-                var idx = path.indexOf(URI._slash, 2);
-                if (idx === -1) {
-                    ret._authority = path.substring(2);
-                }
-                else {
-                    ret._authority = path.substring(2, idx);
-                    ret._path = path.substring(idx);
-                }
-            }
-            else {
-                ret._path = path;
-            }
-            // Ensure that path starts with a slash
-            // or that it is at least a slash
-            if (ret._path[0] !== URI._slash) {
-                ret._path = URI._slash + ret._path;
-            }
-            URI._validate(ret);
-            return ret;
-        };
-        URI._parseComponents = function (value) {
-            var ret = {
-                scheme: URI._empty,
-                authority: URI._empty,
-                path: URI._empty,
-                query: URI._empty,
-                fragment: URI._empty,
-            };
-            var match = URI._regexp.exec(value);
-            if (match) {
-                ret.scheme = match[2] || ret.scheme;
-                ret.authority = match[4] || ret.authority;
-                ret.path = match[5] || ret.path;
-                ret.query = match[7] || ret.query;
-                ret.fragment = match[9] || ret.fragment;
-            }
-            return ret;
-        };
-        URI.from = function (components) {
-            return new URI().with(components);
-        };
-        URI._validate = function (ret) {
-            // scheme, https://tools.ietf.org/html/rfc3986#section-3.1
-            // ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
-            if (ret.scheme && !URI._schemePattern.test(ret.scheme)) {
-                throw new Error('[UriError]: Scheme contains illegal characters.');
-            }
-            // path, http://tools.ietf.org/html/rfc3986#section-3.3
-            // If a URI contains an authority component, then the path component
-            // must either be empty or begin with a slash ("/") character.  If a URI
-            // does not contain an authority component, then the path cannot begin
-            // with two slash characters ("//").
-            if (ret.path) {
-                if (ret.authority) {
-                    if (!URI._singleSlashStart.test(ret.path)) {
-                        throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
-                    }
-                }
-                else {
-                    if (URI._doubleSlashStart.test(ret.path)) {
-                        throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
-                    }
-                }
-            }
-        };
-        // ---- printing/externalize ---------------------------
-        /**
-         *
-         * @param skipEncoding Do not encode the result, default is `false`
-         */
-        URI.prototype.toString = function (skipEncoding) {
-            if (skipEncoding === void 0) { skipEncoding = false; }
-            if (!skipEncoding) {
-                if (!this._formatted) {
-                    this._formatted = URI._asFormatted(this, false);
-                }
-                return this._formatted;
-            }
-            else {
-                // we don't cache that
-                return URI._asFormatted(this, true);
-            }
-        };
-        URI._asFormatted = function (uri, skipEncoding) {
-            var encoder = !skipEncoding
-                ? encodeURIComponent2
-                : encodeNoop;
-            var parts = [];
-            var scheme = uri.scheme, authority = uri.authority, path = uri.path, query = uri.query, fragment = uri.fragment;
-            if (scheme) {
-                parts.push(scheme, ':');
-            }
-            if (authority || scheme === 'file') {
-                parts.push('//');
-            }
-            if (authority) {
-                authority = authority.toLowerCase();
-                var idx = authority.indexOf(':');
-                if (idx === -1) {
-                    parts.push(encoder(authority));
-                }
-                else {
-                    parts.push(encoder(authority.substr(0, idx)), authority.substr(idx));
-                }
-            }
-            if (path) {
-                // lower-case windows drive letters in /C:/fff or C:/fff
-                var m = URI._upperCaseDrive.exec(path);
-                if (m) {
-                    if (m[1]) {
-                        path = '/' + m[2].toLowerCase() + path.substr(3); // "/c:".length === 3
-                    }
-                    else {
-                        path = m[2].toLowerCase() + path.substr(2); // // "c:".length === 2
-                    }
-                }
-                // encode every segement but not slashes
-                // make sure that # and ? are always encoded
-                // when occurring in paths - otherwise the result
-                // cannot be parsed back again
-                var lastIdx = 0;
-                while (true) {
-                    var idx = path.indexOf(URI._slash, lastIdx);
-                    if (idx === -1) {
-                        parts.push(encoder(path.substring(lastIdx)).replace(/[#?]/, _encode));
-                        break;
-                    }
-                    parts.push(encoder(path.substring(lastIdx, idx)).replace(/[#?]/, _encode), URI._slash);
-                    lastIdx = idx + 1;
-                }
-                ;
-            }
-            if (query) {
-                parts.push('?', encoder(query));
-            }
-            if (fragment) {
-                parts.push('#', encoder(fragment));
-            }
-            return parts.join(URI._empty);
-        };
-        URI.prototype.toJSON = function () {
-            return {
-                scheme: this.scheme,
-                authority: this.authority,
-                path: this.path,
-                fsPath: this.fsPath,
-                query: this.query,
-                fragment: this.fragment,
-                external: this.toString(),
-                $mid: 1
-            };
-        };
-        URI.revive = function (data) {
-            var result = new URI();
-            result._scheme = data.scheme;
-            result._authority = data.authority;
-            result._path = data.path;
-            result._query = data.query;
-            result._fragment = data.fragment;
-            result._fsPath = data.fsPath;
-            result._formatted = data.external;
-            URI._validate(result);
-            return result;
-        };
-        URI._empty = '';
-        URI._slash = '/';
-        URI._regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
-        URI._driveLetterPath = /^\/[a-zA-z]:/;
-        URI._upperCaseDrive = /^(\/)?([A-Z]:)/;
-        URI._schemePattern = /^\w[\w\d+.-]*$/;
-        URI._singleSlashStart = /^\//;
-        URI._doubleSlashStart = /^\/\//;
-        return URI;
-    }());
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = URI;
 });
 
 /**
@@ -8025,63 +7205,887 @@ if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-define(__m[3/*vs/base/common/winjs.base*/], __M([30/*vs/base/common/winjs.base.raw*/,2/*vs/base/common/errors*/]), function (winjs, __Errors__) {
+define(__m[2/*vs/base/common/winjs.base*/], __M([32/*vs/base/common/winjs.base.raw*/]), function (winjs) {
 	'use strict';
-
-	var outstandingPromiseErrors = {};
-	function promiseErrorHandler(e) {
-
-		//
-		// e.detail looks like: { exception, error, promise, handler, id, parent }
-		//
-		var details = e.detail;
-		var id = details.id;
-
-		// If the error has a parent promise then this is not the origination of the
-		//  error so we check if it has a handler, and if so we mark that the error
-		//  was handled by removing it from outstandingPromiseErrors
-		//
-		if (details.parent) {
-			if (details.handler && outstandingPromiseErrors) {
-				delete outstandingPromiseErrors[id];
-			}
-			return;
-		}
-
-		// Indicate that this error was originated and needs to be handled
-		outstandingPromiseErrors[id] = details;
-
-		// The first time the queue fills up this iteration, schedule a timeout to
-		// check if any errors are still unhandled.
-		if (Object.keys(outstandingPromiseErrors).length === 1) {
-			setTimeout(function () {
-				var errors = outstandingPromiseErrors;
-				outstandingPromiseErrors = {};
-				Object.keys(errors).forEach(function (errorId) {
-					var error = errors[errorId];
-					if(error.exception) {
-						__Errors__.onUnexpectedError(error.exception);
-					} else if(error.error) {
-						__Errors__.onUnexpectedError(error.error);
-					}
-					console.log("WARNING: Promise with no error callback:" + error.id);
-					console.log(error);
-					if(error.exception) {
-						console.log(error.exception.stack);
-					}
-				});
-			}, 0);
-		}
-	}
-
-	winjs.Promise.addEventListener("error", promiseErrorHandler);
-
 	return {
 		Promise: winjs.Promise,
 		TPromise: winjs.Promise,
 		PPromise: winjs.Promise
 	};
 });
+
+define(__m[8/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/platform*/,14/*vs/base/common/types*/,2/*vs/base/common/winjs.base*/]), function (require, exports, platform, types, winjs_base_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    // ------ BEGIN Hook up error listeners to winjs promises
+    var outstandingPromiseErrors = {};
+    function promiseErrorHandler(e) {
+        //
+        // e.detail looks like: { exception, error, promise, handler, id, parent }
+        //
+        var details = e.detail;
+        var id = details.id;
+        // If the error has a parent promise then this is not the origination of the
+        //  error so we check if it has a handler, and if so we mark that the error
+        //  was handled by removing it from outstandingPromiseErrors
+        //
+        if (details.parent) {
+            if (details.handler && outstandingPromiseErrors) {
+                delete outstandingPromiseErrors[id];
+            }
+            return;
+        }
+        // Indicate that this error was originated and needs to be handled
+        outstandingPromiseErrors[id] = details;
+        // The first time the queue fills up this iteration, schedule a timeout to
+        // check if any errors are still unhandled.
+        if (Object.keys(outstandingPromiseErrors).length === 1) {
+            setTimeout(function () {
+                var errors = outstandingPromiseErrors;
+                outstandingPromiseErrors = {};
+                Object.keys(errors).forEach(function (errorId) {
+                    var error = errors[errorId];
+                    if (error.exception) {
+                        onUnexpectedError(error.exception);
+                    }
+                    else if (error.error) {
+                        onUnexpectedError(error.error);
+                    }
+                    console.log('WARNING: Promise with no error callback:' + error.id);
+                    console.log(error);
+                    if (error.exception) {
+                        console.log(error.exception.stack);
+                    }
+                });
+            }, 0);
+        }
+    }
+    winjs_base_1.TPromise.addEventListener('error', promiseErrorHandler);
+    // Avoid circular dependency on EventEmitter by implementing a subset of the interface.
+    var ErrorHandler = (function () {
+        function ErrorHandler() {
+            this.listeners = [];
+            this.unexpectedErrorHandler = function (e) {
+                platform.setTimeout(function () {
+                    if (e.stack) {
+                        throw new Error(e.message + '\n\n' + e.stack);
+                    }
+                    throw e;
+                }, 0);
+            };
+        }
+        ErrorHandler.prototype.addListener = function (listener) {
+            var _this = this;
+            this.listeners.push(listener);
+            return function () {
+                _this._removeListener(listener);
+            };
+        };
+        ErrorHandler.prototype.emit = function (e) {
+            this.listeners.forEach(function (listener) {
+                listener(e);
+            });
+        };
+        ErrorHandler.prototype._removeListener = function (listener) {
+            this.listeners.splice(this.listeners.indexOf(listener), 1);
+        };
+        ErrorHandler.prototype.setUnexpectedErrorHandler = function (newUnexpectedErrorHandler) {
+            this.unexpectedErrorHandler = newUnexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.getUnexpectedErrorHandler = function () {
+            return this.unexpectedErrorHandler;
+        };
+        ErrorHandler.prototype.onUnexpectedError = function (e) {
+            this.unexpectedErrorHandler(e);
+            this.emit(e);
+        };
+        // For external errors, we don't want the listeners to be called
+        ErrorHandler.prototype.onUnexpectedExternalError = function (e) {
+            this.unexpectedErrorHandler(e);
+        };
+        return ErrorHandler;
+    }());
+    exports.ErrorHandler = ErrorHandler;
+    exports.errorHandler = new ErrorHandler();
+    function setUnexpectedErrorHandler(newUnexpectedErrorHandler) {
+        exports.errorHandler.setUnexpectedErrorHandler(newUnexpectedErrorHandler);
+    }
+    exports.setUnexpectedErrorHandler = setUnexpectedErrorHandler;
+    function onUnexpectedError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedError(e);
+        }
+    }
+    exports.onUnexpectedError = onUnexpectedError;
+    function onUnexpectedExternalError(e) {
+        // ignore errors from cancelled promises
+        if (!isPromiseCanceledError(e)) {
+            exports.errorHandler.onUnexpectedExternalError(e);
+        }
+    }
+    exports.onUnexpectedExternalError = onUnexpectedExternalError;
+    function onUnexpectedPromiseError(promise) {
+        return promise.then(null, onUnexpectedError);
+    }
+    exports.onUnexpectedPromiseError = onUnexpectedPromiseError;
+    function transformErrorForSerialization(error) {
+        if (error instanceof Error) {
+            var name_1 = error.name, message = error.message;
+            var stack = error.stacktrace || error.stack;
+            return {
+                $isError: true,
+                name: name_1,
+                message: message,
+                stack: stack
+            };
+        }
+        // return as is
+        return error;
+    }
+    exports.transformErrorForSerialization = transformErrorForSerialization;
+    var canceledName = 'Canceled';
+    /**
+     * Checks if the given error is a promise in canceled state
+     */
+    function isPromiseCanceledError(error) {
+        return error instanceof Error && error.name === canceledName && error.message === canceledName;
+    }
+    exports.isPromiseCanceledError = isPromiseCanceledError;
+    /**
+     * Returns an error that signals cancellation.
+     */
+    function canceled() {
+        var error = new Error(canceledName);
+        error.name = error.message;
+        return error;
+    }
+    exports.canceled = canceled;
+    /**
+     * Returns an error that signals something is not implemented.
+     */
+    function notImplemented() {
+        return new Error('Not Implemented');
+    }
+    exports.notImplemented = notImplemented;
+    function illegalArgument(name) {
+        if (name) {
+            return new Error("Illegal argument: " + name);
+        }
+        else {
+            return new Error('Illegal argument');
+        }
+    }
+    exports.illegalArgument = illegalArgument;
+    function illegalState(name) {
+        if (name) {
+            return new Error("Illegal state: " + name);
+        }
+        else {
+            return new Error('Illegal state');
+        }
+    }
+    exports.illegalState = illegalState;
+    function readonly(name) {
+        return name
+            ? new Error("readonly property '" + name + " cannot be changed'")
+            : new Error('readonly property cannot be changed');
+    }
+    exports.readonly = readonly;
+    function create(message, options) {
+        if (options === void 0) { options = {}; }
+        var result = new Error(message);
+        if (types.isNumber(options.severity)) {
+            result.severity = options.severity;
+        }
+        if (options.actions) {
+            result.actions = options.actions;
+        }
+        return result;
+    }
+    exports.create = create;
+    function getErrorMessage(err) {
+        if (!err) {
+            return 'Error';
+        }
+        if (err.message) {
+            return err.message;
+        }
+        if (err.stack) {
+            return err.stack.split('\n')[0];
+        }
+        return String(err);
+    }
+    exports.getErrorMessage = getErrorMessage;
+});
+
+define(__m[15/*vs/base/common/callbackList*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var CallbackList = (function () {
+        function CallbackList() {
+        }
+        CallbackList.prototype.add = function (callback, context, bucket) {
+            var _this = this;
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                this._callbacks = [];
+                this._contexts = [];
+            }
+            this._callbacks.push(callback);
+            this._contexts.push(context);
+            if (Array.isArray(bucket)) {
+                bucket.push({ dispose: function () { return _this.remove(callback, context); } });
+            }
+        };
+        CallbackList.prototype.remove = function (callback, context) {
+            if (context === void 0) { context = null; }
+            if (!this._callbacks) {
+                return;
+            }
+            var foundCallbackWithDifferentContext = false;
+            for (var i = 0, len = this._callbacks.length; i < len; i++) {
+                if (this._callbacks[i] === callback) {
+                    if (this._contexts[i] === context) {
+                        // callback & context match => remove it
+                        this._callbacks.splice(i, 1);
+                        this._contexts.splice(i, 1);
+                        return;
+                    }
+                    else {
+                        foundCallbackWithDifferentContext = true;
+                    }
+                }
+            }
+            if (foundCallbackWithDifferentContext) {
+                throw new Error('When adding a listener with a context, you should remove it with the same context');
+            }
+        };
+        CallbackList.prototype.invoke = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            if (!this._callbacks) {
+                return undefined;
+            }
+            var ret = [], callbacks = this._callbacks.slice(0), contexts = this._contexts.slice(0);
+            for (var i = 0, len = callbacks.length; i < len; i++) {
+                try {
+                    ret.push(callbacks[i].apply(contexts[i], args));
+                }
+                catch (e) {
+                    errors_1.onUnexpectedError(e);
+                }
+            }
+            return ret;
+        };
+        CallbackList.prototype.isEmpty = function () {
+            return !this._callbacks || this._callbacks.length === 0;
+        };
+        CallbackList.prototype.entries = function () {
+            var _this = this;
+            if (!this._callbacks) {
+                return [];
+            }
+            return this._callbacks.map(function (fn, index) { return [fn, _this._contexts[index]]; });
+        };
+        CallbackList.prototype.dispose = function () {
+            this._callbacks = undefined;
+            this._contexts = undefined;
+        };
+        return CallbackList;
+    }());
+    exports.default = CallbackList;
+});
+
+define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,10/*vs/base/common/lifecycle*/,15/*vs/base/common/callbackList*/,2/*vs/base/common/winjs.base*/,11/*vs/base/common/functional*/]), function (require, exports, lifecycle_1, callbackList_1, winjs_base_1, functional_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Event;
+    (function (Event) {
+        var _disposable = { dispose: function () { } };
+        Event.None = function () { return _disposable; };
+    })(Event || (Event = {}));
+    exports.default = Event;
+    /**
+     * The Emitter can be used to expose an Event to the public
+     * to fire it from the insides.
+     * Sample:
+        class Document {
+    
+            private _onDidChange = new Emitter<(value:string)=>any>();
+    
+            public onDidChange = this._onDidChange.event;
+    
+            // getter-style
+            // get onDidChange(): Event<(value:string)=>any> {
+            // 	return this._onDidChange.event;
+            // }
+    
+            private _doIt() {
+                //...
+                this._onDidChange.fire(value);
+            }
+        }
+     */
+    var Emitter = (function () {
+        function Emitter(_options) {
+            this._options = _options;
+        }
+        Object.defineProperty(Emitter.prototype, "event", {
+            /**
+             * For the public to allow to subscribe
+             * to events from this Emitter
+             */
+            get: function () {
+                var _this = this;
+                if (!this._event) {
+                    this._event = function (listener, thisArgs, disposables) {
+                        if (!_this._callbacks) {
+                            _this._callbacks = new callbackList_1.default();
+                        }
+                        var firstListener = _this._callbacks.isEmpty();
+                        if (firstListener && _this._options && _this._options.onFirstListenerAdd) {
+                            _this._options.onFirstListenerAdd(_this);
+                        }
+                        _this._callbacks.add(listener, thisArgs);
+                        if (firstListener && _this._options && _this._options.onFirstListenerDidAdd) {
+                            _this._options.onFirstListenerDidAdd(_this);
+                        }
+                        if (_this._options && _this._options.onListenerDidAdd) {
+                            _this._options.onListenerDidAdd(_this, listener, thisArgs);
+                        }
+                        var result;
+                        result = {
+                            dispose: function () {
+                                result.dispose = Emitter._noop;
+                                if (!_this._disposed) {
+                                    _this._callbacks.remove(listener, thisArgs);
+                                    if (_this._options && _this._options.onLastListenerRemove && _this._callbacks.isEmpty()) {
+                                        _this._options.onLastListenerRemove(_this);
+                                    }
+                                }
+                            }
+                        };
+                        if (Array.isArray(disposables)) {
+                            disposables.push(result);
+                        }
+                        return result;
+                    };
+                }
+                return this._event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * To be kept private to fire an event to
+         * subscribers
+         */
+        Emitter.prototype.fire = function (event) {
+            if (this._callbacks) {
+                this._callbacks.invoke.call(this._callbacks, event);
+            }
+        };
+        Emitter.prototype.dispose = function () {
+            if (this._callbacks) {
+                this._callbacks.dispose();
+                this._callbacks = undefined;
+                this._disposed = true;
+            }
+        };
+        Emitter._noop = function () { };
+        return Emitter;
+    }());
+    exports.Emitter = Emitter;
+    var EventMultiplexer = (function () {
+        function EventMultiplexer() {
+            var _this = this;
+            this.hasListeners = false;
+            this.events = [];
+            this.emitter = new Emitter({
+                onFirstListenerAdd: function () { return _this.onFirstListenerAdd(); },
+                onLastListenerRemove: function () { return _this.onLastListenerRemove(); }
+            });
+        }
+        Object.defineProperty(EventMultiplexer.prototype, "event", {
+            get: function () {
+                return this.emitter.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        EventMultiplexer.prototype.add = function (event) {
+            var _this = this;
+            var e = { event: event, listener: null };
+            this.events.push(e);
+            if (this.hasListeners) {
+                this.hook(e);
+            }
+            var dispose = function () {
+                if (_this.hasListeners) {
+                    _this.unhook(e);
+                }
+                var idx = _this.events.indexOf(e);
+                _this.events.splice(idx, 1);
+            };
+            return lifecycle_1.toDisposable(functional_1.once(dispose));
+        };
+        EventMultiplexer.prototype.onFirstListenerAdd = function () {
+            var _this = this;
+            this.hasListeners = true;
+            this.events.forEach(function (e) { return _this.hook(e); });
+        };
+        EventMultiplexer.prototype.onLastListenerRemove = function () {
+            var _this = this;
+            this.hasListeners = false;
+            this.events.forEach(function (e) { return _this.unhook(e); });
+        };
+        EventMultiplexer.prototype.hook = function (e) {
+            var _this = this;
+            e.listener = e.event(function (r) { return _this.emitter.fire(r); });
+        };
+        EventMultiplexer.prototype.unhook = function (e) {
+            e.listener.dispose();
+            e.listener = null;
+        };
+        EventMultiplexer.prototype.dispose = function () {
+            this.emitter.dispose();
+        };
+        return EventMultiplexer;
+    }());
+    exports.EventMultiplexer = EventMultiplexer;
+    /**
+     * Creates an Event which is backed-up by the event emitter. This allows
+     * to use the existing eventing pattern and is likely using less memory.
+     * Sample:
+     *
+     * 	class Document {
+     *
+     *		private _eventbus = new EventEmitter();
+     *
+     *		public onDidChange = fromEventEmitter(this._eventbus, 'changed');
+     *
+     *		// getter-style
+     *		// get onDidChange(): Event<(value:string)=>any> {
+     *		// 	cache fromEventEmitter result and return
+     *		// }
+     *
+     *		private _doIt() {
+     *			// ...
+     *			this._eventbus.emit('changed', value)
+     *		}
+     *	}
+     */
+    function fromEventEmitter(emitter, eventType) {
+        return function (listener, thisArgs, disposables) {
+            var result = emitter.addListener(eventType, function () {
+                listener.apply(thisArgs, arguments);
+            });
+            if (Array.isArray(disposables)) {
+                disposables.push(result);
+            }
+            return result;
+        };
+    }
+    exports.fromEventEmitter = fromEventEmitter;
+    function fromCallback(fn) {
+        var listener;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () { return listener = fn(function (e) { return emitter.fire(e); }); },
+            onLastListenerRemove: function () { return listener.dispose(); }
+        });
+        return emitter.event;
+    }
+    exports.fromCallback = fromCallback;
+    function fromPromise(promise) {
+        var emitter = new Emitter();
+        var shouldEmit = false;
+        promise
+            .then(null, function () { return null; })
+            .then(function () {
+            if (!shouldEmit) {
+                setTimeout(function () { return emitter.fire(); }, 0);
+            }
+            else {
+                emitter.fire();
+            }
+        });
+        shouldEmit = true;
+        return emitter.event;
+    }
+    exports.fromPromise = fromPromise;
+    function toPromise(event) {
+        return new winjs_base_1.TPromise(function (complete) {
+            var sub = event(function (e) {
+                sub.dispose();
+                complete(e);
+            });
+        });
+    }
+    exports.toPromise = toPromise;
+    function delayed(promise) {
+        var toCancel = null;
+        var listener = null;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                toCancel = promise.then(function (event) { return listener = event(function (e) { return emitter.fire(e); }); }, function () { return null; });
+            },
+            onLastListenerRemove: function () {
+                if (toCancel) {
+                    toCancel.cancel();
+                    toCancel = null;
+                }
+                if (listener) {
+                    listener.dispose();
+                    listener = null;
+                }
+            }
+        });
+        return emitter.event;
+    }
+    exports.delayed = delayed;
+    function once(event) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            var result = event(function (e) {
+                result.dispose();
+                return listener.call(thisArgs, e);
+            }, null, disposables);
+            return result;
+        };
+    }
+    exports.once = once;
+    function any() {
+        var events = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            events[_i] = arguments[_i];
+        }
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return lifecycle_1.combinedDisposable(events.map(function (event) { return event(function (e) { return listener.call(thisArgs, e); }, null, disposables); }));
+        };
+    }
+    exports.any = any;
+    function debounceEvent(event, merger, delay, leading) {
+        if (delay === void 0) { delay = 100; }
+        if (leading === void 0) { leading = false; }
+        var subscription;
+        var output;
+        var handle;
+        var numDebouncedCalls = 0;
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                subscription = event(function (cur) {
+                    numDebouncedCalls++;
+                    output = merger(output, cur);
+                    if (!handle && leading) {
+                        emitter.fire(output);
+                    }
+                    clearTimeout(handle);
+                    handle = setTimeout(function () {
+                        var _output = output;
+                        output = undefined;
+                        if (!leading || numDebouncedCalls > 1) {
+                            emitter.fire(_output);
+                        }
+                        handle = null;
+                        numDebouncedCalls = 0;
+                    }, delay);
+                });
+            },
+            onLastListenerRemove: function () {
+                subscription.dispose();
+            }
+        });
+        return emitter.event;
+    }
+    exports.debounceEvent = debounceEvent;
+    /**
+     * The EventDelayer is useful in situations in which you want
+     * to delay firing your events during some code.
+     * You can wrap that code and be sure that the event will not
+     * be fired during that wrap.
+     *
+     * ```
+     * const emitter: Emitter;
+     * const delayer = new EventDelayer();
+     * const delayedEvent = delayer.wrapEvent(emitter.event);
+     *
+     * delayedEvent(console.log);
+     *
+     * delayer.bufferEvents(() => {
+     *   emitter.fire(); // event will not be fired yet
+     * });
+     *
+     * // event will only be fired at this point
+     * ```
+     */
+    var EventBufferer = (function () {
+        function EventBufferer() {
+            this.buffers = [];
+        }
+        EventBufferer.prototype.wrapEvent = function (event) {
+            var _this = this;
+            return function (listener, thisArgs, disposables) {
+                return event(function (i) {
+                    var buffer = _this.buffers[_this.buffers.length - 1];
+                    if (buffer) {
+                        buffer.push(function () { return listener.call(thisArgs, i); });
+                    }
+                    else {
+                        listener.call(thisArgs, i);
+                    }
+                }, void 0, disposables);
+            };
+        };
+        EventBufferer.prototype.bufferEvents = function (fn) {
+            var buffer = [];
+            this.buffers.push(buffer);
+            fn();
+            this.buffers.pop();
+            buffer.forEach(function (flush) { return flush(); });
+        };
+        return EventBufferer;
+    }());
+    exports.EventBufferer = EventBufferer;
+    function mapEvent(event, map) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (i) { return listener.call(thisArgs, map(i)); }, null, disposables);
+        };
+    }
+    exports.mapEvent = mapEvent;
+    function filterEvent(event, filter) {
+        return function (listener, thisArgs, disposables) {
+            if (thisArgs === void 0) { thisArgs = null; }
+            return event(function (e) { return filter(e) && listener.call(thisArgs, e); }, null, disposables);
+        };
+    }
+    exports.filterEvent = filterEvent;
+    var ChainableEvent = (function () {
+        function ChainableEvent(_event) {
+            this._event = _event;
+        }
+        Object.defineProperty(ChainableEvent.prototype, "event", {
+            get: function () { return this._event; },
+            enumerable: true,
+            configurable: true
+        });
+        ChainableEvent.prototype.map = function (fn) {
+            return new ChainableEvent(mapEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.filter = function (fn) {
+            return new ChainableEvent(filterEvent(this._event, fn));
+        };
+        ChainableEvent.prototype.on = function (listener, thisArgs, disposables) {
+            return this._event(listener, thisArgs, disposables);
+        };
+        return ChainableEvent;
+    }());
+    function chain(event) {
+        return new ChainableEvent(event);
+    }
+    exports.chain = chain;
+    function stopwatch(event) {
+        var start = new Date().getTime();
+        return mapEvent(once(event), function (_) { return new Date().getTime() - start; });
+    }
+    exports.stopwatch = stopwatch;
+    /**
+     * Buffers the provided event until a first listener comes
+     * along, at which point fire all the events at once and
+     * pipe the event from then on.
+     *
+     * ```typescript
+     * const emitter = new Emitter<number>();
+     * const event = emitter.event;
+     * const bufferedEvent = buffer(event);
+     *
+     * emitter.fire(1);
+     * emitter.fire(2);
+     * emitter.fire(3);
+     * // nothing...
+     *
+     * const listener = bufferedEvent(num => console.log(num));
+     * // 1, 2, 3
+     *
+     * emitter.fire(4);
+     * // 4
+     * ```
+     */
+    function buffer(event, nextTick, buffer) {
+        if (nextTick === void 0) { nextTick = false; }
+        if (buffer === void 0) { buffer = []; }
+        buffer = buffer.slice();
+        var listener = event(function (e) {
+            if (buffer) {
+                buffer.push(e);
+            }
+            else {
+                emitter.fire(e);
+            }
+        });
+        var flush = function () {
+            buffer.forEach(function (e) { return emitter.fire(e); });
+            buffer = null;
+        };
+        var emitter = new Emitter({
+            onFirstListenerAdd: function () {
+                if (!listener) {
+                    listener = event(function (e) { return emitter.fire(e); });
+                }
+            },
+            onFirstListenerDidAdd: function () {
+                if (buffer) {
+                    if (nextTick) {
+                        setTimeout(flush);
+                    }
+                    else {
+                        flush();
+                    }
+                }
+            },
+            onLastListenerRemove: function () {
+                listener.dispose();
+                listener = null;
+            }
+        });
+        return emitter.event;
+    }
+    exports.buffer = buffer;
+    /**
+     * Similar to `buffer` but it buffers indefinitely and repeats
+     * the buffered events to every new listener.
+     */
+    function echo(event, nextTick, buffer) {
+        if (nextTick === void 0) { nextTick = false; }
+        if (buffer === void 0) { buffer = []; }
+        buffer = buffer.slice();
+        event(function (e) {
+            buffer.push(e);
+            emitter.fire(e);
+        });
+        var flush = function (listener, thisArgs) { return buffer.forEach(function (e) { return listener.call(thisArgs, e); }); };
+        var emitter = new Emitter({
+            onListenerDidAdd: function (emitter, listener, thisArgs) {
+                if (nextTick) {
+                    setTimeout(function () { return flush(listener, thisArgs); });
+                }
+                else {
+                    flush(listener, thisArgs);
+                }
+            }
+        });
+        return emitter.event;
+    }
+    exports.echo = echo;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[13/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,9/*vs/base/common/event*/]), function (require, exports, event_1) {
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var shortcutEvent = Object.freeze(function (callback, context) {
+        var handle = setTimeout(callback.bind(context), 0);
+        return { dispose: function () { clearTimeout(handle); } };
+    });
+    var CancellationToken;
+    (function (CancellationToken) {
+        CancellationToken.None = Object.freeze({
+            isCancellationRequested: false,
+            onCancellationRequested: event_1.default.None
+        });
+        CancellationToken.Cancelled = Object.freeze({
+            isCancellationRequested: true,
+            onCancellationRequested: shortcutEvent
+        });
+    })(CancellationToken = exports.CancellationToken || (exports.CancellationToken = {}));
+    var MutableToken = (function () {
+        function MutableToken() {
+            this._isCancelled = false;
+        }
+        MutableToken.prototype.cancel = function () {
+            if (!this._isCancelled) {
+                this._isCancelled = true;
+                if (this._emitter) {
+                    this._emitter.fire(undefined);
+                    this._emitter = undefined;
+                }
+            }
+        };
+        Object.defineProperty(MutableToken.prototype, "isCancellationRequested", {
+            get: function () {
+                return this._isCancelled;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MutableToken.prototype, "onCancellationRequested", {
+            get: function () {
+                if (this._isCancelled) {
+                    return shortcutEvent;
+                }
+                if (!this._emitter) {
+                    this._emitter = new event_1.Emitter();
+                }
+                return this._emitter.event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return MutableToken;
+    }());
+    var CancellationTokenSource = (function () {
+        function CancellationTokenSource() {
+        }
+        Object.defineProperty(CancellationTokenSource.prototype, "token", {
+            get: function () {
+                if (!this._token) {
+                    // be lazy and create the token only when
+                    // actually needed
+                    this._token = new MutableToken();
+                }
+                return this._token;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CancellationTokenSource.prototype.cancel = function () {
+            if (!this._token) {
+                // save an object by returning the default
+                // cancelled token when cancellation happens
+                // before someone asks for the token
+                this._token = CancellationToken.Cancelled;
+            }
+            else {
+                this._token.cancel();
+            }
+        };
+        CancellationTokenSource.prototype.dispose = function () {
+            this.cancel();
+        };
+        return CancellationTokenSource;
+    }());
+    exports.CancellationTokenSource = CancellationTokenSource;
+});
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -8091,8 +8095,14 @@ define(__m[3/*vs/base/common/winjs.base*/], __M([30/*vs/base/common/winjs.base.r
 
 
 
-define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/errors*/,4/*vs/base/common/platform*/,3/*vs/base/common/winjs.base*/,12/*vs/base/common/cancellation*/,5/*vs/base/common/lifecycle*/,6/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
+
+
+
+
+
+define(__m[18/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/errors*/,4/*vs/base/common/platform*/,2/*vs/base/common/winjs.base*/,13/*vs/base/common/cancellation*/,10/*vs/base/common/lifecycle*/,9/*vs/base/common/event*/]), function (require, exports, errors, platform, winjs_base_1, cancellation_1, lifecycle_1, event_1) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
     }
@@ -8133,6 +8143,7 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
                 if (!errors.isPromiseCanceledError(err)) {
                     return winjs_base_1.TPromise.wrapError(err);
                 }
+                return undefined;
             });
         }
         return always(promise, function () { return subscription.dispose(); });
@@ -8150,8 +8161,8 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
      * The throttler implements this via the queue() method, by providing it a task
      * factory. Following the example:
      *
-     * 		var throttler = new Throttler();
-     * 		var letters = [];
+     * 		const throttler = new Throttler();
+     * 		const letters = [];
      *
      * 		function deliver() {
      * 			const lettersToDeliver = letters;
@@ -8181,20 +8192,20 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
                         _this.queuedPromiseFactory = null;
                         return result;
                     };
-                    this.queuedPromise = new winjs_base_1.Promise(function (c, e, p) {
+                    this.queuedPromise = new winjs_base_1.TPromise(function (c, e, p) {
                         _this.activePromise.then(onComplete_1, onComplete_1, p).done(c);
                     }, function () {
                         _this.activePromise.cancel();
                     });
                 }
-                return new winjs_base_1.Promise(function (c, e, p) {
+                return new winjs_base_1.TPromise(function (c, e, p) {
                     _this.queuedPromise.then(c, e, p);
                 }, function () {
                     // no-op
                 });
             }
             this.activePromise = promiseFactory();
-            return new winjs_base_1.Promise(function (c, e, p) {
+            return new winjs_base_1.TPromise(function (c, e, p) {
                 _this.activePromise.done(function (result) {
                     _this.activePromise = null;
                     c(result);
@@ -8235,8 +8246,8 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
      * to be executed and the waiting period (delay) must be passed in as arguments. Following
      * the example:
      *
-     * 		var delayer = new Delayer(WAITING_PERIOD);
-     * 		var letters = [];
+     * 		const delayer = new Delayer(WAITING_PERIOD);
+     * 		const letters = [];
      *
      * 		function letterReceived(l) {
      * 			letters.push(l);
@@ -8257,7 +8268,7 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
             this.task = task;
             this.cancelTimeout();
             if (!this.completionPromise) {
-                this.completionPromise = new winjs_base_1.Promise(function (c) {
+                this.completionPromise = new winjs_base_1.TPromise(function (c) {
                     _this.onSuccess = c;
                 }, function () {
                     // no-op
@@ -8304,8 +8315,9 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
     var ThrottledDelayer = (function (_super) {
         __extends(ThrottledDelayer, _super);
         function ThrottledDelayer(defaultDelay) {
-            _super.call(this, defaultDelay);
-            this.throttler = new Throttler();
+            var _this = _super.call(this, defaultDelay) || this;
+            _this.throttler = new Throttler();
+            return _this;
         }
         ThrottledDelayer.prototype.trigger = function (promiseFactory, delay) {
             var _this = this;
@@ -8322,9 +8334,10 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
         __extends(PeriodThrottledDelayer, _super);
         function PeriodThrottledDelayer(defaultDelay, minimumPeriod) {
             if (minimumPeriod === void 0) { minimumPeriod = 0; }
-            _super.call(this, defaultDelay);
-            this.minimumPeriod = minimumPeriod;
-            this.periodThrottler = new Throttler();
+            var _this = _super.call(this, defaultDelay) || this;
+            _this.minimumPeriod = minimumPeriod;
+            _this.periodThrottler = new Throttler();
+            return _this;
         }
         PeriodThrottledDelayer.prototype.trigger = function (promiseFactory, delay) {
             var _this = this;
@@ -8367,8 +8380,9 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
     var ShallowCancelThenPromise = (function (_super) {
         __extends(ShallowCancelThenPromise, _super);
         function ShallowCancelThenPromise(outer) {
+            var _this = this;
             var completeCallback, errorCallback, progressCallback;
-            _super.call(this, function (c, e, p) {
+            _this = _super.call(this, function (c, e, p) {
                 completeCallback = c;
                 errorCallback = e;
                 progressCallback = p;
@@ -8376,8 +8390,9 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
                 // cancel this promise but not the
                 // outer promise
                 errorCallback(errors.canceled());
-            });
+            }) || this;
             outer.then(completeCallback, errorCallback, progressCallback);
+            return _this;
         }
         return ShallowCancelThenPromise;
     }(winjs_base_1.TPromise));
@@ -8461,20 +8476,6 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
         return loop();
     }
     exports.first = first;
-    function once(fn) {
-        var _this = this;
-        var didCall = false;
-        var result;
-        return function () {
-            if (didCall) {
-                return result;
-            }
-            didCall = true;
-            result = fn.apply(_this, arguments);
-            return result;
-        };
-    }
-    exports.once = once;
     /**
      * A helper to queue N promises and run them all with a max degree of parallelism. The helper
      * ensures that at any time no more than M promises are running at the same time.
@@ -8536,16 +8537,26 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
     var Queue = (function (_super) {
         __extends(Queue, _super);
         function Queue() {
-            _super.call(this, 1);
+            return _super.call(this, 1) || this;
         }
         return Queue;
     }(Limiter));
     exports.Queue = Queue;
+    function setDisposableTimeout(handler, timeout) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        var handle = setTimeout.apply(void 0, [handler, timeout].concat(args));
+        return { dispose: function () { clearTimeout(handle); } };
+    }
+    exports.setDisposableTimeout = setDisposableTimeout;
     var TimeoutTimer = (function (_super) {
         __extends(TimeoutTimer, _super);
         function TimeoutTimer() {
-            _super.call(this);
-            this._token = -1;
+            var _this = _super.call(this) || this;
+            _this._token = -1;
+            return _this;
         }
         TimeoutTimer.prototype.dispose = function () {
             this.cancel();
@@ -8582,8 +8593,9 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
     var IntervalTimer = (function (_super) {
         __extends(IntervalTimer, _super);
         function IntervalTimer() {
-            _super.call(this);
-            this._token = -1;
+            var _this = _super.call(this) || this;
+            _this._token = -1;
+            return _this;
         }
         IntervalTimer.prototype.dispose = function () {
             this.cancel();
@@ -8661,7 +8673,7 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        return new winjs_base_1.Promise(function (c, e) { return fn.apply(void 0, args.concat([function (err, result) { return err ? e(err) : c(result); }])); });
+        return new winjs_base_1.TPromise(function (c, e) { return fn.apply(void 0, args.concat([function (err, result) { return err ? e(err) : c(result); }])); }, function () { return null; });
     }
     exports.nfcall = nfcall;
     function ninvoke(thisArg, fn) {
@@ -8669,7 +8681,7 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
         for (var _i = 2; _i < arguments.length; _i++) {
             args[_i - 2] = arguments[_i];
         }
-        return new winjs_base_1.Promise(function (c, e) { return fn.call.apply(fn, [thisArg].concat(args, [function (err, result) { return err ? e(err) : c(result); }])); });
+        return new winjs_base_1.TPromise(function (c, e) { return fn.call.apply(fn, [thisArg].concat(args, [function (err, result) { return err ? e(err) : c(result); }])); }, function () { return null; });
     }
     exports.ninvoke = ninvoke;
 });
@@ -8679,12 +8691,18 @@ define(__m[18/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
 
 
 
-define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/errors*/,5/*vs/base/common/lifecycle*/,3/*vs/base/common/winjs.base*/,18/*vs/base/common/async*/,4/*vs/base/common/platform*/]), function (require, exports, errors_1, lifecycle_1, winjs_base_1, async_1, platform_1) {
+
+
+
+
+
+define(__m[31/*vs/base/common/worker/simpleWorker*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/errors*/,10/*vs/base/common/lifecycle*/,2/*vs/base/common/winjs.base*/,18/*vs/base/common/async*/,4/*vs/base/common/platform*/]), function (require, exports, errors_1, lifecycle_1, winjs_base_1, async_1, platform_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var INITIALIZE = '$initialize';
     var webWorkerWarningLogged = false;
     function logOnceWebWorkerWarning(err) {
@@ -8736,6 +8754,7 @@ define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*expor
                 message = JSON.parse(serializedMessage);
             }
             catch (e) {
+                // nothing
             }
             if (!message.vsWorker) {
                 return;
@@ -8801,19 +8820,18 @@ define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*expor
     var SimpleWorkerClient = (function (_super) {
         __extends(SimpleWorkerClient, _super);
         function SimpleWorkerClient(workerFactory, moduleId) {
-            var _this = this;
-            _super.call(this);
-            this._lastRequestTimestamp = -1;
+            var _this = _super.call(this) || this;
+            _this._lastRequestTimestamp = -1;
             var lazyProxyFulfill = null;
             var lazyProxyReject = null;
-            this._worker = this._register(workerFactory.create('vs/base/common/worker/simpleWorker', function (msg) {
+            _this._worker = _this._register(workerFactory.create('vs/base/common/worker/simpleWorker', function (msg) {
                 _this._protocol.handleMessage(msg);
             }, function (err) {
                 // in Firefox, web workers fail lazily :(
                 // we will reject the proxy
                 lazyProxyReject(err);
             }));
-            this._protocol = new SimpleWorkerProtocol({
+            _this._protocol = new SimpleWorkerProtocol({
                 sendMessage: function (msg) {
                     _this._worker.postMessage(msg);
                 },
@@ -8822,7 +8840,7 @@ define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*expor
                     return winjs_base_1.TPromise.as(null);
                 }
             });
-            this._protocol.setWorkerId(this._worker.getId());
+            _this._protocol.setWorkerId(_this._worker.getId());
             // Gather loader configuration
             var loaderConfiguration = null;
             var globalRequire = self.require;
@@ -8834,17 +8852,17 @@ define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*expor
                 // Get the configuration from requirejs
                 loaderConfiguration = self.requirejs.s.contexts._.config;
             }
-            this._lazyProxy = new winjs_base_1.TPromise(function (c, e, p) {
+            _this._lazyProxy = new winjs_base_1.TPromise(function (c, e, p) {
                 lazyProxyFulfill = c;
                 lazyProxyReject = e;
             }, function () { });
             // Send initialize message
-            this._onModuleLoaded = this._protocol.sendMessage(INITIALIZE, [
-                this._worker.getId(),
+            _this._onModuleLoaded = _this._protocol.sendMessage(INITIALIZE, [
+                _this._worker.getId(),
                 moduleId,
                 loaderConfiguration
             ]);
-            this._onModuleLoaded.then(function (availableMethods) {
+            _this._onModuleLoaded.then(function (availableMethods) {
                 var proxy = {};
                 for (var i = 0; i < availableMethods.length; i++) {
                     proxy[availableMethods[i]] = createProxyMethod(availableMethods[i], proxyMethodRequest);
@@ -8864,6 +8882,7 @@ define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*expor
                     return proxyMethodRequest(method, args);
                 };
             };
+            return _this;
         }
         SimpleWorkerClient.prototype.getProxyObject = function () {
             // Do not allow chaining promises to cancel the proxy creation
@@ -8954,7 +8973,7 @@ define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*expor
             self.require([moduleId], function () {
                 var result = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    result[_i - 0] = arguments[_i];
+                    result[_i] = arguments[_i];
                 }
                 var handlerModule = result[0];
                 _this._requestHandler = handlerModule.create();
@@ -8980,55 +8999,13 @@ define(__m[29/*vs/base/common/worker/simpleWorker*/], __M([0/*require*/,1/*expor
     exports.create = create;
 });
 
-define(__m[20/*vs/editor/common/core/characterClassifier*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[3/*vs/editor/common/core/position*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    /**
-     * A fast character classifier that uses a compact array for ASCII values.
-     */
-    var CharacterClassifier = (function () {
-        function CharacterClassifier(defaultValue) {
-            this._defaultValue = defaultValue;
-            this._asciiMap = CharacterClassifier._createAsciiMap(defaultValue);
-            this._map = [];
-        }
-        CharacterClassifier._createAsciiMap = function (defaultValue) {
-            var asciiMap = [];
-            for (var i = 0; i < 256; i++) {
-                asciiMap[i] = defaultValue;
-            }
-            return asciiMap;
-        };
-        CharacterClassifier.prototype.set = function (charCode, value) {
-            if (charCode >= 0 && charCode < 256) {
-                this._asciiMap[charCode] = value;
-            }
-            else {
-                this._map[charCode] = value;
-            }
-        };
-        CharacterClassifier.prototype.get = function (charCode) {
-            if (charCode >= 0 && charCode < 256) {
-                return this._asciiMap[charCode];
-            }
-            else {
-                return this._map[charCode] || this._defaultValue;
-            }
-        };
-        return CharacterClassifier;
-    }());
-    exports.CharacterClassifier = CharacterClassifier;
-});
-
-define(__m[7/*vs/editor/common/core/position*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * A position in the editor.
      */
@@ -9096,6 +9073,19 @@ define(__m[7/*vs/editor/common/core/position*/], __M([0/*require*/,1/*exports*/]
             return a.column <= b.column;
         };
         /**
+         * A function that compares positions, useful for sorting
+         */
+        Position.compare = function (a, b) {
+            var aLineNumber = a.lineNumber | 0;
+            var bLineNumber = b.lineNumber | 0;
+            if (aLineNumber === bLineNumber) {
+                var aColumn = a.column | 0;
+                var bColumn = b.column | 0;
+                return aColumn - bColumn;
+            }
+            return aLineNumber - bLineNumber;
+        };
+        /**
          * Clone this position.
          */
         Position.prototype.clone = function () {
@@ -9131,8 +9121,9 @@ define(__m[7/*vs/editor/common/core/position*/], __M([0/*require*/,1/*exports*/]
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[8/*vs/editor/common/core/range*/], __M([0/*require*/,1/*exports*/,7/*vs/editor/common/core/position*/]), function (require, exports, position_1) {
+define(__m[5/*vs/editor/common/core/range*/], __M([1/*require*/,0/*exports*/,3/*vs/editor/common/core/position*/]), function (require, exports, position_1) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * A range in the editor. (startLineNumber,startColumn) is <= (endLineNumber,endColumn)
      */
@@ -9347,6 +9338,10 @@ define(__m[8/*vs/editor/common/core/range*/], __M([0/*require*/,1/*exports*/,7/*
             return new Range(range.startLineNumber, range.startColumn, range.startLineNumber, range.startColumn);
         };
         // ---
+        Range.fromPositions = function (start, end) {
+            if (end === void 0) { end = start; }
+            return new Range(start.lineNumber, start.column, end.lineNumber, end.column);
+        };
         /**
          * Create a `Range` from an `IRange`.
          */
@@ -9388,15 +9383,15 @@ define(__m[8/*vs/editor/common/core/range*/], __M([0/*require*/,1/*exports*/,7/*
         Range.compareRangesUsingStarts = function (a, b) {
             var aStartLineNumber = a.startLineNumber | 0;
             var bStartLineNumber = b.startLineNumber | 0;
-            var aStartColumn = a.startColumn | 0;
-            var bStartColumn = b.startColumn | 0;
-            var aEndLineNumber = a.endLineNumber | 0;
-            var bEndLineNumber = b.endLineNumber | 0;
-            var aEndColumn = a.endColumn | 0;
-            var bEndColumn = b.endColumn | 0;
             if (aStartLineNumber === bStartLineNumber) {
+                var aStartColumn = a.startColumn | 0;
+                var bStartColumn = b.startColumn | 0;
                 if (aStartColumn === bStartColumn) {
+                    var aEndLineNumber = a.endLineNumber | 0;
+                    var bEndLineNumber = b.endLineNumber | 0;
                     if (aEndLineNumber === bEndLineNumber) {
+                        var aEndColumn = a.endColumn | 0;
+                        var bEndColumn = b.endColumn | 0;
                         return aEndColumn - bEndColumn;
                     }
                     return aEndLineNumber - bEndLineNumber;
@@ -9437,15 +9432,22 @@ define(__m[8/*vs/editor/common/core/range*/], __M([0/*require*/,1/*exports*/,7/*
 
 
 
-define(__m[23/*vs/editor/common/core/selection*/], __M([0/*require*/,1/*exports*/,8/*vs/editor/common/core/range*/]), function (require, exports, range_1) {
+
+
+
+
+
+define(__m[22/*vs/editor/common/core/selection*/], __M([1/*require*/,0/*exports*/,5/*vs/editor/common/core/range*/,3/*vs/editor/common/core/position*/]), function (require, exports, range_1, position_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The direction of a selection.
      */
+    var SelectionDirection;
     (function (SelectionDirection) {
         /**
          * The selection starts above where it ends.
@@ -9455,8 +9457,7 @@ define(__m[23/*vs/editor/common/core/selection*/], __M([0/*require*/,1/*exports*
          * The selection starts below where it ends.
          */
         SelectionDirection[SelectionDirection["RTL"] = 1] = "RTL";
-    })(exports.SelectionDirection || (exports.SelectionDirection = {}));
-    var SelectionDirection = exports.SelectionDirection;
+    })(SelectionDirection = exports.SelectionDirection || (exports.SelectionDirection = {}));
     /**
      * A selection in the editor.
      * The selection is a range that has an orientation.
@@ -9464,11 +9465,12 @@ define(__m[23/*vs/editor/common/core/selection*/], __M([0/*require*/,1/*exports*
     var Selection = (function (_super) {
         __extends(Selection, _super);
         function Selection(selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn) {
-            _super.call(this, selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn);
-            this.selectionStartLineNumber = selectionStartLineNumber;
-            this.selectionStartColumn = selectionStartColumn;
-            this.positionLineNumber = positionLineNumber;
-            this.positionColumn = positionColumn;
+            var _this = _super.call(this, selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn) || this;
+            _this.selectionStartLineNumber = selectionStartLineNumber;
+            _this.selectionStartColumn = selectionStartColumn;
+            _this.positionLineNumber = positionLineNumber;
+            _this.positionColumn = positionColumn;
+            return _this;
         }
         /**
          * Clone this selection.
@@ -9516,6 +9518,12 @@ define(__m[23/*vs/editor/common/core/selection*/], __M([0/*require*/,1/*exports*
             return new Selection(endLineNumber, endColumn, this.startLineNumber, this.startColumn);
         };
         /**
+         * Get the position at `positionLineNumber` and `positionColumn`.
+         */
+        Selection.prototype.getPosition = function () {
+            return new position_1.Position(this.positionLineNumber, this.positionColumn);
+        };
+        /**
          * Create a new selection with a different `selectionStartLineNumber` and `selectionStartColumn`.
          */
         Selection.prototype.setStartPosition = function (startLineNumber, startColumn) {
@@ -9525,6 +9533,13 @@ define(__m[23/*vs/editor/common/core/selection*/], __M([0/*require*/,1/*exports*
             return new Selection(this.endLineNumber, this.endColumn, startLineNumber, startColumn);
         };
         // ----
+        /**
+         * Create a `Selection` from one or two positions
+         */
+        Selection.fromPositions = function (start, end) {
+            if (end === void 0) { end = start; }
+            return new Selection(start.lineNumber, start.column, end.lineNumber, end.column);
+        };
         /**
          * Create a `Selection` from an `ISelection`.
          */
@@ -9575,22 +9590,215 @@ define(__m[23/*vs/editor/common/core/selection*/], __M([0/*require*/,1/*exports*
     exports.Selection = Selection;
 });
 
-
-
-
-
-
-define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*exports*/,14/*vs/base/common/diff/diff*/,9/*vs/base/common/strings*/]), function (require, exports, diff_1, strings) {
+define(__m[23/*vs/editor/common/core/token*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Token = (function () {
+        function Token(offset, type, language) {
+            this.offset = offset | 0; // @perf
+            this.type = type;
+            this.language = language;
+        }
+        Token.prototype.toString = function () {
+            return '(' + this.offset + ', ' + this.type + ')';
+        };
+        return Token;
+    }());
+    exports.Token = Token;
+    var TokenizationResult = (function () {
+        function TokenizationResult(tokens, endState) {
+            this.tokens = tokens;
+            this.endState = endState;
+        }
+        return TokenizationResult;
+    }());
+    exports.TokenizationResult = TokenizationResult;
+    var TokenizationResult2 = (function () {
+        function TokenizationResult2(tokens, endState) {
+            this.tokens = tokens;
+            this.endState = endState;
+        }
+        return TokenizationResult2;
+    }());
+    exports.TokenizationResult2 = TokenizationResult2;
+});
+
+define(__m[7/*vs/editor/common/core/uint*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Uint8Matrix = (function () {
+        function Uint8Matrix(rows, cols, defaultValue) {
+            var data = new Uint8Array(rows * cols);
+            for (var i = 0, len = rows * cols; i < len; i++) {
+                data[i] = defaultValue;
+            }
+            this._data = data;
+            this._rows = rows;
+            this._cols = cols;
+        }
+        Uint8Matrix.prototype.get = function (row, col) {
+            return this._data[row * this._cols + col];
+        };
+        Uint8Matrix.prototype.set = function (row, col, value) {
+            this._data[row * this._cols + col] = value;
+        };
+        return Uint8Matrix;
+    }());
+    exports.Uint8Matrix = Uint8Matrix;
+    var Constants;
+    (function (Constants) {
+        /**
+         * MAX SMI (SMall Integer) as defined in v8.
+         * one bit is lost for boxing/unboxing flag.
+         * one bit is lost for sign flag.
+         * See https://thibaultlaurens.github.io/javascript/2013/04/29/how-the-v8-engine-works/#tagged-values
+         */
+        Constants[Constants["MAX_SAFE_SMALL_INTEGER"] = 1073741824] = "MAX_SAFE_SMALL_INTEGER";
+        /**
+         * MIN SMI (SMall Integer) as defined in v8.
+         * one bit is lost for boxing/unboxing flag.
+         * one bit is lost for sign flag.
+         * See https://thibaultlaurens.github.io/javascript/2013/04/29/how-the-v8-engine-works/#tagged-values
+         */
+        Constants[Constants["MIN_SAFE_SMALL_INTEGER"] = -1073741824] = "MIN_SAFE_SMALL_INTEGER";
+        /**
+         * Max unsigned integer that fits on 8 bits.
+         */
+        Constants[Constants["MAX_UINT_8"] = 255] = "MAX_UINT_8";
+        /**
+         * Max unsigned integer that fits on 16 bits.
+         */
+        Constants[Constants["MAX_UINT_16"] = 65535] = "MAX_UINT_16";
+        /**
+         * Max unsigned integer that fits on 32 bits.
+         */
+        Constants[Constants["MAX_UINT_32"] = 4294967295] = "MAX_UINT_32";
+    })(Constants = exports.Constants || (exports.Constants = {}));
+    function toUint8(v) {
+        if (v < 0) {
+            return 0;
+        }
+        if (v > 255 /* MAX_UINT_8 */) {
+            return 255 /* MAX_UINT_8 */;
+        }
+        return v | 0;
+    }
+    exports.toUint8 = toUint8;
+    function toUint32(v) {
+        if (v < 0) {
+            return 0;
+        }
+        if (v > 4294967295 /* MAX_UINT_32 */) {
+            return 4294967295 /* MAX_UINT_32 */;
+        }
+        return v | 0;
+    }
+    exports.toUint32 = toUint32;
+    function toUint32Array(arr) {
+        var len = arr.length;
+        var r = new Uint32Array(len);
+        for (var i = 0; i < len; i++) {
+            r[i] = toUint32(arr[i]);
+        }
+        return r;
+    }
+    exports.toUint32Array = toUint32Array;
+});
+
+define(__m[25/*vs/editor/common/core/characterClassifier*/], __M([1/*require*/,0/*exports*/,7/*vs/editor/common/core/uint*/]), function (require, exports, uint_1) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * A fast character classifier that uses a compact array for ASCII values.
+     */
+    var CharacterClassifier = (function () {
+        function CharacterClassifier(_defaultValue) {
+            var defaultValue = uint_1.toUint8(_defaultValue);
+            this._defaultValue = defaultValue;
+            this._asciiMap = CharacterClassifier._createAsciiMap(defaultValue);
+            this._map = new Map();
+        }
+        CharacterClassifier._createAsciiMap = function (defaultValue) {
+            var asciiMap = new Uint8Array(256);
+            for (var i = 0; i < 256; i++) {
+                asciiMap[i] = defaultValue;
+            }
+            return asciiMap;
+        };
+        CharacterClassifier.prototype.set = function (charCode, _value) {
+            var value = uint_1.toUint8(_value);
+            if (charCode >= 0 && charCode < 256) {
+                this._asciiMap[charCode] = value;
+            }
+            else {
+                this._map.set(charCode, value);
+            }
+        };
+        CharacterClassifier.prototype.get = function (charCode) {
+            if (charCode >= 0 && charCode < 256) {
+                return this._asciiMap[charCode];
+            }
+            else {
+                return (this._map.get(charCode) || this._defaultValue);
+            }
+        };
+        return CharacterClassifier;
+    }());
+    exports.CharacterClassifier = CharacterClassifier;
+    var Boolean;
+    (function (Boolean) {
+        Boolean[Boolean["False"] = 0] = "False";
+        Boolean[Boolean["True"] = 1] = "True";
+    })(Boolean || (Boolean = {}));
+    var CharacterSet = (function () {
+        function CharacterSet() {
+            this._actual = new CharacterClassifier(0 /* False */);
+        }
+        CharacterSet.prototype.add = function (charCode) {
+            this._actual.set(charCode, 1 /* True */);
+        };
+        CharacterSet.prototype.has = function (charCode) {
+            return (this._actual.get(charCode) === 1 /* True */);
+        };
+        return CharacterSet;
+    }());
+    exports.CharacterSet = CharacterSet;
+});
+
+
+
+
+
+
+
+
+
+
+
+define(__m[26/*vs/editor/common/diff/diffComputer*/], __M([1/*require*/,0/*exports*/,12/*vs/base/common/diff/diff*/,20/*vs/base/common/strings*/]), function (require, exports, diff_1, strings) {
+    /*---------------------------------------------------------------------------------------------
+     *  Copyright (c) Microsoft Corporation. All rights reserved.
+     *  Licensed under the MIT License. See License.txt in the project root for license information.
+     *--------------------------------------------------------------------------------------------*/
+    'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var MAXIMUM_RUN_TIME = 5000; // 5 seconds
     var MINIMUM_MATCHING_CHARACTER_LENGTH = 3;
-    function computeDiff(originalSequence, modifiedSequence, continueProcessingPredicate) {
+    function computeDiff(originalSequence, modifiedSequence, continueProcessingPredicate, pretty) {
         var diffAlgo = new diff_1.LcsDiff(originalSequence, modifiedSequence, continueProcessingPredicate);
-        return diffAlgo.ComputeDiff();
+        return diffAlgo.ComputeDiff(pretty);
     }
     var MarkerSequence = (function () {
         function MarkerSequence(buffer, startMarkers, endMarkers) {
@@ -9641,18 +9849,15 @@ define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*expor
     }());
     var LineMarkerSequence = (function (_super) {
         __extends(LineMarkerSequence, _super);
-        function LineMarkerSequence(lines, shouldIgnoreTrimWhitespace) {
-            var i, length, pos;
+        function LineMarkerSequence(lines) {
+            var _this = this;
             var buffer = '';
-            var startMarkers = [], endMarkers = [], startColumn, endColumn;
-            for (pos = 0, i = 0, length = lines.length; i < length; i++) {
+            var startMarkers = [];
+            var endMarkers = [];
+            for (var pos = 0, i = 0, length_1 = lines.length; i < length_1; i++) {
                 buffer += lines[i];
-                startColumn = 1;
-                endColumn = lines[i].length + 1;
-                if (shouldIgnoreTrimWhitespace) {
-                    startColumn = LineMarkerSequence._getFirstNonBlankColumn(lines[i], 1);
-                    endColumn = LineMarkerSequence._getLastNonBlankColumn(lines[i], 1);
-                }
+                var startColumn = LineMarkerSequence._getFirstNonBlankColumn(lines[i], 1);
+                var endColumn = LineMarkerSequence._getLastNonBlankColumn(lines[i], 1);
                 startMarkers.push({
                     offset: pos + startColumn - 1,
                     lineNumber: i + 1,
@@ -9665,7 +9870,8 @@ define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*expor
                 });
                 pos += lines[i].length;
             }
-            _super.call(this, buffer, startMarkers, endMarkers);
+            _this = _super.call(this, buffer, startMarkers, endMarkers) || this;
+            return _this;
         }
         LineMarkerSequence._getFirstNonBlankColumn = function (txt, defaultValue) {
             var r = strings.firstNonWhitespaceIndex(txt);
@@ -9682,11 +9888,12 @@ define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*expor
             return r + 2;
         };
         LineMarkerSequence.prototype.getCharSequence = function (startIndex, endIndex) {
-            var startMarkers = [], endMarkers = [], index, i, startMarker, endMarker;
-            for (index = startIndex; index <= endIndex; index++) {
-                startMarker = this.startMarkers[index];
-                endMarker = this.endMarkers[index];
-                for (i = startMarker.offset; i < endMarker.offset; i++) {
+            var startMarkers = [];
+            var endMarkers = [];
+            for (var index = startIndex; index <= endIndex; index++) {
+                var startMarker = this.startMarkers[index];
+                var endMarker = this.endMarkers[index];
+                for (var i = startMarker.offset; i < endMarker.offset; i++) {
                     startMarkers.push({
                         offset: i,
                         lineNumber: startMarker.lineNumber,
@@ -9704,32 +9911,51 @@ define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*expor
         return LineMarkerSequence;
     }(MarkerSequence));
     var CharChange = (function () {
-        function CharChange(diffChange, originalCharSequence, modifiedCharSequence) {
+        function CharChange(originalStartLineNumber, originalStartColumn, originalEndLineNumber, originalEndColumn, modifiedStartLineNumber, modifiedStartColumn, modifiedEndLineNumber, modifiedEndColumn) {
+            this.originalStartLineNumber = originalStartLineNumber;
+            this.originalStartColumn = originalStartColumn;
+            this.originalEndLineNumber = originalEndLineNumber;
+            this.originalEndColumn = originalEndColumn;
+            this.modifiedStartLineNumber = modifiedStartLineNumber;
+            this.modifiedStartColumn = modifiedStartColumn;
+            this.modifiedEndLineNumber = modifiedEndLineNumber;
+            this.modifiedEndColumn = modifiedEndColumn;
+        }
+        CharChange.createFromDiffChange = function (diffChange, originalCharSequence, modifiedCharSequence) {
+            var originalStartLineNumber;
+            var originalStartColumn;
+            var originalEndLineNumber;
+            var originalEndColumn;
+            var modifiedStartLineNumber;
+            var modifiedStartColumn;
+            var modifiedEndLineNumber;
+            var modifiedEndColumn;
             if (diffChange.originalLength === 0) {
-                this.originalStartLineNumber = 0;
-                this.originalStartColumn = 0;
-                this.originalEndLineNumber = 0;
-                this.originalEndColumn = 0;
+                originalStartLineNumber = 0;
+                originalStartColumn = 0;
+                originalEndLineNumber = 0;
+                originalEndColumn = 0;
             }
             else {
-                this.originalStartLineNumber = originalCharSequence.getStartLineNumber(diffChange.originalStart);
-                this.originalStartColumn = originalCharSequence.getStartColumn(diffChange.originalStart);
-                this.originalEndLineNumber = originalCharSequence.getEndLineNumber(diffChange.originalStart + diffChange.originalLength - 1);
-                this.originalEndColumn = originalCharSequence.getEndColumn(diffChange.originalStart + diffChange.originalLength - 1);
+                originalStartLineNumber = originalCharSequence.getStartLineNumber(diffChange.originalStart);
+                originalStartColumn = originalCharSequence.getStartColumn(diffChange.originalStart);
+                originalEndLineNumber = originalCharSequence.getEndLineNumber(diffChange.originalStart + diffChange.originalLength - 1);
+                originalEndColumn = originalCharSequence.getEndColumn(diffChange.originalStart + diffChange.originalLength - 1);
             }
             if (diffChange.modifiedLength === 0) {
-                this.modifiedStartLineNumber = 0;
-                this.modifiedStartColumn = 0;
-                this.modifiedEndLineNumber = 0;
-                this.modifiedEndColumn = 0;
+                modifiedStartLineNumber = 0;
+                modifiedStartColumn = 0;
+                modifiedEndLineNumber = 0;
+                modifiedEndColumn = 0;
             }
             else {
-                this.modifiedStartLineNumber = modifiedCharSequence.getStartLineNumber(diffChange.modifiedStart);
-                this.modifiedStartColumn = modifiedCharSequence.getStartColumn(diffChange.modifiedStart);
-                this.modifiedEndLineNumber = modifiedCharSequence.getEndLineNumber(diffChange.modifiedStart + diffChange.modifiedLength - 1);
-                this.modifiedEndColumn = modifiedCharSequence.getEndColumn(diffChange.modifiedStart + diffChange.modifiedLength - 1);
+                modifiedStartLineNumber = modifiedCharSequence.getStartLineNumber(diffChange.modifiedStart);
+                modifiedStartColumn = modifiedCharSequence.getStartColumn(diffChange.modifiedStart);
+                modifiedEndLineNumber = modifiedCharSequence.getEndLineNumber(diffChange.modifiedStart + diffChange.modifiedLength - 1);
+                modifiedEndColumn = modifiedCharSequence.getEndColumn(diffChange.modifiedStart + diffChange.modifiedLength - 1);
             }
-        }
+            return new CharChange(originalStartLineNumber, originalStartColumn, originalEndLineNumber, originalEndColumn, modifiedStartLineNumber, modifiedStartColumn, modifiedEndLineNumber, modifiedEndColumn);
+        };
         return CharChange;
     }());
     function postProcessCharChanges(rawChanges) {
@@ -9737,13 +9963,13 @@ define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*expor
             return rawChanges;
         }
         var result = [rawChanges[0]];
-        var i, len, originalMatchingLength, modifiedMatchingLength, matchingLength, prevChange = result[0], currChange;
-        for (i = 1, len = rawChanges.length; i < len; i++) {
-            currChange = rawChanges[i];
-            originalMatchingLength = currChange.originalStart - (prevChange.originalStart + prevChange.originalLength);
-            modifiedMatchingLength = currChange.modifiedStart - (prevChange.modifiedStart + prevChange.modifiedLength);
+        var prevChange = result[0];
+        for (var i = 1, len = rawChanges.length; i < len; i++) {
+            var currChange = rawChanges[i];
+            var originalMatchingLength = currChange.originalStart - (prevChange.originalStart + prevChange.originalLength);
+            var modifiedMatchingLength = currChange.modifiedStart - (prevChange.modifiedStart + prevChange.modifiedLength);
             // Both of the above should be equal, but the continueProcessingPredicate may prevent this from being true
-            matchingLength = Math.min(originalMatchingLength, modifiedMatchingLength);
+            var matchingLength = Math.min(originalMatchingLength, modifiedMatchingLength);
             if (matchingLength < MINIMUM_MATCHING_CHARACTER_LENGTH) {
                 // Merge the current change into the previous one
                 prevChange.originalLength = (currChange.originalStart + currChange.originalLength) - prevChange.originalStart;
@@ -9758,60 +9984,205 @@ define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*expor
         return result;
     }
     var LineChange = (function () {
-        function LineChange(diffChange, originalLineSequence, modifiedLineSequence, continueProcessingPredicate, shouldPostProcessCharChanges) {
+        function LineChange(originalStartLineNumber, originalEndLineNumber, modifiedStartLineNumber, modifiedEndLineNumber, charChanges) {
+            this.originalStartLineNumber = originalStartLineNumber;
+            this.originalEndLineNumber = originalEndLineNumber;
+            this.modifiedStartLineNumber = modifiedStartLineNumber;
+            this.modifiedEndLineNumber = modifiedEndLineNumber;
+            this.charChanges = charChanges;
+        }
+        LineChange.createFromDiffResult = function (diffChange, originalLineSequence, modifiedLineSequence, continueProcessingPredicate, shouldPostProcessCharChanges) {
+            var originalStartLineNumber;
+            var originalEndLineNumber;
+            var modifiedStartLineNumber;
+            var modifiedEndLineNumber;
+            var charChanges;
             if (diffChange.originalLength === 0) {
-                this.originalStartLineNumber = originalLineSequence.getStartLineNumber(diffChange.originalStart) - 1;
-                this.originalEndLineNumber = 0;
+                originalStartLineNumber = originalLineSequence.getStartLineNumber(diffChange.originalStart) - 1;
+                originalEndLineNumber = 0;
             }
             else {
-                this.originalStartLineNumber = originalLineSequence.getStartLineNumber(diffChange.originalStart);
-                this.originalEndLineNumber = originalLineSequence.getEndLineNumber(diffChange.originalStart + diffChange.originalLength - 1);
+                originalStartLineNumber = originalLineSequence.getStartLineNumber(diffChange.originalStart);
+                originalEndLineNumber = originalLineSequence.getEndLineNumber(diffChange.originalStart + diffChange.originalLength - 1);
             }
             if (diffChange.modifiedLength === 0) {
-                this.modifiedStartLineNumber = modifiedLineSequence.getStartLineNumber(diffChange.modifiedStart) - 1;
-                this.modifiedEndLineNumber = 0;
+                modifiedStartLineNumber = modifiedLineSequence.getStartLineNumber(diffChange.modifiedStart) - 1;
+                modifiedEndLineNumber = 0;
             }
             else {
-                this.modifiedStartLineNumber = modifiedLineSequence.getStartLineNumber(diffChange.modifiedStart);
-                this.modifiedEndLineNumber = modifiedLineSequence.getEndLineNumber(diffChange.modifiedStart + diffChange.modifiedLength - 1);
+                modifiedStartLineNumber = modifiedLineSequence.getStartLineNumber(diffChange.modifiedStart);
+                modifiedEndLineNumber = modifiedLineSequence.getEndLineNumber(diffChange.modifiedStart + diffChange.modifiedLength - 1);
             }
             if (diffChange.originalLength !== 0 && diffChange.modifiedLength !== 0 && continueProcessingPredicate()) {
                 var originalCharSequence = originalLineSequence.getCharSequence(diffChange.originalStart, diffChange.originalStart + diffChange.originalLength - 1);
                 var modifiedCharSequence = modifiedLineSequence.getCharSequence(diffChange.modifiedStart, diffChange.modifiedStart + diffChange.modifiedLength - 1);
-                var rawChanges = computeDiff(originalCharSequence, modifiedCharSequence, continueProcessingPredicate);
+                var rawChanges = computeDiff(originalCharSequence, modifiedCharSequence, continueProcessingPredicate, false);
                 if (shouldPostProcessCharChanges) {
                     rawChanges = postProcessCharChanges(rawChanges);
                 }
-                this.charChanges = [];
-                for (var i = 0, length = rawChanges.length; i < length; i++) {
-                    this.charChanges.push(new CharChange(rawChanges[i], originalCharSequence, modifiedCharSequence));
+                charChanges = [];
+                for (var i = 0, length_2 = rawChanges.length; i < length_2; i++) {
+                    charChanges.push(CharChange.createFromDiffChange(rawChanges[i], originalCharSequence, modifiedCharSequence));
                 }
             }
-        }
+            return new LineChange(originalStartLineNumber, originalEndLineNumber, modifiedStartLineNumber, modifiedEndLineNumber, charChanges);
+        };
         return LineChange;
     }());
     var DiffComputer = (function () {
         function DiffComputer(originalLines, modifiedLines, opts) {
             this.shouldPostProcessCharChanges = opts.shouldPostProcessCharChanges;
             this.shouldIgnoreTrimWhitespace = opts.shouldIgnoreTrimWhitespace;
+            this.shouldMakePrettyDiff = opts.shouldMakePrettyDiff;
             this.maximumRunTimeMs = MAXIMUM_RUN_TIME;
-            this.original = new LineMarkerSequence(originalLines, this.shouldIgnoreTrimWhitespace);
-            this.modified = new LineMarkerSequence(modifiedLines, this.shouldIgnoreTrimWhitespace);
+            this.originalLines = originalLines;
+            this.modifiedLines = modifiedLines;
+            this.original = new LineMarkerSequence(originalLines);
+            this.modified = new LineMarkerSequence(modifiedLines);
             if (opts.shouldConsiderTrimWhitespaceInEmptyCase && this.shouldIgnoreTrimWhitespace && this.original.equals(this.modified)) {
                 // Diff would be empty with `shouldIgnoreTrimWhitespace`
                 this.shouldIgnoreTrimWhitespace = false;
-                this.original = new LineMarkerSequence(originalLines, this.shouldIgnoreTrimWhitespace);
-                this.modified = new LineMarkerSequence(modifiedLines, this.shouldIgnoreTrimWhitespace);
             }
         }
         DiffComputer.prototype.computeDiff = function () {
-            this.computationStartTime = (new Date()).getTime();
-            var rawChanges = computeDiff(this.original, this.modified, this._continueProcessingPredicate.bind(this));
-            var lineChanges = [];
-            for (var i = 0, length = rawChanges.length; i < length; i++) {
-                lineChanges.push(new LineChange(rawChanges[i], this.original, this.modified, this._continueProcessingPredicate.bind(this), this.shouldPostProcessCharChanges));
+            if (this.original.getLength() === 1 && this.original.getElementHash(0).length === 0) {
+                // empty original => fast path
+                return [{
+                        originalStartLineNumber: 1,
+                        originalEndLineNumber: 1,
+                        modifiedStartLineNumber: 1,
+                        modifiedEndLineNumber: this.modified.getLength(),
+                        charChanges: [{
+                                modifiedEndColumn: 0,
+                                modifiedEndLineNumber: 0,
+                                modifiedStartColumn: 0,
+                                modifiedStartLineNumber: 0,
+                                originalEndColumn: 0,
+                                originalEndLineNumber: 0,
+                                originalStartColumn: 0,
+                                originalStartLineNumber: 0
+                            }]
+                    }];
             }
-            return lineChanges;
+            if (this.modified.getLength() === 1 && this.modified.getElementHash(0).length === 0) {
+                // empty modified => fast path
+                return [{
+                        originalStartLineNumber: 1,
+                        originalEndLineNumber: this.original.getLength(),
+                        modifiedStartLineNumber: 1,
+                        modifiedEndLineNumber: 1,
+                        charChanges: [{
+                                modifiedEndColumn: 0,
+                                modifiedEndLineNumber: 0,
+                                modifiedStartColumn: 0,
+                                modifiedStartLineNumber: 0,
+                                originalEndColumn: 0,
+                                originalEndLineNumber: 0,
+                                originalStartColumn: 0,
+                                originalStartLineNumber: 0
+                            }]
+                    }];
+            }
+            this.computationStartTime = (new Date()).getTime();
+            var rawChanges = computeDiff(this.original, this.modified, this._continueProcessingPredicate.bind(this), this.shouldMakePrettyDiff);
+            // The diff is always computed with ignoring trim whitespace
+            // This ensures we get the prettiest diff
+            if (this.shouldIgnoreTrimWhitespace) {
+                var lineChanges = [];
+                for (var i = 0, length_3 = rawChanges.length; i < length_3; i++) {
+                    lineChanges.push(LineChange.createFromDiffResult(rawChanges[i], this.original, this.modified, this._continueProcessingPredicate.bind(this), this.shouldPostProcessCharChanges));
+                }
+                return lineChanges;
+            }
+            // Need to post-process and introduce changes where the trim whitespace is different
+            // Note that we are looping starting at -1 to also cover the lines before the first change
+            var result = [];
+            var originalLineIndex = 0;
+            var modifiedLineIndex = 0;
+            for (var i = -1 /* !!!! */, len = rawChanges.length; i < len; i++) {
+                var nextChange = (i + 1 < len ? rawChanges[i + 1] : null);
+                var originalStop = (nextChange ? nextChange.originalStart : this.originalLines.length);
+                var modifiedStop = (nextChange ? nextChange.modifiedStart : this.modifiedLines.length);
+                while (originalLineIndex < originalStop && modifiedLineIndex < modifiedStop) {
+                    var originalLine = this.originalLines[originalLineIndex];
+                    var modifiedLine = this.modifiedLines[modifiedLineIndex];
+                    if (originalLine !== modifiedLine) {
+                        // These lines differ only in trim whitespace
+                        // Check the leading whitespace
+                        {
+                            var originalStartColumn = LineMarkerSequence._getFirstNonBlankColumn(originalLine, 1);
+                            var modifiedStartColumn = LineMarkerSequence._getFirstNonBlankColumn(modifiedLine, 1);
+                            while (originalStartColumn > 1 && modifiedStartColumn > 1) {
+                                var originalChar = originalLine.charCodeAt(originalStartColumn - 2);
+                                var modifiedChar = modifiedLine.charCodeAt(modifiedStartColumn - 2);
+                                if (originalChar !== modifiedChar) {
+                                    break;
+                                }
+                                originalStartColumn--;
+                                modifiedStartColumn--;
+                            }
+                            if (originalStartColumn > 1 || modifiedStartColumn > 1) {
+                                this._pushTrimWhitespaceCharChange(result, originalLineIndex + 1, 1, originalStartColumn, modifiedLineIndex + 1, 1, modifiedStartColumn);
+                            }
+                        }
+                        // Check the trailing whitespace
+                        {
+                            var originalEndColumn = LineMarkerSequence._getLastNonBlankColumn(originalLine, 1);
+                            var modifiedEndColumn = LineMarkerSequence._getLastNonBlankColumn(modifiedLine, 1);
+                            var originalMaxColumn = originalLine.length + 1;
+                            var modifiedMaxColumn = modifiedLine.length + 1;
+                            while (originalEndColumn < originalMaxColumn && modifiedEndColumn < modifiedMaxColumn) {
+                                var originalChar = originalLine.charCodeAt(originalEndColumn - 1);
+                                var modifiedChar = originalLine.charCodeAt(modifiedEndColumn - 1);
+                                if (originalChar !== modifiedChar) {
+                                    break;
+                                }
+                                originalEndColumn++;
+                                modifiedEndColumn++;
+                            }
+                            if (originalEndColumn < originalMaxColumn || modifiedEndColumn < modifiedMaxColumn) {
+                                this._pushTrimWhitespaceCharChange(result, originalLineIndex + 1, originalEndColumn, originalMaxColumn, modifiedLineIndex + 1, modifiedEndColumn, modifiedMaxColumn);
+                            }
+                        }
+                    }
+                    originalLineIndex++;
+                    modifiedLineIndex++;
+                }
+                if (nextChange) {
+                    // Emit the actual change
+                    result.push(LineChange.createFromDiffResult(nextChange, this.original, this.modified, this._continueProcessingPredicate.bind(this), this.shouldPostProcessCharChanges));
+                    originalLineIndex += nextChange.originalLength;
+                    modifiedLineIndex += nextChange.modifiedLength;
+                }
+            }
+            return result;
+        };
+        DiffComputer.prototype._pushTrimWhitespaceCharChange = function (result, originalLineNumber, originalStartColumn, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedEndColumn) {
+            if (this._mergeTrimWhitespaceCharChange(result, originalLineNumber, originalStartColumn, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedEndColumn)) {
+                // Merged into previous
+                return;
+            }
+            result.push(new LineChange(originalLineNumber, originalLineNumber, modifiedLineNumber, modifiedLineNumber, [
+                new CharChange(originalLineNumber, originalStartColumn, originalLineNumber, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedLineNumber, modifiedEndColumn)
+            ]));
+        };
+        DiffComputer.prototype._mergeTrimWhitespaceCharChange = function (result, originalLineNumber, originalStartColumn, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedEndColumn) {
+            var len = result.length;
+            if (len === 0) {
+                return false;
+            }
+            var prevChange = result[len - 1];
+            if (prevChange.originalEndLineNumber === 0 || prevChange.modifiedEndLineNumber === 0) {
+                // Don't merge with inserts/deletes
+                return false;
+            }
+            if (prevChange.originalEndLineNumber + 1 === originalLineNumber && prevChange.modifiedEndLineNumber + 1 === modifiedLineNumber) {
+                prevChange.originalEndLineNumber = originalLineNumber;
+                prevChange.modifiedEndLineNumber = modifiedLineNumber;
+                prevChange.charChanges.push(new CharChange(originalLineNumber, originalStartColumn, originalLineNumber, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedLineNumber, modifiedEndColumn));
+                return true;
+            }
+            return false;
         };
         DiffComputer.prototype._continueProcessingPredicate = function () {
             if (this.maximumRunTimeMs === 0) {
@@ -9825,12 +10196,13 @@ define(__m[24/*vs/editor/common/diff/diffComputer*/], __M([0/*require*/,1/*expor
     exports.DiffComputer = DiffComputer;
 });
 
-define(__m[25/*vs/editor/common/model/wordHelper*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[27/*vs/editor/common/model/wordHelper*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.USUAL_WORD_SEPARATORS = '`~!@#$%^&*()-=+[{]}\\|;:\'",.<>/?';
     /**
      * Create a word definition regular expression based on default word separators.
@@ -9875,38 +10247,78 @@ define(__m[25/*vs/editor/common/model/wordHelper*/], __M([0/*require*/,1/*export
         return result;
     }
     exports.ensureValidWordDefinition = ensureValidWordDefinition;
-    function getWordAtText(column, wordDefinition, text, textOffset) {
-        // console.log('_getWordAtText: ', column, text, textOffset);
-        var words = text.match(wordDefinition), k, startWord, endWord, startColumn, endColumn, word;
-        if (words) {
-            for (k = 0; k < words.length; k++) {
-                word = words[k].trim();
-                if (word.length > 0) {
-                    startWord = text.indexOf(word, endWord);
-                    endWord = startWord + word.length;
-                    startColumn = textOffset + startWord + 1;
-                    endColumn = textOffset + endWord + 1;
-                    if (startColumn <= column && column <= endColumn) {
-                        return {
-                            word: word,
-                            startColumn: startColumn,
-                            endColumn: endColumn
-                        };
-                    }
-                }
+    function getWordAtPosFast(column, wordDefinition, text, textOffset) {
+        // find whitespace enclosed text around column and match from there
+        var pos = column - 1 - textOffset;
+        var start = text.lastIndexOf(' ', pos - 1) + 1;
+        var end = text.indexOf(' ', pos);
+        if (end === -1) {
+            end = text.length;
+        }
+        wordDefinition.lastIndex = start;
+        var match;
+        while (match = wordDefinition.exec(text)) {
+            if (match.index <= pos && wordDefinition.lastIndex >= pos) {
+                return {
+                    word: match[0],
+                    startColumn: textOffset + 1 + match.index,
+                    endColumn: textOffset + 1 + wordDefinition.lastIndex
+                };
             }
         }
         return null;
     }
+    function getWordAtPosSlow(column, wordDefinition, text, textOffset) {
+        // matches all words starting at the beginning
+        // of the input until it finds a match that encloses
+        // the desired column. slow but correct
+        var pos = column - 1 - textOffset;
+        wordDefinition.lastIndex = 0;
+        var match;
+        while (match = wordDefinition.exec(text)) {
+            if (match.index > pos) {
+                // |nW -> matched only after the pos
+                return null;
+            }
+            else if (wordDefinition.lastIndex >= pos) {
+                // W|W -> match encloses pos
+                return {
+                    word: match[0],
+                    startColumn: textOffset + 1 + match.index,
+                    endColumn: textOffset + 1 + wordDefinition.lastIndex
+                };
+            }
+        }
+        return null;
+    }
+    function getWordAtText(column, wordDefinition, text, textOffset) {
+        // if `words` can contain whitespace character we have to use the slow variant
+        // otherwise we use the fast variant of finding a word
+        wordDefinition.lastIndex = 0;
+        var match = wordDefinition.exec(text);
+        if (!match) {
+            return null;
+        }
+        // todo@joh the `match` could already be the (first) word
+        var ret = match[0].indexOf(' ') >= 0
+            ? getWordAtPosSlow(column, wordDefinition, text, textOffset)
+            : getWordAtPosFast(column, wordDefinition, text, textOffset);
+        // both (getWordAtPosFast and getWordAtPosSlow) leave the wordDefinition-RegExp
+        // in an undefined state and to not confuse other users of the wordDefinition
+        // we reset the lastIndex
+        wordDefinition.lastIndex = 0;
+        return ret;
+    }
     exports.getWordAtText = getWordAtText;
 });
 
-define(__m[26/*vs/editor/common/modes/linkComputer*/], __M([0/*require*/,1/*exports*/,20/*vs/editor/common/core/characterClassifier*/]), function (require, exports, characterClassifier_1) {
+define(__m[28/*vs/editor/common/modes/linkComputer*/], __M([1/*require*/,0/*exports*/,25/*vs/editor/common/core/characterClassifier*/,7/*vs/editor/common/core/uint*/]), function (require, exports, characterClassifier_1, uint_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var State;
     (function (State) {
         State[State["Invalid"] = 0] = "Invalid";
@@ -9940,76 +10352,80 @@ define(__m[26/*vs/editor/common/modes/linkComputer*/], __M([0/*require*/,1/*expo
                     maxState = to;
                 }
             }
-            var states = [];
-            for (var i = 0; i <= maxState; i++) {
-                var tmp = [];
-                for (var j = 0; j <= maxCharCode; j++) {
-                    tmp[j] = 0 /* Invalid */;
-                }
-                states[i] = tmp;
-            }
+            maxCharCode++;
+            maxState++;
+            var states = new uint_1.Uint8Matrix(maxState, maxCharCode, 0 /* Invalid */);
             for (var i = 0, len = edges.length; i < len; i++) {
                 var _b = edges[i], from = _b[0], chCode = _b[1], to = _b[2];
-                states[from][chCode] = to;
+                states.set(from, chCode, to);
             }
             this._states = states;
             this._maxCharCode = maxCharCode;
         }
         StateMachine.prototype.nextState = function (currentState, chCode) {
-            if (chCode < 0 || chCode > this._maxCharCode) {
+            if (chCode < 0 || chCode >= this._maxCharCode) {
                 return 0 /* Invalid */;
             }
-            return this._states[currentState][chCode];
+            return this._states.get(currentState, chCode);
         };
         return StateMachine;
     }());
     // State machine for http:// or https:// or file://
-    var stateMachine = new StateMachine([
-        [1 /* Start */, 104 /* h */, 2 /* H */],
-        [1 /* Start */, 72 /* H */, 2 /* H */],
-        [1 /* Start */, 102 /* f */, 6 /* F */],
-        [1 /* Start */, 70 /* F */, 6 /* F */],
-        [2 /* H */, 116 /* t */, 3 /* HT */],
-        [2 /* H */, 84 /* T */, 3 /* HT */],
-        [3 /* HT */, 116 /* t */, 4 /* HTT */],
-        [3 /* HT */, 84 /* T */, 4 /* HTT */],
-        [4 /* HTT */, 112 /* p */, 5 /* HTTP */],
-        [4 /* HTT */, 80 /* P */, 5 /* HTTP */],
-        [5 /* HTTP */, 115 /* s */, 9 /* BeforeColon */],
-        [5 /* HTTP */, 83 /* S */, 9 /* BeforeColon */],
-        [5 /* HTTP */, 58 /* Colon */, 10 /* AfterColon */],
-        [6 /* F */, 105 /* i */, 7 /* FI */],
-        [6 /* F */, 73 /* I */, 7 /* FI */],
-        [7 /* FI */, 108 /* l */, 8 /* FIL */],
-        [7 /* FI */, 76 /* L */, 8 /* FIL */],
-        [8 /* FIL */, 101 /* e */, 9 /* BeforeColon */],
-        [8 /* FIL */, 69 /* E */, 9 /* BeforeColon */],
-        [9 /* BeforeColon */, 58 /* Colon */, 10 /* AfterColon */],
-        [10 /* AfterColon */, 47 /* Slash */, 11 /* AlmostThere */],
-        [11 /* AlmostThere */, 47 /* Slash */, 12 /* End */],
-    ]);
+    var _stateMachine = null;
+    function getStateMachine() {
+        if (_stateMachine === null) {
+            _stateMachine = new StateMachine([
+                [1 /* Start */, 104 /* h */, 2 /* H */],
+                [1 /* Start */, 72 /* H */, 2 /* H */],
+                [1 /* Start */, 102 /* f */, 6 /* F */],
+                [1 /* Start */, 70 /* F */, 6 /* F */],
+                [2 /* H */, 116 /* t */, 3 /* HT */],
+                [2 /* H */, 84 /* T */, 3 /* HT */],
+                [3 /* HT */, 116 /* t */, 4 /* HTT */],
+                [3 /* HT */, 84 /* T */, 4 /* HTT */],
+                [4 /* HTT */, 112 /* p */, 5 /* HTTP */],
+                [4 /* HTT */, 80 /* P */, 5 /* HTTP */],
+                [5 /* HTTP */, 115 /* s */, 9 /* BeforeColon */],
+                [5 /* HTTP */, 83 /* S */, 9 /* BeforeColon */],
+                [5 /* HTTP */, 58 /* Colon */, 10 /* AfterColon */],
+                [6 /* F */, 105 /* i */, 7 /* FI */],
+                [6 /* F */, 73 /* I */, 7 /* FI */],
+                [7 /* FI */, 108 /* l */, 8 /* FIL */],
+                [7 /* FI */, 76 /* L */, 8 /* FIL */],
+                [8 /* FIL */, 101 /* e */, 9 /* BeforeColon */],
+                [8 /* FIL */, 69 /* E */, 9 /* BeforeColon */],
+                [9 /* BeforeColon */, 58 /* Colon */, 10 /* AfterColon */],
+                [10 /* AfterColon */, 47 /* Slash */, 11 /* AlmostThere */],
+                [11 /* AlmostThere */, 47 /* Slash */, 12 /* End */],
+            ]);
+        }
+        return _stateMachine;
+    }
     var CharacterClass;
     (function (CharacterClass) {
         CharacterClass[CharacterClass["None"] = 0] = "None";
         CharacterClass[CharacterClass["ForceTermination"] = 1] = "ForceTermination";
         CharacterClass[CharacterClass["CannotEndIn"] = 2] = "CannotEndIn";
     })(CharacterClass || (CharacterClass = {}));
-    var classifier = (function () {
-        var result = new characterClassifier_1.CharacterClassifier(0 /* None */);
-        var FORCE_TERMINATION_CHARACTERS = ' \t<>\'\"、。｡､，．：；？！＠＃＄％＆＊‘“〈《「『【〔（［｛｢｣｝］）〕】』」》〉”’｀～…';
-        for (var i = 0; i < FORCE_TERMINATION_CHARACTERS.length; i++) {
-            result.set(FORCE_TERMINATION_CHARACTERS.charCodeAt(i), 1 /* ForceTermination */);
+    var _classifier = null;
+    function getClassifier() {
+        if (_classifier === null) {
+            _classifier = new characterClassifier_1.CharacterClassifier(0 /* None */);
+            var FORCE_TERMINATION_CHARACTERS = ' \t<>\'\"、。｡､，．：；？！＠＃＄％＆＊‘“〈《「『【〔（［｛｢｣｝］）〕】』」》〉”’｀～…';
+            for (var i = 0; i < FORCE_TERMINATION_CHARACTERS.length; i++) {
+                _classifier.set(FORCE_TERMINATION_CHARACTERS.charCodeAt(i), 1 /* ForceTermination */);
+            }
+            var CANNOT_END_WITH_CHARACTERS = '.,;';
+            for (var i = 0; i < CANNOT_END_WITH_CHARACTERS.length; i++) {
+                _classifier.set(CANNOT_END_WITH_CHARACTERS.charCodeAt(i), 2 /* CannotEndIn */);
+            }
         }
-        var CANNOT_END_WITH_CHARACTERS = '.,;';
-        for (var i = 0; i < CANNOT_END_WITH_CHARACTERS.length; i++) {
-            result.set(CANNOT_END_WITH_CHARACTERS.charCodeAt(i), 2 /* CannotEndIn */);
-        }
-        return result;
-    })();
+        return _classifier;
+    }
     var LinkComputer = (function () {
         function LinkComputer() {
         }
-        LinkComputer._createLink = function (line, lineNumber, linkBeginIndex, linkEndIndex) {
+        LinkComputer._createLink = function (classifier, line, lineNumber, linkBeginIndex, linkEndIndex) {
             // Do not allow to end link in certain characters...
             var lastIncludedCharIndex = linkEndIndex - 1;
             do {
@@ -10031,12 +10447,15 @@ define(__m[26/*vs/editor/common/modes/linkComputer*/], __M([0/*require*/,1/*expo
             };
         };
         LinkComputer.computeLinks = function (model) {
+            var stateMachine = getStateMachine();
+            var classifier = getClassifier();
             var result = [];
             for (var i = 1, lineCount = model.getLineCount(); i <= lineCount; i++) {
                 var line = model.getLineContent(i);
                 var len = line.length;
                 var j = 0;
                 var linkBeginIndex = 0;
+                var linkBeginChCode = 0;
                 var state = 1 /* Start */;
                 var hasOpenParens = false;
                 var hasOpenSquareBracket = false;
@@ -10068,12 +10487,22 @@ define(__m[26/*vs/editor/common/modes/linkComputer*/], __M([0/*require*/,1/*expo
                             case 125 /* CloseCurlyBrace */:
                                 chClass = (hasOpenCurlyBracket ? 0 /* None */ : 1 /* ForceTermination */);
                                 break;
+                            /* The following three rules make it that ' or " or ` are allowed inside links if the link began with a different one */
+                            case 39 /* SingleQuote */:
+                                chClass = (linkBeginChCode === 34 /* DoubleQuote */ || linkBeginChCode === 96 /* BackTick */) ? 0 /* None */ : 1 /* ForceTermination */;
+                                break;
+                            case 34 /* DoubleQuote */:
+                                chClass = (linkBeginChCode === 39 /* SingleQuote */ || linkBeginChCode === 96 /* BackTick */) ? 0 /* None */ : 1 /* ForceTermination */;
+                                break;
+                            case 96 /* BackTick */:
+                                chClass = (linkBeginChCode === 39 /* SingleQuote */ || linkBeginChCode === 34 /* DoubleQuote */) ? 0 /* None */ : 1 /* ForceTermination */;
+                                break;
                             default:
                                 chClass = classifier.get(chCode);
                         }
                         // Check if character terminates link
                         if (chClass === 1 /* ForceTermination */) {
-                            result.push(LinkComputer._createLink(line, i, linkBeginIndex, j));
+                            result.push(LinkComputer._createLink(classifier, line, i, linkBeginIndex, j));
                             resetStateMachine = true;
                         }
                     }
@@ -10100,11 +10529,12 @@ define(__m[26/*vs/editor/common/modes/linkComputer*/], __M([0/*require*/,1/*expo
                         hasOpenCurlyBracket = false;
                         // Record where the link started
                         linkBeginIndex = j + 1;
+                        linkBeginChCode = chCode;
                     }
                     j++;
                 }
                 if (state === 13 /* Accept */) {
-                    result.push(LinkComputer._createLink(line, i, linkBeginIndex, len));
+                    result.push(LinkComputer._createLink(classifier, line, i, linkBeginIndex, len));
                 }
             }
             return result;
@@ -10126,12 +10556,13 @@ define(__m[26/*vs/editor/common/modes/linkComputer*/], __M([0/*require*/,1/*expo
     exports.computeLinks = computeLinks;
 });
 
-define(__m[27/*vs/editor/common/modes/supports/inplaceReplaceSupport*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[29/*vs/editor/common/modes/supports/inplaceReplaceSupport*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var BasicInplaceReplace = (function () {
         function BasicInplaceReplace() {
             this._defaultValueSet = [
@@ -10174,6 +10605,8 @@ define(__m[27/*vs/editor/common/modes/supports/inplaceReplaceSupport*/], __M([0/
             if (!isNaN(n1) && !isNaN(n2) && n1 === n2) {
                 if (n1 === 0 && !up) {
                     return null; // don't do negative
+                    //			} else if(n1 === 9 && up) {
+                    //				return null; // don't insert 10 into a number
                 }
                 else {
                     n1 = Math.floor(n1 * precision);
@@ -10213,24 +10646,27 @@ define(__m[27/*vs/editor/common/modes/supports/inplaceReplaceSupport*/], __M([0/
     exports.BasicInplaceReplace = BasicInplaceReplace;
 });
 
-define(__m[28/*vs/editor/common/standalone/standaloneBase*/], __M([0/*require*/,1/*exports*/,6/*vs/base/common/event*/,21/*vs/base/common/keyCodes*/,7/*vs/editor/common/core/position*/,8/*vs/editor/common/core/range*/,23/*vs/editor/common/core/selection*/,3/*vs/base/common/winjs.base*/,12/*vs/base/common/cancellation*/,13/*vs/base/common/uri*/]), function (require, exports, event_1, keyCodes_1, position_1, range_1, selection_1, winjs_base_1, cancellation_1, uri_1) {
+define(__m[30/*vs/editor/common/standalone/standaloneBase*/], __M([1/*require*/,0/*exports*/,9/*vs/base/common/event*/,21/*vs/base/common/keyCodes*/,3/*vs/editor/common/core/position*/,5/*vs/editor/common/core/range*/,22/*vs/editor/common/core/selection*/,2/*vs/base/common/winjs.base*/,13/*vs/base/common/cancellation*/,23/*vs/editor/common/core/token*/,6/*vs/base/common/uri*/]), function (require, exports, event_1, keyCodes_1, position_1, range_1, selection_1, winjs_base_1, cancellation_1, token_1, uri_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     // --------------------------------------------
     // This is repeated here so it can be exported
+    // because TS inlines const enums
     // --------------------------------------------
+    var Severity;
     (function (Severity) {
         Severity[Severity["Ignore"] = 0] = "Ignore";
         Severity[Severity["Info"] = 1] = "Info";
         Severity[Severity["Warning"] = 2] = "Warning";
         Severity[Severity["Error"] = 3] = "Error";
-    })(exports.Severity || (exports.Severity = {}));
-    var Severity = exports.Severity;
+    })(Severity = exports.Severity || (exports.Severity = {}));
     // --------------------------------------------
     // This is repeated here so it can be exported
+    // because TS inlines const enums
     // --------------------------------------------
     var KeyMod = (function () {
         function KeyMod() {
@@ -10238,21 +10674,23 @@ define(__m[28/*vs/editor/common/standalone/standaloneBase*/], __M([0/*require*/,
         KeyMod.chord = function (firstPart, secondPart) {
             return keyCodes_1.KeyChord(firstPart, secondPart);
         };
-        KeyMod.CtrlCmd = 32768 /* CtrlCmd */;
-        KeyMod.Shift = 16384 /* Shift */;
-        KeyMod.Alt = 8192 /* Alt */;
-        KeyMod.WinCtrl = 4096 /* WinCtrl */;
+        KeyMod.CtrlCmd = 2048 /* CtrlCmd */;
+        KeyMod.Shift = 1024 /* Shift */;
+        KeyMod.Alt = 512 /* Alt */;
+        KeyMod.WinCtrl = 256 /* WinCtrl */;
         return KeyMod;
     }());
     exports.KeyMod = KeyMod;
     // --------------------------------------------
     // This is repeated here so it can be exported
+    // because TS inlines const enums
     // --------------------------------------------
     /**
      * Virtual Key Codes, the value does not hold any inherent meaning.
      * Inspired somewhat from https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
      * But these are "more general", as they should work across browsers & OS`s.
      */
+    var KeyCode;
     (function (KeyCode) {
         /**
          * Placed first to cover the 0 value of the enum.
@@ -10417,12 +10855,17 @@ define(__m[28/*vs/editor/common/standalone/standaloneBase*/], __M([0/*require*/,
         KeyCode[KeyCode["NUMPAD_DECIMAL"] = 107] = "NUMPAD_DECIMAL";
         KeyCode[KeyCode["NUMPAD_DIVIDE"] = 108] = "NUMPAD_DIVIDE";
         /**
+         * Cover all key codes when IME is processing input.
+         */
+        KeyCode[KeyCode["KEY_IN_COMPOSITION"] = 109] = "KEY_IN_COMPOSITION";
+        KeyCode[KeyCode["ABNT_C1"] = 110] = "ABNT_C1";
+        KeyCode[KeyCode["ABNT_C2"] = 111] = "ABNT_C2";
+        /**
          * Placed last to cover the length of the enum.
          * Please do not depend on this value!
          */
-        KeyCode[KeyCode["MAX_VALUE"] = 109] = "MAX_VALUE";
-    })(exports.KeyCode || (exports.KeyCode = {}));
-    var KeyCode = exports.KeyCode;
+        KeyCode[KeyCode["MAX_VALUE"] = 112] = "MAX_VALUE";
+    })(KeyCode = exports.KeyCode || (exports.KeyCode = {}));
     function createMonacoBaseAPI() {
         return {
             editor: undefined,
@@ -10431,25 +10874,26 @@ define(__m[28/*vs/editor/common/standalone/standaloneBase*/], __M([0/*require*/,
             Emitter: event_1.Emitter,
             KeyCode: KeyCode,
             KeyMod: KeyMod,
-            Keybinding: keyCodes_1.Keybinding,
             Position: position_1.Position,
             Range: range_1.Range,
             Selection: selection_1.Selection,
             SelectionDirection: selection_1.SelectionDirection,
             Severity: Severity,
             Promise: winjs_base_1.TPromise,
-            Uri: uri_1.default
+            Uri: uri_1.default,
+            Token: token_1.Token
         };
     }
     exports.createMonacoBaseAPI = createMonacoBaseAPI;
 });
 
-define(__m[19/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+define(__m[19/*vs/editor/common/viewModel/prefixSumComputer*/], __M([1/*require*/,0/*exports*/,7/*vs/editor/common/core/uint*/]), function (require, exports, uint_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     var PrefixSumIndexOfResult = (function () {
         function PrefixSumIndexOfResult(index, remainder) {
             this.index = index;
@@ -10461,85 +10905,91 @@ define(__m[19/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*
     var PrefixSumComputer = (function () {
         function PrefixSumComputer(values) {
             this.values = values;
-            this.prefixSum = [];
-            for (var i = 0, len = this.values.length; i < len; i++) {
-                this.prefixSum[i] = 0;
-            }
-            this.prefixSumValidIndex = -1;
+            this.prefixSum = new Uint32Array(values.length);
+            this.prefixSumValidIndex = new Int32Array(1);
+            this.prefixSumValidIndex[0] = -1;
         }
         PrefixSumComputer.prototype.getCount = function () {
             return this.values.length;
         };
-        PrefixSumComputer.prototype.insertValue = function (insertIndex, value) {
-            insertIndex = Math.floor(insertIndex); //@perf
-            value = Math.floor(value); //@perf
-            this.values.splice(insertIndex, 0, value);
-            this.prefixSum.splice(insertIndex, 0, 0);
-            if (insertIndex - 1 < this.prefixSumValidIndex) {
-                this.prefixSumValidIndex = insertIndex - 1;
+        PrefixSumComputer.prototype.insertValues = function (insertIndex, insertValues) {
+            insertIndex = uint_1.toUint32(insertIndex);
+            var oldValues = this.values;
+            var oldPrefixSum = this.prefixSum;
+            var insertValuesLen = insertValues.length;
+            if (insertValuesLen === 0) {
+                return false;
             }
-        };
-        PrefixSumComputer.prototype.insertValues = function (insertIndex, values) {
-            insertIndex = Math.floor(insertIndex); //@perf
-            if (values.length === 0) {
-                return;
+            this.values = new Uint32Array(oldValues.length + insertValuesLen);
+            this.values.set(oldValues.subarray(0, insertIndex), 0);
+            this.values.set(oldValues.subarray(insertIndex), insertIndex + insertValuesLen);
+            this.values.set(insertValues, insertIndex);
+            if (insertIndex - 1 < this.prefixSumValidIndex[0]) {
+                this.prefixSumValidIndex[0] = insertIndex - 1;
             }
-            if (values.length === 1) {
-                // Fast path for one element
-                this.values.splice(insertIndex, 0, values[0]);
-                this.prefixSum.splice(insertIndex, 0, values[0]);
+            this.prefixSum = new Uint32Array(this.values.length);
+            if (this.prefixSumValidIndex[0] >= 0) {
+                this.prefixSum.set(oldPrefixSum.subarray(0, this.prefixSumValidIndex[0] + 1));
             }
-            else {
-                this.values = this.values.slice(0, insertIndex).concat(values).concat(this.values.slice(insertIndex));
-                this.prefixSum = this.prefixSum.slice(0, insertIndex).concat(PrefixSumComputer._zeroArray(values.length)).concat(this.prefixSum.slice(insertIndex));
-            }
-            if (insertIndex - 1 < this.prefixSumValidIndex) {
-                this.prefixSumValidIndex = insertIndex - 1;
-            }
-        };
-        PrefixSumComputer._zeroArray = function (count) {
-            count = Math.floor(count); //@perf
-            var r = [];
-            for (var i = 0; i < count; i++) {
-                r[i] = 0;
-            }
-            return r;
+            return true;
         };
         PrefixSumComputer.prototype.changeValue = function (index, value) {
-            index = Math.floor(index); //@perf
-            value = Math.floor(value); //@perf
+            index = uint_1.toUint32(index);
+            value = uint_1.toUint32(value);
             if (this.values[index] === value) {
-                return;
+                return false;
             }
             this.values[index] = value;
-            if (index - 1 < this.prefixSumValidIndex) {
-                this.prefixSumValidIndex = index - 1;
+            if (index - 1 < this.prefixSumValidIndex[0]) {
+                this.prefixSumValidIndex[0] = index - 1;
             }
+            return true;
         };
         PrefixSumComputer.prototype.removeValues = function (startIndex, cnt) {
-            startIndex = Math.floor(startIndex); //@perf
-            cnt = Math.floor(cnt); //@perf
-            this.values.splice(startIndex, cnt);
-            this.prefixSum.splice(startIndex, cnt);
-            if (startIndex - 1 < this.prefixSumValidIndex) {
-                this.prefixSumValidIndex = startIndex - 1;
+            startIndex = uint_1.toUint32(startIndex);
+            cnt = uint_1.toUint32(cnt);
+            var oldValues = this.values;
+            var oldPrefixSum = this.prefixSum;
+            if (startIndex >= oldValues.length) {
+                return false;
             }
+            var maxCnt = oldValues.length - startIndex;
+            if (cnt >= maxCnt) {
+                cnt = maxCnt;
+            }
+            if (cnt === 0) {
+                return false;
+            }
+            this.values = new Uint32Array(oldValues.length - cnt);
+            this.values.set(oldValues.subarray(0, startIndex), 0);
+            this.values.set(oldValues.subarray(startIndex + cnt), startIndex);
+            this.prefixSum = new Uint32Array(this.values.length);
+            if (startIndex - 1 < this.prefixSumValidIndex[0]) {
+                this.prefixSumValidIndex[0] = startIndex - 1;
+            }
+            if (this.prefixSumValidIndex[0] >= 0) {
+                this.prefixSum.set(oldPrefixSum.subarray(0, this.prefixSumValidIndex[0] + 1));
+            }
+            return true;
         };
         PrefixSumComputer.prototype.getTotalValue = function () {
             if (this.values.length === 0) {
                 return 0;
             }
-            return this.getAccumulatedValue(this.values.length - 1);
+            return this._getAccumulatedValue(this.values.length - 1);
         };
         PrefixSumComputer.prototype.getAccumulatedValue = function (index) {
-            index = Math.floor(index); //@perf
             if (index < 0) {
                 return 0;
             }
-            if (index <= this.prefixSumValidIndex) {
+            index = uint_1.toUint32(index);
+            return this._getAccumulatedValue(index);
+        };
+        PrefixSumComputer.prototype._getAccumulatedValue = function (index) {
+            if (index <= this.prefixSumValidIndex[0]) {
                 return this.prefixSum[index];
             }
-            var startIndex = this.prefixSumValidIndex + 1;
+            var startIndex = this.prefixSumValidIndex[0] + 1;
             if (startIndex === 0) {
                 this.prefixSum[0] = this.values[0];
                 startIndex++;
@@ -10550,11 +11000,13 @@ define(__m[19/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*
             for (var i = startIndex; i <= index; i++) {
                 this.prefixSum[i] = this.prefixSum[i - 1] + this.values[i];
             }
-            this.prefixSumValidIndex = Math.max(this.prefixSumValidIndex, index);
+            this.prefixSumValidIndex[0] = Math.max(this.prefixSumValidIndex[0], index);
             return this.prefixSum[index];
         };
         PrefixSumComputer.prototype.getIndexOf = function (accumulatedValue) {
             accumulatedValue = Math.floor(accumulatedValue); //@perf
+            // Compute all sums (to get a fully valid prefixSum)
+            this.getTotalValue();
             var low = 0;
             var high = this.values.length - 1;
             var mid;
@@ -10562,7 +11014,7 @@ define(__m[19/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*
             var midStart;
             while (low <= high) {
                 mid = low + ((high - low) / 2) | 0;
-                midStop = this.getAccumulatedValue(mid);
+                midStop = this.prefixSum[mid];
                 midStart = midStop - this.values[mid];
                 if (accumulatedValue < midStart) {
                     high = mid - 1;
@@ -10579,67 +11031,120 @@ define(__m[19/*vs/editor/common/viewModel/prefixSumComputer*/], __M([0/*require*
         return PrefixSumComputer;
     }());
     exports.PrefixSumComputer = PrefixSumComputer;
+    var PrefixSumComputerWithCache = (function () {
+        function PrefixSumComputerWithCache(values) {
+            this._cacheAccumulatedValueStart = 0;
+            this._cache = null;
+            this._actual = new PrefixSumComputer(values);
+            this._bustCache();
+        }
+        PrefixSumComputerWithCache.prototype._bustCache = function () {
+            this._cacheAccumulatedValueStart = 0;
+            this._cache = null;
+        };
+        PrefixSumComputerWithCache.prototype.getCount = function () {
+            return this._actual.getCount();
+        };
+        PrefixSumComputerWithCache.prototype.insertValues = function (insertIndex, insertValues) {
+            if (this._actual.insertValues(insertIndex, insertValues)) {
+                this._bustCache();
+            }
+        };
+        PrefixSumComputerWithCache.prototype.changeValue = function (index, value) {
+            if (this._actual.changeValue(index, value)) {
+                this._bustCache();
+            }
+        };
+        PrefixSumComputerWithCache.prototype.removeValues = function (startIndex, cnt) {
+            if (this._actual.removeValues(startIndex, cnt)) {
+                this._bustCache();
+            }
+        };
+        PrefixSumComputerWithCache.prototype.getTotalValue = function () {
+            return this._actual.getTotalValue();
+        };
+        PrefixSumComputerWithCache.prototype.getAccumulatedValue = function (index) {
+            return this._actual.getAccumulatedValue(index);
+        };
+        PrefixSumComputerWithCache.prototype.getIndexOf = function (accumulatedValue) {
+            accumulatedValue = Math.floor(accumulatedValue); //@perf
+            if (this._cache !== null) {
+                var cacheIndex = accumulatedValue - this._cacheAccumulatedValueStart;
+                if (cacheIndex >= 0 && cacheIndex < this._cache.length) {
+                    // Cache hit!
+                    return this._cache[cacheIndex];
+                }
+            }
+            // Cache miss!
+            return this._actual.getIndexOf(accumulatedValue);
+        };
+        /**
+         * Gives a hint that a lot of requests are about to come in for these accumulated values.
+         */
+        PrefixSumComputerWithCache.prototype.warmUpCache = function (accumulatedValueStart, accumulatedValueEnd) {
+            var newCache = [];
+            for (var accumulatedValue = accumulatedValueStart; accumulatedValue <= accumulatedValueEnd; accumulatedValue++) {
+                newCache[accumulatedValue - accumulatedValueStart] = this.getIndexOf(accumulatedValue);
+            }
+            this._cache = newCache;
+            this._cacheAccumulatedValueStart = accumulatedValueStart;
+        };
+        return PrefixSumComputerWithCache;
+    }());
+    exports.PrefixSumComputerWithCache = PrefixSumComputerWithCache;
 });
 
-define(__m[17/*vs/editor/common/model/mirrorModel2*/], __M([0/*require*/,1/*exports*/,19/*vs/editor/common/viewModel/prefixSumComputer*/]), function (require, exports, prefixSumComputer_1) {
+define(__m[24/*vs/editor/common/model/mirrorModel*/], __M([1/*require*/,0/*exports*/,19/*vs/editor/common/viewModel/prefixSumComputer*/]), function (require, exports, prefixSumComputer_1) {
     /*---------------------------------------------------------------------------------------------
      *  Copyright (c) Microsoft Corporation. All rights reserved.
      *  Licensed under the MIT License. See License.txt in the project root for license information.
      *--------------------------------------------------------------------------------------------*/
     'use strict';
-    var MirrorModel2 = (function () {
-        function MirrorModel2(uri, lines, eol, versionId) {
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var MirrorModel = (function () {
+        function MirrorModel(uri, lines, eol, versionId) {
             this._uri = uri;
             this._lines = lines;
             this._eol = eol;
             this._versionId = versionId;
         }
-        MirrorModel2.prototype.dispose = function () {
+        MirrorModel.prototype.dispose = function () {
             this._lines.length = 0;
         };
-        Object.defineProperty(MirrorModel2.prototype, "version", {
+        Object.defineProperty(MirrorModel.prototype, "version", {
             get: function () {
                 return this._versionId;
             },
             enumerable: true,
             configurable: true
         });
-        MirrorModel2.prototype.getText = function () {
+        MirrorModel.prototype.getText = function () {
             return this._lines.join(this._eol);
         };
-        MirrorModel2.prototype.onEvents = function (events) {
-            var newEOL = null;
-            for (var i = 0, len = events.length; i < len; i++) {
-                var e = events[i];
-                if (e.eol) {
-                    newEOL = e.eol;
-                }
-            }
-            if (newEOL && newEOL !== this._eol) {
-                this._eol = newEOL;
+        MirrorModel.prototype.onEvents = function (e) {
+            if (e.eol && e.eol !== this._eol) {
+                this._eol = e.eol;
                 this._lineStarts = null;
             }
             // Update my lines
-            var lastVersionId = -1;
-            for (var i = 0, len = events.length; i < len; i++) {
-                var e = events[i];
-                this._acceptDeleteRange(e.range);
+            var changes = e.changes;
+            for (var i = 0, len = changes.length; i < len; i++) {
+                var change = changes[i];
+                this._acceptDeleteRange(change.range);
                 this._acceptInsertText({
-                    lineNumber: e.range.startLineNumber,
-                    column: e.range.startColumn
-                }, e.text);
-                lastVersionId = Math.max(lastVersionId, e.versionId);
+                    lineNumber: change.range.startLineNumber,
+                    column: change.range.startColumn
+                }, change.text);
             }
-            if (lastVersionId !== -1) {
-                this._versionId = lastVersionId;
-            }
+            this._versionId = e.versionId;
         };
-        MirrorModel2.prototype._ensureLineStarts = function () {
+        MirrorModel.prototype._ensureLineStarts = function () {
             if (!this._lineStarts) {
-                var lineStartValues = [];
                 var eolLength = this._eol.length;
-                for (var i = 0, len = this._lines.length; i < len; i++) {
-                    lineStartValues.push(this._lines[i].length + eolLength);
+                var linesLength = this._lines.length;
+                var lineStartValues = new Uint32Array(linesLength);
+                for (var i = 0; i < linesLength; i++) {
+                    lineStartValues[i] = this._lines[i].length + eolLength;
                 }
                 this._lineStarts = new prefixSumComputer_1.PrefixSumComputer(lineStartValues);
             }
@@ -10647,14 +11152,14 @@ define(__m[17/*vs/editor/common/model/mirrorModel2*/], __M([0/*require*/,1/*expo
         /**
          * All changes to a line's text go through this method
          */
-        MirrorModel2.prototype._setLineText = function (lineIndex, newValue) {
+        MirrorModel.prototype._setLineText = function (lineIndex, newValue) {
             this._lines[lineIndex] = newValue;
             if (this._lineStarts) {
                 // update prefix sum
                 this._lineStarts.changeValue(lineIndex, this._lines[lineIndex].length + this._eol.length);
             }
         };
-        MirrorModel2.prototype._acceptDeleteRange = function (range) {
+        MirrorModel.prototype._acceptDeleteRange = function (range) {
             if (range.startLineNumber === range.endLineNumber) {
                 if (range.startColumn === range.endColumn) {
                     // Nothing to delete
@@ -10675,7 +11180,7 @@ define(__m[17/*vs/editor/common/model/mirrorModel2*/], __M([0/*require*/,1/*expo
                 this._lineStarts.removeValues(range.startLineNumber, range.endLineNumber - range.startLineNumber);
             }
         };
-        MirrorModel2.prototype._acceptInsertText = function (position, insertText) {
+        MirrorModel.prototype._acceptInsertText = function (position, insertText) {
             if (insertText.length === 0) {
                 // Nothing to insert
                 return;
@@ -10694,7 +11199,7 @@ define(__m[17/*vs/editor/common/model/mirrorModel2*/], __M([0/*require*/,1/*expo
             this._setLineText(position.lineNumber - 1, this._lines[position.lineNumber - 1].substring(0, position.column - 1)
                 + insertLines[0]);
             // Insert new lines & store lengths
-            var newLengths = new Array(insertLines.length - 1);
+            var newLengths = new Uint32Array(insertLines.length - 1);
             for (var i = 1; i < insertLines.length; i++) {
                 this._lines.splice(position.lineNumber + i - 1, 0, insertLines[i]);
                 newLengths[i - 1] = insertLines[i].length + this._eol.length;
@@ -10704,9 +11209,9 @@ define(__m[17/*vs/editor/common/model/mirrorModel2*/], __M([0/*require*/,1/*expo
                 this._lineStarts.insertValues(position.lineNumber, newLengths);
             }
         };
-        return MirrorModel2;
+        return MirrorModel;
     }());
-    exports.MirrorModel2 = MirrorModel2;
+    exports.MirrorModel = MirrorModel;
 });
 
 /*---------------------------------------------------------------------------------------------
@@ -10718,15 +11223,21 @@ define(__m[17/*vs/editor/common/model/mirrorModel2*/], __M([0/*require*/,1/*expo
 
 
 
-define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*/,1/*exports*/,13/*vs/base/common/uri*/,3/*vs/base/common/winjs.base*/,8/*vs/editor/common/core/range*/,16/*vs/base/common/filters*/,24/*vs/editor/common/diff/diffComputer*/,14/*vs/base/common/diff/diff*/,7/*vs/editor/common/core/position*/,17/*vs/editor/common/model/mirrorModel2*/,26/*vs/editor/common/modes/linkComputer*/,27/*vs/editor/common/modes/supports/inplaceReplaceSupport*/,25/*vs/editor/common/model/wordHelper*/,28/*vs/editor/common/standalone/standaloneBase*/]), function (require, exports, uri_1, winjs_base_1, range_1, filters_1, diffComputer_1, diff_1, position_1, mirrorModel2_1, linkComputer_1, inplaceReplaceSupport_1, wordHelper_1, standaloneBase_1) {
+
+
+
+
+
+define(__m[33/*vs/editor/common/services/editorSimpleWorker*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/uri*/,2/*vs/base/common/winjs.base*/,5/*vs/editor/common/core/range*/,26/*vs/editor/common/diff/diffComputer*/,12/*vs/base/common/diff/diff*/,3/*vs/editor/common/core/position*/,24/*vs/editor/common/model/mirrorModel*/,28/*vs/editor/common/modes/linkComputer*/,29/*vs/editor/common/modes/supports/inplaceReplaceSupport*/,27/*vs/editor/common/model/wordHelper*/,30/*vs/editor/common/standalone/standaloneBase*/]), function (require, exports, uri_1, winjs_base_1, range_1, diffComputer_1, diff_1, position_1, mirrorModel_1, linkComputer_1, inplaceReplaceSupport_1, wordHelper_1, standaloneBase_1) {
     'use strict';
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * @internal
      */
     var MirrorModel = (function (_super) {
         __extends(MirrorModel, _super);
         function MirrorModel() {
-            _super.apply(this, arguments);
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         Object.defineProperty(MirrorModel.prototype, "uri", {
             get: function () {
@@ -10810,10 +11321,10 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
                 }
             });
         };
-        // TODO@Joh, TODO@Alex - remove these and make sure the super-things work
         MirrorModel.prototype._wordenize = function (content, wordDefinition) {
             var result = [];
             var match;
+            wordDefinition.lastIndex = 0; // reset lastIndex just to be sure
             while (match = wordDefinition.exec(content)) {
                 if (match[0].length === 0) {
                     // it did match the empty string
@@ -10824,6 +11335,7 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
             return result;
         };
         MirrorModel.prototype.getValueInRange = function (range) {
+            range = this._validateRange(range);
             if (range.startLineNumber === range.endLineNumber) {
                 return this._lines[range.startLineNumber - 1].substring(range.startColumn - 1, range.endColumn - 1);
             }
@@ -10851,6 +11363,22 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
                 lineNumber: 1 + out.index,
                 column: 1 + Math.min(out.remainder, lineLength)
             };
+        };
+        MirrorModel.prototype._validateRange = function (range) {
+            var start = this._validatePosition({ lineNumber: range.startLineNumber, column: range.startColumn });
+            var end = this._validatePosition({ lineNumber: range.endLineNumber, column: range.endColumn });
+            if (start.lineNumber !== range.startLineNumber
+                || start.column !== range.startColumn
+                || end.lineNumber !== range.endLineNumber
+                || end.column !== range.endColumn) {
+                return {
+                    startLineNumber: start.lineNumber,
+                    startColumn: start.column,
+                    endLineNumber: end.lineNumber,
+                    endColumn: end.column
+                };
+            }
+            return range;
         };
         MirrorModel.prototype._validatePosition = function (position) {
             if (!position_1.Position.isIPosition(position)) {
@@ -10887,7 +11415,7 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
             }
         };
         return MirrorModel;
-    }(mirrorModel2_1.MirrorModel2));
+    }(mirrorModel_1.MirrorModel));
     /**
      * @internal
      */
@@ -10907,7 +11435,8 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
             var diffComputer = new diffComputer_1.DiffComputer(originalLines, modifiedLines, {
                 shouldPostProcessCharChanges: true,
                 shouldIgnoreTrimWhitespace: ignoreTrimWhitespace,
-                shouldConsiderTrimWhitespaceInEmptyCase: true
+                shouldConsiderTrimWhitespaceInEmptyCase: true,
+                shouldMakePrettyDiff: true
             });
             return winjs_base_1.TPromise.as(diffComputer.computeDiff());
         };
@@ -10922,7 +11451,8 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
             var diffComputer = new diffComputer_1.DiffComputer(originalLines, modifiedLines, {
                 shouldPostProcessCharChanges: false,
                 shouldIgnoreTrimWhitespace: ignoreTrimWhitespace,
-                shouldConsiderTrimWhitespaceInEmptyCase: false
+                shouldConsiderTrimWhitespaceInEmptyCase: false,
+                shouldMakePrettyDiff: true
             });
             return winjs_base_1.TPromise.as(diffComputer.computeDiff());
         };
@@ -10932,8 +11462,16 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
                 return winjs_base_1.TPromise.as(edits);
             }
             var result = [];
+            var lastEol;
             for (var _i = 0, edits_1 = edits; _i < edits_1.length; _i++) {
-                var _a = edits_1[_i], range = _a.range, text = _a.text;
+                var _a = edits_1[_i], range = _a.range, text = _a.text, eol = _a.eol;
+                if (typeof eol === 'number') {
+                    lastEol = eol;
+                }
+                if (!range) {
+                    // eol-change only
+                    continue;
+                }
                 var original = model.getValueInRange(range);
                 text = text.replace(/\r\n|\n|\r/g, model.eol);
                 if (original === text) {
@@ -10946,7 +11484,7 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
                     continue;
                 }
                 // compute diff between original and edit.text
-                var changes = diff_1.stringDiff(original, text);
+                var changes = diff_1.stringDiff(original, text, false);
                 var editOffset = model.offsetAt(range_1.Range.lift(range).getStartPosition());
                 for (var _b = 0, changes_1 = changes; _b < changes_1.length; _b++) {
                     var change = changes_1[_b];
@@ -10961,6 +11499,9 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
                     }
                 }
             }
+            if (typeof lastEol === 'number') {
+                result.push({ eol: lastEol, text: undefined, range: undefined });
+            }
             return winjs_base_1.TPromise.as(result);
         };
         // ---- END minimal edits ---------------------------------------------------------------
@@ -10974,35 +11515,25 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
         // ---- BEGIN suggest --------------------------------------------------------------------------
         BaseEditorSimpleWorker.prototype.textualSuggest = function (modelUrl, position, wordDef, wordDefFlags) {
             var model = this._getModel(modelUrl);
-            if (!model) {
-                return null;
+            if (model) {
+                var suggestions = [];
+                var wordDefRegExp = new RegExp(wordDef, wordDefFlags);
+                var currentWord = model.getWordUntilPosition(position, wordDefRegExp).word;
+                for (var _i = 0, _a = model.getAllUniqueWords(wordDefRegExp); _i < _a.length; _i++) {
+                    var word = _a[_i];
+                    if (word !== currentWord && isNaN(Number(word))) {
+                        suggestions.push({
+                            type: 'text',
+                            label: word,
+                            insertText: word,
+                            noAutoAccept: true,
+                            overwriteBefore: currentWord.length
+                        });
+                    }
+                }
+                return winjs_base_1.TPromise.as({ suggestions: suggestions });
             }
-            return winjs_base_1.TPromise.as(this._suggestFiltered(model, position, new RegExp(wordDef, wordDefFlags)));
-        };
-        BaseEditorSimpleWorker.prototype._suggestFiltered = function (model, position, wordDefRegExp) {
-            var currentWord = model.getWordUntilPosition(position, wordDefRegExp).word;
-            var value = this._suggestUnfiltered(model, position, wordDefRegExp);
-            // filter suggestions
-            return {
-                suggestions: value.suggestions.filter(function (element) { return !!filters_1.fuzzyContiguousFilter(currentWord, element.label); }),
-                incomplete: value.incomplete
-            };
-        };
-        BaseEditorSimpleWorker.prototype._suggestUnfiltered = function (model, position, wordDefRegExp) {
-            var currentWord = model.getWordUntilPosition(position, wordDefRegExp).word;
-            var allWords = model.getAllUniqueWords(wordDefRegExp, currentWord);
-            var suggestions = allWords.filter(function (word) {
-                return !(/^-?\d*\.?\d/.test(word)); // filter out numbers
-            }).map(function (word) {
-                return {
-                    type: 'text',
-                    label: word,
-                    insertText: word,
-                    noAutoAccept: true,
-                    overwriteBefore: currentWord.length
-                };
-            });
-            return { suggestions: suggestions };
+            return undefined;
         };
         // ---- END suggest --------------------------------------------------------------------------
         BaseEditorSimpleWorker.prototype.navigateValueSet = function (modelUrl, range, up, wordDef, wordDefFlags) {
@@ -11074,8 +11605,9 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
     var EditorSimpleWorkerImpl = (function (_super) {
         __extends(EditorSimpleWorkerImpl, _super);
         function EditorSimpleWorkerImpl() {
-            _super.call(this);
-            this._models = Object.create(null);
+            var _this = _super.call(this) || this;
+            _this._models = Object.create(null);
+            return _this;
         }
         EditorSimpleWorkerImpl.prototype.dispose = function () {
             this._models = Object.create(null);
@@ -11090,14 +11622,14 @@ define(__m[31/*vs/editor/common/services/editorSimpleWorker*/], __M([0/*require*
             return all;
         };
         EditorSimpleWorkerImpl.prototype.acceptNewModel = function (data) {
-            this._models[data.url] = new MirrorModel(uri_1.default.parse(data.url), data.value.lines, data.value.EOL, data.versionId);
+            this._models[data.url] = new MirrorModel(uri_1.default.parse(data.url), data.lines, data.EOL, data.versionId);
         };
-        EditorSimpleWorkerImpl.prototype.acceptModelChanged = function (strURL, events) {
+        EditorSimpleWorkerImpl.prototype.acceptModelChanged = function (strURL, e) {
             if (!this._models[strURL]) {
                 return;
             }
             var model = this._models[strURL];
-            model.onEvents(events);
+            model.onEvents(e);
         };
         EditorSimpleWorkerImpl.prototype.acceptRemovedModel = function (strURL) {
             if (!this._models[strURL]) {

@@ -2,6 +2,7 @@ package kha.kore.graphics4;
 
 import haxe.ds.Vector;
 import kha.Blob;
+import kha.Canvas;
 import kha.Color;
 import kha.graphics4.CubeMap;
 import kha.graphics4.CullMode;
@@ -21,6 +22,7 @@ import kha.graphics4.VertexBuffer;
 import kha.graphics4.VertexShader;
 import kha.graphics4.VertexStructure;
 import kha.Image;
+import kha.math.FastMatrix3;
 import kha.math.FastMatrix4;
 import kha.math.FastVector2;
 import kha.math.FastVector3;
@@ -33,70 +35,39 @@ import kha.Video;
 
 @:headerCode('
 #include <Kore/pch.h>
-#include <Kore/Graphics/Graphics.h>
+#include <Kore/Graphics4/Graphics.h>
 ')
 
-@:cppFileCode('
-Kore::ZCompareMode convertCompareMode(int mode) {
-	switch (mode) {
-	case 0:
-		return Kore::ZCompareAlways;
-	case 1:
-		return Kore::ZCompareNever;
-	case 2:
-		return Kore::ZCompareEqual;
-	case 3:
-		return Kore::ZCompareNotEqual;
-	case 4:
-		return Kore::ZCompareLess;
-	case 5:
-		return Kore::ZCompareLessEqual;
-	case 6:
-		return Kore::ZCompareGreater;
-	case 7:
-	default:
-		return Kore::ZCompareGreaterEqual;
-	}
-}
-
-Kore::StencilAction convertStencilAction(int action) {
-	switch (action) {
-	case 0:
-		return Kore::Keep;
-	case 1:
-		return Kore::Zero;
-	case 2:
-		return Kore::Replace;
-	case 3:
-		return Kore::Increment;
-	case 4:
-		return Kore::IncrementWrap;
-	case 5:
-		return Kore::Decrement;
-	case 6:
-		return Kore::DecrementWrap;
-	case 7:
-	default:
-		return Kore::Invert;	
-	}
-}
-')
+@:headerClassCode("Kore::Graphics4::RenderTarget* renderTarget;")
 class Graphics implements kha.graphics4.Graphics {
-	private var target: Image;
+	private var target: Canvas;
 	
-	public function new(target: Image = null) {
+	public function new(target: Canvas = null) {
 		this.target = target;
+		init();
+	}
+
+	function init() {
+		if (target == null) return;
+		if (Std.is(target, CubeMap)) {
+			var cubeMap = cast(target, CubeMap);
+			untyped __cpp__("renderTarget = cubeMap->renderTarget");
+		}
+		else {
+			var image = cast(target, Image);
+			untyped __cpp__("renderTarget = image->renderTarget");
+		}
 	}
 	
 	@:functionCode('
-		return Kore::Graphics::vsynced();
+		return Kore::Graphics4::vsynced();
 	')
 	public function vsynced(): Bool {
 		return true;
 	}
 
 	@:functionCode('
-		return (Int)Kore::Graphics::refreshRate();
+		return (Int)Kore::Graphics4::refreshRate();
 	')
 	public function refreshRate(): Int {
 		return 0;
@@ -111,104 +82,14 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 
 	@:functionCode('
-		Kore::Graphics::viewport(x,y,width,height);
+		Kore::Graphics4::viewport(x,y,width,height);
 	')
 	public function viewport(x : Int, y : Int, width : Int, height : Int): Void{
 	
 	}
 	
 	@:functionCode('
-		switch (mode) {
-		case 0:
-			write ? Kore::Graphics::setRenderState(Kore::DepthTest, true) : Kore::Graphics::setRenderState(Kore::DepthTest, false);
-			Kore::Graphics::setRenderState(Kore::DepthTestCompare, Kore::ZCompareAlways);
-			break;
-		case 1:
-			Kore::Graphics::setRenderState(Kore::DepthTest, true);
-			Kore::Graphics::setRenderState(Kore::DepthTestCompare, Kore::ZCompareNever);
-			break;
-		case 2:
-			Kore::Graphics::setRenderState(Kore::DepthTest, true);
-			Kore::Graphics::setRenderState(Kore::DepthTestCompare, Kore::ZCompareEqual);
-			break;
-		case 3:
-			Kore::Graphics::setRenderState(Kore::DepthTest, true);
-			Kore::Graphics::setRenderState(Kore::DepthTestCompare, Kore::ZCompareNotEqual);
-			break;
-		case 4:
-			Kore::Graphics::setRenderState(Kore::DepthTest, true);
-			Kore::Graphics::setRenderState(Kore::DepthTestCompare, Kore::ZCompareLess);
-			break;
-		case 5:
-			Kore::Graphics::setRenderState(Kore::DepthTest, true);
-			Kore::Graphics::setRenderState(Kore::DepthTestCompare, Kore::ZCompareLessEqual);
-			break;
-		case 6:
-			Kore::Graphics::setRenderState(Kore::DepthTest, true);
-			Kore::Graphics::setRenderState(Kore::DepthTestCompare, Kore::ZCompareGreater);
-			break;
-		case 7:
-			Kore::Graphics::setRenderState(Kore::DepthTest, true);
-			Kore::Graphics::setRenderState(Kore::DepthTestCompare, Kore::ZCompareGreaterEqual);
-			break;
-		}
-		Kore::Graphics::setRenderState(Kore::DepthWrite, write);
-	')
-	private function setDepthMode2(write: Bool, mode: Int): Void {
-		
-	}
-	
-	public function setDepthMode(write: Bool, mode: CompareMode): Void {
-		setDepthMode2(write, mode.getIndex());
-	}
-	
-	
-	private function getBlendingMode(op: BlendingFactor): Int {
-		switch (op) {
-		case BlendOne, Undefined:
-			return 0;
-		case BlendZero:
-			return 1;
-		case SourceAlpha:
-			return 2;
-		case DestinationAlpha:
-			return 3;
-		case InverseSourceAlpha:
-			return 4;
-		case InverseDestinationAlpha:
-			return 5;
-		case SourceColor:
-			return 6;
-		case DestinationColor:
-			return 7;
-		case InverseSourceColor:
-			return 8;
-		case InverseDestinationColor:
-			return 9;
-		default:
-			return 0;
-		}
-	}
-	
-	@:functionCode('
-		if (source == 0 && destination == 1) {
-			Kore::Graphics::setRenderState(Kore::BlendingState, false);
-		}
-		else {
-			Kore::Graphics::setRenderState(Kore::BlendingState, true);
-			Kore::Graphics::setBlendingMode((Kore::BlendingOperation)source, (Kore::BlendingOperation)destination);
-		}
-	')
-	private function setBlendingModeNative(source: Int, destination: Int): Void {
-		
-	}
-	
-	private function setBlendingMode(source: BlendingFactor, destination: BlendingFactor): Void {
-		setBlendingModeNative(getBlendingMode(source), getBlendingMode(destination));
-	}
-	
-	@:functionCode('
-		Kore::Graphics::clear(flags, color, z, stencil);
+		Kore::Graphics4::clear(flags, color, z, stencil);
 	')
 	private function clear2(flags: Int, color: Int, z: Float, stencil: Int): Void {
 		
@@ -218,19 +99,19 @@ class Graphics implements kha.graphics4.Graphics {
 	//	return new VertexBuffer(vertexCount, structure);
 	//}
 	
-	@:functionCode('Kore::Graphics::setVertexBuffer(*vertexBuffer->buffer);')
+	@:functionCode('Kore::Graphics4::setVertexBuffer(*vertexBuffer->buffer);')
 	public function setVertexBuffer(vertexBuffer: kha.graphics4.VertexBuffer): Void {
 		
 	}
 	
 	@:functionCode('
-		Kore::VertexBuffer* vertexBuffers[4] = {
+		Kore::Graphics4::VertexBuffer* vertexBuffers[4] = {
 			vb0 == null() ? nullptr : vb0->buffer,
 			vb1 == null() ? nullptr : vb1->buffer,
 			vb2 == null() ? nullptr : vb2->buffer,
 			vb3 == null() ? nullptr : vb3->buffer
 		};
-		Kore::Graphics::setVertexBuffers(vertexBuffers, count);
+		Kore::Graphics4::setVertexBuffers(vertexBuffers, count);
 	')
 	private function setVertexBuffersInternal(vb0: VertexBuffer, vb1: VertexBuffer, vb2: VertexBuffer, vb3: VertexBuffer, count: Int): Void {
 		
@@ -249,7 +130,7 @@ class Graphics implements kha.graphics4.Graphics {
 	//	return new IndexBuffer(indexCount);
 	//}
 	
-	@:functionCode('Kore::Graphics::setIndexBuffer(*indexBuffer->buffer);')
+	@:functionCode('Kore::Graphics4::setIndexBuffer(*indexBuffer->buffer);')
 	public function setIndexBuffer(indexBuffer: kha.graphics4.IndexBuffer): Void {
 		
 	}	
@@ -270,36 +151,30 @@ class Graphics implements kha.graphics4.Graphics {
 		return false;
 	}
 	
-	public function createCubeMap(size: Int, format: TextureFormat, usage: Usage, canRead: Bool = false): CubeMap {
-		return null;
+	public function setCubeMap(unit: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		if (cubeMap == null) return;
+		var koreUnit = cast(unit, kha.kore.graphics4.TextureUnit);
+		untyped __cpp__("if (cubeMap->texture != nullptr) Kore::Graphics4::setTexture(koreUnit->unit, cubeMap->texture)");
+		untyped __cpp__("else cubeMap->renderTarget->useColorAsTexture(koreUnit->unit)");
 	}
 	
-	@:functionCode('
-		Kore::Graphics::setStencilParameters(convertCompareMode(compareMode), convertStencilAction(bothPass), convertStencilAction(depthFail), convertStencilAction(stencilFail), referenceValue, readMask, writeMask);
-	')
-	private function setStencilParameters2(compareMode: Int, bothPass: Int, depthFail: Int, stencilFail: Int, referenceValue: Int, readMask: Int, writeMask: Int): Void {
-		
+	public function setCubeMapDepth(unit: kha.graphics4.TextureUnit, cubeMap: kha.graphics4.CubeMap): Void {
+		if (cubeMap == null) return;
+		var koreUnit = cast(unit, kha.kore.graphics4.TextureUnit);
+		untyped __cpp__("cubeMap->renderTarget->useDepthAsTexture(koreUnit->unit);");
 	}
 	
-	public function setStencilParameters(compareMode: CompareMode, bothPass: StencilAction, depthFail: StencilAction, stencilFail: StencilAction, referenceValue: Int, readMask: Int = 0xff, writeMask: Int = 0xff): Void {
-		setStencilParameters2(compareMode.getIndex(), bothPass.getIndex(), depthFail.getIndex(), stencilFail.getIndex(), referenceValue, readMask, writeMask);
-	}
-	
-	@:functionCode('
-		Kore::Graphics::scissor(x,y,width,height);
-	')
+	@:functionCode('Kore::Graphics4::scissor(x, y, width, height);')
 	public function scissor(x: Int, y: Int, width: Int, height: Int): Void {
 		
 	}
 	
-	@:functionCode('
-		Kore::Graphics::disableScissor();
-	')
+	@:functionCode('Kore::Graphics4::disableScissor();')
 	public function disableScissor(): Void {
 		
 	}
 	
-	@:functionCode('return Kore::Graphics::renderTargetsInvertedY();')
+	@:functionCode('return Kore::Graphics4::renderTargetsInvertedY();')
 	public function renderTargetsInvertedY(): Bool {
 		return false;
 	}
@@ -309,19 +184,37 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setTextureAddressing(unit->unit, Kore::U, (Kore::TextureAddressing)uWrap);
-		Kore::Graphics::setTextureAddressing(unit->unit, Kore::V, (Kore::TextureAddressing)vWrap);
+		Kore::Graphics4::setTextureAddressing(unit->unit, Kore::Graphics4::U, (Kore::Graphics4::TextureAddressing)uWrap);
+		Kore::Graphics4::setTextureAddressing(unit->unit, Kore::Graphics4::V, (Kore::Graphics4::TextureAddressing)vWrap);
 	')
 	private function setTextureWrapNative(unit: TextureUnit, uWrap: Int, vWrap: Int): Void {
 		
 	}
+
+	@:functionCode('
+		Kore::Graphics4::setTexture3DAddressing(unit->unit, Kore::Graphics4::U, (Kore::Graphics4::TextureAddressing)uWrap);
+		Kore::Graphics4::setTexture3DAddressing(unit->unit, Kore::Graphics4::V, (Kore::Graphics4::TextureAddressing)vWrap);
+		Kore::Graphics4::setTexture3DAddressing(unit->unit, Kore::Graphics4::W, (Kore::Graphics4::TextureAddressing)wWrap);
+	')
+	private function setTexture3DWrapNative(unit: TextureUnit, uWrap: Int, vWrap: Int, wWrap: Int): Void {
+		
+	}
 	
 	@:functionCode('
-		Kore::Graphics::setTextureMinificationFilter(unit->unit, (Kore::TextureFilter)minificationFilter);
-		Kore::Graphics::setTextureMagnificationFilter(unit->unit, (Kore::TextureFilter)magnificationFilter);
-		Kore::Graphics::setTextureMipmapFilter(unit->unit, (Kore::MipmapFilter)mipMapFilter);
+		Kore::Graphics4::setTextureMinificationFilter(unit->unit, (Kore::Graphics4::TextureFilter)minificationFilter);
+		Kore::Graphics4::setTextureMagnificationFilter(unit->unit, (Kore::Graphics4::TextureFilter)magnificationFilter);
+		Kore::Graphics4::setTextureMipmapFilter(unit->unit, (Kore::Graphics4::MipmapFilter)mipMapFilter);
 	')
 	private function setTextureFiltersNative(unit: TextureUnit, minificationFilter: Int, magnificationFilter: Int, mipMapFilter: Int): Void {
+		
+	}
+
+	@:functionCode('
+		Kore::Graphics4::setTexture3DMinificationFilter(unit->unit, (Kore::Graphics4::TextureFilter)minificationFilter);
+		Kore::Graphics4::setTexture3DMagnificationFilter(unit->unit, (Kore::Graphics4::TextureFilter)magnificationFilter);
+		Kore::Graphics4::setTexture3DMipmapFilter(unit->unit, (Kore::Graphics4::MipmapFilter)mipMapFilter);
+	')
+	private function setTexture3DFiltersNative(unit: TextureUnit, minificationFilter: Int, magnificationFilter: Int, mipMapFilter: Int): Void {
 		
 	}
 	
@@ -362,20 +255,14 @@ class Graphics implements kha.graphics4.Graphics {
 		setTextureWrapNative(cast texunit, getTextureAddressing(uAddressing), getTextureAddressing(vAddressing));
 		setTextureFiltersNative(cast texunit, getTextureFilter(minificationFilter), getTextureFilter(magnificationFilter), getTextureMipMapFilter(mipmapFilter));
 	}
-	
-	@:functionCode('
-		Kore::Graphics::setRenderState(Kore::BackfaceCulling, value);
-	')
-	private function setCullModeNative(value: Int): Void {
-		
-	}
-	
-	public function setCullMode(mode: CullMode): Void {
-		setCullModeNative(mode.getIndex());
+
+	public function setTexture3DParameters(texunit: kha.graphics4.TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, wAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void {
+		setTexture3DWrapNative(cast texunit, getTextureAddressing(uAddressing), getTextureAddressing(vAddressing), getTextureAddressing(wAddressing));
+		setTexture3DFiltersNative(cast texunit, getTextureFilter(minificationFilter), getTextureFilter(magnificationFilter), getTextureMipMapFilter(mipmapFilter));
 	}
 	
 	@:functionCode('
-		if (texture->texture != nullptr) Kore::Graphics::setTexture(unit->unit, texture->texture);
+		if (texture->texture != nullptr) Kore::Graphics4::setTexture(unit->unit, texture->texture);
 		else texture->renderTarget->useColorAsTexture(unit->unit);
 	')
 	private function setTextureInternal(unit: kha.kore.graphics4.TextureUnit, texture: kha.Image): Void {
@@ -392,10 +279,28 @@ class Graphics implements kha.graphics4.Graphics {
 		var koreUnit = cast(unit, kha.kore.graphics4.TextureUnit);
 		untyped __cpp__("texture->renderTarget->useDepthAsTexture(koreUnit->unit);");
 	}
+	
+	public function setTextureArray(unit: kha.graphics4.TextureUnit, texture: kha.Image): Void {
+		if (texture == null) return;
+		var koreUnit = cast(unit, kha.kore.graphics4.TextureUnit);
+		untyped __cpp__("if (texture->textureArray != nullptr) Kore::Graphics4::setTextureArray(koreUnit->unit, texture->textureArray);");
+	}
 
 	public function setVideoTexture(unit: kha.graphics4.TextureUnit, texture: kha.Video): Void {
 		if (texture == null) return;
 		setTextureInternal(cast unit, Image.createFromVideo(texture));
+	}
+
+	@:functionCode('
+		Kore::Graphics4::setImageTexture(unit->unit, texture->texture);
+	')
+	private function setImageTextureInternal(unit: kha.kore.graphics4.TextureUnit, texture: kha.Image): Void {
+		
+	}
+
+	public function setImageTexture(unit: kha.graphics4.TextureUnit, texture: kha.Image): Void {
+		if (texture == null) return;
+		setImageTextureInternal(cast unit, texture);
 	}
 	
 	//public function createVertexShader(source: Blob): VertexShader {
@@ -411,24 +316,15 @@ class Graphics implements kha.graphics4.Graphics {
 	//}
 	
 	public function setPipeline(pipe: PipelineState): Void {
-		setCullMode(pipe.cullMode);
-		setDepthMode(pipe.depthWrite, pipe.depthMode);
-		setStencilParameters(pipe.stencilMode, pipe.stencilBothPass, pipe.stencilDepthFail, pipe.stencilFail, pipe.stencilReferenceValue, pipe.stencilReadMask, pipe.stencilWriteMask);
-		setBlendingMode(pipe.blendSource, pipe.blendDestination);
-		setColorMask(pipe.colorWriteMaskRed, pipe.colorWriteMaskGreen, pipe.colorWriteMaskBlue, pipe.colorWriteMaskAlpha);        
 		pipe.set();
 	}
 	
-	@:functionCode('Kore::Graphics::setColorMask(red, green, blue, alpha);')
-	function setColorMask(red : Bool, green : Bool, blue : Bool, alpha : Bool) {
-	}
-
 	public function setBool(location: kha.graphics4.ConstantLocation, value: Bool): Void {
 		setBoolPrivate(cast location, value);
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setBool(location->location, value);
+		Kore::Graphics4::setBool(location->location, value);
 	')
 	private function setBoolPrivate(location: kha.kore.graphics4.ConstantLocation, value: Bool): Void {
 		
@@ -439,7 +335,7 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setInt(location->location, value);
+		Kore::Graphics4::setInt(location->location, value);
 	')
 	private function setIntPrivate(location: ConstantLocation, value: Int): Void {
 		
@@ -450,7 +346,7 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setFloat(location->location, value);
+		Kore::Graphics4::setFloat(location->location, value);
 	')
 	private function setFloatPrivate(location: ConstantLocation, value: FastFloat): Void {
 		
@@ -461,7 +357,7 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setFloat2(location->location, value1, value2);
+		Kore::Graphics4::setFloat2(location->location, value1, value2);
 	')
 	private function setFloat2Private(location: ConstantLocation, value1: FastFloat, value2: FastFloat): Void {
 		
@@ -472,7 +368,7 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setFloat3(location->location, value1, value2, value3);
+		Kore::Graphics4::setFloat3(location->location, value1, value2, value3);
 	')
 	private function setFloat3Private(location: ConstantLocation, value1: FastFloat, value2: FastFloat, value3: FastFloat): Void {
 		
@@ -483,7 +379,7 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setFloat4(location->location, value1, value2, value3, value4);
+		Kore::Graphics4::setFloat4(location->location, value1, value2, value3, value4);
 	')
 	private function setFloat4Private(location: ConstantLocation, value1: FastFloat, value2: FastFloat, value3: FastFloat, value4: FastFloat): Void {
 		
@@ -494,7 +390,7 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setFloat2(location->location, x, y);
+		Kore::Graphics4::setFloat2(location->location, x, y);
 	')
 	private function setVector2Private(location: ConstantLocation, x: FastFloat, y: FastFloat): Void {
 		
@@ -505,7 +401,7 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setFloat3(location->location, x, y, z);
+		Kore::Graphics4::setFloat3(location->location, x, y, z);
 	')
 	private function setVector3Private(location: ConstantLocation, x: FastFloat, y: FastFloat, z: FastFloat): Void {
 		
@@ -516,7 +412,7 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setFloat4(location->location, x, y, z, w);
+		Kore::Graphics4::setFloat4(location->location, x, y, z, w);
 	')
 	private function setVector4Private(location: ConstantLocation, x: FastFloat, y: FastFloat, z: FastFloat, w: FastFloat): Void {
 		
@@ -527,22 +423,40 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::setFloats(location->location, values->Pointer(), values->length);
+		Kore::Graphics4::setFloats(location->location, values->Pointer(), values->length);
 	')
 	private function setFloatsPrivate(location: ConstantLocation, values: Vector<FastFloat>): Void {
 		
 	}
-	
+
+	public function setMatrix(location: kha.graphics4.ConstantLocation, matrix: FastMatrix4): Void {
+		setMatrixPrivate(cast location, matrix);
+	}
+
 	@:functionCode('
 		Kore::mat4 value;
 		value.Set(0, 0, matrix->_00); value.Set(0, 1, matrix->_10); value.Set(0, 2, matrix->_20); value.Set(0, 3, matrix->_30);
 		value.Set(1, 0, matrix->_01); value.Set(1, 1, matrix->_11); value.Set(1, 2, matrix->_21); value.Set(1, 3, matrix->_31);
 		value.Set(2, 0, matrix->_02); value.Set(2, 1, matrix->_12); value.Set(2, 2, matrix->_22); value.Set(2, 3, matrix->_32);
 		value.Set(3, 0, matrix->_03); value.Set(3, 1, matrix->_13); value.Set(3, 2, matrix->_23); value.Set(3, 3, matrix->_33);
-		::kha::kore::graphics4::ConstantLocation_obj* loc = dynamic_cast< ::kha::kore::graphics4::ConstantLocation_obj*>(location->__GetRealObject());
-		Kore::Graphics::setMatrix(loc->location, value);
+		Kore::Graphics4::setMatrix(location->location, value);
 	')
-	public inline function setMatrix(location: kha.graphics4.ConstantLocation, matrix: FastMatrix4): Void {
+	private function setMatrixPrivate(location: ConstantLocation, matrix: FastMatrix4): Void {
+
+	}
+
+	public function setMatrix3(location: kha.graphics4.ConstantLocation, matrix: FastMatrix3): Void {
+		setMatrix3Private(cast location, matrix);
+	}
+
+	@:functionCode('
+		Kore::mat3 value;
+		value.Set(0, 0, matrix->_00); value.Set(0, 1, matrix->_10); value.Set(0, 2, matrix->_20);
+		value.Set(1, 0, matrix->_01); value.Set(1, 1, matrix->_11); value.Set(1, 2, matrix->_21);
+		value.Set(2, 0, matrix->_02); value.Set(2, 1, matrix->_12); value.Set(2, 2, matrix->_22);
+		Kore::Graphics4::setMatrix(location->location, value);
+	')
+	private function setMatrix3Private(location: ConstantLocation, matrix: FastMatrix3): Void {
 		
 	}
 	
@@ -552,14 +466,14 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::drawIndexedVertices();
+		Kore::Graphics4::drawIndexedVertices();
 	')
 	private function drawAllIndexedVertices(): Void {
 		
 	}
 	
 	@:functionCode('
-		Kore::Graphics::drawIndexedVertices(start, count);
+		Kore::Graphics4::drawIndexedVertices(start, count);
 	')
 	public function drawSomeIndexedVertices(start: Int, count: Int): Void {
 		
@@ -571,14 +485,14 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 	
 	@:functionCode('
-		Kore::Graphics::drawIndexedVerticesInstanced(instanceCount);
+		Kore::Graphics4::drawIndexedVerticesInstanced(instanceCount);
 	')
 	private function drawAllIndexedVerticesInstanced(instanceCount: Int): Void {
 		
 	}
 	
 	@:functionCode('
-		Kore::Graphics::drawIndexedVerticesInstanced(instanceCount, start, count);
+		Kore::Graphics4::drawIndexedVerticesInstanced(instanceCount, start, count);
 	')
 	private function drawSomeIndexedVerticesInstanced(instanceCount: Int, start: Int, count: Int): Void {
 		
@@ -587,19 +501,23 @@ class Graphics implements kha.graphics4.Graphics {
 	private function renderToTexture(additionalRenderTargets: Array<Canvas>): Void {
 		if (additionalRenderTargets != null) {
 			var len = additionalRenderTargets.length;
-			untyped __cpp__("Kore::Graphics::setRenderTarget(target->renderTarget, 0, len)");
-			for (i in 0...len) {
-				var image = cast(additionalRenderTargets[i], Image);
-				var num = i + 1;
-				untyped __cpp__("Kore::Graphics::setRenderTarget(image->renderTarget, num, len)");
-			}
+
+			var image1 = cast(additionalRenderTargets[0], Image);
+			var image2 = cast(additionalRenderTargets[1], Image);
+			var image3 = cast(additionalRenderTargets[2], Image);
+			var image4 = cast(additionalRenderTargets[3], Image);
+			var image5 = cast(additionalRenderTargets[4], Image);
+			var image6 = cast(additionalRenderTargets[5], Image);
+			var image7 = cast(additionalRenderTargets[6], Image);
+			
+			untyped __cpp__("Kore::Graphics4::RenderTarget* renderTargets[8] = { renderTarget, image1 == null() ? nullptr : image1->renderTarget, image2 == null() ? nullptr : image2->renderTarget, image3 == null() ? nullptr : image3->renderTarget, image4 == null() ? nullptr : image4->renderTarget, image5 == null() ? nullptr : image5->renderTarget, image6 == null() ? nullptr : image6->renderTarget, image7 == null() ? nullptr : image7->renderTarget }; Kore::Graphics4::setRenderTargets(renderTargets, len + 1);");
 		}
 		else {
-			untyped __cpp__("Kore::Graphics::setRenderTarget(target->renderTarget, 0, 0)");
+			untyped __cpp__("Kore::Graphics4::setRenderTarget(renderTarget)");
 		}
 	}
 	
-	@:functionCode('Kore::Graphics::restoreRenderTarget();')
+	@:functionCode('Kore::Graphics4::restoreRenderTarget();')
 	private function renderToBackbuffer(): Void {
 		
 	}
@@ -609,11 +527,19 @@ class Graphics implements kha.graphics4.Graphics {
 		else renderToTexture(additionalRenderTargets);
 	}
 	
+	public function beginFace(face: Int): Void {
+		untyped __cpp__("Kore::Graphics4::setRenderTargetFace(renderTarget, face)");
+	}
+	
+	public function beginEye(eye: Int): Void {
+		
+	}
+	
 	public function end(): Void {
 		
 	}
 	
-	@:functionCode('Kore::Graphics::flush();')
+	@:functionCode('Kore::Graphics4::flush();')
 	public function flush(): Void {
 		
 	}

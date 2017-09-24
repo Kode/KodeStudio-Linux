@@ -1,6 +1,7 @@
 "use strict";
-const fs = require('fs');
-const path = require('path');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
+const path = require("path");
 function run(name, from, projectfile) {
     if (!fs.existsSync(path.join(from, projectfile))) {
         fs.writeFileSync(path.join(from, projectfile), 'let project = new Project(\'New Project\');\n'
@@ -38,12 +39,12 @@ function run(name, from, projectfile) {
             + '\t\t\n'
             + '\t}\n'
             + '\n'
-            + '\tfunction render(framebuffer: Framebuffer): Void {'
+            + '\tfunction render(framebuffer: Framebuffer): Void {\n'
             + '\t\t\n'
             + '\t}\n'
             + '}\n';
         fs.writeFileSync(path.join(from, 'Sources', friendlyName + '.hx'), projectsource, { encoding: 'utf8' });
     }
 }
-exports.run = run;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/init.js.map
+exports.run = run;
+//# sourceMappingURL=init.js.map

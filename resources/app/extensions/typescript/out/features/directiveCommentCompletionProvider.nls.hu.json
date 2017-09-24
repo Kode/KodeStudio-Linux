@@ -1,0 +1,5 @@
+[
+	"Engedélyezi a JavaScript-fájlok szemantikai ellenőrzését. A fájl tetején kell szerepelnie.",
+	"Letiltja a JavaScript-fájlok szemantikai ellenőrzését. A fájl tetején kell szerepelnie.",
+	"Elfedi a fájl következő sorában található @ts-check-hibákat."
+]

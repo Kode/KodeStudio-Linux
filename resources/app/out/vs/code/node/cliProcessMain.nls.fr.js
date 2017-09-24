@@ -2,17 +2,6 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 define("vs/code/node/cliProcessMain.nls.fr", {
-	"vs/base/common/json": [
-		"Symbole non valide",
-		"Format de nombre non valide",
-		"Nom de propriété attendu",
-		"Valeur attendue",
-		"Signe des deux points attendu",
-		"Virgule attendue",
-		"Accolade fermante attendue",
-		"Crochet fermant attendu",
-		"Fin de fichier attendue",
-	],
 	"vs/base/common/severity": [
 		"Erreur",
 		"Avertissement",
@@ -34,12 +23,11 @@ define("vs/code/node/cliProcessMain.nls.fr", {
 		"L\'extension \'{0}\' a été correctement désinstallée !",
 	],
 	"vs/platform/configuration/common/configurationRegistry": [
-		"Ajoute des paramètres de configuration.",
-		"Résumé des paramètres. Cette étiquette va être utilisée dans le fichier de paramètres en tant que commentaire de séparation.",
-		"Description des propriétés de configuration.",
-		"s\'il est défini, \'configuration.type\' doit avoir la valeur \'object",
-		"\'configuration.title\' doit être une chaîne",
-		"\'configuration.properties\' doit être un objet",
+		"Substitutions de configuration par défaut",
+		"Configurez les paramètres d\'éditeur à remplacer pour le langage {0}.",
+		"Configurez les paramètres d\'éditeur à remplacer pour un langage.",
+		"Impossible d\'inscrire \'{0}\'. Ceci correspond au modèle de propriété \'\\\\[.*\\\\]$\' permettant de décrire les paramètres d\'éditeur spécifiques à un langage. Utilisez la contribution \'configurationDefaults\'.",
+		"Impossible d\'inscrire \'{0}\'. Cette propriété est déjà inscrite.",
 	],
 	"vs/platform/extensionManagement/common/extensionManagement": [
 		"Extensions",
@@ -51,9 +39,6 @@ define("vs/code/node/cliProcessMain.nls.fr", {
 	],
 	"vs/platform/extensionManagement/node/extensionManagementService": [
 		"Extension non valide : package.json n\'est pas un fichier JSON.",
-		"Extension non valide : non-correspondance du nom du manifeste.",
-		"Extension non valide : non-correspondance de l\'éditeur du manifeste.",
-		"Extension non valide : non-correspondance de la version du manifeste.",
 		"Redémarrez Code avant de réinstaller {0}.",
 		"Redémarrez Code avant de réinstaller {0}.",
 		"L\'installation de \'{0}\' entraîne également l\'installation de ses dépendances. Voulez-vous continuer ?",
@@ -71,25 +56,6 @@ define("vs/code/node/cliProcessMain.nls.fr", {
 		"Impossible de désinstaller l\'extension \'{0}\'. Les extensions \'{1}\' et \'{2}\' en dépendent.",
 		"Impossible de désinstaller l\'extension \'{0}\'. Les extensions \'{1}\', \'{2}\' et d\'autres extensions en dépendent.",
 		"Extension introuvable",
-	],
-	"vs/platform/extensions/common/extensionsRegistry": [
-		"Pour les extensions VS Code, spécifie la version de VS Code avec laquelle l\'extension est compatible. Ne peut pas être *. Exemple : ^0.10.5 indique une compatibilité avec la version minimale 0.10.5 de VS Code.",
-		"Éditeur de l\'extension VS Code.",
-		"Nom d\'affichage de l\'extension utilisée dans la galerie VS Code.",
-		"Catégories utilisées par la galerie VS Code pour catégoriser l\'extension.",
-		"Bannière utilisée dans le marketplace VS Code.",
-		"Couleur de la bannière de l\'en-tête de page du marketplace VS Code.",
-		"Thème de couleur de la police utilisée dans la bannière.",
-		"Toutes les contributions de l\'extension VS Code représentées par ce package.",
-		"Définit l\'extension à marquer en tant que préversion dans Marketplace.",
-		"Événements d\'activation pour l\'extension VS Code.",
-		"Ensemble de badges à afficher dans la barre latérale de la page d\'extensions de Marketplace.",
-		"URL de l\'image du badge.",
-		"Lien du badge.",
-		"Description du badge.",
-		"Dépendances envers d\'autres extensions. L\'identificateur d\'une extension est toujours ${publisher}.${name}. Exemple : vscode.csharp.",
-		"Le script exécuté avant le package est publié en tant qu\'extension VS Code.",
-		"Chemin d\'une icône de 128 x 128 pixels.",
 	],
 	"vs/platform/extensions/node/extensionValidator": [
 		"Impossible d\'analyser la valeur {0} de \'engines.vscode\'. Utilisez, par exemple, ^0.10.0, ^1.2.3, ^0.11.0, ^0.10.x, etc.",

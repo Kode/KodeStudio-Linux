@@ -2,15 +2,17 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const fs = require('fs-extra');
-const path = require('path');
-const KhaExporter_1 = require('./KhaExporter');
-const ImageTool_1 = require('../ImageTool');
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
+const path = require("path");
+const KhaExporter_1 = require("./KhaExporter");
+const Converter_1 = require("../Converter");
+const ImageTool_1 = require("../ImageTool");
 function findIcon(from, options) {
     if (fs.existsSync(path.join(from, 'icon.png')))
         return path.join(from, 'icon.png');
@@ -20,7 +22,6 @@ function findIcon(from, options) {
 class AndroidExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
-        this.addSourceDirectory(path.join(options.kha, 'Backends', 'Android'));
     }
     backend() {
         return 'Android';
@@ -34,6 +35,15 @@ class AndroidExporter extends KhaExporter_1.KhaExporter {
         defines.push('sys_g3');
         defines.push('sys_g4');
         defines.push('sys_a1');
+        defines.push('kha_java');
+        defines.push('kha_' + this.options.target);
+        defines.push('kha_' + this.options.target + '_java');
+        defines.push('kha_opengl');
+        defines.push('kha_g1');
+        defines.push('kha_g2');
+        defines.push('kha_g3');
+        defines.push('kha_g4');
+        defines.push('kha_a1');
         return {
             from: this.options.from,
             to: path.join(this.sysdir(), safename),
@@ -46,7 +56,8 @@ class AndroidExporter extends KhaExporter_1.KhaExporter {
             language: 'java',
             width: this.width,
             height: this.height,
-            name: name
+            name: name,
+            main: this.options.main,
         };
     }
     export(name, targetOptions, haxeOptions) {
@@ -61,7 +72,8 @@ class AndroidExporter extends KhaExporter_1.KhaExporter {
         this.safename = safename;
         let targetOptions = {
             package: 'com.ktxsoftware.kha',
-            screenOrientation: 'sensor'
+            screenOrientation: 'sensor',
+            permissions: new Array()
         };
         if (_targetOptions != null && _targetOptions.android != null) {
             let userOptions = _targetOptions.android;
@@ -69,6 +81,8 @@ class AndroidExporter extends KhaExporter_1.KhaExporter {
                 targetOptions.package = userOptions.package;
             if (userOptions.screenOrientation != null)
                 targetOptions.screenOrientation = userOptions.screenOrientation;
+            if (userOptions.permissions != null)
+                targetOptions.permissions = userOptions.permissions;
         }
         let indir = path.join(__dirname, '..', '..', 'Data', 'android');
         let outdir = path.join(this.options.to, this.sysdir(), safename);
@@ -88,6 +102,7 @@ class AndroidExporter extends KhaExporter_1.KhaExporter {
         let manifest = fs.readFileSync(path.join(indir, 'main', 'AndroidManifest.xml'), { encoding: 'utf8' });
         manifest = manifest.replace(/{package}/g, targetOptions.package);
         manifest = manifest.replace(/{screenOrientation}/g, targetOptions.screenOrientation);
+        manifest = manifest.replace(/{permissions}/g, targetOptions.permissions.map(function (p) { return '\n\t<uses-permission android:name="' + p + '"/>'; }).join(''));
         fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main'));
         fs.writeFileSync(path.join(outdir, 'app', 'src', 'main', 'AndroidManifest.xml'), manifest, { encoding: 'utf8' });
         fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'values'));
@@ -95,23 +110,20 @@ class AndroidExporter extends KhaExporter_1.KhaExporter {
         strings = strings.replace(/{name}/g, name);
         fs.writeFileSync(path.join(outdir, 'app', 'src', 'main', 'res', 'values', 'strings.xml'), strings, { encoding: 'utf8' });
         fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-hdpi'));
-        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-hdpi', 'ic_launcher'), { width: 72, height: 72 }, 'png', false);
+        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-hdpi', 'ic_launcher'), { width: 72, height: 72 }, 'png', false, false, {});
         fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-mdpi'));
-        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-mdpi', 'ic_launcher'), { width: 48, height: 48 }, 'png', false);
+        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-mdpi', 'ic_launcher'), { width: 48, height: 48 }, 'png', false, false, {});
         fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xhdpi'));
-        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xhdpi', 'ic_launcher'), { width: 96, height: 96 }, 'png', false);
+        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xhdpi', 'ic_launcher'), { width: 96, height: 96 }, 'png', false, false, {});
         fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi'));
-        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi', 'ic_launcher'), { width: 144, height: 144 }, 'png', false);
+        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxhdpi', 'ic_launcher'), { width: 144, height: 144 }, 'png', false, false, {});
         fs.ensureDirSync(path.join(outdir, 'app', 'src', 'main', 'res', 'mipmap-xxxhdpi'));
-        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxxhdpi', 'ic_launcher'), { width: 192, height: 192 }, 'png', false);
+        ImageTool_1.exportImage(this.options.kha, findIcon(from, this.options), path.join(this.options.to, this.sysdir(), safename, 'app', 'src', 'main', 'res', 'mipmap-xxxhdpi', 'ic_launcher'), { width: 192, height: 192 }, 'png', false, false, {});
         fs.copySync(path.join(indir, 'gradle', 'wrapper', 'gradle-wrapper.jar'), path.join(outdir, 'gradle', 'wrapper', 'gradle-wrapper.jar'));
         fs.copySync(path.join(indir, 'gradle', 'wrapper', 'gradle-wrapper.properties'), path.join(outdir, 'gradle', 'wrapper', 'gradle-wrapper.properties'));
         fs.copySync(path.join(indir, 'idea', 'compiler.xml'), path.join(outdir, '.idea', 'compiler.xml'));
         fs.copySync(path.join(indir, 'idea', 'gradle.xml'), path.join(outdir, '.idea', 'gradle.xml'));
         fs.copySync(path.join(indir, 'idea', 'misc.xml'), path.join(outdir, '.idea', 'misc.xml'));
-        let modules = fs.readFileSync(path.join(indir, 'idea', 'modules.xml'), { encoding: 'utf8' });
-        modules = modules.replace(/{name}/g, safename);
-        fs.writeFileSync(path.join(outdir, '.idea', 'modules.xml'), modules, { encoding: 'utf8' });
         fs.copySync(path.join(indir, 'idea', 'runConfigurations.xml'), path.join(outdir, '.idea', 'runConfigurations.xml'));
         fs.copySync(path.join(indir, 'idea', 'copyright', 'profiles_settings.xml'), path.join(outdir, '.idea', 'copyright', 'profiles_settings.xml'));
     }
@@ -121,21 +133,28 @@ class AndroidExporter extends KhaExporter_1.KhaExporter {
             callback([to + '.ogg']);
         });
     }*/
-    copySound(platform, from, to) {
+    copySound(platform, from, to, options) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to + '.wav'), { clobber: true });
-            return [to + '.wav'];
+            if (options.quality < 1) {
+                fs.ensureDirSync(path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', path.dirname(to)));
+                let ogg = yield Converter_1.convert(from, path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to + '.ogg'), this.options.ogg);
+                return [to + '.ogg'];
+            }
+            else {
+                fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to + '.wav'), { overwrite: true });
+                return [to + '.wav'];
+            }
         });
     }
-    copyImage(platform, from, to, asset) {
+    copyImage(platform, from, to, asset, cache) {
         return __awaiter(this, void 0, void 0, function* () {
-            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to), asset, undefined, false);
+            let format = yield ImageTool_1.exportImage(this.options.kha, from, path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to), asset, undefined, false, false, cache);
             return [to + '.' + format];
         });
     }
     copyBlob(platform, from, to) {
         return __awaiter(this, void 0, void 0, function* () {
-            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to), { clobber: true });
+            fs.copySync(from.toString(), path.join(this.options.to, this.sysdir(), this.safename, 'app', 'src', 'main', 'assets', to), { overwrite: true });
             return [to];
         });
     }
@@ -145,5 +164,5 @@ class AndroidExporter extends KhaExporter_1.KhaExporter {
         });
     }
 }
-exports.AndroidExporter = AndroidExporter;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/Exporters/AndroidExporter.js.map
+exports.AndroidExporter = AndroidExporter;
+//# sourceMappingURL=AndroidExporter.js.map

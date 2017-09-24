@@ -6,12 +6,13 @@
  *--------------------------------------------------------*/
 define("vs/code/node/cli.nls", {
 	"vs/platform/environment/node/argv": [
-		"Arguments in `--goto` mode should be in the format of `FILE(:LINE(:COLUMN))`.",
+		"Arguments in `--goto` mode should be in the format of `FILE(:LINE(:CHARACTER))`.",
 		"Open a diff editor. Requires to pass two file paths as arguments.",
-		"Open the file at path at the line and column (add :line[:column] to path).",
+		"Open the file at path at the line and character (add :line[:character] to path).",
 		"The locale to use (e.g. en-US or zh-TW).",
 		"Force a new instance of Code.",
 		"Start with the 'Developer: Startup Performance' command enabled.",
+		"Run CPU profiler during startup",
 		"Force opening a file or folder in the last active window.",
 		"Specifies the directory that user data is kept in, useful when running as root.",
 		"Print verbose output (implies --wait).",
@@ -21,6 +22,7 @@ define("vs/code/node/cli.nls", {
 		"Show versions of installed extensions, when using --list-extension.",
 		"Installs an extension.",
 		"Uninstalls an extension.",
+		"Enables proposed api features for an extension.",
 		"Disable all installed extensions.",
 		"Disable GPU hardware acceleration.",
 		"Print version.",

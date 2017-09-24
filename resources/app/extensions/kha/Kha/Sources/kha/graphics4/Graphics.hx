@@ -5,6 +5,7 @@ import kha.Blob;
 import kha.Color;
 import kha.FastFloat;
 import kha.Image;
+import kha.math.FastMatrix3;
 import kha.math.FastMatrix4;
 import kha.math.FastVector2;
 import kha.math.FastVector3;
@@ -13,6 +14,8 @@ import kha.Video;
 
 interface Graphics {
 	function begin(additionalRenderTargets: Array<Canvas> = null): Void;
+	function beginFace(face: Int): Void;
+	function beginEye(eye: Int): Void;
 	function end(): Void;
 	
 	function vsynced(): Bool;
@@ -30,11 +33,15 @@ interface Graphics {
 	
 	function setTexture(unit: TextureUnit, texture: Image): Void;
 	function setTextureDepth(unit: TextureUnit, texture: Image): Void;
+	function setTextureArray(unit: TextureUnit, texture: Image): Void;
 	function setVideoTexture(unit: TextureUnit, texture: Video): Void;
+	function setImageTexture(unit: TextureUnit, texture: Image): Void;
 	function setTextureParameters(texunit: TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void;
+	function setTexture3DParameters(texunit: TextureUnit, uAddressing: TextureAddressing, vAddressing: TextureAddressing, wAddressing: TextureAddressing, minificationFilter: TextureFilter, magnificationFilter: TextureFilter, mipmapFilter: MipMapFilter): Void;
+	function setCubeMap(unit: TextureUnit, cubeMap: CubeMap): Void;
+	function setCubeMapDepth(unit: TextureUnit, cubeMap: CubeMap): Void;
 	//function maxTextureSize(): Int;
 	//function supportsNonPow2Textures(): Bool;
-	function createCubeMap(size: Int, format: TextureFormat, usage: Usage, canRead: Bool = false): CubeMap;
 	
 	function renderTargetsInvertedY(): Bool;
 	function instancedRenderingAvailable(): Bool;
@@ -52,6 +59,7 @@ interface Graphics {
 	function setVector3(location: ConstantLocation, value: FastVector3): Void;
 	function setVector4(location: ConstantLocation, value: FastVector4): Void;
 	function setMatrix(location: ConstantLocation, value: FastMatrix4): Void;
+	function setMatrix3(location: ConstantLocation, value: FastMatrix3): Void;
 	
 	function drawIndexedVertices(start: Int = 0, count: Int = -1): Void;
 	function drawIndexedVerticesInstanced(instanceCount: Int, start: Int = 0, count: Int = -1): Void;

@@ -2,16 +2,17 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const child_process = require('child_process');
-const fs = require('fs-extra');
-const path = require('path');
-const log = require('./log');
-const exec_1 = require('./exec');
+Object.defineProperty(exports, "__esModule", { value: true });
+const child_process = require("child_process");
+const fs = require("fs-extra");
+const path = require("path");
+const log = require("./log");
+const exec_1 = require("./exec");
 function getWidthAndHeight(kha, from, to, options, format, prealpha) {
     return new Promise((resolve, reject) => {
         const exe = 'kraffiti' + exec_1.sys();
@@ -44,7 +45,7 @@ function getWidthAndHeight(kha, from, to, options, format, prealpha) {
         });
     });
 }
-function convertImage(from, temp, to, kha, exe, params, options) {
+function convertImage(from, temp, to, kha, exe, params, options, cache) {
     return new Promise((resolve, reject) => {
         let process = child_process.spawn(path.join(kha, 'Kore', 'Tools', 'kraffiti', exe), params);
         let output = '';
@@ -64,8 +65,9 @@ function convertImage(from, temp, to, kha, exe, params, options) {
             for (let line of lines) {
                 if (line.startsWith('#')) {
                     let numbers = line.substring(1).split('x');
-                    options.original_width = parseInt(numbers[0]);
-                    options.original_height = parseInt(numbers[1]);
+                    cache[to] = {};
+                    cache[to].original_width = options.original_width = parseInt(numbers[0]);
+                    cache[to].original_height = options.original_height = parseInt(numbers[1]);
                     resolve();
                     return;
                 }
@@ -74,7 +76,7 @@ function convertImage(from, temp, to, kha, exe, params, options) {
         });
     });
 }
-function exportImage(kha, from, to, options, format, prealpha, poweroftwo = false) {
+function exportImage(kha, from, to, options, format, prealpha, poweroftwo, cache) {
     return __awaiter(this, void 0, void 0, function* () {
         if (format === undefined) {
             if (from.toString().endsWith('.png'))
@@ -89,6 +91,12 @@ function exportImage(kha, from, to, options, format, prealpha, poweroftwo = fals
         }
         else if (format === 'pvr') {
             to = to + '.pvr';
+        }
+        else if (format === 'ASTC') {
+            to = to + '.astc.k';
+        }
+        else if (format === 'DXT5') {
+            to = to + '.dxt5.k';
         }
         else if (format === 'hdr') {
             to = to + '.hdr';
@@ -111,15 +119,28 @@ function exportImage(kha, from, to, options, format, prealpha, poweroftwo = fals
         if (format === 'lz4') {
             outputformat = 'k';
         }
+        if (format === 'ASTC') {
+            outputformat = 'astc.k';
+        }
+        if (format === 'DXT5') {
+            outputformat = 'dxt5.k';
+        }
         if (fs.existsSync(to) && fs.statSync(to).mtime.getTime() > fs.statSync(from.toString()).mtime.getTime()) {
+            if (cache[to] !== undefined) {
+                const cachedOptions = cache[to];
+                options.original_width = cachedOptions.original_width;
+                options.original_height = cachedOptions.original_height;
+                return outputformat;
+            }
             let wh = yield getWidthAndHeight(kha, from, to, options, format, prealpha);
-            options.original_width = wh.w;
-            options.original_height = wh.h;
+            cache[to] = {};
+            cache[to].original_width = options.original_width = wh.w;
+            cache[to].original_height = options.original_height = wh.h;
             return outputformat;
         }
         fs.ensureDirSync(path.dirname(to));
         if (format === 'jpg' || format === 'hdr') {
-            fs.copySync(from, temp, { clobber: true });
+            fs.copySync(from, temp, { overwrite: true });
             fs.renameSync(temp, to);
             let wh = yield getWidthAndHeight(kha, from, to, options, format, prealpha);
             options.original_width = wh.w;
@@ -142,9 +163,9 @@ function exportImage(kha, from, to, options, format, prealpha, poweroftwo = fals
         if (poweroftwo) {
             params.push('poweroftwo');
         }
-        yield convertImage(from, temp, to, kha, exe, params, options);
+        yield convertImage(from, temp, to, kha, exe, params, options, cache);
         return outputformat;
     });
 }
-exports.exportImage = exportImage;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/kha/Kha/Tools/khamake/out/ImageTool.js.map
+exports.exportImage = exportImage;
+//# sourceMappingURL=ImageTool.js.map

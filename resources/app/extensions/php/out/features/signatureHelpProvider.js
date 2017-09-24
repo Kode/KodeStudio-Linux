@@ -3,8 +3,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 'use strict';
-var vscode_1 = require('vscode');
-var phpGlobals = require('./phpGlobals');
+Object.defineProperty(exports, "__esModule", { value: true });
+var vscode_1 = require("vscode");
+var phpGlobals = require("./phpGlobals");
 var _NL = '\n'.charCodeAt(0);
 var _TAB = '\t'.charCodeAt(0);
 var _WSB = ' '.charCodeAt(0);
@@ -56,6 +57,10 @@ var PHPSignatureHelpProvider = (function () {
     function PHPSignatureHelpProvider() {
     }
     PHPSignatureHelpProvider.prototype.provideSignatureHelp = function (document, position, token) {
+        var enable = vscode_1.workspace.getConfiguration('php').get('suggest.basic', true);
+        if (!enable) {
+            return null;
+        }
         var iterator = new BackwardIterator(document, position.character - 1, position.line);
         var paramCount = this.readArguments(iterator);
         if (paramCount < 0) {
@@ -114,6 +119,7 @@ var PHPSignatureHelpProvider = (function () {
                 case _DQuote:
                 case _Quote:
                     while (iterator.hasNext() && ch !== iterator.next()) {
+                        // find the closing quote or double quote
                     }
                     break;
                 case _Comma:
@@ -155,6 +161,5 @@ var PHPSignatureHelpProvider = (function () {
     };
     return PHPSignatureHelpProvider;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = PHPSignatureHelpProvider;
-//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/ebff2335d0f58a5b01ac50cb66737f4694ec73f3/extensions/php/out/features/signatureHelpProvider.js.map
+//# sourceMappingURL=https://ticino.blob.core.windows.net/sourcemaps/0eb40ad2cd45f7b02b138b1a4090966905ed0fec/extensions/php/out/features/signatureHelpProvider.js.map
