@@ -1,8 +1,0 @@
-[
-	"Engedélyezi a(z) {0} (munkaterületi beállításként megadott) végrehajtását a PHP-fájlok linteléséhez?",
-	"Engedélyezés",
-	"Tiltás",
-	"A validáció nem sikerült, mivel a(z) {0} nem egy érvényes php végrehajtható fájl. Használja a 'php.validate.executablePath' beállítást a PHP végrehajtható fájl konfigurálásához!",
-	"A validáció nem sikerült, mivel nincs beállítva PHP végrehajtható fájl. Használja a 'php.validate.executablePath' beállítást a PHP végrehajtható fájl konfigurálásához!",
-	"Nem sikerült futtatni a PHP-t a következő elérési út használatával: {0}. Az ok ismeretlen."
-]

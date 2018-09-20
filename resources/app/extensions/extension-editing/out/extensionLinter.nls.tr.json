@@ -1,9 +1,0 @@
-[
-	"Resimler HTTPS protokolünü kullanmalıdır.",
-	"SVG'ler geçerli bir resim kaynağı değil.",
-	"Gömülü SVG'ler geçerli bir resim kaynağı değil.",
-	"Veri URL'leri geçerli bir resim kaynağı değil.",
-	"Relative image URLs require a repository with HTTPS protocol to be specified in the package.json.",
-	"An icon requires a repository with HTTPS protocol to be specified in this package.json.",
-	"Relative badge URLs require a repository with HTTPS protocol to be specified in this package.json."
-]

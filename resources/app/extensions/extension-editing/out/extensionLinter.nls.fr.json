@@ -1,9 +1,0 @@
-[
-	"Les images doivent utiliser le protocole HTTPS.",
-	"Les SVG ne sont pas une source d'images valide.",
-	"Les SVG incorporés ne sont pas une source d'images valide.",
-	"Les URL de données ne sont pas une source d'images valide.",
-	"Relative image URLs require a repository with HTTPS protocol to be specified in the package.json.",
-	"An icon requires a repository with HTTPS protocol to be specified in this package.json.",
-	"Relative badge URLs require a repository with HTTPS protocol to be specified in this package.json."
-]

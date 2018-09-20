@@ -1,5 +1,0 @@
-[
-	"Habilita verificação semântica em um arquivo JavaScript. Deve estar no topo de um arquivo.",
-	"Desabilita verificação semântica em um arquivo JavaScript. Deve estar no topo de um arquivo.",
-	"Suprime erros de @ts-check na próxima linha de um arquivo."
-]

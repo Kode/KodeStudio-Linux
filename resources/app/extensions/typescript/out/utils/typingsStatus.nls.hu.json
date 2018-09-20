@@ -1,7 +1,0 @@
-[
-	"Adatok lekérése a jobb typescriptes IntelliSense-hez",
-	"Nem sikerült telepíteni a típusdefiníciós fájlokat a javascriptes nyelvi funkciókhoz. Győződjön meg róla, hogy az NPM telepítve van vagy módosítsa a 'typescript.npm' beállítás értékét a felhasználói beállításokban",
-	"További információ",
-	"Ne ellenőrizze újra",
-	"Bezárás"
-]
