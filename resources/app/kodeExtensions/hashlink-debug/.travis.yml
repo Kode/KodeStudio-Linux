@@ -1,0 +1,13 @@
+language: haxe
+
+haxe:
+  - development
+
+install:
+  - haxelib install format
+  - haxelib install hscript
+  - haxelib git vscode-debugadapter https://github.com/vshaxe/vscode-debugadapter-extern
+  - haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs
+
+script:
+  - haxe build.hxml

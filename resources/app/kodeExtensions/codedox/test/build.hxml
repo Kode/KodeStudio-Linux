@@ -1,0 +1,4 @@
+-cp ./
+-debug
+-js test.js
+Test

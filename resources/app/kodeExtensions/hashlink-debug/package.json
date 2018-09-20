@@ -1,0 +1,146 @@
+{
+	"name": "haxe-hl",
+	"displayName": "HashLink Debugger",
+	"version": "0.4.3",
+	"publisher": "HaxeFoundation",
+	"license": "MIT",
+	"description": "Debugger for Haxe/HashLink applications",
+	"repository": {
+		"url": "https://github.com/vshaxe/hashlink-debugger",
+		"type": "git"
+	},
+	"bugs": {
+		"url": "https://github.com/vshaxe/hashlink-debugger/issues"
+	},
+	"author": {
+		"name": "ncannasse"
+	},
+	"engines": {
+		"vscode": "^1.26.0"
+	},
+	"icon": "icon.png",
+	"categories": [
+		"Debuggers"
+	],
+	"galleryBanner": {
+		"theme": "dark",
+		"color": "#5d338f"
+	},
+	"keywords": [
+		"haxe",
+		"hashlink"
+	],
+	"dependencies": {
+		"bindings": "^1.3.0",
+		"deasync": "0.1.11",
+		"ffi": "2.2.0",
+		"vscode-debugadapter": "1.24.0",
+		"vscode-debugprotocol": "1.24.0"
+	},
+	"devDependencies": {},
+	"scripts": {},
+	"contributes": {
+		"debuggers": [
+			{
+				"type": "hl",
+				"label": "HashLink",
+				"enableBreakpointsFor": {
+					"languageIds": [
+						"haxe"
+					]
+				},
+				"program": "./hladapter.js",
+				"runtime": "node",
+				"configurationAttributes": {
+					"launch": {
+						"required": [
+							"hxml",
+							"cwd"
+						],
+						"properties": {
+							"request": {
+								"type": "string",
+								"description": "launch",
+								"default": "launch"
+							},
+							"hxml": {
+								"type": "string",
+								"description": "Path to the .hxml file.",
+								"default": "build.hxml"
+							},
+							"cwd": {
+								"type": "string",
+								"description": "Working directory",
+								"default": "${workspaceRoot}"
+							},
+							"args": {
+								"description": "Program arguments.",
+								"type": "array",
+								"default": [],
+								"items": {
+									"type": "string"
+								}
+							},
+							"argsFile": {
+								"description": "File from which to read program arguments.",
+								"type": "string"
+							},
+							"port": {
+								"type": "number",
+								"decscription": "Port to connect to."
+							}
+						}
+					},
+					"attach": {
+						"required": [
+							"port",
+							"hxml",
+							"cwd"
+						],
+						"properties": {
+							"request": {
+								"type": "string",
+								"description": "attach",
+								"default": "attach"
+							},
+							"hxml": {
+								"type": "string",
+								"description": "Path to the .hxml file.",
+								"default": "build.hxml"
+							},
+							"cwd": {
+								"type": "string",
+								"description": "Working directory",
+								"default": "${workspaceRoot}"
+							},
+							"port": {
+								"type": "number",
+								"decscription": "Port to connect to.",
+								"default": 6112
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"name": "HashLink (launch)",
+						"request": "launch",
+						"type": "hl",
+						"hxml": "build.hxml",
+						"cwd": "${workspaceRoot}",
+						"preLaunchTask": "Build"
+					},
+					{
+						"name": "HashLink (attach)",
+						"request": "attach",
+						"port": 6112,
+						"type": "hl",
+						"hxml": "build.hxml",
+						"cwd": "${workspaceRoot}",
+						"preLaunchTask": "Build"
+					}
+				]
+			}
+		]
+	}
+}

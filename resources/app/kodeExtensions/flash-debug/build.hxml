@@ -1,0 +1,15 @@
+-cp src
+-main fdbAdapter.Adapter
+-lib vscode-debugadapter
+-lib hxnodejs
+-js bin/fdb_adapter.js
+
+--next 
+-lib utest
+-lib vscode-debugadapter
+-main test.TestAll
+-cp .
+-js bin/test.js
+
+#--next
+#-cmd "node bin/test.js"

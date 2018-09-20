@@ -1,0 +1,13 @@
+# extension
+-lib hxnodejs
+-lib vscode
+-cp src
+-js bin/main.js
+Main
+
+# checkstyle
+-lib haxeparser
+-lib compiletime:2.6.0
+-lib hxargs
+-lib checkstyle
+-lib tokentree

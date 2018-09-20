@@ -1,0 +1,84 @@
+{
+	"name": "kha",
+	"displayName": "Kha",
+	"description": "Kha support",
+	"version": "18.9.1",
+	"publisher": "kodetech",
+	"engines": {
+		"vscode": "^1.23.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"Kha",
+		"Haxe"
+	],
+	"activationEvents": [
+		"workspaceContains:khafile.js",
+		"onCommand:kha.init",
+		"onCommand:kha.compile"
+	],
+	"main": "./extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "kha.init",
+				"title": "Init Kha Project"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Kha configuration",
+			"properties": {
+				"kha.khaPath": {
+					"type": "string",
+					"default": "",
+					"description": "Points to a Kha directory."
+				},
+				"kha.ffmpeg": {
+					"type": "string",
+					"default": "",
+					"description": "Path to ffmpeg for extended audio and video format support."
+				},
+				"kha.buildDir": {
+					"type": "string",
+					"default": "build",
+					"description": "Relative path to the Kha build dir for the project."
+				}
+			}
+		},
+		"taskDefinitions": [
+			{
+				"type": "Kha",
+				"required": [
+					"target"
+				],
+				"properties": {
+					"target": {
+						"type": "string",
+						"description": "The target to build for."
+					}
+				}
+			}
+		]
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Kode/vscode-kha"
+	},
+	"scripts": {
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.6",
+		"eslint": "^4.11.0",
+		"@types/node": "^7.0.43",
+		"@types/mocha": "^2.2.42"
+	},
+	"extensionDependencies": [
+		"nadako.vshaxe"
+	]
+}

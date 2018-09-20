@@ -1,0 +1,68 @@
+"use strict";
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+Object.defineProperty(exports, "__esModule", { value: true });
+const assert = require("assert");
+const path = require("path");
+const http_server_1 = require("http-server");
+const testSetup = require("./testSetup");
+const DATA_ROOT = testSetup.DATA_ROOT;
+suite('Chrome Debug Adapter etc', () => {
+    let dc;
+    setup(() => {
+        return testSetup.setup()
+            .then(_dc => dc = _dc);
+    });
+    teardown(() => {
+        return testSetup.teardown();
+    });
+    suite('basic', () => {
+        test('unknown request should produce error', done => {
+            dc.send('illegal_request').then(() => {
+                done(new Error('does not report error on unknown request'));
+            }).catch(() => {
+                done();
+            });
+        });
+    });
+    suite('initialize', () => {
+        test('should return supported features', () => {
+            return dc.initializeRequest().then(response => {
+                assert.equal(response.body.supportsConfigurationDoneRequest, true);
+            });
+        });
+    });
+    suite('launch', () => {
+        test('should stop on debugger statement in file:///, sourcemaps disabled', () => {
+            const testProjectRoot = path.join(DATA_ROOT, 'intervalDebugger');
+            const launchFile = path.join(testProjectRoot, 'index.html');
+            const breakFile = path.join(testProjectRoot, 'out/app.js');
+            const DEBUGGER_LINE = 2;
+            return Promise.all([
+                dc.configurationSequence(),
+                dc.launch({ file: launchFile, sourceMaps: false }),
+                dc.assertStoppedLocation('debugger_statement', { path: breakFile, line: DEBUGGER_LINE })
+            ]);
+        });
+        test('should stop on debugger statement in http://localhost', () => {
+            const testProjectRoot = path.join(DATA_ROOT, 'intervalDebugger');
+            const breakFile = path.join(testProjectRoot, 'src/app.ts');
+            const DEBUGGER_LINE = 2;
+            const server = http_server_1.createServer({ root: testProjectRoot });
+            server.listen(7890);
+            return Promise.all([
+                dc.configurationSequence(),
+                dc.launch({ url: 'http://localhost:7890', webRoot: testProjectRoot }),
+                dc.assertStoppedLocation('debugger_statement', { path: breakFile, line: DEBUGGER_LINE })
+            ])
+                .then(() => server.close(), e => {
+                server.close();
+                throw e;
+            });
+        });
+    });
+});
+
+//# sourceMappingURL=adapter.test.js.map
