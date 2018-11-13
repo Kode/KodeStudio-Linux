@@ -11,7 +11,7 @@
 	"activationEvents": [
 		"onLanguage:php"
 	],
-	"main": "./out/phpMain",
+	"main": "./dist/phpMain",
 	"categories": [
 		"Programming Languages"
 	],
@@ -50,31 +50,25 @@
 				}
 			}
 		},
-		"jsonValidation": [
-			{
-				"fileMatch": "composer.json",
-				"url": "https://getcomposer.org/schema.json"
-			}
-		],
-		"commands": [
-			{
-				"title": "%command.untrustValidationExecutable%",
-				"category": "%commands.categroy.php%",
-				"command": "php.untrustValidationExecutable"
-			}
-		],
+		"jsonValidation": [{
+			"fileMatch": "composer.json",
+			"url": "https://getcomposer.org/schema.json"
+		}],
+		"commands": [{
+			"title": "%command.untrustValidationExecutable%",
+			"category": "%commands.categroy.php%",
+			"command": "php.untrustValidationExecutable"
+		}],
 		"menus": {
-			"commandPalette": [
-				{
-					"command": "php.untrustValidationExecutable",
-					"when": "php.untrustValidationExecutableContext"
-				}
-			]
+			"commandPalette": [{
+				"command": "php.untrustValidationExecutable",
+				"when": "php.untrustValidationExecutableContext"
+			}]
 		}
 	},
 	"scripts": {
-		"compile": "gulp compile-extension:php",
-		"watch": "gulp watch-extension:php"
+		"compile": "npx gulp compile-extension:php-language-features",
+		"watch": "npx gulp watch-extension:php-language-features"
 	},
 	"dependencies": {
 		"vscode-nls": "^4.0.0"

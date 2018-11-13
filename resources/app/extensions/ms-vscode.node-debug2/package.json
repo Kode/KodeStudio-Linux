@@ -1,7 +1,7 @@
 {
   "name": "node-debug2",
   "displayName": "Node Debug",
-  "version": "1.28.0",
+  "version": "1.29.5",
   "publisher": "ms-vscode",
   "description": "%extension.description%",
   "icon": "images/node-debug-icon.png",
@@ -14,8 +14,8 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "vscode-chrome-debug-core": "^6.7.11",
-    "vscode-debugadapter": "^1.31.0",
+    "vscode-chrome-debug-core": "^6.7.31",
+    "vscode-debugadapter": "^1.33.0-pre.2",
     "vscode-nls": "^3.2.5"
   },
   "devDependencies": {
@@ -25,7 +25,7 @@
     "event-stream": "^3.3.4",
     "find-free-port": "^1.0.2",
     "gulp": "^3.9.1",
-    "gulp-sourcemaps": "^2.2.0",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-tslint": "^8.1.2",
     "gulp-typescript": "^3.1.3",
     "gulp-util": "^3.0.5",
@@ -35,10 +35,10 @@
     "tslint": "^5.7.0",
     "typescript": "^2.6.2",
     "vsce": "^1.47.0",
-    "vscode": "^1.1.18",
+    "vscode": "^1.1.21",
     "vscode-chrome-debug-core-testsupport": "^4.0.0",
     "vscode-debugadapter-testsupport": "^1.25.0",
-    "vscode-debugprotocol": "^1.31.0",
+    "vscode-debugprotocol": "^1.32.0-pre.0",
     "vscode-nls-dev": "^3.2.2"
   },
   "main": "./out/src/extension",
@@ -109,7 +109,7 @@
                 "string",
                 "null"
               ],
-              "description": "%extensionHost.launch.runtimeExecutable.description%",
+              "markdownDescription": "%extensionHost.launch.runtimeExecutable.description%",
               "default": "${execPath}"
             },
             "args": {
@@ -130,7 +130,7 @@
                   "null"
                 ]
               },
-              "description": "%extensionHost.launch.env.description%",
+              "markdownDescription": "%extensionHost.launch.env.description%",
               "default": {}
             },
             "stopOnEntry": {
@@ -153,7 +153,7 @@
             },
             "outFiles": {
               "type": "array",
-              "description": "%node.outFiles.description%",
+              "markdownDescription": "%node.outFiles.description%",
               "items": {
                 "type": "string"
               },
@@ -180,6 +180,11 @@
                 "string"
               ],
               "description": "%node.trace.description%",
+              "default": true
+            },
+            "enableSourceMapCaching": {
+              "type": "boolean",
+              "description": "%node.enableSourceMapCaching.description%",
               "default": true
             }
           }
@@ -238,7 +243,7 @@
                 "string",
                 "null"
               ],
-              "description": "%node.launch.runtimeExecutable.description%",
+              "markdownDescription": "%node.launch.runtimeExecutable.description%",
               "default": null
             },
             "runtimeArgs": {
@@ -349,6 +354,11 @@
               ],
               "description": "%node.launch.outputCapture.description%",
               "default": "console"
+            },
+            "enableSourceMapCaching": {
+              "type": "boolean",
+              "description": "%node.enableSourceMapCaching.description%",
+              "default": true
             }
           }
         },
@@ -458,6 +468,11 @@
             "showAsyncStacks": {
               "type": "boolean",
               "description": "%node.showAsyncStacks.description%",
+              "default": true
+            },
+            "enableSourceMapCaching": {
+              "type": "boolean",
+              "description": "%node.enableSourceMapCaching.description%",
               "default": true
             }
           }

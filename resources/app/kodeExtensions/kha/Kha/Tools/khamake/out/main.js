@@ -90,7 +90,7 @@ async function exportProjectFiles(name, resourceDir, options, exporter, kore, ko
     if (options.haxe !== '') {
         let haxeOptions = exporter.haxeOptions(name, targetOptions, defines);
         haxeOptions.defines.push('kha');
-        haxeOptions.defines.push('kha_version=1807');
+        haxeOptions.defines.push('kha_version=1810');
         haxeOptions.safeName = safeName(haxeOptions.name);
         if (options.debug && haxeOptions.parameters.indexOf('-debug') < 0) {
             haxeOptions.parameters.push('-debug');
@@ -99,7 +99,12 @@ async function exportProjectFiles(name, resourceDir, options, exporter, kore, ko
         if (!options.nohaxe) {
             let compiler = new HaxeCompiler_1.HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, resourceDir, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources, exporter.sysdir());
             lastHaxeCompiler = compiler;
-            await compiler.run(options.watch);
+            try {
+                await compiler.run(options.watch);
+            }
+            catch (error) {
+                return Promise.reject(error);
+            }
         }
         for (let callback of ProjectFile_1.Callbacks.postHaxeCompilation) {
             callback();
@@ -179,6 +184,21 @@ async function exportProjectFiles(name, resourceDir, options, exporter, kore, ko
         log.info('Done.');
         return name;
     }
+}
+function checkKorePlatform(platform) {
+    return platform === 'windows'
+        || platform === 'windowsapp'
+        || platform === 'ios'
+        || platform === 'osx'
+        || platform === 'android'
+        || platform === 'linux'
+        || platform === 'html5'
+        || platform === 'tizen'
+        || platform === 'pi'
+        || platform === 'tvos'
+        || platform === 'ps4'
+        || platform === 'xboxone'
+        || platform === 'switch';
 }
 function koreplatform(platform) {
     // 'android-native' becomes 'android'
@@ -263,12 +283,20 @@ async function exportKhaProject(options) {
             if (target.endsWith('-hl')) {
                 korehl = true;
                 options.target = koreplatform(target);
+                if (!checkKorePlatform(options.target)) {
+                    log.error('Unknown platform: ' + options.target);
+                    return Promise.reject('');
+                }
                 exporter = new KoreHLExporter_1.KoreHLExporter(options);
             }
             else {
                 kore = true;
                 // If target is 'android-native' then options.target becomes 'android'
                 options.target = koreplatform(target);
+                if (!checkKorePlatform(options.target)) {
+                    log.error('Unknown platform: ' + options.target);
+                    return Promise.reject('');
+                }
                 exporter = new KoreExporter_1.KoreExporter(options);
             }
             break;
@@ -293,7 +321,9 @@ async function exportKhaProject(options) {
     }
     exporter.parameters = exporter.parameters.concat(project.parameters);
     project.scriptdir = options.kha;
-    project.addShaders('Sources/Shaders/**', {});
+    if (baseTarget !== Platform_1.Platform.Java && baseTarget !== Platform_1.Platform.WPF) {
+        project.addShaders('Sources/Shaders/**', {});
+    }
     for (let callback of ProjectFile_1.Callbacks.preAssetConversion) {
         callback();
     }
@@ -339,7 +369,12 @@ async function exportKhaProject(options) {
         }
         let shaderCompiler = new ShaderCompiler_1.ShaderCompiler(exporter, options.target, options.krafix, shaderDir, temp, buildDir, options, project.shaderMatchers);
         lastShaderCompiler = shaderCompiler;
-        exportedShaders = await shaderCompiler.run(options.watch, recompileAllShaders);
+        try {
+            exportedShaders = await shaderCompiler.run(options.watch, recompileAllShaders);
+        }
+        catch (err) {
+            return Promise.reject(err);
+        }
     }
     if (target === Platform_1.Platform.Unity) {
         fs.ensureDirSync(path.join(options.to, exporter.sysdir() + '-resources'));
@@ -547,7 +582,13 @@ async function run(options, loglog) {
     if (!options.theora && options.ffmpeg) {
         options.theora = options.ffmpeg + ' -nostdin -i {in} {out}';
     }
-    let name = await exportProject(options);
+    let name = '';
+    try {
+        name = await exportProject(options);
+    }
+    catch (err) {
+        process.exit(1);
+    }
     if (options.target === Platform_1.Platform.Linux && options.run) {
         await runProject(options);
     }

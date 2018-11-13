@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/common/platform","vs/base/common/strings","vs/base/common/winjs.base","vs/base/common/paths","vs/base/common/errors","vs/base/common/objects","vs/base/common/async","vs/base/common/event","child_process","vs/base/common/lifecycle","path","vs/base/common/arrays","vs/base/common/types","vs/base/common/normalization","vs/base/common/map","vs/base/common/cancellation","vs/base/common/uri","vs/base/common/glob","vs/workbench/services/search/node/ripgrepTextSearch","fs","vs/base/common/amd","vs/base/common/functional","vs/base/node/extfs","vs/base/parts/ipc/node/ipc","string_decoder","vs/base/node/flow","vs/base/common/stopwatch","vs/base/parts/ipc/node/ipc.cp","vs/base/node/encoding","vs/base/common/comparers","vs/base/node/stream","vs/base/node/console","vs/base/common/uuid","vs/base/common/filters","vs/base/parts/quickopen/common/quickOpenScorer","vs/editor/common/core/position","vs/editor/common/core/range","vs/nls!vs/base/common/errorMessage","vs/nls","vs/nls!vs/workbench/services/search/node/searchApp","vs/base/common/errorMessage","vs/nls!vs/base/node/processes","vs/base/node/processes","vs/base/node/decoder","vs/platform/files/node/files","vs/platform/instantiation/common/instantiation","vs/platform/search/common/search","vs/workbench/services/search/node/search","vs/workbench/services/search/node/searchIpc","vs/workbench/services/search/node/textSearch","vs/workbench/services/search/node/worker/searchWorkerIpc","vs/workbench/services/search/node/textSearchWorkerProvider","vs/base/common/linkedList","vscode-ripgrep","vs/workbench/services/search/node/ripgrepFileSearch","vs/workbench/services/search/node/fileSearch","vs/workbench/services/search/node/rawSearchService","events","vs/workbench/services/search/node/searchApp","stream","os","assert","graceful-fs","iconv-lite"];
+var __m = ["require","exports","vs/base/common/strings","vs/base/common/platform","vs/base/common/winjs.base","vs/base/common/paths","path","vs/base/common/uri","vs/base/common/arrays","vs/base/common/errors","vs/base/common/event","vs/base/common/lifecycle","vs/base/common/objects","vs/base/common/async","child_process","vs/base/common/glob","vs/base/common/cancellation","fs","vs/base/common/types","vs/base/common/normalization","vs/base/common/map","vs/base/node/extfs","vs/base/node/encoding","vs/base/common/stopwatch","vs/base/common/amd","vs/base/common/functional","vs/platform/search/common/search","vs/base/parts/ipc/node/ipc.cp","vs/base/common/errorMessage","string_decoder","vs/base/node/flow","vs/base/parts/ipc/node/ipc","vs/workbench/services/search/node/fileSearch","vs/platform/instantiation/common/instantiation","vs/platform/files/node/files","vs/workbench/services/search/node/ripgrepSearchUtils","vs/workbench/services/search/node/textSearchManager","vs/base/common/iterator","vs/workbench/services/search/node/legacy/worker/searchWorkerIpc","vs/base/node/stream","vs/nls!vs/base/common/errorMessage","vs/nls","vs/nls!vs/workbench/services/search/node/searchApp","vs/base/node/decoder","vs/nls!vs/base/node/processes","vs/base/node/processes","vs/base/node/console","vs/base/common/uuid","vs/base/common/resources","vs/platform/log/common/log","vs/base/common/filters","vs/workbench/services/search/node/legacy/textSearch","vs/base/parts/quickopen/common/quickOpenScorer","vs/workbench/services/search/node/legacy/textSearchWorkerProvider","vs/base/common/comparers","vs/workbench/services/search/node/search","vs/workbench/services/search/node/searchIpc","vs/base/common/network","vs/workbench/services/search/node/ripgrepFileSearch","vscode-ripgrep","vs/base/common/linkedList","vs/workbench/services/search/node/legacy/rawLegacyTextSearchService","graceful-fs","vs/workbench/services/search/node/ripgrepTextSearchEngine","vs/workbench/services/search/node/textSearchAdapter","vs/workbench/services/search/node/rawSearchService","assert","vs/workbench/services/search/node/searchApp","events","stream","os","iconv-lite"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -14,8 +14,8 @@ var __M = function(deps) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[23/*vs/base/common/functional*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    'use strict';
+define(__m[25/*vs/base/common/functional*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function once(fn) {
         var _this = this;
@@ -37,8 +37,201 @@ define(__m[23/*vs/base/common/functional*/], __M([1/*require*/,0/*exports*/]), f
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[11/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,23/*vs/base/common/functional*/]), function (require, exports, functional_1) {
-    'use strict';
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+define(__m[37/*vs/base/common/iterator*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.FIN = { done: true, value: undefined };
+    var Iterator;
+    (function (Iterator) {
+        var _empty = {
+            next: function () {
+                return exports.FIN;
+            }
+        };
+        function empty() {
+            return _empty;
+        }
+        Iterator.empty = empty;
+        function fromArray(array, index, length) {
+            if (index === void 0) { index = 0; }
+            if (length === void 0) { length = array.length; }
+            return {
+                next: function () {
+                    if (index >= length) {
+                        return exports.FIN;
+                    }
+                    return { done: false, value: array[index++] };
+                }
+            };
+        }
+        Iterator.fromArray = fromArray;
+        function from(elements) {
+            if (!elements) {
+                return Iterator.empty();
+            }
+            else if (Array.isArray(elements)) {
+                return Iterator.fromArray(elements);
+            }
+            else {
+                return elements;
+            }
+        }
+        Iterator.from = from;
+        function map(iterator, fn) {
+            return {
+                next: function () {
+                    var element = iterator.next();
+                    if (element.done) {
+                        return exports.FIN;
+                    }
+                    else {
+                        return { done: false, value: fn(element.value) };
+                    }
+                }
+            };
+        }
+        Iterator.map = map;
+        function filter(iterator, fn) {
+            return {
+                next: function () {
+                    while (true) {
+                        var element = iterator.next();
+                        if (element.done) {
+                            return exports.FIN;
+                        }
+                        if (fn(element.value)) {
+                            return { done: false, value: element.value };
+                        }
+                    }
+                }
+            };
+        }
+        Iterator.filter = filter;
+        function forEach(iterator, fn) {
+            for (var next = iterator.next(); !next.done; next = iterator.next()) {
+                fn(next.value);
+            }
+        }
+        Iterator.forEach = forEach;
+        function collect(iterator) {
+            var result = [];
+            forEach(iterator, function (value) { return result.push(value); });
+            return result;
+        }
+        Iterator.collect = collect;
+    })(Iterator = exports.Iterator || (exports.Iterator = {}));
+    function getSequenceIterator(arg) {
+        if (Array.isArray(arg)) {
+            return Iterator.fromArray(arg);
+        }
+        else {
+            return arg;
+        }
+    }
+    exports.getSequenceIterator = getSequenceIterator;
+    var ArrayIterator = /** @class */ (function () {
+        function ArrayIterator(items, start, end, index) {
+            if (start === void 0) { start = 0; }
+            if (end === void 0) { end = items.length; }
+            if (index === void 0) { index = start - 1; }
+            this.items = items;
+            this.start = start;
+            this.end = end;
+            this.index = index;
+        }
+        ArrayIterator.prototype.first = function () {
+            this.index = this.start;
+            return this.current();
+        };
+        ArrayIterator.prototype.next = function () {
+            this.index = Math.min(this.index + 1, this.end);
+            return this.current();
+        };
+        ArrayIterator.prototype.current = function () {
+            if (this.index === this.start - 1 || this.index === this.end) {
+                return null;
+            }
+            return this.items[this.index];
+        };
+        return ArrayIterator;
+    }());
+    exports.ArrayIterator = ArrayIterator;
+    var ArrayNavigator = /** @class */ (function (_super) {
+        __extends(ArrayNavigator, _super);
+        function ArrayNavigator(items, start, end, index) {
+            if (start === void 0) { start = 0; }
+            if (end === void 0) { end = items.length; }
+            if (index === void 0) { index = start - 1; }
+            return _super.call(this, items, start, end, index) || this;
+        }
+        ArrayNavigator.prototype.current = function () {
+            return _super.prototype.current.call(this);
+        };
+        ArrayNavigator.prototype.previous = function () {
+            this.index = Math.max(this.index - 1, this.start - 1);
+            return this.current();
+        };
+        ArrayNavigator.prototype.first = function () {
+            this.index = this.start;
+            return this.current();
+        };
+        ArrayNavigator.prototype.last = function () {
+            this.index = this.end - 1;
+            return this.current();
+        };
+        ArrayNavigator.prototype.parent = function () {
+            return null;
+        };
+        return ArrayNavigator;
+    }(ArrayIterator));
+    exports.ArrayNavigator = ArrayNavigator;
+    var MappedIterator = /** @class */ (function () {
+        function MappedIterator(iterator, fn) {
+            this.iterator = iterator;
+            this.fn = fn;
+            // noop
+        }
+        MappedIterator.prototype.next = function () { return this.fn(this.iterator.next()); };
+        return MappedIterator;
+    }());
+    exports.MappedIterator = MappedIterator;
+    var MappedNavigator = /** @class */ (function (_super) {
+        __extends(MappedNavigator, _super);
+        function MappedNavigator(navigator, fn) {
+            var _this = _super.call(this, navigator, fn) || this;
+            _this.navigator = navigator;
+            return _this;
+        }
+        MappedNavigator.prototype.current = function () { return this.fn(this.navigator.current()); };
+        MappedNavigator.prototype.previous = function () { return this.fn(this.navigator.previous()); };
+        MappedNavigator.prototype.parent = function () { return this.fn(this.navigator.parent()); };
+        MappedNavigator.prototype.first = function () { return this.fn(this.navigator.first()); };
+        MappedNavigator.prototype.last = function () { return this.fn(this.navigator.last()); };
+        MappedNavigator.prototype.next = function () { return this.fn(this.navigator.next()); };
+        return MappedNavigator;
+    }(MappedIterator));
+    exports.MappedNavigator = MappedNavigator;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[11/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,25/*vs/base/common/functional*/]), function (require, exports, functional_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function isDisposable(thing) {
         return typeof thing.dispose === 'function'
@@ -109,7 +302,7 @@ define(__m[11/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,23/*v
             var object = reference.object;
             var dispose = functional_1.once(function () {
                 if (--reference.counter === 0) {
-                    _this.destroyReferencedObject(reference.object);
+                    _this.destroyReferencedObject(key, reference.object);
                     delete _this.references[key];
                 }
             });
@@ -133,8 +326,8 @@ define(__m[11/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,23/*v
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[54/*vs/base/common/linkedList*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    'use strict';
+define(__m[60/*vs/base/common/linkedList*/], __M([0/*require*/,1/*exports*/,37/*vs/base/common/iterator*/]), function (require, exports, iterator_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Node = /** @class */ (function () {
         function Node(element) {
@@ -180,8 +373,10 @@ define(__m[54/*vs/base/common/linkedList*/], __M([1/*require*/,0/*exports*/]), f
                 oldFirst.prev = newNode;
             }
             return function () {
-                for (var candidate = _this._first; candidate instanceof Node; candidate = candidate.next) {
+                var candidate = _this._first;
+                while (candidate instanceof Node) {
                     if (candidate !== newNode) {
+                        candidate = candidate.next;
                         continue;
                     }
                     if (candidate.prev && candidate.next) {
@@ -211,22 +406,20 @@ define(__m[54/*vs/base/common/linkedList*/], __M([1/*require*/,0/*exports*/]), f
             };
         };
         LinkedList.prototype.iterator = function () {
-            var element = {
-                done: undefined,
-                value: undefined,
-            };
+            var element;
             var node = this._first;
             return {
                 next: function () {
                     if (!node) {
-                        element.done = true;
-                        element.value = undefined;
+                        return iterator_1.FIN;
+                    }
+                    if (!element) {
+                        element = { done: false, value: node.element };
                     }
                     else {
-                        element.done = false;
                         element.value = node.element;
-                        node = node.next;
                     }
+                    node = node.next;
                     return element;
                 }
             };
@@ -243,12 +436,51 @@ define(__m[54/*vs/base/common/linkedList*/], __M([1/*require*/,0/*exports*/]), f
     exports.LinkedList = LinkedList;
 });
 
-define(__m[2/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[57/*vs/base/common/network*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Schemas;
+    (function (Schemas) {
+        /**
+         * A schema that is used for models that exist in memory
+         * only and that have no correspondence on a server or such.
+         */
+        Schemas.inMemory = 'inmemory';
+        /**
+         * A schema that is used for setting files
+         */
+        Schemas.vscode = 'vscode';
+        /**
+         * A schema that is used for internal private files
+         */
+        Schemas.internal = 'private';
+        /**
+         * A walk-through document.
+         */
+        Schemas.walkThrough = 'walkThrough';
+        /**
+         * An embedded code snippet.
+         */
+        Schemas.walkThroughSnippet = 'walkThroughSnippet';
+        Schemas.http = 'http';
+        Schemas.https = 'https';
+        Schemas.file = 'file';
+        Schemas.mailto = 'mailto';
+        Schemas.untitled = 'untitled';
+        Schemas.data = 'data';
+    })(Schemas = exports.Schemas || (exports.Schemas = {}));
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[3/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var _isWindows = false;
     var _isMacintosh = false;
@@ -259,8 +491,18 @@ define(__m[2/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), func
     var _language = undefined;
     var _translationsConfigFile = undefined;
     exports.LANGUAGE_DEFAULT = 'en';
+    var isElectronRenderer = (typeof process !== 'undefined' && typeof process.versions !== 'undefined' && typeof process.versions.electron !== 'undefined' && process.type === 'renderer');
     // OS detection
-    if (typeof process === 'object' && typeof process.nextTick === 'function' && typeof process.platform === 'string') {
+    if (typeof navigator === 'object' && !isElectronRenderer) {
+        var userAgent = navigator.userAgent;
+        _isWindows = userAgent.indexOf('Windows') >= 0;
+        _isMacintosh = userAgent.indexOf('Macintosh') >= 0;
+        _isLinux = userAgent.indexOf('Linux') >= 0;
+        _isWeb = true;
+        _locale = navigator.language;
+        _language = _locale;
+    }
+    else if (typeof process === 'object') {
         _isWindows = (process.platform === 'win32');
         _isMacintosh = (process.platform === 'darwin');
         _isLinux = (process.platform === 'linux');
@@ -280,15 +522,6 @@ define(__m[2/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), func
             }
         }
         _isNative = true;
-    }
-    else if (typeof navigator === 'object') {
-        var userAgent = navigator.userAgent;
-        _isWindows = userAgent.indexOf('Windows') >= 0;
-        _isMacintosh = userAgent.indexOf('Macintosh') >= 0;
-        _isLinux = userAgent.indexOf('Linux') >= 0;
-        _isWeb = true;
-        _locale = navigator.language;
-        _language = _locale;
     }
     var Platform;
     (function (Platform) {
@@ -380,12 +613,12 @@ define(__m[2/*vs/base/common/platform*/], __M([1/*require*/,0/*exports*/]), func
     })(AccessibilitySupport = exports.AccessibilitySupport || (exports.AccessibilitySupport = {}));
 });
 
-define(__m[28/*vs/base/common/stopwatch*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/platform*/]), function (require, exports, platform_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[23/*vs/base/common/stopwatch*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/platform*/]), function (require, exports, platform_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var hasPerformanceNow = (platform_1.globals.performance && typeof platform_1.globals.performance.now === 'function');
     var StopWatch = /** @class */ (function () {
@@ -415,12 +648,12 @@ define(__m[28/*vs/base/common/stopwatch*/], __M([1/*require*/,0/*exports*/,2/*vs
     exports.StopWatch = StopWatch;
 });
 
-define(__m[3/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[2/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The empty string.
@@ -515,8 +748,8 @@ define(__m[3/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/]), funct
         if (needleLen === 0 || haystack.length === 0) {
             return haystack;
         }
-        var offset = 0, idx = -1;
-        while ((idx = haystack.indexOf(needle, offset)) === offset) {
+        var offset = 0;
+        while (haystack.indexOf(needle, offset) === offset) {
             offset = offset + needleLen;
         }
         return haystack.substring(offset);
@@ -629,7 +862,7 @@ define(__m[3/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/]), funct
         // We check against an empty string. If the regular expression doesn't advance
         // (e.g. ends in an endless loop) it will match an empty string.
         var match = regexp.exec('');
-        return (match && regexp.lastIndex === 0);
+        return !!(match && regexp.lastIndex === 0);
     }
     exports.regExpLeadsToEndlessLoop = regExpLeadsToEndlessLoop;
     function regExpContainsBackreference(regexpValue) {
@@ -991,7 +1224,7 @@ define(__m[3/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/]), funct
     // -- UTF-8 BOM
     exports.UTF8_BOM_CHARACTER = String.fromCharCode(65279 /* UTF8_BOM */);
     function startsWithUTF8BOM(str) {
-        return (str && str.length > 0 && str.charCodeAt(0) === 65279 /* UTF8_BOM */);
+        return !!(str && str.length > 0 && str.charCodeAt(0) === 65279 /* UTF8_BOM */);
     }
     exports.startsWithUTF8BOM = startsWithUTF8BOM;
     function stripUTF8BOM(str) {
@@ -1051,14 +1284,29 @@ define(__m[3/*vs/base/common/strings*/], __M([1/*require*/,0/*exports*/]), funct
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
     exports.uppercaseFirstLetter = uppercaseFirstLetter;
+    function getNLines(str, n) {
+        if (n === void 0) { n = 1; }
+        if (n === 0) {
+            return '';
+        }
+        var idx = -1;
+        do {
+            idx = str.indexOf('\n', idx + 1);
+            n--;
+        } while (n > 0 && idx >= 0);
+        return idx >= 0 ?
+            str.substr(0, idx) :
+            str;
+    }
+    exports.getNLines = getNLines;
 });
 
-define(__m[5/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/platform*/,3/*vs/base/common/strings*/]), function (require, exports, platform_1, strings_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[5/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/platform*/,2/*vs/base/common/strings*/]), function (require, exports, platform_1, strings_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The forward slash path separator.
@@ -1135,7 +1383,7 @@ define(__m[5/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,2/*vs/base
         if (len === 0) {
             return '.';
         }
-        var wantsBackslash = platform_1.isWindows && toOSPath;
+        var wantsBackslash = !!(platform_1.isWindows && toOSPath);
         if (_isNormal(path, wantsBackslash)) {
             return path;
         }
@@ -1415,23 +1663,21 @@ define(__m[5/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,2/*vs/base
     }
     exports.isAbsolute_win32 = isAbsolute_win32;
     function isAbsolute_posix(path) {
-        return path && path.charCodeAt(0) === 47 /* Slash */;
+        return !!(path && path.charCodeAt(0) === 47 /* Slash */);
     }
     exports.isAbsolute_posix = isAbsolute_posix;
 });
 
-define(__m[31/*vs/base/common/comparers*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/strings*/,5/*vs/base/common/paths*/]), function (require, exports, strings, paths) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[54/*vs/base/common/comparers*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/strings*/,5/*vs/base/common/paths*/]), function (require, exports, strings, paths) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var intlFileNameCollator;
-    var intlFileNameCollatorIsNumeric;
     function setFileNameComparer(collator) {
         intlFileNameCollator = collator;
-        intlFileNameCollatorIsNumeric = collator.resolvedOptions().numeric;
     }
     exports.setFileNameComparer = setFileNameComparer;
     function compareFileNames(one, other, caseSensitive) {
@@ -1439,10 +1685,10 @@ define(__m[31/*vs/base/common/comparers*/], __M([1/*require*/,0/*exports*/,3/*vs
         if (intlFileNameCollator) {
             var a = one || '';
             var b = other || '';
-            var result = intlFileNameCollator.compare(a, b);
+            var result = intlFileNameCollator.getValue().collator.compare(a, b);
             // Using the numeric option in the collator will
             // make compare(`foo1`, `foo01`) === 0. We must disambiguate.
-            if (intlFileNameCollatorIsNumeric && result === 0 && a !== b) {
+            if (intlFileNameCollator.getValue().collatorIsNumeric && result === 0 && a !== b) {
                 return a < b ? -1 : 1;
             }
             return result;
@@ -1472,16 +1718,16 @@ define(__m[31/*vs/base/common/comparers*/], __M([1/*require*/,0/*exports*/,3/*vs
         if (intlFileNameCollator) {
             var _a = extractNameAndExtension(one), oneName = _a[0], oneExtension = _a[1];
             var _b = extractNameAndExtension(other), otherName = _b[0], otherExtension = _b[1];
-            var result = intlFileNameCollator.compare(oneExtension, otherExtension);
+            var result = intlFileNameCollator.getValue().collator.compare(oneExtension, otherExtension);
             if (result === 0) {
                 // Using the numeric option in the collator will
                 // make compare(`foo1`, `foo01`) === 0. We must disambiguate.
-                if (intlFileNameCollatorIsNumeric && oneExtension !== otherExtension) {
+                if (intlFileNameCollator.getValue().collatorIsNumeric && oneExtension !== otherExtension) {
                     return oneExtension < otherExtension ? -1 : 1;
                 }
                 // Extensions are equal, compare filenames
-                result = intlFileNameCollator.compare(oneName, otherName);
-                if (intlFileNameCollatorIsNumeric && result === 0 && oneName !== otherName) {
+                result = intlFileNameCollator.getValue().collator.compare(oneName, otherName);
+                if (intlFileNameCollator.getValue().collatorIsNumeric && result === 0 && oneName !== otherName) {
                     return oneName < otherName ? -1 : 1;
                 }
             }
@@ -1588,12 +1834,12 @@ define(__m[31/*vs/base/common/comparers*/], __M([1/*require*/,0/*exports*/,3/*vs
     exports.compareByPrefix = compareByPrefix;
 });
 
-define(__m[14/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[18/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var _typeof = {
         number: 'number',
@@ -1761,8 +2007,8 @@ define(__m[14/*vs/base/common/types*/], __M([1/*require*/,0/*exports*/]), functi
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[7/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,14/*vs/base/common/types*/]), function (require, exports, types_1) {
-    'use strict';
+define(__m[12/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,18/*vs/base/common/types*/]), function (require, exports, types_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function deepClone(obj) {
         if (!obj || typeof obj !== 'object') {
@@ -2013,35 +2259,49 @@ define(__m[7/*vs/base/common/objects*/], __M([1/*require*/,0/*exports*/,14/*vs/b
     exports.distinct = distinct;
 });
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-define(__m[18/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/platform*/]), function (require, exports, platform_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[7/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/platform*/]), function (require, exports, platform_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var _a;
     var _schemePattern = /^\w[\w\d+.-]*$/;
     var _singleSlashStart = /^\//;
     var _doubleSlashStart = /^\/\//;
+    var _throwOnMissingSchema = true;
+    /**
+     * @internal
+     */
+    function setUriThrowOnMissingScheme(value) {
+        var old = _throwOnMissingSchema;
+        _throwOnMissingSchema = value;
+        return old;
+    }
+    exports.setUriThrowOnMissingScheme = setUriThrowOnMissingScheme;
     function _validateUri(ret) {
         // scheme, must be set
         if (!ret.scheme) {
-            // throw new Error(`[UriError]: Scheme is missing: {scheme: "", authority: "${ret.authority}", path: "${ret.path}", query: "${ret.query}", fragment: "${ret.fragment}"}`);
-            console.warn("[UriError]: Scheme is missing: {scheme: \"\", authority: \"" + ret.authority + "\", path: \"" + ret.path + "\", query: \"" + ret.query + "\", fragment: \"" + ret.fragment + "\"}");
+            if (_throwOnMissingSchema) {
+                throw new Error("[UriError]: Scheme is missing: {scheme: \"\", authority: \"" + ret.authority + "\", path: \"" + ret.path + "\", query: \"" + ret.query + "\", fragment: \"" + ret.fragment + "\"}");
+            }
+            else {
+                console.warn("[UriError]: Scheme is missing: {scheme: \"\", authority: \"" + ret.authority + "\", path: \"" + ret.path + "\", query: \"" + ret.query + "\", fragment: \"" + ret.fragment + "\"}");
+            }
         }
         // scheme, https://tools.ietf.org/html/rfc3986#section-3.1
         // ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
@@ -2283,7 +2543,7 @@ define(__m[18/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,2/*vs/base/
         };
         // ---- printing/externalize ---------------------------
         /**
-         * Creates a string presentation for this URI. It's guardeed that calling
+         * Creates a string presentation for this URI. It's guaranteed that calling
          * `URI.parse` with the result of this function creates an URI which is equal
          * to this URI.
          *
@@ -2575,8 +2835,8 @@ define(__m[18/*vs/base/common/uri*/], __M([1/*require*/,0/*exports*/,2/*vs/base/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[22/*vs/base/common/amd*/], __M([1/*require*/,0/*exports*/,18/*vs/base/common/uri*/]), function (require, exports, uri_1) {
-    'use strict';
+define(__m[24/*vs/base/common/amd*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function getPathFromAmdModule(requirefn, relativePath) {
         return uri_1.URI.parse(requirefn.toUrl(relativePath)).fsPath;
@@ -2601,8 +2861,8 @@ define(__m[22/*vs/base/common/amd*/], __M([1/*require*/,0/*exports*/,18/*vs/base
 
 
 
-define(__m[16/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/,18/*vs/base/common/uri*/]), function (require, exports, uri_1) {
-    'use strict';
+define(__m[20/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/uri*/,37/*vs/base/common/iterator*/]), function (require, exports, uri_1, iterator_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function values(forEachable) {
         var result = [];
@@ -2625,6 +2885,22 @@ define(__m[16/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/,18/*vs/base
         return result;
     }
     exports.getOrSet = getOrSet;
+    function mapToString(map) {
+        var entries = [];
+        map.forEach(function (value, key) {
+            entries.push(key + " => " + value);
+        });
+        return "Map(" + map.size + ") {" + entries.join(', ') + "}";
+    }
+    exports.mapToString = mapToString;
+    function setToString(set) {
+        var entries = [];
+        set.forEach(function (value) {
+            entries.push(value);
+        });
+        return "Set(" + set.size + ") {" + entries.join(', ') + "}";
+    }
+    exports.setToString = setToString;
     var StringIterator = /** @class */ (function () {
         function StringIterator() {
             this._value = '';
@@ -2851,7 +3127,7 @@ define(__m[16/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/,18/*vs/base
         TernarySearchTree.prototype.findSubstr = function (key) {
             var iter = this._iter.reset(key);
             var node = this._root;
-            var candidate;
+            var candidate = undefined;
             while (node) {
                 var val = iter.cmp(node.segment);
                 if (val > 0) {
@@ -2906,10 +3182,7 @@ define(__m[16/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/,18/*vs/base
         };
         TernarySearchTree.prototype._nodeIterator = function (node) {
             var _this = this;
-            var res = {
-                done: false,
-                value: undefined
-            };
+            var res;
             var idx;
             var data;
             var next = function () {
@@ -2920,11 +3193,12 @@ define(__m[16/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/,18/*vs/base
                     _this._forEach(node, function (value) { return data.push(value); });
                 }
                 if (idx >= data.length) {
-                    res.done = true;
-                    res.value = undefined;
+                    return iterator_1.FIN;
+                }
+                if (!res) {
+                    res = { done: false, value: data[idx++] };
                 }
                 else {
-                    res.done = false;
                     res.value = data[idx++];
                 }
                 return res;
@@ -3187,7 +3461,9 @@ define(__m[16/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/,18/*vs/base
             }
             this._head = current;
             this._size = currentSize;
-            current.previous = void 0;
+            if (current) {
+                current.previous = void 0;
+            }
         };
         LinkedMap.prototype.addItemFirst = function (item) {
             // First time Insert
@@ -3361,12 +3637,12 @@ define(__m[16/*vs/base/common/map*/], __M([1/*require*/,0/*exports*/,18/*vs/base
     exports.LRUCache = LRUCache;
 });
 
-define(__m[35/*vs/base/common/filters*/], __M([1/*require*/,0/*exports*/,16/*vs/base/common/map*/,3/*vs/base/common/strings*/]), function (require, exports, map_1, strings) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[50/*vs/base/common/filters*/], __M([0/*require*/,1/*exports*/,20/*vs/base/common/map*/,2/*vs/base/common/strings*/]), function (require, exports, map_1, strings) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // Combined filters
     /**
@@ -3783,38 +4059,17 @@ define(__m[35/*vs/base/common/filters*/], __M([1/*require*/,0/*exports*/,16/*vs/
         Arrow[Arrow["Diag"] = 2] = "Diag";
         Arrow[Arrow["Left"] = 4] = "Left";
     })(Arrow || (Arrow = {}));
-    function fuzzyScore(pattern, word, patternMaxWhitespaceIgnore, firstMatchCanBeWeak) {
+    function fuzzyScore(pattern, lowPattern, patternPos, word, lowWord, wordPos, firstMatchCanBeWeak) {
         var patternLen = pattern.length > 100 ? 100 : pattern.length;
         var wordLen = word.length > 100 ? 100 : word.length;
-        // Check for leading whitespace in the pattern and
-        // start matching just after that position. This is
-        // like `pattern = pattern.rtrim()` but doesn't create
-        // a new string
-        var patternStartPos = 0;
-        if (patternMaxWhitespaceIgnore === undefined) {
-            patternMaxWhitespaceIgnore = patternLen;
-        }
-        while (patternStartPos < patternMaxWhitespaceIgnore) {
-            if (isWhitespaceAtPos(pattern, patternStartPos)) {
-                patternStartPos += 1;
-            }
-            else {
-                break;
-            }
-        }
-        if (patternStartPos === patternLen) {
-            return [-100, []];
-        }
-        if (patternLen > wordLen) {
+        if (patternPos >= patternLen || wordPos >= wordLen || patternLen > wordLen) {
             return undefined;
         }
-        var lowPattern = pattern.toLowerCase();
-        var lowWord = word.toLowerCase();
-        var patternPos = patternStartPos;
-        var wordPos = 0;
         // Run a simple check if the characters of pattern occur
         // (in order) at all in word. If that isn't the case we
         // stop because no match will be possible
+        var patternStartPos = patternPos;
+        var wordStartPos = wordPos;
         while (patternPos < patternLen && wordPos < wordLen) {
             if (lowPattern[patternPos] === lowWord[wordPos]) {
                 patternPos += 1;
@@ -3824,6 +4079,8 @@ define(__m[35/*vs/base/common/filters*/], __M([1/*require*/,0/*exports*/,16/*vs/
         if (patternPos !== patternLen) {
             return undefined;
         }
+        patternPos = patternStartPos;
+        wordPos = wordStartPos;
         // There will be a mach, fill in tables
         for (patternPos = patternStartPos + 1; patternPos <= patternLen; patternPos++) {
             for (wordPos = 1; wordPos <= wordLen; wordPos++) {
@@ -4018,16 +4275,16 @@ define(__m[35/*vs/base/common/filters*/], __M([1/*require*/,0/*exports*/,16/*vs/
     }());
     //#endregion
     //#region --- graceful ---
-    function fuzzyScoreGracefulAggressive(pattern, word, patternMaxWhitespaceIgnore) {
-        return fuzzyScoreWithPermutations(pattern, word, true, patternMaxWhitespaceIgnore);
+    function fuzzyScoreGracefulAggressive(pattern, lowPattern, patternPos, word, lowWord, wordPos, firstMatchCanBeWeak) {
+        return fuzzyScoreWithPermutations(pattern, lowPattern, patternPos, word, lowWord, wordPos, true, firstMatchCanBeWeak);
     }
     exports.fuzzyScoreGracefulAggressive = fuzzyScoreGracefulAggressive;
-    function fuzzyScoreGraceful(pattern, word, patternMaxWhitespaceIgnore) {
-        return fuzzyScoreWithPermutations(pattern, word, false, patternMaxWhitespaceIgnore);
+    function fuzzyScoreGraceful(pattern, lowPattern, patternPos, word, lowWord, wordPos, firstMatchCanBeWeak) {
+        return fuzzyScoreWithPermutations(pattern, lowPattern, patternPos, word, lowWord, wordPos, false, firstMatchCanBeWeak);
     }
     exports.fuzzyScoreGraceful = fuzzyScoreGraceful;
-    function fuzzyScoreWithPermutations(pattern, word, aggressive, patternMaxWhitespaceIgnore) {
-        var top = fuzzyScore(pattern, word, patternMaxWhitespaceIgnore);
+    function fuzzyScoreWithPermutations(pattern, lowPattern, patternPos, word, lowWord, wordPos, aggressive, firstMatchCanBeWeak) {
+        var top = fuzzyScore(pattern, lowPattern, patternPos, word, lowWord, wordPos, firstMatchCanBeWeak);
         if (top && !aggressive) {
             // when using the original pattern yield a result we`
             // return it unless we are aggressive and try to find
@@ -4040,10 +4297,10 @@ define(__m[35/*vs/base/common/filters*/], __M([1/*require*/,0/*exports*/,16/*vs/
             // permutations only swap neighbouring characters, e.g
             // `cnoso` becomes `conso`, `cnsoo`, `cnoos`.
             var tries = Math.min(7, pattern.length - 1);
-            for (var patternPos = 1; patternPos < tries; patternPos++) {
-                var newPattern = nextTypoPermutation(pattern, patternPos);
+            for (var movingPatternPos = patternPos + 1; movingPatternPos < tries; movingPatternPos++) {
+                var newPattern = nextTypoPermutation(pattern, movingPatternPos);
                 if (newPattern) {
-                    var candidate = fuzzyScore(newPattern, word, patternMaxWhitespaceIgnore);
+                    var candidate = fuzzyScore(newPattern, newPattern.toLowerCase(), patternPos, word, lowWord, wordPos, firstMatchCanBeWeak);
                     if (candidate) {
                         candidate[0] -= 3; // permutation penalty
                         if (!top || candidate[0] > top[0]) {
@@ -4072,12 +4329,12 @@ define(__m[35/*vs/base/common/filters*/], __M([1/*require*/,0/*exports*/,16/*vs/
 });
 //#endregion
 
-define(__m[15/*vs/base/common/normalization*/], __M([1/*require*/,0/*exports*/,16/*vs/base/common/map*/]), function (require, exports, map_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[19/*vs/base/common/normalization*/], __M([0/*require*/,1/*exports*/,20/*vs/base/common/map*/]), function (require, exports, map_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The normalize() method returns the Unicode Normalization Form of a given string. The form will be
@@ -4118,6 +4375,228 @@ define(__m[15/*vs/base/common/normalization*/], __M([1/*require*/,0/*exports*/,1
     }
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[48/*vs/base/common/resources*/], __M([0/*require*/,1/*exports*/,5/*vs/base/common/paths*/,7/*vs/base/common/uri*/,2/*vs/base/common/strings*/,57/*vs/base/common/network*/,3/*vs/base/common/platform*/]), function (require, exports, paths, uri_1, strings_1, network_1, platform_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function getComparisonKey(resource) {
+        return hasToIgnoreCase(resource) ? resource.toString().toLowerCase() : resource.toString();
+    }
+    exports.getComparisonKey = getComparisonKey;
+    function hasToIgnoreCase(resource) {
+        // A file scheme resource is in the same platform as code, so ignore case for non linux platforms
+        // Resource can be from another platform. Lowering the case as an hack. Should come from File system provider
+        return resource && resource.scheme === network_1.Schemas.file ? !platform_1.isLinux : true;
+    }
+    exports.hasToIgnoreCase = hasToIgnoreCase;
+    function basenameOrAuthority(resource) {
+        return basename(resource) || resource.authority;
+    }
+    exports.basenameOrAuthority = basenameOrAuthority;
+    /**
+     * Tests whether a `candidate` URI is a parent or equal of a given `base` URI.
+     * @param base A uri which is "longer"
+     * @param parentCandidate A uri which is "shorter" then `base`
+     */
+    function isEqualOrParent(base, parentCandidate, ignoreCase) {
+        if (ignoreCase === void 0) { ignoreCase = hasToIgnoreCase(base); }
+        if (base.scheme === parentCandidate.scheme) {
+            if (base.scheme === network_1.Schemas.file) {
+                return paths.isEqualOrParent(fsPath(base), fsPath(parentCandidate), ignoreCase);
+            }
+            if (isEqualAuthority(base.authority, parentCandidate.authority, ignoreCase)) {
+                return paths.isEqualOrParent(base.path, parentCandidate.path, ignoreCase, '/');
+            }
+        }
+        return false;
+    }
+    exports.isEqualOrParent = isEqualOrParent;
+    function isEqualAuthority(a1, a2, ignoreCase) {
+        return a1 === a2 || ignoreCase && a1 && a2 && strings_1.equalsIgnoreCase(a1, a2);
+    }
+    function isEqual(first, second, ignoreCase) {
+        if (ignoreCase === void 0) { ignoreCase = hasToIgnoreCase(first); }
+        var identityEquals = (first === second);
+        if (identityEquals) {
+            return true;
+        }
+        if (!first || !second) {
+            return false;
+        }
+        if (ignoreCase) {
+            return strings_1.equalsIgnoreCase(first.toString(), second.toString());
+        }
+        return first.toString() === second.toString();
+    }
+    exports.isEqual = isEqual;
+    function basename(resource) {
+        return paths.basename(resource.path);
+    }
+    exports.basename = basename;
+    /**
+     * Return a URI representing the directory of a URI path.
+     *
+     * @param resource The input URI.
+     * @returns The URI representing the directory of the input URI.
+     */
+    function dirname(resource) {
+        if (resource.scheme === network_1.Schemas.file) {
+            return uri_1.URI.file(paths.dirname(fsPath(resource)));
+        }
+        var dirname = paths.dirname(resource.path, '/');
+        if (resource.authority && dirname.length && dirname.charCodeAt(0) !== 47 /* Slash */) {
+            return null; // If a URI contains an authority component, then the path component must either be empty or begin with a CharCode.Slash ("/") character
+        }
+        return resource.with({
+            path: dirname
+        });
+    }
+    exports.dirname = dirname;
+    /**
+     * Join a URI path with a path fragment and normalizes the resulting path.
+     *
+     * @param resource The input URI.
+     * @param pathFragment The path fragment to add to the URI path.
+     * @returns The resulting URI.
+     */
+    function joinPath(resource, pathFragment) {
+        var joinedPath;
+        if (resource.scheme === network_1.Schemas.file) {
+            joinedPath = uri_1.URI.file(paths.join(fsPath(resource), pathFragment)).path;
+        }
+        else {
+            joinedPath = paths.join(resource.path, pathFragment);
+        }
+        return resource.with({
+            path: joinedPath
+        });
+    }
+    exports.joinPath = joinPath;
+    /**
+     * Normalizes the path part of a URI: Resolves `.` and `..` elements with directory names.
+     *
+     * @param resource The URI to normalize the path.
+     * @returns The URI with the normalized path.
+     */
+    function normalizePath(resource) {
+        var normalizedPath;
+        if (resource.scheme === network_1.Schemas.file) {
+            normalizedPath = uri_1.URI.file(paths.normalize(fsPath(resource))).path;
+        }
+        else {
+            normalizedPath = paths.normalize(resource.path);
+        }
+        return resource.with({
+            path: normalizedPath
+        });
+    }
+    exports.normalizePath = normalizePath;
+    /**
+     * Returns the fsPath of an URI where the drive letter is not normalized.
+     * See #56403.
+     */
+    function fsPath(uri) {
+        var value;
+        if (uri.authority && uri.path.length > 1 && uri.scheme === 'file') {
+            // unc path: file://shares/c$/far/boo
+            value = "//" + uri.authority + uri.path;
+        }
+        else if (platform_1.isWindows
+            && uri.path.charCodeAt(0) === 47 /* Slash */
+            && (uri.path.charCodeAt(1) >= 65 /* A */ && uri.path.charCodeAt(1) <= 90 /* Z */ || uri.path.charCodeAt(1) >= 97 /* a */ && uri.path.charCodeAt(1) <= 122 /* z */)
+            && uri.path.charCodeAt(2) === 58 /* Colon */) {
+            value = uri.path.substr(1);
+        }
+        else {
+            // other path
+            value = uri.path;
+        }
+        if (platform_1.isWindows) {
+            value = value.replace(/\//g, '\\');
+        }
+        return value;
+    }
+    exports.fsPath = fsPath;
+    /**
+     * Returns true if the URI path is absolute.
+     */
+    function isAbsolutePath(resource) {
+        return paths.isAbsolute(resource.path);
+    }
+    exports.isAbsolutePath = isAbsolutePath;
+    function distinctParents(items, resourceAccessor) {
+        var distinctParents = [];
+        var _loop_1 = function (i) {
+            var candidateResource = resourceAccessor(items[i]);
+            if (items.some(function (otherItem, index) {
+                if (index === i) {
+                    return false;
+                }
+                return isEqualOrParent(candidateResource, resourceAccessor(otherItem));
+            })) {
+                return "continue";
+            }
+            distinctParents.push(items[i]);
+        };
+        for (var i = 0; i < items.length; i++) {
+            _loop_1(i);
+        }
+        return distinctParents;
+    }
+    exports.distinctParents = distinctParents;
+    /**
+     * Tests whether the given URL is a file URI created by `URI.parse` instead of `URI.file`.
+     * Such URI have no scheme or scheme that consist of a single letter (windows drive letter)
+     * @param candidate The URI to test
+     * @returns A corrected, real file URI if the input seems to be malformed.
+     * Undefined is returned if the input URI looks fine.
+     */
+    function isMalformedFileUri(candidate) {
+        if (!candidate.scheme || platform_1.isWindows && candidate.scheme.match(/^[a-zA-Z]$/)) {
+            return uri_1.URI.file((candidate.scheme ? candidate.scheme + ':' : '') + candidate.path);
+        }
+        return void 0;
+    }
+    exports.isMalformedFileUri = isMalformedFileUri;
+    /**
+     * Data URI related helpers.
+     */
+    var DataUri;
+    (function (DataUri) {
+        DataUri.META_DATA_LABEL = 'label';
+        DataUri.META_DATA_DESCRIPTION = 'description';
+        DataUri.META_DATA_SIZE = 'size';
+        DataUri.META_DATA_MIME = 'mime';
+        function parseMetaData(dataUri) {
+            var metadata = new Map();
+            // Given a URI of:  data:image/png;size:2313;label:SomeLabel;description:SomeDescription;base64,77+9UE5...
+            // the metadata is: size:2313;label:SomeLabel;description:SomeDescription
+            var meta = dataUri.path.substring(dataUri.path.indexOf(';') + 1, dataUri.path.lastIndexOf(';'));
+            meta.split(';').forEach(function (property) {
+                var _a = property.split(':'), key = _a[0], value = _a[1];
+                if (key && value) {
+                    metadata.set(key, value);
+                }
+            });
+            // Given a URI of:  data:image/png;size:2313;label:SomeLabel;description:SomeDescription;base64,77+9UE5...
+            // the mime is: image/png
+            var mime = dataUri.path.substring(0, dataUri.path.indexOf(';'));
+            if (mime) {
+                metadata.set(DataUri.META_DATA_MIME, mime);
+            }
+            return metadata;
+        }
+        DataUri.parseMetaData = parseMetaData;
+    })(DataUri = exports.DataUri || (exports.DataUri = {}));
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 
 
@@ -4131,12 +4610,8 @@ define(__m[15/*vs/base/common/normalization*/], __M([1/*require*/,0/*exports*/,1
 
 
 
-define(__m[34/*vs/base/common/uuid*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+define(__m[47/*vs/base/common/uuid*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ValueUUID = /** @class */ (function () {
         function ValueUUID(_value) {
@@ -6323,12 +6798,12 @@ if (typeof exports === 'undefined' && typeof define === 'function' && define.amd
 // export var PPromise = __winjs_exports.PPromise;
 // ESM-uncomment-end
 
-define(__m[6/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/winjs.base*/]), function (require, exports, winjs_base_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[9/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,4/*vs/base/common/winjs.base*/]), function (require, exports, winjs_base_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // ------ BEGIN Hook up error listeners to winjs promises
     var outstandingPromiseErrors = {};
@@ -6502,19 +6977,6 @@ define(__m[6/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,4/*vs/bas
         return result;
     }
     exports.disposed = disposed;
-    function isErrorWithActions(obj) {
-        return obj instanceof Error && Array.isArray(obj.actions);
-    }
-    exports.isErrorWithActions = isErrorWithActions;
-    function create(message, options) {
-        if (options === void 0) { options = Object.create(null); }
-        var result = new Error(message);
-        if (options.actions) {
-            result.actions = options.actions;
-        }
-        return result;
-    }
-    exports.create = create;
     function getErrorMessage(err) {
         if (!err) {
             return 'Error';
@@ -6530,6 +6992,10 @@ define(__m[6/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,4/*vs/bas
     exports.getErrorMessage = getErrorMessage;
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -6565,12 +7031,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(__m[13/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/errors*/,4/*vs/base/common/winjs.base*/]), function (require, exports, errors_1, winjs_base_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+define(__m[8/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Returns the last element of an array.
@@ -6698,7 +7160,7 @@ define(__m[13/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/,6/*vs/ba
     }
     function groupBy(data, compare) {
         var result = [];
-        var currentGroup;
+        var currentGroup = undefined;
         for (var _i = 0, _a = mergeSort(data.slice(0), compare); _i < _a.length; _i++) {
             var element = _a[_i];
             if (!currentGroup || compare(currentGroup[0], element) !== 0) {
@@ -6818,9 +7280,9 @@ define(__m[13/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/,6/*vs/ba
     function topAsync(array, compare, n, batch, token) {
         var _this = this;
         if (n === 0) {
-            return winjs_base_1.TPromise.as([]);
+            return Promise.resolve([]);
         }
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             (function () { return __awaiter(_this, void 0, void 0, function () {
                 var o, result, i, m;
                 return __generator(this, function (_a) {
@@ -6867,27 +7329,33 @@ define(__m[13/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/,6/*vs/ba
             _loop_1(n);
         }
     }
-    function coalesce(array, inplace) {
+    /**
+     * @returns a new array with all falsy values removed. The original array IS NOT modified.
+     */
+    function coalesce(array) {
         if (!array) {
-            if (!inplace) {
-                return array;
-            }
+            return array;
         }
-        if (!inplace) {
-            return array.filter(function (e) { return !!e; });
-        }
-        else {
-            var to = 0;
-            for (var i = 0; i < array.length; i++) {
-                if (!!array[i]) {
-                    array[to] = array[i];
-                    to += 1;
-                }
-            }
-            array.length = to;
-        }
+        return array.filter(function (e) { return !!e; });
     }
     exports.coalesce = coalesce;
+    /**
+     * Remove all falsey values from `array`. The original array IS modified.
+     */
+    function coalesceInPlace(array) {
+        if (!array) {
+            return;
+        }
+        var to = 0;
+        for (var i = 0; i < array.length; i++) {
+            if (!!array[i]) {
+                array[to] = array[i];
+                to += 1;
+            }
+        }
+        array.length = to;
+    }
+    exports.coalesceInPlace = coalesceInPlace;
     /**
      * Moves the element in the array for the provided positions.
      */
@@ -6962,7 +7430,8 @@ define(__m[13/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/,6/*vs/ba
     }
     exports.commonPrefixLength = commonPrefixLength;
     function flatten(arr) {
-        return [].concat.apply([], arr);
+        var _a;
+        return (_a = []).concat.apply(_a, arr);
     }
     exports.flatten = flatten;
     function range(arg, to) {
@@ -7033,14 +7502,20 @@ define(__m[13/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/,6/*vs/ba
      * Uses Fisher-Yates shuffle to shuffle the given array
      * @param array
      */
-    function shuffle(array, seed) {
-        // Seeded random number generator in JS. Modified from:
-        // https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
-        var random = function () {
-            var x = Math.sin(seed++) * 179426549; // throw away most significant digits and reduce any potential bias
-            return x - Math.floor(x);
-        };
-        var rand = typeof seed === 'number' ? random : Math.random;
+    function shuffle(array, _seed) {
+        var rand;
+        if (typeof _seed === 'number') {
+            var seed_1 = _seed;
+            // Seeded random number generator in JS. Modified from:
+            // https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
+            rand = function () {
+                var x = Math.sin(seed_1++) * 179426549; // throw away most significant digits and reduce any potential bias
+                return x - Math.floor(x);
+            };
+        }
+        else {
+            rand = Math.random;
+        }
         for (var i = array.length - 1; i > 0; i -= 1) {
             var j = Math.floor(rand() * (i + 1));
             var temp = array[i];
@@ -7081,8 +7556,18 @@ define(__m[13/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/,6/*vs/ba
         return undefined;
     }
     exports.find = find;
+    function mapArrayOrNot(items, fn) {
+        return Array.isArray(items) ?
+            items.map(fn) :
+            fn(items);
+    }
+    exports.mapArrayOrNot = mapArrayOrNot;
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 
 
@@ -7131,12 +7616,8 @@ define(__m[13/*vs/base/common/arrays*/], __M([1/*require*/,0/*exports*/,6/*vs/ba
 
 
 
-define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/errors*/,23/*vs/base/common/functional*/,11/*vs/base/common/lifecycle*/,54/*vs/base/common/linkedList*/,4/*vs/base/common/winjs.base*/]), function (require, exports, errors_1, functional_1, lifecycle_1, linkedList_1, winjs_base_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+define(__m[10/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/errors*/,25/*vs/base/common/functional*/,11/*vs/base/common/lifecycle*/,60/*vs/base/common/linkedList*/,4/*vs/base/common/winjs.base*/]), function (require, exports, errors_1, functional_1, lifecycle_1, linkedList_1, winjs_base_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Event;
     (function (Event) {
@@ -7166,7 +7647,12 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
      */
     var Emitter = /** @class */ (function () {
         function Emitter(_options) {
+            if (_options === void 0) { _options = null; }
             this._options = _options;
+            this._event = null;
+            this._disposed = false;
+            this._deliveryQueue = null;
+            this._listeners = null;
         }
         Object.defineProperty(Emitter.prototype, "event", {
             /**
@@ -7197,8 +7683,11 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
                                 result.dispose = Emitter._noop;
                                 if (!_this._disposed) {
                                     remove();
-                                    if (_this._options && _this._options.onLastListenerRemove && _this._listeners.isEmpty()) {
-                                        _this._options.onLastListenerRemove(_this);
+                                    if (_this._options && _this._options.onLastListenerRemove) {
+                                        var hasListeners = (_this._listeners && !_this._listeners.isEmpty());
+                                        if (!hasListeners) {
+                                            _this._options.onLastListenerRemove(_this);
+                                        }
                                     }
                                 }
                             }
@@ -7247,7 +7736,7 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         };
         Emitter.prototype.dispose = function () {
             if (this._listeners) {
-                this._listeners = undefined;
+                this._listeners = null;
             }
             if (this._deliveryQueue) {
                 this._deliveryQueue.length = 0;
@@ -7361,7 +7850,9 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
             e.listener = e.event(function (r) { return _this.emitter.fire(r); });
         };
         EventMultiplexer.prototype.unhook = function (e) {
-            e.listener.dispose();
+            if (e.listener) {
+                e.listener.dispose();
+            }
             e.listener = null;
         };
         EventMultiplexer.prototype.dispose = function () {
@@ -7370,20 +7861,11 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         return EventMultiplexer;
     }());
     exports.EventMultiplexer = EventMultiplexer;
-    function fromCallback(fn) {
-        var listener;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () { return listener = fn(function (e) { return emitter.fire(e); }); },
-            onLastListenerRemove: function () { return listener.dispose(); }
-        });
-        return emitter.event;
-    }
-    exports.fromCallback = fromCallback;
     function fromPromise(promise) {
         var emitter = new Emitter();
         var shouldEmit = false;
         promise
-            .then(null, function () { return null; })
+            .then(undefined, function () { return null; })
             .then(function () {
             if (!shouldEmit) {
                 setTimeout(function () { return emitter.fire(); }, 0);
@@ -7514,9 +7996,10 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         EventBufferer.prototype.bufferEvents = function (fn) {
             var buffer = [];
             this.buffers.push(buffer);
-            fn();
+            var r = fn();
             this.buffers.pop();
             buffer.forEach(function (flush) { return flush(); });
+            return r;
         };
         return EventBufferer;
     }());
@@ -7542,6 +8025,10 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         };
     }
     exports.filterEvent = filterEvent;
+    function signalEvent(event) {
+        return event;
+    }
+    exports.signalEvent = signalEvent;
     var ChainableEvent = /** @class */ (function () {
         function ChainableEvent(_event) {
             this._event = _event;
@@ -7602,10 +8089,10 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
      * // 4
      * ```
      */
-    function buffer(event, nextTick, buffer) {
+    function buffer(event, nextTick, _buffer) {
         if (nextTick === void 0) { nextTick = false; }
-        if (buffer === void 0) { buffer = []; }
-        buffer = buffer.slice();
+        if (_buffer === void 0) { _buffer = []; }
+        var buffer = _buffer.slice();
         var listener = event(function (e) {
             if (buffer) {
                 buffer.push(e);
@@ -7615,7 +8102,9 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
             }
         });
         var flush = function () {
-            buffer.forEach(function (e) { return emitter.fire(e); });
+            if (buffer) {
+                buffer.forEach(function (e) { return emitter.fire(e); });
+            }
             buffer = null;
         };
         var emitter = new Emitter({
@@ -7635,7 +8124,9 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
                 }
             },
             onLastListenerRemove: function () {
-                listener.dispose();
+                if (listener) {
+                    listener.dispose();
+                }
                 listener = null;
             }
         });
@@ -7736,8 +8227,8 @@ define(__m[9/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,6/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[17/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,9/*vs/base/common/event*/]), function (require, exports, event_1) {
-    'use strict';
+define(__m[16/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/event*/]), function (require, exports, event_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var shortcutEvent = Object.freeze(function (callback, context) {
         var handle = setTimeout(callback.bind(context), 0);
@@ -7771,6 +8262,7 @@ define(__m[17/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,9/
     var MutableToken = /** @class */ (function () {
         function MutableToken() {
             this._isCancelled = false;
+            this._emitter = null;
         }
         MutableToken.prototype.cancel = function () {
             if (!this._isCancelled) {
@@ -7804,7 +8296,7 @@ define(__m[17/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,9/
         MutableToken.prototype.dispose = function () {
             if (this._emitter) {
                 this._emitter.dispose();
-                this._emitter = undefined;
+                this._emitter = null;
             }
         };
         return MutableToken;
@@ -7868,22 +8360,13 @@ define(__m[17/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,9/
 
 
 
-define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/base/common/cancellation*/,6/*vs/base/common/errors*/,9/*vs/base/common/event*/,11/*vs/base/common/lifecycle*/,4/*vs/base/common/winjs.base*/]), function (require, exports, cancellation_1, errors, event_1, lifecycle_1, winjs_base_1) {
-    'use strict';
+define(__m[13/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,16/*vs/base/common/cancellation*/,9/*vs/base/common/errors*/,10/*vs/base/common/event*/,11/*vs/base/common/lifecycle*/,4/*vs/base/common/winjs.base*/]), function (require, exports, cancellation_1, errors, event_1, lifecycle_1, winjs_base_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
     }
     exports.isThenable = isThenable;
-    function toThenable(arg) {
-        if (isThenable(arg)) {
-            return arg;
-        }
-        else {
-            return winjs_base_1.TPromise.as(arg);
-        }
-    }
-    exports.toThenable = toThenable;
     function createCancelablePromise(callback) {
         var source = new cancellation_1.CancellationTokenSource();
         var thenable = callback(source.token);
@@ -7916,12 +8399,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
     }
     exports.createCancelablePromise = createCancelablePromise;
     function asThenable(callback) {
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var item = callback();
-            if (item instanceof winjs_base_1.TPromise) {
-                item.then(resolve, reject);
-            }
-            else if (isThenable(item)) {
+            if (isThenable(item)) {
                 item.then(resolve, reject);
             }
             else {
@@ -8076,6 +8556,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
                 this.timeout = null;
             }
         };
+        Delayer.prototype.dispose = function () {
+            this.cancelTimeout();
+        };
         return Delayer;
     }());
     exports.Delayer = Delayer;
@@ -8083,8 +8566,10 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
      * A helper to delay execution of a task that is being requested often, while
      * preventing accumulation of consecutive executions, while the task runs.
      *
-     * Simply combine the two mail men's strategies from the Throttler and Delayer
-     * helpers, for an analogy.
+     * The mail man is clever and waits for a certain amount of time, before going
+     * out to deliver letters. While the mail man is going out, more letters arrive
+     * and can only be delivered once he is back. Once he is back the mail man will
+     * do one more trip to deliver the letters that have accumulated while he was out.
      */
     var ThrottledDelayer = /** @class */ (function (_super) {
         __extends(ThrottledDelayer, _super);
@@ -8137,7 +8622,24 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
         });
     }
     exports.timeout = timeout;
-    function always(winjsPromiseOrThenable, callback) {
+    function disposableTimeout(handler, timeout) {
+        if (timeout === void 0) { timeout = 0; }
+        var timer = setTimeout(handler, timeout);
+        return {
+            dispose: function () {
+                clearTimeout(timer);
+            }
+        };
+    }
+    exports.disposableTimeout = disposableTimeout;
+    /**
+     * Returns a new promise that joins the provided promise. Upon completion of
+     * the provided promise the provided function will always be called. This
+     * method is comparable to a try-finally code block.
+     * @param promise a promise
+     * @param callback a function that will be call in the success and error case.
+     */
+    function always(promise, callback) {
         function safeCallback() {
             try {
                 callback();
@@ -8146,8 +8648,8 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
                 errors.onUnexpectedError(err);
             }
         }
-        winjsPromiseOrThenable.then(function (_) { return safeCallback(); }, function (_) { return safeCallback(); });
-        return winjsPromiseOrThenable;
+        promise.then(function (_) { return safeCallback(); }, function (_) { return safeCallback(); });
+        return Promise.resolve(promise);
     }
     exports.always = always;
     /**
@@ -8169,12 +8671,12 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
             if (n) {
                 return n.then(thenHandler);
             }
-            return winjs_base_1.TPromise.as(results);
+            return Promise.resolve(results);
         }
-        return winjs_base_1.TPromise.as(null).then(thenHandler);
+        return Promise.resolve(null).then(thenHandler);
     }
     exports.sequence = sequence;
-    function first2(promiseFactories, shouldStop, defaultValue) {
+    function first(promiseFactories, shouldStop, defaultValue) {
         if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
         if (defaultValue === void 0) { defaultValue = null; }
         var index = 0;
@@ -8184,31 +8686,10 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
                 return Promise.resolve(defaultValue);
             }
             var factory = promiseFactories[index++];
-            var promise = factory();
+            var promise = Promise.resolve(factory());
             return promise.then(function (result) {
                 if (shouldStop(result)) {
                     return Promise.resolve(result);
-                }
-                return loop();
-            });
-        };
-        return loop();
-    }
-    exports.first2 = first2;
-    function first(promiseFactories, shouldStop, defaultValue) {
-        if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
-        if (defaultValue === void 0) { defaultValue = null; }
-        var index = 0;
-        var len = promiseFactories.length;
-        var loop = function () {
-            if (index >= len) {
-                return winjs_base_1.TPromise.as(defaultValue);
-            }
-            var factory = promiseFactories[index++];
-            var promise = factory();
-            return promise.then(function (result) {
-                if (shouldStop(result)) {
-                    return winjs_base_1.TPromise.as(result);
                 }
                 return loop();
             });
@@ -8420,7 +8901,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
             }
         };
         RunOnceScheduler.prototype.doRun = function () {
-            this.runner();
+            if (this.runner) {
+                this.runner();
+            }
         };
         return RunOnceScheduler;
     }());
@@ -8441,7 +8924,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
         RunOnceWorker.prototype.doRun = function () {
             var units = this.units;
             this.units = [];
-            this.runner(units);
+            if (this.runner) {
+                this.runner(units);
+            }
         };
         RunOnceWorker.prototype.dispose = function () {
             this.units = [];
@@ -8466,14 +8951,88 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,17/*vs/bas
         return new winjs_base_1.TPromise(function (c, e) { return fn.call.apply(fn, [thisArg].concat(args, [function (err, result) { return err ? e(err) : c(result); }])); });
     }
     exports.ninvoke = ninvoke;
+    (function () {
+        if (typeof requestIdleCallback !== 'function' || typeof cancelIdleCallback !== 'function') {
+            var dummyIdle_1 = Object.freeze({
+                didTimeout: true,
+                timeRemaining: function () { return 15; }
+            });
+            exports.runWhenIdle = function (runner, timeout) {
+                if (timeout === void 0) { timeout = 0; }
+                var handle = setTimeout(function () { return runner(dummyIdle_1); }, timeout);
+                var disposed = false;
+                return {
+                    dispose: function () {
+                        if (disposed) {
+                            return;
+                        }
+                        disposed = true;
+                        clearTimeout(handle);
+                    }
+                };
+            };
+        }
+        else {
+            exports.runWhenIdle = function (runner, timeout) {
+                var handle = requestIdleCallback(runner, typeof timeout === 'number' ? { timeout: timeout } : undefined);
+                var disposed = false;
+                return {
+                    dispose: function () {
+                        if (disposed) {
+                            return;
+                        }
+                        disposed = true;
+                        cancelIdleCallback(handle);
+                    }
+                };
+            };
+        }
+    })();
+    /**
+     * An implementation of the "idle-until-urgent"-strategy as introduced
+     * here: https://philipwalton.com/articles/idle-until-urgent/
+     */
+    var IdleValue = /** @class */ (function () {
+        function IdleValue(executor) {
+            var _this = this;
+            this._executor = function () {
+                try {
+                    _this._value = executor();
+                }
+                catch (err) {
+                    _this._error = err;
+                }
+                finally {
+                    _this._didRun = true;
+                }
+            };
+            this._handle = exports.runWhenIdle(function () { return _this._executor(); });
+        }
+        IdleValue.prototype.dispose = function () {
+            this._handle.dispose();
+        };
+        IdleValue.prototype.getValue = function () {
+            if (!this._didRun) {
+                this._handle.dispose();
+                this._executor();
+            }
+            if (this._error) {
+                throw this._error;
+            }
+            return this._value;
+        };
+        return IdleValue;
+    }());
+    exports.IdleValue = IdleValue;
 });
+//#endregion
 
-define(__m[19/*vs/base/common/glob*/], __M([1/*require*/,0/*exports*/,13/*vs/base/common/arrays*/,3/*vs/base/common/strings*/,5/*vs/base/common/paths*/,16/*vs/base/common/map*/,4/*vs/base/common/winjs.base*/,8/*vs/base/common/async*/]), function (require, exports, arrays, strings, paths, map_1, winjs_base_1, async_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[15/*vs/base/common/glob*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/arrays*/,2/*vs/base/common/strings*/,5/*vs/base/common/paths*/,20/*vs/base/common/map*/,4/*vs/base/common/winjs.base*/,13/*vs/base/common/async*/]), function (require, exports, arrays, strings, paths, map_1, winjs_base_1, async_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function getEmptyExpression() {
         return Object.create(null);
@@ -8892,7 +9451,7 @@ define(__m[19/*vs/base/common/glob*/], __M([1/*require*/,0/*exports*/,13/*vs/bas
         if (!n) {
             return NULL;
         }
-        if (!parsedPatterns.some(function (parsedPattern) { return parsedPattern.requiresSiblings; })) {
+        if (!parsedPatterns.some(function (parsedPattern) { return !!parsedPattern.requiresSiblings; })) {
             if (n === 1) {
                 return parsedPatterns[0];
             }
@@ -8917,7 +9476,7 @@ define(__m[19/*vs/base/common/glob*/], __M([1/*require*/,0/*exports*/,13/*vs/bas
             return resultExpression_1;
         }
         var resultExpression = function (path, basename, hasSibling) {
-            var name;
+            var name = undefined;
             for (var i = 0, n_3 = parsedPatterns.length; i < n_3; i++) {
                 // Pattern matches path
                 var parsedPattern = parsedPatterns[i];
@@ -8984,7 +9543,10 @@ define(__m[19/*vs/base/common/glob*/], __M([1/*require*/,0/*exports*/,13/*vs/bas
         if (basenamePatterns.length < 2) {
             return parsedPatterns;
         }
-        var basenames = basenamePatterns.reduce(function (all, current) { return all.concat(current.basenames); }, []);
+        var basenames = basenamePatterns.reduce(function (all, current) {
+            var basenames = current.basenames;
+            return basenames ? all.concat(basenames) : all;
+        }, []);
         var patterns;
         if (result) {
             patterns = [];
@@ -8993,7 +9555,10 @@ define(__m[19/*vs/base/common/glob*/], __M([1/*require*/,0/*exports*/,13/*vs/bas
             }
         }
         else {
-            patterns = basenamePatterns.reduce(function (all, current) { return all.concat(current.patterns); }, []);
+            patterns = basenamePatterns.reduce(function (all, current) {
+                var patterns = current.patterns;
+                return patterns ? all.concat(patterns) : all;
+            }, []);
         }
         var aggregate = function (path, basename) {
             if (!path) {
@@ -9025,8 +9590,8 @@ define(__m[19/*vs/base/common/glob*/], __M([1/*require*/,0/*exports*/,13/*vs/bas
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[33/*vs/base/node/console*/], __M([1/*require*/,0/*exports*/,18/*vs/base/common/uri*/]), function (require, exports, uri_1) {
-    'use strict';
+define(__m[46/*vs/base/node/console*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function isRemoteConsoleLog(obj) {
         var entry = obj;
@@ -9072,7 +9637,7 @@ define(__m[33/*vs/base/node/console*/], __M([1/*require*/,0/*exports*/,18/*vs/ba
             // (?:(?:[a-zA-Z]+:)|(?:[\/])|(?:\\\\) => windows drive letter OR unix root OR unc root
             // (?:.+) => simple pattern for the path, only works because of the line/col pattern after
             // :(?:\d+):(?:\d+) => :line:column data
-            var matches = /at [^\/]*((?:(?:[a-zA-Z]+:)|(?:[\/])|(?:\\\\))(?:.+)):(\d+):(\d+)/.exec(topFrame);
+            var matches = /at [^\/]*((?:(?:[a-zA-Z]+:)|(?:[\/])|(?:\\\\))(?:.+)):(\d+):(\d+)/.exec(topFrame || '');
             if (matches && matches.length === 4) {
                 return {
                     uri: uri_1.URI.file(matches[1]),
@@ -9132,8 +9697,8 @@ define(__m[33/*vs/base/node/console*/], __M([1/*require*/,0/*exports*/,18/*vs/ba
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[45/*vs/base/node/decoder*/], __M([1/*require*/,0/*exports*/,26/*string_decoder*/]), function (require, exports, sd) {
-    'use strict';
+define(__m[43/*vs/base/node/decoder*/], __M([0/*require*/,1/*exports*/,29/*string_decoder*/]), function (require, exports, sd) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Convenient way to iterate over output line by line. This helper accommodates for the fact that
@@ -9193,8 +9758,8 @@ define(__m[45/*vs/base/node/decoder*/], __M([1/*require*/,0/*exports*/,26/*strin
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[27/*vs/base/node/flow*/], __M([1/*require*/,0/*exports*/,63/*assert*/]), function (require, exports, assert) {
-    'use strict';
+define(__m[30/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,66/*assert*/]), function (require, exports, assert) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
@@ -9340,27 +9905,27 @@ define(__m[27/*vs/base/node/flow*/], __M([1/*require*/,0/*exports*/,63/*assert*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[32/*vs/base/node/stream*/], __M([1/*require*/,0/*exports*/,21/*fs*/,4/*vs/base/common/winjs.base*/]), function (require, exports, fs, winjs_base_1) {
-    'use strict';
+define(__m[39/*vs/base/node/stream*/], __M([0/*require*/,1/*exports*/,17/*fs*/]), function (require, exports, fs) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Reads totalBytes from the provided file.
      */
     function readExactlyByFile(file, totalBytes) {
-        return new winjs_base_1.TPromise(function (complete, error) {
+        return new Promise(function (resolve, reject) {
             fs.open(file, 'r', null, function (err, fd) {
                 if (err) {
-                    return error(err);
+                    return reject(err);
                 }
                 function end(err, resultBuffer, bytesRead) {
                     fs.close(fd, function (closeError) {
                         if (closeError) {
-                            return error(closeError);
+                            return reject(closeError);
                         }
                         if (err && err.code === 'EISDIR') {
-                            return error(err); // we want to bubble this error up (file is actually a folder)
+                            return reject(err); // we want to bubble this error up (file is actually a folder)
                         }
-                        return complete({ buffer: resultBuffer, bytesRead: bytesRead });
+                        return resolve({ buffer: resultBuffer, bytesRead: bytesRead });
                     });
                 }
                 var buffer = Buffer.allocUnsafe(totalBytes);
@@ -9395,20 +9960,20 @@ define(__m[32/*vs/base/node/stream*/], __M([1/*require*/,0/*exports*/,21/*fs*/,4
      * @param callback The finished callback.
      */
     function readToMatchingString(file, matchingString, chunkBytes, maximumBytesToRead) {
-        return new winjs_base_1.TPromise(function (complete, error) {
+        return new Promise(function (resolve, reject) {
             return fs.open(file, 'r', null, function (err, fd) {
                 if (err) {
-                    return error(err);
+                    return reject(err);
                 }
                 function end(err, result) {
                     fs.close(fd, function (closeError) {
                         if (closeError) {
-                            return error(closeError);
+                            return reject(closeError);
                         }
                         if (err && err.code === 'EISDIR') {
-                            return error(err); // we want to bubble this error up (file is actually a folder)
+                            return reject(err); // we want to bubble this error up (file is actually a folder)
                         }
-                        return complete(result);
+                        return resolve(result);
                     });
                 }
                 var buffer = Buffer.allocUnsafe(maximumBytesToRead);
@@ -9456,8 +10021,8 @@ define(__m[32/*vs/base/node/stream*/], __M([1/*require*/,0/*exports*/,21/*fs*/,4
 
 
 
-define(__m[30/*vs/base/node/encoding*/], __M([1/*require*/,0/*exports*/,32/*vs/base/node/stream*/,65/*iconv-lite*/,4/*vs/base/common/winjs.base*/,2/*vs/base/common/platform*/,10/*child_process*/,61/*stream*/]), function (require, exports, stream, iconv, winjs_base_1, platform_1, child_process_1, stream_1) {
-    'use strict';
+define(__m[22/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,39/*vs/base/node/stream*/,71/*iconv-lite*/,3/*vs/base/common/platform*/,14/*child_process*/,69/*stream*/]), function (require, exports, stream, iconv, platform_1, child_process_1, stream_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.UTF8 = 'utf8';
     exports.UTF8_with_bom = 'utf8bom';
@@ -9470,7 +10035,8 @@ define(__m[30/*vs/base/node/encoding*/], __M([1/*require*/,0/*exports*/,32/*vs/b
         if (!options.overwriteEncoding) {
             options.overwriteEncoding = function (detected) { return detected || exports.UTF8; };
         }
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
+            readable.on('error', reject);
             readable.pipe(new /** @class */ (function (_super) {
                 __extends(class_1, _super);
                 function class_1(opts) {
@@ -9495,7 +10061,7 @@ define(__m[30/*vs/base/node/encoding*/], __M([1/*require*/,0/*exports*/,32/*vs/b
                         // waiting for the decoder to be ready
                         this._decodeStreamConstruction.then(function (_) { return callback(); }, function (err) { return callback(err); });
                     }
-                    else if (this._bytesBuffered >= options.minBytesRequiredForDetection) {
+                    else if (typeof options.minBytesRequiredForDetection === 'number' && this._bytesBuffered >= options.minBytesRequiredForDetection) {
                         // buffered enough data, create stream and forward data
                         this._startDecodeStream(callback);
                     }
@@ -9506,7 +10072,7 @@ define(__m[30/*vs/base/node/encoding*/], __M([1/*require*/,0/*exports*/,32/*vs/b
                 };
                 class_1.prototype._startDecodeStream = function (callback) {
                     var _this = this;
-                    this._decodeStreamConstruction = winjs_base_1.TPromise.as(detectEncodingFromBuffer({
+                    this._decodeStreamConstruction = Promise.resolve(detectEncodingFromBuffer({
                         buffer: Buffer.concat(this._buffer), bytesRead: this._bytesBuffered
                     }, options.guessEncoding)).then(function (detected) {
                         detected.encoding = options.overwriteEncoding(detected.encoding);
@@ -9617,7 +10183,7 @@ define(__m[30/*vs/base/node/encoding*/], __M([1/*require*/,0/*exports*/,32/*vs/b
      * Guesses the encoding from buffer.
      */
     function guessEncodingByBuffer(buffer) {
-        return winjs_base_1.TPromise.wrap(new Promise(function (resolve_1, reject_1) { require(['jschardet'], resolve_1, reject_1); })).then(function (jschardet) {
+        return new Promise(function (resolve_1, reject_1) { require(['jschardet'], resolve_1, reject_1); }).then(function (jschardet) {
             jschardet.Constants.MINIMUM_THRESHOLD = MINIMUM_THRESHOLD;
             var guessed = jschardet.detect(buffer);
             if (!guessed || !guessed.encoding) {
@@ -9732,10 +10298,10 @@ define(__m[30/*vs/base/node/encoding*/], __M([1/*require*/,0/*exports*/,32/*vs/b
         }
         // Auto guess encoding if configured
         if (autoGuessEncoding && !seemsBinary && !encoding) {
-            return guessEncodingByBuffer(buffer.slice(0, bytesRead)).then(function (encoding) {
+            return guessEncodingByBuffer(buffer.slice(0, bytesRead)).then(function (guessedEncoding) {
                 return {
                     seemsBinary: false,
-                    encoding: encoding
+                    encoding: guessedEncoding
                 };
             });
         }
@@ -9766,20 +10332,20 @@ define(__m[30/*vs/base/node/encoding*/], __M([1/*require*/,0/*exports*/,32/*vs/b
             if (verbose) {
                 console.log("Found VSCODE_CLI_ENCODING variable: " + cliEncodingEnv);
             }
-            rawEncodingPromise = winjs_base_1.TPromise.as(cliEncodingEnv);
+            rawEncodingPromise = Promise.resolve(cliEncodingEnv);
         }
         // Linux/Mac: use "locale charmap" command
         else if (platform_1.isLinux || platform_1.isMacintosh) {
-            rawEncodingPromise = new winjs_base_1.TPromise(function (c) {
+            rawEncodingPromise = new Promise(function (resolve) {
                 if (verbose) {
                     console.log('Running "locale charmap" to detect terminal encoding...');
                 }
-                child_process_1.exec('locale charmap', function (err, stdout, stderr) { return c(stdout); });
+                child_process_1.exec('locale charmap', function (err, stdout, stderr) { return resolve(stdout); });
             });
         }
         // Windows: educated guess
         else {
-            rawEncodingPromise = new winjs_base_1.TPromise(function (c) {
+            rawEncodingPromise = new Promise(function (resolve) {
                 if (verbose) {
                     console.log('Running "chcp" to detect terminal encoding...');
                 }
@@ -9789,11 +10355,11 @@ define(__m[30/*vs/base/node/encoding*/], __M([1/*require*/,0/*exports*/,32/*vs/b
                         for (var i = 0; i < windowsTerminalEncodingKeys.length; i++) {
                             var key = windowsTerminalEncodingKeys[i];
                             if (stdout.indexOf(key) >= 0) {
-                                return c(windowsTerminalEncodings[key]);
+                                return resolve(windowsTerminalEncodings[key]);
                             }
                         }
                     }
-                    return c(void 0);
+                    return resolve(void 0);
                 });
             });
         }
@@ -9821,8 +10387,8 @@ define(__m[30/*vs/base/node/encoding*/], __M([1/*require*/,0/*exports*/,32/*vs/b
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[24/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,21/*fs*/,12/*path*/,8/*vs/base/common/async*/,15/*vs/base/common/normalization*/,2/*vs/base/common/platform*/,3/*vs/base/common/strings*/,34/*vs/base/common/uuid*/,4/*vs/base/common/winjs.base*/,30/*vs/base/node/encoding*/,27/*vs/base/node/flow*/,11/*vs/base/common/lifecycle*/]), function (require, exports, fs, paths, async_1, normalization_1, platform, strings, uuid, winjs_base_1, encoding_1, flow, lifecycle_1) {
-    'use strict';
+define(__m[21/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,17/*fs*/,6/*path*/,13/*vs/base/common/async*/,19/*vs/base/common/normalization*/,3/*vs/base/common/platform*/,2/*vs/base/common/strings*/,47/*vs/base/common/uuid*/,22/*vs/base/node/encoding*/,30/*vs/base/node/flow*/,11/*vs/base/common/lifecycle*/,4/*vs/base/common/winjs.base*/]), function (require, exports, fs, paths, async_1, normalization_1, platform, strings, uuid, encoding_1, flow, lifecycle_1, winjs_base_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var loop = flow.loop;
     function readdirSync(path) {
@@ -10432,8 +10998,8 @@ define(__m[24/*vs/base/node/extfs*/], __M([1/*require*/,0/*exports*/,21/*fs*/,12
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[25/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,11/*vs/base/common/lifecycle*/,9/*vs/base/common/event*/,8/*vs/base/common/async*/,17/*vs/base/common/cancellation*/,6/*vs/base/common/errors*/]), function (require, exports, lifecycle_1, event_1, async_1, cancellation_1, errors) {
-    'use strict';
+define(__m[31/*vs/base/parts/ipc/node/ipc*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/lifecycle*/,10/*vs/base/common/event*/,13/*vs/base/common/async*/,16/*vs/base/common/cancellation*/,9/*vs/base/common/errors*/]), function (require, exports, lifecycle_1, event_1, async_1, cancellation_1, errors) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RequestType;
     (function (RequestType) {
@@ -10595,8 +11161,10 @@ define(__m[25/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,11/
             }
         };
         ChannelServer.prototype.dispose = function () {
-            this.protocolListener.dispose();
-            this.protocolListener = null;
+            if (this.protocolListener) {
+                this.protocolListener.dispose();
+                this.protocolListener = null;
+            }
             this.activeRequests.forEach(function (d) { return d.dispose(); });
             this.activeRequests.clear();
         };
@@ -10677,8 +11245,8 @@ define(__m[25/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,11/
                 };
                 var cancellationTokenListener = cancellationToken.onCancellationRequested(cancel);
                 disposable = lifecycle_1.combinedDisposable([lifecycle_1.toDisposable(cancel), cancellationTokenListener]);
+                _this.activeRequests.add(disposable);
             });
-            this.activeRequests.add(disposable);
             async_1.always(result, function () { return _this.activeRequests.delete(disposable); });
             return result;
         };
@@ -10756,15 +11324,17 @@ define(__m[25/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,11/
         };
         ChannelClient.prototype.whenInitialized = function () {
             if (this.state === State.Idle) {
-                return Promise.resolve(null);
+                return Promise.resolve();
             }
             else {
                 return event_1.toNativePromise(this.onDidInitialize);
             }
         };
         ChannelClient.prototype.dispose = function () {
-            this.protocolListener.dispose();
-            this.protocolListener = null;
+            if (this.protocolListener) {
+                this.protocolListener.dispose();
+                this.protocolListener = null;
+            }
             this.activeRequests.forEach(function (p) { return p.dispose(); });
             this.activeRequests.clear();
         };
@@ -10793,6 +11363,9 @@ define(__m[25/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,11/
                     var channelClient = new ChannelClient(protocol);
                     _this.channels.forEach(function (channel, name) { return channelServer.registerChannel(name, channel); });
                     var id = rawId.toString();
+                    if (_this.channelClients.has(id)) {
+                        console.warn("IPC client with id '" + id + "' is already registered.");
+                    }
                     _this.channelClients.set(id, channelClient);
                     _this.onClientAdded.fire(id);
                     onDidClientDisconnect(function () {
@@ -10803,18 +11376,27 @@ define(__m[25/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,11/
                 });
             });
         }
+        Object.defineProperty(IPCServer.prototype, "clientKeys", {
+            get: function () {
+                var result = [];
+                this.channelClients.forEach(function (_, key) { return result.push(key); });
+                return result;
+            },
+            enumerable: true,
+            configurable: true
+        });
         IPCServer.prototype.getChannel = function (channelName, router) {
             var that = this;
             return {
                 call: function (command, arg, cancellationToken) {
-                    var channelPromise = router.routeCall(command, arg)
+                    var channelPromise = router.routeCall(that.clientKeys, command, arg)
                         .then(function (id) { return that.getClient(id); })
                         .then(function (client) { return client.getChannel(channelName); });
                     return getDelayedChannel(channelPromise)
                         .call(command, arg, cancellationToken);
                 },
                 listen: function (event, arg) {
-                    var channelPromise = router.routeEvent(event, arg)
+                    var channelPromise = router.routeEvent(that.clientKeys, event, arg)
                         .then(function (id) { return that.getClient(id); })
                         .then(function (client) { return client.getChannel(channelName); });
                     return getDelayedChannel(channelPromise)
@@ -10868,9 +11450,7 @@ define(__m[25/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,11/
         };
         IPCClient.prototype.dispose = function () {
             this.channelClient.dispose();
-            this.channelClient = null;
             this.channelServer.dispose();
-            this.channelServer = null;
         };
         return IPCClient;
     }());
@@ -10918,8 +11498,8 @@ define(__m[25/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,11/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[36/*vs/base/parts/quickopen/common/quickOpenScorer*/], __M([1/*require*/,0/*exports*/,31/*vs/base/common/comparers*/,35/*vs/base/common/filters*/,5/*vs/base/common/paths*/,2/*vs/base/common/platform*/,3/*vs/base/common/strings*/]), function (require, exports, comparers_1, filters_1, paths_1, platform_1, strings_1) {
-    'use strict';
+define(__m[52/*vs/base/parts/quickopen/common/quickOpenScorer*/], __M([0/*require*/,1/*exports*/,54/*vs/base/common/comparers*/,50/*vs/base/common/filters*/,5/*vs/base/common/paths*/,3/*vs/base/common/platform*/,2/*vs/base/common/strings*/]), function (require, exports, comparers_1, filters_1, paths_1, platform_1, strings_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var NO_MATCH = 0;
     var NO_SCORE = [NO_MATCH, []];
@@ -11363,460 +11943,13 @@ define(__m[36/*vs/base/parts/quickopen/common/quickOpenScorer*/], __M([1/*requir
     exports.fallbackCompare = fallbackCompare;
 });
 
-define(__m[37/*vs/editor/common/core/position*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * A position in the editor.
-     */
-    var Position = /** @class */ (function () {
-        function Position(lineNumber, column) {
-            this.lineNumber = lineNumber;
-            this.column = column;
-        }
-        /**
-         * Test if this position equals other position
-         */
-        Position.prototype.equals = function (other) {
-            return Position.equals(this, other);
-        };
-        /**
-         * Test if position `a` equals position `b`
-         */
-        Position.equals = function (a, b) {
-            if (!a && !b) {
-                return true;
-            }
-            return (!!a &&
-                !!b &&
-                a.lineNumber === b.lineNumber &&
-                a.column === b.column);
-        };
-        /**
-         * Test if this position is before other position.
-         * If the two positions are equal, the result will be false.
-         */
-        Position.prototype.isBefore = function (other) {
-            return Position.isBefore(this, other);
-        };
-        /**
-         * Test if position `a` is before position `b`.
-         * If the two positions are equal, the result will be false.
-         */
-        Position.isBefore = function (a, b) {
-            if (a.lineNumber < b.lineNumber) {
-                return true;
-            }
-            if (b.lineNumber < a.lineNumber) {
-                return false;
-            }
-            return a.column < b.column;
-        };
-        /**
-         * Test if this position is before other position.
-         * If the two positions are equal, the result will be true.
-         */
-        Position.prototype.isBeforeOrEqual = function (other) {
-            return Position.isBeforeOrEqual(this, other);
-        };
-        /**
-         * Test if position `a` is before position `b`.
-         * If the two positions are equal, the result will be true.
-         */
-        Position.isBeforeOrEqual = function (a, b) {
-            if (a.lineNumber < b.lineNumber) {
-                return true;
-            }
-            if (b.lineNumber < a.lineNumber) {
-                return false;
-            }
-            return a.column <= b.column;
-        };
-        /**
-         * A function that compares positions, useful for sorting
-         */
-        Position.compare = function (a, b) {
-            var aLineNumber = a.lineNumber | 0;
-            var bLineNumber = b.lineNumber | 0;
-            if (aLineNumber === bLineNumber) {
-                var aColumn = a.column | 0;
-                var bColumn = b.column | 0;
-                return aColumn - bColumn;
-            }
-            return aLineNumber - bLineNumber;
-        };
-        /**
-         * Clone this position.
-         */
-        Position.prototype.clone = function () {
-            return new Position(this.lineNumber, this.column);
-        };
-        /**
-         * Convert to a human-readable representation.
-         */
-        Position.prototype.toString = function () {
-            return '(' + this.lineNumber + ',' + this.column + ')';
-        };
-        // ---
-        /**
-         * Create a `Position` from an `IPosition`.
-         */
-        Position.lift = function (pos) {
-            return new Position(pos.lineNumber, pos.column);
-        };
-        /**
-         * Test if `obj` is an `IPosition`.
-         */
-        Position.isIPosition = function (obj) {
-            return (obj
-                && (typeof obj.lineNumber === 'number')
-                && (typeof obj.column === 'number'));
-        };
-        return Position;
-    }());
-    exports.Position = Position;
-});
-
+define(__m[40/*vs/nls!vs/base/common/errorMessage*/], __M([41/*vs/nls*/,42/*vs/nls!vs/workbench/services/search/node/searchApp*/]), function(nls, data) { return nls.create("vs/base/common/errorMessage", data); });
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[38/*vs/editor/common/core/range*/], __M([1/*require*/,0/*exports*/,37/*vs/editor/common/core/position*/]), function (require, exports, position_1) {
-    'use strict';
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * A range in the editor. (startLineNumber,startColumn) is <= (endLineNumber,endColumn)
-     */
-    var Range = /** @class */ (function () {
-        function Range(startLineNumber, startColumn, endLineNumber, endColumn) {
-            if ((startLineNumber > endLineNumber) || (startLineNumber === endLineNumber && startColumn > endColumn)) {
-                this.startLineNumber = endLineNumber;
-                this.startColumn = endColumn;
-                this.endLineNumber = startLineNumber;
-                this.endColumn = startColumn;
-            }
-            else {
-                this.startLineNumber = startLineNumber;
-                this.startColumn = startColumn;
-                this.endLineNumber = endLineNumber;
-                this.endColumn = endColumn;
-            }
-        }
-        /**
-         * Test if this range is empty.
-         */
-        Range.prototype.isEmpty = function () {
-            return Range.isEmpty(this);
-        };
-        /**
-         * Test if `range` is empty.
-         */
-        Range.isEmpty = function (range) {
-            return (range.startLineNumber === range.endLineNumber && range.startColumn === range.endColumn);
-        };
-        /**
-         * Test if position is in this range. If the position is at the edges, will return true.
-         */
-        Range.prototype.containsPosition = function (position) {
-            return Range.containsPosition(this, position);
-        };
-        /**
-         * Test if `position` is in `range`. If the position is at the edges, will return true.
-         */
-        Range.containsPosition = function (range, position) {
-            if (position.lineNumber < range.startLineNumber || position.lineNumber > range.endLineNumber) {
-                return false;
-            }
-            if (position.lineNumber === range.startLineNumber && position.column < range.startColumn) {
-                return false;
-            }
-            if (position.lineNumber === range.endLineNumber && position.column > range.endColumn) {
-                return false;
-            }
-            return true;
-        };
-        /**
-         * Test if range is in this range. If the range is equal to this range, will return true.
-         */
-        Range.prototype.containsRange = function (range) {
-            return Range.containsRange(this, range);
-        };
-        /**
-         * Test if `otherRange` is in `range`. If the ranges are equal, will return true.
-         */
-        Range.containsRange = function (range, otherRange) {
-            if (otherRange.startLineNumber < range.startLineNumber || otherRange.endLineNumber < range.startLineNumber) {
-                return false;
-            }
-            if (otherRange.startLineNumber > range.endLineNumber || otherRange.endLineNumber > range.endLineNumber) {
-                return false;
-            }
-            if (otherRange.startLineNumber === range.startLineNumber && otherRange.startColumn < range.startColumn) {
-                return false;
-            }
-            if (otherRange.endLineNumber === range.endLineNumber && otherRange.endColumn > range.endColumn) {
-                return false;
-            }
-            return true;
-        };
-        /**
-         * A reunion of the two ranges.
-         * The smallest position will be used as the start point, and the largest one as the end point.
-         */
-        Range.prototype.plusRange = function (range) {
-            return Range.plusRange(this, range);
-        };
-        /**
-         * A reunion of the two ranges.
-         * The smallest position will be used as the start point, and the largest one as the end point.
-         */
-        Range.plusRange = function (a, b) {
-            var startLineNumber;
-            var startColumn;
-            var endLineNumber;
-            var endColumn;
-            if (b.startLineNumber < a.startLineNumber) {
-                startLineNumber = b.startLineNumber;
-                startColumn = b.startColumn;
-            }
-            else if (b.startLineNumber === a.startLineNumber) {
-                startLineNumber = b.startLineNumber;
-                startColumn = Math.min(b.startColumn, a.startColumn);
-            }
-            else {
-                startLineNumber = a.startLineNumber;
-                startColumn = a.startColumn;
-            }
-            if (b.endLineNumber > a.endLineNumber) {
-                endLineNumber = b.endLineNumber;
-                endColumn = b.endColumn;
-            }
-            else if (b.endLineNumber === a.endLineNumber) {
-                endLineNumber = b.endLineNumber;
-                endColumn = Math.max(b.endColumn, a.endColumn);
-            }
-            else {
-                endLineNumber = a.endLineNumber;
-                endColumn = a.endColumn;
-            }
-            return new Range(startLineNumber, startColumn, endLineNumber, endColumn);
-        };
-        /**
-         * A intersection of the two ranges.
-         */
-        Range.prototype.intersectRanges = function (range) {
-            return Range.intersectRanges(this, range);
-        };
-        /**
-         * A intersection of the two ranges.
-         */
-        Range.intersectRanges = function (a, b) {
-            var resultStartLineNumber = a.startLineNumber;
-            var resultStartColumn = a.startColumn;
-            var resultEndLineNumber = a.endLineNumber;
-            var resultEndColumn = a.endColumn;
-            var otherStartLineNumber = b.startLineNumber;
-            var otherStartColumn = b.startColumn;
-            var otherEndLineNumber = b.endLineNumber;
-            var otherEndColumn = b.endColumn;
-            if (resultStartLineNumber < otherStartLineNumber) {
-                resultStartLineNumber = otherStartLineNumber;
-                resultStartColumn = otherStartColumn;
-            }
-            else if (resultStartLineNumber === otherStartLineNumber) {
-                resultStartColumn = Math.max(resultStartColumn, otherStartColumn);
-            }
-            if (resultEndLineNumber > otherEndLineNumber) {
-                resultEndLineNumber = otherEndLineNumber;
-                resultEndColumn = otherEndColumn;
-            }
-            else if (resultEndLineNumber === otherEndLineNumber) {
-                resultEndColumn = Math.min(resultEndColumn, otherEndColumn);
-            }
-            // Check if selection is now empty
-            if (resultStartLineNumber > resultEndLineNumber) {
-                return null;
-            }
-            if (resultStartLineNumber === resultEndLineNumber && resultStartColumn > resultEndColumn) {
-                return null;
-            }
-            return new Range(resultStartLineNumber, resultStartColumn, resultEndLineNumber, resultEndColumn);
-        };
-        /**
-         * Test if this range equals other.
-         */
-        Range.prototype.equalsRange = function (other) {
-            return Range.equalsRange(this, other);
-        };
-        /**
-         * Test if range `a` equals `b`.
-         */
-        Range.equalsRange = function (a, b) {
-            return (!!a &&
-                !!b &&
-                a.startLineNumber === b.startLineNumber &&
-                a.startColumn === b.startColumn &&
-                a.endLineNumber === b.endLineNumber &&
-                a.endColumn === b.endColumn);
-        };
-        /**
-         * Return the end position (which will be after or equal to the start position)
-         */
-        Range.prototype.getEndPosition = function () {
-            return new position_1.Position(this.endLineNumber, this.endColumn);
-        };
-        /**
-         * Return the start position (which will be before or equal to the end position)
-         */
-        Range.prototype.getStartPosition = function () {
-            return new position_1.Position(this.startLineNumber, this.startColumn);
-        };
-        /**
-         * Transform to a user presentable string representation.
-         */
-        Range.prototype.toString = function () {
-            return '[' + this.startLineNumber + ',' + this.startColumn + ' -> ' + this.endLineNumber + ',' + this.endColumn + ']';
-        };
-        /**
-         * Create a new range using this range's start position, and using endLineNumber and endColumn as the end position.
-         */
-        Range.prototype.setEndPosition = function (endLineNumber, endColumn) {
-            return new Range(this.startLineNumber, this.startColumn, endLineNumber, endColumn);
-        };
-        /**
-         * Create a new range using this range's end position, and using startLineNumber and startColumn as the start position.
-         */
-        Range.prototype.setStartPosition = function (startLineNumber, startColumn) {
-            return new Range(startLineNumber, startColumn, this.endLineNumber, this.endColumn);
-        };
-        /**
-         * Create a new empty range using this range's start position.
-         */
-        Range.prototype.collapseToStart = function () {
-            return Range.collapseToStart(this);
-        };
-        /**
-         * Create a new empty range using this range's start position.
-         */
-        Range.collapseToStart = function (range) {
-            return new Range(range.startLineNumber, range.startColumn, range.startLineNumber, range.startColumn);
-        };
-        // ---
-        Range.fromPositions = function (start, end) {
-            if (end === void 0) { end = start; }
-            return new Range(start.lineNumber, start.column, end.lineNumber, end.column);
-        };
-        /**
-         * Create a `Range` from an `IRange`.
-         */
-        Range.lift = function (range) {
-            if (!range) {
-                return null;
-            }
-            return new Range(range.startLineNumber, range.startColumn, range.endLineNumber, range.endColumn);
-        };
-        /**
-         * Test if `obj` is an `IRange`.
-         */
-        Range.isIRange = function (obj) {
-            return (obj
-                && (typeof obj.startLineNumber === 'number')
-                && (typeof obj.startColumn === 'number')
-                && (typeof obj.endLineNumber === 'number')
-                && (typeof obj.endColumn === 'number'));
-        };
-        /**
-         * Test if the two ranges are touching in any way.
-         */
-        Range.areIntersectingOrTouching = function (a, b) {
-            // Check if `a` is before `b`
-            if (a.endLineNumber < b.startLineNumber || (a.endLineNumber === b.startLineNumber && a.endColumn < b.startColumn)) {
-                return false;
-            }
-            // Check if `b` is before `a`
-            if (b.endLineNumber < a.startLineNumber || (b.endLineNumber === a.startLineNumber && b.endColumn < a.startColumn)) {
-                return false;
-            }
-            // These ranges must intersect
-            return true;
-        };
-        /**
-         * Test if the two ranges are intersecting. If the ranges are touching it returns true.
-         */
-        Range.areIntersecting = function (a, b) {
-            // Check if `a` is before `b`
-            if (a.endLineNumber < b.startLineNumber || (a.endLineNumber === b.startLineNumber && a.endColumn <= b.startColumn)) {
-                return false;
-            }
-            // Check if `b` is before `a`
-            if (b.endLineNumber < a.startLineNumber || (b.endLineNumber === a.startLineNumber && b.endColumn <= a.startColumn)) {
-                return false;
-            }
-            // These ranges must intersect
-            return true;
-        };
-        /**
-         * A function that compares ranges, useful for sorting ranges
-         * It will first compare ranges on the startPosition and then on the endPosition
-         */
-        Range.compareRangesUsingStarts = function (a, b) {
-            var aStartLineNumber = a.startLineNumber | 0;
-            var bStartLineNumber = b.startLineNumber | 0;
-            if (aStartLineNumber === bStartLineNumber) {
-                var aStartColumn = a.startColumn | 0;
-                var bStartColumn = b.startColumn | 0;
-                if (aStartColumn === bStartColumn) {
-                    var aEndLineNumber = a.endLineNumber | 0;
-                    var bEndLineNumber = b.endLineNumber | 0;
-                    if (aEndLineNumber === bEndLineNumber) {
-                        var aEndColumn = a.endColumn | 0;
-                        var bEndColumn = b.endColumn | 0;
-                        return aEndColumn - bEndColumn;
-                    }
-                    return aEndLineNumber - bEndLineNumber;
-                }
-                return aStartColumn - bStartColumn;
-            }
-            return aStartLineNumber - bStartLineNumber;
-        };
-        /**
-         * A function that compares ranges, useful for sorting ranges
-         * It will first compare ranges on the endPosition and then on the startPosition
-         */
-        Range.compareRangesUsingEnds = function (a, b) {
-            if (a.endLineNumber === b.endLineNumber) {
-                if (a.endColumn === b.endColumn) {
-                    if (a.startLineNumber === b.startLineNumber) {
-                        return a.startColumn - b.startColumn;
-                    }
-                    return a.startLineNumber - b.startLineNumber;
-                }
-                return a.endColumn - b.endColumn;
-            }
-            return a.endLineNumber - b.endLineNumber;
-        };
-        /**
-         * Test if the range spans multiple lines.
-         */
-        Range.spansMultipleLines = function (range) {
-            return range.endLineNumber > range.startLineNumber;
-        };
-        return Range;
-    }());
-    exports.Range = Range;
-});
-
-define(__m[39/*vs/nls!vs/base/common/errorMessage*/], __M([40/*vs/nls*/,41/*vs/nls!vs/workbench/services/search/node/searchApp*/]), function(nls, data) { return nls.create("vs/base/common/errorMessage", data); });
-define(__m[42/*vs/base/common/errorMessage*/], __M([1/*require*/,0/*exports*/,39/*vs/nls!vs/base/common/errorMessage*/,14/*vs/base/common/types*/,13/*vs/base/common/arrays*/]), function (require, exports, nls, types, arrays) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+define(__m[28/*vs/base/common/errorMessage*/], __M([0/*require*/,1/*exports*/,40/*vs/nls!vs/base/common/errorMessage*/,18/*vs/base/common/types*/,8/*vs/base/common/arrays*/]), function (require, exports, nls, types, arrays) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function exceptionToErrorMessage(exception, verbose) {
         if (exception.message) {
@@ -11877,7 +12010,11 @@ define(__m[42/*vs/base/common/errorMessage*/], __M([1/*require*/,0/*exports*/,39
     exports.toErrorMessage = toErrorMessage;
 });
 
-define(__m[43/*vs/nls!vs/base/node/processes*/], __M([40/*vs/nls*/,41/*vs/nls!vs/workbench/services/search/node/searchApp*/]), function(nls, data) { return nls.create("vs/base/node/processes", data); });
+define(__m[44/*vs/nls!vs/base/node/processes*/], __M([41/*vs/nls*/,42/*vs/nls!vs/workbench/services/search/node/searchApp*/]), function(nls, data) { return nls.create("vs/base/node/processes", data); });
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 
 
@@ -11891,12 +12028,8 @@ define(__m[43/*vs/nls!vs/base/node/processes*/], __M([40/*vs/nls*/,41/*vs/nls!vs
 
 
 
-define(__m[44/*vs/base/node/processes*/], __M([1/*require*/,0/*exports*/,12/*path*/,10/*child_process*/,43/*vs/nls!vs/base/node/processes*/,4/*vs/base/common/winjs.base*/,14/*vs/base/common/types*/,7/*vs/base/common/objects*/,5/*vs/base/common/paths*/,2/*vs/base/common/platform*/,45/*vs/base/node/decoder*/,22/*vs/base/common/amd*/]), function (require, exports, path, cp, nls, winjs_base_1, Types, Objects, TPath, Platform, decoder_1, amd_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+define(__m[45/*vs/base/node/processes*/], __M([0/*require*/,1/*exports*/,6/*path*/,14/*child_process*/,44/*vs/nls!vs/base/node/processes*/,4/*vs/base/common/winjs.base*/,18/*vs/base/common/types*/,12/*vs/base/common/objects*/,5/*vs/base/common/paths*/,3/*vs/base/common/platform*/,43/*vs/base/node/decoder*/,24/*vs/base/common/amd*/]), function (require, exports, path, cp, nls, winjs_base_1, Types, Objects, TPath, Platform, decoder_1, amd_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function getWindowsCode(status) {
         switch (status) {
@@ -11989,7 +12122,7 @@ define(__m[44/*vs/base/node/processes*/], __M([1/*require*/,0/*exports*/,12/*pat
         };
         AbstractProcess.prototype.start = function (pp) {
             var _this = this;
-            if (Platform.isWindows && ((this.options && this.options.cwd && TPath.isUNC(this.options.cwd)) || !this.options && !this.options.cwd && TPath.isUNC(process.cwd()))) {
+            if (Platform.isWindows && ((this.options && this.options.cwd && TPath.isUNC(this.options.cwd)) || !this.options && TPath.isUNC(process.cwd()))) {
                 return winjs_base_1.TPromise.wrapError(new Error(nls.localize(0, null)));
             }
             return this.useExec().then(function (useExec) {
@@ -12274,7 +12407,7 @@ define(__m[44/*vs/base/node/processes*/], __M([1/*require*/,0/*exports*/,12/*pat
 
 
 
-define(__m[29/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,10/*child_process*/,11/*vs/base/common/lifecycle*/,8/*vs/base/common/async*/,7/*vs/base/common/objects*/,9/*vs/base/common/event*/,44/*vs/base/node/processes*/,25/*vs/base/parts/ipc/node/ipc*/,33/*vs/base/node/console*/,17/*vs/base/common/cancellation*/,6/*vs/base/common/errors*/]), function (require, exports, child_process_1, lifecycle_1, async_1, objects_1, event_1, processes_1, ipc_1, console_1, cancellation_1, errors) {
+define(__m[27/*vs/base/parts/ipc/node/ipc.cp*/], __M([0/*require*/,1/*exports*/,14/*child_process*/,11/*vs/base/common/lifecycle*/,13/*vs/base/common/async*/,12/*vs/base/common/objects*/,10/*vs/base/common/event*/,45/*vs/base/node/processes*/,31/*vs/base/parts/ipc/node/ipc*/,46/*vs/base/node/console*/,16/*vs/base/common/cancellation*/,9/*vs/base/common/errors*/]), function (require, exports, child_process_1, lifecycle_1, async_1, objects_1, event_1, processes_1, ipc_1, console_1, cancellation_1, errors) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -12285,10 +12418,14 @@ define(__m[29/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
         __extends(Server, _super);
         function Server() {
             var _this = _super.call(this, {
-                send: function (r) { try {
-                    process.send(r.toString('base64'));
-                }
-                catch (e) { /* not much to do */ } },
+                send: function (r) {
+                    try {
+                        if (process.send) {
+                            process.send(r.toString('base64'));
+                        }
+                    }
+                    catch (e) { /* not much to do */ }
+                },
                 onMessage: event_1.fromNodeEventEmitter(process, 'message', function (msg) { return Buffer.from(msg, 'base64'); })
             }) || this;
             process.once('disconnect', function () { return _this.dispose(); });
@@ -12395,7 +12532,7 @@ define(__m[29/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
                         // Handle remote console logs specially
                         if (console_1.isRemoteConsoleLog(msg)) {
                             console_1.log(msg, "IPC Library: " + _this.options.serverName);
-                            return null;
+                            return;
                         }
                         // Anything else goes to the outside
                         onMessageEmitter_1.fire(Buffer.from(msg, 'base64'));
@@ -12414,9 +12551,11 @@ define(__m[29/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
                         _this.activeRequests.clear();
                         if (code !== 0 && signal !== 'SIGTERM') {
                             console.warn('IPC "' + _this.options.serverName + '" crashed with exit code ' + code + ' and signal ' + signal);
-                            _this.disposeDelayer.cancel();
-                            _this.disposeClient();
                         }
+                        if (_this.disposeDelayer) {
+                            _this.disposeDelayer.cancel();
+                        }
+                        _this.disposeClient();
                         _this._onDidProcessExit.fire({ code: code, signal: signal });
                     });
                 }
@@ -12435,8 +12574,10 @@ define(__m[29/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
         };
         Client.prototype.disposeClient = function () {
             if (this._client) {
-                this.child.kill();
-                this.child = null;
+                if (this.child) {
+                    this.child.kill();
+                    this.child = null;
+                }
                 this._client = null;
                 this.channels.clear();
             }
@@ -12444,7 +12585,7 @@ define(__m[29/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
         Client.prototype.dispose = function () {
             this._onDidProcessExit.dispose();
             this.disposeDelayer.cancel();
-            this.disposeDelayer = null;
+            this.disposeDelayer = null; // StrictNullOverride: nulling out ok in dispose
             this.disposeClient();
             this.activeRequests.clear();
         };
@@ -12457,7 +12598,7 @@ define(__m[29/*vs/base/parts/ipc/node/ipc.cp*/], __M([1/*require*/,0/*exports*/,
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[46/*vs/platform/files/node/files*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+define(__m[34/*vs/platform/files/node/files*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // See https://github.com/Microsoft/vscode/issues/30180
@@ -12470,12 +12611,12 @@ define(__m[46/*vs/platform/files/node/files*/], __M([1/*require*/,0/*exports*/])
     exports.MAX_HEAP_SIZE = process.arch === 'ia32' ? WIN32_MAX_HEAP_SIZE : GENERAL_MAX_HEAP_SIZE;
 });
 
-define(__m[47/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[33/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // ------ internal util
     var _util;
@@ -12530,12 +12671,475 @@ define(__m[47/*vs/platform/instantiation/common/instantiation*/], __M([1/*requir
     exports.optional = optional;
 });
 
-define(__m[48/*vs/platform/search/common/search*/], __M([1/*require*/,0/*exports*/,19/*vs/base/common/glob*/,7/*vs/base/common/objects*/,5/*vs/base/common/paths*/,47/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, glob, objects, paths, instantiation_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[49/*vs/platform/log/common/log*/], __M([0/*require*/,1/*exports*/,33/*vs/platform/instantiation/common/instantiation*/,11/*vs/base/common/lifecycle*/,3/*vs/base/common/platform*/,10/*vs/base/common/event*/]), function (require, exports, instantiation_1, lifecycle_1, platform_1, event_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ILogService = instantiation_1.createDecorator('logService');
+    var LogLevel;
+    (function (LogLevel) {
+        LogLevel[LogLevel["Trace"] = 0] = "Trace";
+        LogLevel[LogLevel["Debug"] = 1] = "Debug";
+        LogLevel[LogLevel["Info"] = 2] = "Info";
+        LogLevel[LogLevel["Warning"] = 3] = "Warning";
+        LogLevel[LogLevel["Error"] = 4] = "Error";
+        LogLevel[LogLevel["Critical"] = 5] = "Critical";
+        LogLevel[LogLevel["Off"] = 6] = "Off";
+    })(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
+    exports.DEFAULT_LOG_LEVEL = LogLevel.Info;
+    var AbstractLogService = /** @class */ (function (_super) {
+        __extends(AbstractLogService, _super);
+        function AbstractLogService() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.level = exports.DEFAULT_LOG_LEVEL;
+            _this._onDidChangeLogLevel = _this._register(new event_1.Emitter());
+            _this.onDidChangeLogLevel = _this._onDidChangeLogLevel.event;
+            return _this;
+        }
+        AbstractLogService.prototype.setLevel = function (level) {
+            if (this.level !== level) {
+                this.level = level;
+                this._onDidChangeLogLevel.fire(this.level);
+            }
+        };
+        AbstractLogService.prototype.getLevel = function () {
+            return this.level;
+        };
+        return AbstractLogService;
+    }(lifecycle_1.Disposable));
+    exports.AbstractLogService = AbstractLogService;
+    var ConsoleLogMainService = /** @class */ (function (_super) {
+        __extends(ConsoleLogMainService, _super);
+        function ConsoleLogMainService(logLevel) {
+            if (logLevel === void 0) { logLevel = exports.DEFAULT_LOG_LEVEL; }
+            var _this = _super.call(this) || this;
+            _this.setLevel(logLevel);
+            _this.useColors = !platform_1.isWindows;
+            return _this;
+        }
+        ConsoleLogMainService.prototype.trace = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Trace) {
+                if (this.useColors) {
+                    console.log.apply(console, ["\u001B[90m[main " + new Date().toLocaleTimeString() + "]\u001B[0m", message].concat(args));
+                }
+                else {
+                    console.log.apply(console, ["[main " + new Date().toLocaleTimeString() + "]", message].concat(args));
+                }
+            }
+        };
+        ConsoleLogMainService.prototype.debug = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Debug) {
+                if (this.useColors) {
+                    console.log.apply(console, ["\u001B[90m[main " + new Date().toLocaleTimeString() + "]\u001B[0m", message].concat(args));
+                }
+                else {
+                    console.log.apply(console, ["[main " + new Date().toLocaleTimeString() + "]", message].concat(args));
+                }
+            }
+        };
+        ConsoleLogMainService.prototype.info = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Info) {
+                if (this.useColors) {
+                    console.log.apply(console, ["\u001B[90m[main " + new Date().toLocaleTimeString() + "]\u001B[0m", message].concat(args));
+                }
+                else {
+                    console.log.apply(console, ["[main " + new Date().toLocaleTimeString() + "]", message].concat(args));
+                }
+            }
+        };
+        ConsoleLogMainService.prototype.warn = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Warning) {
+                if (this.useColors) {
+                    console.warn.apply(console, ["\u001B[93m[main " + new Date().toLocaleTimeString() + "]\u001B[0m", message].concat(args));
+                }
+                else {
+                    console.warn.apply(console, ["[main " + new Date().toLocaleTimeString() + "]", message].concat(args));
+                }
+            }
+        };
+        ConsoleLogMainService.prototype.error = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Error) {
+                if (this.useColors) {
+                    console.error.apply(console, ["\u001B[91m[main " + new Date().toLocaleTimeString() + "]\u001B[0m", message].concat(args));
+                }
+                else {
+                    console.error.apply(console, ["[main " + new Date().toLocaleTimeString() + "]", message].concat(args));
+                }
+            }
+        };
+        ConsoleLogMainService.prototype.critical = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Critical) {
+                if (this.useColors) {
+                    console.error.apply(console, ["\u001B[90m[main " + new Date().toLocaleTimeString() + "]\u001B[0m", message].concat(args));
+                }
+                else {
+                    console.error.apply(console, ["[main " + new Date().toLocaleTimeString() + "]", message].concat(args));
+                }
+            }
+        };
+        ConsoleLogMainService.prototype.dispose = function () {
+            // noop
+        };
+        return ConsoleLogMainService;
+    }(AbstractLogService));
+    exports.ConsoleLogMainService = ConsoleLogMainService;
+    var ConsoleLogService = /** @class */ (function (_super) {
+        __extends(ConsoleLogService, _super);
+        function ConsoleLogService(logLevel) {
+            if (logLevel === void 0) { logLevel = exports.DEFAULT_LOG_LEVEL; }
+            var _this = _super.call(this) || this;
+            _this.setLevel(logLevel);
+            return _this;
+        }
+        ConsoleLogService.prototype.trace = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Trace) {
+                console.log.apply(console, ['%cTRACE', 'color: #888', message].concat(args));
+            }
+        };
+        ConsoleLogService.prototype.debug = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Debug) {
+                console.log.apply(console, ['%cDEBUG', 'background: #eee; color: #888', message].concat(args));
+            }
+        };
+        ConsoleLogService.prototype.info = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Info) {
+                console.log.apply(console, ['%c INFO', 'color: #33f', message].concat(args));
+            }
+        };
+        ConsoleLogService.prototype.warn = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Warning) {
+                console.log.apply(console, ['%c WARN', 'color: #993', message].concat(args));
+            }
+        };
+        ConsoleLogService.prototype.error = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Error) {
+                console.log.apply(console, ['%c  ERR', 'color: #f33', message].concat(args));
+            }
+        };
+        ConsoleLogService.prototype.critical = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            if (this.getLevel() <= LogLevel.Critical) {
+                console.log.apply(console, ['%cCRITI', 'background: #f33; color: white', message].concat(args));
+            }
+        };
+        ConsoleLogService.prototype.dispose = function () { };
+        return ConsoleLogService;
+    }(AbstractLogService));
+    exports.ConsoleLogService = ConsoleLogService;
+    var MultiplexLogService = /** @class */ (function (_super) {
+        __extends(MultiplexLogService, _super);
+        function MultiplexLogService(logServices) {
+            var _this = _super.call(this) || this;
+            _this.logServices = logServices;
+            if (logServices.length) {
+                _this.setLevel(logServices[0].getLevel());
+            }
+            return _this;
+        }
+        MultiplexLogService.prototype.setLevel = function (level) {
+            for (var _i = 0, _a = this.logServices; _i < _a.length; _i++) {
+                var logService = _a[_i];
+                logService.setLevel(level);
+            }
+            _super.prototype.setLevel.call(this, level);
+        };
+        MultiplexLogService.prototype.trace = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            for (var _a = 0, _b = this.logServices; _a < _b.length; _a++) {
+                var logService = _b[_a];
+                logService.trace.apply(logService, [message].concat(args));
+            }
+        };
+        MultiplexLogService.prototype.debug = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            for (var _a = 0, _b = this.logServices; _a < _b.length; _a++) {
+                var logService = _b[_a];
+                logService.debug.apply(logService, [message].concat(args));
+            }
+        };
+        MultiplexLogService.prototype.info = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            for (var _a = 0, _b = this.logServices; _a < _b.length; _a++) {
+                var logService = _b[_a];
+                logService.info.apply(logService, [message].concat(args));
+            }
+        };
+        MultiplexLogService.prototype.warn = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            for (var _a = 0, _b = this.logServices; _a < _b.length; _a++) {
+                var logService = _b[_a];
+                logService.warn.apply(logService, [message].concat(args));
+            }
+        };
+        MultiplexLogService.prototype.error = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            for (var _a = 0, _b = this.logServices; _a < _b.length; _a++) {
+                var logService = _b[_a];
+                logService.error.apply(logService, [message].concat(args));
+            }
+        };
+        MultiplexLogService.prototype.critical = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            for (var _a = 0, _b = this.logServices; _a < _b.length; _a++) {
+                var logService = _b[_a];
+                logService.critical.apply(logService, [message].concat(args));
+            }
+        };
+        MultiplexLogService.prototype.dispose = function () {
+            for (var _i = 0, _a = this.logServices; _i < _a.length; _i++) {
+                var logService = _a[_i];
+                logService.dispose();
+            }
+        };
+        return MultiplexLogService;
+    }(AbstractLogService));
+    exports.MultiplexLogService = MultiplexLogService;
+    var DelegatedLogService = /** @class */ (function (_super) {
+        __extends(DelegatedLogService, _super);
+        function DelegatedLogService(logService) {
+            var _this = _super.call(this) || this;
+            _this.logService = logService;
+            _this._register(logService);
+            return _this;
+        }
+        Object.defineProperty(DelegatedLogService.prototype, "onDidChangeLogLevel", {
+            get: function () {
+                return this.logService.onDidChangeLogLevel;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        DelegatedLogService.prototype.setLevel = function (level) {
+            this.logService.setLevel(level);
+        };
+        DelegatedLogService.prototype.getLevel = function () {
+            return this.logService.getLevel();
+        };
+        DelegatedLogService.prototype.trace = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var _a;
+            (_a = this.logService).trace.apply(_a, [message].concat(args));
+        };
+        DelegatedLogService.prototype.debug = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var _a;
+            (_a = this.logService).debug.apply(_a, [message].concat(args));
+        };
+        DelegatedLogService.prototype.info = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var _a;
+            (_a = this.logService).info.apply(_a, [message].concat(args));
+        };
+        DelegatedLogService.prototype.warn = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var _a;
+            (_a = this.logService).warn.apply(_a, [message].concat(args));
+        };
+        DelegatedLogService.prototype.error = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var _a;
+            (_a = this.logService).error.apply(_a, [message].concat(args));
+        };
+        DelegatedLogService.prototype.critical = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var _a;
+            (_a = this.logService).critical.apply(_a, [message].concat(args));
+        };
+        return DelegatedLogService;
+    }(lifecycle_1.Disposable));
+    exports.DelegatedLogService = DelegatedLogService;
+    var NullLogService = /** @class */ (function () {
+        function NullLogService() {
+            this.onDidChangeLogLevel = new event_1.Emitter().event;
+        }
+        NullLogService.prototype.setLevel = function (level) { };
+        NullLogService.prototype.getLevel = function () { return LogLevel.Info; };
+        NullLogService.prototype.trace = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+        };
+        NullLogService.prototype.debug = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+        };
+        NullLogService.prototype.info = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+        };
+        NullLogService.prototype.warn = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+        };
+        NullLogService.prototype.error = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+        };
+        NullLogService.prototype.critical = function (message) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+        };
+        NullLogService.prototype.dispose = function () { };
+        return NullLogService;
+    }());
+    exports.NullLogService = NullLogService;
+    function getLogLevel(environmentService) {
+        if (environmentService.verbose) {
+            return LogLevel.Trace;
+        }
+        if (typeof environmentService.args.log === 'string') {
+            var logLevel = environmentService.args.log.toLowerCase();
+            switch (logLevel) {
+                case 'trace':
+                    return LogLevel.Trace;
+                case 'debug':
+                    return LogLevel.Debug;
+                case 'info':
+                    return LogLevel.Info;
+                case 'warn':
+                    return LogLevel.Warning;
+                case 'error':
+                    return LogLevel.Error;
+                case 'critical':
+                    return LogLevel.Critical;
+                case 'off':
+                    return LogLevel.Off;
+            }
+        }
+        return exports.DEFAULT_LOG_LEVEL;
+    }
+    exports.getLogLevel = getLogLevel;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[26/*vs/platform/search/common/search*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/arrays*/,15/*vs/base/common/glob*/,12/*vs/base/common/objects*/,5/*vs/base/common/paths*/,2/*vs/base/common/strings*/,33/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, arrays_1, glob, objects, paths, strings_1, instantiation_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.VIEW_ID = 'workbench.view.search';
     exports.ISearchHistoryService = instantiation_1.createDecorator('searchHistoryService');
@@ -12554,46 +13158,65 @@ define(__m[48/*vs/platform/search/common/search*/], __M([1/*require*/,0/*exports
         QueryType[QueryType["File"] = 1] = "File";
         QueryType[QueryType["Text"] = 2] = "Text";
     })(QueryType = exports.QueryType || (exports.QueryType = {}));
+    function resultIsMatch(result) {
+        return !!result.preview;
+    }
+    exports.resultIsMatch = resultIsMatch;
     var FileMatch = /** @class */ (function () {
         function FileMatch(resource) {
             this.resource = resource;
-            this.matches = [];
+            this.results = [];
             // empty
         }
         return FileMatch;
     }());
     exports.FileMatch = FileMatch;
-    var TextSearchResult = /** @class */ (function () {
-        function TextSearchResult(fullLine, range, previewOptions) {
-            this.range = range;
-            if (previewOptions) {
-                var previewStart = Math.max(range.startColumn - previewOptions.leadingChars, 0);
-                var previewEnd = previewOptions.totalChars + previewStart;
-                var endOfMatchRangeInPreview = Math.min(previewEnd, range.endColumn - previewStart);
+    var TextSearchMatch = /** @class */ (function () {
+        function TextSearchMatch(text, range, previewOptions) {
+            this.ranges = range;
+            if (previewOptions && previewOptions.matchLines === 1 && !Array.isArray(range)) {
+                // 1 line preview requested
+                text = strings_1.getNLines(text, previewOptions.matchLines);
+                var leadingChars = Math.floor(previewOptions.charsPerLine / 5);
+                var previewStart = Math.max(range.startColumn - leadingChars, 0);
+                var previewText = text.substring(previewStart, previewOptions.charsPerLine + previewStart);
+                var endColInPreview = (range.endLineNumber - range.startLineNumber + 1) <= previewOptions.matchLines ?
+                    Math.min(previewText.length, range.endColumn - previewStart) : // if number of match lines will not be trimmed by previewOptions
+                    previewText.length; // if number of lines is trimmed
                 this.preview = {
-                    text: fullLine.substring(previewStart, previewEnd),
-                    match: new OneLineRange(0, range.startColumn - previewStart, endOfMatchRangeInPreview)
+                    text: previewText,
+                    matches: new OneLineRange(0, range.startColumn - previewStart, endColInPreview)
                 };
             }
             else {
+                var firstMatchLine_1 = Array.isArray(range) ? range[0].startLineNumber : range.startLineNumber;
+                // n line, no preview requested, or multiple matches in the preview
                 this.preview = {
-                    text: fullLine,
-                    match: new OneLineRange(0, range.startColumn, range.endColumn)
+                    text: text,
+                    matches: arrays_1.mapArrayOrNot(range, function (r) { return new SearchRange(r.startLineNumber - firstMatchLine_1, r.startColumn, r.endLineNumber - firstMatchLine_1, r.endColumn); })
                 };
             }
         }
-        return TextSearchResult;
+        return TextSearchMatch;
     }());
-    exports.TextSearchResult = TextSearchResult;
-    var OneLineRange = /** @class */ (function () {
-        function OneLineRange(lineNumber, startColumn, endColumn) {
-            this.startLineNumber = lineNumber;
+    exports.TextSearchMatch = TextSearchMatch;
+    var SearchRange = /** @class */ (function () {
+        function SearchRange(startLineNumber, startColumn, endLineNumber, endColumn) {
+            this.startLineNumber = startLineNumber;
             this.startColumn = startColumn;
-            this.endLineNumber = lineNumber;
+            this.endLineNumber = endLineNumber;
             this.endColumn = endColumn;
         }
-        return OneLineRange;
+        return SearchRange;
     }());
+    exports.SearchRange = SearchRange;
+    var OneLineRange = /** @class */ (function (_super) {
+        __extends(OneLineRange, _super);
+        function OneLineRange(lineNumber, startColumn, endColumn) {
+            return _super.call(this, lineNumber, startColumn, lineNumber, endColumn) || this;
+        }
+        return OneLineRange;
+    }(SearchRange));
     exports.OneLineRange = OneLineRange;
     function getExcludes(configuration) {
         var fileExcludes = configuration && configuration.files && configuration.files.exclude;
@@ -12611,16 +13234,16 @@ define(__m[48/*vs/platform/search/common/search*/], __M([1/*require*/,0/*exports
         return allExcludes;
     }
     exports.getExcludes = getExcludes;
-    function pathIncludedInQuery(query, fsPath) {
-        if (query.excludePattern && glob.match(query.excludePattern, fsPath)) {
+    function pathIncludedInQuery(queryProps, fsPath) {
+        if (queryProps.excludePattern && glob.match(queryProps.excludePattern, fsPath)) {
             return false;
         }
-        if (query.includePattern && !glob.match(query.includePattern, fsPath)) {
+        if (queryProps.includePattern && !glob.match(queryProps.includePattern, fsPath)) {
             return false;
         }
         // If searchPaths are being used, the extra file must be in a subfolder and match the pattern, if present
-        if (query.usingSearchPaths) {
-            return query.folderQueries.every(function (fq) {
+        if (queryProps.usingSearchPaths) {
+            return !!queryProps.folderQueries && queryProps.folderQueries.every(function (fq) {
                 var searchPath = fq.folder.fsPath;
                 if (paths.isEqualOrParent(fsPath, searchPath)) {
                     return !fq.includePattern || !!glob.match(fq.includePattern, fsPath);
@@ -12633,102 +13256,48 @@ define(__m[48/*vs/platform/search/common/search*/], __M([1/*require*/,0/*exports
         return true;
     }
     exports.pathIncludedInQuery = pathIncludedInQuery;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[49/*vs/workbench/services/search/node/search*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    'use strict';
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function isSerializedSearchComplete(arg) {
-        if (arg.type === 'error') {
-            return true;
+    var SearchErrorCode;
+    (function (SearchErrorCode) {
+        SearchErrorCode[SearchErrorCode["unknownEncoding"] = 1] = "unknownEncoding";
+        SearchErrorCode[SearchErrorCode["regexParseError"] = 2] = "regexParseError";
+        SearchErrorCode[SearchErrorCode["globParseError"] = 3] = "globParseError";
+        SearchErrorCode[SearchErrorCode["invalidLiteral"] = 4] = "invalidLiteral";
+        SearchErrorCode[SearchErrorCode["rgProcessError"] = 5] = "rgProcessError";
+        SearchErrorCode[SearchErrorCode["other"] = 6] = "other";
+    })(SearchErrorCode = exports.SearchErrorCode || (exports.SearchErrorCode = {}));
+    var SearchError = /** @class */ (function (_super) {
+        __extends(SearchError, _super);
+        function SearchError(message, code) {
+            var _this = _super.call(this, message) || this;
+            _this.code = code;
+            return _this;
         }
-        else if (arg.type === 'success') {
-            return true;
+        return SearchError;
+    }(Error));
+    exports.SearchError = SearchError;
+    function deserializeSearchError(errorMsg) {
+        try {
+            var details = JSON.parse(errorMsg);
+            return new SearchError(details.message, details.code);
         }
-        else {
-            return false;
+        catch (e) {
+            return new SearchError(errorMsg, SearchErrorCode.other);
         }
     }
-    exports.isSerializedSearchComplete = isSerializedSearchComplete;
-    function isSerializedSearchSuccess(arg) {
-        return arg.type === 'success';
+    exports.deserializeSearchError = deserializeSearchError;
+    function serializeSearchError(searchError) {
+        var details = { message: searchError.message, code: searchError.code };
+        return new Error(JSON.stringify(details));
     }
-    exports.isSerializedSearchSuccess = isSerializedSearchSuccess;
-    var FileMatch = /** @class */ (function () {
-        function FileMatch(path) {
-            this.path = path;
-            this.matches = [];
-        }
-        FileMatch.prototype.addMatch = function (match) {
-            this.matches.push(match);
-        };
-        FileMatch.prototype.serialize = function () {
-            return {
-                path: this.path,
-                matches: this.matches,
-                numMatches: this.matches.length
-            };
-        };
-        return FileMatch;
-    }());
-    exports.FileMatch = FileMatch;
+    exports.serializeSearchError = serializeSearchError;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[50/*vs/workbench/services/search/node/searchIpc*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    'use strict';
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var SearchChannel = /** @class */ (function () {
-        function SearchChannel(service) {
-            this.service = service;
-        }
-        SearchChannel.prototype.listen = function (event, arg) {
-            switch (event) {
-                case 'fileSearch': return this.service.fileSearch(arg);
-                case 'textSearch': return this.service.textSearch(arg);
-            }
-            throw new Error('Event not found');
-        };
-        SearchChannel.prototype.call = function (command, arg) {
-            switch (command) {
-                case 'clearCache': return this.service.clearCache(arg);
-            }
-            throw new Error('Call not found');
-        };
-        return SearchChannel;
-    }());
-    exports.SearchChannel = SearchChannel;
-    var SearchChannelClient = /** @class */ (function () {
-        function SearchChannelClient(channel) {
-            this.channel = channel;
-        }
-        SearchChannelClient.prototype.fileSearch = function (search) {
-            return this.channel.listen('fileSearch', search);
-        };
-        SearchChannelClient.prototype.textSearch = function (search) {
-            return this.channel.listen('textSearch', search);
-        };
-        SearchChannelClient.prototype.clearCache = function (cacheKey) {
-            return this.channel.call('clearCache', cacheKey);
-        };
-        return SearchChannelClient;
-    }());
-    exports.SearchChannelClient = SearchChannelClient;
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[51/*vs/workbench/services/search/node/textSearch*/], __M([1/*require*/,0/*exports*/,12/*path*/,6/*vs/base/common/errors*/]), function (require, exports, path, errors_1) {
-    'use strict';
+define(__m[51/*vs/workbench/services/search/node/legacy/textSearch*/], __M([0/*require*/,1/*exports*/,6/*path*/,9/*vs/base/common/errors*/]), function (require, exports, path, errors_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Engine = /** @class */ (function () {
         function Engine(config, walker, workerProvider) {
@@ -12741,7 +13310,8 @@ define(__m[51/*vs/workbench/services/search/node/textSearch*/], __M([1/*require*
             this.limitReached = false;
             this.numResults = 0;
             this.nextWorker = 0;
-            this.config = config;
+            this.config = makeRawSearch(config);
+            this.config2 = config;
             this.walker = walker;
             this.workerProvider = workerProvider;
         }
@@ -12814,7 +13384,7 @@ define(__m[51/*vs/workbench/services/search/node/textSearch*/], __M([1/*require*
             var nextBatch = [];
             var nextBatchBytes = 0;
             var batchFlushBytes = Math.pow(2, 20); // 1MB
-            this.walker.walk(this.config.folderQueries, this.config.extraFiles, function (result) {
+            this.walker.walk(this.config2.folderQueries, this.config2.extraFileResources, function (result) {
                 var bytes = result.size || 1;
                 _this.totalBytes += bytes;
                 // If we have reached the limit or we are canceled, ignore it
@@ -12852,14 +13422,51 @@ define(__m[51/*vs/workbench/services/search/node/textSearch*/], __M([1/*require*
         return Engine;
     }());
     exports.Engine = Engine;
+    /**
+     * Exported for tests
+     */
+    function makeRawSearch(query) {
+        var rawSearch = {
+            folderQueries: [],
+            extraFiles: [],
+            excludePattern: query.excludePattern,
+            includePattern: query.includePattern,
+            maxResults: query.maxResults,
+            useRipgrep: query.useRipgrep,
+            disregardIgnoreFiles: query.folderQueries.some(function (fq) { return fq.disregardIgnoreFiles; }),
+            disregardGlobalIgnoreFiles: query.folderQueries.some(function (fq) { return fq.disregardGlobalIgnoreFiles; }),
+            ignoreSymlinks: query.folderQueries.some(function (fq) { return fq.ignoreSymlinks; }),
+            previewOptions: query.previewOptions
+        };
+        for (var _i = 0, _a = query.folderQueries; _i < _a.length; _i++) {
+            var q = _a[_i];
+            rawSearch.folderQueries.push({
+                excludePattern: q.excludePattern,
+                includePattern: q.includePattern,
+                fileEncoding: q.fileEncoding,
+                disregardIgnoreFiles: q.disregardIgnoreFiles,
+                disregardGlobalIgnoreFiles: q.disregardGlobalIgnoreFiles,
+                folder: q.folder.fsPath
+            });
+        }
+        if (query.extraFileResources) {
+            for (var _b = 0, _c = query.extraFileResources; _b < _c.length; _b++) {
+                var r = _c[_b];
+                rawSearch.extraFiles.push(r.fsPath);
+            }
+        }
+        rawSearch.contentPattern = query.contentPattern;
+        return rawSearch;
+    }
+    exports.makeRawSearch = makeRawSearch;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[52/*vs/workbench/services/search/node/worker/searchWorkerIpc*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    'use strict';
+define(__m[38/*vs/workbench/services/search/node/legacy/worker/searchWorkerIpc*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var SearchWorkerChannel = /** @class */ (function () {
         function SearchWorkerChannel(worker) {
@@ -12901,8 +13508,8 @@ define(__m[52/*vs/workbench/services/search/node/worker/searchWorkerIpc*/], __M(
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[53/*vs/workbench/services/search/node/textSearchWorkerProvider*/], __M([1/*require*/,0/*exports*/,62/*os*/,25/*vs/base/parts/ipc/node/ipc*/,29/*vs/base/parts/ipc/node/ipc.cp*/,52/*vs/workbench/services/search/node/worker/searchWorkerIpc*/,22/*vs/base/common/amd*/]), function (require, exports, os, ipc, ipc_cp_1, searchWorkerIpc_1, amd_1) {
-    'use strict';
+define(__m[53/*vs/workbench/services/search/node/legacy/textSearchWorkerProvider*/], __M([0/*require*/,1/*exports*/,70/*os*/,31/*vs/base/parts/ipc/node/ipc*/,27/*vs/base/parts/ipc/node/ipc.cp*/,38/*vs/workbench/services/search/node/legacy/worker/searchWorkerIpc*/,24/*vs/base/common/amd*/]), function (require, exports, os, ipc, ipc_cp_1, searchWorkerIpc_1, amd_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var TextSearchWorkerProvider = /** @class */ (function () {
         function TextSearchWorkerProvider() {
@@ -12921,7 +13528,7 @@ define(__m[53/*vs/workbench/services/search/node/textSearchWorkerProvider*/], __
                 args: ['--type=searchWorker'],
                 timeout: 30 * 1000,
                 env: {
-                    AMD_ENTRYPOINT: 'vs/workbench/services/search/node/worker/searchWorkerApp',
+                    AMD_ENTRYPOINT: 'vs/workbench/services/search/node/legacy/worker/searchWorkerApp',
                     PIPE_LOGGING: 'true',
                     VERBOSE_LOGGING: process.env.VERBOSE_LOGGING
                 },
@@ -12936,318 +13543,617 @@ define(__m[53/*vs/workbench/services/search/node/textSearchWorkerProvider*/], __
     exports.TextSearchWorkerProvider = TextSearchWorkerProvider;
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+define(__m[35/*vs/workbench/services/search/node/ripgrepSearchUtils*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/strings*/,49/*vs/platform/log/common/log*/,26/*vs/platform/search/common/search*/,8/*vs/base/common/arrays*/]), function (require, exports, strings_1, log_1, search_1, arrays_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function anchorGlob(glob) {
+        return strings_1.startsWith(glob, '**') || strings_1.startsWith(glob, '/') ? glob : "/" + glob;
+    }
+    exports.anchorGlob = anchorGlob;
+    /**
+     * Create a vscode.TextSearchResult by using our internal TextSearchResult type for its previewOptions logic.
+     */
+    function createTextSearchResult(uri, text, range, previewOptions) {
+        var searchRange = arrays_1.mapArrayOrNot(range, rangeToSearchRange);
+        var internalResult = new search_1.TextSearchMatch(text, searchRange, previewOptions);
+        var internalPreviewRange = internalResult.preview.matches;
+        return {
+            ranges: arrays_1.mapArrayOrNot(searchRange, searchRangeToRange),
+            uri: uri,
+            preview: {
+                text: internalResult.preview.text,
+                matches: arrays_1.mapArrayOrNot(internalPreviewRange, searchRangeToRange)
+            }
+        };
+    }
+    exports.createTextSearchResult = createTextSearchResult;
+    function rangeToSearchRange(range) {
+        return new search_1.SearchRange(range.start.line, range.start.character, range.end.line, range.end.character);
+    }
+    function searchRangeToRange(range) {
+        return new Range(range.startLineNumber, range.startColumn, range.endLineNumber, range.endColumn);
+    }
+    var Position = /** @class */ (function () {
+        function Position(line, character) {
+            this.line = line;
+            this.character = character;
+        }
+        Position.prototype.isBefore = function (other) { return false; };
+        Position.prototype.isBeforeOrEqual = function (other) { return false; };
+        Position.prototype.isAfter = function (other) { return false; };
+        Position.prototype.isAfterOrEqual = function (other) { return false; };
+        Position.prototype.isEqual = function (other) { return false; };
+        Position.prototype.compareTo = function (other) { return 0; };
+        Position.prototype.translate = function (_) { return null; };
+        Position.prototype.with = function (_) { return null; };
+        return Position;
+    }());
+    exports.Position = Position;
+    var Range = /** @class */ (function () {
+        function Range(startLine, startCol, endLine, endCol) {
+            this.start = new Position(startLine, startCol);
+            this.end = new Position(endLine, endCol);
+        }
+        Range.prototype.contains = function (positionOrRange) { return false; };
+        Range.prototype.isEqual = function (other) { return false; };
+        Range.prototype.intersection = function (range) { return null; };
+        Range.prototype.union = function (other) { return null; };
+        Range.prototype.with = function (_) { return null; };
+        return Range;
+    }());
+    exports.Range = Range;
+    var OutputChannel = /** @class */ (function () {
+        function OutputChannel(logService) {
+            this.logService = logService;
+        }
+        OutputChannel.prototype.appendLine = function (msg) {
+            this.logService.debug('RipgrepSearchEH#search', msg);
+        };
+        OutputChannel = __decorate([
+            __param(0, log_1.ILogService)
+        ], OutputChannel);
+        return OutputChannel;
+    }());
+    exports.OutputChannel = OutputChannel;
+});
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+define(__m[55/*vs/workbench/services/search/node/search*/], __M([0/*require*/,1/*exports*/,15/*vs/base/common/glob*/,4/*vs/base/common/winjs.base*/]), function (require, exports, glob, winjs_base_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function isSerializedSearchComplete(arg) {
+        if (arg.type === 'error') {
+            return true;
+        }
+        else if (arg.type === 'success') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    exports.isSerializedSearchComplete = isSerializedSearchComplete;
+    function isSerializedSearchSuccess(arg) {
+        return arg.type === 'success';
+    }
+    exports.isSerializedSearchSuccess = isSerializedSearchSuccess;
+    function isSerializedFileMatch(arg) {
+        return !!arg.path;
+    }
+    exports.isSerializedFileMatch = isSerializedFileMatch;
+    var FileMatch = /** @class */ (function () {
+        function FileMatch(path) {
+            this.path = path;
+            this.results = [];
+        }
+        FileMatch.prototype.addMatch = function (match) {
+            this.results.push(match);
+        };
+        FileMatch.prototype.serialize = function () {
+            return {
+                path: this.path,
+                results: this.results,
+                numMatches: this.results.length
+            };
+        };
+        return FileMatch;
+    }());
+    exports.FileMatch = FileMatch;
+    /**
+     *  Computes the patterns that the provider handles. Discards sibling clauses and 'false' patterns
+     */
+    function resolvePatternsForProvider(globalPattern, folderPattern) {
+        var merged = __assign({}, (globalPattern || {}), (folderPattern || {}));
+        return Object.keys(merged)
+            .filter(function (key) {
+            var value = merged[key];
+            return typeof value === 'boolean' && value;
+        });
+    }
+    exports.resolvePatternsForProvider = resolvePatternsForProvider;
+    var QueryGlobTester = /** @class */ (function () {
+        function QueryGlobTester(config, folderQuery) {
+            this._excludeExpression = __assign({}, (config.excludePattern || {}), (folderQuery.excludePattern || {}));
+            this._parsedExcludeExpression = glob.parse(this._excludeExpression);
+            // Empty includeExpression means include nothing, so no {} shortcuts
+            var includeExpression = config.includePattern;
+            if (folderQuery.includePattern) {
+                if (includeExpression) {
+                    includeExpression = __assign({}, includeExpression, folderQuery.includePattern);
+                }
+                else {
+                    includeExpression = folderQuery.includePattern;
+                }
+            }
+            if (includeExpression) {
+                this._parsedIncludeExpression = glob.parse(includeExpression);
+            }
+        }
+        /**
+         * Guaranteed sync - siblingsFn should not return a promise.
+         */
+        QueryGlobTester.prototype.includedInQuerySync = function (testPath, basename, hasSibling) {
+            if (this._parsedExcludeExpression && this._parsedExcludeExpression(testPath, basename, hasSibling)) {
+                return false;
+            }
+            if (this._parsedIncludeExpression && !this._parsedIncludeExpression(testPath, basename, hasSibling)) {
+                return false;
+            }
+            return true;
+        };
+        /**
+         * Guaranteed async.
+         */
+        QueryGlobTester.prototype.includedInQuery = function (testPath, basename, hasSibling) {
+            var _this = this;
+            var excludeP = this._parsedExcludeExpression ?
+                winjs_base_1.TPromise.as(this._parsedExcludeExpression(testPath, basename, hasSibling)).then(function (result) { return !!result; }) :
+                winjs_base_1.TPromise.wrap(false);
+            return excludeP.then(function (excluded) {
+                if (excluded) {
+                    return false;
+                }
+                return _this._parsedIncludeExpression ?
+                    winjs_base_1.TPromise.as(_this._parsedIncludeExpression(testPath, basename, hasSibling)).then(function (result) { return !!result; }) :
+                    winjs_base_1.TPromise.wrap(true);
+            }).then(function (included) {
+                return included;
+            });
+        };
+        QueryGlobTester.prototype.hasSiblingExcludeClauses = function () {
+            return hasSiblingClauses(this._excludeExpression);
+        };
+        return QueryGlobTester;
+    }());
+    exports.QueryGlobTester = QueryGlobTester;
+    function hasSiblingClauses(pattern) {
+        for (var key in pattern) {
+            if (typeof pattern[key] !== 'boolean') {
+                return true;
+            }
+        }
+        return false;
+    }
+});
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[56/*vs/workbench/services/search/node/searchIpc*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var SearchChannel = /** @class */ (function () {
+        function SearchChannel(service) {
+            this.service = service;
+        }
+        SearchChannel.prototype.listen = function (event, arg) {
+            switch (event) {
+                case 'fileSearch': return this.service.fileSearch(arg);
+                case 'textSearch': return this.service.textSearch(arg);
+            }
+            throw new Error('Event not found');
+        };
+        SearchChannel.prototype.call = function (command, arg) {
+            switch (command) {
+                case 'clearCache': return this.service.clearCache(arg);
+            }
+            throw new Error('Call not found');
+        };
+        return SearchChannel;
+    }());
+    exports.SearchChannel = SearchChannel;
+    var SearchChannelClient = /** @class */ (function () {
+        function SearchChannelClient(channel) {
+            this.channel = channel;
+        }
+        SearchChannelClient.prototype.fileSearch = function (search) {
+            return this.channel.listen('fileSearch', search);
+        };
+        SearchChannelClient.prototype.textSearch = function (search) {
+            return this.channel.listen('textSearch', search);
+        };
+        SearchChannelClient.prototype.clearCache = function (cacheKey) {
+            return this.channel.call('clearCache', cacheKey);
+        };
+        return SearchChannelClient;
+    }());
+    exports.SearchChannelClient = SearchChannelClient;
+});
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[36/*vs/workbench/services/search/node/textSearchManager*/], __M([0/*require*/,1/*exports*/,6/*path*/,8/*vs/base/common/arrays*/,16/*vs/base/common/cancellation*/,28/*vs/base/common/errorMessage*/,15/*vs/base/common/glob*/,48/*vs/base/common/resources*/,7/*vs/base/common/uri*/,4/*vs/base/common/winjs.base*/,22/*vs/base/node/encoding*/,21/*vs/base/node/extfs*/,55/*vs/workbench/services/search/node/search*/]), function (require, exports, path, arrays_1, cancellation_1, errorMessage_1, glob, resources, uri_1, winjs_base_1, encoding_1, extfs, search_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var TextSearchManager = /** @class */ (function () {
+        function TextSearchManager(query, provider, _extfs) {
+            if (_extfs === void 0) { _extfs = extfs; }
+            this.query = query;
+            this.provider = provider;
+            this._extfs = _extfs;
+            this.resultCount = 0;
+        }
+        TextSearchManager.prototype.search = function (onProgress, token) {
+            var _this = this;
+            var folderQueries = this.query.folderQueries;
+            var tokenSource = new cancellation_1.CancellationTokenSource();
+            token.onCancellationRequested(function () { return tokenSource.cancel(); });
+            return new winjs_base_1.TPromise(function (resolve, reject) {
+                _this.collector = new TextSearchResultsCollector(onProgress);
+                var isCanceled = false;
+                var onResult = function (match, folderIdx) {
+                    if (isCanceled) {
+                        return;
+                    }
+                    if (_this.resultCount >= _this.query.maxResults) {
+                        _this.isLimitHit = true;
+                        isCanceled = true;
+                        tokenSource.cancel();
+                    }
+                    if (!_this.isLimitHit) {
+                        _this.resultCount++;
+                        _this.collector.add(match, folderIdx);
+                    }
+                };
+                // For each root folder
+                winjs_base_1.TPromise.join(folderQueries.map(function (fq, i) {
+                    return _this.searchInFolder(fq, function (r) { return onResult(r, i); }, tokenSource.token);
+                })).then(function (results) {
+                    tokenSource.dispose();
+                    _this.collector.flush();
+                    var someFolderHitLImit = results.some(function (result) { return result && result.limitHit; });
+                    resolve({
+                        limitHit: _this.isLimitHit || someFolderHitLImit,
+                        stats: {
+                            type: 'textSearchProvider'
+                        }
+                    });
+                }, function (errs) {
+                    tokenSource.dispose();
+                    var errMsg = errs
+                        .map(function (err) { return errorMessage_1.toErrorMessage(err); })
+                        .filter(function (msg) { return !!msg; })[0];
+                    reject(new Error(errMsg));
+                });
+            });
+        };
+        TextSearchManager.prototype.searchInFolder = function (folderQuery, onResult, token) {
+            var _this = this;
+            var queryTester = new search_1.QueryGlobTester(this.query, folderQuery);
+            var testingPs = [];
+            var progress = {
+                report: function (result) {
+                    // TODO: validate result.ranges vs result.preview.matches
+                    var hasSibling = folderQuery.folder.scheme === 'file' && glob.hasSiblingPromiseFn(function () {
+                        return _this.readdir(path.dirname(result.uri.fsPath));
+                    });
+                    var relativePath = path.relative(folderQuery.folder.fsPath, result.uri.fsPath);
+                    testingPs.push(queryTester.includedInQuery(relativePath, path.basename(relativePath), hasSibling)
+                        .then(function (included) {
+                        if (included) {
+                            onResult(result);
+                        }
+                    }));
+                }
+            };
+            var searchOptions = this.getSearchOptionsForFolder(folderQuery);
+            return new winjs_base_1.TPromise(function (resolve) { return process.nextTick(resolve); })
+                .then(function () { return _this.provider.provideTextSearchResults(patternInfoToQuery(_this.query.contentPattern), searchOptions, progress, token); })
+                .then(function (result) {
+                return winjs_base_1.TPromise.join(testingPs)
+                    .then(function () { return result; });
+            });
+        };
+        TextSearchManager.prototype.readdir = function (dirname) {
+            var _this = this;
+            return new winjs_base_1.TPromise(function (resolve, reject) {
+                _this._extfs.readdir(dirname, function (err, files) {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(files);
+                });
+            });
+        };
+        TextSearchManager.prototype.getSearchOptionsForFolder = function (fq) {
+            var includes = search_1.resolvePatternsForProvider(this.query.includePattern, fq.includePattern);
+            var excludes = search_1.resolvePatternsForProvider(this.query.excludePattern, fq.excludePattern);
+            var options = {
+                folder: uri_1.URI.from(fq.folder),
+                excludes: excludes,
+                includes: includes,
+                useIgnoreFiles: !fq.disregardIgnoreFiles,
+                useGlobalIgnoreFiles: !fq.disregardGlobalIgnoreFiles,
+                followSymlinks: !fq.ignoreSymlinks,
+                encoding: fq.fileEncoding && encoding_1.toCanonicalName(fq.fileEncoding),
+                maxFileSize: this.query.maxFileSize,
+                maxResults: this.query.maxResults,
+                previewOptions: this.query.previewOptions,
+                afterContext: this.query.afterContext,
+                beforeContext: this.query.beforeContext
+            };
+            options.usePCRE2 = this.query.usePCRE2;
+            return options;
+        };
+        return TextSearchManager;
+    }());
+    exports.TextSearchManager = TextSearchManager;
+    function patternInfoToQuery(patternInfo) {
+        return {
+            isCaseSensitive: patternInfo.isCaseSensitive || false,
+            isRegExp: patternInfo.isRegExp || false,
+            isWordMatch: patternInfo.isWordMatch || false,
+            isMultiline: patternInfo.isMultiline || false,
+            pattern: patternInfo.pattern
+        };
+    }
+    var TextSearchResultsCollector = /** @class */ (function () {
+        function TextSearchResultsCollector(_onResult) {
+            var _this = this;
+            this._onResult = _onResult;
+            this._batchedCollector = new BatchedCollector(512, function (items) { return _this.sendItems(items); });
+        }
+        TextSearchResultsCollector.prototype.add = function (data, folderIdx) {
+            // Collects TextSearchResults into IInternalFileMatches and collates using BatchedCollector.
+            // This is efficient for ripgrep which sends results back one file at a time. It wouldn't be efficient for other search
+            // providers that send results in random order. We could do this step afterwards instead.
+            if (this._currentFileMatch && (this._currentFolderIdx !== folderIdx || !resources.isEqual(this._currentUri, data.uri))) {
+                this.pushToCollector();
+                this._currentFileMatch = null;
+            }
+            if (!this._currentFileMatch) {
+                this._currentFolderIdx = folderIdx;
+                this._currentFileMatch = {
+                    resource: data.uri,
+                    results: []
+                };
+            }
+            this._currentFileMatch.results.push(extensionResultToFrontendResult(data));
+        };
+        TextSearchResultsCollector.prototype.pushToCollector = function () {
+            var size = this._currentFileMatch ?
+                this._currentFileMatch.results.length :
+                0;
+            this._batchedCollector.addItem(this._currentFileMatch, size);
+        };
+        TextSearchResultsCollector.prototype.flush = function () {
+            this.pushToCollector();
+            this._batchedCollector.flush();
+        };
+        TextSearchResultsCollector.prototype.sendItems = function (items) {
+            this._onResult(items);
+        };
+        return TextSearchResultsCollector;
+    }());
+    exports.TextSearchResultsCollector = TextSearchResultsCollector;
+    function extensionResultToFrontendResult(data) {
+        // Warning: result from RipgrepTextSearchEH has fake vscode.Range. Don't depend on any other props beyond these...
+        if (extensionResultIsMatch(data)) {
+            return {
+                preview: {
+                    matches: arrays_1.mapArrayOrNot(data.preview.matches, function (m) { return ({
+                        startLineNumber: m.start.line,
+                        startColumn: m.start.character,
+                        endLineNumber: m.end.line,
+                        endColumn: m.end.character
+                    }); }),
+                    text: data.preview.text
+                },
+                ranges: arrays_1.mapArrayOrNot(data.ranges, function (r) { return ({
+                    startLineNumber: r.start.line,
+                    startColumn: r.start.character,
+                    endLineNumber: r.end.line,
+                    endColumn: r.end.character
+                }); })
+            };
+        }
+        else {
+            return {
+                text: data.text,
+                lineNumber: data.lineNumber
+            };
+        }
+    }
+    function extensionResultIsMatch(data) {
+        return !!data.preview;
+    }
+    exports.extensionResultIsMatch = extensionResultIsMatch;
+    /**
+     * Collects items that have a size - before the cumulative size of collected items reaches START_BATCH_AFTER_COUNT, the callback is called for every
+     * set of items collected.
+     * But after that point, the callback is called with batches of maxBatchSize.
+     * If the batch isn't filled within some time, the callback is also called.
+     */
+    var BatchedCollector = /** @class */ (function () {
+        function BatchedCollector(maxBatchSize, cb) {
+            this.maxBatchSize = maxBatchSize;
+            this.cb = cb;
+            this.totalNumberCompleted = 0;
+            this.batch = [];
+            this.batchSize = 0;
+        }
+        BatchedCollector.prototype.addItem = function (item, size) {
+            if (!item) {
+                return;
+            }
+            this.addItemToBatch(item, size);
+        };
+        BatchedCollector.prototype.addItems = function (items, size) {
+            if (!items) {
+                return;
+            }
+            this.addItemsToBatch(items, size);
+        };
+        BatchedCollector.prototype.addItemToBatch = function (item, size) {
+            this.batch.push(item);
+            this.batchSize += size;
+            this.onUpdate();
+        };
+        BatchedCollector.prototype.addItemsToBatch = function (item, size) {
+            this.batch = this.batch.concat(item);
+            this.batchSize += size;
+            this.onUpdate();
+        };
+        BatchedCollector.prototype.onUpdate = function () {
+            var _this = this;
+            if (this.totalNumberCompleted < BatchedCollector.START_BATCH_AFTER_COUNT) {
+                // Flush because we aren't batching yet
+                this.flush();
+            }
+            else if (this.batchSize >= this.maxBatchSize) {
+                // Flush because the batch is full
+                this.flush();
+            }
+            else if (!this.timeoutHandle) {
+                // No timeout running, start a timeout to flush
+                this.timeoutHandle = setTimeout(function () {
+                    _this.flush();
+                }, BatchedCollector.TIMEOUT);
+            }
+        };
+        BatchedCollector.prototype.flush = function () {
+            if (this.batchSize) {
+                this.totalNumberCompleted += this.batchSize;
+                this.cb(this.batch);
+                this.batch = [];
+                this.batchSize = 0;
+                if (this.timeoutHandle) {
+                    clearTimeout(this.timeoutHandle);
+                    this.timeoutHandle = 0;
+                }
+            }
+        };
+        BatchedCollector.TIMEOUT = 4000;
+        // After START_BATCH_AFTER_COUNT items have been collected, stop flushing on timeout
+        BatchedCollector.START_BATCH_AFTER_COUNT = 50;
+        return BatchedCollector;
+    }());
+    exports.BatchedCollector = BatchedCollector;
+});
 
-
-
-
-
-
-
-
-
-
-define(__m[20/*vs/workbench/services/search/node/ripgrepTextSearch*/], __M([1/*require*/,0/*exports*/,10/*child_process*/,59/*events*/,12/*path*/,26/*string_decoder*/,19/*vs/base/common/glob*/,7/*vs/base/common/objects*/,5/*vs/base/common/paths*/,2/*vs/base/common/platform*/,3/*vs/base/common/strings*/,4/*vs/base/common/winjs.base*/,30/*vs/base/node/encoding*/,24/*vs/base/node/extfs*/,38/*vs/editor/common/core/range*/,48/*vs/platform/search/common/search*/,55/*vscode-ripgrep*/,49/*vs/workbench/services/search/node/search*/]), function (require, exports, cp, events_1, path, string_decoder_1, glob, objects, paths, platform, strings, winjs_base_1, encoding, extfs, range_1, search_1, vscode_ripgrep_1, search_2) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[58/*vs/workbench/services/search/node/ripgrepFileSearch*/], __M([0/*require*/,1/*exports*/,14/*child_process*/,6/*path*/,19/*vs/base/common/normalization*/,12/*vs/base/common/objects*/,5/*vs/base/common/paths*/,3/*vs/base/common/platform*/,2/*vs/base/common/strings*/,35/*vs/workbench/services/search/node/ripgrepSearchUtils*/,59/*vscode-ripgrep*/]), function (require, exports, cp, path, normalization_1, objects, paths, platform_1, strings, ripgrepSearchUtils_1, vscode_ripgrep_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // If vscode-ripgrep is in an .asar file, then the binary is unpacked.
     var rgDiskPath = vscode_ripgrep_1.rgPath.replace(/\bnode_modules\.asar\b/, 'node_modules.asar.unpacked');
-    var RipgrepEngine = /** @class */ (function () {
-        function RipgrepEngine(config) {
-            var _this = this;
-            this.config = config;
-            this.isDone = false;
-            this.resultsHandledP = winjs_base_1.TPromise.wrap(null);
-            this.killRgProcFn = function () { return _this.rgProc && _this.rgProc.kill(); };
-        }
-        RipgrepEngine.prototype.cancel = function () {
-            this.isDone = true;
-            this.ripgrepParser.cancel();
-            this.rgProc.kill();
+    function spawnRipgrepCmd(config, folderQuery, includePattern, excludePattern) {
+        var rgArgs = getRgArgs(config, folderQuery, includePattern, excludePattern);
+        var cwd = folderQuery.folder.fsPath;
+        return {
+            cmd: cp.spawn(rgDiskPath, rgArgs.args, { cwd: cwd }),
+            siblingClauses: rgArgs.siblingClauses,
+            rgArgs: rgArgs,
+            cwd: cwd
         };
-        // TODO@Rob - make promise-based once the old search is gone, and I don't need them to have matching interfaces anymore
-        RipgrepEngine.prototype.search = function (onResult, onMessage, done) {
-            var _this = this;
-            if (!this.config.folderQueries.length && !this.config.extraFiles.length) {
-                process.removeListener('exit', this.killRgProcFn);
-                done(null, {
-                    type: 'success',
-                    limitHit: false,
-                    stats: {
-                        type: 'searchProcess'
-                    }
-                });
-                return;
-            }
-            var rgArgs = getRgArgs(this.config);
-            if (rgArgs.siblingClauses) {
-                this.postProcessExclusions = glob.parseToAsync(rgArgs.siblingClauses, { trimForExclusions: true });
-            }
-            var cwd = platform.isWindows ? 'c:/' : '/';
-            var escapedArgs = rgArgs.args
-                .map(function (arg) { return arg.match(/^-/) ? arg : "'" + arg + "'"; })
-                .join(' ');
-            var rgCmd = "rg " + escapedArgs + "\n - cwd: " + cwd;
-            if (rgArgs.siblingClauses) {
-                rgCmd += "\n - Sibling clauses: " + JSON.stringify(rgArgs.siblingClauses);
-            }
-            onMessage({ message: rgCmd });
-            this.rgProc = cp.spawn(rgDiskPath, rgArgs.args, { cwd: cwd });
-            process.once('exit', this.killRgProcFn);
-            this.ripgrepParser = new RipgrepParser(this.config.maxResults, cwd, this.config.extraFiles, this.config.previewOptions);
-            this.ripgrepParser.on('result', function (match) {
-                if (_this.postProcessExclusions) {
-                    var handleResultP = _this.postProcessExclusions(match.path, undefined, glob.hasSiblingPromiseFn(function () { return getSiblings(match.path); }))
-                        .then(function (globMatch) {
-                        if (!globMatch) {
-                            onResult(match);
-                        }
-                    });
-                    _this.resultsHandledP = winjs_base_1.TPromise.join([_this.resultsHandledP, handleResultP]);
-                }
-                else {
-                    onResult(match);
-                }
-            });
-            this.ripgrepParser.on('hitLimit', function () {
-                _this.cancel();
-                process.removeListener('exit', _this.killRgProcFn);
-                done(null, {
-                    type: 'success',
-                    limitHit: true,
-                    stats: {
-                        type: 'searchProcess'
-                    }
-                });
-            });
-            this.rgProc.stdout.on('data', function (data) {
-                _this.ripgrepParser.handleData(data);
-            });
-            var gotData = false;
-            this.rgProc.stdout.once('data', function () { return gotData = true; });
-            var stderr = '';
-            this.rgProc.stderr.on('data', function (data) {
-                var message = data.toString();
-                onMessage({ message: message });
-                stderr += message;
-            });
-            this.rgProc.on('close', function (code) {
-                // Trigger last result, then wait on async result handling
-                _this.ripgrepParser.flush();
-                _this.resultsHandledP.then(function () {
-                    _this.rgProc = null;
-                    if (!_this.isDone) {
-                        _this.isDone = true;
-                        var displayMsg = void 0;
-                        process.removeListener('exit', _this.killRgProcFn);
-                        if (stderr && !gotData && (displayMsg = rgErrorMsgForDisplay(stderr))) {
-                            done(new Error(displayMsg), {
-                                type: 'success',
-                                limitHit: false,
-                                stats: null
-                            });
-                        }
-                        else {
-                            done(null, {
-                                type: 'success',
-                                limitHit: false,
-                                stats: null
-                            });
-                        }
-                    }
-                });
-            });
-        };
-        return RipgrepEngine;
-    }());
-    exports.RipgrepEngine = RipgrepEngine;
-    /**
-     * Read the first line of stderr and return an error for display or undefined, based on a whitelist.
-     * Ripgrep produces stderr output which is not from a fatal error, and we only want the search to be
-     * "failed" when a fatal error was produced.
-     */
-    function rgErrorMsgForDisplay(msg) {
-        var lines = msg.trim().split('\n');
-        var firstLine = lines[0].trim();
-        if (strings.startsWith(firstLine, 'Error parsing regex')) {
-            return firstLine;
-        }
-        if (strings.startsWith(firstLine, 'regex parse error')) {
-            return strings.uppercaseFirstLetter(lines[lines.length - 1].trim());
-        }
-        if (strings.startsWith(firstLine, 'error parsing glob') ||
-            strings.startsWith(firstLine, 'unsupported encoding')) {
-            // Uppercase first letter
-            return firstLine.charAt(0).toUpperCase() + firstLine.substr(1);
-        }
-        if (firstLine === "Literal '\\n' not allowed.") {
-            // I won't localize this because none of the Ripgrep error messages are localized
-            return "Literal '\\n' currently not supported";
-        }
-        if (strings.startsWith(firstLine, 'Literal ')) {
-            // Other unsupported chars
-            return firstLine;
-        }
-        return undefined;
     }
-    exports.rgErrorMsgForDisplay = rgErrorMsgForDisplay;
-    var RipgrepParser = /** @class */ (function (_super) {
-        __extends(RipgrepParser, _super);
-        function RipgrepParser(maxResults, rootFolder, extraFiles, previewOptions) {
-            var _this = _super.call(this) || this;
-            _this.maxResults = maxResults;
-            _this.rootFolder = rootFolder;
-            _this.previewOptions = previewOptions;
-            _this.numResults = 0;
-            _this.stringDecoder = new string_decoder_1.StringDecoder();
-            _this.extraSearchFiles = extraFiles || [];
-            return _this;
+    exports.spawnRipgrepCmd = spawnRipgrepCmd;
+    function getRgArgs(config, folderQuery, includePattern, excludePattern) {
+        var args = ['--files', '--hidden', '--case-sensitive'];
+        // includePattern can't have siblingClauses
+        foldersToIncludeGlobs([folderQuery], includePattern, false).forEach(function (globArg) {
+            var inclusion = ripgrepSearchUtils_1.anchorGlob(globArg);
+            args.push('-g', inclusion);
+            if (platform_1.isMacintosh) {
+                var normalized = normalization_1.normalizeNFD(inclusion);
+                if (normalized !== inclusion) {
+                    args.push('-g', normalized);
+                }
+            }
+        });
+        var siblingClauses;
+        var rgGlobs = foldersToRgExcludeGlobs([folderQuery], excludePattern, undefined, false);
+        rgGlobs.globArgs.forEach(function (globArg) {
+            var exclusion = "!" + ripgrepSearchUtils_1.anchorGlob(globArg);
+            args.push('-g', exclusion);
+            if (platform_1.isMacintosh) {
+                var normalized = normalization_1.normalizeNFD(exclusion);
+                if (normalized !== exclusion) {
+                    args.push('-g', normalized);
+                }
+            }
+        });
+        siblingClauses = rgGlobs.siblingClauses;
+        if (folderQuery.disregardIgnoreFiles !== false) {
+            // Don't use .gitignore or .ignore
+            args.push('--no-ignore');
         }
-        RipgrepParser.prototype.cancel = function () {
-            this.isDone = true;
-        };
-        RipgrepParser.prototype.flush = function () {
-            this.handleDecodedData(this.stringDecoder.end());
-            if (this.fileMatch) {
-                this.onResult();
-            }
-        };
-        RipgrepParser.prototype.handleData = function (data) {
-            var dataStr = typeof data === 'string' ? data : this.stringDecoder.write(data);
-            this.handleDecodedData(dataStr);
-        };
-        RipgrepParser.prototype.handleDecodedData = function (decodedData) {
-            // If the previous data chunk didn't end in a newline, prepend it to this chunk
-            var dataStr = this.remainder ?
-                this.remainder + decodedData :
-                decodedData;
-            var dataLines = dataStr.split(/\r\n|\n/);
-            this.remainder = dataLines[dataLines.length - 1] ? dataLines.pop() : null;
-            for (var l = 0; l < dataLines.length; l++) {
-                var outputLine = dataLines[l].trim();
-                if (this.isDone) {
-                    break;
-                }
-                var r = void 0;
-                if (r = outputLine.match(RipgrepParser.RESULT_REGEX)) {
-                    var lineNum = parseInt(r[1]) - 1;
-                    var matchText = r[2];
-                    // workaround https://github.com/BurntSushi/ripgrep/issues/416
-                    // If the match line ended with \r, append a match end marker so the match isn't lost
-                    if (r[3]) {
-                        matchText += RipgrepParser.MATCH_END_MARKER;
-                    }
-                    // Line is a result - add to collected results for the current file path
-                    this.handleMatchLine(outputLine, lineNum, matchText);
-                }
-                else if (r = outputLine.match(RipgrepParser.FILE_REGEX)) {
-                    // Line is a file path - send all collected results for the previous file path
-                    if (this.fileMatch) {
-                        this.onResult();
-                    }
-                    this.fileMatch = this.getFileMatch(r[1]);
-                }
-                else {
-                    // Line is empty (or malformed)
-                }
-            }
-        };
-        RipgrepParser.prototype.getFileMatch = function (relativeOrAbsolutePath) {
-            var absPath = path.isAbsolute(relativeOrAbsolutePath) ?
-                relativeOrAbsolutePath :
-                path.join(this.rootFolder, relativeOrAbsolutePath);
-            return new search_2.FileMatch(absPath);
-        };
-        RipgrepParser.prototype.handleMatchLine = function (outputLine, lineNum, text) {
-            var _this = this;
-            if (lineNum === 0) {
-                text = strings.stripUTF8BOM(text);
-            }
-            if (!this.fileMatch) {
-                // When searching a single file and no folderQueries, rg does not print the file line, so create it here
-                var singleFile = this.extraSearchFiles[0];
-                if (!singleFile) {
-                    throw new Error('Got match line for unknown file');
-                }
-                this.fileMatch = this.getFileMatch(singleFile);
-            }
-            var lastMatchEndPos = 0;
-            var matchTextStartPos = -1;
-            // Track positions with color codes subtracted - offsets in the final text preview result
-            var matchTextStartRealIdx = -1;
-            var textRealIdx = 0;
-            var hitLimit = false;
-            var matchRanges = [];
-            var realTextParts = [];
-            for (var i = 0; i < text.length - (RipgrepParser.MATCH_END_MARKER.length - 1);) {
-                if (text.substr(i, RipgrepParser.MATCH_START_MARKER.length) === RipgrepParser.MATCH_START_MARKER) {
-                    // Match start
-                    var chunk_1 = text.slice(lastMatchEndPos, i);
-                    realTextParts.push(chunk_1);
-                    i += RipgrepParser.MATCH_START_MARKER.length;
-                    matchTextStartPos = i;
-                    matchTextStartRealIdx = textRealIdx;
-                }
-                else if (text.substr(i, RipgrepParser.MATCH_END_MARKER.length) === RipgrepParser.MATCH_END_MARKER) {
-                    // Match end
-                    var chunk_2 = text.slice(matchTextStartPos, i);
-                    realTextParts.push(chunk_2);
-                    if (!hitLimit) {
-                        matchRanges.push(new range_1.Range(lineNum, matchTextStartRealIdx, lineNum, textRealIdx));
-                    }
-                    matchTextStartPos = -1;
-                    matchTextStartRealIdx = -1;
-                    i += RipgrepParser.MATCH_END_MARKER.length;
-                    lastMatchEndPos = i;
-                    this.numResults++;
-                    // Check hit maxResults limit
-                    if (this.numResults >= this.maxResults) {
-                        // Finish the line, then report the result below
-                        hitLimit = true;
-                    }
-                }
-                else {
-                    i++;
-                    textRealIdx++;
-                }
-            }
-            var chunk = text.slice(lastMatchEndPos);
-            realTextParts.push(chunk);
-            // Replace preview with version without color codes
-            var preview = realTextParts.join('');
-            matchRanges
-                .map(function (r) { return new search_1.TextSearchResult(preview, r, _this.previewOptions); })
-                .forEach(function (m) { return _this.fileMatch.addMatch(m); });
-            if (hitLimit) {
-                this.cancel();
-                this.onResult();
-                this.emit('hitLimit');
-            }
-        };
-        RipgrepParser.prototype.onResult = function () {
-            this.emit('result', this.fileMatch.serialize());
-            this.fileMatch = null;
-        };
-        RipgrepParser.RESULT_REGEX = /^\u001b\[0m(\d+)\u001b\[0m:(.*)(\r?)/;
-        RipgrepParser.FILE_REGEX = /^\u001b\[0m(.+)\u001b\[0m$/;
-        RipgrepParser.MATCH_START_MARKER = '\u001b[0m\u001b[31m';
-        RipgrepParser.MATCH_END_MARKER = '\u001b[0m';
-        return RipgrepParser;
-    }(events_1.EventEmitter));
-    exports.RipgrepParser = RipgrepParser;
+        else {
+            args.push('--no-ignore-parent');
+        }
+        // Follow symlinks
+        if (!folderQuery.ignoreSymlinks) {
+            args.push('--follow');
+        }
+        if (config.exists) {
+            args.push('--quiet');
+        }
+        args.push('--no-config');
+        if (folderQuery.disregardGlobalIgnoreFiles) {
+            args.push('--no-ignore-global');
+        }
+        return { args: args, siblingClauses: siblingClauses };
+    }
     function foldersToRgExcludeGlobs(folderQueries, globalExclude, excludesToSkip, absoluteGlobs) {
         if (absoluteGlobs === void 0) { absoluteGlobs = true; }
         var globArgs = [];
         var siblingClauses = {};
         folderQueries.forEach(function (folderQuery) {
             var totalExcludePattern = objects.assign({}, folderQuery.excludePattern || {}, globalExclude || {});
-            var result = globExprsToRgGlobs(totalExcludePattern, absoluteGlobs && folderQuery.folder, excludesToSkip);
+            var result = globExprsToRgGlobs(totalExcludePattern, absoluteGlobs && folderQuery.folder.fsPath, excludesToSkip);
             globArgs.push.apply(globArgs, result.globArgs);
             if (result.siblingClauses) {
                 siblingClauses = objects.assign(siblingClauses, result.siblingClauses);
@@ -13261,7 +14167,7 @@ define(__m[20/*vs/workbench/services/search/node/ripgrepTextSearch*/], __M([1/*r
         var globArgs = [];
         folderQueries.forEach(function (folderQuery) {
             var totalIncludePattern = objects.assign({}, globalInclude || {}, folderQuery.includePattern || {});
-            var result = globExprsToRgGlobs(totalIncludePattern, absoluteGlobs && folderQuery.folder);
+            var result = globExprsToRgGlobs(totalIncludePattern, absoluteGlobs && folderQuery.folder.fsPath);
             globArgs.push.apply(globArgs, result.globArgs);
         });
         return globArgs;
@@ -13289,6 +14195,10 @@ define(__m[20/*vs/workbench/services/search/node/ripgrepTextSearch*/], __M([1/*r
                 key = key.replace(/\\/g, '/');
             }
             if (typeof value === 'boolean' && value) {
+                if (strings.startsWith(key, '\\\\')) {
+                    // Absolute globs UNC paths don't work properly, see #58758
+                    key += '**';
+                }
                 globArgs.push(fixDriveC(key));
             }
             else if (value && value.when) {
@@ -13323,203 +14233,28 @@ define(__m[20/*vs/workbench/services/search/node/ripgrepTextSearch*/], __M([1/*r
             path;
     }
     exports.fixDriveC = fixDriveC;
-    function getRgArgs(config) {
-        var args = ['--hidden', '--heading', '--line-number', '--color', 'ansi', '--colors', 'path:none', '--colors', 'line:none', '--colors', 'match:fg:red', '--colors', 'match:style:nobold'];
-        args.push(config.contentPattern.isCaseSensitive ? '--case-sensitive' : '--ignore-case');
-        // includePattern can't have siblingClauses
-        foldersToIncludeGlobs(config.folderQueries, config.includePattern).forEach(function (globArg) {
-            args.push('-g', globArg);
-        });
-        var siblingClauses;
-        // Find excludes that are exactly the same in all folderQueries - e.g. from user settings, and that start with `**`.
-        // To make the command shorter, don't resolve these against every folderQuery path - see #33189.
-        var universalExcludes = findUniversalExcludes(config.folderQueries);
-        var rgGlobs = foldersToRgExcludeGlobs(config.folderQueries, config.excludePattern, universalExcludes);
-        rgGlobs.globArgs
-            .forEach(function (rgGlob) { return args.push('-g', "!" + rgGlob); });
-        if (universalExcludes) {
-            universalExcludes
-                .forEach(function (exclude) { return args.push('-g', "!" + trimTrailingSlash(exclude)); });
-        }
-        siblingClauses = rgGlobs.siblingClauses;
-        if (config.maxFilesize) {
-            args.push('--max-filesize', config.maxFilesize + '');
-        }
-        if (config.disregardIgnoreFiles) {
-            // Don't use .gitignore or .ignore
-            args.push('--no-ignore');
-        }
-        else {
-            args.push('--no-ignore-parent');
-        }
-        // Follow symlinks
-        if (!config.ignoreSymlinks) {
-            args.push('--follow');
-        }
-        if (config.folderQueries[0]) {
-            var folder0Encoding_1 = config.folderQueries[0].fileEncoding;
-            if (folder0Encoding_1 && folder0Encoding_1 !== 'utf8' && config.folderQueries.every(function (fq) { return fq.fileEncoding === folder0Encoding_1; })) {
-                args.push('--encoding', encoding.toCanonicalName(folder0Encoding_1));
-            }
-        }
-        // Ripgrep handles -- as a -- arg separator. Only --.
-        // - is ok, --- is ok, --some-flag is handled as query text. Need to special case.
-        if (config.contentPattern.pattern === '--') {
-            config.contentPattern.isRegExp = true;
-            config.contentPattern.pattern = '\\-\\-';
-        }
-        var searchPatternAfterDoubleDashes;
-        if (config.contentPattern.isWordMatch) {
-            var regexp = strings.createRegExp(config.contentPattern.pattern, config.contentPattern.isRegExp, { wholeWord: config.contentPattern.isWordMatch });
-            var regexpStr = regexp.source.replace(/\\\//g, '/'); // RegExp.source arbitrarily returns escaped slashes. Search and destroy.
-            args.push('--regexp', regexpStr);
-        }
-        else if (config.contentPattern.isRegExp) {
-            args.push('--regexp', fixRegexEndingPattern(config.contentPattern.pattern));
-        }
-        else {
-            searchPatternAfterDoubleDashes = config.contentPattern.pattern;
-            args.push('--fixed-strings');
-        }
-        args.push('--no-config');
-        args.push('--no-ignore-global');
-        // Folder to search
-        args.push('--');
-        if (searchPatternAfterDoubleDashes) {
-            // Put the query after --, in case the query starts with a dash
-            args.push(searchPatternAfterDoubleDashes);
-        }
-        args.push.apply(args, config.folderQueries.map(function (q) { return q.folder; }));
-        args.push.apply(args, config.extraFiles);
-        return { args: args, siblingClauses: siblingClauses };
-    }
-    function getSiblings(file) {
-        return new winjs_base_1.TPromise(function (resolve, reject) {
-            extfs.readdir(path.dirname(file), function (error, files) {
-                if (error) {
-                    reject(error);
-                }
-                resolve(files);
-            });
-        });
-    }
-    function findUniversalExcludes(folderQueries) {
-        if (folderQueries.length < 2) {
-            // Nothing to simplify
-            return null;
-        }
-        var firstFolder = folderQueries[0];
-        if (!firstFolder.excludePattern) {
-            return null;
-        }
-        var universalExcludes = new Set();
-        Object.keys(firstFolder.excludePattern).forEach(function (key) {
-            if (strings.startsWith(key, '**') && folderQueries.every(function (q) { return q.excludePattern && q.excludePattern[key] === true; })) {
-                universalExcludes.add(key);
-            }
-        });
-        return universalExcludes;
-    }
-    // Exported for testing
-    function fixRegexEndingPattern(pattern) {
-        // Replace an unescaped $ at the end of the pattern with \r?$
-        // Match $ preceeded by none or even number of literal \
-        return pattern.match(/([^\\]|^)(\\\\)*\$$/) ?
-            pattern.replace(/\$$/, '\\r?$') :
-            pattern;
-    }
-    exports.fixRegexEndingPattern = fixRegexEndingPattern;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[56/*vs/workbench/services/search/node/ripgrepFileSearch*/], __M([1/*require*/,0/*exports*/,10/*child_process*/,55/*vscode-ripgrep*/,2/*vs/base/common/platform*/,3/*vs/base/common/strings*/,15/*vs/base/common/normalization*/,20/*vs/workbench/services/search/node/ripgrepTextSearch*/]), function (require, exports, cp, vscode_ripgrep_1, platform_1, strings_1, normalization_1, ripgrepTextSearch_1) {
+define(__m[32/*vs/workbench/services/search/node/fileSearch*/], __M([0/*require*/,1/*exports*/,14/*child_process*/,17/*fs*/,6/*path*/,29/*string_decoder*/,8/*vs/base/common/arrays*/,28/*vs/base/common/errorMessage*/,15/*vs/base/common/glob*/,19/*vs/base/common/normalization*/,12/*vs/base/common/objects*/,5/*vs/base/common/paths*/,3/*vs/base/common/platform*/,23/*vs/base/common/stopwatch*/,2/*vs/base/common/strings*/,18/*vs/base/common/types*/,21/*vs/base/node/extfs*/,30/*vs/base/node/flow*/,58/*vs/workbench/services/search/node/ripgrepFileSearch*/]), function (require, exports, childProcess, fs, path, string_decoder_1, arrays, errorMessage_1, glob, normalization, objects, paths_1, platform, stopwatch_1, strings, types, extfs, flow, ripgrepFileSearch_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    // If vscode-ripgrep is in an .asar file, then the binary is unpacked.
-    var rgDiskPath = vscode_ripgrep_1.rgPath.replace(/\bnode_modules\.asar\b/, 'node_modules.asar.unpacked');
-    function spawnRipgrepCmd(config, folderQuery, includePattern, excludePattern) {
-        var rgArgs = getRgArgs(config, folderQuery, includePattern, excludePattern);
-        var cwd = folderQuery.folder;
-        return {
-            cmd: cp.spawn(rgDiskPath, rgArgs.args, { cwd: cwd }),
-            siblingClauses: rgArgs.siblingClauses,
-            rgArgs: rgArgs,
-            cwd: cwd
-        };
-    }
-    exports.spawnRipgrepCmd = spawnRipgrepCmd;
-    function getRgArgs(config, folderQuery, includePattern, excludePattern) {
-        var args = ['--files', '--hidden', '--case-sensitive'];
-        // includePattern can't have siblingClauses
-        ripgrepTextSearch_1.foldersToIncludeGlobs([folderQuery], includePattern, false).forEach(function (globArg) {
-            var inclusion = anchor(globArg);
-            args.push('-g', inclusion);
-            if (platform_1.isMacintosh) {
-                var normalized = normalization_1.normalizeNFD(inclusion);
-                if (normalized !== inclusion) {
-                    args.push('-g', normalized);
-                }
-            }
-        });
-        var siblingClauses;
-        var rgGlobs = ripgrepTextSearch_1.foldersToRgExcludeGlobs([folderQuery], excludePattern, undefined, false);
-        rgGlobs.globArgs.forEach(function (globArg) {
-            var exclusion = "!" + anchor(globArg);
-            args.push('-g', exclusion);
-            if (platform_1.isMacintosh) {
-                var normalized = normalization_1.normalizeNFD(exclusion);
-                if (normalized !== exclusion) {
-                    args.push('-g', normalized);
-                }
-            }
-        });
-        siblingClauses = rgGlobs.siblingClauses;
-        if (folderQuery.disregardIgnoreFiles !== false) {
-            // Don't use .gitignore or .ignore
-            args.push('--no-ignore');
-        }
-        else {
-            args.push('--no-ignore-parent');
-        }
-        // Follow symlinks
-        if (!config.ignoreSymlinks) {
-            args.push('--follow');
-        }
-        if (config.exists) {
-            args.push('--quiet');
-        }
-        args.push('--no-config');
-        args.push('--no-ignore-global');
-        // Folder to search
-        args.push('--');
-        args.push('.');
-        return { args: args, siblingClauses: siblingClauses };
-    }
-    function anchor(glob) {
-        return strings_1.startsWith(glob, '**') || strings_1.startsWith(glob, '/') ? glob : "/" + glob;
-    }
-});
-
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*/,0/*exports*/,10/*child_process*/,21/*fs*/,12/*path*/,26/*string_decoder*/,13/*vs/base/common/arrays*/,42/*vs/base/common/errorMessage*/,19/*vs/base/common/glob*/,15/*vs/base/common/normalization*/,7/*vs/base/common/objects*/,5/*vs/base/common/paths*/,2/*vs/base/common/platform*/,3/*vs/base/common/strings*/,14/*vs/base/common/types*/,24/*vs/base/node/extfs*/,27/*vs/base/node/flow*/,56/*vs/workbench/services/search/node/ripgrepFileSearch*/,20/*vs/workbench/services/search/node/ripgrepTextSearch*/,28/*vs/base/common/stopwatch*/]), function (require, exports, childProcess, fs, path, string_decoder_1, arrays, errorMessage_1, glob, normalization, objects, paths_1, platform, strings, types, extfs, flow, ripgrepFileSearch_1, ripgrepTextSearch_1, stopwatch_1) {
-    'use strict';
     Object.defineProperty(exports, "__esModule", { value: true });
     var Traversal;
     (function (Traversal) {
         Traversal[Traversal["Node"] = 1] = "Node";
         Traversal[Traversal["MacFind"] = 2] = "MacFind";
-        Traversal[Traversal["WindowsDir"] = 3] = "WindowsDir";
-        Traversal[Traversal["LinuxFind"] = 4] = "LinuxFind";
-        Traversal[Traversal["Ripgrep"] = 5] = "Ripgrep";
+        Traversal[Traversal["LinuxFind"] = 3] = "LinuxFind";
+        Traversal[Traversal["Ripgrep"] = 4] = "Ripgrep";
     })(Traversal || (Traversal = {}));
+    var killCmds = new Set();
+    process.on('exit', function () {
+        killCmds.forEach(function (cmd) { return cmd(); });
+    });
     var FileWalker = /** @class */ (function () {
-        function FileWalker(config) {
+        function FileWalker(config, maxFileSize) {
             var _this = this;
             this.config = config;
             this.useRipgrep = config.useRipgrep !== false;
@@ -13527,7 +14262,7 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
             this.includePattern = config.includePattern && glob.parse(config.includePattern);
             this.maxResults = config.maxResults || null;
             this.exists = config.exists;
-            this.maxFilesize = config.maxFilesize || null;
+            this.maxFilesize = maxFileSize || null;
             this.walkedPaths = Object.create(null);
             this.resultCount = 0;
             this.isLimitHit = false;
@@ -13543,16 +14278,17 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
             config.folderQueries.forEach(function (folderQuery) {
                 var folderExcludeExpression = objects.assign({}, folderQuery.excludePattern || {}, _this.config.excludePattern || {});
                 // Add excludes for other root folders
+                var fqPath = folderQuery.folder.fsPath;
                 config.folderQueries
-                    .map(function (rootFolderQuery) { return rootFolderQuery.folder; })
-                    .filter(function (rootFolder) { return rootFolder !== folderQuery.folder; })
+                    .map(function (rootFolderQuery) { return rootFolderQuery.folder.fsPath; })
+                    .filter(function (rootFolder) { return rootFolder !== fqPath; })
                     .forEach(function (otherRootFolder) {
                     // Exclude nested root folders
-                    if (paths_1.isEqualOrParent(otherRootFolder, folderQuery.folder)) {
-                        folderExcludeExpression[path.relative(folderQuery.folder, otherRootFolder)] = true;
+                    if (paths_1.isEqualOrParent(otherRootFolder, fqPath)) {
+                        folderExcludeExpression[path.relative(fqPath, otherRootFolder)] = true;
                     }
                 });
-                _this.folderExcludePatterns.set(folderQuery.folder, new AbsoluteAndRelativeParsedExpression(folderExcludeExpression, folderQuery.folder));
+                _this.folderExcludePatterns.set(fqPath, new AbsoluteAndRelativeParsedExpression(folderExcludeExpression, fqPath));
             });
         }
         FileWalker.prototype.cancel = function () {
@@ -13568,12 +14304,12 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
             // For each extra file
             if (extraFiles) {
                 extraFiles.forEach(function (extraFilePath) {
-                    var basename = path.basename(extraFilePath);
-                    if (_this.globalExcludePattern && _this.globalExcludePattern(extraFilePath, basename)) {
+                    var basename = path.basename(extraFilePath.fsPath);
+                    if (_this.globalExcludePattern && _this.globalExcludePattern(extraFilePath.fsPath, basename)) {
                         return; // excluded
                     }
                     // File: Check for match on file pattern and include pattern
-                    _this.matchFile(onResult, { relativePath: extraFilePath /* no workspace relative path */, basename: basename });
+                    _this.matchFile(onResult, { relativePath: extraFilePath.fsPath /* no workspace relative path */, basename: basename });
                 });
             }
             var traverse = this.nodeJSTraversal;
@@ -13585,11 +14321,7 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
                 else if (platform.isMacintosh) {
                     this.traversal = Traversal.MacFind;
                     traverse = this.cmdTraversal;
-                    // Disable 'dir' for now (#11181, #11179, #11183, #11182).
-                } /* else if (platform.isWindows) {
-                    this.traversal = Traversal.WindowsDir;
-                    traverse = this.windowsDirTraversal;
-                } */
+                }
                 else if (platform.isLinux) {
                     this.traversal = Traversal.LinuxFind;
                     traverse = this.cmdTraversal;
@@ -13632,12 +14364,13 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
         };
         FileWalker.prototype.cmdTraversal = function (folderQuery, onResult, onMessage, cb) {
             var _this = this;
-            var rootFolder = folderQuery.folder;
+            var rootFolder = folderQuery.folder.fsPath;
             var isMac = platform.isMacintosh;
             var cmd;
             var killCmd = function () { return cmd && cmd.kill(); };
+            killCmds.add(killCmd);
             var done = function (err) {
-                process.removeListener('exit', killCmd);
+                killCmds.delete(killCmd);
                 done = function () { };
                 cb(err);
             };
@@ -13647,7 +14380,7 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
             var useRipgrep = this.useRipgrep;
             var noSiblingsClauses;
             if (useRipgrep) {
-                var ripgrep = ripgrepFileSearch_1.spawnRipgrepCmd(this.config, folderQuery, this.config.includePattern, this.folderExcludePatterns.get(folderQuery.folder).expression);
+                var ripgrep = ripgrepFileSearch_1.spawnRipgrepCmd(this.config, folderQuery, this.config.includePattern, this.folderExcludePatterns.get(folderQuery.folder.fsPath).expression);
                 cmd = ripgrep.cmd;
                 noSiblingsClauses = !Object.keys(ripgrep.siblingClauses).length;
                 var escapedArgs = ripgrep.rgArgs.args
@@ -13662,7 +14395,6 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
             else {
                 cmd = this.spawnFindCmd(folderQuery);
             }
-            process.on('exit', killCmd);
             this.cmdResultCount = 0;
             this.collectStdout(cmd, 'utf8', useRipgrep, onMessage, function (err, stdout, last) {
                 if (err) {
@@ -13718,33 +14450,11 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
                 }
             });
         };
-        // protected windowsDirTraversal(rootFolder: string, onResult: (result: IRawFileMatch) => void, done: (err?: Error) => void): void {
-        // 	const cmd = childProcess.spawn('cmd', ['/U', '/c', 'dir', '/s', '/b', '/a-d', rootFolder]);
-        // 	this.readStdout(cmd, 'ucs2', (err: Error, stdout?: string) => {
-        // 		if (err) {
-        // 			done(err);
-        // 			return;
-        // 		}
-        // 		const relativeFiles = stdout.split(`\r\n${rootFolder}\\`);
-        // 		relativeFiles[0] = relativeFiles[0].trim().substr(rootFolder.length + 1);
-        // 		const n = relativeFiles.length;
-        // 		relativeFiles[n - 1] = relativeFiles[n - 1].trim();
-        // 		if (!relativeFiles[n - 1]) {
-        // 			relativeFiles.pop();
-        // 		}
-        // 		if (relativeFiles.length && relativeFiles[0].indexOf('\n') !== -1) {
-        // 			done(new Error('Splitting up files failed'));
-        // 			return;
-        // 		}
-        // 		this.matchFiles(rootFolder, relativeFiles, onResult);
-        // 		done();
-        // 	});
-        // }
         /**
          * Public for testing.
          */
         FileWalker.prototype.spawnFindCmd = function (folderQuery) {
-            var excludePattern = this.folderExcludePatterns.get(folderQuery.folder);
+            var excludePattern = this.folderExcludePatterns.get(folderQuery.folder.fsPath);
             var basenames = excludePattern.getBasenameTerms();
             var pathTerms = excludePattern.getPathTerms();
             var args = ['-L', '.'];
@@ -13764,7 +14474,7 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
                 args.push(')', '-prune', ')');
             }
             args.push('-type', 'f');
-            return childProcess.spawn('find', args, { cwd: folderQuery.folder });
+            return childProcess.spawn('find', args, { cwd: folderQuery.folder.fsPath });
         };
         /**
          * Public for testing.
@@ -13815,8 +14525,8 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
             });
             cmd.on('close', function (code) {
                 // ripgrep returns code=1 when no results are found
-                var stderrText, displayMsg;
-                if (isRipgrep ? (!gotData && (stderrText = _this.decodeData(stderr, encoding)) && (displayMsg = ripgrepTextSearch_1.rgErrorMsgForDisplay(stderrText))) : code !== 0) {
+                var stderrText;
+                if (isRipgrep ? (!gotData && (stderrText = _this.decodeData(stderr, encoding)) && rgErrorMsgForDisplay(stderrText)) : code !== 0) {
                     onData(new Error("command failed with error code " + code + ": " + _this.decodeData(stderr, encoding)));
                 }
                 else {
@@ -13915,7 +14625,7 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
         FileWalker.prototype.nodeJSTraversal = function (folderQuery, onResult, onMessage, done) {
             var _this = this;
             this.directoriesWalked++;
-            extfs.readdir(folderQuery.folder, function (error, files) {
+            extfs.readdir(folderQuery.folder.fsPath, function (error, files) {
                 if (error || _this.isCanceled || _this.isLimitHit) {
                     return done();
                 }
@@ -13950,11 +14660,11 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
                 // to ignore filtering by siblings because the user seems to know what she
                 // is searching for and we want to include the result in that case anyway
                 var currentRelativePath = relativeParentPath ? [relativeParentPath, file].join(path.sep) : file;
-                if (_this.folderExcludePatterns.get(folderQuery.folder).test(currentRelativePath, file, _this.config.filePattern !== file ? hasSibling : undefined)) {
+                if (_this.folderExcludePatterns.get(folderQuery.folder.fsPath).test(currentRelativePath, file, _this.config.filePattern !== file ? hasSibling : undefined)) {
                     return clb(null, undefined);
                 }
                 // Use lstat to detect links
-                var currentAbsolutePath = [rootFolder, currentRelativePath].join(path.sep);
+                var currentAbsolutePath = [rootFolder.fsPath, currentRelativePath].join(path.sep);
                 fs.lstat(currentAbsolutePath, function (error, lstat) {
                     if (error || _this.isCanceled || _this.isLimitHit) {
                         return clb(null, undefined);
@@ -13996,7 +14706,7 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
                             if (_this.maxFilesize && types.isNumber(stat.size) && stat.size > _this.maxFilesize) {
                                 return clb(null, undefined); // ignore file if max file size is hit
                             }
-                            _this.matchFile(onResult, { base: rootFolder, relativePath: currentRelativePath, basename: file, size: stat.size });
+                            _this.matchFile(onResult, { base: rootFolder.fsPath, relativePath: currentRelativePath, basename: file, size: stat.size });
                         }
                         // Unwind
                         return clb(null, undefined);
@@ -14054,7 +14764,7 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
     var Engine = /** @class */ (function () {
         function Engine(config) {
             this.folderQueries = config.folderQueries;
-            this.extraFiles = config.extraFiles;
+            this.extraFiles = config.extraFileResources;
             this.walker = new FileWalker(config);
         }
         Engine.prototype.search = function (onResult, onProgress, done) {
@@ -14130,28 +14840,555 @@ define(__m[57/*vs/workbench/services/search/node/fileSearch*/], __M([1/*require*
         };
         return AbsoluteAndRelativeParsedExpression;
     }());
+    function rgErrorMsgForDisplay(msg) {
+        var lines = msg.trim().split('\n');
+        var firstLine = lines[0].trim();
+        if (strings.startsWith(firstLine, 'Error parsing regex')) {
+            return firstLine;
+        }
+        if (strings.startsWith(firstLine, 'regex parse error')) {
+            return strings.uppercaseFirstLetter(lines[lines.length - 1].trim());
+        }
+        if (strings.startsWith(firstLine, 'error parsing glob') ||
+            strings.startsWith(firstLine, 'unsupported encoding')) {
+            // Uppercase first letter
+            return firstLine.charAt(0).toUpperCase() + firstLine.substr(1);
+        }
+        if (firstLine === "Literal '\\n' not allowed.") {
+            // I won't localize this because none of the Ripgrep error messages are localized
+            return "Literal '\\n' currently not supported";
+        }
+        if (strings.startsWith(firstLine, 'Literal ')) {
+            // Other unsupported chars
+            return firstLine;
+        }
+        return undefined;
+    }
+    exports.rgErrorMsgForDisplay = rgErrorMsgForDisplay;
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[58/*vs/workbench/services/search/node/rawSearchService*/], __M([1/*require*/,0/*exports*/,21/*fs*/,64/*graceful-fs*/,12/*path*/,13/*vs/base/common/arrays*/,8/*vs/base/common/async*/,6/*vs/base/common/errors*/,9/*vs/base/common/event*/,7/*vs/base/common/objects*/,28/*vs/base/common/stopwatch*/,3/*vs/base/common/strings*/,4/*vs/base/common/winjs.base*/,36/*vs/base/parts/quickopen/common/quickOpenScorer*/,46/*vs/platform/files/node/files*/,57/*vs/workbench/services/search/node/fileSearch*/,20/*vs/workbench/services/search/node/ripgrepTextSearch*/,51/*vs/workbench/services/search/node/textSearch*/,53/*vs/workbench/services/search/node/textSearchWorkerProvider*/]), function (require, exports, fs, gracefulFs, path_1, arrays, async_1, errors_1, event_1, objects, stopwatch_1, strings, winjs_base_1, quickOpenScorer_1, files_1, fileSearch_1, ripgrepTextSearch_1, textSearch_1, textSearchWorkerProvider_1) {
-    'use strict';
+define(__m[61/*vs/workbench/services/search/node/legacy/rawLegacyTextSearchService*/], __M([0/*require*/,1/*exports*/,17/*fs*/,62/*graceful-fs*/,34/*vs/platform/files/node/files*/,32/*vs/workbench/services/search/node/fileSearch*/,51/*vs/workbench/services/search/node/legacy/textSearch*/,53/*vs/workbench/services/search/node/legacy/textSearchWorkerProvider*/,36/*vs/workbench/services/search/node/textSearchManager*/]), function (require, exports, fs, gracefulFs, files_1, fileSearch_1, textSearch_1, textSearchWorkerProvider_1, textSearchManager_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    gracefulFs.gracefulify(fs);
+    var LegacyTextSearchService = /** @class */ (function () {
+        function LegacyTextSearchService() {
+        }
+        LegacyTextSearchService.prototype.textSearch = function (config, progressCallback, token) {
+            if (!this.textSearchWorkerProvider) {
+                this.textSearchWorkerProvider = new textSearchWorkerProvider_1.TextSearchWorkerProvider();
+            }
+            var engine = new textSearch_1.Engine(config, new fileSearch_1.FileWalker({
+                type: 1 /* File */,
+                folderQueries: config.folderQueries,
+                extraFileResources: config.extraFileResources,
+                includePattern: config.includePattern,
+                excludePattern: config.excludePattern,
+                useRipgrep: false
+            }, files_1.MAX_FILE_SIZE), this.textSearchWorkerProvider);
+            return this.doTextSearch(engine, progressCallback, LegacyTextSearchService.BATCH_SIZE, token);
+        };
+        LegacyTextSearchService.prototype.doTextSearch = function (engine, progressCallback, batchSize, token) {
+            if (token) {
+                token.onCancellationRequested(function () { return engine.cancel(); });
+            }
+            return new Promise(function (c, e) {
+                // Use BatchedCollector to get new results to the frontend every 2s at least, until 50 results have been returned
+                var collector = new textSearchManager_1.BatchedCollector(batchSize, progressCallback);
+                engine.search(function (matches) {
+                    var totalMatches = matches.reduce(function (acc, m) { return acc + m.numMatches; }, 0);
+                    collector.addItems(matches, totalMatches);
+                }, function (progress) {
+                    progressCallback(progress);
+                }, function (error, stats) {
+                    collector.flush();
+                    if (error) {
+                        e(error);
+                    }
+                    else {
+                        c({
+                            type: 'success',
+                            limitHit: stats.limitHit,
+                            stats: null
+                        });
+                    }
+                });
+            });
+        };
+        LegacyTextSearchService.BATCH_SIZE = 512;
+        return LegacyTextSearchService;
+    }());
+    exports.LegacyTextSearchService = LegacyTextSearchService;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+define(__m[63/*vs/workbench/services/search/node/ripgrepTextSearchEngine*/], __M([0/*require*/,1/*exports*/,14/*child_process*/,68/*events*/,6/*path*/,29/*string_decoder*/,2/*vs/base/common/strings*/,7/*vs/base/common/uri*/,26/*vs/platform/search/common/search*/,59/*vscode-ripgrep*/,35/*vs/workbench/services/search/node/ripgrepSearchUtils*/]), function (require, exports, cp, events_1, path, string_decoder_1, strings_1, uri_1, search_1, vscode_ripgrep_1, ripgrepSearchUtils_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    // If vscode-ripgrep is in an .asar file, then the binary is unpacked.
+    var rgDiskPath = vscode_ripgrep_1.rgPath.replace(/\bnode_modules\.asar\b/, 'node_modules.asar.unpacked');
+    var RipgrepTextSearchEngine = /** @class */ (function () {
+        function RipgrepTextSearchEngine(outputChannel) {
+            this.outputChannel = outputChannel;
+        }
+        RipgrepTextSearchEngine.prototype.provideTextSearchResults = function (query, options, progress, token) {
+            var _this = this;
+            this.outputChannel.appendLine("provideTextSearchResults " + query.pattern + ", " + JSON.stringify(__assign({}, options, {
+                folder: options.folder.toString()
+            })));
+            return new Promise(function (resolve, reject) {
+                token.onCancellationRequested(function () { return cancel(); });
+                var rgArgs = getRgArgs(query, options);
+                var cwd = options.folder.fsPath;
+                var escapedArgs = rgArgs
+                    .map(function (arg) { return arg.match(/^-/) ? arg : "'" + arg + "'"; })
+                    .join(' ');
+                _this.outputChannel.appendLine("rg " + escapedArgs + "\n - cwd: " + cwd);
+                var rgProc = cp.spawn(rgDiskPath, rgArgs, { cwd: cwd });
+                rgProc.on('error', function (e) {
+                    console.error(e);
+                    _this.outputChannel.appendLine('Error: ' + (e && e.message));
+                    reject(search_1.serializeSearchError(new search_1.SearchError(e && e.message, search_1.SearchErrorCode.rgProcessError)));
+                });
+                var gotResult = false;
+                var ripgrepParser = new RipgrepParser(options.maxResults, cwd, options.previewOptions);
+                ripgrepParser.on('result', function (match) {
+                    gotResult = true;
+                    progress.report(match);
+                });
+                var isDone = false;
+                var cancel = function () {
+                    isDone = true;
+                    if (rgProc) {
+                        rgProc.kill();
+                    }
+                    if (ripgrepParser) {
+                        ripgrepParser.cancel();
+                    }
+                };
+                var limitHit = false;
+                ripgrepParser.on('hitLimit', function () {
+                    limitHit = true;
+                    cancel();
+                });
+                rgProc.stdout.on('data', function (data) {
+                    ripgrepParser.handleData(data);
+                });
+                var gotData = false;
+                rgProc.stdout.once('data', function () { return gotData = true; });
+                var stderr = '';
+                rgProc.stderr.on('data', function (data) {
+                    var message = data.toString();
+                    _this.outputChannel.appendLine(message);
+                    stderr += message;
+                });
+                rgProc.on('close', function () {
+                    _this.outputChannel.appendLine(gotData ? 'Got data from stdout' : 'No data from stdout');
+                    _this.outputChannel.appendLine(gotResult ? 'Got result from parser' : 'No result from parser');
+                    _this.outputChannel.appendLine('');
+                    if (isDone) {
+                        resolve({ limitHit: limitHit });
+                    }
+                    else {
+                        // Trigger last result
+                        ripgrepParser.flush();
+                        rgProc = null;
+                        var searchError = void 0;
+                        if (stderr && !gotData && (searchError = rgErrorMsgForDisplay(stderr))) {
+                            reject(search_1.serializeSearchError(new search_1.SearchError(searchError.message, searchError.code)));
+                        }
+                        else {
+                            resolve({ limitHit: limitHit });
+                        }
+                    }
+                });
+            });
+        };
+        return RipgrepTextSearchEngine;
+    }());
+    exports.RipgrepTextSearchEngine = RipgrepTextSearchEngine;
+    /**
+     * Read the first line of stderr and return an error for display or undefined, based on a whitelist.
+     * Ripgrep produces stderr output which is not from a fatal error, and we only want the search to be
+     * "failed" when a fatal error was produced.
+     */
+    function rgErrorMsgForDisplay(msg) {
+        var firstLine = msg.split('\n')[0].trim();
+        if (strings_1.startsWith(firstLine, 'regex parse error')) {
+            return new search_1.SearchError('Regex parse error', search_1.SearchErrorCode.regexParseError);
+        }
+        var match = firstLine.match(/grep config error: unknown encoding: (.*)/);
+        if (match) {
+            return new search_1.SearchError("Unknown encoding: " + match[1], search_1.SearchErrorCode.unknownEncoding);
+        }
+        if (strings_1.startsWith(firstLine, 'error parsing glob')) {
+            // Uppercase first letter
+            return new search_1.SearchError(firstLine.charAt(0).toUpperCase() + firstLine.substr(1), search_1.SearchErrorCode.globParseError);
+        }
+        if (strings_1.startsWith(firstLine, 'the literal')) {
+            // Uppercase first letter
+            return new search_1.SearchError(firstLine.charAt(0).toUpperCase() + firstLine.substr(1), search_1.SearchErrorCode.invalidLiteral);
+        }
+        return undefined;
+    }
+    exports.rgErrorMsgForDisplay = rgErrorMsgForDisplay;
+    var RipgrepParser = /** @class */ (function (_super) {
+        __extends(RipgrepParser, _super);
+        function RipgrepParser(maxResults, rootFolder, previewOptions) {
+            var _this = _super.call(this) || this;
+            _this.maxResults = maxResults;
+            _this.rootFolder = rootFolder;
+            _this.previewOptions = previewOptions;
+            _this.remainder = '';
+            _this.isDone = false;
+            _this.hitLimit = false;
+            _this.numResults = 0;
+            _this.stringDecoder = new string_decoder_1.StringDecoder();
+            return _this;
+        }
+        RipgrepParser.prototype.cancel = function () {
+            this.isDone = true;
+        };
+        RipgrepParser.prototype.flush = function () {
+            this.handleDecodedData(this.stringDecoder.end());
+        };
+        RipgrepParser.prototype.handleData = function (data) {
+            var dataStr = typeof data === 'string' ? data : this.stringDecoder.write(data);
+            this.handleDecodedData(dataStr);
+        };
+        RipgrepParser.prototype.handleDecodedData = function (decodedData) {
+            // If the previous data chunk didn't end in a newline, prepend it to this chunk
+            var dataStr = this.remainder ?
+                this.remainder + decodedData :
+                decodedData;
+            var dataLines = dataStr.split(/\r\n|\n/);
+            this.remainder = dataLines[dataLines.length - 1] ? dataLines.pop() : '';
+            for (var l = 0; l < dataLines.length; l++) {
+                var line = dataLines[l];
+                if (line) { // Empty line at the end of each chunk
+                    this.handleLine(line);
+                }
+            }
+        };
+        RipgrepParser.prototype.handleLine = function (outputLine) {
+            var _this = this;
+            if (this.isDone) {
+                return;
+            }
+            var parsedLine;
+            try {
+                parsedLine = JSON.parse(outputLine);
+            }
+            catch (e) {
+                throw new Error("malformed line from rg: " + outputLine);
+            }
+            if (parsedLine.type === 'match') {
+                var matchPath = bytesOrTextToString(parsedLine.data.path);
+                var uri = uri_1.URI.file(path.join(this.rootFolder, matchPath));
+                var result = this.createTextSearchMatch(parsedLine.data, uri);
+                this.onResult(result);
+                if (this.hitLimit) {
+                    this.cancel();
+                    this.emit('hitLimit');
+                }
+            }
+            else if (parsedLine.type === 'context') {
+                var contextPath = bytesOrTextToString(parsedLine.data.path);
+                var uri = uri_1.URI.file(path.join(this.rootFolder, contextPath));
+                var result = this.createTextSearchContext(parsedLine.data, uri);
+                result.forEach(function (r) { return _this.onResult(r); });
+            }
+        };
+        RipgrepParser.prototype.createTextSearchMatch = function (data, uri) {
+            var _this = this;
+            var lineNumber = data.line_number - 1;
+            var fullText = bytesOrTextToString(data.lines);
+            var fullTextBytes = Buffer.from(fullText);
+            var prevMatchEnd = 0;
+            var prevMatchEndCol = 0;
+            var prevMatchEndLine = lineNumber;
+            var ranges = data.submatches.map(function (match, i) {
+                if (_this.hitLimit) {
+                    return null;
+                }
+                _this.numResults++;
+                if (_this.numResults >= _this.maxResults) {
+                    // Finish the line, then report the result below
+                    _this.hitLimit = true;
+                }
+                var matchText = bytesOrTextToString(match.match);
+                var inBetweenChars = fullTextBytes.slice(prevMatchEnd, match.start).toString().length;
+                var startCol = prevMatchEndCol + inBetweenChars;
+                var stats = getNumLinesAndLastNewlineLength(matchText);
+                var startLineNumber = prevMatchEndLine;
+                var endLineNumber = stats.numLines + startLineNumber;
+                var endCol = stats.numLines > 0 ?
+                    stats.lastLineLength :
+                    stats.lastLineLength + startCol;
+                if (lineNumber === 0 && i === 0 && strings_1.startsWithUTF8BOM(matchText)) {
+                    matchText = strings_1.stripUTF8BOM(matchText);
+                    startCol -= 3;
+                    endCol -= 3;
+                }
+                prevMatchEnd = match.end;
+                prevMatchEndCol = endCol;
+                prevMatchEndLine = endLineNumber;
+                return new ripgrepSearchUtils_1.Range(startLineNumber, startCol, endLineNumber, endCol);
+            })
+                .filter(function (r) { return !!r; });
+            return ripgrepSearchUtils_1.createTextSearchResult(uri, fullText, ranges, this.previewOptions);
+        };
+        RipgrepParser.prototype.createTextSearchContext = function (data, uri) {
+            var text = bytesOrTextToString(data.lines);
+            var startLine = data.line_number;
+            return text
+                .replace(/\r?\n$/, '')
+                .split('\n')
+                .map(function (line, i) {
+                return {
+                    text: line,
+                    uri: uri,
+                    lineNumber: startLine + i
+                };
+            });
+        };
+        RipgrepParser.prototype.onResult = function (match) {
+            this.emit('result', match);
+        };
+        return RipgrepParser;
+    }(events_1.EventEmitter));
+    exports.RipgrepParser = RipgrepParser;
+    function bytesOrTextToString(obj) {
+        return obj.bytes ?
+            Buffer.from(obj.bytes, 'base64').toString() :
+            obj.text;
+    }
+    function getNumLinesAndLastNewlineLength(text) {
+        var re = /\n/g;
+        var numLines = 0;
+        var lastNewlineIdx = -1;
+        var match;
+        while (match = re.exec(text)) {
+            numLines++;
+            lastNewlineIdx = match.index;
+        }
+        var lastLineLength = lastNewlineIdx >= 0 ?
+            text.length - lastNewlineIdx - 1 :
+            text.length;
+        return { numLines: numLines, lastLineLength: lastLineLength };
+    }
+    function getRgArgs(query, options) {
+        var args = ['--hidden', '--heading', '--line-number', '--color', 'ansi', '--colors', 'path:none', '--colors', 'line:none', '--colors', 'match:fg:red', '--colors', 'match:style:nobold'];
+        args.push(query.isCaseSensitive ? '--case-sensitive' : '--ignore-case');
+        options.includes
+            .map(ripgrepSearchUtils_1.anchorGlob)
+            .forEach(function (globArg) { return args.push('-g', globArg); });
+        options.excludes
+            .map(ripgrepSearchUtils_1.anchorGlob)
+            .forEach(function (rgGlob) { return args.push('-g', "!" + rgGlob); });
+        if (options.maxFileSize) {
+            args.push('--max-filesize', options.maxFileSize + '');
+        }
+        if (options.useIgnoreFiles) {
+            args.push('--no-ignore-parent');
+        }
+        else {
+            // Don't use .gitignore or .ignore
+            args.push('--no-ignore');
+        }
+        if (options.followSymlinks) {
+            args.push('--follow');
+        }
+        if (options.encoding) {
+            args.push('--encoding', options.encoding);
+        }
+        var pattern = query.pattern;
+        // Ripgrep handles -- as a -- arg separator. Only --.
+        // - is ok, --- is ok, --some-flag is also ok. Need to special case.
+        if (pattern === '--') {
+            query.isRegExp = true;
+            pattern = '\\-\\-';
+        }
+        if (options.usePCRE2) {
+            args.push('--pcre2');
+            if (query.isRegExp) {
+                pattern = unicodeEscapesToPCRE2(pattern);
+            }
+        }
+        var searchPatternAfterDoubleDashes;
+        if (query.isWordMatch) {
+            var regexp = strings_1.createRegExp(pattern, !!query.isRegExp, { wholeWord: query.isWordMatch });
+            var regexpStr = regexp.source.replace(/\\\//g, '/'); // RegExp.source arbitrarily returns escaped slashes. Search and destroy.
+            args.push('--regexp', regexpStr);
+        }
+        else if (query.isRegExp) {
+            args.push('--regexp', fixRegexEndingPattern(query.pattern));
+        }
+        else {
+            searchPatternAfterDoubleDashes = pattern;
+            args.push('--fixed-strings');
+        }
+        args.push('--no-config');
+        if (!options.useGlobalIgnoreFiles) {
+            args.push('--no-ignore-global');
+        }
+        args.push('--json');
+        if (query.isMultiline) {
+            args.push('--multiline');
+        }
+        if (options.beforeContext) {
+            args.push('--before-context', options.beforeContext + '');
+        }
+        if (options.afterContext) {
+            args.push('--after-context', options.afterContext + '');
+        }
+        // Folder to search
+        args.push('--');
+        if (searchPatternAfterDoubleDashes) {
+            // Put the query after --, in case the query starts with a dash
+            args.push(searchPatternAfterDoubleDashes);
+        }
+        args.push('.');
+        return args;
+    }
+    function unicodeEscapesToPCRE2(pattern) {
+        var reg = /((?:[^\\]|^)(?:\\\\)*)\\u([a-z0-9]{4})(?!\d)/g;
+        // Replace an unescaped $ at the end of the pattern with \r?$
+        // Match $ preceeded by none or even number of literal \
+        while (pattern.match(reg)) {
+            pattern = pattern.replace(reg, "$1\\x{$2}");
+        }
+        return pattern;
+    }
+    exports.unicodeEscapesToPCRE2 = unicodeEscapesToPCRE2;
+    function fixRegexEndingPattern(pattern) {
+        // Replace an unescaped $ at the end of the pattern with \r?$
+        // Match $ preceeded by none or even number of literal \
+        return pattern.match(/([^\\]|^)(\\\\)*\$$/) ?
+            pattern.replace(/\$$/, '\\r?$') :
+            pattern;
+    }
+    exports.fixRegexEndingPattern = fixRegexEndingPattern;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[64/*vs/workbench/services/search/node/textSearchAdapter*/], __M([0/*require*/,1/*exports*/,21/*vs/base/node/extfs*/,63/*vs/workbench/services/search/node/ripgrepTextSearchEngine*/,36/*vs/workbench/services/search/node/textSearchManager*/]), function (require, exports, extfs, ripgrepTextSearchEngine_1, textSearchManager_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var TextSearchEngineAdapter = /** @class */ (function () {
+        function TextSearchEngineAdapter(query) {
+            this.query = query;
+        }
+        TextSearchEngineAdapter.prototype.search = function (token, onResult, onMessage) {
+            if (!this.query.folderQueries.length && !this.query.extraFileResources.length) {
+                return Promise.resolve({
+                    type: 'success',
+                    limitHit: false,
+                    stats: {
+                        type: 'searchProcess'
+                    }
+                });
+            }
+            var pretendOutputChannel = {
+                appendLine: function (msg) {
+                    onMessage({ message: msg });
+                }
+            };
+            var textSearchManager = new textSearchManager_1.TextSearchManager(this.query, new ripgrepTextSearchEngine_1.RipgrepTextSearchEngine(pretendOutputChannel), extfs);
+            return new Promise(function (resolve, reject) {
+                return textSearchManager
+                    .search(function (matches) {
+                    onResult(matches.map(fileMatchToSerialized));
+                }, token)
+                    .then(function (c) { return resolve({ limitHit: c.limitHit, stats: null, type: 'success' }); }, reject);
+            });
+        };
+        return TextSearchEngineAdapter;
+    }());
+    exports.TextSearchEngineAdapter = TextSearchEngineAdapter;
+    function fileMatchToSerialized(match) {
+        return {
+            path: match.resource.fsPath,
+            results: match.results,
+            numMatches: match.results.reduce(function (sum, r) {
+                if (!!r.ranges) {
+                    var m = r;
+                    return sum + (Array.isArray(m.ranges) ? m.ranges.length : 1);
+                }
+                else {
+                    return sum + 1;
+                }
+            }, 0)
+        };
+    }
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+define(__m[65/*vs/workbench/services/search/node/rawSearchService*/], __M([0/*require*/,1/*exports*/,17/*fs*/,62/*graceful-fs*/,6/*path*/,8/*vs/base/common/arrays*/,13/*vs/base/common/async*/,9/*vs/base/common/errors*/,10/*vs/base/common/event*/,12/*vs/base/common/objects*/,23/*vs/base/common/stopwatch*/,2/*vs/base/common/strings*/,7/*vs/base/common/uri*/,4/*vs/base/common/winjs.base*/,52/*vs/base/parts/quickopen/common/quickOpenScorer*/,34/*vs/platform/files/node/files*/,32/*vs/workbench/services/search/node/fileSearch*/,61/*vs/workbench/services/search/node/legacy/rawLegacyTextSearchService*/,64/*vs/workbench/services/search/node/textSearchAdapter*/]), function (require, exports, fs, gracefulFs, path_1, arrays, async_1, errors_1, event_1, objects, stopwatch_1, strings, uri_1, winjs_base_1, quickOpenScorer_1, files_1, fileSearch_1, rawLegacyTextSearchService_1, textSearchAdapter_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     gracefulFs.gracefulify(fs);
     var SearchService = /** @class */ (function () {
         function SearchService() {
+            this.legacyTextSearchService = new rawLegacyTextSearchService_1.LegacyTextSearchService();
             this.caches = Object.create(null);
         }
-        SearchService.prototype.fileSearch = function (config, batchSize) {
+        SearchService.prototype.fileSearch = function (config) {
             var _this = this;
-            if (batchSize === void 0) { batchSize = SearchService.BATCH_SIZE; }
             var promise;
+            var query = reviveQuery(config);
             var emitter = new event_1.Emitter({
                 onFirstListenerDidAdd: function () {
                     promise = async_1.createCancelablePromise(function (token) {
-                        return _this.doFileSearch(fileSearch_1.Engine, config, function (p) { return emitter.fire(p); }, token, batchSize);
+                        return _this.doFileSearchWithEngine(fileSearch_1.Engine, query, function (p) { return emitter.fire(p); }, token);
                     });
                     promise.then(function (c) { return emitter.fire(c); }, function (err) { return emitter.fire({ type: 'error', error: { message: err.message, stack: err.stack } }); });
                 },
@@ -14161,13 +15398,16 @@ define(__m[58/*vs/workbench/services/search/node/rawSearchService*/], __M([1/*re
             });
             return emitter.event;
         };
-        SearchService.prototype.textSearch = function (config) {
+        SearchService.prototype.textSearch = function (rawQuery) {
             var _this = this;
             var promise;
+            var query = reviveQuery(rawQuery);
             var emitter = new event_1.Emitter({
                 onFirstListenerDidAdd: function () {
                     promise = async_1.createCancelablePromise(function (token) {
-                        return (config.useRipgrep ? _this.ripgrepTextSearch(config, function (p) { return emitter.fire(p); }, token) : _this.legacyTextSearch(config, function (p) { return emitter.fire(p); }, token));
+                        return (rawQuery.useRipgrep ?
+                            _this.ripgrepTextSearch(query, function (p) { return emitter.fire(p); }, token) :
+                            _this.legacyTextSearchService.textSearch(query, function (p) { return emitter.fire(p); }, token));
                     });
                     promise.then(function (c) { return emitter.fire(c); }, function (err) { return emitter.fire({ type: 'error', error: { message: err.message, stack: err.stack } }); });
                 },
@@ -14178,44 +15418,16 @@ define(__m[58/*vs/workbench/services/search/node/rawSearchService*/], __M([1/*re
             return emitter.event;
         };
         SearchService.prototype.ripgrepTextSearch = function (config, progressCallback, token) {
-            config.maxFilesize = files_1.MAX_FILE_SIZE;
-            var engine = new ripgrepTextSearch_1.RipgrepEngine(config);
-            token.onCancellationRequested(function () { return engine.cancel(); });
-            return new Promise(function (c, e) {
-                // Use BatchedCollector to get new results to the frontend every 2s at least, until 50 results have been returned
-                var collector = new BatchedCollector(SearchService.BATCH_SIZE, progressCallback);
-                engine.search(function (match) {
-                    collector.addItem(match, match.numMatches);
-                }, function (message) {
-                    progressCallback(message);
-                }, function (error, stats) {
-                    collector.flush();
-                    if (error) {
-                        e(error);
-                    }
-                    else {
-                        c(stats);
-                    }
-                });
-            });
+            config.maxFileSize = files_1.MAX_FILE_SIZE;
+            var engine = new textSearchAdapter_1.TextSearchEngineAdapter(config);
+            return engine.search(token, progressCallback, progressCallback);
         };
-        SearchService.prototype.legacyTextSearch = function (config, progressCallback, token) {
-            if (!this.textSearchWorkerProvider) {
-                this.textSearchWorkerProvider = new textSearchWorkerProvider_1.TextSearchWorkerProvider();
-            }
-            var engine = new textSearch_1.Engine(config, new fileSearch_1.FileWalker({
-                folderQueries: config.folderQueries,
-                extraFiles: config.extraFiles,
-                includePattern: config.includePattern,
-                excludePattern: config.excludePattern,
-                filePattern: config.filePattern,
-                useRipgrep: false,
-                maxFilesize: files_1.MAX_FILE_SIZE
-            }), this.textSearchWorkerProvider);
-            return this.doTextSearch(engine, progressCallback, SearchService.BATCH_SIZE, token);
+        SearchService.prototype.doFileSearch = function (config, progressCallback, token) {
+            return this.doFileSearchWithEngine(fileSearch_1.Engine, config, progressCallback, token);
         };
-        SearchService.prototype.doFileSearch = function (EngineClass, config, progressCallback, token, batchSize) {
+        SearchService.prototype.doFileSearchWithEngine = function (EngineClass, config, progressCallback, token, batchSize) {
             var _this = this;
+            if (batchSize === void 0) { batchSize = SearchService.BATCH_SIZE; }
             var resultCount = 0;
             var fileProgressCallback = function (progress) {
                 if (Array.isArray(progress)) {
@@ -14438,31 +15650,6 @@ define(__m[58/*vs/workbench/services/search/node/rawSearchService*/], __M([1/*re
                     }];
             }));
         };
-        SearchService.prototype.doTextSearch = function (engine, progressCallback, batchSize, token) {
-            token.onCancellationRequested(function () { return engine.cancel(); });
-            return new Promise(function (c, e) {
-                // Use BatchedCollector to get new results to the frontend every 2s at least, until 50 results have been returned
-                var collector = new BatchedCollector(batchSize, progressCallback);
-                engine.search(function (matches) {
-                    var totalMatches = matches.reduce(function (acc, m) { return acc + m.numMatches; }, 0);
-                    collector.addItems(matches, totalMatches);
-                }, function (progress) {
-                    progressCallback(progress);
-                }, function (error, stats) {
-                    collector.flush();
-                    if (error) {
-                        e(error);
-                    }
-                    else {
-                        c({
-                            type: 'success',
-                            limitHit: stats.limitHit,
-                            stats: null
-                        });
-                    }
-                });
-            });
-        };
         SearchService.prototype.doSearch = function (engine, progressCallback, batchSize, token) {
             return new winjs_base_1.TPromise(function (c, e) {
                 var batch = [];
@@ -14546,94 +15733,23 @@ define(__m[58/*vs/workbench/services/search/node/rawSearchService*/], __M([1/*re
         };
         return class_2;
     }());
-    /**
-     * Collects items that have a size - before the cumulative size of collected items reaches START_BATCH_AFTER_COUNT, the callback is called for every
-     * set of items collected.
-     * But after that point, the callback is called with batches of maxBatchSize.
-     * If the batch isn't filled within some time, the callback is also called.
-     */
-    var BatchedCollector = /** @class */ (function () {
-        function BatchedCollector(maxBatchSize, cb) {
-            this.maxBatchSize = maxBatchSize;
-            this.cb = cb;
-            this.totalNumberCompleted = 0;
-            this.batch = [];
-            this.batchSize = 0;
-        }
-        BatchedCollector.prototype.addItem = function (item, size) {
-            if (!item) {
-                return;
-            }
-            if (this.maxBatchSize > 0) {
-                this.addItemToBatch(item, size);
-            }
-            else {
-                this.cb(item);
-            }
-        };
-        BatchedCollector.prototype.addItems = function (items, size) {
-            if (!items) {
-                return;
-            }
-            if (this.maxBatchSize > 0) {
-                this.addItemsToBatch(items, size);
-            }
-            else {
-                this.cb(items);
-            }
-        };
-        BatchedCollector.prototype.addItemToBatch = function (item, size) {
-            this.batch.push(item);
-            this.batchSize += size;
-            this.onUpdate();
-        };
-        BatchedCollector.prototype.addItemsToBatch = function (item, size) {
-            this.batch = this.batch.concat(item);
-            this.batchSize += size;
-            this.onUpdate();
-        };
-        BatchedCollector.prototype.onUpdate = function () {
-            var _this = this;
-            if (this.totalNumberCompleted < BatchedCollector.START_BATCH_AFTER_COUNT) {
-                // Flush because we aren't batching yet
-                this.flush();
-            }
-            else if (this.batchSize >= this.maxBatchSize) {
-                // Flush because the batch is full
-                this.flush();
-            }
-            else if (!this.timeoutHandle) {
-                // No timeout running, start a timeout to flush
-                this.timeoutHandle = setTimeout(function () {
-                    _this.flush();
-                }, BatchedCollector.TIMEOUT);
-            }
-        };
-        BatchedCollector.prototype.flush = function () {
-            if (this.batchSize) {
-                this.totalNumberCompleted += this.batchSize;
-                this.cb(this.batch);
-                this.batch = [];
-                this.batchSize = 0;
-                if (this.timeoutHandle) {
-                    clearTimeout(this.timeoutHandle);
-                    this.timeoutHandle = 0;
-                }
-            }
-        };
-        BatchedCollector.TIMEOUT = 4000;
-        // After RUN_TIMEOUT_UNTIL_COUNT items have been collected, stop flushing on timeout
-        BatchedCollector.START_BATCH_AFTER_COUNT = 50;
-        return BatchedCollector;
-    }());
+    function reviveQuery(rawQuery) {
+        return __assign({}, rawQuery, {
+            folderQueries: rawQuery.folderQueries && rawQuery.folderQueries.map(reviveFolderQuery),
+            extraFileResources: rawQuery.extraFileResources && rawQuery.extraFileResources.map(function (components) { return uri_1.URI.revive(components); })
+        });
+    }
+    function reviveFolderQuery(rawFolderQuery) {
+        return __assign({}, rawFolderQuery, { folder: uri_1.URI.revive(rawFolderQuery.folder) });
+    }
 });
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[60/*vs/workbench/services/search/node/searchApp*/], __M([1/*require*/,0/*exports*/,29/*vs/base/parts/ipc/node/ipc.cp*/,50/*vs/workbench/services/search/node/searchIpc*/,58/*vs/workbench/services/search/node/rawSearchService*/]), function (require, exports, ipc_cp_1, searchIpc_1, rawSearchService_1) {
-    'use strict';
+define(__m[67/*vs/workbench/services/search/node/searchApp*/], __M([0/*require*/,1/*exports*/,27/*vs/base/parts/ipc/node/ipc.cp*/,56/*vs/workbench/services/search/node/searchIpc*/,65/*vs/workbench/services/search/node/rawSearchService*/]), function (require, exports, ipc_cp_1, searchIpc_1, rawSearchService_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var server = new ipc_cp_1.Server();
     var service = new rawSearchService_1.SearchService();

@@ -1,6 +1,5 @@
 import * as child_process from 'child_process';
 import * as fs from 'fs-extra';
-import * as os from 'os';
 import * as path from 'path';
 import * as log from './log';
 import {GraphicsApi} from './GraphicsApi';
@@ -17,6 +16,7 @@ import {EmscriptenExporter} from './Exporters/EmscriptenExporter';
 import {TizenExporter} from './Exporters/TizenExporter';
 import {VisualStudioExporter} from './Exporters/VisualStudioExporter';
 import {XCodeExporter} from './Exporters/XCodeExporter';
+const cpuCores: number = require('physical-cpu-count');
 
 let _global: any = global;
 _global.__base = __dirname + '/';
@@ -158,7 +158,7 @@ async function compileShader(projectDir: string, type: string, from: string, to:
 				funcname = funcname.replace(/\./g, '_');
 				funcname += '_main';
 
-				fs.writeFileSync(to, funcname, 'utf8');
+				fs.writeFileSync(to, '>' + funcname, 'utf8');
 
 				to = path.join(builddir, 'Sources', fileinfo.name + '.' + type);
 				temp = to + '.temp';
@@ -223,7 +223,12 @@ async function compileShader(projectDir: string, type: string, from: string, to:
 
 async function exportKoremakeProject(from: string, to: string, platform: string, options: any) {
 	log.info('korefile found.');
-	log.info('Creating ' + fromPlatform(platform) + ' project files.');
+	if (options.onlyshaders) {
+		log.info('Only compiling shaders.');
+	} 
+	else {
+		log.info('Creating ' + fromPlatform(platform) + ' project files.');
+	}
 
 	Project.root = path.resolve(from);
 	let project: Project;
@@ -265,6 +270,10 @@ async function exportKoremakeProject(from: string, to: string, platform: string,
 				await compileShader(from, shaderLang(platform), file.file, path.join(project.getDebugDir(), outfile), 'build', platform, 'build');
 			}
 		}
+	}
+
+	if (options.onlyshaders) {
+		return project;
 	}
 
 	// Run again to find new shader files for Metal
@@ -417,7 +426,10 @@ export async function run(options: any, loglog: any): Promise<string> {
 		return '';
 	}
 	let solutionName = project.getName();
-	
+	if (options.onlyshaders) {
+		return solutionName;
+	}
+
 	if (options.compile && solutionName !== '') {
 		log.info('Compiling...');
 
@@ -425,7 +437,7 @@ export async function run(options: any, loglog: any): Promise<string> {
 		let make: child_process.ChildProcess = null;
 
 		if ((options.customTarget && options.customTarget.baseTarget === Platform.Linux) || options.target === Platform.Linux) {
-			make = child_process.spawn('make', ['-j', '2'], { cwd: path.join(options.to, options.buildPath) });
+			make = child_process.spawn('make', ['-j', cpuCores.toString()], { cwd: path.join(options.to, options.buildPath) });
 		}
 		if ((options.customTarget && options.customTarget.baseTarget === Platform.Pi) || options.target === Platform.Pi) {
 			make = child_process.spawn('make', [], { cwd: path.join(options.to, options.buildPath) });

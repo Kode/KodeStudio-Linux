@@ -21,7 +21,7 @@
   "devDependencies": {
     "@types/node": "^8.10.25"
   },
-  "main": "./out/main",
+  "main": "./dist/main",
   "activationEvents": [
     "onCommand:workbench.action.tasks.runTask"
   ],
@@ -43,23 +43,21 @@
         }
       }
     },
-    "taskDefinitions": [
-      {
-        "type": "grunt",
-        "required": [
-          "task"
-        ],
-        "properties": {
-          "task": {
-            "type": "string",
-            "description": "%grunt.taskDefinition.type.description%"
-          },
-          "file": {
-            "type": "string",
-            "description": "%grunt.taskDefinition.file.description%"
-          }
+    "taskDefinitions": [{
+      "type": "grunt",
+      "required": [
+        "task"
+      ],
+      "properties": {
+        "task": {
+          "type": "string",
+          "description": "%grunt.taskDefinition.type.description%"
+        },
+        "file": {
+          "type": "string",
+          "description": "%grunt.taskDefinition.file.description%"
         }
       }
-    ]
+    }]
   }
 }

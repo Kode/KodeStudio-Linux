@@ -102,7 +102,7 @@ async function exportProjectFiles(name: string, resourceDir: string, options: Op
 	if (options.haxe !== '') {
 		let haxeOptions = exporter.haxeOptions(name, targetOptions, defines);
 		haxeOptions.defines.push('kha');
-		haxeOptions.defines.push('kha_version=1807');
+		haxeOptions.defines.push('kha_version=1810');
 		haxeOptions.safeName = safeName(haxeOptions.name);
 
 		if (options.debug && haxeOptions.parameters.indexOf('-debug') < 0) {
@@ -114,7 +114,12 @@ async function exportProjectFiles(name: string, resourceDir: string, options: Op
 		if (!options.nohaxe) {
 			let compiler = new HaxeCompiler(options.to, haxeOptions.to, haxeOptions.realto, resourceDir, options.haxe, 'project-' + exporter.sysdir() + '.hxml', haxeOptions.sources, exporter.sysdir());
 			lastHaxeCompiler = compiler;
-			await compiler.run(options.watch);
+			try {
+				await compiler.run(options.watch);
+			}
+			catch (error) {
+				return Promise.reject(error);
+			}
 		}
 		for (let callback of Callbacks.postHaxeCompilation) {
 			callback();
@@ -203,6 +208,22 @@ async function exportProjectFiles(name: string, resourceDir: string, options: Op
 		log.info('Done.');
 		return name;
 	}
+}
+
+function checkKorePlatform(platform: string) {
+	return platform === 'windows'
+		|| platform === 'windowsapp'
+		|| platform === 'ios'
+		|| platform === 'osx'
+		|| platform === 'android'
+		|| platform === 'linux'
+		|| platform === 'html5'
+		|| platform === 'tizen'
+		|| platform === 'pi'
+		|| platform === 'tvos'
+		|| platform === 'ps4'
+		|| platform === 'xboxone'
+		|| platform === 'switch';
 }
 
 function koreplatform(platform: string) {
@@ -294,12 +315,20 @@ async function exportKhaProject(options: Options): Promise<string> {
 			if (target.endsWith('-hl')) {
 				korehl = true;
 				options.target = koreplatform(target);
+				if (!checkKorePlatform(options.target)) {
+					log.error('Unknown platform: ' + options.target);
+					return Promise.reject('');
+				}
 				exporter = new KoreHLExporter(options);
 			}
 			else {
 				kore = true;
 				// If target is 'android-native' then options.target becomes 'android'
 				options.target = koreplatform(target);
+				if (!checkKorePlatform(options.target)) {
+					log.error('Unknown platform: ' + options.target);
+					return Promise.reject('');
+				}
 				exporter = new KoreExporter(options);
 			}
 			break;
@@ -331,7 +360,9 @@ async function exportKhaProject(options: Options): Promise<string> {
 	}
 	exporter.parameters = exporter.parameters.concat(project.parameters);
 	project.scriptdir = options.kha;
-	project.addShaders('Sources/Shaders/**', {});
+	if (baseTarget !== Platform.Java && baseTarget !== Platform.WPF) {
+		project.addShaders('Sources/Shaders/**', {});
+	}
 
 	for (let callback of Callbacks.preAssetConversion) {
 		callback();
@@ -386,7 +417,12 @@ async function exportKhaProject(options: Options): Promise<string> {
 		let shaderCompiler = new ShaderCompiler(exporter, options.target, options.krafix, shaderDir, temp,
 		buildDir, options, project.shaderMatchers);
 		lastShaderCompiler = shaderCompiler;
-		exportedShaders = await shaderCompiler.run(options.watch, recompileAllShaders);
+		try {
+			exportedShaders = await shaderCompiler.run(options.watch, recompileAllShaders);
+		}
+		catch (err) {
+			return Promise.reject(err);
+		}
 	}
 
 	if (target === Platform.Unity) {
@@ -621,7 +657,13 @@ export async function run(options: Options, loglog: any): Promise<string> {
 		options.theora = options.ffmpeg + ' -nostdin -i {in} {out}';
 	}
 
-	let name = await exportProject(options);
+	let name = '';
+	try {
+		name = await exportProject(options);
+	}
+	catch (err) {
+		process.exit(1);
+	}
 
 	if (options.target === Platform.Linux && options.run) {
 		await runProject(options);

@@ -14,7 +14,6 @@
     "onLanguage:handlebars",
     "onLanguage:razor"
   ],
-  "enableProposedApi": true,
   "main": "./client/dist/htmlMain",
   "scripts": {
     "compile": "gulp compile-extension:html-language-features-client compile-extension:html-language-features-server",
@@ -175,8 +174,8 @@
     }
   },
   "dependencies": {
-    "vscode-extension-telemetry": "0.0.18",
-    "vscode-languageclient": "^5.1.0-next.9",
+    "vscode-extension-telemetry": "0.1.0",
+    "vscode-languageclient": "^5.1.0",
     "vscode-nls": "^4.0.0"
   },
   "devDependencies": {

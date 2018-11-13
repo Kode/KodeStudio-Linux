@@ -5,14 +5,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const errors_1 = require("vscode-chrome-debug-core/out/src/errors");
 const nls = require("vscode-nls");
-const localize = nls.loadMessageBundle();
+const localize = nls.loadMessageBundle(__filename);
 /**
  * 'Path does not exist' error
  */
 function getNotExistErrorResponse(attribute, path) {
     return Promise.reject(new errors_1.ErrorWithMessage({
         id: 2007,
-        format: localize('attribute.path.not.exist', "Attribute '{0}' does not exist ('{1}').", attribute, '{path}'),
+        format: localize(0, null, attribute, '{path}'),
         variables: { path }
     }));
 }

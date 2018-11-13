@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["exports","require","vs/base/common/event","vs/base/common/lifecycle","vs/base/common/errors","vs/base/common/winjs.base","vs/base/common/cancellation","vs/base/common/functional","vs/base/common/async","vs/base/common/uuid","vs/base/common/linkedList","vs/base/parts/ipc/node/ipc","vs/base/parts/ipc/node/ipc.net","vs/platform/instantiation/common/instantiation","net","path","os","vs/platform/driver/node/driver"];
+var __m = ["exports","require","vs/base/common/event","vs/base/common/lifecycle","vs/base/common/errors","vs/base/common/winjs.base","vs/base/common/async","vs/base/common/functional","vs/base/common/cancellation","vs/base/common/uuid","vs/base/common/linkedList","vs/base/common/iterator","vs/base/parts/ipc/node/ipc","vs/base/parts/ipc/node/ipc.net","vs/platform/instantiation/common/instantiation","net","path","os","vs/platform/driver/node/driver"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -15,7 +15,7 @@ var __M = function(deps) {
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 define(__m[7/*vs/base/common/functional*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function once(fn) {
         var _this = this;
@@ -37,8 +37,201 @@ define(__m[7/*vs/base/common/functional*/], __M([1/*require*/,0/*exports*/]), fu
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+define(__m[11/*vs/base/common/iterator*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.FIN = { done: true, value: undefined };
+    var Iterator;
+    (function (Iterator) {
+        var _empty = {
+            next: function () {
+                return exports.FIN;
+            }
+        };
+        function empty() {
+            return _empty;
+        }
+        Iterator.empty = empty;
+        function fromArray(array, index, length) {
+            if (index === void 0) { index = 0; }
+            if (length === void 0) { length = array.length; }
+            return {
+                next: function () {
+                    if (index >= length) {
+                        return exports.FIN;
+                    }
+                    return { done: false, value: array[index++] };
+                }
+            };
+        }
+        Iterator.fromArray = fromArray;
+        function from(elements) {
+            if (!elements) {
+                return Iterator.empty();
+            }
+            else if (Array.isArray(elements)) {
+                return Iterator.fromArray(elements);
+            }
+            else {
+                return elements;
+            }
+        }
+        Iterator.from = from;
+        function map(iterator, fn) {
+            return {
+                next: function () {
+                    var element = iterator.next();
+                    if (element.done) {
+                        return exports.FIN;
+                    }
+                    else {
+                        return { done: false, value: fn(element.value) };
+                    }
+                }
+            };
+        }
+        Iterator.map = map;
+        function filter(iterator, fn) {
+            return {
+                next: function () {
+                    while (true) {
+                        var element = iterator.next();
+                        if (element.done) {
+                            return exports.FIN;
+                        }
+                        if (fn(element.value)) {
+                            return { done: false, value: element.value };
+                        }
+                    }
+                }
+            };
+        }
+        Iterator.filter = filter;
+        function forEach(iterator, fn) {
+            for (var next = iterator.next(); !next.done; next = iterator.next()) {
+                fn(next.value);
+            }
+        }
+        Iterator.forEach = forEach;
+        function collect(iterator) {
+            var result = [];
+            forEach(iterator, function (value) { return result.push(value); });
+            return result;
+        }
+        Iterator.collect = collect;
+    })(Iterator = exports.Iterator || (exports.Iterator = {}));
+    function getSequenceIterator(arg) {
+        if (Array.isArray(arg)) {
+            return Iterator.fromArray(arg);
+        }
+        else {
+            return arg;
+        }
+    }
+    exports.getSequenceIterator = getSequenceIterator;
+    var ArrayIterator = /** @class */ (function () {
+        function ArrayIterator(items, start, end, index) {
+            if (start === void 0) { start = 0; }
+            if (end === void 0) { end = items.length; }
+            if (index === void 0) { index = start - 1; }
+            this.items = items;
+            this.start = start;
+            this.end = end;
+            this.index = index;
+        }
+        ArrayIterator.prototype.first = function () {
+            this.index = this.start;
+            return this.current();
+        };
+        ArrayIterator.prototype.next = function () {
+            this.index = Math.min(this.index + 1, this.end);
+            return this.current();
+        };
+        ArrayIterator.prototype.current = function () {
+            if (this.index === this.start - 1 || this.index === this.end) {
+                return null;
+            }
+            return this.items[this.index];
+        };
+        return ArrayIterator;
+    }());
+    exports.ArrayIterator = ArrayIterator;
+    var ArrayNavigator = /** @class */ (function (_super) {
+        __extends(ArrayNavigator, _super);
+        function ArrayNavigator(items, start, end, index) {
+            if (start === void 0) { start = 0; }
+            if (end === void 0) { end = items.length; }
+            if (index === void 0) { index = start - 1; }
+            return _super.call(this, items, start, end, index) || this;
+        }
+        ArrayNavigator.prototype.current = function () {
+            return _super.prototype.current.call(this);
+        };
+        ArrayNavigator.prototype.previous = function () {
+            this.index = Math.max(this.index - 1, this.start - 1);
+            return this.current();
+        };
+        ArrayNavigator.prototype.first = function () {
+            this.index = this.start;
+            return this.current();
+        };
+        ArrayNavigator.prototype.last = function () {
+            this.index = this.end - 1;
+            return this.current();
+        };
+        ArrayNavigator.prototype.parent = function () {
+            return null;
+        };
+        return ArrayNavigator;
+    }(ArrayIterator));
+    exports.ArrayNavigator = ArrayNavigator;
+    var MappedIterator = /** @class */ (function () {
+        function MappedIterator(iterator, fn) {
+            this.iterator = iterator;
+            this.fn = fn;
+            // noop
+        }
+        MappedIterator.prototype.next = function () { return this.fn(this.iterator.next()); };
+        return MappedIterator;
+    }());
+    exports.MappedIterator = MappedIterator;
+    var MappedNavigator = /** @class */ (function (_super) {
+        __extends(MappedNavigator, _super);
+        function MappedNavigator(navigator, fn) {
+            var _this = _super.call(this, navigator, fn) || this;
+            _this.navigator = navigator;
+            return _this;
+        }
+        MappedNavigator.prototype.current = function () { return this.fn(this.navigator.current()); };
+        MappedNavigator.prototype.previous = function () { return this.fn(this.navigator.previous()); };
+        MappedNavigator.prototype.parent = function () { return this.fn(this.navigator.parent()); };
+        MappedNavigator.prototype.first = function () { return this.fn(this.navigator.first()); };
+        MappedNavigator.prototype.last = function () { return this.fn(this.navigator.last()); };
+        MappedNavigator.prototype.next = function () { return this.fn(this.navigator.next()); };
+        return MappedNavigator;
+    }(MappedIterator));
+    exports.MappedNavigator = MappedNavigator;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 define(__m[3/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/functional*/]), function (require, exports, functional_1) {
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function isDisposable(thing) {
         return typeof thing.dispose === 'function'
@@ -109,7 +302,7 @@ define(__m[3/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,7/*vs/
             var object = reference.object;
             var dispose = functional_1.once(function () {
                 if (--reference.counter === 0) {
-                    _this.destroyReferencedObject(reference.object);
+                    _this.destroyReferencedObject(key, reference.object);
                     delete _this.references[key];
                 }
             });
@@ -133,8 +326,8 @@ define(__m[3/*vs/base/common/lifecycle*/], __M([1/*require*/,0/*exports*/,7/*vs/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[10/*vs/base/common/linkedList*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    'use strict';
+define(__m[10/*vs/base/common/linkedList*/], __M([1/*require*/,0/*exports*/,11/*vs/base/common/iterator*/]), function (require, exports, iterator_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Node = /** @class */ (function () {
         function Node(element) {
@@ -180,8 +373,10 @@ define(__m[10/*vs/base/common/linkedList*/], __M([1/*require*/,0/*exports*/]), f
                 oldFirst.prev = newNode;
             }
             return function () {
-                for (var candidate = _this._first; candidate instanceof Node; candidate = candidate.next) {
+                var candidate = _this._first;
+                while (candidate instanceof Node) {
                     if (candidate !== newNode) {
+                        candidate = candidate.next;
                         continue;
                     }
                     if (candidate.prev && candidate.next) {
@@ -211,22 +406,20 @@ define(__m[10/*vs/base/common/linkedList*/], __M([1/*require*/,0/*exports*/]), f
             };
         };
         LinkedList.prototype.iterator = function () {
-            var element = {
-                done: undefined,
-                value: undefined,
-            };
+            var element;
             var node = this._first;
             return {
                 next: function () {
                     if (!node) {
-                        element.done = true;
-                        element.value = undefined;
+                        return iterator_1.FIN;
+                    }
+                    if (!element) {
+                        element = { done: false, value: node.element };
                     }
                     else {
-                        element.done = false;
                         element.value = node.element;
-                        node = node.next;
                     }
+                    node = node.next;
                     return element;
                 }
             };
@@ -243,25 +436,25 @@ define(__m[10/*vs/base/common/linkedList*/], __M([1/*require*/,0/*exports*/]), f
     exports.LinkedList = LinkedList;
 });
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 define(__m[9/*vs/base/common/uuid*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ValueUUID = /** @class */ (function () {
         function ValueUUID(_value) {
@@ -2448,12 +2641,12 @@ if (typeof exports === 'undefined' && typeof define === 'function' && define.amd
 // export var PPromise = __winjs_exports.PPromise;
 // ESM-uncomment-end
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 define(__m[4/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,5/*vs/base/common/winjs.base*/]), function (require, exports, winjs_base_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // ------ BEGIN Hook up error listeners to winjs promises
     var outstandingPromiseErrors = {};
@@ -2627,19 +2820,6 @@ define(__m[4/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,5/*vs/bas
         return result;
     }
     exports.disposed = disposed;
-    function isErrorWithActions(obj) {
-        return obj instanceof Error && Array.isArray(obj.actions);
-    }
-    exports.isErrorWithActions = isErrorWithActions;
-    function create(message, options) {
-        if (options === void 0) { options = Object.create(null); }
-        var result = new Error(message);
-        if (options.actions) {
-            result.actions = options.actions;
-        }
-        return result;
-    }
-    exports.create = create;
     function getErrorMessage(err) {
         if (!err) {
             return 'Error';
@@ -2655,6 +2835,10 @@ define(__m[4/*vs/base/common/errors*/], __M([1/*require*/,0/*exports*/,5/*vs/bas
     exports.getErrorMessage = getErrorMessage;
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 
 
@@ -2704,11 +2888,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/errors*/,7/*vs/base/common/functional*/,3/*vs/base/common/lifecycle*/,10/*vs/base/common/linkedList*/,5/*vs/base/common/winjs.base*/]), function (require, exports, errors_1, functional_1, lifecycle_1, linkedList_1, winjs_base_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Event;
     (function (Event) {
@@ -2738,7 +2918,12 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
      */
     var Emitter = /** @class */ (function () {
         function Emitter(_options) {
+            if (_options === void 0) { _options = null; }
             this._options = _options;
+            this._event = null;
+            this._disposed = false;
+            this._deliveryQueue = null;
+            this._listeners = null;
         }
         Object.defineProperty(Emitter.prototype, "event", {
             /**
@@ -2769,8 +2954,11 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
                                 result.dispose = Emitter._noop;
                                 if (!_this._disposed) {
                                     remove();
-                                    if (_this._options && _this._options.onLastListenerRemove && _this._listeners.isEmpty()) {
-                                        _this._options.onLastListenerRemove(_this);
+                                    if (_this._options && _this._options.onLastListenerRemove) {
+                                        var hasListeners = (_this._listeners && !_this._listeners.isEmpty());
+                                        if (!hasListeners) {
+                                            _this._options.onLastListenerRemove(_this);
+                                        }
                                     }
                                 }
                             }
@@ -2819,7 +3007,7 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
         };
         Emitter.prototype.dispose = function () {
             if (this._listeners) {
-                this._listeners = undefined;
+                this._listeners = null;
             }
             if (this._deliveryQueue) {
                 this._deliveryQueue.length = 0;
@@ -2933,7 +3121,9 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
             e.listener = e.event(function (r) { return _this.emitter.fire(r); });
         };
         EventMultiplexer.prototype.unhook = function (e) {
-            e.listener.dispose();
+            if (e.listener) {
+                e.listener.dispose();
+            }
             e.listener = null;
         };
         EventMultiplexer.prototype.dispose = function () {
@@ -2942,20 +3132,11 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
         return EventMultiplexer;
     }());
     exports.EventMultiplexer = EventMultiplexer;
-    function fromCallback(fn) {
-        var listener;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () { return listener = fn(function (e) { return emitter.fire(e); }); },
-            onLastListenerRemove: function () { return listener.dispose(); }
-        });
-        return emitter.event;
-    }
-    exports.fromCallback = fromCallback;
     function fromPromise(promise) {
         var emitter = new Emitter();
         var shouldEmit = false;
         promise
-            .then(null, function () { return null; })
+            .then(undefined, function () { return null; })
             .then(function () {
             if (!shouldEmit) {
                 setTimeout(function () { return emitter.fire(); }, 0);
@@ -3086,9 +3267,10 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
         EventBufferer.prototype.bufferEvents = function (fn) {
             var buffer = [];
             this.buffers.push(buffer);
-            fn();
+            var r = fn();
             this.buffers.pop();
             buffer.forEach(function (flush) { return flush(); });
+            return r;
         };
         return EventBufferer;
     }());
@@ -3114,6 +3296,10 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
         };
     }
     exports.filterEvent = filterEvent;
+    function signalEvent(event) {
+        return event;
+    }
+    exports.signalEvent = signalEvent;
     var ChainableEvent = /** @class */ (function () {
         function ChainableEvent(_event) {
             this._event = _event;
@@ -3174,10 +3360,10 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
      * // 4
      * ```
      */
-    function buffer(event, nextTick, buffer) {
+    function buffer(event, nextTick, _buffer) {
         if (nextTick === void 0) { nextTick = false; }
-        if (buffer === void 0) { buffer = []; }
-        buffer = buffer.slice();
+        if (_buffer === void 0) { _buffer = []; }
+        var buffer = _buffer.slice();
         var listener = event(function (e) {
             if (buffer) {
                 buffer.push(e);
@@ -3187,7 +3373,9 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
             }
         });
         var flush = function () {
-            buffer.forEach(function (e) { return emitter.fire(e); });
+            if (buffer) {
+                buffer.forEach(function (e) { return emitter.fire(e); });
+            }
             buffer = null;
         };
         var emitter = new Emitter({
@@ -3207,7 +3395,9 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
                 }
             },
             onLastListenerRemove: function () {
-                listener.dispose();
+                if (listener) {
+                    listener.dispose();
+                }
                 listener = null;
             }
         });
@@ -3308,8 +3498,8 @@ define(__m[2/*vs/base/common/event*/], __M([1/*require*/,0/*exports*/,4/*vs/base
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[6/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/event*/]), function (require, exports, event_1) {
-    'use strict';
+define(__m[8/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,2/*vs/base/common/event*/]), function (require, exports, event_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var shortcutEvent = Object.freeze(function (callback, context) {
         var handle = setTimeout(callback.bind(context), 0);
@@ -3343,6 +3533,7 @@ define(__m[6/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,2/*
     var MutableToken = /** @class */ (function () {
         function MutableToken() {
             this._isCancelled = false;
+            this._emitter = null;
         }
         MutableToken.prototype.cancel = function () {
             if (!this._isCancelled) {
@@ -3376,7 +3567,7 @@ define(__m[6/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,2/*
         MutableToken.prototype.dispose = function () {
             if (this._emitter) {
                 this._emitter.dispose();
-                this._emitter = undefined;
+                this._emitter = null;
             }
         };
         return MutableToken;
@@ -3440,22 +3631,13 @@ define(__m[6/*vs/base/common/cancellation*/], __M([1/*require*/,0/*exports*/,2/*
 
 
 
-define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base/common/cancellation*/,4/*vs/base/common/errors*/,2/*vs/base/common/event*/,3/*vs/base/common/lifecycle*/,5/*vs/base/common/winjs.base*/]), function (require, exports, cancellation_1, errors, event_1, lifecycle_1, winjs_base_1) {
-    'use strict';
+define(__m[6/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,8/*vs/base/common/cancellation*/,4/*vs/base/common/errors*/,2/*vs/base/common/event*/,3/*vs/base/common/lifecycle*/,5/*vs/base/common/winjs.base*/]), function (require, exports, cancellation_1, errors, event_1, lifecycle_1, winjs_base_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
     }
     exports.isThenable = isThenable;
-    function toThenable(arg) {
-        if (isThenable(arg)) {
-            return arg;
-        }
-        else {
-            return winjs_base_1.TPromise.as(arg);
-        }
-    }
-    exports.toThenable = toThenable;
     function createCancelablePromise(callback) {
         var source = new cancellation_1.CancellationTokenSource();
         var thenable = callback(source.token);
@@ -3488,12 +3670,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
     }
     exports.createCancelablePromise = createCancelablePromise;
     function asThenable(callback) {
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var item = callback();
-            if (item instanceof winjs_base_1.TPromise) {
-                item.then(resolve, reject);
-            }
-            else if (isThenable(item)) {
+            if (isThenable(item)) {
                 item.then(resolve, reject);
             }
             else {
@@ -3648,6 +3827,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
                 this.timeout = null;
             }
         };
+        Delayer.prototype.dispose = function () {
+            this.cancelTimeout();
+        };
         return Delayer;
     }());
     exports.Delayer = Delayer;
@@ -3655,8 +3837,10 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
      * A helper to delay execution of a task that is being requested often, while
      * preventing accumulation of consecutive executions, while the task runs.
      *
-     * Simply combine the two mail men's strategies from the Throttler and Delayer
-     * helpers, for an analogy.
+     * The mail man is clever and waits for a certain amount of time, before going
+     * out to deliver letters. While the mail man is going out, more letters arrive
+     * and can only be delivered once he is back. Once he is back the mail man will
+     * do one more trip to deliver the letters that have accumulated while he was out.
      */
     var ThrottledDelayer = /** @class */ (function (_super) {
         __extends(ThrottledDelayer, _super);
@@ -3709,7 +3893,24 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         });
     }
     exports.timeout = timeout;
-    function always(winjsPromiseOrThenable, callback) {
+    function disposableTimeout(handler, timeout) {
+        if (timeout === void 0) { timeout = 0; }
+        var timer = setTimeout(handler, timeout);
+        return {
+            dispose: function () {
+                clearTimeout(timer);
+            }
+        };
+    }
+    exports.disposableTimeout = disposableTimeout;
+    /**
+     * Returns a new promise that joins the provided promise. Upon completion of
+     * the provided promise the provided function will always be called. This
+     * method is comparable to a try-finally code block.
+     * @param promise a promise
+     * @param callback a function that will be call in the success and error case.
+     */
+    function always(promise, callback) {
         function safeCallback() {
             try {
                 callback();
@@ -3718,8 +3919,8 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
                 errors.onUnexpectedError(err);
             }
         }
-        winjsPromiseOrThenable.then(function (_) { return safeCallback(); }, function (_) { return safeCallback(); });
-        return winjsPromiseOrThenable;
+        promise.then(function (_) { return safeCallback(); }, function (_) { return safeCallback(); });
+        return Promise.resolve(promise);
     }
     exports.always = always;
     /**
@@ -3741,12 +3942,12 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
             if (n) {
                 return n.then(thenHandler);
             }
-            return winjs_base_1.TPromise.as(results);
+            return Promise.resolve(results);
         }
-        return winjs_base_1.TPromise.as(null).then(thenHandler);
+        return Promise.resolve(null).then(thenHandler);
     }
     exports.sequence = sequence;
-    function first2(promiseFactories, shouldStop, defaultValue) {
+    function first(promiseFactories, shouldStop, defaultValue) {
         if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
         if (defaultValue === void 0) { defaultValue = null; }
         var index = 0;
@@ -3756,31 +3957,10 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
                 return Promise.resolve(defaultValue);
             }
             var factory = promiseFactories[index++];
-            var promise = factory();
+            var promise = Promise.resolve(factory());
             return promise.then(function (result) {
                 if (shouldStop(result)) {
                     return Promise.resolve(result);
-                }
-                return loop();
-            });
-        };
-        return loop();
-    }
-    exports.first2 = first2;
-    function first(promiseFactories, shouldStop, defaultValue) {
-        if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
-        if (defaultValue === void 0) { defaultValue = null; }
-        var index = 0;
-        var len = promiseFactories.length;
-        var loop = function () {
-            if (index >= len) {
-                return winjs_base_1.TPromise.as(defaultValue);
-            }
-            var factory = promiseFactories[index++];
-            var promise = factory();
-            return promise.then(function (result) {
-                if (shouldStop(result)) {
-                    return winjs_base_1.TPromise.as(result);
                 }
                 return loop();
             });
@@ -3992,7 +4172,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
             }
         };
         RunOnceScheduler.prototype.doRun = function () {
-            this.runner();
+            if (this.runner) {
+                this.runner();
+            }
         };
         return RunOnceScheduler;
     }());
@@ -4013,7 +4195,9 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         RunOnceWorker.prototype.doRun = function () {
             var units = this.units;
             this.units = [];
-            this.runner(units);
+            if (this.runner) {
+                this.runner(units);
+            }
         };
         RunOnceWorker.prototype.dispose = function () {
             this.units = [];
@@ -4038,14 +4222,88 @@ define(__m[8/*vs/base/common/async*/], __M([1/*require*/,0/*exports*/,6/*vs/base
         return new winjs_base_1.TPromise(function (c, e) { return fn.call.apply(fn, [thisArg].concat(args, [function (err, result) { return err ? e(err) : c(result); }])); });
     }
     exports.ninvoke = ninvoke;
+    (function () {
+        if (typeof requestIdleCallback !== 'function' || typeof cancelIdleCallback !== 'function') {
+            var dummyIdle_1 = Object.freeze({
+                didTimeout: true,
+                timeRemaining: function () { return 15; }
+            });
+            exports.runWhenIdle = function (runner, timeout) {
+                if (timeout === void 0) { timeout = 0; }
+                var handle = setTimeout(function () { return runner(dummyIdle_1); }, timeout);
+                var disposed = false;
+                return {
+                    dispose: function () {
+                        if (disposed) {
+                            return;
+                        }
+                        disposed = true;
+                        clearTimeout(handle);
+                    }
+                };
+            };
+        }
+        else {
+            exports.runWhenIdle = function (runner, timeout) {
+                var handle = requestIdleCallback(runner, typeof timeout === 'number' ? { timeout: timeout } : undefined);
+                var disposed = false;
+                return {
+                    dispose: function () {
+                        if (disposed) {
+                            return;
+                        }
+                        disposed = true;
+                        cancelIdleCallback(handle);
+                    }
+                };
+            };
+        }
+    })();
+    /**
+     * An implementation of the "idle-until-urgent"-strategy as introduced
+     * here: https://philipwalton.com/articles/idle-until-urgent/
+     */
+    var IdleValue = /** @class */ (function () {
+        function IdleValue(executor) {
+            var _this = this;
+            this._executor = function () {
+                try {
+                    _this._value = executor();
+                }
+                catch (err) {
+                    _this._error = err;
+                }
+                finally {
+                    _this._didRun = true;
+                }
+            };
+            this._handle = exports.runWhenIdle(function () { return _this._executor(); });
+        }
+        IdleValue.prototype.dispose = function () {
+            this._handle.dispose();
+        };
+        IdleValue.prototype.getValue = function () {
+            if (!this._didRun) {
+                this._handle.dispose();
+                this._executor();
+            }
+            if (this._error) {
+                throw this._error;
+            }
+            return this._value;
+        };
+        return IdleValue;
+    }());
+    exports.IdleValue = IdleValue;
 });
+//#endregion
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[11/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/lifecycle*/,2/*vs/base/common/event*/,8/*vs/base/common/async*/,6/*vs/base/common/cancellation*/,4/*vs/base/common/errors*/]), function (require, exports, lifecycle_1, event_1, async_1, cancellation_1, errors) {
-    'use strict';
+define(__m[12/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/lifecycle*/,2/*vs/base/common/event*/,6/*vs/base/common/async*/,8/*vs/base/common/cancellation*/,4/*vs/base/common/errors*/]), function (require, exports, lifecycle_1, event_1, async_1, cancellation_1, errors) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RequestType;
     (function (RequestType) {
@@ -4207,8 +4465,10 @@ define(__m[11/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,3/*
             }
         };
         ChannelServer.prototype.dispose = function () {
-            this.protocolListener.dispose();
-            this.protocolListener = null;
+            if (this.protocolListener) {
+                this.protocolListener.dispose();
+                this.protocolListener = null;
+            }
             this.activeRequests.forEach(function (d) { return d.dispose(); });
             this.activeRequests.clear();
         };
@@ -4289,8 +4549,8 @@ define(__m[11/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,3/*
                 };
                 var cancellationTokenListener = cancellationToken.onCancellationRequested(cancel);
                 disposable = lifecycle_1.combinedDisposable([lifecycle_1.toDisposable(cancel), cancellationTokenListener]);
+                _this.activeRequests.add(disposable);
             });
-            this.activeRequests.add(disposable);
             async_1.always(result, function () { return _this.activeRequests.delete(disposable); });
             return result;
         };
@@ -4368,15 +4628,17 @@ define(__m[11/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,3/*
         };
         ChannelClient.prototype.whenInitialized = function () {
             if (this.state === State.Idle) {
-                return Promise.resolve(null);
+                return Promise.resolve();
             }
             else {
                 return event_1.toNativePromise(this.onDidInitialize);
             }
         };
         ChannelClient.prototype.dispose = function () {
-            this.protocolListener.dispose();
-            this.protocolListener = null;
+            if (this.protocolListener) {
+                this.protocolListener.dispose();
+                this.protocolListener = null;
+            }
             this.activeRequests.forEach(function (p) { return p.dispose(); });
             this.activeRequests.clear();
         };
@@ -4405,6 +4667,9 @@ define(__m[11/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,3/*
                     var channelClient = new ChannelClient(protocol);
                     _this.channels.forEach(function (channel, name) { return channelServer.registerChannel(name, channel); });
                     var id = rawId.toString();
+                    if (_this.channelClients.has(id)) {
+                        console.warn("IPC client with id '" + id + "' is already registered.");
+                    }
                     _this.channelClients.set(id, channelClient);
                     _this.onClientAdded.fire(id);
                     onDidClientDisconnect(function () {
@@ -4415,18 +4680,27 @@ define(__m[11/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,3/*
                 });
             });
         }
+        Object.defineProperty(IPCServer.prototype, "clientKeys", {
+            get: function () {
+                var result = [];
+                this.channelClients.forEach(function (_, key) { return result.push(key); });
+                return result;
+            },
+            enumerable: true,
+            configurable: true
+        });
         IPCServer.prototype.getChannel = function (channelName, router) {
             var that = this;
             return {
                 call: function (command, arg, cancellationToken) {
-                    var channelPromise = router.routeCall(command, arg)
+                    var channelPromise = router.routeCall(that.clientKeys, command, arg)
                         .then(function (id) { return that.getClient(id); })
                         .then(function (client) { return client.getChannel(channelName); });
                     return getDelayedChannel(channelPromise)
                         .call(command, arg, cancellationToken);
                 },
                 listen: function (event, arg) {
-                    var channelPromise = router.routeEvent(event, arg)
+                    var channelPromise = router.routeEvent(that.clientKeys, event, arg)
                         .then(function (id) { return that.getClient(id); })
                         .then(function (client) { return client.getChannel(channelName); });
                     return getDelayedChannel(channelPromise)
@@ -4480,9 +4754,7 @@ define(__m[11/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,3/*
         };
         IPCClient.prototype.dispose = function () {
             this.channelClient.dispose();
-            this.channelClient = null;
             this.channelServer.dispose();
-            this.channelServer = null;
         };
         return IPCClient;
     }());
@@ -4543,8 +4815,8 @@ define(__m[11/*vs/base/parts/ipc/node/ipc*/], __M([1/*require*/,0/*exports*/,3/*
 
 
 
-define(__m[12/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/,14/*net*/,2/*vs/base/common/event*/,11/*vs/base/parts/ipc/node/ipc*/,15/*path*/,16/*os*/,9/*vs/base/common/uuid*/,8/*vs/base/common/async*/]), function (require, exports, net_1, event_1, ipc_1, path_1, os_1, uuid_1, async_1) {
-    'use strict';
+define(__m[13/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/,15/*net*/,2/*vs/base/common/event*/,12/*vs/base/parts/ipc/node/ipc*/,16/*path*/,17/*os*/,9/*vs/base/common/uuid*/,6/*vs/base/common/async*/]), function (require, exports, net_1, event_1, ipc_1, path_1, os_1, uuid_1, async_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function generateRandomPipeName() {
         var randomSuffix = uuid_1.generateUuid();
@@ -4644,7 +4916,7 @@ define(__m[12/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/
             var acceptFirstDataChunk = function () {
                 if (firstDataChunk && firstDataChunk.length > 0) {
                     var tmp = firstDataChunk;
-                    firstDataChunk = null;
+                    firstDataChunk = undefined;
                     acceptChunk(tmp);
                 }
             };
@@ -4722,8 +4994,10 @@ define(__m[12/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/
         };
         Server.prototype.dispose = function () {
             _super.prototype.dispose.call(this);
-            this.server.close();
-            this.server = null;
+            if (this.server) {
+                this.server.close();
+                this.server = null;
+            }
         };
         return Server;
     }(ipc_1.IPCServer));
@@ -4773,12 +5047,12 @@ define(__m[12/*vs/base/parts/ipc/node/ipc.net*/], __M([1/*require*/,0/*exports*/
     exports.connect = connect;
 });
 
-define(__m[13/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[14/*vs/platform/instantiation/common/instantiation*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // ------ internal util
     var _util;
@@ -4872,8 +5146,8 @@ define(__m[13/*vs/platform/instantiation/common/instantiation*/], __M([1/*requir
 
 
 
-define(__m[17/*vs/platform/driver/node/driver*/], __M([1/*require*/,0/*exports*/,12/*vs/base/parts/ipc/node/ipc.net*/,5/*vs/base/common/winjs.base*/,13/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, ipc_net_1, winjs_base_1, instantiation_1) {
-    'use strict';
+define(__m[18/*vs/platform/driver/node/driver*/], __M([1/*require*/,0/*exports*/,13/*vs/base/parts/ipc/node/ipc.net*/,5/*vs/base/common/winjs.base*/,14/*vs/platform/instantiation/common/instantiation*/]), function (require, exports, ipc_net_1, winjs_base_1, instantiation_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ID = 'driverService';
     exports.IDriver = instantiation_1.createDecorator(exports.ID);

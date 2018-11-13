@@ -113,7 +113,7 @@ class CompletionFeature {
 		handle(params, token, resolve, reject, doc, offset, textBefore);
 	}
 
-	static final autoTriggerOnSpacePattern = ~/(\b(import|using|extends|implements|case|new|cast|override)|(->)) $/;
+	static final autoTriggerOnSpacePattern = ~/(\b(import|using|extends|implements|from|to|case|new|cast|override)|(->)) $/;
 
 	function isInvalidCompletionPosition(params:CompletionParams, text:String):Bool {
 		return switch (params.context.triggerCharacter) {
@@ -203,7 +203,10 @@ class CompletionFeature {
 					kind: Keyword,
 					detail: printer.printType(item.type)
 				}
-			case Metadata: {
+			case Metadata:
+				if (item.args.internal) {
+					null;
+				} else {
 					label: item.args.name,
 					kind: Function
 				}
@@ -233,7 +236,8 @@ class CompletionFeature {
 		}
 
 		if (commitCharactersSupport) {
-			if ((item.type != null && item.type.kind == TFun) || data.mode.kind == New || data.mode.kind == Metadata) {
+			var mode = data.mode.kind;
+			if ((item.type != null && item.type.kind == TFun && mode != Pattern) || mode == New || mode == Metadata) {
 				completionItem.commitCharacters = ["("];
 			}
 		}
@@ -532,21 +536,36 @@ class CompletionFeature {
 		if (data.mode.kind == TypeRelation || keyword.name == New) {
 			item.command = triggerSuggest;
 		}
+		if (data.mode.kind == TypeDeclaration) {
+			switch (keyword.name) {
+				case Import | Using | Final | Extern | Private:
+					item.command = triggerSuggest;
+				case _:
+			}
+		}
+
+		inline function maybeAddSpace() {
+			item.textEdit.newText = maybeInsert(item.textEdit.newText, " ", data.lineAfter);
+		}
 
 		switch (keyword.name) {
-			case Implements | Extends | Function | Var | Case | Try | New | Throw | Untyped | Macro:
+			case Extends | Implements:
 				item.textEdit.newText += " ";
 			// TODO: make it configurable for these, since not all code styles want spaces there
 			case Else | Do | Switch:
-				item.textEdit.newText += " ";
+				maybeAddSpace();
 			case If | For | While | Catch:
 				if (snippetSupport) {
 					item.insertTextFormat = Snippet;
 					item.textEdit.newText = '${keyword.name} ($1)';
 				} else {
-					item.textEdit.newText += " ";
+					maybeAddSpace();
 				}
+			// do nothing for these, you might not want a space after
+			case Break | Cast | Continue | Default | Return | Package:
+			// assume a space is needed for all the rest
 			case _:
+				maybeAddSpace();
 		}
 
 		return item;
@@ -582,10 +601,7 @@ class CompletionFeature {
 		}
 	}
 
-	static final wordRegex = ~/^\w*/;
-
 	function maybeInsert(text:String, token:String, lineAfter:String):String {
-		lineAfter = wordRegex.replace(lineAfter, "");
 		return if (lineAfter.charAt(0) == token.charAt(0)) text else text + token;
 	}
 

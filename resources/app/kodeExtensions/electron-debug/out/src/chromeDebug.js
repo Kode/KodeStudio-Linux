@@ -15,7 +15,7 @@ vscode_chrome_debug_core_1.ChromeDebugSession.run(vscode_chrome_debug_core_1.Chr
     adapter: chromeDebugAdapter_1.ChromeDebugAdapter,
     extensionName: EXTENSION_NAME,
     logFilePath: path.resolve(os.tmpdir(), 'vscode-chrome-debug.txt'),
-    targetFilter: utils_1.targetFilter,
+    targetFilter: utils_1.defaultTargetFilter,
     pathTransformer: vscode_chrome_debug_core_1.UrlPathTransformer,
     sourceMapTransformer: vscode_chrome_debug_core_1.BaseSourceMapTransformer,
 }));

@@ -15,74 +15,74 @@
   "activationEvents": [
     "*"
   ],
-  "main": "./out/extension",
+  "main": "./dist/extension",
   "scripts": {
     "compile": "gulp compile-extension:merge-conflict",
     "watch": "gulp watch-extension:merge-conflict"
   },
   "contributes": {
-    "commands": [
-      {
-        "category": "%command.category%",
-        "title": "%command.accept.all-current%",
-        "original": "Accept All Current",
-        "command": "merge-conflict.accept.all-current"
-      },
-      {
-        "category": "%command.category%",
-        "title": "%command.accept.all-incoming%",
-        "original": "Accept All Incoming",
-        "command": "merge-conflict.accept.all-incoming"
-      },
-      {
-        "category": "%command.category%",
-        "title": "%command.accept.all-both%",
-        "original": "Accept All Both",
-        "command": "merge-conflict.accept.all-both"
-      },
-      {
-        "category": "%command.category%",
-        "title": "%command.accept.current%",
-        "original": "Accept Current",
-        "command": "merge-conflict.accept.current"
-      },
-      {
-        "category": "%command.category%",
-        "title": "%command.accept.incoming%",
-        "original": "Accept Incoming",
-        "command": "merge-conflict.accept.incoming"
-      },
-      {
-        "category": "%command.category%",
-        "title": "%command.accept.selection%",
-        "original": "Accept Selection",
-        "command": "merge-conflict.accept.selection"
-      },
-      {
-        "category": "%command.category%",
-        "title": "%command.accept.both%",
-        "original": "Accept Both",
-        "command": "merge-conflict.accept.both"
-      },
-      {
-        "category": "%command.category%",
-        "title": "%command.next%",
-        "original": "Next Conflict",
-        "command": "merge-conflict.next"
-      },
-      {
-        "category": "%command.category%",
-        "title": "%command.previous%",
-        "original": "Previous Conflict",
-        "command": "merge-conflict.previous"
-      },
-      {
-        "category": "%command.category%",
-        "title": "%command.compare%",
-        "original": "Compare Current Conflict",
-        "command": "merge-conflict.compare"
-      }
-    ],
+    "commands": [{
+      "category": "%command.category%",
+      "title": "%command.accept.all-current%",
+      "original": "Accept All Current",
+      "command": "merge-conflict.accept.all-current"
+    }, {
+      "category": "%command.category%",
+      "title": "%command.accept.all-incoming%",
+      "original": "Accept All Incoming",
+      "command": "merge-conflict.accept.all-incoming"
+    }, {
+      "category": "%command.category%",
+      "title": "%command.accept.all-both%",
+      "original": "Accept All Both",
+      "command": "merge-conflict.accept.all-both"
+    }, {
+      "category": "%command.category%",
+      "title": "%command.accept.current%",
+      "original": "Accept Current",
+      "command": "merge-conflict.accept.current"
+    }, {
+      "category": "%command.category%",
+      "title": "%command.accept.incoming%",
+      "original": "Accept Incoming",
+      "command": "merge-conflict.accept.incoming"
+    }, {
+      "category": "%command.category%",
+      "title": "%command.accept.selection%",
+      "original": "Accept Selection",
+      "command": "merge-conflict.accept.selection"
+    }, {
+      "category": "%command.category%",
+      "title": "%command.accept.both%",
+      "original": "Accept Both",
+      "command": "merge-conflict.accept.both"
+    }, {
+      "category": "%command.category%",
+      "title": "%command.next%",
+      "original": "Next Conflict",
+      "command": "merge-conflict.next"
+    }, {
+      "category": "%command.category%",
+      "title": "%command.previous%",
+      "original": "Previous Conflict",
+      "command": "merge-conflict.previous"
+    }, {
+      "category": "%command.category%",
+      "title": "%command.compare%",
+      "original": "Compare Current Conflict",
+      "command": "merge-conflict.compare"
+    }],
+    "menus": {
+      "scm/resourceState/context": [{
+        "command": "merge-conflict.accept.all-current",
+        "when": "scmProvider == git && scmResourceGroup == merge",
+        "group": "1_modification"
+      }, {
+        "command": "merge-conflict.accept.all-incoming",
+        "when": "scmProvider == git && scmResourceGroup == merge",
+        "group": "1_modification"
+      }]
+    },
     "configuration": {
       "title": "%config.title%",
       "properties": {
@@ -95,6 +95,11 @@
           "type": "boolean",
           "description": "%config.decoratorsEnabled%",
           "default": true
+        },
+        "merge-conflict.autoNavigateNextConflict.enabled": {
+          "type": "boolean",
+          "description": "%config.autoNavigateNextConflictEnabled%",
+          "default": false
         }
       }
     }

@@ -30,6 +30,12 @@ class DebounceHelper {
     }
 }
 exports.DebounceHelper = DebounceHelper;
-exports.targetFilter = target => target && (!target.type || target.type === 'page');
+exports.getTargetFilter = (targetTypes) => {
+    if (targetTypes) {
+        return target => target && (!target.type || targetTypes.indexOf(target.type) !== -1);
+    }
+    return () => true;
+};
+exports.defaultTargetFilter = exports.getTargetFilter(['page']);
 
 //# sourceMappingURL=utils.js.map

@@ -67,7 +67,7 @@ exports.pathCompare = pathCompare;
  * realPath does not handle '..' or '.' path segments and it does not take the locale into account.
  * Since a drive letter of a Windows path cannot be looked up, realPath normalizes the drive letter to lower case.
  */
-function realPath(path) {
+function realCasePath(path) {
     let dir = Path.dirname(path);
     if (path === dir) {
         // is this an upper case drive letter?
@@ -82,7 +82,7 @@ function realPath(path) {
         let found = entries.filter(e => e.toLowerCase() === name); // use a case insensitive search
         if (found.length === 1) {
             // on a case sensitive filesystem we cannot determine here, whether the file exists or not, hence we need the 'file exists' precondition
-            let prefix = realPath(dir); // recurse
+            let prefix = realCasePath(dir); // recurse
             if (prefix) {
                 return Path.join(prefix, found[0]);
             }
@@ -91,7 +91,7 @@ function realPath(path) {
             // must be a case sensitive $filesystem
             const ix = found.indexOf(name);
             if (ix >= 0) {
-                let prefix = realPath(dir); // recurse
+                let prefix = realCasePath(dir); // recurse
                 if (prefix) {
                     return Path.join(prefix, found[ix]);
                 }
@@ -103,7 +103,29 @@ function realPath(path) {
     }
     return null;
 }
-exports.realPath = realPath;
+exports.realCasePath = realCasePath;
+function isSymlinkedPath(path) {
+    return new Promise((resolve, reject) => {
+        FS.lstat(path, (err, stats) => {
+            if (err) {
+                reject(err);
+            }
+            if (stats.isSymbolicLink()) {
+                resolve(true);
+            }
+            else {
+                const parent = Path.dirname(path);
+                if (parent === path) {
+                    resolve(false);
+                }
+                else {
+                    resolve(isSymlinkedPath(parent));
+                }
+            }
+        });
+    });
+}
+exports.isSymlinkedPath = isSymlinkedPath;
 /**
  * Make sure that all directories of the given path exist (like mkdir -p).
  */

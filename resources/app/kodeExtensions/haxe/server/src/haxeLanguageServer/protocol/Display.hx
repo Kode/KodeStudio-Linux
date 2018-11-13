@@ -104,6 +104,7 @@ typedef DisplayLocal<T> = {
 	var meta:JsonMetadata;
 	var pos:JsonPos;
 	var isInline:Bool;
+	var isFinal:Bool;
 }
 
 enum abstract LocalOrigin(Int) {
@@ -239,9 +240,9 @@ typedef DisplayLiteral<T> = {
 	var name:String;
 }
 
-/* enum abstract MetadataTarget(String) {
+enum abstract MetadataTarget(String) {
 	var Class = "TClass";
-	var ClassField = "ClassField";
+	var ClassField = "TClassField";
 	var Abstract = "TAbstract";
 	var AbstractField = "TAbstractField";
 	var Enum = "TEnum";
@@ -249,28 +250,30 @@ typedef DisplayLiteral<T> = {
 	var AnyField = "TAnyField";
 	var Expr = "TExpr";
 	var TypeParameter = "TTypeParameter";
-	}
+}
 
-	enum abstract Platform(String) {
-	var Cross;
-	var Js;
-	var Lua;
-	var Neko;
-	var Flash;
-	var Php;
-	var Cpp;
-	var Cs;
-	var Java;
-	var Python;
-	var Hl;
-	var Eval;
-}*/
+enum abstract Platform(String) {
+	var Cross = "cross";
+	var Js = "js";
+	var Lua = "lua";
+	var Neko = "neko";
+	var Flash = "flash";
+	var Php = "php";
+	var Cpp = "cpp";
+	var Cs = "cs";
+	var Java = "java";
+	var Python = "python";
+	var Hl = "hl";
+	var Eval = "eval";
+}
+
 typedef Metadata = {
 	var name:String;
 	var doc:JsonDoc;
-	/* var parameters:Array<String>;
-		var platforms:Array<Platform>;
-		var target:Array<MetadataTarget>; */
+	var parameters:Array<String>;
+	var platforms:Array<Platform>;
+	var targets:Array<MetadataTarget>;
+	var internal:Bool;
 }
 
 typedef Keyword = {
@@ -300,6 +303,17 @@ enum abstract KeywordKind(String) to String {
 	var Untyped = "untyped";
 	var Cast = "cast";
 	var Macro = "macro";
+	var Package = "package";
+	var Import = "import";
+	var Using = "using";
+	var Private = "private";
+	var Extern = "extern";
+	var Class = "class";
+	var Interface = "interface";
+	var Enum = "enum";
+	var Abstract = "abstract";
+	var Typedef = "typedef";
+	var Final = "final";
 }
 
 /* enum abstract PackageContentKind(Int) {
@@ -378,6 +392,7 @@ enum abstract CompletionModeKind<T>(Int) {
 	var Pattern:CompletionModeKind<PatternCompletion<Dynamic>>;
 	var Override;
 	var TypeRelation;
+	var TypeDeclaration;
 }
 
 typedef CompletionMode<T> = {
@@ -414,14 +429,14 @@ typedef HoverResult = Response<HoverDisplayItemOccurence<Dynamic>>;
 typedef HoverDisplayItemOccurence<T> = DisplayItemOccurrence<T> & {
 	var ?expected:{
 		var ?type:JsonType<Dynamic>;
-		var name:{
+		var ?name:{
 			var name:String;
-			var kind:HoverExpectedKind;
+			var kind:HoverExpectedNameKind;
 		};
 	};
 }
 
-enum abstract HoverExpectedKind(Int) {
+enum abstract HoverExpectedNameKind(Int) {
 	var FunctionArgument;
 	var StructureField;
 }
@@ -434,10 +449,16 @@ typedef SignatureInformation = JsonFunctionSignature & {
 	var ?documentation:String;
 }
 
+enum abstract SignatureItemKind(Int) {
+	var Call;
+	var ArrayAccess;
+}
+
 typedef SignatureItem = {
 	var signatures:Array<SignatureInformation>;
 	var activeSignature:Int;
 	var activeParameter:Int;
+	var kind:SignatureItemKind;
 }
 
 typedef SignatureHelpResult = Response<SignatureItem>;

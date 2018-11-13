@@ -11,7 +11,9 @@ function findKha() {
 	let localkhapath = path.resolve(vscode.workspace.rootPath, 'Kha');
 	if (fs.existsSync(localkhapath) && fs.existsSync(path.join(localkhapath, 'Tools', 'khamake', 'out', 'main.js'))) return localkhapath;
 	let khapath = vscode.workspace.getConfiguration('kha').khaPath;
-	if (khapath.length > 0) return path.resolve(khapath);
+	if (khapath.length > 0) {
+		return path.isAbsolute(khapath) ? khapath : path.resolve(vscode.workspace.rootPath, khapath);
+	}
 	return path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha');
 }
 
@@ -43,7 +45,7 @@ function compile(target, silent) {
 		vr: 'none',
 		pch: false,
 		intermediate: '',
-		graphics: 'direct3d11',
+		graphics: 'default',
 		visualstudio: 'vs2017',
 		kha: '',
 		haxe: '',
@@ -262,7 +264,7 @@ const KhaTaskProvider = {
 				task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ProcessExecution(exec, ['--khamake', path.join(findKha(), 'make.js')].concat(args), {cwd: workspaceRoot}), ['$haxe-absolute', '$haxe']);
 			}
 			else {
-				task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node' [path.join(findKha(), 'make.js')].concat(args)), ['$haxe-absolute', '$haxe']);
+				task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node', [path.join(findKha(), 'make.js')].concat(args)), ['$haxe-absolute', '$haxe']);
 			}
 			task.group = vscode.TaskGroup.Build;
 			tasks.push(task);
@@ -391,7 +393,7 @@ exports.activate = (context) => {
 					case 'Flash':
 						return 'flash';
 					case 'HTML5-Worker':
-						return 'html5-worker';
+						return 'html5worker';
 					case 'Java':
 						return 'java';
 					case 'Node.js':

@@ -114,8 +114,14 @@ class PipelineState extends PipelineStateBase {
 	}
 	
 	public function compile(): Void {
+		var stencilReferenceValue = 0;
+		switch (this.stencilReferenceValue) {
+			case Static(value):
+				stencilReferenceValue = value;
+			default:
+		}
 		setStates(cullMode.getIndex(), depthMode.getIndex(), stencilMode.getIndex(), stencilBothPass.getIndex(), stencilDepthFail.getIndex(), stencilFail.getIndex(),
-		getBlendFunc(blendSource), getBlendFunc(blendDestination), getBlendFunc(alphaBlendSource), getBlendFunc(alphaBlendDestination));
+		stencilReferenceValue, getBlendFunc(blendSource), getBlendFunc(blendDestination), getBlendFunc(alphaBlendSource), getBlendFunc(alphaBlendDestination));
 		linkWithStructures2(
 			inputLayout.length > 0 ? inputLayout[0] : null,
 			inputLayout.length > 1 ? inputLayout[1] : null,
@@ -227,15 +233,17 @@ class PipelineState extends PipelineStateBase {
 		pipeline->alphaBlendSource = (Kore::Graphics4::BlendingOperation)alphaBlendSource;
 		pipeline->alphaBlendDestination = (Kore::Graphics4::BlendingOperation)alphaBlendDestination;
 		
-		pipeline->colorWriteMaskRed = colorWriteMaskRed;
-		pipeline->colorWriteMaskGreen = colorWriteMaskGreen;
-		pipeline->colorWriteMaskBlue = colorWriteMaskBlue;
-		pipeline->colorWriteMaskAlpha = colorWriteMaskAlpha;
+		for (int i = 0; i < 8; ++i) {
+			pipeline->colorWriteMaskRed[i] = colorWriteMasksRed[i];
+			pipeline->colorWriteMaskGreen[i] = colorWriteMasksGreen[i];
+			pipeline->colorWriteMaskBlue[i] = colorWriteMasksBlue[i];
+			pipeline->colorWriteMaskAlpha[i] = colorWriteMasksAlpha[i];
+		}
 		
 		pipeline->conservativeRasterization = conservativeRasterization;
 	')
 	private function setStates(cullMode: Int, depthMode: Int, stencilMode: Int, stencilBothPass: Int, stencilDepthFail: Int, stencilFail: Int,
-	blendSource: Int, blendDestination: Int, alphaBlendSource: Int, alphaBlendDestination: Int): Void {
+	stencilReferenceValue: Int, blendSource: Int, blendDestination: Int, alphaBlendSource: Int, alphaBlendDestination: Int): Void {
 		
 	}
 	

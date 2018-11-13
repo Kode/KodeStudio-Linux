@@ -44,11 +44,12 @@ define("vs/code/electron-browser/sharedProcess/sharedProcessMain.nls", {
 		"Error while removing the extension: {0}. Please Quit and Start VS Code before trying again.",
 		"Only Marketplace Extensions can be reinstalled",
 		"Can't install extension since it was reported to be problematic.",
-		"Unable to install because, the depending extension '{0}' compatible with current version '{1}' of VS Code is not found.",
+		"Unable to install because, the extension '{0}' compatible with current version '{1}' of VS Code is not found.",
 		"Unable to install the extension. Please Quit and Start VS Code before reinstalling.",
 		"Unable to install the extension. Please Exit and Start VS Code before reinstalling.",
 		"Unable to delete the existing folder '{0}' while installing the extension '{1}'. Please delete the folder manually and try again",
 		"Unknown error while renaming {0} to {1}",
+		"Extension '{0}' is not installed.",
 		"Cannot uninstall extension '{0}'. Extension '{1}' depends on this.",
 		"Cannot uninstall extension '{0}'. Extensions '{1}' and '{2}' depend on this.",
 		"Cannot uninstall extension '{0}'. Extensions '{1}', '{2}' and others depend on this.",
@@ -69,7 +70,11 @@ define("vs/code/electron-browser/sharedProcess/sharedProcessMain.nls", {
 		"HTTP",
 		"The proxy setting to use. If not set will be taken from the http_proxy and https_proxy environment variables.",
 		"Controls whether the proxy server certificate should be verified against the list of supplied CAs.",
-		"The value to send as the 'Proxy-Authorization' header for every network request."
+		"The value to send as the 'Proxy-Authorization' header for every network request.",
+		"Do not use system proxy configuration.",
+		"Use system proxy configuration if not specified in the request options.",
+		"Always use system proxy configuration.",
+		"Experimental setting: Use the system proxy configuration."
 	],
 	"vs/platform/telemetry/common/telemetryService": [
 		"Telemetry",

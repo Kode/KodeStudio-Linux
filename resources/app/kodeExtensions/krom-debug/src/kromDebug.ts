@@ -28,6 +28,8 @@ class BreakpointRequest {
 }
 
 export class KromDebugSession extends LoggingDebugSession {
+	private static KROM_DEBUG_API = 1;
+
 	private static DEBUGGER_MESSAGE_BREAKPOINT = 0;
 	private static DEBUGGER_MESSAGE_PAUSE = 1;
 	private static DEBUGGER_MESSAGE_STACKTRACE = 2;
@@ -37,6 +39,7 @@ export class KromDebugSession extends LoggingDebugSession {
 	private static DEBUGGER_MESSAGE_STEP_OUT = 6;
 	private static DEBUGGER_MESSAGE_VARIABLES = 7;
 	private static DEBUGGER_MESSAGE_CLEAR_BREAKPOINTS = 8;
+	private static DEBUGGER_MESSAGE_START = 9;
 
 	private static IDE_MESSAGE_STACKTRACE = 0;
 	private static IDE_MESSAGE_BREAK = 1;
@@ -114,6 +117,7 @@ export class KromDebugSession extends LoggingDebugSession {
 			}
 			this.pendingBreakPointRequests = [];
 			this.sendResponse(response);
+			this.sendMessage([KromDebugSession.DEBUGGER_MESSAGE_START, KromDebugSession.KROM_DEBUG_API]);
 		});
 
 		this.socket.on('data', (data) => {

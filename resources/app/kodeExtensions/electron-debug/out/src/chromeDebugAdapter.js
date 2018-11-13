@@ -19,7 +19,7 @@ const child_process_1 = require("child_process");
 const utils = require("./utils");
 const errors = require("./errors");
 const nls = require("vscode-nls");
-let localize = nls.loadMessageBundle();
+let localize = nls.loadMessageBundle(__filename);
 // Keep in sync with sourceMapPathOverrides package.json default
 const DefaultWebSourceMapPathOverrides = {
     'webpack:///./~/*': '${webRoot}/node_modules/*',
@@ -40,18 +40,22 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
         capabilities.supportsSetExpression = true;
         capabilities.supportsLogPoints = true;
         if (args.locale) {
-            localize = nls.config({ locale: args.locale })();
+            localize = nls.config({ locale: args.locale })(__filename);
         }
+        this._doesHostSupportLaunchUnelevatedProcessRequest = args.supportsLaunchUnelevatedProcessRequest || false;
         return capabilities;
     }
     launch(args, telemetryPropertyCollector, seq) {
-        if (args.breakOnLoad && !args.breakOnLoadStrategy) {
+        if ((args.breakOnLoad || typeof args.breakOnLoad === 'undefined') && !args.breakOnLoadStrategy) {
             args.breakOnLoadStrategy = 'instrument';
         }
         return super.launch(args, telemetryPropertyCollector).then(() => __awaiter(this, void 0, void 0, function* () {
             let runtimeExecutable;
             if (args.shouldLaunchChromeUnelevated !== undefined) {
                 telemetryPropertyCollector.addTelemetryProperty('shouldLaunchChromeUnelevated', args.shouldLaunchChromeUnelevated.toString());
+            }
+            if (this._doesHostSupportLaunchUnelevatedProcessRequest) {
+                telemetryPropertyCollector.addTelemetryProperty('doesHostSupportLaunchUnelevated', 'true');
             }
             if (args.runtimeExecutable) {
                 const re = findExecutable(args.runtimeExecutable);
@@ -62,7 +66,7 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
             }
             runtimeExecutable = runtimeExecutable || args.electronPath;
             if (!runtimeExecutable) {
-                return vscode_chrome_debug_core_1.utils.errP(localize('attribute.chrome.missing', "Can't find Chrome - install it or set the \"runtimeExecutable\" field in the launch config."));
+                return vscode_chrome_debug_core_1.utils.errP(localize(0, null));
             }
             // Start with remote debugging enabled
             const port = args.port || Math.floor((Math.random() * 10000) + 10000);
@@ -78,6 +82,7 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
             // Also start with extra stuff disabled
             chromeArgs.push(...['--no-first-run', '--no-default-browser-check']);
             if (args.runtimeArgs) {
+                telemetryPropertyCollector.addTelemetryProperty('numberOfChromeCmdLineSwitchesBeingUsed', String(args.runtimeArgs.length));
                 chromeArgs.push(...args.runtimeArgs);
             }
             // Set a default userDataDir, if the user opted in explicitly with 'true' or if args.userDataDir is not set (only when runtimeExecutable is not set).
@@ -165,22 +170,31 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
         });
     }
     commonArgs(args) {
-        if (!args.webRoot && args.pathMapping && args.pathMapping['/']) {
-            // Adapt pathMapping['/'] as the webRoot when not set, since webRoot is explicitly used in many places
-            args.webRoot = args.pathMapping['/'];
+        if (args.webRoot && (!args.pathMapping || !args.pathMapping['/'])) {
+            args.pathMapping = args.pathMapping || {};
+            args.pathMapping['/'] = args.webRoot;
         }
         args.sourceMaps = typeof args.sourceMaps === 'undefined' || args.sourceMaps;
         args.sourceMapPathOverrides = getSourceMapPathOverrides(args.webRoot, args.sourceMapPathOverrides);
         args.skipFileRegExps = ['^chrome-extension:.*'];
+        if (args.targetTypes === undefined) {
+            args.targetFilter = utils.defaultTargetFilter;
+        }
+        else {
+            args.targetFilter = utils.getTargetFilter(args.targetTypes);
+        }
         super.commonArgs(args);
     }
     doAttach(port, targetUrl, address, timeout, websocketUrl, extraCRDPChannelPort) {
-        return super.doAttach(port, targetUrl, address, timeout, websocketUrl, extraCRDPChannelPort).then(() => {
+        return super.doAttach(port, targetUrl, address, timeout, websocketUrl, extraCRDPChannelPort).then(() => __awaiter(this, void 0, void 0, function* () {
             // Don't return this promise, a failure shouldn't fail attach
             this.globalEvaluate({ expression: 'navigator.userAgent', silent: true })
                 .then(evalResponse => vscode_chrome_debug_core_1.logger.log('Target userAgent: ' + evalResponse.result.value), err => vscode_chrome_debug_core_1.logger.log('Getting userAgent failed: ' + err.message))
                 .then(() => {
-                const cacheDisabled = this._launchAttachArgs.disableNetworkCache || false;
+                const configDisableNetworkCache = this._launchAttachArgs.disableNetworkCache;
+                const cacheDisabled = typeof configDisableNetworkCache === 'boolean' ?
+                    configDisableNetworkCache :
+                    true;
                 this.chrome.Network.setCacheDisabled({ cacheDisabled });
             });
             const versionInformationPromise = this.chrome.Browser.getVersion().then(response => {
@@ -226,13 +240,30 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
                }
              */
             versionInformationPromise.then(versionInformation => vscode_chrome_debug_core_1.telemetry.telemetry.reportEvent('target-version', versionInformation));
+            try {
+                if (this._breakOnLoadHelper) {
+                    // This is what -core is doing. We only actually care to see if this fails, to see if we need to apply the workaround
+                    const browserVersion = (yield this._chromeConnection.version).browser;
+                    if (!browserVersion.isAtLeastVersion(0, 1)) {
+                        vscode_chrome_debug_core_1.logger.log(`/json/version failed, attempting workaround to get the version`);
+                        // If the original way failed, we try to use versionInformationPromise to get this information
+                        const versionInformation = yield versionInformationPromise;
+                        const alternativeBrowserVersion = vscode_chrome_debug_core_1.Version.parse(versionInformation['Versions.Target.Version']);
+                        this._breakOnLoadHelper.setBrowserVersion(alternativeBrowserVersion);
+                    }
+                }
+            }
+            catch (exception) {
+                // If something fails we report telemetry and we ignore it
+                vscode_chrome_debug_core_1.telemetry.telemetry.reportEvent('break-on-load-target-version-workaround-failed', exception);
+            }
             /* __GDPR__FRAGMENT__
                 "DebugCommonProperties" : {
                     "${include}": [ "${VersionInformation}" ]
                 }
             */
             vscode_chrome_debug_core_1.telemetry.telemetry.addCustomGlobalProperty(versionInformationPromise);
-        });
+        }));
     }
     runConnection() {
         return [
@@ -244,12 +275,15 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
     onPaused(notification, expectingStopReason = this._expectingStopReason) {
         const _super = name => super[name];
         return __awaiter(this, void 0, void 0, function* () {
-            this._overlayHelper.doAndCancel(() => {
-                return this._domains.has('Overlay') ?
-                    this.chrome.Overlay.setPausedInDebuggerMessage({ message: this._pagePauseMessage }).catch(() => { }) :
-                    this.chrome.Page.configureOverlay({ message: this._pagePauseMessage }).catch(() => { });
-            });
-            return _super("onPaused").call(this, notification, expectingStopReason);
+            const result = (yield _super("onPaused").call(this, notification, expectingStopReason));
+            if (result.didPause) {
+                this._overlayHelper.doAndCancel(() => {
+                    return this._domains.has('Overlay') ?
+                        this.chrome.Overlay.setPausedInDebuggerMessage({ message: this._pagePauseMessage }).catch(() => { }) :
+                        this.chrome.Page.configureOverlay({ message: this._pagePauseMessage }).catch(() => { });
+                });
+            }
+            return result;
         });
     }
     threadName() {
@@ -264,38 +298,61 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
         super.onResumed();
     }
     disconnect(args) {
-        const hadTerminated = this._hasTerminated;
-        // Disconnect before killing Chrome, because running "taskkill" when it's paused sometimes doesn't kill it
-        super.disconnect(args);
-        if ((this._chromeProc || (!this._chromeProc && this._chromePID)) && !hadTerminated) {
-            // Only kill Chrome if the 'disconnect' originated from vscode. If we previously terminated
-            // due to Chrome shutting down, or devtools taking over, don't kill Chrome.
-            if (vscode_chrome_debug_core_1.utils.getPlatform() === 0 /* Windows */ && this._chromePID) {
-                let taskkillCmd = `taskkill /PID ${this._chromePID}`;
-                vscode_chrome_debug_core_1.logger.log(`Killing Chrome process by pid: ${taskkillCmd}`);
-                try {
-                    // Run synchronously because this process may be killed before exec() would run
-                    child_process_1.execSync(taskkillCmd);
+        const _super = name => super[name];
+        return __awaiter(this, void 0, void 0, function* () {
+            const hadTerminated = this._hasTerminated;
+            // Disconnect before killing Chrome, because running "taskkill" when it's paused sometimes doesn't kill it
+            _super("disconnect").call(this, args);
+            if ((this._chromeProc || this._chromePID) && !hadTerminated) {
+                // Only kill Chrome if the 'disconnect' originated from vscode. If we previously terminated
+                // due to Chrome shutting down, or devtools taking over, don't kill Chrome.
+                if (vscode_chrome_debug_core_1.utils.getPlatform() === 0 /* Windows */ && this._chromePID) {
+                    yield this.killChromeOnWindows(this._chromePID);
                 }
-                catch (e) {
-                    // Can fail if Chrome was already open, and the process with _chromePID is gone.
-                    // Or if it already shut down for some reason.
+                else if (this._chromeProc) {
+                    vscode_chrome_debug_core_1.logger.log('Killing Chrome process');
+                    this._chromeProc.kill('SIGINT');
                 }
-                // execSync above may succeed, but Chrome still might not shut down, for example if the web page promts the user about unsaved changes.
-                // In that case, we need to use /F to force shutdown, but we risk Chrome not shutting down correctly.
-                taskkillCmd = `taskkill /F /PID ${this._chromePID}`;
-                vscode_chrome_debug_core_1.logger.log(`Killing Chrome process by pid (using force in case the first attempt failed): ${taskkillCmd}`);
-                try {
-                    child_process_1.execSync(taskkillCmd);
-                }
-                catch (e) { }
             }
-            else if (this._chromeProc) {
-                vscode_chrome_debug_core_1.logger.log('Killing Chrome process');
-                this._chromeProc.kill('SIGINT');
+            this._chromeProc = null;
+        });
+    }
+    killChromeOnWindows(chromePID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let taskkillCmd = `taskkill /PID ${chromePID}`;
+            vscode_chrome_debug_core_1.logger.log(`Killing Chrome process by pid: ${taskkillCmd}`);
+            try {
+                child_process_1.execSync(taskkillCmd);
             }
-        }
-        this._chromeProc = null;
+            catch (e) {
+                // The command will fail if process was not found. This can be safely ignored.
+            }
+            for (let i = 0; i < 10; i++) {
+                // Check to see if the process is still running, with CSV output format
+                let tasklistCmd = `tasklist /FI "PID eq ${chromePID}" /FO CSV`;
+                vscode_chrome_debug_core_1.logger.log(`Looking up process by pid: ${tasklistCmd}`);
+                let tasklistOutput = child_process_1.execSync(tasklistCmd).toString();
+                // If the process is found, tasklist will output CSV with one of the values being the PID. Exit code will be 0.
+                // If the process is not found, tasklist will give a generic "not found" message instead. Exit code will also be 0.
+                // If we see an entry in the CSV for the PID, then we can assume the process was found.
+                if (!tasklistOutput.includes(`"${chromePID}"`)) {
+                    vscode_chrome_debug_core_1.logger.log(`Chrome process with pid ${chromePID} is not running`);
+                    return;
+                }
+                // Give the process some time to close gracefully
+                vscode_chrome_debug_core_1.logger.log(`Chrome process with pid ${chromePID} is still alive, waiting...`);
+                yield new Promise((resolve) => {
+                    setTimeout(resolve, 200);
+                });
+            }
+            // At this point we can assume the process won't close on its own, so force kill it
+            let taskkillForceCmd = `taskkill /F /PID ${chromePID}`;
+            vscode_chrome_debug_core_1.logger.log(`Killing Chrome process timed out. Killing again using force: ${taskkillForceCmd}`);
+            try {
+                child_process_1.execSync(taskkillForceCmd);
+            }
+            catch (e) { }
+        });
     }
     /**
      * Opt-in event called when the 'reload' button in the debug widget is pressed
@@ -315,21 +372,14 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
             this.events.emitStepStarted('LaunchTarget.LaunchExe');
             const platform = vscode_chrome_debug_core_1.utils.getPlatform();
             if (platform === 0 /* Windows */ && shouldLaunchUnelevated) {
-                const semaphoreFile = path.join(os.tmpdir(), 'launchedUnelevatedChromeProcess.id');
-                if (fs.existsSync(semaphoreFile)) {
-                    fs.unlinkSync(semaphoreFile);
+                let chromePid;
+                if (this._doesHostSupportLaunchUnelevatedProcessRequest) {
+                    chromePid = yield this.spawnChromeUnelevatedWithClient(chromePath, chromeArgs);
                 }
-                const chromeProc = child_process_1.fork(getChromeSpawnHelperPath(), [`${process.env.windir}\\System32\\cscript.exe`, path.join(__dirname, 'launchUnelevated.js'),
-                    semaphoreFile, chromePath, ...chromeArgs], {});
-                chromeProc.unref();
-                yield new Promise((resolve, reject) => {
-                    chromeProc.on('message', resolve);
-                });
-                const pidStr = yield findNewlyLaunchedChromeProcess(semaphoreFile);
-                if (pidStr) {
-                    vscode_chrome_debug_core_1.logger.log(`Parsed output file and got Chrome PID ${pidStr}`);
-                    this._chromePID = parseInt(pidStr, 10);
+                else {
+                    chromePid = yield this.spawnChromeUnelevatedWithWindowsScriptHost(chromePath, chromeArgs);
                 }
+                this._chromePID = chromePid;
                 // Cannot get the real Chrome process, so return null.
                 return null;
             }
@@ -339,7 +389,7 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
                     silent: true
                 };
                 if (env) {
-                    options['env'] = Object.assign({}, process.env, env);
+                    options['env'] = this.getFullEnv(env);
                 }
                 if (cwd) {
                     options['cwd'] = cwd;
@@ -370,7 +420,7 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
                     stdio: ['ignore'],
                 };
                 if (env) {
-                    options['env'] = Object.assign({}, process.env, env, { 'ELECTRON_DISABLE_SECURITY_WARNINGS': 1 });
+                    options['env'] = Object.assign({}, this.getFullEnv(env), { 'ELECTRON_DISABLE_SECURITY_WARNINGS': 1 });
                 }
                 else {
                     options['env'] = Object.assign({}, process.env, { 'ELECTRON_DISABLE_SECURITY_WARNINGS': 1 });
@@ -380,8 +430,51 @@ class ChromeDebugAdapter extends vscode_chrome_debug_core_1.ChromeDebugAdapter {
                 }
                 const chromeProc = child_process_1.spawn(chromePath, chromeArgs, options);
                 chromeProc.unref();
+                this._chromePID = chromeProc.pid;
                 return chromeProc;
             }
+        });
+    }
+    spawnChromeUnelevatedWithWindowsScriptHost(chromePath, chromeArgs) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const semaphoreFile = path.join(os.tmpdir(), 'launchedUnelevatedChromeProcess.id');
+            if (fs.existsSync(semaphoreFile)) {
+                fs.unlinkSync(semaphoreFile);
+            }
+            const chromeProc = child_process_1.fork(getChromeSpawnHelperPath(), [`${process.env.windir}\\System32\\cscript.exe`, path.join(__dirname, 'launchUnelevated.js'),
+                semaphoreFile, chromePath, ...chromeArgs], {});
+            chromeProc.unref();
+            yield new Promise((resolve, reject) => {
+                chromeProc.on('message', resolve);
+            });
+            const pidStr = yield findNewlyLaunchedChromeProcess(semaphoreFile);
+            if (pidStr) {
+                vscode_chrome_debug_core_1.logger.log(`Parsed output file and got Chrome PID ${pidStr}`);
+                return parseInt(pidStr, 10);
+            }
+            return null;
+        });
+    }
+    getFullEnv(customEnv) {
+        const env = Object.assign({}, process.env, customEnv);
+        Object.keys(env).filter(k => env[k] === null).forEach(key => delete env[key]);
+        return env;
+    }
+    spawnChromeUnelevatedWithClient(chromePath, chromeArgs) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                this._session.sendRequest('launchUnelevated', {
+                    'process': chromePath,
+                    'args': chromeArgs
+                }, 10000, (response) => {
+                    if (!response.success) {
+                        reject(new Error(response.message));
+                    }
+                    else {
+                        resolve(response.body.processId);
+                    }
+                });
+            });
         });
     }
     setExpression(args) {

@@ -1,4 +1,4 @@
-﻿//*********************************************************
+//*********************************************************
 // Original author Microsoft (license MIT)
 // https://github.com/Microsoft/Windows-universal-samples/tree/master/Samples/HolographicSpatialMapping
 // Code is adapted for Kore integration.

@@ -1,4 +1,6 @@
 extern class Krom {
+	static inline var KROM_API: Int = 1;
+
 	static function clear(flags: Int, color: Int, depth: Float, stencil: Int): Void;
 	
 	static function createVertexShader(data: haxe.io.BytesData, name: String): Dynamic;
@@ -72,10 +74,11 @@ extern class Krom {
 	static function writeAudioBuffer(bufferValue: Float): Dynamic;
 	static function loadBlob(file: String): js.html.ArrayBuffer;
 	
-	static function init(title: String, width: Int, height: Int, samplesPerPixel: Int, vSync: Bool, windowMode: Int, windowFeatures: Int): Void;
+	static function init(title: String, width: Int, height: Int, samplesPerPixel: Int, vSync: Bool, windowMode: Int, windowFeatures: Int, kromApi: Int): Void;
 	static function log(v: Dynamic): Void;
 	static function setCallback(callback: Void->Void): Void;
 	static function setDropFilesCallback(callback: String->Void): Void;
+	static function setCutCopyPasteCallback(cutCallback: Void->String, copyCallback: Void->String, pasteCallback: String->Void): Void;
 	static function setKeyboardDownCallback(callback: Int->Void): Void;
 	static function setKeyboardUpCallback(callback: Int->Void): Void;
 	static function setKeyboardPressCallback(callback: Int->Void): Void;
@@ -98,6 +101,7 @@ extern class Krom {
 	static function getTime(): Float;
 	static function windowWidth(id: Int): Int;
 	static function windowHeight(id: Int): Int;
+	static function setWindowTitle(id: Int, title: String): Void;
 	static function screenDpi(): Int;
 	static function systemId(): String;
 	static function requestShutdown(): Void;
@@ -115,6 +119,7 @@ extern class Krom {
 	static function savePath(): String;
 	static function getArgCount(): Int;
 	static function getArg(index: Int): String;
+	static function getFilesLocation(): String;
 
 	static function setBoolCompute(location: kha.compute.ConstantLocation, value: Bool): Void;
 	static function setIntCompute(location: kha.compute.ConstantLocation, value: Int): Void;

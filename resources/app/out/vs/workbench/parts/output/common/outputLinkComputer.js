@@ -10,12 +10,12 @@ var __M = function(deps) {
   }
   return result;
 };
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 define(__m[5/*vs/base/common/network*/], __M([1/*require*/,0/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Schemas;
     (function (Schemas) {
@@ -49,12 +49,12 @@ define(__m[5/*vs/base/common/network*/], __M([1/*require*/,0/*exports*/]), funct
     })(Schemas = exports.Schemas || (exports.Schemas = {}));
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 define(__m[3/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,4/*vs/base/common/platform*/,2/*vs/base/common/strings*/]), function (require, exports, platform_1, strings_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The forward slash path separator.
@@ -131,7 +131,7 @@ define(__m[3/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,4/*vs/base
         if (len === 0) {
             return '.';
         }
-        var wantsBackslash = platform_1.isWindows && toOSPath;
+        var wantsBackslash = !!(platform_1.isWindows && toOSPath);
         if (_isNormal(path, wantsBackslash)) {
             return path;
         }
@@ -411,17 +411,17 @@ define(__m[3/*vs/base/common/paths*/], __M([1/*require*/,0/*exports*/,4/*vs/base
     }
     exports.isAbsolute_win32 = isAbsolute_win32;
     function isAbsolute_posix(path) {
-        return path && path.charCodeAt(0) === 47 /* Slash */;
+        return !!(path && path.charCodeAt(0) === 47 /* Slash */);
     }
     exports.isAbsolute_posix = isAbsolute_posix;
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 define(__m[6/*vs/base/common/resources*/], __M([1/*require*/,0/*exports*/,3/*vs/base/common/paths*/,7/*vs/base/common/uri*/,2/*vs/base/common/strings*/,5/*vs/base/common/network*/,4/*vs/base/common/platform*/]), function (require, exports, paths, uri_1, strings_1, network_1, platform_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function getComparisonKey(resource) {
         return hasToIgnoreCase(resource) ? resource.toString().toLowerCase() : resource.toString();
@@ -438,7 +438,7 @@ define(__m[6/*vs/base/common/resources*/], __M([1/*require*/,0/*exports*/,3/*vs/
     }
     exports.basenameOrAuthority = basenameOrAuthority;
     /**
-     * Tests wheter a `candidate` URI is a parent or equal of a given `base` URI.
+     * Tests whether a `candidate` URI is a parent or equal of a given `base` URI.
      * @param base A uri which is "longer"
      * @param parentCandidate A uri which is "shorter" then `base`
      */
@@ -484,6 +484,9 @@ define(__m[6/*vs/base/common/resources*/], __M([1/*require*/,0/*exports*/,3/*vs/
      * @returns The URI representing the directory of the input URI.
      */
     function dirname(resource) {
+        if (resource.scheme === network_1.Schemas.file) {
+            return uri_1.URI.file(paths.dirname(fsPath(resource)));
+        }
         var dirname = paths.dirname(resource.path, '/');
         if (resource.authority && dirname.length && dirname.charCodeAt(0) !== 47 /* Slash */) {
             return null; // If a URI contains an authority component, then the path component must either be empty or begin with a CharCode.Slash ("/") character
@@ -557,6 +560,7 @@ define(__m[6/*vs/base/common/resources*/], __M([1/*require*/,0/*exports*/,3/*vs/
         }
         return value;
     }
+    exports.fsPath = fsPath;
     /**
      * Returns true if the URI path is absolute.
      */
@@ -585,7 +589,7 @@ define(__m[6/*vs/base/common/resources*/], __M([1/*require*/,0/*exports*/,3/*vs/
     }
     exports.distinctParents = distinctParents;
     /**
-     * Tests wheter the given URL is a file URI created by `URI.parse` instead of `URI.file`.
+     * Tests whether the given URL is a file URI created by `URI.parse` instead of `URI.file`.
      * Such URI have no scheme or scheme that consist of a single letter (windows drive letter)
      * @param candidate The URI to test
      * @returns A corrected, real file URI if the input seems to be malformed.
@@ -598,14 +602,44 @@ define(__m[6/*vs/base/common/resources*/], __M([1/*require*/,0/*exports*/,3/*vs/
         return void 0;
     }
     exports.isMalformedFileUri = isMalformedFileUri;
+    /**
+     * Data URI related helpers.
+     */
+    var DataUri;
+    (function (DataUri) {
+        DataUri.META_DATA_LABEL = 'label';
+        DataUri.META_DATA_DESCRIPTION = 'description';
+        DataUri.META_DATA_SIZE = 'size';
+        DataUri.META_DATA_MIME = 'mime';
+        function parseMetaData(dataUri) {
+            var metadata = new Map();
+            // Given a URI of:  data:image/png;size:2313;label:SomeLabel;description:SomeDescription;base64,77+9UE5...
+            // the metadata is: size:2313;label:SomeLabel;description:SomeDescription
+            var meta = dataUri.path.substring(dataUri.path.indexOf(';') + 1, dataUri.path.lastIndexOf(';'));
+            meta.split(';').forEach(function (property) {
+                var _a = property.split(':'), key = _a[0], value = _a[1];
+                if (key && value) {
+                    metadata.set(key, value);
+                }
+            });
+            // Given a URI of:  data:image/png;size:2313;label:SomeLabel;description:SomeDescription;base64,77+9UE5...
+            // the mime is: image/png
+            var mime = dataUri.path.substring(0, dataUri.path.indexOf(';'));
+            if (mime) {
+                metadata.set(DataUri.META_DATA_MIME, mime);
+            }
+            return metadata;
+        }
+        DataUri.parseMetaData = parseMetaData;
+    })(DataUri = exports.DataUri || (exports.DataUri = {}));
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 define(__m[8/*vs/workbench/parts/output/common/outputLinkComputer*/], __M([1/*require*/,0/*exports*/,7/*vs/base/common/uri*/,3/*vs/base/common/paths*/,6/*vs/base/common/resources*/,2/*vs/base/common/strings*/,9/*vs/base/common/arrays*/,10/*vs/editor/common/core/range*/]), function (require, exports, uri_1, paths, resources, strings, arrays, range_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var OutputLinkComputer = /** @class */ (function () {
         function OutputLinkComputer(ctx, createData) {
@@ -655,7 +689,7 @@ define(__m[8/*vs/workbench/parts/output/common/outputLinkComputer*/], __M([1/*re
                     links.push.apply(links, OutputLinkComputer.detectLinks(lines[i], i + 1, folderPatterns, resourceCreator));
                 }
             });
-            return links;
+            return Promise.resolve(links);
         };
         OutputLinkComputer.createPatterns = function (workspaceFolder) {
             var patterns = [];
@@ -698,9 +732,12 @@ define(__m[8/*vs/workbench/parts/output/common/outputLinkComputer*/], __M([1/*re
                 var _loop_1 = function () {
                     // Convert the relative path information to a resource that we can use in links
                     var folderRelativePath = strings.rtrim(match[1], '.').replace(/\\/g, '/'); // remove trailing "." that likely indicate end of sentence
-                    var resource = void 0;
+                    var resourceString = void 0;
                     try {
-                        resource = resourceCreator.toResource(folderRelativePath).toString();
+                        var resource = resourceCreator.toResource(folderRelativePath);
+                        if (resource) {
+                            resourceString = resource.toString();
+                        }
                     }
                     catch (error) {
                         return "continue";
@@ -710,10 +747,10 @@ define(__m[8/*vs/workbench/parts/output/common/outputLinkComputer*/], __M([1/*re
                         var lineNumber = match[3];
                         if (match[5]) {
                             var columnNumber = match[5];
-                            resource = strings.format('{0}#{1},{2}', resource, lineNumber, columnNumber);
+                            resourceString = strings.format('{0}#{1},{2}', resourceString, lineNumber, columnNumber);
                         }
                         else {
-                            resource = strings.format('{0}#{1}', resource, lineNumber);
+                            resourceString = strings.format('{0}#{1}', resourceString, lineNumber);
                         }
                     }
                     var fullMatch = strings.rtrim(match[0], '.'); // remove trailing "." that likely indicate end of sentence
@@ -730,7 +767,7 @@ define(__m[8/*vs/workbench/parts/output/common/outputLinkComputer*/], __M([1/*re
                     }
                     links.push({
                         range: linkRange,
-                        url: resource
+                        url: resourceString
                     });
                 };
                 while ((match = pattern.exec(line)) !== null) {

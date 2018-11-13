@@ -1,8 +1,0 @@
-.haxelib/**
-.vscode/**
-bin/main.js.map
-src/**
-.editorconfig
-.gitignore
-.travis.yml
-build.hxml

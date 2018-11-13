@@ -16,6 +16,7 @@ const EmscriptenExporter_1 = require("./Exporters/EmscriptenExporter");
 const TizenExporter_1 = require("./Exporters/TizenExporter");
 const VisualStudioExporter_1 = require("./Exporters/VisualStudioExporter");
 const XCodeExporter_1 = require("./Exporters/XCodeExporter");
+const cpuCores = require('physical-cpu-count');
 let _global = global;
 _global.__base = __dirname + '/';
 let debug = false;
@@ -148,7 +149,7 @@ async function compileShader(projectDir, type, from, to, temp, platform, builddi
                 funcname = funcname.replace(/-/g, '_');
                 funcname = funcname.replace(/\./g, '_');
                 funcname += '_main';
-                fs.writeFileSync(to, funcname, 'utf8');
+                fs.writeFileSync(to, '>' + funcname, 'utf8');
                 to = path.join(builddir, 'Sources', fileinfo.name + '.' + type);
                 temp = to + '.temp';
             }
@@ -205,7 +206,12 @@ async function compileShader(projectDir, type, from, to, temp, platform, builddi
 }
 async function exportKoremakeProject(from, to, platform, options) {
     log.info('korefile found.');
-    log.info('Creating ' + fromPlatform(platform) + ' project files.');
+    if (options.onlyshaders) {
+        log.info('Only compiling shaders.');
+    }
+    else {
+        log.info('Creating ' + fromPlatform(platform) + ' project files.');
+    }
     Project_1.Project.root = path.resolve(from);
     let project;
     try {
@@ -243,6 +249,9 @@ async function exportKoremakeProject(from, to, platform, options) {
                 await compileShader(from, shaderLang(platform), file.file, path.join(project.getDebugDir(), outfile), 'build', platform, 'build');
             }
         }
+    }
+    if (options.onlyshaders) {
+        return project;
     }
     // Run again to find new shader files for Metal
     project.searchFiles(undefined);
@@ -378,12 +387,15 @@ async function run(options, loglog) {
         return '';
     }
     let solutionName = project.getName();
+    if (options.onlyshaders) {
+        return solutionName;
+    }
     if (options.compile && solutionName !== '') {
         log.info('Compiling...');
         const dothemath = true;
         let make = null;
         if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Linux) || options.target === Platform_1.Platform.Linux) {
-            make = child_process.spawn('make', ['-j', '2'], { cwd: path.join(options.to, options.buildPath) });
+            make = child_process.spawn('make', ['-j', cpuCores.toString()], { cwd: path.join(options.to, options.buildPath) });
         }
         if ((options.customTarget && options.customTarget.baseTarget === Platform_1.Platform.Pi) || options.target === Platform_1.Platform.Pi) {
             make = child_process.spawn('make', [], { cwd: path.join(options.to, options.buildPath) });

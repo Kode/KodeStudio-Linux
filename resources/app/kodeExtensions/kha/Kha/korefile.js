@@ -36,7 +36,18 @@ project.addFiles('Backends/Kore/khacpp/project/thirdparty/mbedtls-' + tlsVersion
 
 project.addFiles('Backends/Kore/*.cpp', 'Backends/Kore/*.h');
 
-const pcreExcludes = ['dftables.c', 'pcredemo.c', 'pcregrep.c', 'pcretest.c', 'pcre_jit_test.c', 'sljit/**'];
+const pcreExcludes = [
+	'dftables.c',
+	'pcredemo.c',
+	'pcregrep.c',
+	'pcretest.c',
+	'pcre_jit_test.c',
+	'pcre_printint.c',
+	'pcre16_printint.c',
+	'pcre32_printint.c',
+	'sljit/**'
+];
+
 for (const file of pcreExcludes) {
 	project.addExclude('Backends/Kore/khacpp/project/thirdparty/pcre-' + pcreVersion + '/' + file);
 }
@@ -97,6 +108,8 @@ project.addDefine('HXCPP_VISIT_ALLOCS');
 project.addDefine('KORE');
 project.addDefine('ROTATE90');
 project.addDefine('HAVE_CONFIG_H');
+project.addDefine('SUPPORT_UTF');
+project.addDefine('SUPPORT_UCP');
 
 //if (Options.vrApi === "gearvr") {
 //	out += "project.addDefine('VR_GEAR_VR');\n";

@@ -18,6 +18,9 @@ define("vs/workbench/node/extensionHostProcess.nls", {
 		"Warning",
 		"Info"
 	],
+	"vs/base/node/processes": [
+		"Can't execute a shell command on a UNC drive."
+	],
 	"vs/editor/common/config/editorOptions": [
 		"The editor is not accessible at this time. Press Alt+F1 for options.",
 		"Editor content"
@@ -51,8 +54,8 @@ define("vs/workbench/node/extensionHostProcess.nls", {
 		"Not showing {0} further errors and warnings."
 	],
 	"vs/workbench/api/node/extHostExtensionActivator": [
-		"Extension '{1}' failed to activate. Reason: unknown dependency '{0}'.",
-		"Extension '{1}' failed to activate. Reason: dependency '{0}' failed to activate.",
+		"Cannot activate extension '{0}' as the depending extension '{1}' is not found. Please install or enable the depending extension and reload the window.",
+		"Cannot activate extension '{0}' as the depending extension '{1}' is failed to activate.",
 		"Extension '{0}' failed to activate. Reason: more than 10 levels of dependencies (most likely a dependency loop).",
 		"Activating extension '{0}' failed: {1}."
 	],

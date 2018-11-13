@@ -207,6 +207,7 @@ class ShaderCompiler {
                     catch (error) {
                         log.error('Compiling shader ' + (index + 1) + ' of ' + shaders.length + ' (' + parsed.base + ') failed:');
                         log.error(error);
+                        return Promise.reject(error);
                     }
                     if (compiledShader === null) {
                         compiledShader = new CompiledShader();
@@ -224,6 +225,7 @@ class ShaderCompiler {
                     compiledShader.name = AssetConverter_1.AssetConverter.createExportInfo(parsed, false, options, self.exporter.options.from).name;
                     compiledShaders.push(compiledShader);
                     ++index;
+                    return Promise.resolve();
                 }
                 if (this.options.parallelAssetConversion !== 0) {
                     let todo = shaders.map((shader, index) => {
@@ -241,7 +243,13 @@ class ShaderCompiler {
                 else {
                     let index = 0;
                     for (let shader of shaders) {
-                        await compile(shader, index);
+                        try {
+                            await compile(shader, index);
+                        }
+                        catch (err) {
+                            reject();
+                            return;
+                        }
                         index += 1;
                     }
                 }
@@ -253,11 +261,7 @@ class ShaderCompiler {
     async run(watch, recompileAll) {
         let shaders = [];
         for (let matcher of this.shaderMatchers) {
-            try {
-                shaders = shaders.concat(await this.watch(watch, matcher.match, matcher.options, recompileAll));
-            }
-            catch (error) {
-            }
+            shaders = shaders.concat(await this.watch(watch, matcher.match, matcher.options, recompileAll));
         }
         return shaders;
     }

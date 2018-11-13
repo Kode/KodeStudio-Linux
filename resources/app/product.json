@@ -19,16 +19,15 @@
 	"reportIssueUrl": "https://github.com/Kode/KodeStudio/issues/new",
 	"urlProtocol": "code-oss",
 	"extensionAllowedProposedApi": [
-		"ms-vscode.node-debug",
-		"ms-vscode.node-debug2"
+		"ms-vscode.references-view"
 	],
-	"kodeStudioVersion": "18.9.2",
-	"commit": "b4f62a65292c32b44a9c2ab7739390fd05d4df2a",
-	"date": "2018-09-20T19:45:43.852Z",
+	"kodeStudioVersion": "18.11.0",
+	"commit": "7eefaf49560f5ee60219f93487cf67802625ac03",
+	"date": "2018-11-13T16:00:42.776Z",
 	"checksums": {
-		"vs/workbench/workbench.main.js": "ZEku9itYPQqxmGrhyJ4uKw",
-		"vs/workbench/workbench.main.css": "qYJNTN2JH433M5XgWwsEvg",
+		"vs/workbench/workbench.main.js": "0k5PvRi8h+wTFlA1xe2XkQ",
+		"vs/workbench/workbench.main.css": "SUp5ynXxrtytreYwdEJz2A",
 		"vs/code/electron-browser/workbench/workbench.html": "8oljjuhrm+xZ2LcVLBFCFA",
-		"vs/code/electron-browser/workbench/workbench.js": "4NmdLBmmGqGe99wmL6LPug"
+		"vs/code/electron-browser/workbench/workbench.js": "rZxNkbgZVnODn8tu/zdN9Q"
 	}
 }

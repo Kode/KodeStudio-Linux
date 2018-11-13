@@ -135,6 +135,10 @@ class Graphics implements kha.graphics4.Graphics {
 		pipeline.set();
 	}
 
+	public function setStencilReferenceValue(value: Int): Void {
+
+	}
+
 	public function setBool(location: kha.graphics4.ConstantLocation, value: Bool): Void {
 		Krom.setBool(location, value);
 	}
@@ -200,7 +204,7 @@ class Graphics implements kha.graphics4.Graphics {
 	}
 
 	public function instancedRenderingAvailable(): Bool {
-		return false;
+		return true;
 	}
 
 	public function scissor(x: Int, y: Int, width: Int, height: Int): Void {

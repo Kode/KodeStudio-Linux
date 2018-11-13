@@ -55,6 +55,12 @@ function getPageStubs() {
         on(eventName, handler) { }
     };
 }
+function getLogStubs() {
+    return {
+        enable() { return Promise.resolve(); },
+        on(eventName, handler) { }
+    };
+}
 function getMockChromeConnectionApi() {
     const mockEventEmitter = new events_1.EventEmitter();
     const mockConsole = typemoq_1.Mock.ofInstance(getConsoleStubs());
@@ -82,6 +88,8 @@ function getMockChromeConnectionApi() {
     const mockPage = typemoq_1.Mock.ofInstance(getPageStubs());
     const mockBrowser = typemoq_1.Mock.ofInstance(getBrowserStubs());
     mockBrowser.callBase = true;
+    const mockLog = typemoq_1.Mock.ofInstance(getLogStubs());
+    mockLog.callBase = true;
     const chromeConnectionAPI = {
         Browser: mockBrowser.object,
         Console: mockConsole.object,
@@ -89,7 +97,8 @@ function getMockChromeConnectionApi() {
         Runtime: mockRuntime.object,
         Inspector: mockInspector.object,
         Network: mockNetwork.object,
-        Page: mockPage.object
+        Page: mockPage.object,
+        Log: mockLog.object
     };
     return {
         apiObjects: chromeConnectionAPI,
@@ -100,6 +109,7 @@ function getMockChromeConnectionApi() {
         Inspector: mockInspector,
         Network: mockNetwork,
         Page: mockPage,
+        Log: mockLog,
         mockEventEmitter
     };
 }

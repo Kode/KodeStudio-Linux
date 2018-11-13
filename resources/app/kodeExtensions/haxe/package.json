@@ -1,6 +1,6 @@
 {
 	"name": "vshaxe",
-	"version": "2.4.1",
+	"version": "2.4.4",
 	"publisher": "nadako",
 	"engines": {
 		"vscode": "^1.25.0"
@@ -27,7 +27,7 @@
 	"author": "Dan Korostelev",
 	"license": "MIT",
 	"dependencies": {
-		"vscode-languageclient": "5.0.1",
+		"vscode-languageclient": "5.1.0",
 		"copy-paste": "^1.3.0"
 	},
 	"bugs": "https://github.com/vshaxe/vshaxe/issues",
@@ -51,6 +51,7 @@
 		"onCommand:haxe.toggleCodeLens",
 		"onCommand:haxe.dependencies.refresh",
 		"onCommand:haxe.dependencies.collapseAll",
+		"onCommand:workbench.action.tasks.runTask",
 		"onView:haxe.methods",
 		"onView:haxe.dependencies",
 		"workspaceContains:*.hxml"

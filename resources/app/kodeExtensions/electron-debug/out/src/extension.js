@@ -18,9 +18,9 @@ const NetworkSettings_1 = require("./NetworkSettings");
 const util = require("./common");
 const vscode = require("vscode");
 const Core = require("vscode-chrome-debug-core");
-const utils_1 = require("./utils");
 const nls = require("vscode-nls");
-const localize = nls.loadMessageBundle();
+const utils_1 = require("./utils");
+const localize = nls.loadMessageBundle(__filename);
 function activate(context) {
     return __awaiter(this, void 0, void 0, function* () {
         const extensionId = 'kodetech.electron-debug';
@@ -49,7 +49,7 @@ exports.deactivate = deactivate;
 const DEFAULT_CONFIG = {
     type: 'electron',
     request: 'launch',
-    name: localize('chrome.launch.name', 'Launch Electron against the workspace'),
+    name: localize(0, null),
     appDir: '${workspaceFolder}'
 };
 class ChromeConfigurationProvider {
@@ -71,7 +71,7 @@ class ChromeConfigurationProvider {
                 const discovery = new Core.chromeTargetDiscoveryStrategy.ChromeTargetDiscovery(new Core.NullLogger(), new Core.telemetry.NullTelemetryReporter());
                 let targets;
                 try {
-                    targets = yield discovery.getAllTargets(config.address || '127.0.0.1', config.port, utils_1.targetFilter, config.url || config.urlFilter);
+                    targets = yield discovery.getAllTargets(config.address || '127.0.0.1', config.port, utils_1.defaultTargetFilter, config.url || config.urlFilter);
                 }
                 catch (e) {
                     // Target not running?
@@ -94,7 +94,7 @@ class ChromeConfigurationProvider {
                 config.electronPath = exec;
             }
             else {
-                const electronDir = path_1.join(vscode.extensions.getExtension('kodetech.electron-debug').extensionPath, '.electron', '2.0.2');
+                const electronDir = path_1.join(vscode.extensions.getExtension('kodetech.electron-debug').extensionPath, '.electron', '3.0.8');
                 if (process.platform === 'darwin') {
                     config.electronPath = path_1.join(electronDir, 'Electron.app', 'Contents', 'MacOS', 'Electron');
                 }
@@ -132,7 +132,7 @@ function pickTarget(targets) {
             detail: target.url,
             websocketDebuggerUrl: target.webSocketDebuggerUrl
         }));
-        const placeHolder = localize('chrome.targets.placeholder', 'Select a tab');
+        const placeHolder = localize(1, null);
         const selected = yield vscode.window.showQuickPick(items, { placeHolder, matchOnDescription: true, matchOnDetail: true });
         return selected;
     });

@@ -1,9 +1,0 @@
-src/**/*
-.vscode/**/*
-docs/**/*
-test/**/*
-.gitignore
-out/*.map
-*.hxml
-*.vsix
-

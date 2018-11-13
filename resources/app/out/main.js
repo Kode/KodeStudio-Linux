@@ -45,8 +45,8 @@ function findKhaAppParameter() {
 if (process.argv[1] === '--khamake') {
 	const { fork } = require('child_process');
 	const forked = fork(process.argv[2], process.argv.slice(3));
-	forked.on('exit', () => {
-		app.quit();
+	forked.on('exit', (code) => {
+		app.exit(code);
 	});
 }
 // start in Kha debug mode
@@ -113,6 +113,22 @@ configureCommandlineSwitches(args, nodeCachedDataDir);
 
 // Load our code once ready
 app.once('ready', function () {
+	if (args['trace']) {
+		// @ts-ignore
+		const contentTracing = require('electron').contentTracing;
+
+		const traceOptions = {
+			categoryFilter: args['trace-category-filter'] || '*',
+			traceOptions: args['trace-options'] || 'record-until-full,enable-sampling'
+		};
+
+		contentTracing.startRecording(traceOptions, () => onReady());
+	} else {
+		onReady();
+	}
+});
+
+function onReady() {
 	perf.mark('main:appReady');
 
 	Promise.all([nodeCachedDataDir.ensureExists(), userDefinedLocale]).then(([cachedDataDir, locale]) => {
@@ -131,10 +147,7 @@ app.once('ready', function () {
 			const startup = nlsConfig => {
 				nlsConfig._languagePackSupport = true;
 				process.env['VSCODE_NLS_CONFIG'] = JSON.stringify(nlsConfig);
-
-				if (cachedDataDir) {
-					process.env['VSCODE_NODE_CACHED_DATA_DIR_' + process.pid] = cachedDataDir;
-				}
+				process.env['VSCODE_NODE_CACHED_DATA_DIR'] = cachedDataDir || '';
 
 				// Load main in AMD
 				require('./bootstrap-amd').load('vs/code/electron-main/main');
@@ -168,7 +181,7 @@ app.once('ready', function () {
 			}
 		});
 	}, console.error);
-});
+}
 
 }
 
@@ -452,7 +465,7 @@ function rimraf(location) {
 	});
 }
 
-// Language tags are case insensitve however an amd loader is case sensitive
+// Language tags are case insensitive however an amd loader is case sensitive
 // To make this work on case preserving & insensitive FS we do the following:
 // the language bundles have lower case language tags and we always lower case
 // the locale we receive from the user or OS.

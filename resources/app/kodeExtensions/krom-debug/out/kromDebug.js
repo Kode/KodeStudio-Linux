@@ -70,6 +70,7 @@ class KromDebugSession extends vscode_debugadapter_1.LoggingDebugSession {
             }
             this.pendingBreakPointRequests = [];
             this.sendResponse(response);
+            this.sendMessage([KromDebugSession.DEBUGGER_MESSAGE_START, KromDebugSession.KROM_DEBUG_API]);
         });
         this.socket.on('data', (data) => {
             vscode_debugadapter_1.logger.log('Receiving data.');
@@ -383,6 +384,7 @@ class KromDebugSession extends vscode_debugadapter_1.LoggingDebugSession {
         this.sendResponse(response);
     }
 }
+KromDebugSession.KROM_DEBUG_API = 1;
 KromDebugSession.DEBUGGER_MESSAGE_BREAKPOINT = 0;
 KromDebugSession.DEBUGGER_MESSAGE_PAUSE = 1;
 KromDebugSession.DEBUGGER_MESSAGE_STACKTRACE = 2;
@@ -392,6 +394,7 @@ KromDebugSession.DEBUGGER_MESSAGE_STEP_IN = 5;
 KromDebugSession.DEBUGGER_MESSAGE_STEP_OUT = 6;
 KromDebugSession.DEBUGGER_MESSAGE_VARIABLES = 7;
 KromDebugSession.DEBUGGER_MESSAGE_CLEAR_BREAKPOINTS = 8;
+KromDebugSession.DEBUGGER_MESSAGE_START = 9;
 KromDebugSession.IDE_MESSAGE_STACKTRACE = 0;
 KromDebugSession.IDE_MESSAGE_BREAK = 1;
 KromDebugSession.IDE_MESSAGE_VARIABLES = 2;

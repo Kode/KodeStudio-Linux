@@ -1,4 +1,37 @@
-### 2.4.1 (to be released)
+### 2.4.5 (to be released)
+
+**Changes and Improvements**:
+
+- disallowed using `(` as a commit character in pattern completion ([#292](https://github.com/vshaxe/vshaxe/issues/292))
+
+### 2.4.4 (October 17, 2018)
+
+**Bugfixes**:
+
+- updated to haxe-formatter version 1.1.2
+
+### 2.4.3 (October 16, 2018)
+
+**Bugfixes**:
+
+- really updated to haxe-formatter version 1.1.1 ^_^
+
+### 2.4.2 (October 15, 2018)
+
+**Bugfixes**:
+
+- fixed tasks not working when vshaxe hasn't been activated yet ([#296](https://github.com/vshaxe/vshaxe/issues/296))
+
+**Changes and Improvements**:
+
+- updated to haxe-formatter version 1.1.1
+- added syntax highlighting support for key-value iterators ([HXP-0006](https://github.com/HaxeFoundation/haxe-evolution/blob/master/proposals/0006-key-value-iter.md))
+- added expected argument info when hovering over call args (requires Haxe 4 preview 5)
+- added more details to metadata docs in completion / hover (requires Haxe 4 preview 5)
+- don't save auto-selected display configurations ([#295](https://github.com/vshaxe/vshaxe/issues/295))
+- allowed using the "Organize Imports" command to remove unused imports
+
+### 2.4.1 (September 12, 2018)
 
 **Changes and Improvements**:
 

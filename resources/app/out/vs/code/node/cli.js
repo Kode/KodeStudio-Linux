@@ -2,7 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 (function() {
-var __m = ["require","exports","vs/base/common/platform","vs/base/common/winjs.base","path","vs/base/common/strings","vs/base/common/lifecycle","vs/base/common/event","vs/base/common/uri","fs","vs/base/common/errors","vs/base/common/functional","vs/base/common/async","vs/base/common/amd","vs/base/common/paths","vs/base/node/encoding","vs/platform/node/product","vs/base/node/extfs","vs/base/common/types","os","vs/base/common/linkedList","vs/base/common/cancellation","vs/base/common/network","vs/base/common/map","assert","vs/base/node/ports","vs/platform/environment/node/argv","vs/base/node/stream","vs/base/common/normalization","vs/base/common/resources","iconv-lite","child_process","vs/base/common/uuid","vs/base/node/flow","vs/base/common/objects","vs/base/node/pfs","vs/base/common/arrays","vs/nls!vs/platform/environment/node/argv","vs/platform/node/package","vs/platform/files/common/files","vs/platform/instantiation/common/instantiation","vs/nls!vs/code/node/cli","vs/nls","stream","net","minimist","vs/code/node/cli"];
+var __m = ["require","exports","vs/base/common/platform","vs/base/common/winjs.base","path","vs/base/common/strings","fs","os","vs/base/common/uri","vs/base/common/event","vs/base/common/errors","vs/base/common/lifecycle","vs/base/common/amd","vs/base/common/async","vs/base/common/types","vs/base/common/paths","vs/base/node/encoding","vs/platform/node/product","vs/base/node/extfs","vs/base/common/iterator","vs/base/node/pfs","vs/base/common/functional","vs/base/common/cancellation","vs/base/common/network","vs/base/common/map","assert","vs/base/node/ports","vs/platform/environment/node/argv","vs/base/node/stream","vs/base/common/normalization","vs/base/common/resources","iconv-lite","child_process","vs/base/common/uuid","vs/base/node/flow","vs/base/common/objects","vs/base/common/arrays","vs/base/common/linkedList","vs/code/node/wait","vs/nls!vs/platform/environment/node/argv","vs/platform/node/package","vs/platform/files/common/files","vs/platform/instantiation/common/instantiation","vs/nls!vs/code/node/cli","vs/nls","stream","net","minimist","vs/code/node/cli"];
 var __M = function(deps) {
   var result = [];
   for (var i = 0, len = deps.length; i < len; i++) {
@@ -14,8 +14,8 @@ var __M = function(deps) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[11/*vs/base/common/functional*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    'use strict';
+define(__m[21/*vs/base/common/functional*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function once(fn) {
         var _this = this;
@@ -37,8 +37,201 @@ define(__m[11/*vs/base/common/functional*/], __M([0/*require*/,1/*exports*/]), f
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[6/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,11/*vs/base/common/functional*/]), function (require, exports, functional_1) {
-    'use strict';
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+define(__m[19/*vs/base/common/iterator*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.FIN = { done: true, value: undefined };
+    var Iterator;
+    (function (Iterator) {
+        var _empty = {
+            next: function () {
+                return exports.FIN;
+            }
+        };
+        function empty() {
+            return _empty;
+        }
+        Iterator.empty = empty;
+        function fromArray(array, index, length) {
+            if (index === void 0) { index = 0; }
+            if (length === void 0) { length = array.length; }
+            return {
+                next: function () {
+                    if (index >= length) {
+                        return exports.FIN;
+                    }
+                    return { done: false, value: array[index++] };
+                }
+            };
+        }
+        Iterator.fromArray = fromArray;
+        function from(elements) {
+            if (!elements) {
+                return Iterator.empty();
+            }
+            else if (Array.isArray(elements)) {
+                return Iterator.fromArray(elements);
+            }
+            else {
+                return elements;
+            }
+        }
+        Iterator.from = from;
+        function map(iterator, fn) {
+            return {
+                next: function () {
+                    var element = iterator.next();
+                    if (element.done) {
+                        return exports.FIN;
+                    }
+                    else {
+                        return { done: false, value: fn(element.value) };
+                    }
+                }
+            };
+        }
+        Iterator.map = map;
+        function filter(iterator, fn) {
+            return {
+                next: function () {
+                    while (true) {
+                        var element = iterator.next();
+                        if (element.done) {
+                            return exports.FIN;
+                        }
+                        if (fn(element.value)) {
+                            return { done: false, value: element.value };
+                        }
+                    }
+                }
+            };
+        }
+        Iterator.filter = filter;
+        function forEach(iterator, fn) {
+            for (var next = iterator.next(); !next.done; next = iterator.next()) {
+                fn(next.value);
+            }
+        }
+        Iterator.forEach = forEach;
+        function collect(iterator) {
+            var result = [];
+            forEach(iterator, function (value) { return result.push(value); });
+            return result;
+        }
+        Iterator.collect = collect;
+    })(Iterator = exports.Iterator || (exports.Iterator = {}));
+    function getSequenceIterator(arg) {
+        if (Array.isArray(arg)) {
+            return Iterator.fromArray(arg);
+        }
+        else {
+            return arg;
+        }
+    }
+    exports.getSequenceIterator = getSequenceIterator;
+    var ArrayIterator = /** @class */ (function () {
+        function ArrayIterator(items, start, end, index) {
+            if (start === void 0) { start = 0; }
+            if (end === void 0) { end = items.length; }
+            if (index === void 0) { index = start - 1; }
+            this.items = items;
+            this.start = start;
+            this.end = end;
+            this.index = index;
+        }
+        ArrayIterator.prototype.first = function () {
+            this.index = this.start;
+            return this.current();
+        };
+        ArrayIterator.prototype.next = function () {
+            this.index = Math.min(this.index + 1, this.end);
+            return this.current();
+        };
+        ArrayIterator.prototype.current = function () {
+            if (this.index === this.start - 1 || this.index === this.end) {
+                return null;
+            }
+            return this.items[this.index];
+        };
+        return ArrayIterator;
+    }());
+    exports.ArrayIterator = ArrayIterator;
+    var ArrayNavigator = /** @class */ (function (_super) {
+        __extends(ArrayNavigator, _super);
+        function ArrayNavigator(items, start, end, index) {
+            if (start === void 0) { start = 0; }
+            if (end === void 0) { end = items.length; }
+            if (index === void 0) { index = start - 1; }
+            return _super.call(this, items, start, end, index) || this;
+        }
+        ArrayNavigator.prototype.current = function () {
+            return _super.prototype.current.call(this);
+        };
+        ArrayNavigator.prototype.previous = function () {
+            this.index = Math.max(this.index - 1, this.start - 1);
+            return this.current();
+        };
+        ArrayNavigator.prototype.first = function () {
+            this.index = this.start;
+            return this.current();
+        };
+        ArrayNavigator.prototype.last = function () {
+            this.index = this.end - 1;
+            return this.current();
+        };
+        ArrayNavigator.prototype.parent = function () {
+            return null;
+        };
+        return ArrayNavigator;
+    }(ArrayIterator));
+    exports.ArrayNavigator = ArrayNavigator;
+    var MappedIterator = /** @class */ (function () {
+        function MappedIterator(iterator, fn) {
+            this.iterator = iterator;
+            this.fn = fn;
+            // noop
+        }
+        MappedIterator.prototype.next = function () { return this.fn(this.iterator.next()); };
+        return MappedIterator;
+    }());
+    exports.MappedIterator = MappedIterator;
+    var MappedNavigator = /** @class */ (function (_super) {
+        __extends(MappedNavigator, _super);
+        function MappedNavigator(navigator, fn) {
+            var _this = _super.call(this, navigator, fn) || this;
+            _this.navigator = navigator;
+            return _this;
+        }
+        MappedNavigator.prototype.current = function () { return this.fn(this.navigator.current()); };
+        MappedNavigator.prototype.previous = function () { return this.fn(this.navigator.previous()); };
+        MappedNavigator.prototype.parent = function () { return this.fn(this.navigator.parent()); };
+        MappedNavigator.prototype.first = function () { return this.fn(this.navigator.first()); };
+        MappedNavigator.prototype.last = function () { return this.fn(this.navigator.last()); };
+        MappedNavigator.prototype.next = function () { return this.fn(this.navigator.next()); };
+        return MappedNavigator;
+    }(MappedIterator));
+    exports.MappedNavigator = MappedNavigator;
+});
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[11/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,21/*vs/base/common/functional*/]), function (require, exports, functional_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function isDisposable(thing) {
         return typeof thing.dispose === 'function'
@@ -109,7 +302,7 @@ define(__m[6/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,11/*vs
             var object = reference.object;
             var dispose = functional_1.once(function () {
                 if (--reference.counter === 0) {
-                    _this.destroyReferencedObject(reference.object);
+                    _this.destroyReferencedObject(key, reference.object);
                     delete _this.references[key];
                 }
             });
@@ -133,8 +326,8 @@ define(__m[6/*vs/base/common/lifecycle*/], __M([0/*require*/,1/*exports*/,11/*vs
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[20/*vs/base/common/linkedList*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    'use strict';
+define(__m[37/*vs/base/common/linkedList*/], __M([0/*require*/,1/*exports*/,19/*vs/base/common/iterator*/]), function (require, exports, iterator_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Node = /** @class */ (function () {
         function Node(element) {
@@ -180,8 +373,10 @@ define(__m[20/*vs/base/common/linkedList*/], __M([0/*require*/,1/*exports*/]), f
                 oldFirst.prev = newNode;
             }
             return function () {
-                for (var candidate = _this._first; candidate instanceof Node; candidate = candidate.next) {
+                var candidate = _this._first;
+                while (candidate instanceof Node) {
                     if (candidate !== newNode) {
+                        candidate = candidate.next;
                         continue;
                     }
                     if (candidate.prev && candidate.next) {
@@ -211,22 +406,20 @@ define(__m[20/*vs/base/common/linkedList*/], __M([0/*require*/,1/*exports*/]), f
             };
         };
         LinkedList.prototype.iterator = function () {
-            var element = {
-                done: undefined,
-                value: undefined,
-            };
+            var element;
             var node = this._first;
             return {
                 next: function () {
                     if (!node) {
-                        element.done = true;
-                        element.value = undefined;
+                        return iterator_1.FIN;
+                    }
+                    if (!element) {
+                        element = { done: false, value: node.element };
                     }
                     else {
-                        element.done = false;
                         element.value = node.element;
-                        node = node.next;
                     }
+                    node = node.next;
                     return element;
                 }
             };
@@ -243,12 +436,12 @@ define(__m[20/*vs/base/common/linkedList*/], __M([0/*require*/,1/*exports*/]), f
     exports.LinkedList = LinkedList;
 });
 
-define(__m[22/*vs/base/common/network*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[23/*vs/base/common/network*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Schemas;
     (function (Schemas) {
@@ -282,12 +475,12 @@ define(__m[22/*vs/base/common/network*/], __M([0/*require*/,1/*exports*/]), func
     })(Schemas = exports.Schemas || (exports.Schemas = {}));
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 define(__m[2/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var _isWindows = false;
     var _isMacintosh = false;
@@ -298,8 +491,18 @@ define(__m[2/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), func
     var _language = undefined;
     var _translationsConfigFile = undefined;
     exports.LANGUAGE_DEFAULT = 'en';
+    var isElectronRenderer = (typeof process !== 'undefined' && typeof process.versions !== 'undefined' && typeof process.versions.electron !== 'undefined' && process.type === 'renderer');
     // OS detection
-    if (typeof process === 'object' && typeof process.nextTick === 'function' && typeof process.platform === 'string') {
+    if (typeof navigator === 'object' && !isElectronRenderer) {
+        var userAgent = navigator.userAgent;
+        _isWindows = userAgent.indexOf('Windows') >= 0;
+        _isMacintosh = userAgent.indexOf('Macintosh') >= 0;
+        _isLinux = userAgent.indexOf('Linux') >= 0;
+        _isWeb = true;
+        _locale = navigator.language;
+        _language = _locale;
+    }
+    else if (typeof process === 'object') {
         _isWindows = (process.platform === 'win32');
         _isMacintosh = (process.platform === 'darwin');
         _isLinux = (process.platform === 'linux');
@@ -319,15 +522,6 @@ define(__m[2/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), func
             }
         }
         _isNative = true;
-    }
-    else if (typeof navigator === 'object') {
-        var userAgent = navigator.userAgent;
-        _isWindows = userAgent.indexOf('Windows') >= 0;
-        _isMacintosh = userAgent.indexOf('Macintosh') >= 0;
-        _isLinux = userAgent.indexOf('Linux') >= 0;
-        _isWeb = true;
-        _locale = navigator.language;
-        _language = _locale;
     }
     var Platform;
     (function (Platform) {
@@ -419,12 +613,12 @@ define(__m[2/*vs/base/common/platform*/], __M([0/*require*/,1/*exports*/]), func
     })(AccessibilitySupport = exports.AccessibilitySupport || (exports.AccessibilitySupport = {}));
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 define(__m[5/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The empty string.
@@ -519,8 +713,8 @@ define(__m[5/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/]), funct
         if (needleLen === 0 || haystack.length === 0) {
             return haystack;
         }
-        var offset = 0, idx = -1;
-        while ((idx = haystack.indexOf(needle, offset)) === offset) {
+        var offset = 0;
+        while (haystack.indexOf(needle, offset) === offset) {
             offset = offset + needleLen;
         }
         return haystack.substring(offset);
@@ -633,7 +827,7 @@ define(__m[5/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/]), funct
         // We check against an empty string. If the regular expression doesn't advance
         // (e.g. ends in an endless loop) it will match an empty string.
         var match = regexp.exec('');
-        return (match && regexp.lastIndex === 0);
+        return !!(match && regexp.lastIndex === 0);
     }
     exports.regExpLeadsToEndlessLoop = regExpLeadsToEndlessLoop;
     function regExpContainsBackreference(regexpValue) {
@@ -995,7 +1189,7 @@ define(__m[5/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/]), funct
     // -- UTF-8 BOM
     exports.UTF8_BOM_CHARACTER = String.fromCharCode(65279 /* UTF8_BOM */);
     function startsWithUTF8BOM(str) {
-        return (str && str.length > 0 && str.charCodeAt(0) === 65279 /* UTF8_BOM */);
+        return !!(str && str.length > 0 && str.charCodeAt(0) === 65279 /* UTF8_BOM */);
     }
     exports.startsWithUTF8BOM = startsWithUTF8BOM;
     function stripUTF8BOM(str) {
@@ -1055,14 +1249,29 @@ define(__m[5/*vs/base/common/strings*/], __M([0/*require*/,1/*exports*/]), funct
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
     exports.uppercaseFirstLetter = uppercaseFirstLetter;
+    function getNLines(str, n) {
+        if (n === void 0) { n = 1; }
+        if (n === 0) {
+            return '';
+        }
+        var idx = -1;
+        do {
+            idx = str.indexOf('\n', idx + 1);
+            n--;
+        } while (n > 0 && idx >= 0);
+        return idx >= 0 ?
+            str.substr(0, idx) :
+            str;
+    }
+    exports.getNLines = getNLines;
 });
 
-define(__m[14/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/platform*/,5/*vs/base/common/strings*/]), function (require, exports, platform_1, strings_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[15/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/platform*/,5/*vs/base/common/strings*/]), function (require, exports, platform_1, strings_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The forward slash path separator.
@@ -1139,7 +1348,7 @@ define(__m[14/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
         if (len === 0) {
             return '.';
         }
-        var wantsBackslash = platform_1.isWindows && toOSPath;
+        var wantsBackslash = !!(platform_1.isWindows && toOSPath);
         if (_isNormal(path, wantsBackslash)) {
             return path;
         }
@@ -1419,17 +1628,17 @@ define(__m[14/*vs/base/common/paths*/], __M([0/*require*/,1/*exports*/,2/*vs/bas
     }
     exports.isAbsolute_win32 = isAbsolute_win32;
     function isAbsolute_posix(path) {
-        return path && path.charCodeAt(0) === 47 /* Slash */;
+        return !!(path && path.charCodeAt(0) === 47 /* Slash */);
     }
     exports.isAbsolute_posix = isAbsolute_posix;
 });
 
-define(__m[18/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[14/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var _typeof = {
         number: 'number',
@@ -1597,8 +1806,8 @@ define(__m[18/*vs/base/common/types*/], __M([0/*require*/,1/*exports*/]), functi
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[34/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,18/*vs/base/common/types*/]), function (require, exports, types_1) {
-    'use strict';
+define(__m[35/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,14/*vs/base/common/types*/]), function (require, exports, types_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function deepClone(obj) {
         if (!obj || typeof obj !== 'object') {
@@ -1849,35 +2058,49 @@ define(__m[34/*vs/base/common/objects*/], __M([0/*require*/,1/*exports*/,18/*vs/
     exports.distinct = distinct;
 });
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 define(__m[8/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,2/*vs/base/common/platform*/]), function (require, exports, platform_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var _a;
     var _schemePattern = /^\w[\w\d+.-]*$/;
     var _singleSlashStart = /^\//;
     var _doubleSlashStart = /^\/\//;
+    var _throwOnMissingSchema = true;
+    /**
+     * @internal
+     */
+    function setUriThrowOnMissingScheme(value) {
+        var old = _throwOnMissingSchema;
+        _throwOnMissingSchema = value;
+        return old;
+    }
+    exports.setUriThrowOnMissingScheme = setUriThrowOnMissingScheme;
     function _validateUri(ret) {
         // scheme, must be set
         if (!ret.scheme) {
-            // throw new Error(`[UriError]: Scheme is missing: {scheme: "", authority: "${ret.authority}", path: "${ret.path}", query: "${ret.query}", fragment: "${ret.fragment}"}`);
-            console.warn("[UriError]: Scheme is missing: {scheme: \"\", authority: \"" + ret.authority + "\", path: \"" + ret.path + "\", query: \"" + ret.query + "\", fragment: \"" + ret.fragment + "\"}");
+            if (_throwOnMissingSchema) {
+                throw new Error("[UriError]: Scheme is missing: {scheme: \"\", authority: \"" + ret.authority + "\", path: \"" + ret.path + "\", query: \"" + ret.query + "\", fragment: \"" + ret.fragment + "\"}");
+            }
+            else {
+                console.warn("[UriError]: Scheme is missing: {scheme: \"\", authority: \"" + ret.authority + "\", path: \"" + ret.path + "\", query: \"" + ret.query + "\", fragment: \"" + ret.fragment + "\"}");
+            }
         }
         // scheme, https://tools.ietf.org/html/rfc3986#section-3.1
         // ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
@@ -2119,7 +2342,7 @@ define(__m[8/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,2/*vs/base/c
         };
         // ---- printing/externalize ---------------------------
         /**
-         * Creates a string presentation for this URI. It's guardeed that calling
+         * Creates a string presentation for this URI. It's guaranteed that calling
          * `URI.parse` with the result of this function creates an URI which is equal
          * to this URI.
          *
@@ -2411,8 +2634,8 @@ define(__m[8/*vs/base/common/uri*/], __M([0/*require*/,1/*exports*/,2/*vs/base/c
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[13/*vs/base/common/amd*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/uri*/]), function (require, exports, uri_1) {
-    'use strict';
+define(__m[12/*vs/base/common/amd*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/uri*/]), function (require, exports, uri_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function getPathFromAmdModule(requirefn, relativePath) {
         return uri_1.URI.parse(requirefn.toUrl(relativePath)).fsPath;
@@ -2437,8 +2660,8 @@ define(__m[13/*vs/base/common/amd*/], __M([0/*require*/,1/*exports*/,8/*vs/base/
 
 
 
-define(__m[23/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/uri*/]), function (require, exports, uri_1) {
-    'use strict';
+define(__m[24/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,8/*vs/base/common/uri*/,19/*vs/base/common/iterator*/]), function (require, exports, uri_1, iterator_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function values(forEachable) {
         var result = [];
@@ -2461,6 +2684,22 @@ define(__m[23/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,8/*vs/base/
         return result;
     }
     exports.getOrSet = getOrSet;
+    function mapToString(map) {
+        var entries = [];
+        map.forEach(function (value, key) {
+            entries.push(key + " => " + value);
+        });
+        return "Map(" + map.size + ") {" + entries.join(', ') + "}";
+    }
+    exports.mapToString = mapToString;
+    function setToString(set) {
+        var entries = [];
+        set.forEach(function (value) {
+            entries.push(value);
+        });
+        return "Set(" + set.size + ") {" + entries.join(', ') + "}";
+    }
+    exports.setToString = setToString;
     var StringIterator = /** @class */ (function () {
         function StringIterator() {
             this._value = '';
@@ -2687,7 +2926,7 @@ define(__m[23/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,8/*vs/base/
         TernarySearchTree.prototype.findSubstr = function (key) {
             var iter = this._iter.reset(key);
             var node = this._root;
-            var candidate;
+            var candidate = undefined;
             while (node) {
                 var val = iter.cmp(node.segment);
                 if (val > 0) {
@@ -2742,10 +2981,7 @@ define(__m[23/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,8/*vs/base/
         };
         TernarySearchTree.prototype._nodeIterator = function (node) {
             var _this = this;
-            var res = {
-                done: false,
-                value: undefined
-            };
+            var res;
             var idx;
             var data;
             var next = function () {
@@ -2756,11 +2992,12 @@ define(__m[23/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,8/*vs/base/
                     _this._forEach(node, function (value) { return data.push(value); });
                 }
                 if (idx >= data.length) {
-                    res.done = true;
-                    res.value = undefined;
+                    return iterator_1.FIN;
+                }
+                if (!res) {
+                    res = { done: false, value: data[idx++] };
                 }
                 else {
-                    res.done = false;
                     res.value = data[idx++];
                 }
                 return res;
@@ -3023,7 +3260,9 @@ define(__m[23/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,8/*vs/base/
             }
             this._head = current;
             this._size = currentSize;
-            current.previous = void 0;
+            if (current) {
+                current.previous = void 0;
+            }
         };
         LinkedMap.prototype.addItemFirst = function (item) {
             // First time Insert
@@ -3197,12 +3436,12 @@ define(__m[23/*vs/base/common/map*/], __M([0/*require*/,1/*exports*/,8/*vs/base/
     exports.LRUCache = LRUCache;
 });
 
-define(__m[28/*vs/base/common/normalization*/], __M([0/*require*/,1/*exports*/,23/*vs/base/common/map*/]), function (require, exports, map_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[29/*vs/base/common/normalization*/], __M([0/*require*/,1/*exports*/,24/*vs/base/common/map*/]), function (require, exports, map_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The normalize() method returns the Unicode Normalization Form of a given string. The form will be
@@ -3243,12 +3482,12 @@ define(__m[28/*vs/base/common/normalization*/], __M([0/*require*/,1/*exports*/,2
     }
 });
 
-define(__m[29/*vs/base/common/resources*/], __M([0/*require*/,1/*exports*/,14/*vs/base/common/paths*/,8/*vs/base/common/uri*/,5/*vs/base/common/strings*/,22/*vs/base/common/network*/,2/*vs/base/common/platform*/]), function (require, exports, paths, uri_1, strings_1, network_1, platform_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[30/*vs/base/common/resources*/], __M([0/*require*/,1/*exports*/,15/*vs/base/common/paths*/,8/*vs/base/common/uri*/,5/*vs/base/common/strings*/,23/*vs/base/common/network*/,2/*vs/base/common/platform*/]), function (require, exports, paths, uri_1, strings_1, network_1, platform_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function getComparisonKey(resource) {
         return hasToIgnoreCase(resource) ? resource.toString().toLowerCase() : resource.toString();
@@ -3265,7 +3504,7 @@ define(__m[29/*vs/base/common/resources*/], __M([0/*require*/,1/*exports*/,14/*v
     }
     exports.basenameOrAuthority = basenameOrAuthority;
     /**
-     * Tests wheter a `candidate` URI is a parent or equal of a given `base` URI.
+     * Tests whether a `candidate` URI is a parent or equal of a given `base` URI.
      * @param base A uri which is "longer"
      * @param parentCandidate A uri which is "shorter" then `base`
      */
@@ -3311,6 +3550,9 @@ define(__m[29/*vs/base/common/resources*/], __M([0/*require*/,1/*exports*/,14/*v
      * @returns The URI representing the directory of the input URI.
      */
     function dirname(resource) {
+        if (resource.scheme === network_1.Schemas.file) {
+            return uri_1.URI.file(paths.dirname(fsPath(resource)));
+        }
         var dirname = paths.dirname(resource.path, '/');
         if (resource.authority && dirname.length && dirname.charCodeAt(0) !== 47 /* Slash */) {
             return null; // If a URI contains an authority component, then the path component must either be empty or begin with a CharCode.Slash ("/") character
@@ -3384,6 +3626,7 @@ define(__m[29/*vs/base/common/resources*/], __M([0/*require*/,1/*exports*/,14/*v
         }
         return value;
     }
+    exports.fsPath = fsPath;
     /**
      * Returns true if the URI path is absolute.
      */
@@ -3412,7 +3655,7 @@ define(__m[29/*vs/base/common/resources*/], __M([0/*require*/,1/*exports*/,14/*v
     }
     exports.distinctParents = distinctParents;
     /**
-     * Tests wheter the given URL is a file URI created by `URI.parse` instead of `URI.file`.
+     * Tests whether the given URL is a file URI created by `URI.parse` instead of `URI.file`.
      * Such URI have no scheme or scheme that consist of a single letter (windows drive letter)
      * @param candidate The URI to test
      * @returns A corrected, real file URI if the input seems to be malformed.
@@ -3425,8 +3668,42 @@ define(__m[29/*vs/base/common/resources*/], __M([0/*require*/,1/*exports*/,14/*v
         return void 0;
     }
     exports.isMalformedFileUri = isMalformedFileUri;
+    /**
+     * Data URI related helpers.
+     */
+    var DataUri;
+    (function (DataUri) {
+        DataUri.META_DATA_LABEL = 'label';
+        DataUri.META_DATA_DESCRIPTION = 'description';
+        DataUri.META_DATA_SIZE = 'size';
+        DataUri.META_DATA_MIME = 'mime';
+        function parseMetaData(dataUri) {
+            var metadata = new Map();
+            // Given a URI of:  data:image/png;size:2313;label:SomeLabel;description:SomeDescription;base64,77+9UE5...
+            // the metadata is: size:2313;label:SomeLabel;description:SomeDescription
+            var meta = dataUri.path.substring(dataUri.path.indexOf(';') + 1, dataUri.path.lastIndexOf(';'));
+            meta.split(';').forEach(function (property) {
+                var _a = property.split(':'), key = _a[0], value = _a[1];
+                if (key && value) {
+                    metadata.set(key, value);
+                }
+            });
+            // Given a URI of:  data:image/png;size:2313;label:SomeLabel;description:SomeDescription;base64,77+9UE5...
+            // the mime is: image/png
+            var mime = dataUri.path.substring(0, dataUri.path.indexOf(';'));
+            if (mime) {
+                metadata.set(DataUri.META_DATA_MIME, mime);
+            }
+            return metadata;
+        }
+        DataUri.parseMetaData = parseMetaData;
+    })(DataUri = exports.DataUri || (exports.DataUri = {}));
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 
 
@@ -3440,12 +3717,8 @@ define(__m[29/*vs/base/common/resources*/], __M([0/*require*/,1/*exports*/,14/*v
 
 
 
-define(__m[32/*vs/base/common/uuid*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+define(__m[33/*vs/base/common/uuid*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ValueUUID = /** @class */ (function () {
         function ValueUUID(_value) {
@@ -5632,12 +5905,12 @@ if (typeof exports === 'undefined' && typeof define === 'function' && define.amd
 // export var PPromise = __winjs_exports.PPromise;
 // ESM-uncomment-end
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 define(__m[10/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/winjs.base*/]), function (require, exports, winjs_base_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // ------ BEGIN Hook up error listeners to winjs promises
     var outstandingPromiseErrors = {};
@@ -5811,19 +6084,6 @@ define(__m[10/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,3/*vs/ba
         return result;
     }
     exports.disposed = disposed;
-    function isErrorWithActions(obj) {
-        return obj instanceof Error && Array.isArray(obj.actions);
-    }
-    exports.isErrorWithActions = isErrorWithActions;
-    function create(message, options) {
-        if (options === void 0) { options = Object.create(null); }
-        var result = new Error(message);
-        if (options.actions) {
-            result.actions = options.actions;
-        }
-        return result;
-    }
-    exports.create = create;
     function getErrorMessage(err) {
         if (!err) {
             return 'Error';
@@ -5839,6 +6099,10 @@ define(__m[10/*vs/base/common/errors*/], __M([0/*require*/,1/*exports*/,3/*vs/ba
     exports.getErrorMessage = getErrorMessage;
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -5874,12 +6138,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(__m[36/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/errors*/,3/*vs/base/common/winjs.base*/]), function (require, exports, errors_1, winjs_base_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+define(__m[36/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/errors*/]), function (require, exports, errors_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Returns the last element of an array.
@@ -6007,7 +6267,7 @@ define(__m[36/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,10/*vs/b
     }
     function groupBy(data, compare) {
         var result = [];
-        var currentGroup;
+        var currentGroup = undefined;
         for (var _i = 0, _a = mergeSort(data.slice(0), compare); _i < _a.length; _i++) {
             var element = _a[_i];
             if (!currentGroup || compare(currentGroup[0], element) !== 0) {
@@ -6127,9 +6387,9 @@ define(__m[36/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,10/*vs/b
     function topAsync(array, compare, n, batch, token) {
         var _this = this;
         if (n === 0) {
-            return winjs_base_1.TPromise.as([]);
+            return Promise.resolve([]);
         }
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             (function () { return __awaiter(_this, void 0, void 0, function () {
                 var o, result, i, m;
                 return __generator(this, function (_a) {
@@ -6176,27 +6436,33 @@ define(__m[36/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,10/*vs/b
             _loop_1(n);
         }
     }
-    function coalesce(array, inplace) {
+    /**
+     * @returns a new array with all falsy values removed. The original array IS NOT modified.
+     */
+    function coalesce(array) {
         if (!array) {
-            if (!inplace) {
-                return array;
-            }
+            return array;
         }
-        if (!inplace) {
-            return array.filter(function (e) { return !!e; });
-        }
-        else {
-            var to = 0;
-            for (var i = 0; i < array.length; i++) {
-                if (!!array[i]) {
-                    array[to] = array[i];
-                    to += 1;
-                }
-            }
-            array.length = to;
-        }
+        return array.filter(function (e) { return !!e; });
     }
     exports.coalesce = coalesce;
+    /**
+     * Remove all falsey values from `array`. The original array IS modified.
+     */
+    function coalesceInPlace(array) {
+        if (!array) {
+            return;
+        }
+        var to = 0;
+        for (var i = 0; i < array.length; i++) {
+            if (!!array[i]) {
+                array[to] = array[i];
+                to += 1;
+            }
+        }
+        array.length = to;
+    }
+    exports.coalesceInPlace = coalesceInPlace;
     /**
      * Moves the element in the array for the provided positions.
      */
@@ -6271,7 +6537,8 @@ define(__m[36/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,10/*vs/b
     }
     exports.commonPrefixLength = commonPrefixLength;
     function flatten(arr) {
-        return [].concat.apply([], arr);
+        var _a;
+        return (_a = []).concat.apply(_a, arr);
     }
     exports.flatten = flatten;
     function range(arg, to) {
@@ -6342,14 +6609,20 @@ define(__m[36/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,10/*vs/b
      * Uses Fisher-Yates shuffle to shuffle the given array
      * @param array
      */
-    function shuffle(array, seed) {
-        // Seeded random number generator in JS. Modified from:
-        // https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
-        var random = function () {
-            var x = Math.sin(seed++) * 179426549; // throw away most significant digits and reduce any potential bias
-            return x - Math.floor(x);
-        };
-        var rand = typeof seed === 'number' ? random : Math.random;
+    function shuffle(array, _seed) {
+        var rand;
+        if (typeof _seed === 'number') {
+            var seed_1 = _seed;
+            // Seeded random number generator in JS. Modified from:
+            // https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
+            rand = function () {
+                var x = Math.sin(seed_1++) * 179426549; // throw away most significant digits and reduce any potential bias
+                return x - Math.floor(x);
+            };
+        }
+        else {
+            rand = Math.random;
+        }
         for (var i = array.length - 1; i > 0; i -= 1) {
             var j = Math.floor(rand() * (i + 1));
             var temp = array[i];
@@ -6390,8 +6663,18 @@ define(__m[36/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,10/*vs/b
         return undefined;
     }
     exports.find = find;
+    function mapArrayOrNot(items, fn) {
+        return Array.isArray(items) ?
+            items.map(fn) :
+            fn(items);
+    }
+    exports.mapArrayOrNot = mapArrayOrNot;
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 
 
@@ -6440,12 +6723,8 @@ define(__m[36/*vs/base/common/arrays*/], __M([0/*require*/,1/*exports*/,10/*vs/b
 
 
 
-define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/errors*/,11/*vs/base/common/functional*/,6/*vs/base/common/lifecycle*/,20/*vs/base/common/linkedList*/,3/*vs/base/common/winjs.base*/]), function (require, exports, errors_1, functional_1, lifecycle_1, linkedList_1, winjs_base_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+define(__m[9/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/base/common/errors*/,21/*vs/base/common/functional*/,11/*vs/base/common/lifecycle*/,37/*vs/base/common/linkedList*/,3/*vs/base/common/winjs.base*/]), function (require, exports, errors_1, functional_1, lifecycle_1, linkedList_1, winjs_base_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Event;
     (function (Event) {
@@ -6475,7 +6754,12 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
      */
     var Emitter = /** @class */ (function () {
         function Emitter(_options) {
+            if (_options === void 0) { _options = null; }
             this._options = _options;
+            this._event = null;
+            this._disposed = false;
+            this._deliveryQueue = null;
+            this._listeners = null;
         }
         Object.defineProperty(Emitter.prototype, "event", {
             /**
@@ -6506,8 +6790,11 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
                                 result.dispose = Emitter._noop;
                                 if (!_this._disposed) {
                                     remove();
-                                    if (_this._options && _this._options.onLastListenerRemove && _this._listeners.isEmpty()) {
-                                        _this._options.onLastListenerRemove(_this);
+                                    if (_this._options && _this._options.onLastListenerRemove) {
+                                        var hasListeners = (_this._listeners && !_this._listeners.isEmpty());
+                                        if (!hasListeners) {
+                                            _this._options.onLastListenerRemove(_this);
+                                        }
                                     }
                                 }
                             }
@@ -6556,7 +6843,7 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
         };
         Emitter.prototype.dispose = function () {
             if (this._listeners) {
-                this._listeners = undefined;
+                this._listeners = null;
             }
             if (this._deliveryQueue) {
                 this._deliveryQueue.length = 0;
@@ -6670,7 +6957,9 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
             e.listener = e.event(function (r) { return _this.emitter.fire(r); });
         };
         EventMultiplexer.prototype.unhook = function (e) {
-            e.listener.dispose();
+            if (e.listener) {
+                e.listener.dispose();
+            }
             e.listener = null;
         };
         EventMultiplexer.prototype.dispose = function () {
@@ -6679,20 +6968,11 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
         return EventMultiplexer;
     }());
     exports.EventMultiplexer = EventMultiplexer;
-    function fromCallback(fn) {
-        var listener;
-        var emitter = new Emitter({
-            onFirstListenerAdd: function () { return listener = fn(function (e) { return emitter.fire(e); }); },
-            onLastListenerRemove: function () { return listener.dispose(); }
-        });
-        return emitter.event;
-    }
-    exports.fromCallback = fromCallback;
     function fromPromise(promise) {
         var emitter = new Emitter();
         var shouldEmit = false;
         promise
-            .then(null, function () { return null; })
+            .then(undefined, function () { return null; })
             .then(function () {
             if (!shouldEmit) {
                 setTimeout(function () { return emitter.fire(); }, 0);
@@ -6823,9 +7103,10 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
         EventBufferer.prototype.bufferEvents = function (fn) {
             var buffer = [];
             this.buffers.push(buffer);
-            fn();
+            var r = fn();
             this.buffers.pop();
             buffer.forEach(function (flush) { return flush(); });
+            return r;
         };
         return EventBufferer;
     }());
@@ -6851,6 +7132,10 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
         };
     }
     exports.filterEvent = filterEvent;
+    function signalEvent(event) {
+        return event;
+    }
+    exports.signalEvent = signalEvent;
     var ChainableEvent = /** @class */ (function () {
         function ChainableEvent(_event) {
             this._event = _event;
@@ -6911,10 +7196,10 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
      * // 4
      * ```
      */
-    function buffer(event, nextTick, buffer) {
+    function buffer(event, nextTick, _buffer) {
         if (nextTick === void 0) { nextTick = false; }
-        if (buffer === void 0) { buffer = []; }
-        buffer = buffer.slice();
+        if (_buffer === void 0) { _buffer = []; }
+        var buffer = _buffer.slice();
         var listener = event(function (e) {
             if (buffer) {
                 buffer.push(e);
@@ -6924,7 +7209,9 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
             }
         });
         var flush = function () {
-            buffer.forEach(function (e) { return emitter.fire(e); });
+            if (buffer) {
+                buffer.forEach(function (e) { return emitter.fire(e); });
+            }
             buffer = null;
         };
         var emitter = new Emitter({
@@ -6944,7 +7231,9 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
                 }
             },
             onLastListenerRemove: function () {
-                listener.dispose();
+                if (listener) {
+                    listener.dispose();
+                }
                 listener = null;
             }
         });
@@ -7045,8 +7334,8 @@ define(__m[7/*vs/base/common/event*/], __M([0/*require*/,1/*exports*/,10/*vs/bas
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[21/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,7/*vs/base/common/event*/]), function (require, exports, event_1) {
-    'use strict';
+define(__m[22/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,9/*vs/base/common/event*/]), function (require, exports, event_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var shortcutEvent = Object.freeze(function (callback, context) {
         var handle = setTimeout(callback.bind(context), 0);
@@ -7080,6 +7369,7 @@ define(__m[21/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,7/
     var MutableToken = /** @class */ (function () {
         function MutableToken() {
             this._isCancelled = false;
+            this._emitter = null;
         }
         MutableToken.prototype.cancel = function () {
             if (!this._isCancelled) {
@@ -7113,7 +7403,7 @@ define(__m[21/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,7/
         MutableToken.prototype.dispose = function () {
             if (this._emitter) {
                 this._emitter.dispose();
-                this._emitter = undefined;
+                this._emitter = null;
             }
         };
         return MutableToken;
@@ -7177,22 +7467,13 @@ define(__m[21/*vs/base/common/cancellation*/], __M([0/*require*/,1/*exports*/,7/
 
 
 
-define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/base/common/cancellation*/,10/*vs/base/common/errors*/,7/*vs/base/common/event*/,6/*vs/base/common/lifecycle*/,3/*vs/base/common/winjs.base*/]), function (require, exports, cancellation_1, errors, event_1, lifecycle_1, winjs_base_1) {
-    'use strict';
+define(__m[13/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,22/*vs/base/common/cancellation*/,10/*vs/base/common/errors*/,9/*vs/base/common/event*/,11/*vs/base/common/lifecycle*/,3/*vs/base/common/winjs.base*/]), function (require, exports, cancellation_1, errors, event_1, lifecycle_1, winjs_base_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function isThenable(obj) {
         return obj && typeof obj.then === 'function';
     }
     exports.isThenable = isThenable;
-    function toThenable(arg) {
-        if (isThenable(arg)) {
-            return arg;
-        }
-        else {
-            return winjs_base_1.TPromise.as(arg);
-        }
-    }
-    exports.toThenable = toThenable;
     function createCancelablePromise(callback) {
         var source = new cancellation_1.CancellationTokenSource();
         var thenable = callback(source.token);
@@ -7225,12 +7506,9 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
     }
     exports.createCancelablePromise = createCancelablePromise;
     function asThenable(callback) {
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var item = callback();
-            if (item instanceof winjs_base_1.TPromise) {
-                item.then(resolve, reject);
-            }
-            else if (isThenable(item)) {
+            if (isThenable(item)) {
                 item.then(resolve, reject);
             }
             else {
@@ -7385,6 +7663,9 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
                 this.timeout = null;
             }
         };
+        Delayer.prototype.dispose = function () {
+            this.cancelTimeout();
+        };
         return Delayer;
     }());
     exports.Delayer = Delayer;
@@ -7392,8 +7673,10 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
      * A helper to delay execution of a task that is being requested often, while
      * preventing accumulation of consecutive executions, while the task runs.
      *
-     * Simply combine the two mail men's strategies from the Throttler and Delayer
-     * helpers, for an analogy.
+     * The mail man is clever and waits for a certain amount of time, before going
+     * out to deliver letters. While the mail man is going out, more letters arrive
+     * and can only be delivered once he is back. Once he is back the mail man will
+     * do one more trip to deliver the letters that have accumulated while he was out.
      */
     var ThrottledDelayer = /** @class */ (function (_super) {
         __extends(ThrottledDelayer, _super);
@@ -7446,7 +7729,24 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
         });
     }
     exports.timeout = timeout;
-    function always(winjsPromiseOrThenable, callback) {
+    function disposableTimeout(handler, timeout) {
+        if (timeout === void 0) { timeout = 0; }
+        var timer = setTimeout(handler, timeout);
+        return {
+            dispose: function () {
+                clearTimeout(timer);
+            }
+        };
+    }
+    exports.disposableTimeout = disposableTimeout;
+    /**
+     * Returns a new promise that joins the provided promise. Upon completion of
+     * the provided promise the provided function will always be called. This
+     * method is comparable to a try-finally code block.
+     * @param promise a promise
+     * @param callback a function that will be call in the success and error case.
+     */
+    function always(promise, callback) {
         function safeCallback() {
             try {
                 callback();
@@ -7455,8 +7755,8 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
                 errors.onUnexpectedError(err);
             }
         }
-        winjsPromiseOrThenable.then(function (_) { return safeCallback(); }, function (_) { return safeCallback(); });
-        return winjsPromiseOrThenable;
+        promise.then(function (_) { return safeCallback(); }, function (_) { return safeCallback(); });
+        return Promise.resolve(promise);
     }
     exports.always = always;
     /**
@@ -7478,12 +7778,12 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
             if (n) {
                 return n.then(thenHandler);
             }
-            return winjs_base_1.TPromise.as(results);
+            return Promise.resolve(results);
         }
-        return winjs_base_1.TPromise.as(null).then(thenHandler);
+        return Promise.resolve(null).then(thenHandler);
     }
     exports.sequence = sequence;
-    function first2(promiseFactories, shouldStop, defaultValue) {
+    function first(promiseFactories, shouldStop, defaultValue) {
         if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
         if (defaultValue === void 0) { defaultValue = null; }
         var index = 0;
@@ -7493,31 +7793,10 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
                 return Promise.resolve(defaultValue);
             }
             var factory = promiseFactories[index++];
-            var promise = factory();
+            var promise = Promise.resolve(factory());
             return promise.then(function (result) {
                 if (shouldStop(result)) {
                     return Promise.resolve(result);
-                }
-                return loop();
-            });
-        };
-        return loop();
-    }
-    exports.first2 = first2;
-    function first(promiseFactories, shouldStop, defaultValue) {
-        if (shouldStop === void 0) { shouldStop = function (t) { return !!t; }; }
-        if (defaultValue === void 0) { defaultValue = null; }
-        var index = 0;
-        var len = promiseFactories.length;
-        var loop = function () {
-            if (index >= len) {
-                return winjs_base_1.TPromise.as(defaultValue);
-            }
-            var factory = promiseFactories[index++];
-            var promise = factory();
-            return promise.then(function (result) {
-                if (shouldStop(result)) {
-                    return winjs_base_1.TPromise.as(result);
                 }
                 return loop();
             });
@@ -7729,7 +8008,9 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
             }
         };
         RunOnceScheduler.prototype.doRun = function () {
-            this.runner();
+            if (this.runner) {
+                this.runner();
+            }
         };
         return RunOnceScheduler;
     }());
@@ -7750,7 +8031,9 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
         RunOnceWorker.prototype.doRun = function () {
             var units = this.units;
             this.units = [];
-            this.runner(units);
+            if (this.runner) {
+                this.runner(units);
+            }
         };
         RunOnceWorker.prototype.dispose = function () {
             this.units = [];
@@ -7775,14 +8058,88 @@ define(__m[12/*vs/base/common/async*/], __M([0/*require*/,1/*exports*/,21/*vs/ba
         return new winjs_base_1.TPromise(function (c, e) { return fn.call.apply(fn, [thisArg].concat(args, [function (err, result) { return err ? e(err) : c(result); }])); });
     }
     exports.ninvoke = ninvoke;
+    (function () {
+        if (typeof requestIdleCallback !== 'function' || typeof cancelIdleCallback !== 'function') {
+            var dummyIdle_1 = Object.freeze({
+                didTimeout: true,
+                timeRemaining: function () { return 15; }
+            });
+            exports.runWhenIdle = function (runner, timeout) {
+                if (timeout === void 0) { timeout = 0; }
+                var handle = setTimeout(function () { return runner(dummyIdle_1); }, timeout);
+                var disposed = false;
+                return {
+                    dispose: function () {
+                        if (disposed) {
+                            return;
+                        }
+                        disposed = true;
+                        clearTimeout(handle);
+                    }
+                };
+            };
+        }
+        else {
+            exports.runWhenIdle = function (runner, timeout) {
+                var handle = requestIdleCallback(runner, typeof timeout === 'number' ? { timeout: timeout } : undefined);
+                var disposed = false;
+                return {
+                    dispose: function () {
+                        if (disposed) {
+                            return;
+                        }
+                        disposed = true;
+                        cancelIdleCallback(handle);
+                    }
+                };
+            };
+        }
+    })();
+    /**
+     * An implementation of the "idle-until-urgent"-strategy as introduced
+     * here: https://philipwalton.com/articles/idle-until-urgent/
+     */
+    var IdleValue = /** @class */ (function () {
+        function IdleValue(executor) {
+            var _this = this;
+            this._executor = function () {
+                try {
+                    _this._value = executor();
+                }
+                catch (err) {
+                    _this._error = err;
+                }
+                finally {
+                    _this._didRun = true;
+                }
+            };
+            this._handle = exports.runWhenIdle(function () { return _this._executor(); });
+        }
+        IdleValue.prototype.dispose = function () {
+            this._handle.dispose();
+        };
+        IdleValue.prototype.getValue = function () {
+            if (!this._didRun) {
+                this._handle.dispose();
+                this._executor();
+            }
+            if (this._error) {
+                throw this._error;
+            }
+            return this._value;
+        };
+        return IdleValue;
+    }());
+    exports.IdleValue = IdleValue;
 });
+//#endregion
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[33/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,24/*assert*/]), function (require, exports, assert) {
-    'use strict';
+define(__m[34/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,25/*assert*/]), function (require, exports, assert) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Executes the given function (fn) over the given array of items (list) in parallel and returns the resulting errors and results as
@@ -7928,8 +8285,8 @@ define(__m[33/*vs/base/node/flow*/], __M([0/*require*/,1/*exports*/,24/*assert*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[25/*vs/base/node/ports*/], __M([0/*require*/,1/*exports*/,44/*net*/]), function (require, exports, net) {
-    'use strict';
+define(__m[26/*vs/base/node/ports*/], __M([0/*require*/,1/*exports*/,46/*net*/]), function (require, exports, net) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * @returns Returns a random port between 1025 and 65535.
@@ -8005,27 +8362,27 @@ define(__m[25/*vs/base/node/ports*/], __M([0/*require*/,1/*exports*/,44/*net*/])
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[27/*vs/base/node/stream*/], __M([0/*require*/,1/*exports*/,9/*fs*/,3/*vs/base/common/winjs.base*/]), function (require, exports, fs, winjs_base_1) {
-    'use strict';
+define(__m[28/*vs/base/node/stream*/], __M([0/*require*/,1/*exports*/,6/*fs*/]), function (require, exports, fs) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Reads totalBytes from the provided file.
      */
     function readExactlyByFile(file, totalBytes) {
-        return new winjs_base_1.TPromise(function (complete, error) {
+        return new Promise(function (resolve, reject) {
             fs.open(file, 'r', null, function (err, fd) {
                 if (err) {
-                    return error(err);
+                    return reject(err);
                 }
                 function end(err, resultBuffer, bytesRead) {
                     fs.close(fd, function (closeError) {
                         if (closeError) {
-                            return error(closeError);
+                            return reject(closeError);
                         }
                         if (err && err.code === 'EISDIR') {
-                            return error(err); // we want to bubble this error up (file is actually a folder)
+                            return reject(err); // we want to bubble this error up (file is actually a folder)
                         }
-                        return complete({ buffer: resultBuffer, bytesRead: bytesRead });
+                        return resolve({ buffer: resultBuffer, bytesRead: bytesRead });
                     });
                 }
                 var buffer = Buffer.allocUnsafe(totalBytes);
@@ -8060,20 +8417,20 @@ define(__m[27/*vs/base/node/stream*/], __M([0/*require*/,1/*exports*/,9/*fs*/,3/
      * @param callback The finished callback.
      */
     function readToMatchingString(file, matchingString, chunkBytes, maximumBytesToRead) {
-        return new winjs_base_1.TPromise(function (complete, error) {
+        return new Promise(function (resolve, reject) {
             return fs.open(file, 'r', null, function (err, fd) {
                 if (err) {
-                    return error(err);
+                    return reject(err);
                 }
                 function end(err, result) {
                     fs.close(fd, function (closeError) {
                         if (closeError) {
-                            return error(closeError);
+                            return reject(closeError);
                         }
                         if (err && err.code === 'EISDIR') {
-                            return error(err); // we want to bubble this error up (file is actually a folder)
+                            return reject(err); // we want to bubble this error up (file is actually a folder)
                         }
-                        return complete(result);
+                        return resolve(result);
                     });
                 }
                 var buffer = Buffer.allocUnsafe(maximumBytesToRead);
@@ -8121,8 +8478,8 @@ define(__m[27/*vs/base/node/stream*/], __M([0/*require*/,1/*exports*/,9/*fs*/,3/
 
 
 
-define(__m[15/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,27/*vs/base/node/stream*/,30/*iconv-lite*/,3/*vs/base/common/winjs.base*/,2/*vs/base/common/platform*/,31/*child_process*/,43/*stream*/]), function (require, exports, stream, iconv, winjs_base_1, platform_1, child_process_1, stream_1) {
-    'use strict';
+define(__m[16/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,28/*vs/base/node/stream*/,31/*iconv-lite*/,2/*vs/base/common/platform*/,32/*child_process*/,45/*stream*/]), function (require, exports, stream, iconv, platform_1, child_process_1, stream_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.UTF8 = 'utf8';
     exports.UTF8_with_bom = 'utf8bom';
@@ -8135,7 +8492,8 @@ define(__m[15/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,27/*vs/b
         if (!options.overwriteEncoding) {
             options.overwriteEncoding = function (detected) { return detected || exports.UTF8; };
         }
-        return new winjs_base_1.TPromise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
+            readable.on('error', reject);
             readable.pipe(new /** @class */ (function (_super) {
                 __extends(class_1, _super);
                 function class_1(opts) {
@@ -8160,7 +8518,7 @@ define(__m[15/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,27/*vs/b
                         // waiting for the decoder to be ready
                         this._decodeStreamConstruction.then(function (_) { return callback(); }, function (err) { return callback(err); });
                     }
-                    else if (this._bytesBuffered >= options.minBytesRequiredForDetection) {
+                    else if (typeof options.minBytesRequiredForDetection === 'number' && this._bytesBuffered >= options.minBytesRequiredForDetection) {
                         // buffered enough data, create stream and forward data
                         this._startDecodeStream(callback);
                     }
@@ -8171,7 +8529,7 @@ define(__m[15/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,27/*vs/b
                 };
                 class_1.prototype._startDecodeStream = function (callback) {
                     var _this = this;
-                    this._decodeStreamConstruction = winjs_base_1.TPromise.as(detectEncodingFromBuffer({
+                    this._decodeStreamConstruction = Promise.resolve(detectEncodingFromBuffer({
                         buffer: Buffer.concat(this._buffer), bytesRead: this._bytesBuffered
                     }, options.guessEncoding)).then(function (detected) {
                         detected.encoding = options.overwriteEncoding(detected.encoding);
@@ -8282,7 +8640,7 @@ define(__m[15/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,27/*vs/b
      * Guesses the encoding from buffer.
      */
     function guessEncodingByBuffer(buffer) {
-        return winjs_base_1.TPromise.wrap(new Promise(function (resolve_1, reject_1) { require(['jschardet'], resolve_1, reject_1); })).then(function (jschardet) {
+        return new Promise(function (resolve_1, reject_1) { require(['jschardet'], resolve_1, reject_1); }).then(function (jschardet) {
             jschardet.Constants.MINIMUM_THRESHOLD = MINIMUM_THRESHOLD;
             var guessed = jschardet.detect(buffer);
             if (!guessed || !guessed.encoding) {
@@ -8397,10 +8755,10 @@ define(__m[15/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,27/*vs/b
         }
         // Auto guess encoding if configured
         if (autoGuessEncoding && !seemsBinary && !encoding) {
-            return guessEncodingByBuffer(buffer.slice(0, bytesRead)).then(function (encoding) {
+            return guessEncodingByBuffer(buffer.slice(0, bytesRead)).then(function (guessedEncoding) {
                 return {
                     seemsBinary: false,
-                    encoding: encoding
+                    encoding: guessedEncoding
                 };
             });
         }
@@ -8431,20 +8789,20 @@ define(__m[15/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,27/*vs/b
             if (verbose) {
                 console.log("Found VSCODE_CLI_ENCODING variable: " + cliEncodingEnv);
             }
-            rawEncodingPromise = winjs_base_1.TPromise.as(cliEncodingEnv);
+            rawEncodingPromise = Promise.resolve(cliEncodingEnv);
         }
         // Linux/Mac: use "locale charmap" command
         else if (platform_1.isLinux || platform_1.isMacintosh) {
-            rawEncodingPromise = new winjs_base_1.TPromise(function (c) {
+            rawEncodingPromise = new Promise(function (resolve) {
                 if (verbose) {
                     console.log('Running "locale charmap" to detect terminal encoding...');
                 }
-                child_process_1.exec('locale charmap', function (err, stdout, stderr) { return c(stdout); });
+                child_process_1.exec('locale charmap', function (err, stdout, stderr) { return resolve(stdout); });
             });
         }
         // Windows: educated guess
         else {
-            rawEncodingPromise = new winjs_base_1.TPromise(function (c) {
+            rawEncodingPromise = new Promise(function (resolve) {
                 if (verbose) {
                     console.log('Running "chcp" to detect terminal encoding...');
                 }
@@ -8454,11 +8812,11 @@ define(__m[15/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,27/*vs/b
                         for (var i = 0; i < windowsTerminalEncodingKeys.length; i++) {
                             var key = windowsTerminalEncodingKeys[i];
                             if (stdout.indexOf(key) >= 0) {
-                                return c(windowsTerminalEncodings[key]);
+                                return resolve(windowsTerminalEncodings[key]);
                             }
                         }
                     }
-                    return c(void 0);
+                    return resolve(void 0);
                 });
             });
         }
@@ -8486,8 +8844,8 @@ define(__m[15/*vs/base/node/encoding*/], __M([0/*require*/,1/*exports*/,27/*vs/b
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[17/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,9/*fs*/,4/*path*/,12/*vs/base/common/async*/,28/*vs/base/common/normalization*/,2/*vs/base/common/platform*/,5/*vs/base/common/strings*/,32/*vs/base/common/uuid*/,3/*vs/base/common/winjs.base*/,15/*vs/base/node/encoding*/,33/*vs/base/node/flow*/,6/*vs/base/common/lifecycle*/]), function (require, exports, fs, paths, async_1, normalization_1, platform, strings, uuid, winjs_base_1, encoding_1, flow, lifecycle_1) {
-    'use strict';
+define(__m[18/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,6/*fs*/,4/*path*/,13/*vs/base/common/async*/,29/*vs/base/common/normalization*/,2/*vs/base/common/platform*/,5/*vs/base/common/strings*/,33/*vs/base/common/uuid*/,16/*vs/base/node/encoding*/,34/*vs/base/node/flow*/,11/*vs/base/common/lifecycle*/,3/*vs/base/common/winjs.base*/]), function (require, exports, fs, paths, async_1, normalization_1, platform, strings, uuid, encoding_1, flow, lifecycle_1, winjs_base_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var loop = flow.loop;
     function readdirSync(path) {
@@ -9097,8 +9455,8 @@ define(__m[17/*vs/base/node/extfs*/], __M([0/*require*/,1/*exports*/,9/*fs*/,4/*
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[35/*vs/base/node/pfs*/], __M([0/*require*/,1/*exports*/,3/*vs/base/common/winjs.base*/,17/*vs/base/node/extfs*/,4/*path*/,12/*vs/base/common/async*/,9/*fs*/,19/*os*/,2/*vs/base/common/platform*/,7/*vs/base/common/event*/]), function (require, exports, winjs_base_1, extfs, path_1, async_1, fs, os, platform, event_1) {
-    'use strict';
+define(__m[20/*vs/base/node/pfs*/], __M([0/*require*/,1/*exports*/,18/*vs/base/node/extfs*/,4/*path*/,13/*vs/base/common/async*/,6/*fs*/,7/*os*/,2/*vs/base/common/platform*/,9/*vs/base/common/event*/,3/*vs/base/common/winjs.base*/]), function (require, exports, extfs, path_1, async_1, fs, os, platform, event_1, winjs_base_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function readdir(path) {
         return async_1.nfcall(extfs.readdir, path);
@@ -9269,13 +9627,37 @@ define(__m[35/*vs/base/node/pfs*/], __M([0/*require*/,1/*exports*/,3/*vs/base/co
     exports.copy = copy;
 });
 
-define(__m[37/*vs/nls!vs/platform/environment/node/argv*/], __M([42/*vs/nls*/,41/*vs/nls!vs/code/node/cli*/]), function(nls, data) { return nls.create("vs/platform/environment/node/argv", data); });
-define(__m[40/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[38/*vs/code/node/wait*/], __M([0/*require*/,1/*exports*/,4/*path*/,7/*os*/,20/*vs/base/node/pfs*/]), function (require, exports, path_1, os_1, pfs_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function createWaitMarkerFile(verbose) {
+        var randomWaitMarkerPath = path_1.join(os_1.tmpdir(), Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10));
+        return pfs_1.writeFile(randomWaitMarkerPath, '').then(function () {
+            if (verbose) {
+                console.log("Marker file for --wait created: " + randomWaitMarkerPath);
+            }
+            return randomWaitMarkerPath;
+        }, function (error) {
+            if (verbose) {
+                console.error("Failed to create marker file for --wait: " + error);
+            }
+            return Promise.resolve(void 0);
+        });
+    }
+    exports.createWaitMarkerFile = createWaitMarkerFile;
+});
+
+define(__m[39/*vs/nls!vs/platform/environment/node/argv*/], __M([44/*vs/nls*/,43/*vs/nls!vs/code/node/cli*/]), function(nls, data) { return nls.create("vs/platform/environment/node/argv", data); });
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+define(__m[42/*vs/platform/instantiation/common/instantiation*/], __M([0/*require*/,1/*exports*/]), function (require, exports) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // ------ internal util
     var _util;
@@ -9330,6 +9712,10 @@ define(__m[40/*vs/platform/instantiation/common/instantiation*/], __M([0/*requir
     exports.optional = optional;
 });
 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 
 
@@ -9343,12 +9729,8 @@ define(__m[40/*vs/platform/instantiation/common/instantiation*/], __M([0/*requir
 
 
 
-define(__m[39/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/,14/*vs/base/common/paths*/,2/*vs/base/common/platform*/,40/*vs/platform/instantiation/common/instantiation*/,5/*vs/base/common/strings*/,29/*vs/base/common/resources*/,18/*vs/base/common/types*/]), function (require, exports, paths, platform_1, instantiation_1, strings_1, resources_1, types_1) {
-    /*---------------------------------------------------------------------------------------------
-     *  Copyright (c) Microsoft Corporation. All rights reserved.
-     *  Licensed under the MIT License. See License.txt in the project root for license information.
-     *--------------------------------------------------------------------------------------------*/
-    'use strict';
+define(__m[41/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/,15/*vs/base/common/paths*/,2/*vs/base/common/platform*/,42/*vs/platform/instantiation/common/instantiation*/,5/*vs/base/common/strings*/,30/*vs/base/common/resources*/,14/*vs/base/common/types*/]), function (require, exports, paths, platform_1, instantiation_1, strings_1, resources_1, types_1) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.IFileService = instantiation_1.createDecorator('fileService');
     var FileType;
@@ -9508,8 +9890,8 @@ define(__m[39/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/
     }
     exports.isParent = isParent;
     var StringSnapshot = /** @class */ (function () {
-        function StringSnapshot(_value) {
-            this._value = _value;
+        function StringSnapshot(value) {
+            this._value = value;
         }
         StringSnapshot.prototype.read = function () {
             var ret = this._value;
@@ -9827,7 +10209,7 @@ define(__m[39/*vs/platform/files/common/files*/], __M([0/*require*/,1/*exports*/
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[38/*vs/platform/node/package*/], __M([0/*require*/,1/*exports*/,4/*path*/,13/*vs/base/common/amd*/]), function (require, exports, path, amd_1) {
+define(__m[40/*vs/platform/node/package*/], __M([0/*require*/,1/*exports*/,4/*path*/,12/*vs/base/common/amd*/]), function (require, exports, path, amd_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var rootPath = path.dirname(amd_1.getPathFromAmdModule(require, ''));
@@ -9839,7 +10221,7 @@ define(__m[38/*vs/platform/node/package*/], __M([0/*require*/,1/*exports*/,4/*pa
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[16/*vs/platform/node/product*/], __M([0/*require*/,1/*exports*/,4/*path*/,13/*vs/base/common/amd*/]), function (require, exports, path, amd_1) {
+define(__m[17/*vs/platform/node/product*/], __M([0/*require*/,1/*exports*/,4/*path*/,12/*vs/base/common/amd*/]), function (require, exports, path, amd_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var rootPath = path.dirname(amd_1.getPathFromAmdModule(require, ''));
@@ -9857,7 +10239,7 @@ define(__m[16/*vs/platform/node/product*/], __M([0/*require*/,1/*exports*/,4/*pa
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-define(__m[26/*vs/platform/environment/node/argv*/], __M([0/*require*/,1/*exports*/,19/*os*/,45/*minimist*/,24/*assert*/,36/*vs/base/common/arrays*/,37/*vs/nls!vs/platform/environment/node/argv*/,2/*vs/base/common/platform*/,16/*vs/platform/node/product*/,39/*vs/platform/files/common/files*/]), function (require, exports, os, minimist, assert, arrays_1, nls_1, platform_1, product_1, files_1) {
+define(__m[27/*vs/platform/environment/node/argv*/], __M([0/*require*/,1/*exports*/,7/*os*/,47/*minimist*/,25/*assert*/,36/*vs/base/common/arrays*/,39/*vs/nls!vs/platform/environment/node/argv*/,2/*vs/base/common/platform*/,17/*vs/platform/node/product*/,41/*vs/platform/files/common/files*/]), function (require, exports, os, minimist, assert, arrays_1, nls_1, platform_1, product_1, files_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var options = {
@@ -9881,7 +10263,10 @@ define(__m[26/*vs/platform/environment/node/argv*/], __M([0/*require*/,1/*export
             'export-default-configuration',
             'install-source',
             'upload-logs',
-            'driver'
+            'driver',
+            'trace-category-filter',
+            'trace-options',
+            '_'
         ],
         boolean: [
             'help',
@@ -9914,7 +10299,8 @@ define(__m[26/*vs/platform/environment/node/argv*/], __M([0/*require*/,1/*export
             'status',
             'file-write',
             'file-chmod',
-            'driver-verbose'
+            'driver-verbose',
+            'trace'
         ],
         alias: {
             add: 'a',
@@ -9958,7 +10344,7 @@ define(__m[26/*vs/platform/environment/node/argv*/], __M([0/*require*/,1/*export
         var args = processArgv.slice(1);
         // If dev, remove the first non-option argument: it's the app location
         if (process.env['VSCODE_DEV']) {
-            args = stripAppPath(args);
+            args = stripAppPath(args) || [];
         }
         return validate(parseArgs(args));
     }
@@ -9969,7 +10355,7 @@ define(__m[26/*vs/platform/environment/node/argv*/], __M([0/*require*/,1/*export
     function parseCLIProcessArgv(processArgv) {
         var args = processArgv.slice(2);
         if (process.env['VSCODE_DEV']) {
-            args = stripAppPath(args);
+            args = stripAppPath(args) || [];
         }
         return validate(parseArgs(args));
     }
@@ -9997,8 +10383,8 @@ define(__m[26/*vs/platform/environment/node/argv*/], __M([0/*require*/,1/*export
         '--extensions-dir <dir>': nls_1.localize(11, null),
         '--list-extensions': nls_1.localize(12, null),
         '--show-versions': nls_1.localize(13, null),
-        '--install-extension (<extension-id> | <extension-vsix-path>)': nls_1.localize(14, null),
-        '--uninstall-extension (<extension-id> | <extension-vsix-path>)': nls_1.localize(15, null),
+        '--uninstall-extension (<extension-id> | <extension-vsix-path>)': nls_1.localize(14, null),
+        '--install-extension (<extension-id> | <extension-vsix-path>)': nls_1.localize(15, null),
         '--enable-proposed-api (<extension-id>)': nls_1.localize(16, null)
     };
     var troubleshootingHelp = {
@@ -10122,7 +10508,7 @@ define(__m[26/*vs/platform/environment/node/argv*/], __M([0/*require*/,1/*export
 
 
 
-define(__m[46/*vs/code/node/cli*/], __M([0/*require*/,1/*exports*/,31/*child_process*/,3/*vs/base/common/winjs.base*/,34/*vs/base/common/objects*/,26/*vs/platform/environment/node/argv*/,16/*vs/platform/node/product*/,38/*vs/platform/node/package*/,4/*path*/,19/*os*/,9/*fs*/,35/*vs/base/node/pfs*/,25/*vs/base/node/ports*/,15/*vs/base/node/encoding*/,30/*iconv-lite*/,17/*vs/base/node/extfs*/,2/*vs/base/common/platform*/]), function (require, exports, child_process_1, winjs_base_1, objects_1, argv_1, product_1, package_1, paths, os, fs, pfs_1, ports_1, encoding_1, iconv, extfs_1, platform_1) {
+define(__m[48/*vs/code/node/cli*/], __M([0/*require*/,1/*exports*/,32/*child_process*/,3/*vs/base/common/winjs.base*/,35/*vs/base/common/objects*/,27/*vs/platform/environment/node/argv*/,17/*vs/platform/node/product*/,40/*vs/platform/node/package*/,4/*path*/,7/*os*/,6/*fs*/,20/*vs/base/node/pfs*/,26/*vs/base/node/ports*/,16/*vs/base/node/encoding*/,31/*iconv-lite*/,18/*vs/base/node/extfs*/,2/*vs/base/common/platform*/,38/*vs/code/node/wait*/]), function (require, exports, child_process_1, winjs_base_1, objects_1, argv_1, product_1, package_1, paths, os, fs, pfs_1, ports_1, encoding_1, iconv, extfs_1, platform_1, wait_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function shouldSpawnCliProcess(argv) {
@@ -10133,7 +10519,7 @@ define(__m[46/*vs/code/node/cli*/], __M([0/*require*/,1/*exports*/,31/*child_pro
     }
     function main(argv) {
         return __awaiter(this, void 0, void 0, function () {
-            var args, mainCli, source, target, targetMode, restoreMode, data, env, processCallbacks, verbose, stdinWithoutTty, readFromStdin, stdinFilePath_1, stdinFileError, stdinFileStream_1, waitMarkerFilePath_1, waitMarkerError, randomTmpFile, portMain_1, portRenderer_1, portExthost_1, filenamePrefix_1, match, options, child_1;
+            var args, mainCli, source, target, targetMode, restoreMode, data, env, processCallbacks, verbose, stdinWithoutTty, readFromStdin, stdinFilePath_1, stdinFileError, stdinFileStream_1, waitMarkerFilePath_1, portMain_1, portRenderer_1, portExthost_1, filenamePrefix_1, match, options, child_1;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -10147,11 +10533,11 @@ define(__m[46/*vs/code/node/cli*/], __M([0/*require*/,1/*exports*/,31/*child_pro
                         }
                         if (!args.help) return [3 /*break*/, 1];
                         console.log(argv_1.buildHelpMessage(product_1.default.nameLong, product_1.default.applicationName, package_1.default.version));
-                        return [3 /*break*/, 9];
+                        return [3 /*break*/, 11];
                     case 1:
                         if (!args.version) return [3 /*break*/, 2];
                         console.log(package_1.default.version + "\n" + product_1.default.commit + "\n" + process.arch);
-                        return [3 /*break*/, 9];
+                        return [3 /*break*/, 11];
                     case 2:
                         if (!shouldSpawnCliProcess(args)) return [3 /*break*/, 3];
                         mainCli = new winjs_base_1.TPromise(function (c) { return require(['vs/code/node/cliProcessMain'], c); });
@@ -10289,41 +10675,30 @@ define(__m[46/*vs/code/node/cli*/], __M([0/*require*/,1/*exports*/,31/*child_pro
                                 }); });
                             }
                         }
-                        if (args.wait) {
-                            waitMarkerError = void 0;
-                            randomTmpFile = paths.join(os.tmpdir(), Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10));
-                            try {
-                                fs.writeFileSync(randomTmpFile, '');
-                                waitMarkerFilePath_1 = randomTmpFile;
-                                argv.push('--waitMarkerFilePath', waitMarkerFilePath_1);
-                            }
-                            catch (error) {
-                                waitMarkerError = error;
-                            }
-                            if (verbose) {
-                                if (waitMarkerError) {
-                                    console.error("Failed to create marker file for --wait: " + waitMarkerError.toString());
-                                }
-                                else {
-                                    console.log("Marker file for --wait created: " + waitMarkerFilePath_1);
-                                }
-                            }
-                        }
-                        if (!args['prof-startup']) return [3 /*break*/, 8];
-                        return [4 /*yield*/, ports_1.findFreePort(ports_1.randomPort(), 10, 3000)];
+                        if (!args.wait) return [3 /*break*/, 6];
+                        return [4 /*yield*/, wait_1.createWaitMarkerFile(verbose)];
                     case 5:
+                        waitMarkerFilePath_1 = _a.sent();
+                        if (waitMarkerFilePath_1) {
+                            argv.push('--waitMarkerFilePath', waitMarkerFilePath_1);
+                        }
+                        _a.label = 6;
+                    case 6:
+                        if (!args['prof-startup']) return [3 /*break*/, 10];
+                        return [4 /*yield*/, ports_1.findFreePort(ports_1.randomPort(), 10, 3000)];
+                    case 7:
                         portMain_1 = _a.sent();
                         return [4 /*yield*/, ports_1.findFreePort(portMain_1 + 1, 10, 3000)];
-                    case 6:
+                    case 8:
                         portRenderer_1 = _a.sent();
                         return [4 /*yield*/, ports_1.findFreePort(portRenderer_1 + 1, 10, 3000)];
-                    case 7:
+                    case 9:
                         portExthost_1 = _a.sent();
                         // fail the operation when one of the ports couldn't be accquired.
                         if (portMain_1 * portRenderer_1 * portExthost_1 === 0) {
                             throw new Error('Failed to find free ports for profiler. Make sure to shutdown all instances of the editor first.');
                         }
-                        filenamePrefix_1 = paths.join(os.homedir(), Math.random().toString(16).slice(-4));
+                        filenamePrefix_1 = paths.join(os.homedir(), 'prof-' + Math.random().toString(16).slice(-4));
                         argv.push("--inspect-brk=" + portMain_1);
                         argv.push("--remote-debugging-port=" + portRenderer_1);
                         argv.push("--inspect-brk-extensions=" + portExthost_1);
@@ -10331,23 +10706,100 @@ define(__m[46/*vs/code/node/cli*/], __M([0/*require*/,1/*exports*/,31/*child_pro
                         argv.push("--no-cached-data");
                         fs.writeFileSync(filenamePrefix_1, argv.slice(-6).join('|'));
                         processCallbacks.push(function (_child) { return __awaiter(_this, void 0, void 0, function () {
-                            var profiler, main_1, renderer, extHost, profileMain, profileRenderer, profileExtHost, suffix, e_1;
+                            var Profiler, mainProfileRequest, extHostProfileRequest, rendererProfileRequest, main_1, extHost, renderer, e_1;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        _a.trys.push([0, 12, , 13]);
-                                        return [4 /*yield*/, new Promise(function (resolve_1, reject_1) { require(['v8-inspect-profiler'], resolve_1, reject_1); })];
+                                        Profiler = /** @class */ (function () {
+                                            function Profiler() {
+                                            }
+                                            Profiler.start = function (name, filenamePrefix, opts) {
+                                                return __awaiter(this, void 0, void 0, function () {
+                                                    var profiler, session, err_1;
+                                                    return __generator(this, function (_a) {
+                                                        switch (_a.label) {
+                                                            case 0: return [4 /*yield*/, new Promise(function (resolve_1, reject_1) { require(['v8-inspect-profiler'], resolve_1, reject_1); })];
+                                                            case 1:
+                                                                profiler = _a.sent();
+                                                                _a.label = 2;
+                                                            case 2:
+                                                                _a.trys.push([2, 4, , 5]);
+                                                                return [4 /*yield*/, profiler.startProfiling(opts)];
+                                                            case 3:
+                                                                session = _a.sent();
+                                                                return [3 /*break*/, 5];
+                                                            case 4:
+                                                                err_1 = _a.sent();
+                                                                console.error("FAILED to start profiling for '" + name + "' on port '" + opts.port + "'");
+                                                                return [3 /*break*/, 5];
+                                                            case 5: return [2 /*return*/, {
+                                                                    stop: function () {
+                                                                        return __awaiter(this, void 0, void 0, function () {
+                                                                            var suffix, profile;
+                                                                            return __generator(this, function (_a) {
+                                                                                switch (_a.label) {
+                                                                                    case 0:
+                                                                                        if (!session) {
+                                                                                            return [2 /*return*/];
+                                                                                        }
+                                                                                        suffix = '';
+                                                                                        return [4 /*yield*/, session.stop()];
+                                                                                    case 1:
+                                                                                        profile = _a.sent();
+                                                                                        if (!process.env['VSCODE_DEV']) {
+                                                                                            // when running from a not-development-build we remove
+                                                                                            // absolute filenames because we don't want to reveal anything
+                                                                                            // about users. We also append the `.txt` suffix to make it
+                                                                                            // easier to attach these files to GH issues
+                                                                                            profile = profiler.rewriteAbsolutePaths(profile, 'piiRemoved');
+                                                                                            suffix = '.txt';
+                                                                                        }
+                                                                                        return [4 /*yield*/, profiler.writeProfile(profile, filenamePrefix + "." + name + ".cpuprofile" + suffix)];
+                                                                                    case 2:
+                                                                                        _a.sent();
+                                                                                        return [2 /*return*/];
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                    }
+                                                                }];
+                                                        }
+                                                    });
+                                                });
+                                            };
+                                            return Profiler;
+                                        }());
+                                        _a.label = 1;
                                     case 1:
-                                        profiler = _a.sent();
-                                        return [4 /*yield*/, profiler.startProfiling({ port: portMain_1 })];
+                                        _a.trys.push([1, 9, , 10]);
+                                        mainProfileRequest = Profiler.start('main', filenamePrefix_1, { port: portMain_1 });
+                                        extHostProfileRequest = Profiler.start('extHost', filenamePrefix_1, { port: portExthost_1, tries: 300 });
+                                        rendererProfileRequest = Profiler.start('renderer', filenamePrefix_1, {
+                                            port: portRenderer_1,
+                                            tries: 200,
+                                            chooseTab: function (targets) {
+                                                return targets.find(function (target) {
+                                                    if (!target.webSocketDebuggerUrl) {
+                                                        return false;
+                                                    }
+                                                    if (target.type === 'page') {
+                                                        return target.url.indexOf('workbench/workbench.html') > 0;
+                                                    }
+                                                    else {
+                                                        return true;
+                                                    }
+                                                });
+                                            }
+                                        });
+                                        return [4 /*yield*/, mainProfileRequest];
                                     case 2:
                                         main_1 = _a.sent();
-                                        return [4 /*yield*/, profiler.startProfiling({ port: portRenderer_1, tries: 200 })];
+                                        return [4 /*yield*/, extHostProfileRequest];
                                     case 3:
-                                        renderer = _a.sent();
-                                        return [4 /*yield*/, profiler.startProfiling({ port: portExthost_1, tries: 300 })];
-                                    case 4:
                                         extHost = _a.sent();
+                                        return [4 /*yield*/, rendererProfileRequest];
+                                    case 4:
+                                        renderer = _a.sent();
                                         // wait for the renderer to delete the
                                         // marker file
                                         return [4 /*yield*/, pfs_1.whenDeleted(filenamePrefix_1)];
@@ -10355,50 +10807,30 @@ define(__m[46/*vs/code/node/cli*/], __M([0/*require*/,1/*exports*/,31/*child_pro
                                         // wait for the renderer to delete the
                                         // marker file
                                         _a.sent();
+                                        // stop profiling
                                         return [4 /*yield*/, main_1.stop()];
                                     case 6:
-                                        profileMain = _a.sent();
+                                        // stop profiling
+                                        _a.sent();
                                         return [4 /*yield*/, renderer.stop()];
                                     case 7:
-                                        profileRenderer = _a.sent();
+                                        _a.sent();
                                         return [4 /*yield*/, extHost.stop()];
                                     case 8:
-                                        profileExtHost = _a.sent();
-                                        suffix = '';
-                                        if (!process.env['VSCODE_DEV']) {
-                                            // when running from a not-development-build we remove
-                                            // absolute filenames because we don't want to reveal anything
-                                            // about users. We also append the `.txt` suffix to make it
-                                            // easier to attach these files to GH issues
-                                            profileMain = profiler.rewriteAbsolutePaths(profileMain, 'piiRemoved');
-                                            profileRenderer = profiler.rewriteAbsolutePaths(profileRenderer, 'piiRemoved');
-                                            profileExtHost = profiler.rewriteAbsolutePaths(profileExtHost, 'piiRemoved');
-                                            suffix = '.txt';
-                                        }
-                                        // finally stop profiling and save profiles to disk
-                                        return [4 /*yield*/, profiler.writeProfile(profileMain, filenamePrefix_1 + "-main.cpuprofile" + suffix)];
-                                    case 9:
-                                        // finally stop profiling and save profiles to disk
-                                        _a.sent();
-                                        return [4 /*yield*/, profiler.writeProfile(profileRenderer, filenamePrefix_1 + "-renderer.cpuprofile" + suffix)];
-                                    case 10:
-                                        _a.sent();
-                                        return [4 /*yield*/, profiler.writeProfile(profileExtHost, filenamePrefix_1 + "-exthost.cpuprofile" + suffix)];
-                                    case 11:
                                         _a.sent();
                                         // re-create the marker file to signal that profiling is done
                                         fs.writeFileSync(filenamePrefix_1, '');
-                                        return [3 /*break*/, 13];
-                                    case 12:
+                                        return [3 /*break*/, 10];
+                                    case 9:
                                         e_1 = _a.sent();
                                         console.error('Failed to profile startup. Make sure to quit Code first.');
-                                        return [3 /*break*/, 13];
-                                    case 13: return [2 /*return*/];
+                                        return [3 /*break*/, 10];
+                                    case 10: return [2 /*return*/];
                                 }
                             });
                         }); });
-                        _a.label = 8;
-                    case 8:
+                        _a.label = 10;
+                    case 10:
                         if (args['js-flags']) {
                             match = /max_old_space_size=(\d+)/g.exec(args['js-flags']);
                             if (match && !args['max-memory']) {
@@ -10430,7 +10862,7 @@ define(__m[46/*vs/code/node/cli*/], __M([0/*require*/,1/*exports*/,31/*child_pro
                                 })];
                         }
                         return [2 /*return*/, winjs_base_1.TPromise.join(processCallbacks.map(function (callback) { return callback(child_1); }))];
-                    case 9: return [2 /*return*/, winjs_base_1.TPromise.as(null)];
+                    case 11: return [2 /*return*/, winjs_base_1.TPromise.as(null)];
                 }
             });
         });

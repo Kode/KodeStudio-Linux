@@ -10,7 +10,7 @@
 	"activationEvents": [
 		"*"
 	],
-	"main": "./out/extension",
+	"main": "./dist/extension",
 	"scripts": {
 		"compile": "gulp compile-extension:debug-auto-launch",
 		"watch": "gulp watch-extension:debug-auto-launch"
@@ -37,13 +37,11 @@
 				}
 			}
 		},
-		"commands": [
-			{
-				"command": "extension.node-debug.toggleAutoAttach",
-				"title": "%toggle.auto.attach%",
-				"category": "Debug"
-			}
-		]
+		"commands": [{
+			"command": "extension.node-debug.toggleAutoAttach",
+			"title": "%toggle.auto.attach%",
+			"category": "Debug"
+		}]
 	},
 	"dependencies": {
 		"vscode-nls": "^4.0.0"

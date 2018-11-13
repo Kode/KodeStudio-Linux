@@ -12,10 +12,10 @@ import * as util from './common';
 
 import * as vscode from 'vscode';
 import * as Core from 'vscode-chrome-debug-core';
-
-import { targetFilter } from './utils';
-
 import * as nls from 'vscode-nls';
+
+import { defaultTargetFilter } from './utils';
+
 const localize = nls.loadMessageBundle();
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -74,7 +74,7 @@ export class ChromeConfigurationProvider implements vscode.DebugConfigurationPro
 
             let targets;
             try {
-                targets = await discovery.getAllTargets(config.address || '127.0.0.1', config.port, targetFilter, config.url || config.urlFilter);
+                targets = await discovery.getAllTargets(config.address || '127.0.0.1', config.port, defaultTargetFilter, config.url || config.urlFilter);
             } catch (e) {
                 // Target not running?
             }
@@ -98,7 +98,7 @@ export class ChromeConfigurationProvider implements vscode.DebugConfigurationPro
             }
             config.electronPath = exec;
         } else {
-            const electronDir = join(vscode.extensions.getExtension('kodetech.electron-debug').extensionPath, '.electron', '2.0.2');
+            const electronDir = join(vscode.extensions.getExtension('kodetech.electron-debug').extensionPath, '.electron', '3.0.8');
             if (process.platform === 'darwin') {
                 config.electronPath = join(electronDir, 'Electron.app', 'Contents', 'MacOS', 'Electron');
             } else if (process.platform === 'win32') {

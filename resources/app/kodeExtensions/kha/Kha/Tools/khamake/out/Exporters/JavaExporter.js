@@ -7,9 +7,12 @@ const ImageTool_1 = require("../ImageTool");
 class JavaExporter extends KhaExporter_1.KhaExporter {
     constructor(options) {
         super(options);
-        fs.removeSync(path.join(this.options.to, this.sysdir(), 'Sources'));
     }
     haxeOptions(name, targetOptions, defines) {
+        const sources = path.join(this.options.to, this.sysdir(), 'Sources');
+        if (fs.existsSync(sources)) {
+            fs.removeSync(sources);
+        }
         defines.push('no-compilation');
         defines.push('sys_' + this.options.target);
         defines.push('sys_g1');

@@ -10,8 +10,7 @@ const nodeDebugAdapter_1 = require("./nodeDebugAdapter");
 vscode_chrome_debug_core_1.ChromeDebugSession.run(vscode_chrome_debug_core_1.ChromeDebugSession.getSession({
     logFilePath: path.join(os.tmpdir(), 'vscode-node-debug2.txt'),
     adapter: nodeDebugAdapter_1.NodeDebugAdapter,
-    extensionName: 'node-debug2',
-    enableSourceMapCaching: true
+    extensionName: 'node-debug2'
 }));
 /* tslint:disable:no-var-requires */
 const debugAdapterVersion = require('../../package.json').version;

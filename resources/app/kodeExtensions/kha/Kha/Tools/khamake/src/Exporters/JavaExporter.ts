@@ -10,10 +10,14 @@ import {Library} from '../Project';
 export class JavaExporter extends KhaExporter {
 	constructor(options: Options) {
 		super(options);
-		fs.removeSync(path.join(this.options.to, this.sysdir(), 'Sources'));
 	}
 
 	haxeOptions(name: string, targetOptions: any, defines: Array<string>) {
+		const sources = path.join(this.options.to, this.sysdir(), 'Sources');
+		if (fs.existsSync(sources)) {
+			fs.removeSync(sources);
+		}
+		
 		defines.push('no-compilation');
 
 		defines.push('sys_' + this.options.target);

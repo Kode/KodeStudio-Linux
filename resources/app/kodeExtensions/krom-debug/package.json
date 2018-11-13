@@ -1,7 +1,7 @@
 {
 	"name": "krom-debug",
 	"displayName": "Debugger for Krom",
-	"version": "18.8.4",
+	"version": "18.11.1",
 	"publisher": "kodetech",
 	"description": "Debug your JavaScript code in Krom.",
 	"license": "SEE LICENSE IN LICENSE.txt",
@@ -38,14 +38,14 @@
 		"await-notify": "1.0.1",
 		"source-map": "^0.7.3",
 		"vscode-debugadapter": "1.27.0",
-		"vscode-debugprotocol": "1.27.0"
+		"vscode-debugprotocol": "1.27.0",
+		"vscode": "1.1.17"
 	},
 	"devDependencies": {
 		"@types/node": "7.0.55",
 		"@types/mocha": "2.2.48",
 		"typescript": "2.6.2",
 		"mocha": "5.0.1",
-		"vscode": "1.1.17",
 		"vscode-debugadapter-testsupport": "1.27.0",
 		"tslint": "5.9.1",
 		"vsce": "1.37.5"
@@ -68,9 +68,6 @@
 				"runtime": "node",
 				"configurationAttributes": {
 					"launch": {
-						"required": [
-							"program"
-						],
 						"properties": {
 							"trace": {
 								"type": "boolean",
